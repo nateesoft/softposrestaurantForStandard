@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MTranBean;
@@ -10,6 +5,8 @@ import com.softpos.main.program.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import util.DateUtil;
 import util.MSG;
 
 /**
@@ -56,5 +53,50 @@ public class MTranController {
         bean.setTranferFlag(rs.getString("TranferFlag"));
 
         return bean;
+    }
+
+    public int create(MTranBean bean) {
+        int resultCreate = 0;
+
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+
+        try {
+            String sql = "insert into " + Value.db_member + ".mtran "
+                    + "(Service_Date, Member_Code, Branch_Code, Receipt_No, Sale_Type, GrossAmount, "
+                    + "DiscountAmount, NetAmount, Mechine_Code, Employee_Code, Service_Time, Score, TranferFlag) "
+                    + "values ('" + DateUtil.getDateFormat(bean.getService_Date(), "yyyy-MM-dd") + "', "
+                    + "'" + bean.getMember_Code() + "', '" + bean.getBranch_Code() + "', "
+                    + "'" + bean.getReceipt_No() + "', '" + bean.getSale_Type() + "', '" + bean.getGrossAmount() + "', "
+                    + "'" + bean.getDiscountAmount() + "', '" + bean.getNetAmount() + "', '" + bean.getMechine_Code() + "', "
+                    + "'" + bean.getEmployee_Code() + "', '" + bean.getService_Time() + "', '" + bean.getScore() + "', "
+                    + "'" + bean.getTranferFlag() + "')";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                resultCreate = stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+        return resultCreate;
+    }
+
+    public void refundBill(String receiptNo) {
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+
+        try {
+            String sql = "delete from " + Value.db_member + ".mtran "
+                    + "where receipt_no='" + receiptNo + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.softpos.floorplan;
 
+import com.softpos.crm.pos.core.controller.MPluController;
+import com.softpos.crm.pos.core.controller.MTranController;
 import convert_utility.text_to_image.TextToImage;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -36,6 +38,7 @@ import com.softpos.main.program.PublicVar;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.main.program.UserRecord;
 import com.softpos.main.program.Value;
+import com.softpos.pos.core.model.MemmaterController;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
@@ -188,6 +191,7 @@ public class RefundBill extends javax.swing.JDialog {
             }
         });
 
+        bntExit.setBackground(new java.awt.Color(255, 153, 153));
         bntExit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bntExit.setText("ESC-ออก (Exit)");
         bntExit.setFocusable(false);
@@ -308,7 +312,7 @@ public class RefundBill extends javax.swing.JDialog {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(bntOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(bntExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bntNew))
+                            .addComponent(bntNew, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(9, 9, 9)))
                 .addContainerGap())
         );
@@ -330,9 +334,9 @@ public class RefundBill extends javax.swing.JDialog {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bntNew, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 205, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -419,6 +423,20 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     }
                     File fObject2 = new File(TempBill);
                     fObject2.delete();
+                    
+                    // check member point and remove both table mycrmbranch.mplu and mycrmbranch.mtran
+                    BillControl billControl = new BillControl();
+                    BillNoBean billBean = billControl.getData(BillNo);
+                    
+                    String receiptNo = billBean.getB_MacNo()+"/"+billBean.getB_Refno();
+                    MPluController mpluControl = new MPluController();
+                    mpluControl.refundBill(receiptNo);
+                    MTranController mtranControl = new MTranController();
+                    mtranControl.refundBill(receiptNo);
+                    
+                    MemmaterController memControl = new MemmaterController();
+                    memControl.updateScoreRefund(billBean.getB_MemCode(), billBean.getB_MemCurSum());
+                    
                     PUtility.ShowMsg("การยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " เรียบร้อยแล้ว...");
                 }
                 InitRefund();

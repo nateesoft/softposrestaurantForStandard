@@ -13,13 +13,13 @@ public class MTranBean {
     private String Branch_Code;
     private String Receipt_No;
     private String Sale_Type;
-    private float GrossAmount;
-    private float DiscountAmount;
-    private float NetAmount;
+    private double GrossAmount;
+    private double DiscountAmount;
+    private double NetAmount;
     private String Mechine_Code;
     private String Employee_Code;
     private String Service_Time;
-    private float Score;
+    private double Score;
     private String TranferFlag;
 
     public Date getService_Date() {
@@ -62,27 +62,27 @@ public class MTranBean {
         this.Sale_Type = Sale_Type;
     }
 
-    public float getGrossAmount() {
+    public double getGrossAmount() {
         return GrossAmount;
     }
 
-    public void setGrossAmount(float GrossAmount) {
+    public void setGrossAmount(double GrossAmount) {
         this.GrossAmount = GrossAmount;
     }
 
-    public float getDiscountAmount() {
+    public double getDiscountAmount() {
         return DiscountAmount;
     }
 
-    public void setDiscountAmount(float DiscountAmount) {
+    public void setDiscountAmount(double DiscountAmount) {
         this.DiscountAmount = DiscountAmount;
     }
 
-    public float getNetAmount() {
+    public double getNetAmount() {
         return NetAmount;
     }
 
-    public void setNetAmount(float NetAmount) {
+    public void setNetAmount(double NetAmount) {
         this.NetAmount = NetAmount;
     }
 
@@ -110,11 +110,11 @@ public class MTranBean {
         this.Service_Time = Service_Time;
     }
 
-    public float getScore() {
+    public double getScore() {
         return Score;
     }
 
-    public void setScore(float Score) {
+    public void setScore(double Score) {
         this.Score = Score;
     }
 

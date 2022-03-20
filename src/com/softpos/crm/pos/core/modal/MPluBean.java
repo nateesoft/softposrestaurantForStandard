@@ -17,9 +17,9 @@ public class MPluBean {
     private String PLU_GroupName;
     private String PLU_Code;
     private String PLU_Name;
-    private float PLU_Amount;
-    private float PLU_Quantity;
-    private float PLU_Price;
+    private double PLU_Amount;
+    private double PLU_Quantity;
+    private double PLU_Price;
     private String TranferFlag;
 
     public Date getService_Date() {
@@ -94,27 +94,27 @@ public class MPluBean {
         this.PLU_Name = PLU_Name;
     }
 
-    public float getPLU_Amount() {
+    public double getPLU_Amount() {
         return PLU_Amount;
     }
 
-    public void setPLU_Amount(float PLU_Amount) {
+    public void setPLU_Amount(double PLU_Amount) {
         this.PLU_Amount = PLU_Amount;
     }
 
-    public float getPLU_Quantity() {
+    public double getPLU_Quantity() {
         return PLU_Quantity;
     }
 
-    public void setPLU_Quantity(float PLU_Quantity) {
+    public void setPLU_Quantity(double PLU_Quantity) {
         this.PLU_Quantity = PLU_Quantity;
     }
 
-    public float getPLU_Price() {
+    public double getPLU_Price() {
         return PLU_Price;
     }
 
-    public void setPLU_Price(float PLU_Price) {
+    public void setPLU_Price(double PLU_Price) {
         this.PLU_Price = PLU_Price;
     }
 

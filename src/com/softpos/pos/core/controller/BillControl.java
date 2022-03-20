@@ -68,18 +68,27 @@ public class BillControl {
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 ReceNo1 = rs.getString("ReceNo1");
-                if (ReceNo1.length() == 1) {
-                    ReceNo1 = "000000" + ReceNo1;
-                } else if (ReceNo1.length() == 2) {
-                    ReceNo1 = "00000" + ReceNo1;
-                } else if (ReceNo1.length() == 3) {
-                    ReceNo1 = "0000" + ReceNo1;
-                } else if (ReceNo1.length() == 4) {
-                    ReceNo1 = "000" + ReceNo1;
-                } else if (ReceNo1.length() == 5) {
-                    ReceNo1 = "00" + ReceNo1;
-                } else if (ReceNo1.length() == 6) {
-                    ReceNo1 = "0" + ReceNo1;
+                switch (ReceNo1.length()) {
+                    case 1:
+                        ReceNo1 = "000000" + ReceNo1;
+                        break;
+                    case 2:
+                        ReceNo1 = "00000" + ReceNo1;
+                        break;
+                    case 3:
+                        ReceNo1 = "0000" + ReceNo1;
+                        break;
+                    case 4:
+                        ReceNo1 = "000" + ReceNo1;
+                        break;
+                    case 5:
+                        ReceNo1 = "00" + ReceNo1;
+                        break;
+                    case 6:
+                        ReceNo1 = "0" + ReceNo1;
+                        break;
+                    default:
+                        break;
                 }
 
             }
@@ -88,7 +97,6 @@ public class BillControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -586,10 +594,11 @@ public class BillControl {
                     billNo.setMScore("");
                 } else {
                     if (!memberBean.getMember_Code().equals("")) {
-                        billNo.setB_SumScore(memberBean.getMember_TotalScore());
-                        billNo.setB_MemName(memberBean.getMember_NameThai());
-                        
-                        memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
+                        double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
+                    
+                        billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
+                        billNo.setB_MemCurSum(currentMemberScore);
+                        billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
                     }
                 }
                 billNo.setMStamp("");
@@ -985,10 +994,11 @@ public class BillControl {
                 billNo.setMScore("");
             } else {
                 if (!memberBean.getMember_Code().equals("")) {
-                    billNo.setB_SumScore(memberBean.getMember_TotalScore());
-                    billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
+                    double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
                     
-                    memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
+                    billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
+                    billNo.setB_MemCurSum(currentMemberScore);
+                    billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
                 }
             }
             billNo.setMStamp("");
@@ -1165,6 +1175,7 @@ public class BillControl {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
+                tsale.setR_Date(rs.getDate("r_date"));
                 tsale.setR_Index(rs.getString("R_Index"));
                 tsale.setR_Refno(rs.getString("R_Refno"));
                 tsale.setR_Table(rs.getString("R_Table"));
