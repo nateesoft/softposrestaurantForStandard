@@ -879,137 +879,6 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private javax.swing.JTextField txtShortName;
     // End of variables declaration//GEN-END:variables
 
-    public JButton getButtonLayout(String menuCode, int menuIndex) {
-
-        MenuMGR m = new MenuMGR();
-        int fontType = Font.PLAIN;
-        int layout = 0;
-
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from soft_menusetup "
-                    + "where MenuCode='" + menuCode + "' "
-                    + "and M_Index='" + menuIndex + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                m.setMenuCode(rs.getString("MenuCode"));
-                m.setMenuType(rs.getInt("MenuType"));
-                m.setPCode(rs.getString("PCode"));
-                m.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                m.setIMG(rs.getString("IMG"));
-                m.setFontColor(rs.getString("FontColor"));
-                m.setBGColor(rs.getString("BGColor"));
-                m.setLayout(rs.getInt("Layout"));
-                m.setFontSize(rs.getInt("FontSize"));
-                m.setFontName(rs.getString("FontName"));
-                m.setMIndex(rs.getInt("M_Index"));
-                m.setFontAttr(rs.getString("FontAttr"));
-                m.setImgSize(rs.getInt("IMG_SIZE"));
-                layout = m.getLayout();
-
-                if (m.getFontAttr().equals("B")) {
-                    fontType = Font.BOLD;
-                } else if (m.getFontAttr().equals("I")) {
-                    fontType = Font.ITALIC;
-                } else if (m.getFontAttr().equals("BI")) {
-                    fontType = Font.BOLD | Font.ITALIC;
-                }
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        JButton button = new JButton("");
-        button.setName(menuCode);
-        if (m.getIMG() == null) {
-            m.setIMG("");
-        }
-        if (layout == 0) {
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-            button.setText("<html>" + m.getMenuShowText() + "</html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-            button.setVerticalAlignment(SwingConstants.TOP);
-            button.setVerticalTextPosition(SwingConstants.BOTTOM);
-            button.setForeground(getColorFormat(m.getFontColor()));
-        } else if (layout == 1) {
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-            button.setText("<html>" + m.getMenuShowText() + "</html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-            button.setVerticalAlignment(SwingConstants.BOTTOM);
-            button.setVerticalTextPosition(SwingConstants.TOP);
-            button.setForeground(getColorFormat(m.getFontColor()));
-        } else if (layout == 2) {
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            button.setForeground(getColorFormat(m.getFontColor()));
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-            button.setText("<html>" + m.getMenuShowText() + "</html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-        } else if (layout == 3) {
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            button.setForeground(getColorFormat(m.getFontColor()));
-            button.setText("<html><center>" + m.getMenuShowText() + "</center></html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-        } else if (layout == 4) {
-            button.setBackground(getColorFormat(m.getBGColor()));
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            button.setForeground(getColorFormat(m.getFontColor()));
-            button.setText("<html>" + m.getMenuShowText() + "</html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-        } else if (layout == 5) {
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-            button.setVerticalTextPosition(SwingConstants.BOTTOM);
-        } else if (layout == 6) {
-            button.setBackground(getColorFormat(m.getBGColor()));
-            button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-            if (!m.getIMG().equals("")) {
-                updateIconFull(button, m.getIMG(), m.getImgSize());
-            }
-            button.setText("<html>" + m.getMenuShowText() + "</html>");
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
-            button.setVerticalAlignment(SwingConstants.TOP);
-            button.setVerticalTextPosition(SwingConstants.BOTTOM);
-            button.setForeground(getColorFormat(m.getFontColor()));
-        }
-
-        //check empty text name
-        if (button.getText().trim().equals("<html>null</html>")) {
-//            button.setBackground(Color.PINK);
-            button.setOpaque(false);
-            button.setFocusPainted(false);
-            button.setBorderPainted(false);
-            button.setContentAreaFilled(false);
-            button.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        }
-
-        return button;
-    }
-
     private void save() {
         //set value;
         MenuMGR mgr = new MenuMGR();
@@ -1119,7 +988,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
     }
@@ -1148,7 +1017,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
     }
@@ -1181,7 +1050,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     + "where MenuCode='" + menuCode + "' "
                     + "and M_Index='" + menuIndex + "'";
             Statement stmt = mysql.getConnection().createStatement();
-ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 MenuMGR m = new MenuMGR();
                 m.setMenuCode(rs.getString("MenuCode"));
@@ -1226,7 +1095,7 @@ ResultSet rs = stmt.executeQuery(sql);
                 }
 
                 txtShortName.setText(m.getMenuShowText());
-                Color BGColor = getColorFormat(m.getBGColor());
+                Color BGColor = ButtonCustom.getColorFormat(m.getBGColor());
                 btnBGColor.setBackground(BGColor);
                 if (m.getFontAttr().equals("B")) {
                     chkFontBold.setSelected(true);
@@ -1246,7 +1115,7 @@ ResultSet rs = stmt.executeQuery(sql);
                     chkFontBoldAndItalic.setSelected(false);
                 }
 
-                btnFontColor.setForeground(getColorFormat(m.getFontColor()));
+                btnFontColor.setForeground(ButtonCustom.getColorFormat(m.getFontColor()));
                 if (m.getFontName().equals("")) {
                     cbFontList.setSelectedItem("Tahoma");
                 } else {
@@ -1264,8 +1133,7 @@ ResultSet rs = stmt.executeQuery(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        }finally{
+        } finally {
             mysql.close();
         }
     }
@@ -1375,51 +1243,13 @@ ResultSet rs = stmt.executeQuery(sql);
         cbFontList.setSelectedItem("Tahoma");
     }
 
-    private Color getColorFormat(String bgColor) {
-        int red = 240, green = 240, blue = 240;
-        if (bgColor != null) {
-            String[] color = bgColor.split(",");
-            if (color.length == 3) {
-                try {
-                    red = Integer.parseInt(color[0]);
-                    green = Integer.parseInt(color[1]);
-                    blue = Integer.parseInt(color[2]);
-                } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-
-        return new Color(red, green, blue);
-    }
-
-    private void updateIconFull(JButton button, String img, int imgSize) {
-        //full button image
-        ImageIcon icon = new ImageIcon(img);
-        int scale = 1;
-        int width = imgSize;//icon.getIconWidth();
-        if (width <= 0) {
-            width = 125;
-        }
-        int newWidth = width / scale;
-        button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(newWidth, -1, Image.SCALE_SMOOTH)));
-    }
-
-    private void updateIconDefault(JButton button, String img) {
-        ImageIcon icon = new ImageIcon(img);
-        int scale = 1; // 2 times smaller
-        int width = button.getWidth() - 35;//icon.getIconWidth();
-        int newWidth = width / scale;
-        button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(newWidth, -1, Image.SCALE_SMOOTH)));
-    }
-
     private void Selectmenu() {
         String pcode = txtPCode.getText();
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        
+
         try {
             mysql.open();
             String sqlFind = "select PDesc from product "
@@ -1434,148 +1264,9 @@ ResultSet rs = stmt.executeQuery(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
     }
 
-    class MenuMGR {
-
-        private String MenuCode;
-        private int MenuType;
-        private String OptSet;
-        private String PSet;
-        private String PCode;
-        private String MenuShowText;
-        private String IMG;
-        private String FontColor;
-        private String BGColor;
-        private int Layout;
-        private int FontSize;
-        private String FontName;
-        private String FontAttr;
-        private int MIndex;
-        private int ImgSize;
-
-        public int getImgSize() {
-            return ImgSize;
-        }
-
-        public void setImgSize(int ImgSize) {
-            this.ImgSize = ImgSize;
-        }
-
-        public int getMIndex() {
-            return MIndex;
-        }
-
-        public String getOptSet() {
-            return OptSet;
-        }
-
-        public void setOptSet(String OptSet) {
-            this.OptSet = OptSet;
-        }
-
-        public String getPSet() {
-            return PSet;
-        }
-
-        public void setPSet(String PSet) {
-            this.PSet = PSet;
-        }
-
-        public void setMIndex(int MIndex) {
-            this.MIndex = MIndex;
-        }
-
-        public String getMenuCode() {
-            return MenuCode;
-        }
-
-        public void setMenuCode(String MenuCode) {
-            this.MenuCode = MenuCode;
-        }
-
-        public int getMenuType() {
-            return MenuType;
-        }
-
-        public void setMenuType(int MenuType) {
-            this.MenuType = MenuType;
-        }
-
-        public String getPCode() {
-            return PCode;
-        }
-
-        public void setPCode(String PCode) {
-            this.PCode = PCode;
-        }
-
-        public String getMenuShowText() {
-            return MenuShowText;
-        }
-
-        public void setMenuShowText(String MenuShowText) {
-            this.MenuShowText = MenuShowText;
-        }
-
-        public String getIMG() {
-            return IMG;
-        }
-
-        public void setIMG(String IMG) {
-            this.IMG = IMG;
-        }
-
-        public String getFontColor() {
-            return FontColor;
-        }
-
-        public void setFontColor(String FontColor) {
-            this.FontColor = FontColor;
-        }
-
-        public String getBGColor() {
-            return BGColor;
-        }
-
-        public void setBGColor(String BGColor) {
-            this.BGColor = BGColor;
-        }
-
-        public int getLayout() {
-            return Layout;
-        }
-
-        public void setLayout(int Layout) {
-            this.Layout = Layout;
-        }
-
-        public int getFontSize() {
-            return FontSize;
-        }
-
-        public void setFontSize(int FontSize) {
-            this.FontSize = FontSize;
-        }
-
-        public String getFontName() {
-            return FontName;
-        }
-
-        public void setFontName(String FontName) {
-            this.FontName = FontName;
-        }
-
-        public String getFontAttr() {
-            return FontAttr;
-        }
-
-        public void setFontAttr(String FontAttr) {
-            this.FontAttr = FontAttr;
-        }
-
-    }
 }

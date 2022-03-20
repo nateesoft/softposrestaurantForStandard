@@ -738,6 +738,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
         jMenu8.add(jMenuItem32);
 
+        jMenuItem37.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem37.setText("บังคับปิดโปรแกรม (ForceExit)");
         jMenuItem37.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
