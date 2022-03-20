@@ -1,14 +1,31 @@
 package util;
 
-import util.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 
 public class DateUtil {
+    
+    public static Date getDateFormat(String dateTimeString, String dateFormat) {
+        SimpleDateFormat simp = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+        try {
+            return simp.parse(dateTimeString);
+        } catch (ParseException ex) {
+            Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static String getDateFormat(Date date, String dateFormat) {
+        SimpleDateFormat simp = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+        return simp.format(date);
+    }
 
     private DateUtil(){
         throw new AssertionError();

@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -963,11 +965,6 @@ public class CheckBill extends javax.swing.JDialog {
                 btnAcceptActionPerformed(evt);
             }
         });
-        btnAccept.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btnAcceptKeyPressed(evt);
-            }
-        });
         panelNumber.add(btnAccept);
 
         jPanel8.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -1199,42 +1196,41 @@ public class CheckBill extends javax.swing.JDialog {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtBillNo))
-                            .addComponent(jPanel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(bntPrintCheckBill1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bntPrintCheckBill2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addContainerGap()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                                    .addComponent(btnDiscountAll)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtDiscountAmount))
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(83, 83, 83)
+                                .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtBillNo))
+                                    .addComponent(jPanel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(bntPrintCheckBill1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(bntPrintCheckBill2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(panelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                                            .addComponent(btnDiscountAll)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtDiscountAmount))
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addComponent(bntPrintCheckBill, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1301,19 +1297,24 @@ public class CheckBill extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDiscountAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiscountAllActionPerformed
-        backupTempBalnace();
-        double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
-        DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
-                txtMember1.getText(), txtMember2.getText());
-        dd.setVisible(true);
-        if (dd.getDiscountBean() != null) {
-            discBean = dd.getDiscountBean();
-            txtDiscountAmount.setText("" + discBean.getTotalDiscount());
-            loadTableBill();
-        } else {
-            restoreTempBalance();
+        try {
+            backupTempBalnace();
+            double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
+            DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
+                    txtMember1.getText(), txtMember2.getText());
+            dd.setVisible(true);
+            if (dd.getDiscountBean() != null) {
+                discBean = dd.getDiscountBean();
+                txtDiscountAmount.setText("" + discBean.getTotalDiscount());
+                loadTableBill();
+            } else {
+                restoreTempBalance();
+            }
+            LoadDisc();
+        } catch (SQLException ex) {
+            MSG.ERR(ex.getMessage());
+            Logger.getLogger(CheckBill.class.getName()).log(Level.SEVERE, null, ex);
         }
-        LoadDisc();
     }//GEN-LAST:event_btnDiscountAllActionPerformed
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
@@ -1480,14 +1481,6 @@ public class CheckBill extends javax.swing.JDialog {
         input("00");
     }//GEN-LAST:event_btnARActionPerformed
 
-    private void btnAcceptKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAcceptKeyPressed
-
-//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            btnAcceptActionPerformed(null);
-//        }
-
-    }//GEN-LAST:event_btnAcceptKeyPressed
-
     private void btnCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreditActionPerformed
         txtCreditName.setText("");
         txtCreditNo.setText("");
@@ -1618,34 +1611,31 @@ public class CheckBill extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCreditAmountMouseClicked
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-
         if (!txtCreditName.getText().equals("") && txtCreditNo.getText().equals("") && txtCreditTrackNo.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Credit Cannot Be Blank:");
-        } else if (!txtCreditName.getText().equals("") && !txtCreditNo.getText().equals("") && txtCreditTrackNo.getText().equals("")) {
-            txtCreditTrackNo.requestFocus();
-        } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String sql = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
-                    try {
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
-                        final ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-                        boolean isTakeOrder = isTakeOrder();
-                        if (rs.next() && isTakeOrder == true) {
-                            JOptionPane.showMessageDialog(null, "Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
-                        } else {
-                            checkBillOK();
-                        }
-                        c.close();
-                    } catch (Exception e) {
-                        MSG.ERR(e.toString());
-                    }
-//                    checkBillOK();
-                }
-            }).start();
+            MSG.WAR("Credit Cannot Be Blank:");
+            return;
         }
+        if (!txtCreditName.getText().equals("") && !txtCreditNo.getText().equals("") && txtCreditTrackNo.getText().equals("")) {
+            txtCreditTrackNo.requestFocus();
+            return;
+        }
+        new Thread(() -> {
+            String sql = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
+            try {
+                MySQLConnect c = new MySQLConnect();
+                c.open();
+                final ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+                boolean isTakeOrder = isTakeOrder();
+                if (rs.next() && isTakeOrder == true) {
+                    MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
+                } else {
+                    checkBillOK();
+                }
+                c.close();
+            } catch (SQLException e) {
+                MSG.ERR(e.toString());
+            }
+        }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void txtCreditTrackNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditTrackNoActionPerformed
@@ -2035,36 +2025,18 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void checkBillPayment() {
         DecimalFormat DecFmt = new DecimalFormat("##0.00");
-        double netTotal;
         double tmpNetTotal;
-        //temp
-        double totalAmount = tBean.getTAmount();
-
         double totalDiscount = Double.parseDouble(txtDiscountAmount.getText().replace(",", ""));
         double totalItemDisc = Double.parseDouble(txtItemDisc.getText().replace(",", ""));
-        double totalService;
 
         PosControl posControl = new PosControl();
         POSConfigSetup config = posControl.getData();
 
-//        if (config.getP_ServiceType().equals("N")) {
-//        totalService = getServiceAllbalance(tBean.getTcode()) * (config.getP_Service() / 100);
-//            totalService = (totalAmount) * (config.getP_Service() / 100);
-//        } else if (config.getP_ServiceType().equals("G")) {
-//            totalService = getServiceAllbalance(tBean.getTcode()) * (config.getP_Service() / 100);
-//            totalService = totalAmount - totalDiscount * (config.getP_Service() / 100);
-//        } else {
-//            totalService = 0;
-//        }
-//        totalService = NumberControl.UP_DOWN_NATURAL_BAHT(totalService);
-        netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
-
+        double netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         if (config.getP_VatType().equals("I")) {
-//            netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal() - totalDiscount));
             netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         }
         if (config.getP_VatType().equals("E")) {
-//            netTotal = ((tBean.getTAmount() - tBean.getDiscBath() + tBean.getServiceAmt()));
             netTotal = ((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt()));
             netTotal = netTotal + (netTotal * 7 / 100);
         }
@@ -2075,7 +2047,6 @@ public class CheckBill extends javax.swing.JDialog {
             netTotal = (netTotal);
         }
 
-        double saveEntertain = 0.00;
         double returnMoney = Double.parseDouble(txtReturnMoneyAmount.getText().replace(",", ""));
         if (returnMoney > netTotal) {
             JOptionPane.showMessageDialog(this, "**** ยอดการหักคืนเงินมัดจำ (Earnest-Return) มากกว่ายอดที่ต้องจ่ายจริง ****");
@@ -2086,510 +2057,199 @@ public class CheckBill extends javax.swing.JDialog {
         double returnCash = Double.parseDouble(txtCashAmount.getText().replace(",", ""));
         double saveAR = Double.parseDouble(txtArAmount.getText().replace(",", ""));
         double saveCredit = Double.parseDouble(txtCreditAmount.getText().replace(",", ""));
-        saveEntertain = Double.parseDouble(txtEntertainAmount.getText().replace(",", ""));
+        double saveEntertain = Double.parseDouble(txtEntertainAmount.getText().replace(",", ""));
         PublicVar.b_entertain = saveEntertain;
         double Entertain = PublicVar.b_entertain;
         if (saveAR > 0 && saveCredit > 0) {
             PublicVar.SubTotalOK = true;
-        } else {
-            double totalPayment = returnMoney + returnGift + returnCash;
-            CuponBean cuponBean = discBean.getCuponBean(); //22/07/2014
-            if (totalPayment >= netTotal) {
-                Digital_Msg.setText("เงินทอน");
-                double ton = 0.00;
-
-                if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    ton = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
-                } else {
-                    ton = netTotal - totalPayment;
-                }
-                if (ton < 0) {
-                    ton *= -1;
-                }
-                txtTotalAmount.setForeground(Color.RED);
-                txtTotalAmount.setText(dec.format(ton));
-
-                BillNoBean billBean = new BillNoBean();
-                billBean.setB_PayAmt(totalPayment);
-                billBean.setB_Ton(ton);
-                // for AR
-                billBean.setB_AccrCode(txtArCode.getText());
-                billBean.setB_AccrAmt(saveAR);
-                int creditDay;
-                try {
-                    creditDay = Integer.parseInt(lbCredit.getText());
-                } catch (NumberFormatException e) {
-                    creditDay = 0;
-                }
-                billBean.setB_SubDiscBath(tBean.getDiscBath());
-                billBean.setB_AccrCr(creditDay);
-
-                // for giftvoucher
-                billBean.setB_GiftVoucher(returnGift);
-
-                // for EntertainPayment
-                billBean.setB_Entertain1(Entertain);
-
-                // for cash
-                if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    double cashPay = Double.parseDouble(txtCashAmount.getText().trim().replace(",", ""));
-                    billBean.setB_NetDiff(tmpNetTotal - netTotal);
-                } else {
-                    billBean.setB_NetDiff(tmpNetTotal - netTotal);
-                }
-                billBean.setB_Total(netTotal);
-                billBean.setB_Cash(returnCash - ton);
-
-//                billBean.setB_ServiceAmt(totalService);
-                billBean.setB_ItemDiscAmt(totalItemDisc);
-                billBean.setB_NetTotal(netTotal);
-
-                // for credit
-                billBean.setB_CrCode1(txtCreditName.getText());
-                billBean.setB_CardNo1(txtCreditNo.getText());
-                billBean.setB_AppCode1(txtCreditTrackNo.getText());
-                billBean.setB_CrAmt1(saveCredit);
-
-                // for earnest
-                billBean.setB_Earnest(returnMoney);
-
-                TableFileControl tfCon = new TableFileControl();
-                TableFileBean tBean = tfCon.getData(tableNo);
-
-                //get from bean
-                if (tBean.getServiceAmt() < 0) {
-                    tBean.setServiceAmt(0);
-                }
-                billBean.setB_ServiceAmt(tBean.getServiceAmt());
-                billBean.setB_CuponDiscAmt(tBean.getCuponDiscAmt());
-                billBean.setB_FastDiscAmt(tBean.getFastDiscAmt());
-                billBean.setB_FastDisc(tBean.getFastDisc());
-                billBean.setB_EmpDiscAmt(tBean.getEmpDiscAmt());
-                billBean.setB_EmpDisc(tBean.getEmpDisc());
-                billBean.setB_TrainDiscAmt(tBean.getTrainDiscAmt());
-                billBean.setB_TrainDisc(tBean.getTrainDisc());
-                billBean.setB_MemDiscAmt(tBean.getMemDiscAmt());
-                billBean.setB_MemDisc(tBean.getMemDisc());
-                billBean.setB_SubDisc(tBean.getSubDisc());
-                billBean.setB_SubDiscAmt(tBean.getSubDiscAmt());
-
-                //set for MemberScore
-                if (memberBean != null) {
-                    if (!memberBean.getMember_Code().equals("")) {
-                        billBean.setB_SumScore(memberBean.getMember_TotalScore());
-                    }
-                }
-                BillControl billControl = new BillControl();
-                PublicVar.SubTotalOK = true;
-                billControl.saveBillNo(tableNo, billBean);
-                //clear tempset
-                clearTempSet(tableNo);
-                lockScreen1(false);
-//                lockScreen(this, false);
-                UpdateMember("Del");
-                txtCashAmount.setEnabled(false);
-            } else if (saveCredit == netTotal
-                    || saveAR == netTotal
-                    || (saveCredit + returnCash) == netTotal
-                    || saveEntertain == netTotal
-                    || returnGift + returnCash + saveCredit == netTotal) {
-                Digital_Msg.setText("เงินทอน");
-                double ton = 0;
-                txtTotalAmount.setForeground(Color.RED);
-                txtTotalAmount.setText(dec.format(ton));
-                BillNoBean billBean = new BillNoBean();
-
-                billBean.setB_PayAmt(totalPayment);
-                // set ton
-                billBean.setB_Ton(ton);
-
-                // for AR
-                billBean.setB_AccrCode(txtArCode.getText());
-                billBean.setB_AccrAmt(saveAR);
-                int creditDay;
-                try {
-                    creditDay = Integer.parseInt(lbCredit.getText());
-                } catch (NumberFormatException e) {
-                    creditDay = 0;
-                }
-                billBean.setB_AccrCr(creditDay);
-
-                // for giftvoucher
-                billBean.setB_GiftVoucher(returnGift);
-
-                // for cash                
-                billBean.setB_SubDiscBath(tBean.getDiscBath());
-                billBean.setB_Total(netTotal);
-                billBean.setB_Cash(returnCash);
-
-//                if (config.getP_VatType().equals("I")) {
-//                    billBean.setB_ServiceAmt(totalService * 7 / 107);
-//                }
-//                if (config.getP_VatType().equals("E")) {
-//                    billBean.setB_ServiceAmt(totalService * 7 / 100);
-//                }
-//                billBean.setB_ServiceAmt(totalService);
-                if (tBean.getServiceAmt() < 0) {
-                    tBean.setServiceAmt(0);
-                }
-                billBean.setB_ServiceAmt(tBean.getServiceAmt());
-                billBean.setB_ItemDiscAmt(totalItemDisc);
-                billBean.setB_NetTotal(tmpNetTotal);
-                //btnAccept.setEnabled(false);
-
-                // for earnest
-                billBean.setB_Earnest(returnMoney);
-
-                // for EntertainPay
-                billBean.setB_Entertain1(saveEntertain);
-
-                // for credit
-                billBean.setB_CrCode1(txtCreditName.getText());
-                billBean.setB_CardNo1(txtCreditNo.getText());
-                billBean.setB_AppCode1(txtCreditTrackNo.getText());
-//                btnAccept.setEnabled(false);
-                billBean.setB_CrAmt1(saveCredit);
-
-                //get from bean
-//                billBean.setB_CuponDiscAmt(discBean.getCuponDiscount());
-                billBean.setB_CuponDiscAmt(tBean.getCuponDiscAmt());
-                billBean.setB_FastDiscAmt(discBean.getFestDiscount());
-                billBean.setB_FastDisc(discBean.getStrFestDiscount());
-                billBean.setB_EmpDiscAmt(discBean.getEmpDiscount());
-                billBean.setB_EmpDisc(discBean.getStrEmpDiscount());
-                billBean.setB_TrainDiscAmt(discBean.getTrainDiscount());
-                billBean.setB_TrainDisc(discBean.getStrTrainDiscount());
-                billBean.setB_MemDiscAmt(discBean.getMemDiscount());
-                billBean.setB_MemDisc(discBean.getStrMemDiscount());
-                billBean.setB_SubDisc(discBean.getStrCuponDiscount());
-                billBean.setB_SubDiscAmt(discBean.getCuponDiscount());
-
-                BillControl billControl = new BillControl();
-//                btnAccept.setVisible(false);
-                PublicVar.SubTotalOK = true;
-                if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    double cashPay = Double.parseDouble(txtCashAmount.getText().trim().replace(",", ""));
-                    billBean.setB_NetDiff(tmpNetTotal - (cashPay + saveCredit + saveEntertain + saveAR + returnGift));
-                } else {
-                    billBean.setB_NetDiff(tmpNetTotal - netTotal);
-                }
-                if (memberBean != null) {
-                    if (!memberBean.getMember_Code().equals("")) {
-                        billBean.setB_SumScore(memberBean.getMember_TotalScore());
-                    }
-                }
-                billControl.saveBillNo(tableNo, billBean);
-//                btnAccept.setVisible(true);
-                Value.MemberAlready = false;
-//                lockScreen(this, false);
-                lockScreen1(false);
-                UpdateMember("Del");
-
-            } else {
-                // กรณีใส่จำนวนเงินไม่ครบ
-                double total = netTotal - returnCash - returnGift - saveEntertain;
-//                double total = netTotal - returnCash - returnGift - saveEntertain;
-//                txtTotalAmount.setText(dec.format(Math.round(total)));
-                txtTotalAmount.setText(dec.format((total)));
-            }
-//
-//            btnAccept.setEnabled(true);
-//            btnAccept.setFocusable(true);
-//            btnAccept.requestFocus();
-//            btnAccept.setEnabled(false);
+            return;
         }
-//        lockScreen1(false);
-//        btnAccept.setEnabled(false);
+        double totalPayment = returnMoney + returnGift + returnCash;
+        if (totalPayment >= netTotal) {
+            Digital_Msg.setText("เงินทอน");
+            double ton;
+
+            if (!CONFIG.getP_PayBahtRound().equals("O")) {
+                ton = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
+            } else {
+                ton = netTotal - totalPayment;
+            }
+            if (ton < 0) {
+                ton *= -1;
+            }
+            txtTotalAmount.setForeground(Color.RED);
+            txtTotalAmount.setText(dec.format(ton));
+
+            BillNoBean billBean = new BillNoBean();
+            billBean.setB_PayAmt(totalPayment);
+            billBean.setB_Ton(ton);
+            // for AR
+            billBean.setB_AccrCode(txtArCode.getText());
+            billBean.setB_AccrAmt(saveAR);
+            int creditDay;
+            try {
+                creditDay = Integer.parseInt(lbCredit.getText());
+            } catch (NumberFormatException e) {
+                creditDay = 0;
+            }
+            billBean.setB_SubDiscBath(tBean.getDiscBath());
+            billBean.setB_AccrCr(creditDay);
+
+            // for giftvoucher
+            billBean.setB_GiftVoucher(returnGift);
+
+            // for EntertainPayment
+            billBean.setB_Entertain1(Entertain);
+
+            // for cash
+            if (!CONFIG.getP_PayBahtRound().equals("O")) {
+                billBean.setB_NetDiff(tmpNetTotal - netTotal);
+            } else {
+                billBean.setB_NetDiff(tmpNetTotal - netTotal);
+            }
+            billBean.setB_Total(netTotal);
+            billBean.setB_Cash(returnCash - ton);
+
+            billBean.setB_ItemDiscAmt(totalItemDisc);
+            billBean.setB_NetTotal(netTotal);
+
+            // for credit
+            billBean.setB_CrCode1(txtCreditName.getText());
+            billBean.setB_CardNo1(txtCreditNo.getText());
+            billBean.setB_AppCode1(txtCreditTrackNo.getText());
+            billBean.setB_CrAmt1(saveCredit);
+
+            // for earnest
+            billBean.setB_Earnest(returnMoney);
+
+            TableFileControl tfCon = new TableFileControl();
+            TableFileBean tableFileBean = tfCon.getData(tableNo);
+
+            //get from bean
+            if (tableFileBean.getServiceAmt() < 0) {
+                tableFileBean.setServiceAmt(0);
+            }
+            billBean.setB_ServiceAmt(tableFileBean.getServiceAmt());
+            billBean.setB_CuponDiscAmt(tableFileBean.getCuponDiscAmt());
+            billBean.setB_FastDiscAmt(tableFileBean.getFastDiscAmt());
+            billBean.setB_FastDisc(tableFileBean.getFastDisc());
+            billBean.setB_EmpDiscAmt(tableFileBean.getEmpDiscAmt());
+            billBean.setB_EmpDisc(tableFileBean.getEmpDisc());
+            billBean.setB_TrainDiscAmt(tableFileBean.getTrainDiscAmt());
+            billBean.setB_TrainDisc(tableFileBean.getTrainDisc());
+            billBean.setB_MemDiscAmt(tableFileBean.getMemDiscAmt());
+            billBean.setB_MemDisc(tableFileBean.getMemDisc());
+            billBean.setB_SubDisc(tableFileBean.getSubDisc());
+            billBean.setB_SubDiscAmt(tableFileBean.getSubDiscAmt());
+
+            //set for MemberScore
+            if (memberBean != null) {
+                if (!memberBean.getMember_Code().equals("")) {
+                    billBean.setB_SumScore(memberBean.getMember_TotalScore());
+                }
+            }
+            BillControl billControl = new BillControl();
+            PublicVar.SubTotalOK = true;
+            billControl.saveBillNo(tableNo, billBean);
+            //clear tempset
+            clearTempSet(tableNo);
+            lockScreen1(false);
+            UpdateMember("Del");
+            txtCashAmount.setEnabled(false);
+            return;
+        }
+        if (saveCredit == netTotal || saveAR == netTotal || (saveCredit + returnCash) == netTotal
+                || saveEntertain == netTotal || returnGift + returnCash + saveCredit == netTotal) {
+            Digital_Msg.setText("เงินทอน");
+            double ton = 0;
+            txtTotalAmount.setForeground(Color.RED);
+            txtTotalAmount.setText(dec.format(ton));
+            BillNoBean billBean = new BillNoBean();
+
+            billBean.setB_PayAmt(totalPayment);
+            // set ton
+            billBean.setB_Ton(ton);
+
+            // for AR
+            billBean.setB_AccrCode(txtArCode.getText());
+            billBean.setB_AccrAmt(saveAR);
+            int creditDay;
+            try {
+                creditDay = Integer.parseInt(lbCredit.getText());
+            } catch (NumberFormatException e) {
+                creditDay = 0;
+            }
+            billBean.setB_AccrCr(creditDay);
+
+            // for giftvoucher
+            billBean.setB_GiftVoucher(returnGift);
+
+            // for cash                
+            billBean.setB_SubDiscBath(tBean.getDiscBath());
+            billBean.setB_Total(netTotal);
+            billBean.setB_Cash(returnCash);
+
+            if (tBean.getServiceAmt() < 0) {
+                tBean.setServiceAmt(0);
+            }
+            billBean.setB_ServiceAmt(tBean.getServiceAmt());
+            billBean.setB_ItemDiscAmt(totalItemDisc);
+            billBean.setB_NetTotal(tmpNetTotal);
+
+            // for earnest
+            billBean.setB_Earnest(returnMoney);
+
+            // for EntertainPay
+            billBean.setB_Entertain1(saveEntertain);
+
+            // for credit
+            billBean.setB_CrCode1(txtCreditName.getText());
+            billBean.setB_CardNo1(txtCreditNo.getText());
+            billBean.setB_AppCode1(txtCreditTrackNo.getText());
+            billBean.setB_CrAmt1(saveCredit);
+
+            billBean.setB_CuponDiscAmt(tBean.getCuponDiscAmt());
+            billBean.setB_FastDiscAmt(discBean.getFestDiscount());
+            billBean.setB_FastDisc(discBean.getStrFestDiscount());
+            billBean.setB_EmpDiscAmt(discBean.getEmpDiscount());
+            billBean.setB_EmpDisc(discBean.getStrEmpDiscount());
+            billBean.setB_TrainDiscAmt(discBean.getTrainDiscount());
+            billBean.setB_TrainDisc(discBean.getStrTrainDiscount());
+            billBean.setB_MemDiscAmt(discBean.getMemDiscount());
+            billBean.setB_MemDisc(discBean.getStrMemDiscount());
+            billBean.setB_SubDisc(discBean.getStrCuponDiscount());
+            billBean.setB_SubDiscAmt(discBean.getCuponDiscount());
+
+            BillControl billControl = new BillControl();
+            PublicVar.SubTotalOK = true;
+            if (!CONFIG.getP_PayBahtRound().equals("O")) {
+                double cashPay = Double.parseDouble(txtCashAmount.getText().trim().replace(",", ""));
+                billBean.setB_NetDiff(tmpNetTotal - (cashPay + saveCredit + saveEntertain + saveAR + returnGift));
+            } else {
+                billBean.setB_NetDiff(tmpNetTotal - netTotal);
+            }
+            if (memberBean != null) {
+                if (!memberBean.getMember_Code().equals("")) {
+                    billBean.setB_SumScore(memberBean.getMember_TotalScore());
+                }
+            }
+            billControl.saveBillNo(tableNo, billBean);
+            Value.MemberAlready = false;
+            lockScreen1(false);
+            UpdateMember("Del");
+            return;
+        }
+        
+        // กรณีใส่จำนวนเงินไม่ครบ
+        double total = netTotal - returnCash - returnGift - saveEntertain;
+        txtTotalAmount.setText(dec.format((total)));
     }
 
-//    private void checkBillPayment() {
-//        double netTotal;
-//        double tmpNetTotal;
-//
-//        //temp
-//        double totalAmount = tBean.getTAmount();
-//
-//        double totalDiscount = Double.parseDouble(txtDiscountAmount.getText().replace(",", ""));
-//        double totalItemDisc = Double.parseDouble(txtItemDisc.getText().replace(",", ""));
-//        double totalService;
-//        PosControl posControl = new PosControl();
-//        POSConfigSetup config = posControl.getData();
-//        if (config.getP_ServiceType().equals("N")) {
-//            totalService = (totalAmount - totalDiscount) * (config.getP_Service() / 100);
-//        } else if (config.getP_ServiceType().equals("G")) {
-//            totalService = totalAmount * (config.getP_Service() / 100);
-//        } else {
-//            totalService = 0;
-//        }
-//        DecimalFormat DecFmt = new DecimalFormat("##0.00");
-//        netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal() + TCreditCharge));
-//
-//        tmpNetTotal = netTotal;
-////        netTotal = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal);
-//        netTotal = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal);
-//        double saveEntertain = 0.00;
-//        double returnMoney = Double.parseDouble(txtReturnMoneyAmount.getText().replace(",", ""));
-//        if (returnMoney > netTotal) {
-//            JOptionPane.showMessageDialog(this, "**** ยอดการหักคืนเงินมัดจำ (Earnest-Return) มากกว่ายอดที่ต้องจ่ายจริง ****");
-//            txtReturnMoneyAmount.selectAll();
-//            return;
-//        }
-//        double returnGift = Double.parseDouble(txtGiftVoucherAmount.getText().replace(",", ""));
-//        double returnCash = Double.parseDouble(txtCashAmount.getText().replace(",", ""));
-//        double saveAR = Double.parseDouble(txtArAmount.getText().replace(",", ""));
-//        double saveCredit = NumberControl.UP_DOWN_NATURAL_BAHT(Double.parseDouble(txtCreditAmount.getText().replace(",", "")));
-//        saveEntertain = Double.parseDouble(txtEntertainAmount.getText().replace(",", ""));
-//        PublicVar.b_entertain = saveEntertain;
-//        double Entertain = PublicVar.b_entertain;
-//        if (saveAR > 0 && saveCredit > 0) {
-//            PublicVar.SubTotalOK = true;
-//        } else {
-//            double totalPayment = returnMoney + returnGift + returnCash;
-//            CuponBean cuponBean = discBean.getCuponBean(); //22/07/2014
-//            if (totalPayment >= netTotal) {
-//                Digital_Msg.setText("เงินทอน");
-//                double ton = netTotal - totalPayment;
-//                if (ton < 0) {
-//                    ton *= -1;
-//                }
-//                txtTotalAmount.setForeground(Color.RED);
-//                txtTotalAmount.setText(dec.format(ton));
-//
-//                BillNoBean billBean = new BillNoBean();
-//                billBean.setB_PayAmt(totalPayment);
-//                billBean.setB_Ton(ton);
-//                // for AR
-//                billBean.setB_AccrCode(txtArCode.getText());
-//                billBean.setB_AccrAmt(saveAR);
-//                int creditDay;
-//                try {
-//                    creditDay = Integer.parseInt(lbCredit.getText());
-//                } catch (NumberFormatException e) {
-//                    creditDay = 0;
-//                }
-//                billBean.setB_AccrCr(creditDay);
-//
-//                // for giftvoucher
-//                billBean.setB_GiftVoucher(returnGift);
-//
-//                // for EntertainPayment
-//                billBean.setB_Entertain1(Entertain);
-//
-//                // for cash
-//                billBean.setB_NetDiff(tmpNetTotal - netTotal);
-//                billBean.setB_Total(netTotal);
-//                billBean.setB_Cash(returnCash - ton);
-//
-//                billBean.setB_ServiceAmt(totalService);
-//                billBean.setB_ItemDiscAmt(totalItemDisc);
-//                billBean.setB_NetTotal(tmpNetTotal);
-//
-//                // for credit
-//                billBean.setB_CrCode1(txtCreditName.getText());
-//                billBean.setB_CardNo1(txtCreditNo.getText());
-//                billBean.setB_AppCode1(txtCreditTrackNo.getText());
-//                billBean.setB_CrAmt1(saveCredit);
-//                billBean.setB_CrCharge1((CreditCharge));
-//
-//                // for earnest
-//                billBean.setB_Earnest(returnMoney);
-//
-//                TableFileControl tfCon = new TableFileControl();
-//                TableFileBean tBean = tfCon.getData(tableNo);
-//
-//                //get from bean
-//                billBean.setB_CuponDiscAmt(tBean.getCuponDiscAmt());
-//                billBean.setB_FastDiscAmt(tBean.getFastDiscAmt());
-//                billBean.setB_FastDisc(tBean.getFastDisc());
-//                billBean.setB_EmpDiscAmt(tBean.getEmpDiscAmt());
-//                billBean.setB_EmpDisc(tBean.getEmpDisc());
-//                billBean.setB_TrainDiscAmt(tBean.getTrainDiscAmt());
-//                billBean.setB_TrainDisc(tBean.getTrainDisc());
-//                billBean.setB_MemDiscAmt(tBean.getMemDiscAmt());
-//                billBean.setB_MemDisc(tBean.getMemDisc());
-//                billBean.setB_SubDisc(tBean.getSubDisc());
-//                billBean.setB_SubDiscAmt(tBean.getSubDiscAmt());
-//                billBean.setB_SubDiscBath(0);
-//
-//                BillControl billControl = new BillControl();
-//                PublicVar.SubTotalOK = true;
-//                btnAccept.setVisible(false);
-//                billControl.saveBillNo(tableNo, billBean);
-//                btnAccept.setVisible(true);
-//                //clear tempset
-//                clearTempSet(tableNo);
-//                lockScreen(this, false);
-//            } else if (saveCredit == netTotal
-//                    || saveAR == netTotal
-//                    || (saveCredit + returnCash) == netTotal
-//                    || saveEntertain == netTotal
-//                    || returnGift + returnCash + saveCredit == netTotal) {
-//                Digital_Msg.setText("เงินทอน");
-//                double ton = 0;
-//                txtTotalAmount.setForeground(Color.RED);
-//                txtTotalAmount.setText(dec.format(ton));
-//                BillNoBean billBean = new BillNoBean();
-//
-//                billBean.setB_PayAmt(totalPayment);
-//                // set ton
-//                billBean.setB_Ton(ton);
-//
-//                // for AR
-//                billBean.setB_AccrCode(txtArCode.getText());
-//                billBean.setB_AccrAmt(saveAR);
-//                int creditDay;
-//                try {
-//                    creditDay = Integer.parseInt(lbCredit.getText());
-//                } catch (NumberFormatException e) {
-//                    creditDay = 0;
-//                }
-//                billBean.setB_AccrCr(creditDay);
-//
-//                // for giftvoucher
-//                billBean.setB_GiftVoucher(returnGift);
-//
-//                // for cash                
-//                billBean.setB_NetDiff(tmpNetTotal - netTotal);
-//                billBean.setB_Total(netTotal);
-//                billBean.setB_Cash(returnCash);
-//                billBean.setB_ServiceAmt(totalService);
-//                billBean.setB_ItemDiscAmt(totalItemDisc);
-//                billBean.setB_NetTotal(tmpNetTotal);
-//                //btnAccept.setEnabled(false);
-//
-//                // for earnest
-//                billBean.setB_Earnest(returnMoney);
-//
-//                // for EntertainPay
-//                billBean.setB_Entertain1(PublicVar.b_entertain);
-//
-//                // for credit
-//                billBean.setB_CrCode1(txtCreditName.getText());
-//                billBean.setB_CardNo1(txtCreditNo.getText());
-//                billBean.setB_AppCode1(txtCreditTrackNo.getText());
-//                btnAccept.setEnabled(false);
-//                billBean.setB_CrAmt1(saveCredit);
-//                billBean.setB_CrChargeAmt1(TCreditCharge);
-//                billBean.setB_CrCharge1(CreditCharge);
-//
-//                //get from bean
-////                billBean.setB_CuponDiscAmt(discBean.getCuponDiscount());
-//                billBean.setB_CuponDiscAmt(tBean.getCuponDiscAmt());
-//                billBean.setB_FastDiscAmt(discBean.getFestDiscount());
-//                billBean.setB_FastDisc(discBean.getStrFestDiscount());
-//                billBean.setB_EmpDiscAmt(discBean.getEmpDiscount());
-//                billBean.setB_EmpDisc(discBean.getStrEmpDiscount());
-//                billBean.setB_TrainDiscAmt(discBean.getTrainDiscount());
-//                billBean.setB_TrainDisc(discBean.getStrTrainDiscount());
-//                billBean.setB_MemDiscAmt(discBean.getMemDiscount());
-//                billBean.setB_MemDisc(discBean.getStrMemDiscount());
-//                billBean.setB_SubDisc(discBean.getStrCuponDiscount());
-//                billBean.setB_SubDiscAmt(discBean.getCuponDiscount());
-//
-//                BillControl billControl = new BillControl();
-//                btnAccept.setVisible(false);
-//                PublicVar.SubTotalOK = true;
-//                billControl.saveBillNo(tableNo, billBean);
-//                btnAccept.setVisible(true);
-//
-//                Value.MemberAlready = false;
-//
-//                lockScreen(this, false);
-//            } else {
-//                // กรณีใส่จำนวนเงินไม่ครบ
-//                double total = netTotal - returnCash - returnGift - saveEntertain;
-//                txtTotalAmount.setText(dec.format(total));
-//            }
-//
-////            btnAccept.setEnabled(true);
-////            btnAccept.setFocusable(true);
-////            btnAccept.requestFocus();
-////            btnAccept.setEnabled(false);
-//        }
-//        //btnAccept.setEnabled(false);
-//    }
-//    private double getServiceAllbalance(String table) {
-//        double service = 0.00;
-//        String etd = "";
-//        double sumEtdE = 0.00;
-//        double sumEtdT = 0.00;
-//        double sumEtdD = 0.00;
-//        double sumEtdP = 0.00;
-//        double sumEtdW = 0.00;
-//        
-//        String[] strs = POSConfigSetup.Bean().getP_SerChkBySaleType().split("/");
-//        String serviceSaleTypeE = "";
-//        String serviceSaleTypeT = "";
-//        String serviceSaleTypeD = "";
-//        String serviceSaleTypeP = "";
-//        String serviceSaleTypeW = "";
-//        for (String data : strs) {
-//            serviceSaleTypeE = strs[0];
-//            serviceSaleTypeT = strs[1];
-//            serviceSaleTypeD = strs[2];
-//            serviceSaleTypeP = strs[3];
-//            serviceSaleTypeW = strs[4];
-//        }
-//        try {
-//            MySQLConnect c = new MySQLConnect();
-//            c.open();
-//            
-//            for (int i = 0; i <= 4; i++) {
-//                if (i == 0) {
-//                    etd += "E";
-//                } else if (i == 1) {
-//                    etd += "T";
-//                } else if (i == 2) {
-//                    etd += "D";
-//                } else if (i == 3) {
-//                    etd += "P";
-//                } else if (i == 4) {
-//                    etd += "W";
-//                }
-//                String sql = "select "
-//                        + "sum(r_total) r_toal "
-//                        + "from "
-//                        + "balance "
-//                        + "where "
-//                        + "r_table='" + table + "' and r_etd='" + etd + "';";
-//                ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-//                if (rs.next() && !rs.wasNull()) {
-//                    if (etd.equals("E") && serviceSaleTypeE.equals("Y")) {
-//                        sumEtdE = rs.getDouble("r_toal");
-//                    } else if (etd.endsWith("T") && serviceSaleTypeE.equals("Y")) {
-//                        sumEtdT = rs.getDouble("r_toal");
-//                    } else if (etd.endsWith("D") && serviceSaleTypeE.equals("Y")) {
-//                        sumEtdD = rs.getDouble("r_toal");
-//                    } else if (etd.endsWith("P") && serviceSaleTypeE.equals("Y")) {
-//                        sumEtdP = rs.getDouble("r_toal");
-//                    } else if (etd.endsWith("W") && serviceSaleTypeE.equals("Y")) {
-//                        sumEtdW = rs.getDouble("r_toal");
-//                    } else if (etd.equals("E") && serviceSaleTypeE.equals("N")) {
-//                        sumEtdE = 0;
-//                    } else if (etd.endsWith("T") && serviceSaleTypeE.equals("N")) {
-//                        sumEtdT = 0;
-//                    } else if (etd.endsWith("D") && serviceSaleTypeE.equals("N")) {
-//                        sumEtdD = 0;
-//                    } else if (etd.endsWith("P") && serviceSaleTypeE.equals("N")) {
-//                        sumEtdP = 0;
-//                    } else if (etd.endsWith("W") && serviceSaleTypeE.equals("N")) {
-//                        sumEtdW = 0;
-//                    }
-//                }
-//                service = sumEtdE + sumEtdT + sumEtdD + sumEtdP + sumEtdW;
-//            }
-//            c.close();
-//        } catch (Exception e) {
-//            MSG.ERR(e.toString());
-//        }
-//        return service;
-//    }
     private void printBillCheck() {
         PPrint print = new PPrint();
         if (Value.useprint) {
             print.PrintCheckBill(tableNo);
         } else {
-            //JOptionPane.showMessageDialog(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!");
             print.printCheckBillDriver(tableNo);
         }
     }
@@ -2773,28 +2433,30 @@ public class CheckBill extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Over Credit Number Or Over Appr Code : Please Check!");
             txtCreditNo.setEditable(true);
             txtCreditTrackNo.setEditable(true);
-        } else {
-            if (txtCreditNo.hasFocus()) {
-                txtCreditTrackNo.setFocusable(true);
-                txtCreditTrackNo.requestFocus();
-            } else if (txtCreditTrackNo.hasFocus()) {
-                trackNoExist();
-            } else if (txtArCode.hasFocus()) {
-                arCodeExits();
-            } else {
-                if (!PublicVar.SubTotalOK) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            checkBillPayment();
-                        }
-                    }).start();
-                } else {
-                    dispose();
-                    jPanel6.setVisible(false);
-                }
-            }
+            return;
         }
+        if (txtCreditNo.hasFocus()) {
+            txtCreditTrackNo.setFocusable(true);
+            txtCreditTrackNo.requestFocus();
+            return;
+        }
+        if (txtCreditTrackNo.hasFocus()) {
+            trackNoExist();
+            return;
+        }
+        if (txtArCode.hasFocus()) {
+            arCodeExits();
+            return;
+        }
+        if (PublicVar.SubTotalOK) {
+            dispose();
+            jPanel6.setVisible(false);
+            return;
+        }
+        
+        new Thread(() -> {
+            checkBillPayment();
+        }).start();
     }
 
     private void GetEDC() {
@@ -2819,24 +2481,20 @@ public class CheckBill extends javax.swing.JDialog {
         }
     }
 
-    private void backupTempBalnace() {
+    private void backupTempBalnace() throws SQLException {
         /**
          * * OPEN CONNECTION **
          */
         //MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        try {
-            String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
-            String sql2 = "insert ignore into temp_balance select * from balance "
-                    + "where r_table='" + tableNo + "' order by r_index";
-            Statement stmt = mysql.getConnection().createStatement();
+        String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
+        String sql2 = "insert ignore into temp_balance select * from balance "
+                + "where r_table='" + tableNo + "' order by r_index";
+        try (Statement stmt = mysql.getConnection().createStatement()) {
             stmt.executeUpdate(sql1);
             stmt.executeUpdate(sql2);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
         }
+        mysql.close();
     }
 
     private void restoreTempBalance() {

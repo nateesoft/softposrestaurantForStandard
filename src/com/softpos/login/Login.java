@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.main.program.BranchControl;
 import com.softpos.main.program.GetPassword;
 import com.softpos.main.program.PPrint;
 import com.softpos.main.program.PublicVar;
@@ -471,6 +472,7 @@ public class Login extends javax.swing.JDialog {
                                     UpdateLogin(loginname);
                                     PosHwSetupOnAct("Y");
                                     Value.USERCODE = txtUser.getText();
+                                    PublicVar.Branch_Code = BranchControl.getData().getCode();
                                     dispose();
                                     FloorPlanDialog floorPlan = new FloorPlanDialog();
                                     floorPlan.setVisible(true);
