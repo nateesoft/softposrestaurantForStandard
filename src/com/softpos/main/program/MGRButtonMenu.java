@@ -10,13 +10,11 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 import setupmenu.DlgBrowseProduct;
 import sun.natee.project.util.ThaiUtil;
@@ -1095,7 +1093,8 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                 }
 
                 txtShortName.setText(m.getMenuShowText());
-                Color BGColor = ButtonCustom.getColorFormat(m.getBGColor());
+                ButtonCustom buttonCustom = new ButtonCustom();
+                Color BGColor = buttonCustom.getColorFormat(m.getBGColor());
                 btnBGColor.setBackground(BGColor);
                 if (m.getFontAttr().equals("B")) {
                     chkFontBold.setSelected(true);
@@ -1115,7 +1114,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     chkFontBoldAndItalic.setSelected(false);
                 }
 
-                btnFontColor.setForeground(ButtonCustom.getColorFormat(m.getFontColor()));
+                btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
                 if (m.getFontName().equals("")) {
                     cbFontList.setSelectedItem("Tahoma");
                 } else {

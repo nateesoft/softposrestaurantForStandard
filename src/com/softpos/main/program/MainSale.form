@@ -964,6 +964,40 @@
                 <Property name="columns" type="int" value="4"/>
                 <Property name="rows" type="int" value="4"/>
               </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JButton" name="btnP1">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP2">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP3">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP4">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP5">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP6">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP7">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP8">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP9">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP10">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP11">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP12">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP13">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP14">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP15">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP16">
+                </Component>
+              </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pMenu2">
               <Constraints>
@@ -978,6 +1012,40 @@
                 <Property name="columns" type="int" value="4"/>
                 <Property name="rows" type="int" value="4"/>
               </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JButton" name="btnP17">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP18">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP19">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP20">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP21">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP22">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP23">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP24">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP25">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP26">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP27">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP28">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP29">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP30">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP31">
+                </Component>
+                <Component class="javax.swing.JButton" name="btnP32">
+                </Component>
+              </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pMenu3">
               <Constraints>

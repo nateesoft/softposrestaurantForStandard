@@ -36,14 +36,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -55,6 +54,7 @@ import util.Option;
 import util.MSG;
 
 public class MainSale extends javax.swing.JDialog {
+
     private PPrint Prn = new PPrint();
     private Timer timer;
     private DefaultTableModel model;
@@ -100,20 +100,19 @@ public class MainSale extends javax.swing.JDialog {
         TableFileBean tbBean = tbControl.getData(tableNo);
         this.memberBean = MemberBean.getMember(tbBean.getMemCode());
         if (memberBean == null) {
-//            BalanceControl.updateProSerTable(tableNo, memberBean);
+            BalanceControl.updateProSerTable(tableNo, memberBean);
         } else {
             if (!memberBean.getMember_Code().equals("")) {
-//                BalanceControl.updateProSerTable(tableNo, memberBean);
+                BalanceControl.updateProSerTable(tableNo, memberBean);
                 txtMember1.setText(memberBean.getMember_NameThai());
                 txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore() + " แต้ม");
             } else if (tbBean.getMemDiscAmt() != 0) {
                 updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
             }
-
         }
         txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        setupMenu();
+        loadButtonProductMenu("A");
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         Value.MemberAlready = false;
 
@@ -143,16 +142,16 @@ public class MainSale extends javax.swing.JDialog {
         txtPluCode.requestFocus();
         MAddNewMember1.setVisible(true);
 
-        tbpMain.setUI(new BasicTabbedPaneUI() {
-            @Override
-            protected int calculateTabAreaHeight(int tab_placement, int run_count, int max_tab_height) {
-                if (tbpMain.getTabCount() > 1) {
-                    return -1;
-                } else {
-                    return -1;
-                }
-            }
-        });
+//        tbpMain.setUI(new BasicTabbedPaneUI() {
+//            @Override
+//            protected int calculateTabAreaHeight(int tab_placement, int run_count, int max_tab_height) {
+//                if (tbpMain.getTabCount() > 1) {
+//                    return -1;
+//                } else {
+//                    return -1;
+//                }
+//            }
+//        });
         upDateTableFile();
         showCustomerInput();
     }
@@ -265,7 +264,39 @@ public class MainSale extends javax.swing.JDialog {
         lbTotalAmount = new javax.swing.JLabel();
         tbpMain = new javax.swing.JTabbedPane();
         pMenu1 = new javax.swing.JPanel();
+        btnP1 = new javax.swing.JButton();
+        btnP2 = new javax.swing.JButton();
+        btnP3 = new javax.swing.JButton();
+        btnP4 = new javax.swing.JButton();
+        btnP5 = new javax.swing.JButton();
+        btnP6 = new javax.swing.JButton();
+        btnP7 = new javax.swing.JButton();
+        btnP8 = new javax.swing.JButton();
+        btnP9 = new javax.swing.JButton();
+        btnP10 = new javax.swing.JButton();
+        btnP11 = new javax.swing.JButton();
+        btnP12 = new javax.swing.JButton();
+        btnP13 = new javax.swing.JButton();
+        btnP14 = new javax.swing.JButton();
+        btnP15 = new javax.swing.JButton();
+        btnP16 = new javax.swing.JButton();
         pMenu2 = new javax.swing.JPanel();
+        btnP17 = new javax.swing.JButton();
+        btnP18 = new javax.swing.JButton();
+        btnP19 = new javax.swing.JButton();
+        btnP20 = new javax.swing.JButton();
+        btnP21 = new javax.swing.JButton();
+        btnP22 = new javax.swing.JButton();
+        btnP23 = new javax.swing.JButton();
+        btnP24 = new javax.swing.JButton();
+        btnP25 = new javax.swing.JButton();
+        btnP26 = new javax.swing.JButton();
+        btnP27 = new javax.swing.JButton();
+        btnP28 = new javax.swing.JButton();
+        btnP29 = new javax.swing.JButton();
+        btnP30 = new javax.swing.JButton();
+        btnP31 = new javax.swing.JButton();
+        btnP32 = new javax.swing.JButton();
         pMenu3 = new javax.swing.JPanel();
         pMenu4 = new javax.swing.JPanel();
         pMenu5 = new javax.swing.JPanel();
@@ -658,9 +689,43 @@ public class MainSale extends javax.swing.JDialog {
 
         pMenu1.setBackground(new java.awt.Color(255, 255, 255));
         pMenu1.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu1.add(btnP1);
+        pMenu1.add(btnP2);
+        pMenu1.add(btnP3);
+        pMenu1.add(btnP4);
+        pMenu1.add(btnP5);
+        pMenu1.add(btnP6);
+        pMenu1.add(btnP7);
+        pMenu1.add(btnP8);
+        pMenu1.add(btnP9);
+        pMenu1.add(btnP10);
+        pMenu1.add(btnP11);
+        pMenu1.add(btnP12);
+        pMenu1.add(btnP13);
+        pMenu1.add(btnP14);
+        pMenu1.add(btnP15);
+        pMenu1.add(btnP16);
+
         tbpMain.addTab("", pMenu1);
 
         pMenu2.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu2.add(btnP17);
+        pMenu2.add(btnP18);
+        pMenu2.add(btnP19);
+        pMenu2.add(btnP20);
+        pMenu2.add(btnP21);
+        pMenu2.add(btnP22);
+        pMenu2.add(btnP23);
+        pMenu2.add(btnP24);
+        pMenu2.add(btnP25);
+        pMenu2.add(btnP26);
+        pMenu2.add(btnP27);
+        pMenu2.add(btnP28);
+        pMenu2.add(btnP29);
+        pMenu2.add(btnP30);
+        pMenu2.add(btnP31);
+        pMenu2.add(btnP32);
+
         tbpMain.addTab("", pMenu2);
 
         pMenu3.setLayout(new java.awt.GridLayout(4, 4));
@@ -1149,35 +1214,35 @@ public class MainSale extends javax.swing.JDialog {
     }
 
 private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
-                tableOpened();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                txtTable.setText("");
-                bntlogoffuserClick();
-                break;
-            case KeyEvent.VK_F5:
-                showTableAvialble();
-                break;
-            case KeyEvent.VK_F8:
-                showPaidIn();
-                break;
-            case KeyEvent.VK_F9:
-                showPaidOut();
-                break;
-            case KeyEvent.VK_F6:
-                showBillDuplicate();
-                break;
-            case KeyEvent.VK_F7:
-                showRefundBill();
-                break;
-            case KeyEvent.VK_F12:
-                showPayAR();
-                break;
-            default:
-                break;
-        }
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_ENTER:
+            tableOpened();
+            break;
+        case KeyEvent.VK_ESCAPE:
+            txtTable.setText("");
+            bntlogoffuserClick();
+            break;
+        case KeyEvent.VK_F5:
+            showTableAvialble();
+            break;
+        case KeyEvent.VK_F8:
+            showPaidIn();
+            break;
+        case KeyEvent.VK_F9:
+            showPaidOut();
+            break;
+        case KeyEvent.VK_F6:
+            showBillDuplicate();
+            break;
+        case KeyEvent.VK_F7:
+            showRefundBill();
+            break;
+        case KeyEvent.VK_F12:
+            showPayAR();
+            break;
+        default:
+            break;
+    }
 
 }//GEN-LAST:event_txtTableKeyPressed
 
@@ -1357,8 +1422,9 @@ private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 find.setVisible(true);
                 if (!find.getPCode().equals("")) {
                     txtPluCode.setText(txtPluCode.getText() + find.getPCode());
-                    
-                }   break;
+
+                }
+                break;
             case KeyEvent.VK_F3:
                 showHoldTable();
                 break;
@@ -1666,7 +1732,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         MGRButtonMenu mgr = new MGRButtonMenu(null, true, buttonName, buttonIndex);
         mgr.setVisible(true);
-        setupMenu();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -3571,6 +3636,38 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JButton btnHold;
     private javax.swing.JRadioButton btnLangEN;
     private javax.swing.JRadioButton btnLangTH;
+    private javax.swing.JButton btnP1;
+    private javax.swing.JButton btnP10;
+    private javax.swing.JButton btnP11;
+    private javax.swing.JButton btnP12;
+    private javax.swing.JButton btnP13;
+    private javax.swing.JButton btnP14;
+    private javax.swing.JButton btnP15;
+    private javax.swing.JButton btnP16;
+    private javax.swing.JButton btnP17;
+    private javax.swing.JButton btnP18;
+    private javax.swing.JButton btnP19;
+    private javax.swing.JButton btnP2;
+    private javax.swing.JButton btnP20;
+    private javax.swing.JButton btnP21;
+    private javax.swing.JButton btnP22;
+    private javax.swing.JButton btnP23;
+    private javax.swing.JButton btnP24;
+    private javax.swing.JButton btnP25;
+    private javax.swing.JButton btnP26;
+    private javax.swing.JButton btnP27;
+    private javax.swing.JButton btnP28;
+    private javax.swing.JButton btnP29;
+    private javax.swing.JButton btnP3;
+    private javax.swing.JButton btnP30;
+    private javax.swing.JButton btnP31;
+    private javax.swing.JButton btnP32;
+    private javax.swing.JButton btnP4;
+    private javax.swing.JButton btnP5;
+    private javax.swing.JButton btnP6;
+    private javax.swing.JButton btnP7;
+    private javax.swing.JButton btnP8;
+    private javax.swing.JButton btnP9;
     private javax.swing.JButton btnPayment;
     private javax.swing.JButton btnPrintKic;
     private javax.swing.JButton btnSplit;
@@ -4504,292 +4601,83 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
-//----------SetupMenu-----------------------
-    private void setupMenu() { //คำสั่งกำหนด Buttom เมนูอาหาร
-        clearPanelMenu();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
-        loadHeaderMenu();
-        String[] menuAt = new String[]{"A", "B"};
-        final JPanel[] panel = new JPanel[]{pMenu1, pMenu2};
-        final int sizeButtonFix = 15;
+    private void loadButtonProductMenu(String menuCode) {
+        ButtonCustom buttonCustom = new ButtonCustom();
+        JButton[] btnGrid = new JButton[]{
+            btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
+            btnP9, btnP10, btnP11, btnP12, btnP13, btnP14, btnP15, btnP16
+        };
+        for (JButton btn : btnGrid) {
+            btn = buttonCustom.buttonDefault(btn);
+        }
+        List<MenuMGR> listMenu = buttonCustom.getDataButtonLayout(menuCode);
+        for (int i = 0; i < listMenu.size(); i++) {
+            MenuMGR menu = listMenu.get(i);
+            if (menu.getMenuCode().length() >= 4) {
+                btnGrid[15].setText("กลับ");
+            }
+            btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
+            btnGrid[menu.getMIndex()].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn = (JButton) e.getSource();
+                    System.out.println(btn.getName());
+                    if (menu.getPCode().equals("")) {
+                        loadButtonProductMenu(menu.getMenuCode());
+                    } else if (!txtCust.getText().trim().equals("")) {
+                        addProductFromButtonMenu(menu.getPCode());
+                    }
+                }
+            });
+        }
         
-        for (int a = 0; a < menuAt.length; a++) {  //การเพิ่ม Button ในเมนู Item
-            for (int b = 0; b < sizeButtonFix; b++) {
-                String MCode;
-                if ((b + 1) < 10) {
-                    MCode = menuAt[a] + "0" + (b + 1);
+        // add back button
+        btnGrid[15].setText("กลับ");
+        btnGrid[15].setFocusable(false);
+        btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+        btnGrid[15].setBackground(Color.RED);
+        btnGrid[15].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadButtonProductMenu("A");
+            }
+        });
+    }
+
+    private void addProductFromButtonMenu(String PCode) {
+        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
+        if (findPluCode()) {
+            if (PublicVar.P_Status.equals("S")) {
+                getPrice();
+            } else {
+                //สามารถเลือกจำนวนได้เลย
+                double qtySet;
+                if (Value.autoqty) {
+                    GetQty frm = new GetQty(null, true, txtPluCode.getText());
+                    frm.setVisible(true);
+
+                    qtySet = frm.ReturnQty;
                 } else {
-                    MCode = menuAt[a] + (b + 1);
+                    qtySet = PublicVar.P_Qty;
                 }
 
-                final JButton btn1 = ButtonCustom.getButtonLayout(MCode, b);
-                btn1.setFocusable(false);
-                btn1.setOpaque(false);
-
-                addMouseEvent(btn1, b);
-                btn1.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String customerCount = txtCust.getText();
-                        int cusInt = 0;
-                        try {
-                            cusInt = Integer.parseInt(customerCount);
-                        } catch (NumberFormatException e1) {
-                            System.err.println(e1.getMessage());
-                        }
-
-                        if (cusInt > 0) {
-                            if (btn1.getText() == null) {
-                                return;
-                            }
-                            if (!showPopupOption(btn1.getName())) {
-                                return;
-                            }
-                            String[] data = checkGroup(btn1.getName());
-                            if (data[0].equals("1")) {
-                                String PCode = data[1];
-                                addProductFromButtonMenu(PCode);
-                                return;
-                            }
-                            
-                            addHistory(tbpMain.getSelectedIndex());
-                            pSubMenu1.removeAll();
-
-                            String MCode2;
-                            for (int c = 0; c < sizeButtonFix; c++) {
-                                if ((c + 1) < 10) {
-                                    MCode2 = btn1.getName() + "0" + (c + 1);
-                                } else {
-                                    MCode2 = btn1.getName() + (c + 1);
-                                }
-
-                                final JButton btn2 = ButtonCustom.getButtonLayout(MCode2, c);
-                                btn2.setFocusable(false);
-                                addMouseEvent(btn2, c);
-                                btn2.setName(MCode2);
-                                pSubMenu1.add(btn2);
-                                tbpMain.setSelectedIndex(9);
-
-                                btn2.addActionListener(new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        if (btn2.getText() == null) {
-                                            return;
-                                        }
-
-                                        if (!showPopupOption(btn2.getName())) {
-                                            return;
-                                        }
-                                        String[] data = checkGroup(btn2.getName());
-
-                                        //add product
-                                        if (data[0].equals("1")) {
-                                            String PCode = data[1];
-                                            addProductFromButtonMenu(PCode);
-                                            return;
-                                        }
-                                        
-                                        addHistory(9);
-                                        addHistory(tbpMain.getSelectedIndex());
-                                        pSubMenu2.removeAll();
-
-                                        String MCode3;
-                                        for (int d = 0; d < sizeButtonFix; d++) {
-                                            if ((d + 1) < 10) {
-                                                MCode3 = btn2.getName() + "0" + (d + 1);
-                                            } else {
-                                                MCode3 = btn2.getName() + (d + 1);
-                                            }
-
-                                            final JButton btn3 = ButtonCustom.getButtonLayout(MCode3, d);
-                                            btn3.setFocusable(false);
-                                            addMouseEvent(btn3, d);
-                                            btn3.setName(MCode3);
-                                            pSubMenu2.add(btn3);
-                                            tbpMain.setSelectedIndex(10);
-
-                                            btn3.addActionListener(new ActionListener() {
-
-                                                @Override
-                                                public void actionPerformed(ActionEvent e) {
-                                                    if (btn3.getText() == null) {
-                                                        return;
-                                                    }
-                                                    if (!showPopupOption(btn3.getName())) {
-                                                        return;
-                                                    }
-                                                    String[] data = checkGroup(btn3.getName());
-                                                    // add product
-                                                    if (data[0].equals("1")) {
-                                                        String PCode = data[1];
-                                                        addProductFromButtonMenu(PCode);
-                                                        return;
-                                                    }
-                                                    
-                                                    addHistory(10);
-                                                    addHistory(tbpMain.getSelectedIndex());
-                                                    pSubMenu3.removeAll();
-
-                                                    String MCode4;
-                                                    for (int f = 0; f < sizeButtonFix; f++) {
-                                                        if ((f + 1) < 10) {
-                                                            MCode4 = btn3.getName() + "0" + (f + 1);
-                                                        } else {
-                                                            MCode4 = btn3.getName() + (f + 1);
-                                                        }
-                                                        final JButton btn4 = ButtonCustom.getButtonLayout(MCode4, f);
-                                                        btn4.setFocusable(false);
-                                                        addMouseEvent(btn4, f);
-                                                        btn4.setName(MCode4);
-                                                        btn4.addActionListener(new ActionListener() {
-
-                                                            @Override
-                                                            public void actionPerformed(ActionEvent e) {
-                                                                if (btn4.getText() == null) {
-                                                                    return;
-                                                                }
-
-                                                                if (!showPopupOption(btn4.getName())) {
-                                                                    return;
-                                                                }
-
-                                                                String[] data = checkGroup(btn4.getName());
-                                                                if (data[0].equals("1") && !data[1].equals("")) {
-                                                                    //add Product
-                                                                    String PCode = data[1];
-                                                                    addProductFromButtonMenu(PCode);
-                                                                }
-                                                            }
-                                                        });
-                                                        pSubMenu3.add(btn4);
-                                                        tbpMain.setSelectedIndex(11);
-                                                    }
-
-                                                    JButton btnBack = new JButton("กลับ");
-                                                    btnBack.setFocusable(false);
-                                                    btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                                                    btnBack.setBackground(Color.RED);
-                                                    btnBack.addActionListener(new ActionListener() {
-
-                                                        @Override
-                                                        public void actionPerformed(ActionEvent e) {
-                                                            backHistory();
-                                                        }
-                                                    });
-                                                    pSubMenu3.add(btnBack);
-
-                                                }
-
-                                            });
-                                        }
-
-                                        JButton btnBack = new JButton("กลับ");
-                                        btnBack.setFocusable(false);
-                                        btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                                        btnBack.setBackground(Color.RED);
-                                        btnBack.addActionListener(new ActionListener() {
-
-                                            @Override
-                                            public void actionPerformed(ActionEvent e) {
-                                                backHistory();
-                                            }
-                                        });
-                                        pSubMenu2.add(btnBack);
-
-                                    }
-                                });
-                            }
-
-                            JButton btnBack = new JButton("กลับ");
-                            btnBack.setFocusable(false);
-                            btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                            btnBack.setBackground(Color.RED);
-                            btnBack.addActionListener(new ActionListener() {
-
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    backHistory();
-                                }
-                            });
-                            pSubMenu1.add(btnBack);
-                        }
-                    }
-
-                    private String[] checkGroup(String MenuCode) {
-                        String[] data = new String[]{"", ""};
-                        /**
-                         * * OPEN CONNECTION **
-                         */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
-                        try {
-                            String sql = "select MenuType, PCode "
-                                    + "from soft_menusetup where MenuCode='" + MenuCode + "'";
-                            Statement stmt = mysql.getConnection().createStatement();
-                            ResultSet rs = stmt.executeQuery(sql);
-                            if (rs.next()) {
-                                String MenuType = rs.getString("MenuType");
-                                String PCode = rs.getString("PCode");
-                                data[0] = MenuType;
-                                data[1] = PCode;
-                            }
-
-                            rs.close();
-                            stmt.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
-                        } finally {
-                            mysql.close();
-                        }
-
-                        return data;
-                    }
-
-                    private void addProductFromButtonMenu(String PCode) {
-                        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
-                        if (findPluCode()) {
+                if (!txtPluCode.getText().trim().equals("")) {
+                    if (qtySet > 0) {
+                        txtPluCode.setText("" + qtySet + "*" + PCode);
+                        if (seekPluCode()) {
                             if (PublicVar.P_Status.equals("S")) {
                                 getPrice();
                             } else {
-                                //สามารถเลือกจำนวนได้เลย
-                                double qtySet = 0;
-                                if (Value.autoqty) {
-                                    GetQty frm = new GetQty(null, true, txtPluCode.getText());
-                                    frm.setVisible(true);
-
-                                    qtySet = frm.ReturnQty;
-                                } else {
-                                    qtySet = PublicVar.P_Qty;
-                                }
-
-                                if (!txtPluCode.getText().trim().equals("")) {
-                                    if (qtySet > 0) {
-                                        txtPluCode.setText("" + qtySet + "*" + PCode);
-                                        if (seekPluCode()) {
-                                            if (PublicVar.P_Status.equals("S")) {
-                                                getPrice();
-                                            } else {
-                                                txtPluCodeOnExit();
-                                            }
-                                        }
-                                    } else {
-                                        txtPluCode.setText("");
-                                        txtPluCode.requestFocus();
-                                    }
-                                }
+                                txtPluCodeOnExit();
                             }
                         }
+                    } else {
+                        txtPluCode.setText("");
+                        txtPluCode.requestFocus();
                     }
-
-                });
-                panel[a].add(btn1);
+                }
             }
-
-            panel[a].add(new JButton());
         }
-
     }
 
     private void addHistory(int index) {
@@ -4804,17 +4692,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
         if (!isExists) {
             historyBack.add(index);
-        }
-    }
-
-    private void backHistory() {
-        int size = historyBack.size();
-        if (size > 0) {
-            tbpMain.setSelectedIndex(historyBack.get(size - 1));
-            historyBack.remove(size - 1);
-        } else {
-            clearHistory();
-            tbpMain.setSelectedIndex(0);
         }
     }
 
@@ -5025,7 +4902,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             cc = Integer.parseInt(customerCount);
         } catch (NumberFormatException e) {
         }
-        
+
         if (PublicVar.defaultCustomer.equals("true")) {
             int cuscount = Integer.parseInt(PublicVar.defaultCustomerQty);
             cc = cuscount;
