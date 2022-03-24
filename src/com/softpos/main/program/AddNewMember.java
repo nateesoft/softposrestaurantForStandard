@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import util.DateUtilities;
+import util.DateUtil;
 import util.MSG;
 
 public class AddNewMember extends javax.swing.JDialog {
@@ -726,8 +726,8 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             int newYear = (Integer.parseInt(TempYear)) + 2;
             M_End.setText(TempDate + "/" + TempMonth + "/" + newYear);
             Calendar cal = PUtility.StrToCalendar(M_End.getText());
-            cal.set(Calendar.DAY_OF_MONTH, DateUtilities.getMaxDay((GregorianCalendar) cal));
-            intday = DateUtilities.getMaxDay((GregorianCalendar) cal);
+            cal.set(Calendar.DAY_OF_MONTH, DateUtil.getMaxDay((GregorianCalendar) cal));
+            intday = DateUtil.getMaxDay((GregorianCalendar) cal);
             TempDate = DayFmt.format(intday);
             M_End.setText(TempDate + "/" + TempMonth + "/" + newYear);
             Calendar cal2 = Calendar.getInstance();
@@ -1005,8 +1005,8 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         //TempYear = newYear.
                         M_End.setText(TempDate + "/" + TempMonth + "/" + newYear);
                         Calendar cal2 = PUtility.StrToCalendar(M_End.getText());
-                        cal2.set(Calendar.DAY_OF_MONTH, DateUtilities.getMaxDay((GregorianCalendar) cal));
-                        int intday = DateUtilities.getMaxDay((GregorianCalendar) cal);
+                        cal2.set(Calendar.DAY_OF_MONTH, DateUtil.getMaxDay((GregorianCalendar) cal));
+                        int intday = DateUtil.getMaxDay((GregorianCalendar) cal);
                         TempDate = DayFmt.format(intday);
                         M_End.setText(TempDate + "/" + TempMonth + "/" + newYear);
 

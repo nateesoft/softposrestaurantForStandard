@@ -69,6 +69,7 @@ public class Login extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        lbVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Login Sale System www.softpos.co.th tel.02-116-6615 Hotline: 086-320-3877");
@@ -255,6 +256,10 @@ public class Login extends javax.swing.JDialog {
         jLabel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 770));
 
+        lbVersion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbVersion.setText("Update: 24/03/2022");
+        jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -405,6 +410,7 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbPass;
     private javax.swing.JLabel lbUser;
+    private javax.swing.JLabel lbVersion;
     private javax.swing.JProgressBar pbCheckUpdate;
     private javax.swing.JTextField txtMacNo;
     private javax.swing.JPasswordField txtPass;
@@ -487,7 +493,7 @@ public class Login extends javax.swing.JDialog {
                         }
                     } else {
                         try {
-                            String SQLposhwsetupCheckOnact = "select onact onact from poshwsetup where terminal='" + Value.MACNO + "';";
+                            String SQLposhwsetupCheckOnact = "select onact from poshwsetup where terminal='" + Value.MACNO + "';";
                             ResultSet rsPOSHWOnAct = mysql.getConnection().createStatement().executeQuery(SQLposhwsetupCheckOnact);
                             if (rsPOSHWOnAct.next()) {
                                 String POSOnActCheck = rsPOSHWOnAct.getString("onact");
@@ -515,6 +521,7 @@ public class Login extends javax.swing.JDialog {
                                         UpdateLogin(loginname);
                                         PosHwSetupOnAct("Y");
                                         Value.USERCODE = txtUser.getText();
+                                        PublicVar.Branch_Code = BranchControl.getData().getCode();
 
                                         dispose();
                                         FloorPlanDialog floorPlan = new FloorPlanDialog();

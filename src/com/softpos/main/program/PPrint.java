@@ -40,7 +40,9 @@ import javax.print.attribute.standard.PrinterName;
 import javax.swing.JOptionPane;
 import sun.natee.project.util.NumberFormat;
 import sun.natee.project.util.ThaiUtil;
+import util.DateUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class PPrint {
 
@@ -1022,9 +1024,9 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "สมาชิก - " + bBean.getB_MemCode()) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + ThaiUtil.ASCII2Unicode(bBean.getB_MemName())) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มครั้งนี้ :           "+(int)bBean.getB_MemCurSum()+" แต้ม") + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มสะสมถึง  --- -- ----   "+(int)bBean.getB_SumScore()+" แต้ม") + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   บัตรหมดอายุวันที่ : " + ShowDatefmt.format(bBean.getB_MemEnd())) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มครั้งนี้ :           " + NumberUtil.showNumber(bBean.getB_MemCurSum()) + " แต้ม") + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มสะสมถึง  --- -- ----   " + NumberUtil.showNumber(bBean.getB_SumScore()) + " แต้ม") + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   บัตรหมดอายุวันที่ : " + DateUtil.toDateLocal(bBean.getB_MemEnd())) + "_";
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
             t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Receipt No: " + _RefNo + Space + "COM:" + Space + bBean.getB_MacNo()) + "_";
@@ -1432,9 +1434,9 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "สมาชิก - " + bBean.getB_MemCode()) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + ThaiUtil.ASCII2Unicode(bBean.getB_MemName())) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   แต้มครั้งนี้ :           0 แต้ม") + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   แต้มสะสมถึง  --- -- ----   0 แต้ม") + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   บัตรหมดอายุวันที่ : " + ShowDatefmt.format(bBean.getB_MemEnd())) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   แต้มครั้งนี้ :           " + NumberUtil.showNumber(bBean.getB_MemCurSum()) + " แต้ม") + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   แต้มสะสมถึง  --- -- ----   " + NumberUtil.showNumber(bBean.getB_SumScore()) + " แต้ม") + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "   บัตรหมดอายุวันที่ : " + DateUtil.toDateLocal(bBean.getB_MemEnd())) + "_";
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
             t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Receipt No: " + _RefNo) + "_";
@@ -1772,9 +1774,9 @@ public class PPrint {
                         print("----------------------------------------");
                         print("สมาชิก - " + bBean.getB_MemCode());
                         print(ThaiUtil.ASCII2Unicode(bBean.getB_MemName()));
-                        print("   แต้มครั้งนี้ :           0 แต้ม");
-                        print("   แต้มสะสมถึง  --- -- ----   0 แต้ม");
-                        print("   บัตรหมดอายุวันที่ : " + ShowDatefmt.format(bBean.getB_MemEnd()));
+                        print("   แต้มครั้งนี้ :           " + NumberUtil.showNumber(bBean.getB_MemCurSum()) + " แต้ม");
+                        print("   แต้มสะสมถึง  --- -- ----   " + NumberUtil.showNumber(bBean.getB_SumScore()) + " แต้ม");
+                        print("   บัตรหมดอายุวันที่ : " + DateUtil.toDateLocal(bBean.getB_MemEnd()));
                     }
 
                     print("----------------------------------------");

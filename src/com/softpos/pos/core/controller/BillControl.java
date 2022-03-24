@@ -35,6 +35,7 @@ import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.MemmaterController;
 import java.text.DecimalFormat;
 import util.DateConvert;
+import util.DateUtil;
 
 public class BillControl {
 
@@ -179,48 +180,52 @@ public class BillControl {
         mysql.open();
         DateConvert dc = new DateConvert();
         try {
-            String sqlGetLoginTime = "select r_time from balance where r_table='" + bean.getB_Table() + "' order by r_index;";
+            String sqlGetLoginTime = "select r_time from balance "
+                    + "where r_table='" + bean.getB_Table() + "' "
+                    + "order by r_index;";
             ResultSet rsLGT = mysql.getConnection().createStatement().executeQuery(sqlGetLoginTime);
             if (rsLGT.next()) {
                 blBean.setLoginTime(rsLGT.getString("r_time"));
             }
             String sql = "insert into billno "
-                    + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,B_PostDate,"
-                    + "B_Table,B_MacNo,B_Cashier,B_Cust,B_ETD,B_Total,B_Food,B_Drink,B_Product,"
-                    + "B_Service,B_ServiceAmt,B_ItemDiscAmt,B_FastDisc,B_FastDiscAmt,B_EmpDisc,"
-                    + "B_EmpDiscAmt,B_TrainDisc,B_TrainDiscAmt,B_MemDisc,B_MemDiscAmt,B_SubDisc,"
-                    + "B_SubDiscAmt,B_SubDiscBath,B_ProDiscAmt,B_SpaDiscAmt,B_AdjAmt,B_PreDisAmt,"
-                    + "B_NetTotal,B_NetFood,B_NetDrink,B_NetProduct,B_NetVat,B_NetNonVat,B_Vat,"
-                    + "B_PayAmt,B_Cash,B_GiftVoucher,B_Earnest,B_Ton,B_CrCode1,B_CardNo1,B_AppCode1,"
-                    + "B_CrCharge1,B_CrChargeAmt1,B_CrAmt1,B_AccrCode,B_AccrAmt,B_AccrCr,B_MemCode,"
-                    + "B_MemName,B_MemBegin,B_MemEnd,B_MemCurSum,B_Void,B_VoidUser,B_VoidTime,"
-                    + "B_BillCopy,B_PrnCnt,B_PrnTime1,B_PrnTime2,B_InvNo,B_InvType,B_Bran,B_BranName,"
-                    + "B_Tel,B_RecTime,MStamp,MScore,CurStamp,StampRate,B_ChkBill,B_ChkBillTime,"
-                    + "B_CashTime,B_WaitTime,B_SumScore,B_CrBank,B_CrCardAmt,B_CrCurPoint,"
-                    + "B_CrSumPoint,B_Entertain,B_VoucherDiscAmt,B_VoucherOver,B_NetDiff,"
-                    + "B_SumSetDiscAmt,B_DetailFood,B_DetailDrink,B_DetailProduct,B_KicQue,B_ROUNDCLOSE)  "
+                    + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,"
+                    + "B_PostDate,B_Table,B_MacNo,B_Cashier,B_Cust,"
+                    + "B_ETD,B_Total,B_Food,B_Drink,B_Product,"
+                    + "B_Service,B_ServiceAmt,B_ItemDiscAmt,B_FastDisc,B_FastDiscAmt,"
+                    + "B_EmpDisc,B_EmpDiscAmt,B_TrainDisc,B_TrainDiscAmt,B_MemDisc,"
+                    + "B_MemDiscAmt,B_SubDisc,B_SubDiscAmt,B_SubDiscBath,B_ProDiscAmt,"
+                    + "B_SpaDiscAmt,B_AdjAmt,B_PreDisAmt,B_NetTotal,B_NetFood,"
+                    + "B_NetDrink,B_NetProduct,B_NetVat,B_NetNonVat,B_Vat,"
+                    + "B_PayAmt,B_Cash,B_GiftVoucher,B_Earnest,B_Ton,"
+                    + "B_CrCode1,B_CardNo1,B_AppCode1,B_CrCharge1,B_CrChargeAmt1,"
+                    + "B_CrAmt1,B_AccrCode,B_AccrAmt,B_AccrCr,B_MemCode,"
+                    + "B_MemName,B_MemBegin,B_MemEnd,B_MemCurSum,B_Void,"
+                    + "B_VoidUser,B_VoidTime,B_BillCopy,B_PrnCnt,B_PrnTime1,"
+                    + "B_PrnTime2,B_InvNo,B_InvType,B_Bran,B_BranName,"
+                    + "B_Tel,B_RecTime,MStamp,MScore,CurStamp,"
+                    + "StampRate,B_ChkBill,B_ChkBillTime,B_CashTime,B_WaitTime,"
+                    + "B_SumScore,B_CrBank,B_CrCardAmt,B_CrCurPoint,B_CrSumPoint,"
+                    + "B_Entertain,B_VoucherDiscAmt,B_VoucherOver,B_NetDiff,B_SumSetDiscAmt,"
+                    + "B_DetailFood,B_DetailDrink,B_DetailProduct,B_KicQue,B_ROUNDCLOSE)  "
                     + "values('" + bean.getB_Refno() + "','" + bean.getB_CuponDiscAmt() + "',curtime(),'" + blBean.getLoginTime() + "',curdate(),"
                     + "'" + Value.getDateDefault() + "','" + bean.getB_Table() + "','" + bean.getB_MacNo() + "','" + Value.CASHIER + "','" + bean.getB_Cust() + "',"
                     + "'" + bean.getB_ETD() + "','" + bean.getB_Total() + "','" + bean.getB_Food() + "','" + bean.getB_Drink() + "','" + bean.getB_Product() + "',"
-                    + "'" + bean.getB_Service() + "','" + bean.getB_ServiceAmt() + "','" + bean.getB_ItemDiscAmt() + "','" + bean.getB_FastDisc() + "',"
-                    + "'" + bean.getB_FastDiscAmt() + "','" + bean.getB_EmpDisc() + "','" + bean.getB_EmpDiscAmt() + "','" + bean.getB_TrainDisc() + "',"
-                    + "'" + bean.getB_TrainDiscAmt() + "','" + bean.getB_MemDisc() + "','" + bean.getB_MemDiscAmt() + "','" + bean.getB_SubDisc() + "',"
-                    + "'" + bean.getB_SubDiscAmt() + "','" + bean.getB_SubDiscBath() + "','" + bean.getB_ProDiscAmt() + "','" + bean.getB_SpaDiscAmt() + "',"
-                    + "'" + bean.getB_AdjAmt() + "','" + bean.getB_PreDisAmt() + "','" + bean.getB_NetTotal() + "','" + bean.getB_NetFood() + "',"
-                    + "'" + bean.getB_NetDrink() + "','" + bean.getB_NetProduct() + "','" + bean.getB_NetVat() + "','" + bean.getB_NetNonVat() + "',"
-                    + "'" + bean.getB_Vat() + "','" + bean.getB_PayAmt() + "','" + bean.getB_Cash() + "','" + bean.getB_GiftVoucher() + "','" + bean.getB_Earnest() + "',"
-                    + "'" + bean.getB_Ton() + "','" + bean.getB_CrCode1() + "','" + bean.getB_CardNo1() + "','" + bean.getB_AppCode1() + "','" + bean.getB_CrCharge1() + "',"
-                    + "'" + bean.getB_CrChargeAmt1() + "','" + bean.getB_CrAmt1() + "','" + bean.getB_AccrCode() + "','" + bean.getB_AccrAmt() + "','" + bean.getB_AccrCr() + "',"
-                    + "'" + bean.getB_MemCode() + "','" + bean.getB_MemName() + "','" + Value.getDateDefault() + "','" + Value.getDateDefault() + "','" + bean.getB_MemCurSum() + "',"
-                    + "'" + bean.getB_Void() + "','" + bean.getB_VoidUser() + "','" + bean.getB_VoidTime() + "','" + bean.getB_BillCopy() + "','" + bean.getB_PrnCnt() + "',"
-                    + "'" + bean.getB_PrnTime1() + "','" + bean.getB_PrnTime2() + "','" + bean.getB_InvNo() + "','" + bean.getB_InvType() + "','" + bean.getB_Bran() + "',"
-                    + "'" + bean.getB_BranName() + "','" + bean.getB_Tel() + "','" + bean.getB_RecTime() + "','" + bean.getMStamp() + "','" + bean.getMScore() + "',"
-                    + "'" + bean.getCurStamp() + "','" + bean.getStampRate() + "','" + bean.getB_ChkBill() + "','" + bean.getB_ChkBillTime() + "','" + bean.getB_CashTime() + "',"
-                    + "'" + bean.getB_WaitTime() + "','" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "',"
-                    + "'" + bean.getB_CrSumPoint() + "','" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "',"
-                    //                    + "'" + bean.getB_CrSumPoint() + "','" + PublicVar.b_entertain + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "',"
-                    + "'" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "','" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "',"
-                    + "'" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
+                    + "'" + bean.getB_Service() + "','" + bean.getB_ServiceAmt() + "','" + bean.getB_ItemDiscAmt() + "','" + bean.getB_FastDisc() + "','" + bean.getB_FastDiscAmt() + "',"
+                    + "'" + bean.getB_EmpDisc() + "','" + bean.getB_EmpDiscAmt() + "','" + bean.getB_TrainDisc() + "','" + bean.getB_TrainDiscAmt() + "','" + bean.getB_MemDisc() + "',"
+                    + "'" + bean.getB_MemDiscAmt() + "','" + bean.getB_SubDisc() + "','" + bean.getB_SubDiscAmt() + "','" + bean.getB_SubDiscBath() + "','" + bean.getB_ProDiscAmt() + "',"
+                    + "'" + bean.getB_SpaDiscAmt() + "','" + bean.getB_AdjAmt() + "','" + bean.getB_PreDisAmt() + "','" + bean.getB_NetTotal() + "','" + bean.getB_NetFood() + "',"
+                    + "'" + bean.getB_NetDrink() + "','" + bean.getB_NetProduct() + "','" + bean.getB_NetVat() + "','" + bean.getB_NetNonVat() + "','" + bean.getB_Vat() + "',"
+                    + "'" + bean.getB_PayAmt() + "','" + bean.getB_Cash() + "','" + bean.getB_GiftVoucher() + "','" + bean.getB_Earnest() + "','" + bean.getB_Ton() + "',"
+                    + "'" + bean.getB_CrCode1() + "','" + bean.getB_CardNo1() + "','" + bean.getB_AppCode1() + "','" + bean.getB_CrCharge1() + "','" + bean.getB_CrChargeAmt1() + "',"
+                    + "'" + bean.getB_CrAmt1() + "','" + bean.getB_AccrCode() + "','" + bean.getB_AccrAmt() + "','" + bean.getB_AccrCr() + "','" + bean.getB_MemCode() + "',"
+                    + "'" + bean.getB_MemName() + "','" + DateUtil.toMySqlInsert(bean.getB_MemBegin()) + "','" + DateUtil.toMySqlInsert(bean.getB_MemEnd()) + "','" + bean.getB_MemCurSum() + "','" + bean.getB_Void() + "',"
+                    + "'" + bean.getB_VoidUser() + "','" + bean.getB_VoidTime() + "','" + bean.getB_BillCopy() + "','" + bean.getB_PrnCnt() + "','" + bean.getB_PrnTime1() + "',"
+                    + "'" + bean.getB_PrnTime2() + "','" + bean.getB_InvNo() + "','" + bean.getB_InvType() + "','" + bean.getB_Bran() + "','" + bean.getB_BranName() + "',"
+                    + "'" + bean.getB_Tel() + "','" + bean.getB_RecTime() + "','" + bean.getMStamp() + "','" + bean.getMScore() + "','" + bean.getCurStamp() + "',"
+                    + "'" + bean.getStampRate() + "','" + bean.getB_ChkBill() + "','" + bean.getB_ChkBillTime() + "','" + bean.getB_CashTime() + "','" + bean.getB_WaitTime() + "',"
+                    + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
+                    + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
+                    + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
@@ -599,6 +604,8 @@ public class BillControl {
                         billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
                         billNo.setB_MemCurSum(currentMemberScore);
                         billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
+                        billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
+                        billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
                     }
                 }
                 billNo.setMStamp("");
@@ -999,6 +1006,8 @@ public class BillControl {
                     billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
                     billNo.setB_MemCurSum(currentMemberScore);
                     billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
+                    billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
+                    billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
                 }
             }
             billNo.setMStamp("");

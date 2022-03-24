@@ -62,7 +62,7 @@ public class MemmaterController {
         mTranBean.setDiscountAmount(billBean.getB_MemDiscAmt());
         mTranBean.setNetAmount(billBean.getB_NetTotal());
         mTranBean.setMechine_Code(billBean.getB_MacNo());
-        mTranBean.setEmployee_Code(billBean.getB_Cashier());
+        mTranBean.setEmployee_Code(Value.USERCODE);
         mTranBean.setService_Time(billBean.getB_Ontime());
         mTranBean.setScore(pointTotal);
         mTranBean.setTranferFlag("N");
@@ -79,7 +79,7 @@ public class MemmaterController {
             MPluBean pluBean = new MPluBean();
             pluBean.setService_Date(tSaleBean.getR_Date());
             pluBean.setMember_Code(mTranBean.getMember_Code());
-            pluBean.setBranch_Code(tSaleBean.getR_BranchCode());
+            pluBean.setBranch_Code(PublicVar.Branch_Code);
             pluBean.setReceipt_No(mTranBean.getReceipt_No());
             pluBean.setPLU_Group(tSaleBean.getR_Group());
             pluBean.setSale_Type(tSaleBean.getR_ETD());
