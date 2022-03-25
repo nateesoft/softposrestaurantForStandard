@@ -650,20 +650,16 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 } finally {
                     mysql.close();
                 }
 
                 // backup tmp
                 tmpTableBeforeMove(txtTable1.getText().toUpperCase());
-
                 TableMoveControl.moveTable(txtTable1.getText().toUpperCase(), txtTable2.getText().toUpperCase());
 
                 //คำนวณโปรโมชัน + ค่าบริการ และคำนวณภาษีมูลค่าเพิ่ม
                 BalanceControl.updateProSerTable(txtTable2.getText().toUpperCase(), null);
-                //printBillCheck();
-
                 String strKic = "";
                 /*
                  ค้นหาปริ้นเตอร์ในตารางนั้นๆ ก่อนว่ามีปริ้นเตอร์อะไรบ้าง ที่จะต้องปริ้นออก
@@ -681,7 +677,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 } finally {
                     mysql.close();
                 }
@@ -949,7 +944,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -1037,13 +1031,12 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 "create table if not exists tmp_balance select * from balance where r_table = '" + table + "';"
             };
             Statement stmt = mysql.getConnection().createStatement();
-            for (int i = 0; i < sql.length; i++) {
-                stmt.executeUpdate(sql[i]);
+            for (String sql1 : sql) {
+                stmt.executeUpdate(sql1);
             }
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

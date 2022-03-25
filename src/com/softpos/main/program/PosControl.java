@@ -23,7 +23,6 @@ public class PosControl {
     }
 
     public static CompanyBean getDataCompany() {
-//        System.out.println("CompanyBean getDataCompany()");
         if (companyBean != null) {
             return companyBean;
         }
@@ -89,7 +88,6 @@ public class PosControl {
     }
 
     public static POSConfigSetup getData() {
-//        System.out.println("POSConfigSetup getData()");
         if (posConfigSetup != null) {
             return posConfigSetup;
         }
@@ -168,7 +166,6 @@ public class PosControl {
     }
 
     public static POSHWSetup getData(String macno) {
-//        System.out.println("POSHWSetup getData(String macno) => " + macno);
         if (poshwsetup != null) {
             return poshwsetup;
         }
@@ -275,25 +272,6 @@ public class PosControl {
     }
 
     public static int getRefreshTime() {
-        int refrechTime = 1;
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select P_RefreshTime from posconfigsetup";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                if (rs.next()) {
-                    refrechTime = rs.getInt("P_RefreshTime");
-                    if (refrechTime <= 0) {
-                        refrechTime = 1;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        return refrechTime;
+        return getData().getP_RefreshTime();
     }
-
 }

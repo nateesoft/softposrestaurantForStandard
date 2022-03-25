@@ -548,7 +548,6 @@ public class Login extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                e.printStackTrace();
                 clearlogin();
             } finally {
                 mysql.close();
@@ -625,12 +624,9 @@ public class Login extends javax.swing.JDialog {
                         pbCheckUpdate.setString("Check Update: (" + i + " %)");
                         try {
                             Thread.sleep(25);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (InterruptedException e) {
                         }
                     }
-
-//                    pbCheckUpdate.setString("SoftPOS Update:V8.2 29/05/2020 15:00");
                     pbCheckUpdate.setString("SoftPOS Update:V8.2 12/08/2020 00:35");
                 } catch (Exception e) {
                     MSG.ERR(e.toString());

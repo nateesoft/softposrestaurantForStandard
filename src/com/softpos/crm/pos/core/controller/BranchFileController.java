@@ -13,24 +13,25 @@ import util.MSG;
  * @author nathee
  */
 public class BranchFileController {
-    
+
+    public static void main(String[] args) {
+        BranchFileController.getData("001");
+    }
+
     public static BranchFileBean getData(String branchCode) {
         BranchFileBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-
         try {
             mysql.open();
-            String sql = "select * from " + Value.db_member + ".branfile where Branch_Code='" + branchCode + "'";
+            String sql = "select * from " + Value.db_member + ".branfile "
+                    + "where Branch_Code='" + branchCode + "'";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("BranchFileController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -40,9 +41,6 @@ public class BranchFileController {
 
     public static BranchFileBean getDataMemberPoint(String branchCode) {
         BranchFileBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
 
         try {
@@ -61,7 +59,7 @@ public class BranchFileController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("BranchFileController:" + e.getMessage());
         } finally {
             mysql.close();
         }

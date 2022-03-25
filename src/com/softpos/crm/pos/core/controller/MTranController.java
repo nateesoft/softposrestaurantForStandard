@@ -28,7 +28,7 @@ public class MTranController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MTranController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -75,7 +75,7 @@ public class MTranController {
                 resultCreate = stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MTranController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -94,7 +94,7 @@ public class MTranController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MTranController:" + e.getMessage());
         } finally {
             mysql.close();
         }

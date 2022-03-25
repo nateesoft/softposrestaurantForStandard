@@ -131,7 +131,7 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -201,7 +201,7 @@ public class ControlMenu {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         }
 
         ArrayList<MenuSetup> menuAll = new ArrayList<>();
@@ -400,7 +400,7 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

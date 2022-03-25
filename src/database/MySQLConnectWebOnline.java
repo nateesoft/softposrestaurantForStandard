@@ -173,7 +173,7 @@ public class MySQLConnectWebOnline {
                 fs.close();
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
         }
     }

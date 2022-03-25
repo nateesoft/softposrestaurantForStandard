@@ -1089,7 +1089,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     stmt1.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
+                    
                 }
 
                 txtShortName.setText(m.getMenuShowText());

@@ -64,7 +64,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -125,7 +125,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -182,7 +182,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -225,7 +225,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -262,7 +262,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }

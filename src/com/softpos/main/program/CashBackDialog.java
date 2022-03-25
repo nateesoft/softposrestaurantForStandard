@@ -258,7 +258,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             PrintReturnMoney(refStr);
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            e.printStackTrace();
+            
         }
     }
 

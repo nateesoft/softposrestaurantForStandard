@@ -517,7 +517,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

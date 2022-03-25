@@ -28,7 +28,7 @@ public class FTPUtility {
 //        try {
 //            ftp.upload("D:/Backup/Data/retail652/branch20210802.sql", "Data/branch20210802.sql");
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            
 //        }
 
 //    }
@@ -139,7 +139,7 @@ public class FTPUtility {
             return success;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            
             return false;
         }
     }

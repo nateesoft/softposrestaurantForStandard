@@ -54,9 +54,7 @@ public class PropControl {
             bean.setPassword(prop.getProperty("DB_PASS"));            
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT")));
             bean.setCharset(prop.getProperty("DB_CHARSET"));
-        } catch (IOException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             MSG.ERR(null, e.getMessage());
         }
         
@@ -74,9 +72,7 @@ public class PropControl {
             bean.setPassword(prop.getProperty("DB_PASS_CLIENT"));            
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT_CLIENT")));
             bean.setCharset(prop.getProperty("DB_CHARSET_CLIENT"));
-        } catch (IOException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             MSG.ERR(null, e.getMessage());
         }
         

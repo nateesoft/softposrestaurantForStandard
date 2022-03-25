@@ -113,7 +113,7 @@ public class ServiceControl {
             mysql.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         }
     }
 

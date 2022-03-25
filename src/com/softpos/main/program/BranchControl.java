@@ -26,7 +26,7 @@ public class BranchControl {
 //            stmt.close();
         } catch (Exception e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -225,7 +225,7 @@ public class BranchControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

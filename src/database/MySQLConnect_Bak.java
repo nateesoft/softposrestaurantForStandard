@@ -131,7 +131,7 @@ public class MySQLConnect_Bak {
             ds.close();
             fs.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            
             MSG.ERR(e.getMessage());
         }
     }
@@ -143,7 +143,7 @@ public class MySQLConnect_Bak {
             try {
                 return getStatement().executeQuery(sql);
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 showError(e);
                 return null;
             }
@@ -157,7 +157,7 @@ public class MySQLConnect_Bak {
             try {
                 return con.createStatement().executeUpdate(sql);
             } catch (SQLException e) {
-                e.printStackTrace();
+                
                 showError(e);
                 return -1;
             }
@@ -171,7 +171,7 @@ public class MySQLConnect_Bak {
             try {
                 return con.createStatement();
             } catch (SQLException e) {
-                e.printStackTrace();
+                
                 showError(e);
                 return null;
             }
@@ -186,7 +186,7 @@ public class MySQLConnect_Bak {
             try {
                 return con.prepareStatement(sql);
             } catch (SQLException e) {
-                e.printStackTrace();
+                
                 showError(e);
                 return null;
             }

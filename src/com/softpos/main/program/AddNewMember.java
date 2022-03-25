@@ -826,7 +826,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
+                    
                 } finally {
                     mysql.close();
                 }
@@ -878,7 +878,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        e.printStackTrace();
+                        
                     } finally {
                         mysql.close();
                     }
@@ -935,7 +935,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        e.printStackTrace();
+                        
                     } finally {
                         mysql.close();
                     }
@@ -1046,7 +1046,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR_MSG(this, e.getMessage());
-                    e.printStackTrace();
+                    
                 } finally{
                     mysql.close();
                 }
@@ -1081,7 +1081,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }

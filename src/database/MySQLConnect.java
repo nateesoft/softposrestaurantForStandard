@@ -166,7 +166,7 @@ public class MySQLConnect {
                 fs.close();
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
         }
     }
@@ -176,7 +176,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"startService.bat");
             System.out.println("MySQL server start successfully!");
         } catch (IOException e) {
-            e.printStackTrace();
+            
         }
     }
 
@@ -185,7 +185,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"stopService.bat");
             System.out.println("MySQL server stopped successfully!");
         } catch (IOException e) {
-            e.printStackTrace();
+            
         }
     }
 

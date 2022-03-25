@@ -20,11 +20,7 @@ public class MPluController {
 
     public static MPluBean getData(String branchCode) {
         MPluBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-
         try {
             mysql.open();
             String sql = "select * from " + Value.db_member + ".mplu "
@@ -35,7 +31,7 @@ public class MPluController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MPluController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -92,7 +88,7 @@ public class MPluController {
             prm.clearParameters();
             resultCreate = prm.executeBatch();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MPluController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -111,7 +107,7 @@ public class MPluController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("MPluController:" + e.getMessage());
         } finally {
             mysql.close();
         }

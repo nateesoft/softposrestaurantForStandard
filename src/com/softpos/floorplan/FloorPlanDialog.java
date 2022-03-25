@@ -984,7 +984,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1618,7 +1617,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            e.printStackTrace();
                         }
 
 //                        btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")" + r_time);
@@ -1775,7 +1773,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                     System.exit(0);
                 } finally {
                     mysql.close();
@@ -1792,8 +1789,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 mysql.getConnection().createStatement().executeUpdate(QryUpdatePosuser);
 
                 mysql.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             }
 
         }
@@ -1820,7 +1817,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
             return false;
         } finally {
             mysql.close();
@@ -1888,7 +1884,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1909,7 +1904,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 ms.setVisible(true);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -2020,21 +2014,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         mysql.close();
-    }
-
-    private void updateSQLStructure() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "ALTER TABLE temppromotion CHANGE PrType PrType CHAR(3)  NOT NULL;";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
     }
 
     class TableSetup {
@@ -2195,11 +2174,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                                     rs2.close();
                                     stmt2.close();
-                                } catch (Exception e1) {
+                                } catch (HeadlessException | SQLException e1) {
                                     login.setVisible(false);
-//                                    login.dispose();
                                     MSG.ERR(e1.getMessage());
-                                    e1.printStackTrace();
                                 }
                             } else {
                                 showPOS(tableNo);
@@ -2237,8 +2214,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 c.open();
                 c.getConnection().createStatement().executeUpdate(sql);
                 c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             }
             ms.setVisible(true);
 //            setVisible(true);
@@ -2484,7 +2461,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                             rs1.close();
                             stmt2.close();
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
                         }
                     }
@@ -2499,7 +2476,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 stmt2.close();
             } catch (Exception e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             }
 
             rs.close();
@@ -2541,7 +2517,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

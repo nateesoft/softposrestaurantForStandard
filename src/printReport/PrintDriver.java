@@ -54,16 +54,16 @@ public class PrintDriver {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
 //            MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } catch (IllegalAccessException e) {
 //            MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } catch (InstantiationException e) {
 //            MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } catch (UnsupportedLookAndFeelException e) {
 //            MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         }
     }
 
@@ -169,7 +169,7 @@ public class PrintDriver {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                e.printStackTrace();
+                
             } finally {
                 mysql.close();
             }
@@ -217,7 +217,7 @@ public class PrintDriver {
             output.write(text);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            
         } finally {
             if (output != null) {
                 try {
@@ -233,7 +233,6 @@ public class PrintDriver {
     public void printHTMLKitChen() {
         //Print Cashier
         String text = header + textAll + footer;
-        
         try {
             JEditorPane editor = new JEditorPane();
             editor.setContentType("text/html");
@@ -244,8 +243,7 @@ public class PrintDriver {
 
             editor.print(null, null, false, getPrinterKitchen(), attr, false);
         } catch (PrinterException ex) {
-            ex.printStackTrace();
-//            MSG.ERR(ex.getMessage());
+            MSG.ERR("printHTMLKitChen:" + ex.getMessage());
         }
         close();
     }

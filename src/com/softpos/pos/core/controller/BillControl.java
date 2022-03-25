@@ -161,7 +161,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -254,7 +254,7 @@ public class BillControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -293,7 +293,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -647,14 +647,12 @@ public class BillControl {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            e.printStackTrace();
                         }
                     }
 
                     rs.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 } finally {
                     mysql.close();
                 }
@@ -682,7 +680,6 @@ public class BillControl {
                     tcCon.clearTempOld(tcBean.getR_Index());
                 } catch (Exception e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 }
 
                 BillControl.updateNextBill();
@@ -1020,16 +1017,15 @@ public class BillControl {
                 if (rs.next()) {
                     String r_index = rs.getString("R_Index");
                     String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                    Statement stmt1 = ce.getConnection().createStatement();
-                    stmt1.executeUpdate(sqlUpdateT_sale);
-                    stmt1.close();
+                    try (Statement stmt1 = ce.getConnection().createStatement()) {
+                        stmt1.executeUpdate(sqlUpdateT_sale);
+                    }
                 }
                 stmt.close();
                 rs.close();
                 ce.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.NOTICE(e.toString());
-
             }
 
             BillControl.saveBillNo(billNo, memberBean);
@@ -1073,16 +1069,14 @@ public class BillControl {
                         Statement stmt1 = mysql.getConnection().createStatement();
                         stmt1.executeUpdate(sqlAdd);
                         stmt1.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        e.printStackTrace();
                     }
                 }
 
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -1110,12 +1104,11 @@ public class BillControl {
                 tcCon.clearTempOld(tcBean.getR_Index());
             } catch (Exception e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             }
 
             BillControl.updateNextBill();
             BranchControl.updateKicItemNo();
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             MSG.ERR(e.getMessage());
         }
         return BillNo;
@@ -1158,7 +1151,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -1264,7 +1257,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -1367,7 +1360,7 @@ public class BillControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -1587,7 +1580,7 @@ public class BillControl {
             rs1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -1716,7 +1709,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

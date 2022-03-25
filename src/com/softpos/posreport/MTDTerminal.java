@@ -1327,7 +1327,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 c.close();
             }
         }
@@ -1877,7 +1877,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             listObj.add(new Object[]{countb_refnoD});
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         }
 
         mysql.close();

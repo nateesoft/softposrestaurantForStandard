@@ -641,7 +641,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLayeredPane1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="jTabbedPane1" min="-2" pref="978" max="-2" attributes="0"/>
+              <Component id="jTabbedPane1" alignment="0" min="-2" pref="978" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

@@ -51,7 +51,6 @@ public class MemberControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         }
     }
 //    public void updateMemberDiscount(String table, MemberBean memberBean) {
@@ -162,7 +161,6 @@ public class MemberControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -243,7 +241,7 @@ public class MemberControl {
 //            rs.close();
 //        } catch (SQLException e) {
 //            MSG.ERR(e.getMessage());
-//            e.printStackTrace();
+//            
 //        }
 //    }
     public void updateMemVIPAllBalance(String table, String discountRate) {
@@ -323,7 +321,6 @@ public class MemberControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         }
     }
 

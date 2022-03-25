@@ -1570,7 +1570,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
             mysql.close();
@@ -1594,7 +1594,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
-        } catch (Exception e2) {
+        } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
         } finally {
             mysql.close();
@@ -2176,7 +2176,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                
             }
         }
         pd.printHTML();

@@ -193,7 +193,7 @@ public class GiftDialogList extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

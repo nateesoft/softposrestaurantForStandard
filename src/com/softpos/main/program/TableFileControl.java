@@ -464,11 +464,11 @@ public class TableFileControl {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
-            if (table.indexOf("-") != -1) {
+            if (table.contains("-")) {
                 sql = "delete from tablefile where Tcode='" + table + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
-                stmt1.executeUpdate(sql);
-                stmt1.close();
+                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    stmt1.executeUpdate(sql);
+                }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -503,7 +503,7 @@ public class TableFileControl {
             //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
             ServiceControl serviceControl = new ServiceControl();
             serviceControl.updateService(table);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         }
     }
@@ -628,7 +628,7 @@ public class TableFileControl {
             ServiceControl serviceControl = new ServiceControl();
             serviceControl.updateService(tableNo);
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         }
     }
@@ -759,7 +759,6 @@ public class TableFileControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

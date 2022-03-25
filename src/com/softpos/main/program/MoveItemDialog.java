@@ -474,7 +474,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            e.printStackTrace();
+                            
                         } finally {
                             mysql.close();
                         }
@@ -792,7 +792,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

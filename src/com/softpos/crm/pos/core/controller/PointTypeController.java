@@ -30,7 +30,7 @@ public class PointTypeController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("PointTypeController:" + e.getMessage());
         } finally {
             mysql.close();
         }
@@ -55,7 +55,7 @@ public class PointTypeController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR("PointTypeController:" + e.getMessage());
         } finally {
             mysql.close();
         }

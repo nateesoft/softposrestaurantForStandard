@@ -62,14 +62,14 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                     try {
                         serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                     } catch (PortInUseException e) {
-                        e.printStackTrace();
+                        
                     }
 
                     try {
                         outputStream = serialPort.getOutputStream();
                         inputStream = serialPort.getInputStream();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        
                     }
 
                     try {
@@ -78,7 +78,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                         serialPort.setOutputBufferSize(2048);
                         openStatus = true;
                     } catch (UnsupportedCommOperationException e) {
-                        e.printStackTrace();
+                        
                     }
 
                     break;
@@ -98,7 +98,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                
             }
             serialPort.close();
         }
@@ -134,13 +134,13 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
             try {
                 serialPort.addEventListener(this);
             } catch (TooManyListenersException e) {
-                e.printStackTrace();
+                
             }
 
             try {
                 inputStream = serialPort.getInputStream();
             } catch (IOException e) {
-                e.printStackTrace();
+                
             }
             byte[] readBuffer = new byte[2048];
             try {
@@ -149,7 +149,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                 }
                 strRead = new String(readBuffer);
             } catch (IOException e) {
-                e.printStackTrace();
+                
             }
             byte chz = (byte) strRead.charAt(0);
             int timeOut = 0;
