@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -15,7 +16,7 @@ public class ControlMenu {
     private int size;
 
     public ControlMenu() {
-        companyMenu = new ArrayList<CompanyMenu>();
+        companyMenu = new ArrayList<>();
         size = 0;
     }
 
@@ -26,14 +27,21 @@ public class ControlMenu {
 
     public CompanyMenu getMenu(String head) {
         int index = 0;
-        if (head.equals("A")) {
-            index = 0;
-        } else if (head.equals("B")) {
-            index = 1;
-        } else if (head.equals("C")) {
-            index = 2;
-        } else if (head.equals("D")) {
-            index = 3;
+        switch (head) {
+            case "A":
+                index = 0;
+                break;
+            case "B":
+                index = 1;
+                break;
+            case "C":
+                index = 2;
+                break;
+            case "D":
+                index = 3;
+                break;
+            default:
+                break;
         }
 
         ArrayList<CompanyMenu> cpm = getAllMenu();
@@ -59,7 +67,6 @@ public class ControlMenu {
                     + "where m.PCode=p.PCode AND Code_ID like '" + item + "E%' "
                     + "and PActive='Y' and PFix='F' "
                     + "group by PCode";
-            System.out.println(sql);
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -83,7 +90,6 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -104,7 +110,6 @@ public class ControlMenu {
                     + "from menusetup m, product p "
                     + "where m.PCode=p.PCode "
                     + "group by PCode";
-            System.out.println(sql);
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -235,83 +240,70 @@ public class ControlMenu {
     }
 
     public ArrayList<CompanyMenu> getAllMenu() {
-        String sqlHead = "select head1, head2, head3, head4 from company";
-        /**
-         * * OPEN CONNECTION **
-         */
+        CompanyBean companyBean = PosControl.getDataCompany();
+        String[] head = new String[]{
+            ThaiUtil.ASCII2Unicode(companyBean.getHead1()),
+            ThaiUtil.ASCII2Unicode(companyBean.getHead2()),
+            ThaiUtil.ASCII2Unicode(companyBean.getHead3()),
+            ThaiUtil.ASCII2Unicode(companyBean.getHead4()),};
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sqlHead);
-            if (rs != null) {
-                if (rs.next()) {
-                    String head1 = ThaiUtil.ASCII2Unicode(rs.getString("head1"));
-                    String head2 = ThaiUtil.ASCII2Unicode(rs.getString("head2"));
-                    String head3 = ThaiUtil.ASCII2Unicode(rs.getString("head3"));
-                    String head4 = ThaiUtil.ASCII2Unicode(rs.getString("head4"));
-                    String sql;
-                    CompanyMenu headMenu;
-                    String[] head = (head1 + "," + head2 + "," + head3 + "," + head4).split(",");
-                    String[] mmenu = ("A,B,C,D").split(",");
-                    int index = 0;
+            String sql;
+            CompanyMenu headMenu;
+            String[] mmenu = ("A,B,C,D").split(",");
+            int index = 0;
 
-                    for (String h : head) {
-                        if (h != null) {
-                            headMenu = new CompanyMenu();
-                            headMenu.setHeadName(h.trim());
+            for (String h : head) {
+                if (h != null) {
+                    headMenu = new CompanyMenu();
+                    headMenu.setHeadName(h.trim());
 
-                            sql = "select * from menusetup "
-                                    + "where code_id like '" + mmenu[index] + "%' "
-                                    + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
-                                    + "group by Code_ID";
-                            Statement stmt1 = mysql.getConnection().createStatement();
-                            ResultSet rs1 = stmt1.executeQuery(sql);
-                            while (rs1.next()) {
-                                MenuSetup menu = new MenuSetup();
-                                menu.setCode_ID(rs1.getString("Code_ID"));
-                                menu.setCode_Type(rs1.getString("Code_Type"));
-                                menu.setPCode(rs1.getString("PCode"));
-                                menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
-                                menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
+                    sql = "select * from menusetup "
+                            + "where code_id like '" + mmenu[index] + "%' "
+                            + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
+                            + "group by Code_ID";
+                    Statement stmt1 = mysql.getConnection().createStatement();
+                    ResultSet rs1 = stmt1.executeQuery(sql);
+                    while (rs1.next()) {
+                        MenuSetup menu = new MenuSetup();
+                        menu.setCode_ID(rs1.getString("Code_ID"));
+                        menu.setCode_Type(rs1.getString("Code_Type"));
+                        menu.setPCode(rs1.getString("PCode"));
+                        menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
+                        menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
 
-                                String sqlProduct = "select * from menusetup "
-                                        + "where Code_Id like '" + menu.getCode_ID() + "%' "
-                                        + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
-                                        + "and shortName<>'' "
-                                        + "group by Code_ID";
-                                Statement stmt2 = mysql.getConnection().createStatement();
-                                ResultSet rs2 = stmt2.executeQuery(sqlProduct);
-                                while (rs2.next()) {
-                                    ProductBean product = new ProductBean();
-                                    product.setPCode(rs2.getString("Code_ID"));
-                                    product.setPDesc(ThaiUtil.ASCII2Unicode(rs2.getString("ShortName")));
+                        String sqlProduct = "select * from menusetup "
+                                + "where Code_Id like '" + menu.getCode_ID() + "%' "
+                                + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
+                                + "and shortName<>'' "
+                                + "group by Code_ID";
+                        Statement stmt2 = mysql.getConnection().createStatement();
+                        ResultSet rs2 = stmt2.executeQuery(sqlProduct);
+                        while (rs2.next()) {
+                            ProductBean product = new ProductBean();
+                            product.setPCode(rs2.getString("Code_ID"));
+                            product.setPDesc(ThaiUtil.ASCII2Unicode(rs2.getString("ShortName")));
 
-                                    menu.addProduct(product);
-                                }
-
-                                rs2.close();
-                                stmt2.close();
-
-                                headMenu.addMenuSetup(menu);
-                            }
-                            rs1.close();
-                            stmt1.close();
-
-                            companyMenu.add(headMenu);
-                            size++;
+                            menu.addProduct(product);
                         }
-                        index++;
+
+                        rs2.close();
+                        stmt2.close();
+
+                        headMenu.addMenuSetup(menu);
                     }
+                    rs1.close();
+                    stmt1.close();
 
+                    companyMenu.add(headMenu);
+                    size++;
                 }
+                index++;
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -401,8 +393,6 @@ public class ControlMenu {
             String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
-            System.out.println(sql);
             if (rs.next()) {
                 menuAt = rs.getString("MenuItem");
             }
@@ -411,7 +401,7 @@ public class ControlMenu {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             e.printStackTrace();
-        } finally{
+        } finally {
             mysql.close();
         }
 

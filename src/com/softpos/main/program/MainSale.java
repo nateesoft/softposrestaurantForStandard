@@ -2156,7 +2156,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                     double R_Total = 0;
-                    System.out.println("ตัดสต็อก " + R_PluCode);
                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate,
                             StkRemark, R_QuanIng, R_Total, bean.getCashier(),
                             "Y", "", "", "");//edit by  nathee 30/10/2016
@@ -2211,7 +2210,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String pname = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
                     double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                     double R_Total = 0;
-                    System.out.println("ตัดสต็อก -" + R_PluCode + " " + pname + " จำนวน -" + R_QuanIng);
                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate, StkRemark, -1 * R_QuanIng, R_Total,
                             PublicVar.TUserRec.UserCode, "Y", "", "", "");
                 }
@@ -2806,7 +2804,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String StkRemark = "SAL";
                     String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
                     if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
-                        System.out.println("กำลังตัดสต๊อกสินค้านี้" + productBean.getPCode() + productBean.getPDesc());
                         PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                 balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
                     }
@@ -2829,7 +2826,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 }
                                 double R_QuanIng = (rs.getDouble("PingQty") * balance.getR_Quan());
                                 double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
                                 PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                         balance.getCashier(), "Y", "", "", "");
                             }
@@ -3296,11 +3292,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void txtPluCodeOnExit() {
-        long s = System.currentTimeMillis();
         saveToBalance();
         tblShowPluShow(txtTable.getText());
-        long e = System.currentTimeMillis();
-        System.out.println("Time Estimate: " + (e - s));
         txtPluCode.setText("");
         txtPluCode.requestFocus();
     }
@@ -3795,7 +3788,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.executeUpdate(sql);
                     stmt.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
                     JOptionPane.showMessageDialog(this, e.getMessage());
                 }
 
@@ -3872,7 +3864,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void selectedOptionBill() {
         int row = tblShowBalance.getSelectedRow();
         String chkPCode = "" + tblShowBalance.getValueAt(row, 0);
-        System.out.println(chkPCode);
         if (chkPCode.equals("")) {
             return;
         }
@@ -4282,7 +4273,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 }
                                 double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan());
                                 double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
                                 if (rs1.getString("pstock").equals("Y") && rs1.getString("pactive").equals("Y")) {
                                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                             balance.getCashier(), "Y", "", "", "");
@@ -4451,7 +4441,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             }
                             double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                             double R_Total = 0;
-                            System.out.println("ตัดสต็อก -" + R_PluCode);
                             PUtility.ProcessStockOut(DocNo, bean.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
                                     R_Total, bean.getCashier(), "Y", "", "", "");
                         }
@@ -4498,7 +4487,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         }
                                         double R_QuanIng = (rs2.getDouble("PingQty") * bean2.getR_Quan());
                                         double R_Total = 0;
-                                        System.out.println("ตัดสต็อก -" + R_PluCode);
                                         PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
                                                 R_Total, bean2.getCashier(), "Y", "", "", "");
                                     }
@@ -4620,8 +4608,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             btnGrid[menu.getMIndex()].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JButton btn = (JButton) e.getSource();
-                    System.out.println(btn.getName());
                     if (menu.getPCode().equals("")) {
                         loadButtonProductMenu(menu.getMenuCode());
                     } else if (!txtCust.getText().trim().equals("")) {

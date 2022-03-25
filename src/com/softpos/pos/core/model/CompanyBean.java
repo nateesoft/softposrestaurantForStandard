@@ -46,6 +46,7 @@ public class CompanyBean {
     private String FloorTab4 = "Zone 4";
     private String FloorTab5 = "Zone 5";
     private String FloorTab6 = "Zone 6";
+    private String FloorTab7 = "Zone 7";
     private String pdahead3 = "pdahead3";
     private String pdahead4 = "pdahead4";
 
@@ -400,6 +401,13 @@ public class CompanyBean {
     public void setPdahead4(String pdahead4) {
         this.pdahead4 = pdahead4;
     }
-    
+
+    public String getFloorTab7() {
+        return FloorTab7;
+    }
+
+    public void setFloorTab7(String FloorTab7) {
+        this.FloorTab7 = FloorTab7;
+    }
     
 }

@@ -66,9 +66,7 @@ public class POSConfigSetup {
     private String P_BillLang = "T";
     
     public static POSConfigSetup Bean(){
-        PosControl pos = new PosControl();
-        
-        return pos.getData();
+        return PosControl.getData();
     }
 
     public String getP_Terminal() {
@@ -566,6 +564,4 @@ public class POSConfigSetup {
     public void setP_BillLang(String P_BillLang) {
         this.P_BillLang = P_BillLang;
     }
-    
-    
 }

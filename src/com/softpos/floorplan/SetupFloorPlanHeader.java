@@ -1,5 +1,7 @@
 package com.softpos.floorplan;
 
+import com.softpos.main.program.PosControl;
+import com.softpos.pos.core.model.CompanyBean;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -359,9 +361,6 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void saveItem() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -373,12 +372,11 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
                     + "FloorTab5='" + ThaiUtil.Unicode2ASCII(txtTab5.getText()) + "',"
                     + "FloorTab6='" + ThaiUtil.Unicode2ASCII(txtTab6.getText()) + "',"
                     + "FloorTab7='" + ThaiUtil.Unicode2ASCII(txtTab7.getText()) + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -387,33 +385,13 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
     }
 
     private void loadDefaultTab() {
-        //load header for tab
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select FloorTab1,FloorTab2,FloorTab3,FloorTab4,FloorTab5,FloorTab6,FloorTab7 from company;";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                txtTab1.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab1")));
-                txtTab2.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab2")));
-                txtTab3.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab3")));
-                txtTab4.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab4")));
-                txtTab5.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab5")));
-                txtTab6.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab6")));
-                txtTab7.setText(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab7")));
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
+        CompanyBean companyBean = PosControl.getDataCompany();
+        txtTab1.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()));
+        txtTab2.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab2()));
+        txtTab3.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab3()));
+        txtTab4.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab4()));
+        txtTab5.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab5()));
+        txtTab6.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()));
+        txtTab7.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7()));
     }
 }

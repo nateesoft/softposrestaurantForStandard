@@ -59,7 +59,4 @@ public class StringCount {
         }
         return index;
     }
-    public static void main(String[] args) {
-        System.out.println(countThai("สวัสดีครับ"));
-    }
 }

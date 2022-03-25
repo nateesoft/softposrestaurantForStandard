@@ -386,7 +386,6 @@ public class TableFileControl {
                 bean.setTCustomer(rs.getInt("TCustomer"));
                 bean.setTItem(rs.getInt("TItem"));
                 bean.setTAmount(rs.getFloat("TAmount"));
-                System.out.print(rs.getFloat("TAmount"));
                 bean.setTOnAct(rs.getString("TOnAct"));
                 bean.setService(rs.getFloat("Service"));
                 bean.setServiceAmt(rs.getFloat("ServiceAmt"));

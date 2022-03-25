@@ -1,5 +1,7 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.awt.Font;
 import java.sql.ResultSet;
@@ -33,41 +35,21 @@ public class PUtility {
     }
 
     public static int GetActionMon(Date EndofdayDate) {
-        int RetVal = 0;
+        CompanyBean companyBean = PosControl.getDataCompany();
+        int RetVal;
         SimpleDateFormat XYear = new SimpleDateFormat("yyyy", Locale.ENGLISH);
         SimpleDateFormat XMonth = new SimpleDateFormat("MM", Locale.ENGLISH);
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from company";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+        String TempYear = XYear.format(companyBean.getAccterm());
+        String CurYear = XYear.format(EndofdayDate);
+        String CurMonth = XMonth.format(EndofdayDate);
+        if (TempYear.equals(CurYear)) {
+            RetVal = Integer.parseInt(CurMonth) + 12;
+        } else {
+            if (Integer.parseInt(CurYear) == Integer.parseInt(TempYear) - 1) {
+                RetVal = Integer.parseInt(CurMonth);
             } else {
-                String TempYear = XYear.format(rec.getDate("accterm"));
-                String TempMonth = XMonth.format(rec.getDate("accterm"));
-                String CurYear = XYear.format(EndofdayDate);
-                String CurMonth = XMonth.format(EndofdayDate);
-                if (TempYear.equals(CurYear)) {
-                    RetVal = Integer.parseInt(CurMonth) + 12;
-                } else {
-                    if (Integer.parseInt(CurYear) == Integer.parseInt(TempYear) - 1) {
-                        RetVal = Integer.parseInt(CurMonth);
-                    } else {
-                        RetVal = 0;
-                    }
-                }
+                RetVal = 0;
             }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-        } finally {
-            mysql.close();
         }
         return RetVal;
     }
@@ -88,57 +70,12 @@ public class PUtility {
     }
 
     public static String GetStkCode() {
-        String RetVal = "A1";
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from company ";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = "A1";
-            } else {
-                RetVal = rec.getString("posstock");
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        return RetVal;
+        CompanyBean companyBean = PosControl.getDataCompany();
+        return companyBean.getPosStock();
     }
 
     public static String GetStockOnLine() {
-        String RetVal = "N";
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select * from company ";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = "N";
-            } else {
-                RetVal = "N";//rec.getString("minimumchk");
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        return RetVal;
+        return "N";
     }
 
     public static Boolean CheckStockOK(String TempCode, double TempQty) {
@@ -1361,58 +1298,6 @@ public class PUtility {
             mysql.close();
         }
         return PublicVar.Branch_Code + PUtility.Addzero(StrRefBillNo, 7);
-    }
-
-    public static Double ProcessScore(String BranchCode, Double Amount) {
-        Double ReturnValue = 0.0;
-        String XPT1 = "";
-        String XPT2 = "";
-        String XPT3 = "";
-        String XPT4 = "";
-        String XPT5 = "";
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from branch ";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                showError("กรุณากำหนดข้อมูลสาขาก่อนการใช้งาน...");
-            } else {
-                XPT1 = rec.getString("PT1");
-                XPT2 = rec.getString("PT2");
-                XPT3 = rec.getString("PT3");
-                XPT4 = rec.getString("PT4");
-                XPT5 = rec.getString("PT5");
-            }
-            rec.close();
-        } catch (SQLException e) {
-            showError(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        Double TempPoint = 0.0;
-        if (ChkMemPoint(XPT1)) {
-            TempPoint = PublicVar.XPoint;
-        } else if (ChkMemPoint(XPT2)) {
-            TempPoint = PublicVar.XPoint;
-        } else if (ChkMemPoint(XPT3)) {
-            TempPoint = PublicVar.XPoint;
-        } else if (ChkMemPoint(XPT4)) {
-            TempPoint = PublicVar.XPoint;
-        } else if (ChkMemPoint(XPT5)) {
-            TempPoint = PublicVar.XPoint;
-        }
-        if (TempPoint > 0) {
-            ReturnValue = Amount / TempPoint;
-        } else {
-            ReturnValue = 0.0;
-        }
-        return ReturnValue;
     }
 
     public static Boolean ChkMemPoint(String ProCode) {

@@ -53,8 +53,6 @@ public class DateConvert {
         Calendar current1 = Calendar.getInstance();
         current1.add(Calendar.DATE, +0);
         DateOrder += GetLocalDate.format(current1.getTime());
-//        System.out.println("GetCurrentDate:"+dateString);
-        //txtDate1.setText(dateString);
         return DateOrder;
     }
 

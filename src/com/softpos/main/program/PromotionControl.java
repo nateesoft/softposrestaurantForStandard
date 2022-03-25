@@ -418,8 +418,6 @@ public class PromotionControl {
                                 + "and R_Index='" + balance.getR_Index() + "'";
                         Statement stmt1 = mysql.getConnection().createStatement();
                         int iUpdate = stmt1.executeUpdate(sqlUpdatePro);
-                        System.out.println(iUpdate + ":Update -P");
-
                         //Sale Promotion Type 1
                         if (protab1.getPType().equals(Promotion.PROMOTION_TYPE_1)) {
 
@@ -1235,34 +1233,11 @@ public class PromotionControl {
             c.open();
             ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
-                DateConvert dc = new DateConvert();
-                String startDate = (rs.getString("pdate1")).replace("-", "");
-                String expireDate = (rs.getString("pdate2")).replace("-", "");
-                String date = (dc.GetCurrentDate()).replace("-", "");
-                int ptime1s = Integer.parseInt(rs.getString("ptime1s").replace(":", ""));
-                int ptime1e = Integer.parseInt(rs.getString("ptime1e").replace(":", ""));
-                int expDate = Integer.parseInt(expireDate);
-                int curDate = Integer.parseInt(date);
                 procode = rs.getString("procode");
                 prodesc = rs.getString("prodesc");
-                if (expDate < curDate) {
-                    System.out.println("Promotion Expire!");
-                    System.out.println("start " + startDate);
-                    System.out.println("expire " + expireDate);
-                    System.out.println("current " + date);
-                } else {
-                    System.out.println("Excute Promotion!");
-                    System.out.println("start " + startDate);
-                    System.out.println("expire " + expireDate);
-                    System.out.println("current " + date);
-                    int time = Integer.parseInt(dc.GetCurrentDateFM("HH:mm").replace(":", ""));
-                    System.out.println("TIME " + time);
-                    if (time > ptime1s && time < ptime1e) {
-                        System.out.println("Promotion is in Active time" + ptime1s + " and " + ptime1e + " and " + time);
-                    }
-                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         return procode + ":" + prodesc;
     }

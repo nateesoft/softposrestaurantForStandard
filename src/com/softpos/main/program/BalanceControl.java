@@ -1747,56 +1747,6 @@ public class BalanceControl {
         return list;
     }
 
-    public void holdTableToKichen(String table) {
-        kichenPrint(table);
-    }
-
-    public void kichenPrint(String table) {
-
-    }
-
-    public String SeekKicItemNo() {
-        int KicItemNo = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select * from branch";
-            ResultSet rec = stmt.executeQuery(sql);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                KicItemNo = rec.getInt("kicitemno") + 1;
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
-
-        mysql.open();
-
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String sql = "update branch set kicitemno =" + KicItemNo;
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
-
-        return "" + KicItemNo;
-    }
-
     public void deleteBalance(String r_Table, String r_PluCode, String r_Index) {
         /**
          * * OPEN CONNECTION **

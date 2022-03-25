@@ -32,23 +32,14 @@ public class PropControl {
     
     public void sampleLoadProp(){
         Properties prop = new Properties();
- 
     	try {
-               //load a properties file
-    		prop.load(new FileInputStream("test.properties"));
- 
-               //get the property value and print it out
-                System.out.println(prop.getProperty("DB_SERVER"));
-    		System.out.println(prop.getProperty("DB_ROOT"));
-    		System.out.println(prop.getProperty("DB_PASSWORD"));
- 
+            prop.load(new FileInputStream("test.properties"));
     	} catch (IOException ex) {
             MSG.ERR(null, ex.getMessage());
         }
     }
     
     public String getMacNo(){
-       
         return Value.MACNO;
     }
     

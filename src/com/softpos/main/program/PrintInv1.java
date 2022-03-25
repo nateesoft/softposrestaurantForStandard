@@ -2068,11 +2068,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void printINVDriver(int i) throws ParseException {
-//        int i = 0;
         String t = "";
-        Date TempInvDate = date;
         Date TempOnDate = date;
-        TempInvDate = DateFmt.parse(txtDate.getText());
         TempOnDate = DateFmt.parse(txtDateRef.getText());
 
         NumberToString numToString = new NumberToString();
@@ -2081,13 +2078,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         CustomerBean custBean = new CustomerBean();
         custBean = custControl.getCustomer(txtCode.getText());
 
-        BranchControl branch = new BranchControl();
-        BranchBean branchBean = new BranchBean();
-        branchBean = branch.getBranch();
-
-        PosControl posBean = new PosControl();
-        CompanyBean companyBean = new CompanyBean();
-        companyBean = posBean.getCompany();
+        BranchBean branchBean = BranchControl.getData();
+        CompanyBean companyBean = PosControl.getDataCompany();
         // 1.Company Area
         t += "colspan=5 align=left><font face=Angsana New size=1>" + companyBean.getName() + "_";
         t += "colspan=5 align=left><font face=Angsana New size=1>" + companyBean.getAddress() + "_";

@@ -77,13 +77,8 @@ public class MySQLConnectWebOnline {
             getDbVar();
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-            //System.out.println("Database Connected.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+        } catch (ClassNotFoundException | SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

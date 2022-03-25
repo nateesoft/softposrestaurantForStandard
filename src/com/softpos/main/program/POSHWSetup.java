@@ -56,9 +56,7 @@ public class POSHWSetup {
     private String RFIDPort = "NONE";
     
     public static POSHWSetup Bean(String MacNo){
-        PosControl pos = new PosControl();
-        
-        return pos.getData(MacNo);
+        return PosControl.getData(MacNo);
     }
 
     public String getTerminal() {
@@ -475,6 +473,4 @@ public class POSHWSetup {
     public void setRFIDPort(String RFIDPort) {
         this.RFIDPort = RFIDPort;
     }
-    
-    
 }

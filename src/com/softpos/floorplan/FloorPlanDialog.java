@@ -58,6 +58,7 @@ import com.softpos.pos.core.model.ProductBean;
 import com.softpos.main.program.ProductControl;
 import com.softpos.main.program.UpdateData;
 import com.softpos.main.program.UserRecord;
+import com.softpos.pos.core.model.CompanyBean;
 import java.awt.Image;
 import java.util.Date;
 import java.util.logging.Level;
@@ -157,7 +158,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenu7.setVisible(false);
         MShowDailyEJ1.setVisible(false);
         jMenuItem38.setVisible(false);
-        loadImageHome();
 
         //สำหรับเปลี่ยน icon java เป็น icon ที่เราคุ้นเคย
         try {
@@ -863,8 +863,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
         HomeImageDialog home = new HomeImageDialog(null, true);
         home.setVisible(true);
-
-        loadImageHome();
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
@@ -1058,7 +1056,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             String sqlGetFromT_sale = "select * from "
                                     + "t_sale "
                                     + "where r_refno='" + b_refno + "' "
-//                                    + "and r_void<>'V' "
+                                    //                                    + "and r_void<>'V' "
                                     + "order by r_index;";
                             ResultSet rs2 = c.getConnection().createStatement().executeQuery(sqlGetFromT_sale);
 
@@ -1250,7 +1248,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     String StkRemark = "SAL";
                     String DocNo = tableNo + "/" + Timefmt.format(new Date());
                     if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
-                        System.out.println("กำลังตัดสต๊อกสินค้านี้" + productBean.getPCode() + productBean.getPDesc());
                         PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                 balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
 
@@ -1274,7 +1271,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 }
                                 double R_QuanIng = (rs.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
                                 double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
                                 PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                         balance.getCashier(), "Y", "", "", "");
                             }
@@ -1669,7 +1665,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                 } catch (NumberFormatException e) {
                     MSG.ERR(this, e.getMessage());
-                    e.printStackTrace();
                 }
             }
 
@@ -1677,7 +1672,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1695,36 +1689,25 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void loadHeaderTab() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        
-        try {
-            String sql = "select FloorTab1,FloorTab2,FloorTab3,FloorTab4,FloorTab5,FloorTab6,FloorTab7 from company;";
-            mysql.open();
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                for (int i = 0; i < 7; i++) {
-                    JLabel lab = new JLabel(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab" + (i + 1))));
-                    add(lab);
-                    lab.setFont(fontB);
-                    if (lab.getText().trim().equals("")) {
-                        lab.setHorizontalAlignment(SwingConstants.CENTER);
-                    }
-                    jTabbedPane1.setTabComponentAt(i, lab);
-                    jTabbedPane1.setIconAt(i, null);
-                }
+        CompanyBean companyBean = PosControl.getDataCompany();
+        String[] floorTab = new String[]{
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab2()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab3()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab4()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab5()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()),
+            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7())
+        };
+        for (int i = 0; i < floorTab.length; i++) {
+            JLabel lab = new JLabel(ThaiUtil.ASCII2Unicode(floorTab[i]));
+            add(lab);
+            lab.setFont(fontB);
+            if (lab.getText().trim().equals("")) {
+                lab.setHorizontalAlignment(SwingConstants.CENTER);
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
+            jTabbedPane1.setTabComponentAt(i, lab);
+            jTabbedPane1.setIconAt(i, null);
         }
         if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
             PrintCheckBillFromPDA();
@@ -1843,29 +1826,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             mysql.close();
         }
 
-    }
-
-    private void loadImageHome() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select IMG_HOME_PATH from branch";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                //lbMainImage.setIcon(new ImageIcon(rs.getString("IMG_HOME_PATH")));
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
     }
 
     private void returnBill() {
@@ -2298,7 +2258,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (evt.getButton() == 3) {
-                System.out.println("mouseClicked");
                 Value.BTN_FLOORPLAN = button.getName();
                 JPopupMenu pop = jPopupMenu1;
                 pop.show(button, evt.getX(), evt.getY());
@@ -2516,7 +2475,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 }
                                 double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
                                 double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
                                 if (rs1.getString("pstock").equals("Y") && rs1.getString("pactive").equals("Y")) {
                                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                             balance.getCashier(), "Y", "", "", "");

@@ -1,5 +1,7 @@
 package com.softpos.floorplan;
 
+import com.softpos.main.program.BranchControl;
+import com.softpos.pos.core.model.BranchBean;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -269,27 +271,8 @@ public class HomeImageDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadImageHome() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select IMG_HOME_PATH from branch";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                lbImageHome.setIcon(new javax.swing.ImageIcon(rs.getString("IMG_HOME_PATH")));
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
-
+        BranchBean branchBean = BranchControl.getData();
+        lbImageHome.setIcon(new javax.swing.ImageIcon(branchBean.getImageHomePath()));
         lbImageHome.setVerticalAlignment(javax.swing.SwingConstants.TOP);
     }
 

@@ -139,7 +139,6 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -172,8 +171,7 @@ public class BillControl {
         /**
          * * OPEN CONNECTION **
          */
-        BranchControl branchControl = new BranchControl();
-        BranchBean branchBean = branchControl.getBranch();
+        BranchBean branchBean = BranchControl.getData();
         MySQLConnect mysql = new MySQLConnect();
         BalanceBean blBean = new BalanceBean();
 
@@ -422,11 +420,10 @@ public class BillControl {
             pre.setString(86, ThaiUtil.Unicode2ASCII(bean.getR_VoidPause()));
             pre.setDouble(87, bean.getR_NetDiff());
 
-            int i = pre.executeUpdate();
+            pre.executeUpdate();
             pre.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -444,8 +441,7 @@ public class BillControl {
             int size = balance.size();
             double B_Food = 0.0, B_Drink = 0.0, B_Product = 0.0, B_Service = 0.0;
 
-            BranchControl branchControl = new BranchControl();
-            BranchBean branchBean = branchControl.getBranch();
+            BranchBean branchBean = BranchControl.getData();
 
             String etdTypeFromTSale = "";
 
@@ -708,8 +704,7 @@ public class BillControl {
         double R_ServiceAmt, SumR_Nettotal = 0.00, SumR_ServiceAmt = 0.00;
         String productType;
 
-        BranchControl branchControl = new BranchControl();
-        BranchBean branchBean = branchControl.getBranch();
+        BranchBean branchBean = BranchControl.getData();
 
         String etdTypeFromTSale = "";
 
