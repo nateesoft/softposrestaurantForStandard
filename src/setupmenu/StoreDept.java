@@ -11,9 +11,6 @@ public class StoreDept {
 
     public boolean store(DeptButtonBean bean) {
         String sql = "";
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {

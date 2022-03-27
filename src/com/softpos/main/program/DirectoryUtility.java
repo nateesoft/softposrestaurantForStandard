@@ -9,21 +9,18 @@ public class DirectoryUtility {
 
     public boolean createDir(File file) throws IOException {
         boolean success = file.mkdir();
-//        System.out.println(file.getCanonicalPath() + " Create. ==> " + success);
         return success;
     }
 
     public boolean deleteDir(File file) throws IOException {
         boolean success = file.delete();
-//        System.out.println(file.getCanonicalPath() + " Delete. ==> " + success);
         return success;
     }
 
     public File getFileAndCreateDir(String pathFile) throws Exception {
         StringTokenizer st = new StringTokenizer(pathFile.trim(), "/");
         String path = "";
-        File f = null;
-        //System.out.println("Token "+st.countTokens());        
+        File f;
         int countToken = st.countTokens();
         for (int i = 0; st.hasMoreTokens(); i++) {
             if (i < countToken - 1) {
@@ -32,13 +29,11 @@ public class DirectoryUtility {
                 if (!f.exists()) {
                     createDir(f);
                 }
-                //System.out.println(i + " , " + path);                
             } else {
                 st.nextToken();
             }
         }
         File file = new File(pathFile);
-        //System.out.println(file.getCanonicalPath() + " === " + file.exists());
         return file;
     }
 }

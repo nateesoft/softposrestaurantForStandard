@@ -18,21 +18,6 @@ public class FTPUtility {
 
     private FTPClient ftp;
 
-//    public static void main(String[] args) {
-//        FTPUtility ftp = new FTPUtility();
-//        String host = ConfigFileServer.getProperties("ftp_server_host");
-//        String user = ConfigFileServer.getProperties("ftp_server_user");
-//        String password = ConfigFileServer.getProperties("ftp_server_pass");
-//        ftp.connect(host, user, password, 21);
-////        ftp.download("C:rss/rss.txt", "C:/tmp/rss.txt");
-//        try {
-//            ftp.upload("D:/Backup/Data/retail652/branch20210802.sql", "Data/branch20210802.sql");
-//        } catch (Exception e) {
-//            
-//        }
-
-//    }
-
     public boolean connect(String server, String user, String pass, int port) {
         ftp = new FTPClient();
         ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
@@ -50,7 +35,7 @@ public class FTPUtility {
                 return false;
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
         try {

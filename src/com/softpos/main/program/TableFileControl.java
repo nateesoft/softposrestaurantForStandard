@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
@@ -169,13 +170,9 @@ public class TableFileControl {
         return result;
     }
 
-    public ArrayList<TableFileBean> getALlHoldTable() {
-        ArrayList<TableFileBean> allTable = new ArrayList<>();
+    public List<TableFileBean> getALlHoldTable() {
+        List<TableFileBean> allTable = new ArrayList<>();
         String sql = "select * from tablefile where TAmount>0";
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -250,12 +247,8 @@ public class TableFileControl {
         return allTable;
     }
 
-    public ArrayList<TableFileBean> getALlTable() {
-        ArrayList<TableFileBean> allTable = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+    public List<TableFileBean> getALlTable() {
+        List<TableFileBean> allTable = new ArrayList<>();
         mysql.open();
         try {
             String sql = "select * from tablefile";
@@ -331,12 +324,8 @@ public class TableFileControl {
         return allTable;
     }
 
-    public ArrayList<TableSetup> getTable(String TCode) {
-        ArrayList<TableSetup> allTable = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+    public List<TableSetup> getTable(String TCode) {
+        List<TableSetup> allTable = new ArrayList<>();
         mysql.open();
         try {
             String sql = "select t2.Code_ID, t1.TCode from tablefile t1 , tablesetup t2 "
@@ -604,7 +593,7 @@ public class TableFileControl {
         try {
             double TAmount = 0.00;
             BalanceControl bControl = new BalanceControl();
-            ArrayList<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
+            List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
             for (int i = 0; i < dataBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) dataBean.get(i);
                 if (!bean.getR_Void().equals("V")) {

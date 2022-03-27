@@ -380,6 +380,8 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
         } finally {
             mysql.close();
         }
+        
+        PosControl.resetDataCompany();
 
         dispose();
     }

@@ -18,9 +18,6 @@ public class DiscountControl {
 
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -30,7 +27,6 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next() && !rs.wasNull()) {
                 String sqlUpd = "update tablefile set "
@@ -42,7 +38,6 @@ public class DiscountControl {
             }
 
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             
@@ -62,7 +57,7 @@ public class DiscountControl {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next() && !rs.wasNull()) {
-                String sqlUpd = "";
+                String sqlUpd;
                 if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
                     sqlUpd = "update tablefile set "
                             + "CuponDiscAmt='" + NumberControl.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
@@ -72,10 +67,7 @@ public class DiscountControl {
                             + "CuponDiscAmt='" + (rs.getDouble("SUM_R_PrCuAmt")) + "' "
                             + "where Tcode = '" + tableNo + "'";
                 }
-
-//                Statement stmt1 = mysql.getConnection().createStatement();
                 mysql.getConnection().createStatement().executeUpdate(sqlUpd);
-//                stmt1.close();
             }
 
             rs.close();

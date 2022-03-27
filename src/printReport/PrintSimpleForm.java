@@ -1,11 +1,8 @@
 package printReport;
 
 import com.softpos.main.program.BranchControl;
-import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.main.program.PPrint;
 import database.MySQLConnect;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -13,8 +10,6 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,15 +19,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import javax.print.PrintService;
-import javax.swing.JOptionPane;
-import com.softpos.main.program.PUtility;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.main.program.TableFileControl;
 import com.softpos.main.program.Value;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import java.util.List;
-import javax.print.attribute.standard.MediaSizeName;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 

@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.softpos.main.program.Value;
-import javax.swing.JOptionPane;
 import util.MSG;
 
 public class MySQLConnect {

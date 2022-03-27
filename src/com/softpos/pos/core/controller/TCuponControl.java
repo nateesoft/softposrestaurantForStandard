@@ -6,15 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import util.MSG;
 
 public class TCuponControl {
 
-    public ArrayList<TCuponBean> listTCupon() {
-        ArrayList<TCuponBean> listBean = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<TCuponBean> listTCupon() {
+        List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -49,11 +47,8 @@ public class TCuponControl {
         return listBean;
     }
 
-    public ArrayList<TCuponBean> listTCupon(String R_Index) {
-        ArrayList<TCuponBean> listBean = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<TCuponBean> listTCupon(String R_Index) {
+        List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {

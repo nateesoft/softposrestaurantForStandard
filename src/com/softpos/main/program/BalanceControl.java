@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import sun.natee.project.util.DateFormat;
 import sun.natee.project.util.ThaiUtil;
 import util.DateConvert;
@@ -266,8 +267,8 @@ public class BalanceControl {
         }
     }
 
-    public ArrayList<BalanceBean> getAllBalance(String table) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
+    public List<BalanceBean> getAllBalance(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -380,11 +381,8 @@ public class BalanceControl {
         return beanData;
     }
 
-    public ArrayList<BalanceBean> getAllBalanceSum(String table) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getAllBalanceSum(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -616,18 +614,14 @@ public class BalanceControl {
         return beanData;
     }
 
-    public ArrayList<BalanceBean> getAllBalanceNoVoid(String table) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getAllBalanceNoVoid(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' and r_void<>'V'"
                     + "order by R_ETD,R_Index,r_time";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -737,11 +731,8 @@ public class BalanceControl {
         return beanData;
     }
 
-    public ArrayList<BalanceBean> getAllBalanceNoVoidSum(String table) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getAllBalanceNoVoidSum(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1008,16 +999,12 @@ public class BalanceControl {
         return beanData;
     }
 
-    public ArrayList<BalanceBean> getBalanceIndex(String R_Index) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getBalanceIndex(String R_Index) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from balance where R_Index='" + R_Index + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -1125,11 +1112,8 @@ public class BalanceControl {
         return beanData;
     }
 
-    public ArrayList<BalanceBean> getAllBalancePromotion(String table) {
-        ArrayList<BalanceBean> beanData = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getAllBalancePromotion(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1602,11 +1586,8 @@ public class BalanceControl {
         return balanceBean;
     }
 
-    public ArrayList<BalanceBean> getBalanceIndexVoid(String Table) {
-        ArrayList<BalanceBean> list = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<BalanceBean> getBalanceIndexVoid(String Table) {
+        List<BalanceBean> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1616,7 +1597,6 @@ public class BalanceControl {
                     + "and r_void='V' "
                     + "and r_pause='Y' "
                     + "and r_kicprint=''";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -1877,8 +1857,8 @@ public class BalanceControl {
             }
             rs.close();
             c.close();
-        } catch (Exception e) {
-            MSG.ERR(e.toString());
+        } catch (NumberFormatException | SQLException e) {
+            MSG.ERR(e.getMessage());
         }
 
         if (memberBean != null) {

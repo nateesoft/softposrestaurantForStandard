@@ -9,12 +9,18 @@ public class JTableControl {
     
     public static void alignColumn(JTable tblShowBalance, int col, String align) {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        if(align.equals("right")){
-            rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-        }else if(align.equals("left")){
-            rightRenderer.setHorizontalAlignment(SwingConstants.LEFT);
-        }else if(align.equals("center")){
-            rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        switch (align) {
+            case "right":
+                rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+                break;
+            case "left":
+                rightRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+                break;
+            case "center":
+                rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+                break;
+            default:
+                break;
         }
         
         tblShowBalance.getColumnModel().getColumn(col).setCellRenderer(rightRenderer);

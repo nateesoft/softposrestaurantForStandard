@@ -545,8 +545,8 @@ public class MemberDialog extends javax.swing.JDialog {
                     c.getConnection().createStatement().executeUpdate(sql);
                     break;
             }
-        } catch (Exception e) {
-            MSG.ERR(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

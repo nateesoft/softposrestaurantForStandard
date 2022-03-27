@@ -10,8 +10,8 @@ import java.io.OutputStream;
 public class FileManager {
 
     public static void copyFileUsingStream(File source, File dest){
-        InputStream is = null;
-        OutputStream os = null;
+        InputStream is;
+        OutputStream os;
         try {
             is = new FileInputStream(source);
             os = new FileOutputStream(dest);

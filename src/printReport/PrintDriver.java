@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import javax.print.PrintService;
@@ -32,6 +31,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.DateConvert;
@@ -41,7 +41,6 @@ public class PrintDriver {
 
     private String textAll = "";
     private String textNormal = "";
-//    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100 height=50>";
     private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100 height=50>";
     private final String footer = "</table></body></html>";
     private final String fontName = "Angsana New";
@@ -119,7 +118,7 @@ public class PrintDriver {
 
     public void printVoid(String R_Table) {
         BalanceControl bControl = new BalanceControl();
-        ArrayList<BalanceBean> list = bControl.getBalanceIndexVoid(R_Table);
+        List<BalanceBean> list = bControl.getBalanceIndexVoid(R_Table);
         if (list == null) {
             return;
         }

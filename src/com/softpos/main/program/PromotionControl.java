@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import util.DateConvert;
+import java.util.List;
 import util.MSG;
 
 public class PromotionControl {
@@ -368,15 +368,11 @@ public class PromotionControl {
         ProductBean product;
 
         BalanceControl balanceControl = new BalanceControl();
-        //Quantity = dataBeansize
-        ArrayList<BalanceBean> dataBean = balanceControl.getAllBalancePromotion(table);//Filter by Promotion and Discount = 'Y'
+        List<BalanceBean> dataBean = balanceControl.getAllBalancePromotion(table);//Filter by Promotion and Discount = 'Y'
         String PCode;
 
         double R_Quan = 0.00;
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 

@@ -5,6 +5,7 @@ import com.softpos.main.program.BranchControl;
 import com.softpos.main.program.CompanyConfig;
 import com.softpos.main.program.DateControl;
 import com.softpos.main.program.POSConfigSetup;
+import com.softpos.main.program.POSHWSetup;
 import com.softpos.main.program.PPrint;
 import com.softpos.main.program.PosControl;
 import com.softpos.main.program.PromotionControl;
@@ -34,19 +35,17 @@ import util.MSG;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.MemmaterController;
 import java.text.DecimalFormat;
+import java.util.List;
 import util.DateConvert;
 import util.DateUtil;
 
 public class BillControl {
 
     private final POSConfigSetup posConfig;
-    private MemmaterController memControl = new MemmaterController();
-
+    private final MemmaterController memControl = new MemmaterController();
 
     public BillControl() {
-        PosControl posControl = new PosControl();
-        posConfig = posControl.getData();
-
+        posConfig = PosControl.getData();
     }
 
     public static String getLocalMacNO() {
@@ -56,9 +55,6 @@ public class BillControl {
 
     public static String getBillIDCurrent() {
         String ReceNo1 = "";
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -91,11 +87,9 @@ public class BillControl {
                     default:
                         break;
                 }
-
             }
             rs.close();
             stmt.close();
-
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -106,71 +100,56 @@ public class BillControl {
     }
 
     public static String getExistCurrent() {
-        String ReceNo1 = "";
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select ReceNo1-1 ReceNo1 "
-                    + "from poshwsetup "
-                    + "where Terminal='" + getLocalMacNO() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                ReceNo1 = rs.getString("ReceNo1");
-                if (ReceNo1.length() == 1) {
-                    ReceNo1 = "000000" + ReceNo1;
-                } else if (ReceNo1.length() == 2) {
-                    ReceNo1 = "00000" + ReceNo1;
-                } else if (ReceNo1.length() == 3) {
-                    ReceNo1 = "0000" + ReceNo1;
-                } else if (ReceNo1.length() == 4) {
-                    ReceNo1 = "000" + ReceNo1;
-                } else if (ReceNo1.length() == 5) {
-                    ReceNo1 = "00" + ReceNo1;
-                } else if (ReceNo1.length() == 6) {
-                    ReceNo1 = "0" + ReceNo1;
-                }
-
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+        String ReceNo1;
+        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+        ReceNo1 = "" + (poshwSetup.getReceNo1() - 1);
+        switch (ReceNo1.length()) {
+            case 1:
+                ReceNo1 = "000000" + ReceNo1;
+                break;
+            case 2:
+                ReceNo1 = "00000" + ReceNo1;
+                break;
+            case 3:
+                ReceNo1 = "0000" + ReceNo1;
+                break;
+            case 4:
+                ReceNo1 = "000" + ReceNo1;
+                break;
+            case 5:
+                ReceNo1 = "00" + ReceNo1;
+                break;
+            case 6:
+                ReceNo1 = "0" + ReceNo1;
+                break;
+            default:
+                break;
         }
 
         return ReceNo1;
     }
 
     public static void updateNextBill() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "UPDATE poshwsetup "
                     + "SET receno1=receno1+1 "
                     + "WHERE terminal='" + getLocalMacNO() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                if(stmt.executeUpdate(sql)>0){
+                    // reset load poshwsetup
+                    PosControl.resetPosHwSetup();
+                }
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
     }
 
     public static void saveBillNo(BillNoBean bean, MemberBean memBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
         BranchBean branchBean = BranchControl.getData();
         MySQLConnect mysql = new MySQLConnect();
         BalanceBean blBean = new BalanceBean();
@@ -224,9 +203,9 @@ public class BillControl {
                     + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
                     + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
                     + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
 
             if (bean.getB_AccrAmt() > 0) {
                 try {
@@ -254,7 +233,6 @@ public class BillControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -262,9 +240,6 @@ public class BillControl {
 
     public static String getQueUpdate() {
         String q = "";
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -281,10 +256,7 @@ public class BillControl {
                     } else {
                         q = "" + que;
                     }
-                } catch (SQLException e) {
-                    System.out.println("Not get que from billno, n" + e.getMessage());
-                    q = "01";
-                } catch (NumberFormatException e) {
+                } catch (SQLException | NumberFormatException e) {
                     System.out.println("Not get que from billno, n" + e.getMessage());
                     q = "01";
                 }
@@ -293,7 +265,6 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -302,10 +273,6 @@ public class BillControl {
     }
 
     public static void saveTSale(TSaleBean bean) {
-        //update table t_sale
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -435,7 +402,7 @@ public class BillControl {
 
         BalanceControl balanceControl = new BalanceControl();
         if (!posConfig.getP_PrintSum().equals("Y")) {
-            ArrayList<BalanceBean> balance = balanceControl.getAllBalance(table);
+            List<BalanceBean> balance = balanceControl.getAllBalance(table);
 
             //for T_Sale
             int size = balance.size();
@@ -449,11 +416,11 @@ public class BillControl {
             for (int i = 0; i < size; i++) {
                 BalanceBean bean = (BalanceBean) balance.get(i);
                 TSaleBean tSaleBean = mappingBalanceToTSale(i, size, bean, BillNo, billBean);
-                
+
                 if (etdTypeFromTSale.equals("")) {
                     etdTypeFromTSale = tSaleBean.getR_ETD();
                 }
-                
+
                 String productType = bean.getR_Type();
                 if (!bean.getR_Void().equals("V")) {
                     switch (productType) {
@@ -596,7 +563,7 @@ public class BillControl {
                 } else {
                     if (!memberBean.getMember_Code().equals("")) {
                         double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
-                    
+
                         billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
                         billNo.setB_MemCurSum(currentMemberScore);
                         billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
@@ -620,37 +587,33 @@ public class BillControl {
                 tableControl.setDefaultTableFile(table);
 
                 //move tempgift
-                /**
-                 * * OPEN CONNECTION **
-                 */
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
                     String sql = "select * from tempgift";
                     Statement stmt = mysql.getConnection().createStatement();
-                    ResultSet rs = stmt.executeQuery(sql);
-                    while (rs.next()) {
-                        try {
-                            String sqlAdd = "insert into t_gift "
-                                    + "(ondate,macno,refno,"
-                                    + "cashier,giftbarcode,gifttype,"
-                                    + "giftprice,giftmodel,giftlot,"
-                                    + "giftexp,giftcode,giftno,"
-                                    + "giftamt,fat) "
-                                    + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
-                                    + "'','','',"
-                                    + "'','',"
-                                    + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                            Statement stmt1 = mysql.getConnection().createStatement();
-                            stmt1.executeUpdate(sqlAdd);
-                            stmt1.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                    try (ResultSet rs = stmt.executeQuery(sql)) {
+                        while (rs.next()) {
+                            try {
+                                String sqlAdd = "insert into t_gift "
+                                        + "(ondate,macno,refno,"
+                                        + "cashier,giftbarcode,gifttype,"
+                                        + "giftprice,giftmodel,giftlot,"
+                                        + "giftexp,giftcode,giftno,"
+                                        + "giftamt,fat) "
+                                        + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
+                                        + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                        + "'','','',"
+                                        + "'','',"
+                                        + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
+                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                    stmt1.executeUpdate(sqlAdd);
+                                }
+                            } catch (SQLException e) {
+                                MSG.ERR(e.getMessage());
+                            }
                         }
                     }
-
-                    rs.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                 } finally {
@@ -687,11 +650,11 @@ public class BillControl {
             } catch (Exception e) {
                 MSG.ERR(e.getMessage());
             }
-            
+
             return BillNo;
         }
-        
-        ArrayList<BalanceBean> balance = balanceControl.getAllBalance(table);
+
+        List<BalanceBean> balance = balanceControl.getAllBalance(table);
 
         //for T_Sale
         DecimalFormat dfFormat = new DecimalFormat("##.00");
@@ -994,7 +957,7 @@ public class BillControl {
             } else {
                 if (!memberBean.getMember_Code().equals("")) {
                     double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
-                    
+
                     billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
                     billNo.setB_MemCurSum(currentMemberScore);
                     billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
@@ -1033,7 +996,7 @@ public class BillControl {
                 new Thread(() -> {
                     PPrint print = new PPrint();
                     print.PrintSubTotalBill(BillNo, table);
-                    if(PublicVar.PrintCopyAuto.equals("true")){
+                    if (PublicVar.PrintCopyAuto.equals("true")) {
                         print.PrintSubTotalBill(BillNo, table);
                     }
                 }).start();
@@ -1044,37 +1007,33 @@ public class BillControl {
             tableControl.setDefaultTableFile(table);
 
             //move tempgift
-            /**
-             * * OPEN CONNECTION **
-             */
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
                 String sql = "select * from tempgift";
                 Statement stmt = mysql.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    try {
-                        String sqlAdd = "insert into t_gift "
-                                + "(ondate,macno,refno,"
-                                + "cashier,giftbarcode,gifttype,"
-                                + "giftprice,giftmodel,giftlot,"
-                                + "giftexp,giftcode,giftno,"
-                                + "giftamt,fat) "
-                                + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
-                                + "'','','',"
-                                + "'','',"
-                                + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                        Statement stmt1 = mysql.getConnection().createStatement();
-                        stmt1.executeUpdate(sqlAdd);
-                        stmt1.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                try (ResultSet rs = stmt.executeQuery(sql)) {
+                    while (rs.next()) {
+                        try {
+                            String sqlAdd = "insert into t_gift "
+                                    + "(ondate,macno,refno,"
+                                    + "cashier,giftbarcode,gifttype,"
+                                    + "giftprice,giftmodel,giftlot,"
+                                    + "giftexp,giftcode,giftno,"
+                                    + "giftamt,fat) "
+                                    + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
+                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                    + "'','','',"
+                                    + "'','',"
+                                    + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
+                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                stmt1.executeUpdate(sqlAdd);
+                            }
+                        } catch (SQLException e) {
+                            MSG.ERR(e.getMessage());
+                        }
                     }
                 }
-
-                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
             } finally {
@@ -1114,7 +1073,7 @@ public class BillControl {
         return BillNo;
     }
 
-    public ArrayList<TSaleBean> getAllTSaleToBill(String billNo) {
+    public List<TSaleBean> getAllTSaleToBill(String billNo) {
         String sql = "select R_Normal, R_PluCode, R_PName, sum(R_Quan) R_Quan, sum(R_Total) R_Total, "
                 + "sum(R_Price) R_Price, R_ETD "
                 + "from t_sale "
@@ -1126,12 +1085,9 @@ public class BillControl {
             sql += "order by R_Status, R_Index";
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        ArrayList<TSaleBean> data = new ArrayList<>();
+        List<TSaleBean> data = new ArrayList<>();
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -1151,7 +1107,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
@@ -1159,12 +1115,10 @@ public class BillControl {
         return data;
     }
 
-    public ArrayList<TSaleBean> getAllTSale(String billNo) {
+    public List<TSaleBean> getAllTSale(String billNo) {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' order by R_Index";
-        ArrayList<TSaleBean> data = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+        List<TSaleBean> data = new ArrayList<>();
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1212,7 +1166,6 @@ public class BillControl {
                 tsale.setR_Redule(rs.getFloat("R_Redule"));
                 tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
                 tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
-                //tsale.setR_PreDisAmt(rs.getFloat("R_PreDisAmt"));
                 tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
                 tsale.setR_Kic(rs.getString("R_Kic"));
                 tsale.setR_KicPrint(rs.getString("R_KicPrint"));
@@ -1257,7 +1210,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
@@ -1265,12 +1218,10 @@ public class BillControl {
         return data;
     }
 
-    public ArrayList<TSaleBean> getAllTSaleNovoid(String billNo) {
+    public List<TSaleBean> getAllTSaleNovoid(String billNo) {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
-        ArrayList<TSaleBean> data = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+        List<TSaleBean> data = new ArrayList<>();
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1316,7 +1267,6 @@ public class BillControl {
                 tsale.setR_Redule(rs.getFloat("R_Redule"));
                 tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
                 tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
-                //tsale.setR_PreDisAmt(rs.getFloat("R_PreDisAmt"));
                 tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
                 tsale.setR_Kic(rs.getString("R_Kic"));
                 tsale.setR_KicPrint(rs.getString("R_KicPrint"));
@@ -1360,7 +1310,7 @@ public class BillControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
@@ -1368,21 +1318,10 @@ public class BillControl {
         return data;
     }
 
-    public ArrayList<TSaleBean> getAllTSaleNovoidSum(String billNo) {
-//        String sql = "select sum(r_quan) sum_r_quan, "
-//                + "sum(r_total) sum_r_total,"
-//                + "r_etd "
-//                + "from t_sale t "
-//                + "where R_Refno='" + billNo + "' "
-//                + "and r_void<>'V' "
-//                + "and r_plucode<>'8899' "
-//                + "group by r_plucode"
-//                + " order by R_Index";
+    public List<TSaleBean> getAllTSaleNovoidSum(String billNo) {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
-        ArrayList<TSaleBean> data = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+        List<TSaleBean> data = new ArrayList<>();
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1429,7 +1368,6 @@ public class BillControl {
                 tsale.setR_Redule(rs.getFloat("R_Redule"));
                 tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
                 tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
-                //tsale.setR_PreDisAmt(rs.getFloat("R_PreDisAmt"));
                 tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
                 tsale.setR_Kic(rs.getString("R_Kic"));
                 tsale.setR_KicPrint(rs.getString("R_KicPrint"));
@@ -1526,7 +1464,6 @@ public class BillControl {
                 tsale.setR_Redule(rs1.getFloat("R_Redule"));
                 tsale.setR_DiscBath(rs1.getFloat("R_DiscBath"));
                 tsale.setR_PrAdj(rs1.getFloat("R_PrAdj"));
-                //tsale.setR_PreDisAmt(rs1.getFloat("R_PreDisAmt"));
                 tsale.setR_NetTotal(rs1.getFloat("R_NetTotal"));
                 tsale.setR_Kic(rs1.getString("R_Kic"));
                 tsale.setR_KicPrint(rs1.getString("R_KicPrint"));
@@ -1580,7 +1517,6 @@ public class BillControl {
             rs1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -1590,9 +1526,6 @@ public class BillControl {
 
     public BillNoBean getData(String billNo) {
         BillNoBean bean = new BillNoBean();
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1709,7 +1642,6 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -1823,7 +1755,7 @@ public class BillControl {
             PromotionControl proControl = new PromotionControl();
             proControl.saveTPromotion(promotionBean);
         }
-        
+
         return tSaleBean;
     }
 

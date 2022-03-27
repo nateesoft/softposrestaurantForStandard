@@ -2,7 +2,6 @@ package com.softpos.webapp.service;
 
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.main.program.BalanceControl;
 import com.softpos.main.program.NumberControl;
@@ -10,6 +9,7 @@ import com.softpos.main.program.POSConfigSetup;
 import com.softpos.main.program.PosControl;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import util.MSG;
 
 public class ServiceControl {
@@ -23,7 +23,7 @@ public class ServiceControl {
     public void updateService(String table) {
         try {
             BalanceControl balanceControl = new BalanceControl();
-            ArrayList<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
+            List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
             double ServiceTotal = 0;
             double VatTotal = 0;
             double ServicePercent = POSConfigSetup.Bean().getP_Service();

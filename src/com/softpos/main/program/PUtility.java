@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.awt.Font;
@@ -1154,33 +1153,6 @@ public class PUtility {
 
     }
 
-    public static String ReadRefBillNo(String Macno) {
-        String StrRefBillNo = "";
-
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-
-            //Load Data From PosConfigSetup ;
-            String SQLQuery = "select * from poshwsetup where terminal='" + Macno + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                showError("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
-            } else {
-                int Refbillno = rec.getInt("receno1");
-                StrRefBillNo = Integer.toString(Refbillno);
-            }
-            rec.close();
-        } catch (SQLException e) {
-            showError(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        return PUtility.Addzero(StrRefBillNo, 7);
-    }
-
     public static String ReadChargeBillNo(String Macno) {
         String StrRefBillNo = "";
 
@@ -1630,28 +1602,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekRegNo(String TCode) {
-        String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from poshwsetup where terminal='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                ReturnValues = "";
-            } else {
-                ReturnValues = rec.getString("macno");
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        return ReturnValues;
+    public static String SeekRegNo(String macNo) {
+        POSHWSetup poshwSetup = PosControl.getData(macNo);
+        return poshwSetup.getMacNo();
     }
 
     public static String SeekPromotionName(String TCode) {

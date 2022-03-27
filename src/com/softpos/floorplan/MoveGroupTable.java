@@ -1012,8 +1012,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
             c.open();
             c.getConnection().createStatement().executeUpdate(sql);
             c.close();
-        } catch (Exception e) {
-            MSG.ERR(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

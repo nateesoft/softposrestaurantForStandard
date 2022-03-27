@@ -20,98 +20,8 @@ public class StockControl {
 
     public StockControl() {
     }
-//
-//    public String GET_STOCK_NAME(String PCode, String table) {
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        String sql = "select PCode,PGroup,PDesc,POSStk, MSStk from product "
-//                + "where PActive='Y' and PStock='Y' and PCode='" + PCode + "'";
-//        String stock = "";
-//        try {
-//            int Stock_Int;
-//            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            if (rs.next()) {
-//
-//                Stock_Int = rs.getInt("POSStk");
-//
-//                //คลังหลัก ถูกกำหนดโดยตรงจาก Company
-//                if (Stock_Int == 0) {
-//                    String sqlCom = "select PosStock from company";
-//                    Statement stmt1 = mysql.getConnection().createStatement();
-//                    ResultSet rsCom = stmt1.executeQuery(sqlCom);
-//                    if (rsCom.next()) {
-//                        stock = rsCom.getString("PosStock");
-//                    }
-//                    rsCom.close();
-//                    stmt1.close();
-//                } //คลังเลือก ถูกกำหนดโดยแต่ละสาขา ซึ่งจะแยกเป็น ตัดตามสต็อกที่กำหนดโดย Table/POS
-//                else if (Stock_Int == 1) {
-//                    String sqlBranch = "select PSelectStk from branch";
-//                    Statement stmt1 = mysql.getConnection().createStatement();
-//                    ResultSet rsBranch = stmt1.executeQuery(sqlBranch);
-//                    if (rsBranch.next()) {
-//                        String selectedStk = rsBranch.getString("PSelectStk");
-//
-//                        //พิจารณาตัดสต็อกตาม POS
-//                        if (selectedStk.equals("P")) {
-//                            PropControl prop = new PropControl();
-//                            String sqlStock = "select TStock from poshwsetup where Terminal='" + prop.getMacNo() + "'";
-//                            Statement stmt2 = mysql.getConnection().createStatement();
-//                            ResultSet rsStock = stmt2.executeQuery(sqlStock);
-//                            if (rsStock.next()) {
-//                                stock = rsStock.getString("TStock");
-//                            }
-//                            rsStock.close();
-//                            stmt2.close();
-//                        } //พิจารณาตัดสต็อกตาม Table ซึ่งแต่ละ Table จะมีการกำหนดค่าสต็อก 2 คลัง เช่น คลังหลัก และคลังย่อย อย่างใดอย่างหนึ่ง
-//                        else if (selectedStk.equals("T")) {
-//                            String sqlTable = "select Tcode, StkCode1, StkCode2 from tablefile where Tcode='" + table + "'";
-//                            Statement stmt2 = mysql.getConnection().createStatement();
-//                            ResultSet rsTable = stmt2.executeQuery(sqlTable);
-//                            if (rsTable.next()) {
-//                                String stkCode1 = rsTable.getString("StkCode1");
-//                                String stkCode2 = rsTable.getString("StkCode2");
-//
-//                                //ถ้ามีการกำหนดคลังหลัก
-//                                if (!stkCode1.equals("")) {
-//                                    stock = stkCode1;
-//                                } //หากคลังหลักไม่สามารถใช้งานได้
-//                                else if (!stkCode2.equals("")) {
-//                                    stock = stkCode2;
-//                                }
-//                            }
-//                            rsTable.close();
-//                            stmt2.close();
-//                        }
-//                    }
-//
-//                    rsBranch.close();
-//                    stmt1.close();
-//
-//                } //คลังย่อย แต่ละสินค้าจะเป็นตัวกำหนดคลังในการตัดสต็อกเอง
-//                else if (Stock_Int == 2) {
-//                    stock = rs.getString("MSStk");
-//                }
-//            }
-//            rs.close();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-//        } finally {
-//            mysql.close();
-//        }
-//
-//        return stock;
-//    }
 
     public boolean Active(String stock) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         String sql = "select * from stockfile where StkCode='" + stock + "' and flage='Y'";
@@ -136,21 +46,16 @@ public class StockControl {
     public double GET_PRODUCT_QTY(String PCode, String stockCode) {
         double qty = 0;
         SimpleDateFormat sp = new SimpleDateFormat("MM");
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
             String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                qty = rs.getDouble(1);
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    qty = rs.getDouble(1);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -162,9 +67,6 @@ public class StockControl {
 
     public StkFileBean getDataStkFile(String sql) {
         StkFileBean bean = new StkFileBean();
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {

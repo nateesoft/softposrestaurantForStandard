@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
 import database.ConfigFile;
 import database.ConfigFileServer;
 
-/**
- *
- * @author Dell-Softpos
- */
 public class UploadPicToServer {
 
     FTPUtility ftp = new FTPUtility();

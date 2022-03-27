@@ -14,12 +14,20 @@ public class PosControl {
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
 
-    public CompanyBean getCompany() {
-        return getDataCompany();
+    public static void resetPosHwSetup() {
+        poshwsetup = null;
+    }
+    
+    public static void resetPOSConfigSetup() {
+        posConfigSetup = null;
     }
 
     public static void resetDataCompany() {
         companyBean = null;
+    }
+    
+    public CompanyBean getCompany() {
+        return getDataCompany();
     }
 
     public static CompanyBean getDataCompany() {

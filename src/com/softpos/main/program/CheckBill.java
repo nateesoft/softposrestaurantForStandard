@@ -4,22 +4,12 @@ import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.discount.DiscountDialog;
-//import com.softpos.floorplan.DailyRep;
-//import com.softpos.floorplan.DiarySale;
-//import com.softpos.floorplan.MoveGroupTable;
-//import com.softpos.floorplan.PaidinFrm;
-//import com.softpos.floorplan.RefundBill;
-//import com.softpos.floorplan.ResonPaidoutFrm;
-//import com.softpos.floorplan.ShowTable;
 import static com.softpos.main.program.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
@@ -28,9 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -49,11 +37,8 @@ public class CheckBill extends javax.swing.JDialog {
     private DecimalFormat intFM = new DecimalFormat("#,##0");
     private DiscountBean discBean = new DiscountBean();
     private MemberBean memberBean;
-    private double TCreditCharge = 0.00;
     private double CreditCharge = 0.00;
-    private POSHWSetup POSHW;
     private POSConfigSetup CONFIG;
-    private MySQLConnect mysql = new MySQLConnect();
 
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
@@ -67,8 +52,6 @@ public class CheckBill extends javax.swing.JDialog {
         PublicVar.temp_table = tableNo;
         this.memberBean = memberBean;
         this.tableNo = tableNo;
-//        txtMember1.setText(member1);
-//        txtMember2.setText(member2);
         if (memberBean != null) {
             txtMember1.setText(ThaiUtil.ASCII2Unicode(memberBean.getMember_NameThai()));
             txtMember2.setText("แต้มสะสม" + intFM.format(memberBean.getMember_TotalScore()));
@@ -79,17 +62,8 @@ public class CheckBill extends javax.swing.JDialog {
 
         jLabel9.setVisible(false);
         jLabel11.setVisible(false);
-//        txtArCode.setVisible(false);
-//        txtArAmount.setVisible(false);
-//        jPanel3.setVisible(false);
-//        btnCredit1.setVisible(false);
-//        lbCreditAmt.setVisible(false);
-//        lbCreditMoney.setVisible(false);
-//        bntEarnest.setEnabled(false);
-//        txtReturnMoneyAmount.setEnabled(false);
         jLabel5.setVisible(true);
         jLabel10.setVisible(false);
-//        jLabel7.setVisible(false);
         txtSubTotal.setVisible(true);
         txtTotalService.setVisible(true);
         jPanelDiscount.setVisible(true);
@@ -97,16 +71,9 @@ public class CheckBill extends javax.swing.JDialog {
         jLabel11.setVisible(false);
         lbCreditAmt.setVisible(false);
         jPanel3.setVisible(false);
-//        bntEarnest.setVisible(false);
-//        txtReturnMoneyAmount.setVisible(false);
-//        jPanelMember.setVisible(false);
         bntPrintCheckBill.setVisible(false);
         BalanceControl.updateProSerTable(tableNo, memberBean);
         initTable();
-    }
-
-    public CheckBill(Object object, boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @SuppressWarnings("unchecked")
@@ -1311,16 +1278,14 @@ public class CheckBill extends javax.swing.JDialog {
                 restoreTempBalance();
             }
             LoadDisc();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
-            Logger.getLogger(CheckBill.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }//GEN-LAST:event_btnDiscountAllActionPerformed
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
         kichenPrintAfterPrintCheck();
         printBillCheck();
-
     }//GEN-LAST:event_bntPrintCheckBillActionPerformed
 
     private void txtCashAmountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCashAmountKeyPressed
@@ -1345,21 +1310,6 @@ public class CheckBill extends javax.swing.JDialog {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void txtCreditNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreditNoKeyPressed
-//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            if (!txtCreditNo.getText().equals("")) {
-//                if (txtCreditNo.getText().length() > 16) {
-//                    JOptionPane.showMessageDialog(this, "Over Credit Number:");
-//                    txtCreditNo.requestFocus();
-//                    txtCreditNo.selectAll();
-//                } else {
-//                    txtCreditNo.setEditable(false);
-//                    //txtCreditTrackNo.setFocusable(true);
-//                    txtCreditTrackNo.requestFocus();//btnAccept
-//                }
-//            } else {
-//                GetEDC();
-//            }
-//        }
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtCreditNo.getText().equals("")) {
                 if (txtCreditNo.getText().length() > 16) {
@@ -1368,14 +1318,11 @@ public class CheckBill extends javax.swing.JDialog {
                     txtCreditNo.selectAll();
                 } else {
                     txtCreditNo.setEditable(false);
-                    txtCreditTrackNo.requestFocus();//btnAccept
+                    txtCreditTrackNo.requestFocus();
                 }
             } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        processEDC();
-                    }
+                new Thread(() -> {
+                    processEDC();
                 }).start();
             }
         }
@@ -1510,16 +1457,13 @@ public class CheckBill extends javax.swing.JDialog {
                     txtCreditName.setText(findCredit.getCreditCode());
                     CreditCharge = findCredit.getCreditCharge();
                     if (CreditCharge != 0.00) {
-//                    if (!CreditCharge.replace(",", "").equals("0.00")) {
                         amount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
-                        TCreditCharge = (amount * (CreditCharge) / 100);
                         amount = amount + (amount * (CreditCharge) / 100);
                         if (!CONFIG.getP_PayBahtRound().equals("O")) {
                             txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(amount)));
                         } else {
                             txtTotalAmount.setText(dec.format((amount)));
                         }
-//                        txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(amount)));
                     }
                     txtCreditNo.setText("");
                     txtCreditTrackNo.setText("");
@@ -1557,7 +1501,6 @@ public class CheckBill extends javax.swing.JDialog {
             if (c < 0) {
                 c = 0;
             }
-//            txtTotalAmount.setText(NumberFormat.showDouble2(a - b));
             txtTotalAmount.setText(NumberFormat.showDouble2(c));
             txtCashAmount.requestFocus();
         } else {
@@ -1633,7 +1576,7 @@ public class CheckBill extends javax.swing.JDialog {
                 }
                 c.close();
             } catch (SQLException e) {
-                MSG.ERR(e.toString());
+                MSG.ERR(e.getMessage());
             }
         }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
@@ -1670,8 +1613,6 @@ public class CheckBill extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtMember1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMember1ActionPerformed
-//        MemberDialog MBD = new MemberDialog(this, true);
-//        MBD.setVisible(true);
 
     }//GEN-LAST:event_txtMember1ActionPerformed
 
@@ -1689,7 +1630,7 @@ public class CheckBill extends javax.swing.JDialog {
                 txtMember2.setText("แต้มสะสม : " + "0.00" + " แต้ม");
             }
         } catch (Exception e) {
-            MSG.ERR(e.toString());
+            MSG.ERR(e.getMessage());
         }
         loadTableBill();
         LoadDisc();
@@ -1699,7 +1640,6 @@ public class CheckBill extends javax.swing.JDialog {
         PublicVar.languagePrint = "TH";
         kichenPrintAfterPrintCheck();
         printBillCheck();
-//        ClearApp();
     }//GEN-LAST:event_bntPrintCheckBill1ActionPerformed
 
     private void bntPrintCheckBill2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBill2ActionPerformed
@@ -1789,19 +1729,6 @@ public class CheckBill extends javax.swing.JDialog {
             String temp = txtCreditTrackNo.getText().trim();
             txtCreditTrackNo.setText(temp + Str);
         }
-    }
-
-    public static void main(String args[]) {
-        new MySQLConnect();
-//        new MySQLConnect();
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                CheckBill dialog = new CheckBill(new javax.swing.JFrame(), true, "1", null);
-//                dialog.setVisible(true);
-//            }
-//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1905,7 +1832,6 @@ public class CheckBill extends javax.swing.JDialog {
         lbCredit.setText("");
         lbCreditMoney.setText("");
         lbCreditAmt.setText("");
-        POSHW = POSHWSetup.Bean(Value.getMacno());
         CONFIG = POSConfigSetup.Bean();
         loadTableBill();
     }
@@ -1913,17 +1839,14 @@ public class CheckBill extends javax.swing.JDialog {
     private void loadTableBill() {
         TableFileControl tfCon = new TableFileControl();
         tBean = tfCon.getData(tableNo);
-        double totalDiscount = 0.00;
+        double totalDiscount;
         totalDiscount = tBean.getProDiscAmt() + tBean.getSpaDiscAmt() + tBean.getCuponDiscAmt()
                 + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
                 + tBean.getSubDiscAmt() + tBean.getDiscBath() + tBean.getItemDiscAmt();
-
-//        txtTotalCash.setText(dec.format(tBean.getTAmount() - totalDiscount));
         txtTotalCash.setText(dec.format(tBean.getTAmount() - totalDiscount));
         txtBillNo.setText(BillControl.getBillIDCurrent());
 
-        PosControl posControl = new PosControl();
-        POSConfigSetup config = posControl.getData();
+        POSConfigSetup config = PosControl.getData();
         BalanceControl bc = new BalanceControl();
         double NetTotalUpDown = 0;
         if (!config.getP_PayBahtRound().equals("O")) {
@@ -1937,15 +1860,12 @@ public class CheckBill extends javax.swing.JDialog {
             } else {
                 txtTotalAmount.setText(dec.format((tBean.getNetTotal())));
             }
-
-//            txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(NetTotalUpDown - totalDiscount)));
         }
         if (config.getP_VatType().equals("E")) {
             NetTotalUpDown = tBean.getTAmount() - totalDiscount + tBean.getServiceAmt();
             double vat = 0;
             vat = (NetTotalUpDown * 7 / 100);
             NetTotalUpDown = NetTotalUpDown + vat;
-//            txtTotalAmount.setText((dec.format((NetTotalUpDown))));
             txtTotalAmount.setText((dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(NetTotalUpDown))));
         }
 
@@ -1956,7 +1876,7 @@ public class CheckBill extends javax.swing.JDialog {
 
         //ถ้า posconfig PrintSum=Y พิมพืใบเสร็จเป็นยอดรวม
         if (config.getP_PrintSum().equals("Y")) {
-            ArrayList<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
+            List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
                 if (!bean.getR_Void().equals("V")) {
@@ -1979,30 +1899,7 @@ public class CheckBill extends javax.swing.JDialog {
             txtTotalService.setText("" + dec.format(tBean.getServiceAmt()));
             txtSubTotal.setText(dec.format(totalDiscount));
             bntCashActionPerformed(null);
-//            if (!memberBean.getMember_Code().equals("")) {
-//                txtMember1.setText(memberBean.getMember_NameThai());
-//                txtMember2.setText(intFM.format(memberBean.getMember_TotalScore()));
-//            }
-//        } else {
-//            ArrayList<BalanceBean> listBean = bc.getAllBalance(tableNo);
-//            for (int i = 0; i < listBean.size(); i++) {
-//                BalanceBean bean = (BalanceBean) listBean.get(i);
-//                if (!bean.getR_Void().equals("V")) {
-//                    model.addRow(new Object[]{
-//                        bean.getR_PluCode(), bean.getR_PName(),
-//                        dec.format(bean.getR_Quan()), dec.format(bean.getR_Price()), dec.format(bean.getR_Total())
-//                    });
-//                }
-//            }
-//
-//            txtItemDisc.setText("" + dec.format(tBean.getItemDiscAmt()));
-//            txtPromotion.setText("" + dec.format(tBean.getProDiscAmt()));
-//            txtSubTotal.setText("" + dec.format(tBean.getSubDiscAmt()));
-//            txtTotalService.setText("" + dec.format(tBean.getServiceAmt()));
-//
-//            bntCashActionPerformed(null);
         }
-
     }
 
     private void backspaceText() {
@@ -2029,9 +1926,7 @@ public class CheckBill extends javax.swing.JDialog {
         double totalDiscount = Double.parseDouble(txtDiscountAmount.getText().replace(",", ""));
         double totalItemDisc = Double.parseDouble(txtItemDisc.getText().replace(",", ""));
 
-        PosControl posControl = new PosControl();
-        POSConfigSetup config = posControl.getData();
-
+        POSConfigSetup config = PosControl.getData();
         double netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         if (config.getP_VatType().equals("I")) {
             netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
@@ -2239,7 +2134,7 @@ public class CheckBill extends javax.swing.JDialog {
             UpdateMember("Del");
             return;
         }
-        
+
         // กรณีใส่จำนวนเงินไม่ครบ
         double total = netTotal - returnCash - returnGift - saveEntertain;
         txtTotalAmount.setText(dec.format((total)));
@@ -2252,20 +2147,6 @@ public class CheckBill extends javax.swing.JDialog {
         } else {
             print.printCheckBillDriver(tableNo);
         }
-    }
-
-    private void lockScreen(Container container, boolean b) {
-
-        Component[] components = container.getComponents();
-        for (Component component : components) {
-            component.setEnabled(b);
-            component.setFocusable(false);
-            if (component instanceof Container) {
-                lockScreen((Container) component, b);
-            }
-        }
-        btnAccept.setEnabled(true);
-        btnExit.setEnabled(true);
     }
 
     private void lockScreen1(boolean b) {
@@ -2282,7 +2163,6 @@ public class CheckBill extends javax.swing.JDialog {
         btnExit.setEnabled(true);
         btnAccept.setEnabled(true);
         btnAccept.setFocusable(true);
-
     }
 
     private void trackNoExist() {
@@ -2298,12 +2178,8 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void arCodeExits() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-
         try {
             String sql = "select sp_desc,sp_cr,sp_cramt "
                     + "from custfile "
@@ -2314,7 +2190,6 @@ public class CheckBill extends javax.swing.JDialog {
                 lbArName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
                 lbCredit.setText("" + rs.getInt("sp_cr"));
                 lbCreditMoney.setText("" + rs.getDouble("sp_cramt"));
-
                 try {
                     String sql2 = "select sum(aramount) total "
                             + "from accr "
@@ -2332,9 +2207,7 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
                 }
-
                 txtArAmount.setFocusable(true);
                 txtArAmount.setText(txtTotalAmount.getText());
                 txtArAmount.requestFocus();
@@ -2351,7 +2224,6 @@ public class CheckBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -2366,7 +2238,6 @@ public class CheckBill extends javax.swing.JDialog {
             double A = Double.parseDouble(Amt);
 
             txtTotalAmount.setText(dec.format(A - R));
-//            txtTotalAmount.setText(NumberFormat.showDouble2(A - R));
             txtCashAmount.requestFocus();
         }
     }
@@ -2377,31 +2248,24 @@ public class CheckBill extends javax.swing.JDialog {
 
         double SumCS = TC + TS;
         txtTotalAmount.setText(dec.format(SumCS));
-//        txtTotalAmount.setText(NumberFormat.showDouble2(SumCS));
         txtCashAmount.requestFocus();
     }
 
     private void LoadDisc() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String query = "select sum(FastDiscAmt+EmpDiscAmt+MemDiscAmt+TrainDiscAmt+SubDiscAmt+DiscBath+CuponDiscAmt) AAA from tablefile where Tcode = '" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(query);
-
             if (rs.next()) {
                 String DiscTotal = ThaiUtil.ASCII2Unicode(rs.getString("AAA"));
                 txtDiscountAmount.setText(DiscTotal);
             }
-
             rs.close();
             stmt.close();
         } catch (SQLException ex) {
             MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2409,20 +2273,16 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void clearTempSet(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "delete from tempset "
                     + "where PTableNo='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -2453,39 +2313,14 @@ public class CheckBill extends javax.swing.JDialog {
             jPanel6.setVisible(false);
             return;
         }
-        
+
         new Thread(() -> {
             checkBillPayment();
         }).start();
     }
 
-    private void GetEDC() {
-        double TempCreditAmt = Double.parseDouble(PUtility.ConvertReal(txtCreditAmount.getText().replace(",", "")));
-        POSHWSetup hw = POSHWSetup.Bean(Value.MACNO);
-        if (!hw.getEDCPort().equals("NONE")) {
-            try {
-                EDCControl frm = new EDCControl(null, true, hw.getEDCPort(), TempCreditAmt);
-                frm.setVisible(true);
-                while (!frm.ProcessFinish) {
-
-                }
-                if (!frm.ProcessError) {
-                    txtCreditNo.setText(frm.CardCode);
-                    txtCreditTrackNo.setText(frm.AppCode);
-                    txtCreditAmount.setText("" + TempCreditAmt);
-                    txtCreditNo.setFocusable(false);
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "มีปัญหาในการติดต่อเครื่องอนุมัติบัตรเครดิต...กรุณาตรวจสอบ", "Show Message", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
     private void backupTempBalnace() throws SQLException {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
         String sql2 = "insert ignore into temp_balance select * from balance "
@@ -2498,10 +2333,7 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void restoreTempBalance() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from temp_balance where r_table ='" + tableNo + "'";
@@ -2517,12 +2349,11 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -2530,19 +2361,15 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void clearTempGift() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "delete from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -2567,7 +2394,6 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void kichenPrintAfterPrintCheck() {
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-
         try {
             String printerName;
             String[] kicMaster = BranchControl.getKicData20();
@@ -2579,10 +2405,7 @@ public class CheckBill extends javax.swing.JDialog {
                     + "and R_Kic<>'' "
                     + "group by r_kic "
                     + "order by r_kic";
-            /**
-             * * OPEN CONNECTION **
-             */
-            //MySQLConnect mysql = new MySQLConnect();
+            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
                 Statement stmt1 = mysql.getConnection().createStatement();
@@ -2633,12 +2456,6 @@ public class CheckBill extends javax.swing.JDialog {
                                                 + "and R_Kic<>'' "
                                                 + "and R_Void<>'V' and R_KIC='" + rKic + "' "
                                                 + "group by r_plucode order by r_opt1";
-//                                        String sql2 = "select * from balance "
-//                                                + "where r_table='" + tableNo + "' "
-//                                                + "and R_PrintOK='Y' "
-//                                                + "and R_KicPrint<>'P' "
-//                                                + "and R_Kic<>'' "
-//                                                + "and R_Void<>'V' ";
                                         Statement stmt2 = mysql.getConnection().createStatement();
                                         ResultSet rs2 = stmt2.executeQuery(sql2);
                                         while (rs2.next()) {
@@ -2649,28 +2466,23 @@ public class CheckBill extends javax.swing.JDialog {
                                                 double qty = rs2.getDouble("R_Quan");
                                                 double priceTotal = rs2.getDouble("Total");
                                                 printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_Plucode, qty, priceTotal);
-//                                                printBillCheck();
                                             }
                                         }
 
                                         rs2.close();
                                         stmt2.close();
                                     } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-
                                         if (printerForm.equals("3")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
-//                                                printBillVoidCheck();
                                             }
                                         } else if (printerForm.equals("4")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_4(printerName, tableNo);
-//                                                printBillVoidCheck();
                                             }
                                         } else if (printerForm.equals("5")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_5(printerName, tableNo);
-//                                                printBillVoidCheck();
                                             }
                                         }
                                     } else {
@@ -2687,7 +2499,6 @@ public class CheckBill extends javax.swing.JDialog {
                 rsKic.close();
                 stmt1.close();
 
-//                CheckKicPrint();
                 //update r_kicprint
                 try {
                     String sql = "update balance "
@@ -2712,115 +2523,9 @@ public class CheckBill extends javax.swing.JDialog {
         }
     }
 
-//    public void ClearApp() {
-//        ModalPopup popup = new ModalPopup(null, true, "", "", "", "", "");
-//        popup.setVisible(false);
-//        ShowTable s = new ShowTable(null, true);
-//        MoveGroupTable move = new MoveGroupTable(null, true);
-//        RefundBill refund = new RefundBill(null, true);
-//        CopyBill c = new CopyBill(null, true);
-//        FindCredit Find = new FindCredit(null, true);
-//        CustomerCountDialog Cuscount = new CustomerCountDialog(null, true, "", "");
-//        PopupItemJDialog ItemDialog = new PopupItemJDialog(null, true);
-//        SplitBillPayment SplitBill = new SplitBillPayment(null, true, "");
-//        VoidPopupDialog VoidPopUp = new VoidPopupDialog(null, true, "", memberBean);
-//        CouponDiscount Cupon = new CouponDiscount(null, true, "", "", "", 0.00);
-//        s.setVisible(false);
-//        move.setVisible(false);
-//        refund.setVisible(false);
-//        c.setVisible(false);
-//        popup.setVisible(false);
-//        Find.setVisible(false);
-//        Cuscount.setVisible(false);
-//        ItemDialog.setVisible(false);
-//        SplitBill.setVisible(false);
-//        VoidPopUp.setVisible(false);
-//        Cupon.setVisible(false);
-//        PaidinFrm frm = new PaidinFrm(null, true);
-//        frm.setVisible(false);
-//        ResonPaidoutFrm frm1 = new ResonPaidoutFrm(null, true);
-//        frm1.setVisible(false);
-//        DiarySale d = new DiarySale(null, true);
-//        d.setVisible(false);
-//        DailyRep frm2 = new DailyRep(null, true);
-//        frm2.setVisible(false);
-//        DiscountDialog Dis = new DiscountDialog(null, true, "", 0, memberBean, "", "");
-//        Dis.setVisible(false);
-//    }
-    private void clearCuponSpecail() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        //clear temp cupon
-        try {
-            String sql = "delete from tempcupon where r_table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        } finally {
-            mysql.close();
-        }
-
-        mysql.open();
-        try {
-            String sql = "select * from temp_balance "
-                    + "where r_table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String sql1 = "delete from balance where r_table='" + tableNo + "'";
-                String sql2 = "insert into balance select * from temp_balance "
-                        + "where r_table='" + tableNo + "' "
-                        + "order by r_index";
-                String sql3 = "delete from temp_balance where r_table='" + tableNo + "'";
-                stmt.executeUpdate(sql1);
-                stmt.executeUpdate(sql2);
-                stmt.executeUpdate(sql3);
-
-                BalanceControl.updateProSerTable(tableNo, memberBean);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        } finally {
-            mysql.close();
-        }
-    }
-
     private boolean isTakeOrder() {
-        boolean isTakeOrder = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "SELECT TakeOrderChk FROM poshwsetup "
-                    + "where Terminal = '" + Value.MACNO + "' "
-                    + "and TakeOrderChk='Y'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                isTakeOrder = true;
-            } else {
-                isTakeOrder = false;
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        return isTakeOrder;
+        POSHWSetup posHwSetup = PosControl.getData(Value.MACNO);
+        return "Y".equals(posHwSetup.getTakeOrderChk());
     }
 
     public void UpdateMember(String choice) {
@@ -2842,8 +2547,8 @@ public class CheckBill extends javax.swing.JDialog {
                     break;
             }
             c.close();
-        } catch (Exception e) {
-            MSG.ERR(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

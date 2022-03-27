@@ -1,9 +1,11 @@
 package com.softpos.main.program;
 
 import database.MySQLConnect;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -30,7 +32,6 @@ public final class ViewReport {
     public void printReportPVat(String vatNo) {
         ResultSet rs1;
         String comName = null, address = null, comTel = null, comFax = null, no = null, tax = null;
-        String sub = "", prov = "", city = "", post = "";
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
@@ -44,18 +45,13 @@ public final class ViewReport {
                     if (rs1.next()) {
                         comName = rs1.getString("c.Name");
                         address = rs1.getString("c.Address");
-                        sub = rs1.getString("c.Subprovince");
-                        prov = rs1.getString("c.Province");
-                        city = rs1.getString("c.City");
-                        post = rs1.getString("c.POST");
                         comTel = rs1.getString("c.Tel");
                         comFax = rs1.getString("c.Fax");
                         tax = rs1.getString("c.Tax");
-                        address += sub + prov + city + post;
                     }
                 }
                 rs1.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.NOTICE(e.toString());
             }
 
@@ -85,13 +81,11 @@ public final class ViewReport {
                 }
 
                 rs.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.NOTICE(e.toString());
-                
             }
 
             if (check > 0) {
-
                 String sqlBranch = "SELECT * FROM branch ";
                 String branchName = "";
                 try {
@@ -101,12 +95,10 @@ public final class ViewReport {
                             branchName = rs.getString("Name");
                         }
                     }
-                } catch (Exception e) {
-
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
                 }
-                  File file = new File("C:/spapplication/application/report/inVat.jrxml");               
                 try {
-
                     Float cp = Float.parseFloat(cashPay);
                     Float crp = Float.parseFloat(crPay);
                     Float cup = Float.parseFloat(cupon);
@@ -170,13 +162,10 @@ public final class ViewReport {
                     JasperReport jasperReport = null;
                     try {
                         jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/inVat.jasper"));
-                    } catch (Exception e) {
-                        MSG.ERR(null, e.toString());
+                    } catch (JRException e) {
+                        MSG.ERR(null, e.getMessage());
                     }
 
-                    /**
-                     * * OPEN CONNECTION **
-                     */
                     JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
                     JasperViewer v = new JasperViewer(jasperPrint, false);
                     JDialog j = new JDialog(new JFrame(), true);
@@ -187,7 +176,7 @@ public final class ViewReport {
                     j.setVisible(true);
                     v.setTitle("Report...");
                     mysql.close();
-                } catch (Exception e) {
+                } catch (HeadlessException | NumberFormatException | JRException e) {
                     MSG.ERR(e.getMessage());
                 }
             } else {
@@ -203,7 +192,6 @@ public final class ViewReport {
     public void printReportIVat(String vatNo) {
         ResultSet rs1;
         String comName = null, address = null, comTel = null, comFax = null, no = null, tax = null;
-        String sub = "", prov = "", city = "", post = "";
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
@@ -214,19 +202,14 @@ public final class ViewReport {
                 if (rs1.next()) {
                     comName = rs1.getString("c.Name");
                     address = rs1.getString("c.Address");
-                    sub = rs1.getString("c.Subprovince");
-                    prov = rs1.getString("c.Province");
-                    city = rs1.getString("c.City");
-                    post = rs1.getString("c.POST");
                     comTel = rs1.getString("c.Tel");
                     comFax = rs1.getString("c.Fax");
                     tax = rs1.getString("c.Tax");
-                    address += sub + prov + city + post;
                 }
             }
             rs1.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.NOTICE(e.getMessage());
         }
 
         String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
@@ -285,7 +268,6 @@ public final class ViewReport {
         }
 
         if (check > 0) {
-
             String sqlBranch = "SELECT * FROM branch ";
             String branchName = "";
             try {
@@ -295,11 +277,10 @@ public final class ViewReport {
                         branchName = rs.getString("Name");
                     }
                 }
-            } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             }
             try {
-
                 Map parameters = new HashMap();
 
                 parameters.put("companyName", comName);
@@ -345,9 +326,7 @@ public final class ViewReport {
                 parameters.put("vat", doubleFmt.format(vt));
                 parameters.put("amount", doubleFmt.format(amt));
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/debtVat.jasper"));
-                /**
-                 * * OPEN CONNECTION **
-                 */
+
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
@@ -360,7 +339,7 @@ public final class ViewReport {
                 j.setVisible(true);
                 v.setTitle("Report...");
                 mysql.close();
-            } catch (Exception e) {
+            } catch (HeadlessException | NumberFormatException | JRException e) {
                 MSG.ERR(e.getMessage());
             }
         } else {
@@ -385,16 +364,18 @@ public final class ViewReport {
                         branchName = rs.getString("Name");
                     }
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             }
-            Date dates = new Date();
+            
+            Date dates;
             try {
                 dates = outFmt.parse(str);
                 date1 = inFmt.format(dates);
 
                 dates = outFmt.parse(end);
                 date2 = inFmt.format(dates);
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
             try {
                 Map parameters = new HashMap();
@@ -406,15 +387,10 @@ public final class ViewReport {
                 JasperReport jasperReport = null;
                 try {
                     jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/PVatDaily.jasper"));
-                } catch (Exception e) {
-                    MSG.ERR(null, e.toString());
+                } catch (JRException e) {
+                    MSG.ERR(null, e.getMessage());
                 }
 
-                /**
-                 * * OPEN CONNECTION **
-                 */
-//                MySQLConnect mysql = new MySQLConnect();
-//                mysql.open();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
                 int pageSize = jasperPrint.getPages().size();
                 if (pageSize > 0) {
@@ -477,8 +453,8 @@ public final class ViewReport {
             JasperReport jasperReport = null;
             try {
                 jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/IVatDaily.jasper"));
-            } catch (Exception e) {
-                MSG.ERR(null, e.toString());
+            } catch (JRException e) {
+                MSG.ERR(null, e.getMessage());
             }
 
             /**

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
@@ -44,7 +45,7 @@ public class ControlMenu {
                 break;
         }
 
-        ArrayList<CompanyMenu> cpm = getAllMenu();
+        List<CompanyMenu> cpm = getAllMenu();
         if (cpm.isEmpty()) {
             return new CompanyMenu();
         } else {
@@ -53,11 +54,8 @@ public class ControlMenu {
     }
 
     //sample A01
-    public ArrayList<ProductBean> getMenuItem(String item) {
-        ArrayList<ProductBean> dataProduct = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<ProductBean> getMenuItem(String item) {
+        List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -97,11 +95,8 @@ public class ControlMenu {
         return dataProduct;
     }
 
-    public ArrayList<ProductBean> getMenuItem2(String item) {
-        ArrayList<ProductBean> dataProduct = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<ProductBean> getMenuItem2(String item) {
+        List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -139,15 +134,12 @@ public class ControlMenu {
         return dataProduct;
     }
 
-    public ArrayList<MenuSetup> menuAt(String index) {
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<MenuSetup> menuAt(String index) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         String sql = "select * from menusetup where Code_ID like '" + index + "%' "
                 + "and length(Code_ID)=3 group by Code_Id order by Code_Id";
-        ArrayList<MenuSetup> menuAll = new ArrayList<>();
+        List<MenuSetup> menuAll = new ArrayList<>();
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -173,10 +165,7 @@ public class ControlMenu {
         return menuAll;
     }
 
-    public ArrayList<MenuSetup> menuItemAt(String Code_ID) {
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<MenuSetup> menuItemAt(String Code_ID) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         String sql = "select * from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID";
@@ -186,25 +175,30 @@ public class ControlMenu {
             if (rs.next()) {
                 String Code_Type = rs.getString("Code_Type");
                 String PCode = rs.getString("PCode");
-
-                if (Code_Type.equals("S")) {
-                    sql = "select Code_ID, PCode, ShortName from menusetup where Code_ID like '" + Code_ID + "%' and Code_Type='P' group by Code_ID";
-                } else if (Code_Type.equals("P")) {
-                    sql = "";
-                } else if (Code_Type.equals("D")) {
-                    sql = "select PCode, PDesc ShortName from product where PGroup='" + PCode + "'";
-                } else if (Code_Type.equals("G")) {
-                    sql = "select Code_ID, p.PCode, PDesc ShortName from menugroup m inner join product p on m.PCode=p.PCode where Code_ID='" + Code_ID + "'";
+                switch (Code_Type) {
+                    case "S":
+                        sql = "select Code_ID, PCode, ShortName from menusetup where Code_ID like '" + Code_ID + "%' and Code_Type='P' group by Code_ID";
+                        break;
+                    case "P":
+                        sql = "";
+                        break;
+                    case "D":
+                        sql = "select PCode, PDesc ShortName from product where PGroup='" + PCode + "'";
+                        break;
+                    case "G":
+                        sql = "select Code_ID, p.PCode, PDesc ShortName from menugroup m inner join product p on m.PCode=p.PCode where Code_ID='" + Code_ID + "'";
+                        break;
+                    default:
+                        break;
                 }
             }
 
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         }
 
-        ArrayList<MenuSetup> menuAll = new ArrayList<>();
+        List<MenuSetup> menuAll = new ArrayList<>();
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -231,7 +225,6 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException ex) {
             MSG.ERR(null, ex.getMessage());
-            ex.printStackTrace();
         }
 
         mysql.close();
@@ -239,7 +232,7 @@ public class ControlMenu {
         return menuAll;
     }
 
-    public ArrayList<CompanyMenu> getAllMenu() {
+    public List<CompanyMenu> getAllMenu() {
         CompanyBean companyBean = PosControl.getDataCompany();
         String[] head = new String[]{
             ThaiUtil.ASCII2Unicode(companyBean.getHead1()),
@@ -316,7 +309,7 @@ public class ControlMenu {
     }
 
     public String[] getData(String menuHead) {
-        ArrayList<MenuSetup> listMenu = menuAt(menuHead);
+        List<MenuSetup> listMenu = menuAt(menuHead);
         String[] data = new String[28];
         for (int a1 = 0; a1 < data.length; a1++) {
             data[a1] = "";
@@ -330,8 +323,8 @@ public class ControlMenu {
         return data;
     }
 
-    public ArrayList<String> getDataArray(String menuHead) {
-        ArrayList<MenuSetup> listMenu = menuAt(menuHead);
+    public List<String> getDataArray(String menuHead) {
+        List<MenuSetup> listMenu = menuAt(menuHead);
         ArrayList<String> dataArray = new ArrayList<String>();
         for (int a1 = 0; a1 < 28; a1++) {
             //data[a1] = "";
@@ -342,26 +335,33 @@ public class ControlMenu {
             int index = Integer.parseInt(m.getCode_ID().substring(1, m.getCode_ID().length()));
 
             //Sub Menu
-            if (m.getCode_Type().equals("S")) {
-                dataArray.set(index - 1, "(S) " + m.getShortName());
-            } //Plu Code
-            else if (m.getCode_Type().equals("P")) {
-                dataArray.set(index - 1, "(P) " + m.getShortName());
-            } //Group
-            else if (m.getCode_Type().equals("G")) {
-                dataArray.set(index - 1, "(G) " + m.getShortName());
-            } //Dept
-            else if (m.getCode_Type().equals("D")) {
-                dataArray.set(index - 1, "(D) " + m.getShortName());
+            switch (m.getCode_Type()) {
+            //Plu Code
+                case "S":
+                    dataArray.set(index - 1, "(S) " + m.getShortName());
+                    break;
+            //Group
+                case "P":
+                    dataArray.set(index - 1, "(P) " + m.getShortName());
+                    break;
+            //Dept
+                case "G":
+                    dataArray.set(index - 1, "(G) " + m.getShortName());
+                    break;
+                case "D":
+                    dataArray.set(index - 1, "(D) " + m.getShortName());
+                    break;
+                default:
+                    break;
             }
         }
 
         return dataArray;
     }
 
-    public ArrayList<MenuSetup> getDataMenuSetup(String menuHead) {
-        ArrayList<MenuSetup> listMenu = menuAt(menuHead);
-        ArrayList<MenuSetup> dataArray = new ArrayList<MenuSetup>();
+    public List<MenuSetup> getDataMenuSetup(String menuHead) {
+        List<MenuSetup> listMenu = menuAt(menuHead);
+        List<MenuSetup> dataArray = new ArrayList<>();
         for (int a1 = 0; a1 < 28; a1++) {
             //data[a1] = "";
             dataArray.add(new MenuSetup("", "", "", "", ""));
@@ -376,17 +376,13 @@ public class ControlMenu {
         return dataArray;
     }
 
-    public ArrayList<MenuSetup> getDataMenuItem(String Code_ID) {
-        ArrayList<MenuSetup> listMenu = menuItemAt(Code_ID);
-
+    public List<MenuSetup> getDataMenuItem(String Code_ID) {
+        List<MenuSetup> listMenu = menuItemAt(Code_ID);
         return listMenu;
     }
 
     public String getMenuItemAt(String pCode) {
         String menuAt = "";
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {

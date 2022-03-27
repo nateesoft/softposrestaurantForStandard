@@ -53,46 +53,6 @@ public class MemberControl {
             MSG.ERR(e.getMessage());
         }
     }
-//    public void updateMemberDiscount(String table, MemberBean memberBean) {
-//        String strDisc = "";
-//        String memCode = "";
-//        String memName = "";
-//        if (memberBean != null) {
-//            if (!memberBean.getMember_DiscountRate().equals("")) {
-//                strDisc = memberBean.getMember_DiscountRate();
-//            }
-//            memCode = memberBean.getMember_Code();
-//            memName = memberBean.getMember_NameThai();
-//        }
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        try {
-//            String sql = "select sum(R_PrSubAmt) as MemDiscount "
-//                    + "from balance where r_table='" + table + "' "
-//                    + "order by R_Index;";
-//            try (Statement stmt = mysql.getConnection().createStatement()) {
-//                ResultSet rs = stmt.executeQuery(sql);
-//                if (rs.next()) {
-//                    String upd = "update tablefile set "
-//                            + "MemDiscAmt='" + rs.getDouble("MemDiscount") + "',"
-//                            + "MemDisc='" + strDisc + "', "
-//                            + "MemCode='" + memCode + "', "
-//                            + "MemName='" + memName + "' "
-//                            + "where tcode='" + table + "'";
-//                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
-//                        stmt1.executeUpdate(upd);
-//                    }
-//                }
-//
-//                rs.close();
-//            }
-//        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-//        }
-//    }
 
     public void updateMemberAllBalance(String table, MemberBean memberBean) {
         /**
@@ -164,86 +124,6 @@ public class MemberControl {
         }
     }
 
-//    public void updateMemVIPAllBalance(String table, MemberBean memberBean) {
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        try {
-//            /*
-//             R_PrSubType = -M
-//             R_PrSubCode = MEM
-//             R_PrSubQuan = 1
-//             R_PrSubDisc = 5 (เปอร์เซ็นต์การลด)
-//             R_PrSubBath = 0
-//             R_PrSubAmt = 4.75 (5% ของราคาสินค้า)
-//             R_QuanCanDisc = 0
-//             */
-//            String sql = "select * from balance "
-//                    + "where R_Table='" + table + "' "
-//                    + "and R_Discount='Y' "
-//                    + "order by R_Index;";
-//            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            while (rs.next()) {
-//                BalanceBean balance = new BalanceBean();
-//
-//                // คำนวณหาว่าลดเท่าไหร่
-//                String[] subPercent = memberBean.getMember_DiscountRate().split("/");
-//                int Percent = 0;
-//
-//                if (subPercent.length == 3) {
-//                    String R_Normal = rs.getString("R_Normal");
-//                    if (R_Normal == null) {
-//                        R_Normal = "";
-//                    }
-//                    if (R_Normal.equals("N")) {
-//                        Percent = Integer.parseInt(subPercent[0].trim());
-//                    } else if (R_Normal.equals("C")) {
-//                        Percent = Integer.parseInt(subPercent[1].trim());
-//                    } else if (R_Normal.equals("S")) {
-//                        Percent = Integer.parseInt(subPercent[2].trim());
-//                    }
-//                }
-//                if (subPercent.length == 3) {
-//                    String R_Normal = rs.getString("R_Normal");
-//                    if (R_Normal == null) {
-//                        R_Normal = "";
-//                    }
-//                    if (R_Normal.equals("N")) {
-//                        Percent = Integer.parseInt(subPercent[0].trim());
-//                    } else if (R_Normal.equals("C")) {
-//                        Percent = Integer.parseInt(subPercent[1].trim());
-//                    } else if (R_Normal.equals("S")) {
-//                        Percent = Integer.parseInt(subPercent[2].trim());
-//                    }
-//                }
-//
-//                balance.setR_PrSubAmt((rs.getDouble("R_Total") * Percent) / 100);
-//                balance.setR_QuanCanDisc(0);// if member default 0
-//
-//                String sqlUpd = "update balance set "
-//                        + "R_PrSubType='-M',"
-//                        + "R_PrSubCode='MEM',"
-//                        + "R_PrSubQuan='" + rs.getDouble("R_Quan") + "',"
-//                        + "R_PrSubDisc='" + Percent + "',"
-//                        + "R_PrSubBath='0',"
-//                        + "R_PrSubAmt='" + ((rs.getDouble("R_Total") * Percent) / 100) + "',"
-//                        + "R_QuanCanDisc='0' "
-//                        + "where R_Index='" + rs.getString("R_Index") + "' "
-//                        + "and R_Table='" + rs.getString("R_Table") + "'";
-//                Statement stmt1 = mysql.getConnection().createStatement();
-//                stmt1.executeUpdate(sqlUpd);
-//                stmt1.close();
-//            }
-//
-//            rs.close();
-//        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-//            
-//        }
-//    }
     public void updateMemVIPAllBalance(String table, String discountRate) {
         /**
          * * OPEN CONNECTION **

@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +21,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
     private DefaultTableModel model;
     private String tableNo;
     private BalanceControl balanceControl;
-    private ArrayList<BalanceBean> listBalance;
+    private List<BalanceBean> listBalance;
     private String tempETD;
 
     /**

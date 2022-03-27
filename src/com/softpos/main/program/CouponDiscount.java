@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import database.MySQLConnect;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
@@ -740,7 +740,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
                     //check from cuponlist
                     CuponListControl lc = new CuponListControl();
-                    ArrayList<CuponlistBean> listBean = lc.listCuponlist(cuCode);
+                    List<CuponlistBean> listBean = lc.listCuponlist(cuCode);
                     //******* START ******//
                     if (listBean.isEmpty()) {
                         MSG.WAR(msgError);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
 import database.MySQLConnect;
@@ -19,12 +14,9 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import printReport.PrintDriver;
 
-/**
- *
- * @author Dell-Softpos
- */
 public class SendTerminalReportAuto {
     
     SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -328,11 +320,9 @@ public class SendTerminalReportAuto {
     
     public void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo1, String macNo2) throws FileNotFoundException, UnsupportedEncodingException {
         String t = "";
-        double sumCuponAmt = 0.00;
         CONFIG = POSConfigSetup.Bean();
-        ArrayList<Object[]> list1 = DocAnalyse(dc.GetCurrentDate() + "", dc.GetCurrentDate() + "");
-        String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
-        double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
+        List<Object[]> list1 = DocAnalyse(dc.GetCurrentDate() + "", dc.GetCurrentDate() + "");
+        double totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
         double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
         double AVG_DockE = 0.00;
         double AVG_DockT = 0.00;
@@ -341,20 +331,13 @@ public class SendTerminalReportAuto {
         double AVG_CCT = 0.00;
         double AVG_CCD = 0.00;
         if (list1 != null && list1.size() > 0) {
-            countE = list1.get(0)[0].toString();
-            etdE = list1.get(0)[1].toString();
             countCCE = Double.parseDouble(list1.get(0)[2].toString());
-            totalE = Double.parseDouble(list1.get(0)[4].toString()) - frec.Service - frec.VatAmt;
             nettotalE = Double.parseDouble(list1.get(0)[5].toString());
             
-            countT = list1.get(1)[0].toString();
-            etdT = list1.get(1)[1].toString();
             countCCT = Double.parseDouble(list1.get(1)[2].toString());
             nettotalT = Double.parseDouble(list1.get(1)[4].toString());
             totalT = Double.parseDouble(list1.get(1)[5].toString());
             
-            countD = list1.get(2)[0].toString();
-            etdD = list1.get(2)[1].toString();
             countCCD = Double.parseDouble(list1.get(2)[2].toString());
             nettotalD = Double.parseDouble(list1.get(2)[4].toString());
             totalD = Double.parseDouble(list1.get(2)[5].toString());
@@ -391,7 +374,7 @@ public class SendTerminalReportAuto {
         } else {
             
         }
-        double totalDiscount = 0.00;
+        double totalDiscount;
         totalDiscount = frec.Vip_Disc + frec.Fast_Disc + frec.Emp_Disc
                 + frec.Train_Disc + frec.Sub_Disc + frec.Gen_Refund + frec.Promotion
                 + frec.Spacial + frec.Item_Disc + frec.Cupon_Disc;
@@ -506,7 +489,7 @@ public class SendTerminalReportAuto {
             double am1 = Double.parseDouble(am);
             t += ("align=left><font face=Angsana New size=1>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=1>" + cd + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(am1)) + "_";
         }
-        ArrayList<String[]> list = CreName(macNo1, macNo2);
+        List<String[]> list = CreName(macNo1, macNo2);
         for (int i = 0; i < list.size(); i++) {
             String[] CreName = (String[]) list.get(i);
             
@@ -609,8 +592,8 @@ public class SendTerminalReportAuto {
         pd.printHTMLIntoFile();
     }
     
-    private ArrayList<Object[]> DocAnalyse(String date1, String date2) {
-        ArrayList<Object[]> listObj = new ArrayList<>();
+    private List<Object[]> DocAnalyse(String date1, String date2) {
+        List<Object[]> listObj = new ArrayList<>();
         String sqlSelectDocTypeE = "select count(b_refno)b_refno,"
                 + "b_ondate, "
                 + "b_macno, "
@@ -756,11 +739,8 @@ public class SendTerminalReportAuto {
         return listObj;
     }
     
-    private ArrayList<String[]> CreName(String macNo1, String macNo2) {
-        ArrayList<String[]> list = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    private List<String[]> CreName(String macNo1, String macNo2) {
+        List<String[]> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -844,39 +824,7 @@ public class SendTerminalReportAuto {
         
         return credit;
     }
-    
-    private String[] specialCupon(String macNo1, String macNo2) {
-        String[] cupon = new String[]{"", ""};
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select sum(cuquan) cuquan, "
-                    + "sum(cuamt) cuamt "
-                    + "from s_cupon "
-                    + "where cuquan<>'0' "
-                    + "and cuant<>'0' "
-                    + "and macno between'" + macNo1 + "' and '" + macNo2 + "';";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            if (rec.next()) {
-                cupon[0] = rec.getString("cuquan");
-                cupon[1] = rec.getString("cuamt");
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException ex) {
-//            MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
-        } finally {
-            mysql.close();
-        }
-        
-        return cupon;
-    }
-    
+
     public String changeReportLanguage(String text) {
         String t = text;
         String billLanguage = ConfigFile.getProperties("languagebillSubtotal");
@@ -973,17 +921,13 @@ public class SendTerminalReportAuto {
                         }
                         rsAddress.close();
                     } catch (Exception e) {
-                        MSG.ERR(e.toString());
+                        MSG.ERR(e.getMessage());
                     }
-                    
-//                } else {
-//                    System.out.println("Holder Time : Next Round = :" + TimeSend);
-//                }
             }
             rsConfig.close();
             c.close();
         } catch (Exception e) {
-            MSG.ERR(e.toString());
+            MSG.ERR(e.getMessage());
         }
     }
     
@@ -1002,7 +946,7 @@ public class SendTerminalReportAuto {
 //            }
             c.close();
         } catch (Exception e) {
-            MSG.ERR(e.toString());
+            MSG.ERR(e.getMessage());
 //            
         }
     }

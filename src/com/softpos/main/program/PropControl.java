@@ -79,5 +79,4 @@ public class PropControl {
         return bean;
     }
     
-    
 }

@@ -97,17 +97,6 @@ public class MySQLConnectWebOnline {
         }
     }
 
-    private void showError(Exception e) {
-        String strErr = e.getMessage();
-        if (strErr.indexOf("No operations") != -1
-                || strErr.indexOf("Communications link failure") != -1) {
-            int confirm = JOptionPane.showConfirmDialog(null, msgError);
-            if (confirm == JOptionPane.YES_OPTION) {
-                System.exit(0);
-            }
-        }
-    }
-
     public void getDbVar() {
         if (HostName == null) {
             try {

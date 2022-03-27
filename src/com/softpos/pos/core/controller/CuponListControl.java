@@ -6,16 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import util.MSG;
 
 public class CuponListControl {
 
-    public ArrayList<CuponlistBean> listCuponlist() {
+    public List<CuponlistBean> listCuponlist() {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         
-        ArrayList<CuponlistBean> listBean = new ArrayList<>();
+        List<CuponlistBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cuponlist";
             Statement stmt = mysql.getConnection().createStatement();
@@ -40,12 +41,12 @@ public class CuponListControl {
         return listBean;
     }
 
-    public ArrayList<CuponlistBean> listCuponlist(String CuCode) {
+    public List<CuponlistBean> listCuponlist(String CuCode) {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         
-        ArrayList<CuponlistBean> listBean = new ArrayList<>();
+        List<CuponlistBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cuponlist "
                     + "where CuCode='" + CuCode + "'";

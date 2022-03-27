@@ -330,7 +330,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                         chkResult();
                     }
                 } catch (IOException e) {
-                    MSG.ERR(e.toString());
+                    MSG.ERR(e.getMessage());
                 }
                 break;
         }
