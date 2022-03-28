@@ -234,6 +234,7 @@ public class ButtonCustom {
         button.setVerticalTextPosition(SwingConstants.CENTER);
         button.setVerticalAlignment(SwingConstants.CENTER);
         button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setRequestFocusEnabled(false);
 
         for (ActionListener al : button.getActionListeners()) {
             button.removeActionListener(al);

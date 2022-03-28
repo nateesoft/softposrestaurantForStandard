@@ -1,6 +1,5 @@
 package com.softpos.floorplan;
 
-import com.softpos.core.logger.LoggerController;
 import com.softpos.login.FileSettingDialog;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -83,7 +82,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private Font fontB = new Font("Tahoma", Font.BOLD, 11);
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
-    private Logger logger = Logger.getLogger(FloorPlanDialog.class.getName());
 
     public FloorPlanDialog() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
@@ -97,8 +95,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jLabel1.setVisible(false);
         Value.TableSelected = "";
-
-        LoggerController.inital(logger);
 
         new Thread(() -> {
             for (int a = 0; a < 10; a++) {
@@ -139,7 +135,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             MSG.ERR(null, ex.getMessage());
         }
         jButton1.setLocation(0, 1024);
-        logger.log(Level.INFO, "FloorPlanDialog init");
     }
 
     @SuppressWarnings("unchecked")
