@@ -22,8 +22,7 @@
         <group name="CBMart"/>
         <group name="Jeffer_Group"/>
         <group>
-            <file>file:/D:/OutsourceProject/softpos/pos_project/GithubProject/softposrestaurantForStandard/src/com/softpos/core/logger/LoggerController.java</file>
-            <file>file:/D:/OutsourceProject/softpos/pos_project/GithubProject/softposrestaurantForStandard/src/com/softpos/core/logger/MyHtmlFormatter.java</file>
+            <file>file:/D:/OutsourceProject/softpos/pos_project/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/MainSale.java</file>
         </group>
     </open-files>
 </project-private>
