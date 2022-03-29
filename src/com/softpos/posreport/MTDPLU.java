@@ -14,12 +14,12 @@ import util.DateChooseDialog;
 import database.MySQLConnect;
 import java.sql.Statement;
 import com.softpos.main.program.Jdi_report_MTDSalePLU;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PluRec;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PluRec;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.MSG;
@@ -41,9 +41,6 @@ public class MTDPLU extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
 
-    /**
-     * Creates new form MTDPLU
-     */
     public MTDPLU(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -1056,25 +1053,6 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         }
 
         pd.printHTML();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                MTDPLU dialog = new MTDPLU(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

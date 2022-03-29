@@ -1,4 +1,5 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
+
 public class HourlyRec {
     public String TTime = "" ;
     public int TBill = 0 ;

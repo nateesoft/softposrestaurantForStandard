@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.main.program.BalanceControl;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.main.program.CheckProductNotEnough;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBill;
@@ -38,26 +38,26 @@ import com.softpos.main.program.DisplayEJ;
 import com.softpos.main.program.EmployLogin;
 import com.softpos.main.program.GetQty;
 import com.softpos.main.program.GetUserAction;
-import com.softpos.main.program.POSConfigSetup;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PublicVar;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.main.program.SetupButtonTable;
-import com.softpos.main.program.TableFileControl;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
 import util.MSG;
 import java.awt.event.MouseAdapter;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import javax.swing.ImageIcon;
 import com.softpos.main.program.MainSale;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PosControl;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosControl;
 import com.softpos.main.program.PrintKicControl;
 import com.softpos.pos.core.model.ProductBean;
-import com.softpos.main.program.ProductControl;
+import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.main.program.UpdateData;
-import com.softpos.main.program.UserRecord;
+import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.model.CompanyBean;
 import java.awt.Image;
 import java.util.Date;
@@ -1243,53 +1243,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } finally {
             mysql.close();
         }
-    }
-
-    public static void main(String args[]) {
-//        try {
-//            Runtime.getRuntime().exec("calc");
-//        } catch (IOException e) {
-//            System.err.println(e.getMessage());
-//        }
-//        
-        new MySQLConnect();
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FloorPlanDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FloorPlanDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FloorPlanDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FloorPlanDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FloorPlanDialog dialog = new FloorPlanDialog();
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

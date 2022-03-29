@@ -19,14 +19,13 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.floorplan.FloorPlanDialog;
-import com.softpos.main.program.BranchControl;
+import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.main.program.GetPassword;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PosControl;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.UserRecord;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
 import database.ConfigFile;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
@@ -259,7 +258,7 @@ public class Login extends javax.swing.JDialog {
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 770));
 
         lbVersion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbVersion.setText("Update: 27/03/2022");
+        lbVersion.setText("Update: 29/03/2022");
         jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -296,15 +296,6 @@ public class DateUtil {
         hours = hours % 24;
 
         return new Time(day, (int) hours, (int) minutes, (int) seconds, (int) millis);
-
-    }
-
-    public static void main(String[] args) {
-        GregorianCalendar start = new GregorianCalendar(2007, 1, 1, 20, 20, 20);
-        start.set(Calendar.MILLISECOND, 100);
-        GregorianCalendar stop = new GregorianCalendar(2007, 1, 3, 10, 25, 20);
-        stop.set(Calendar.MILLISECOND, 900);
-        System.out.println(lunarStay(start, stop).toString());
     }
     
     public static String addZero(long i){

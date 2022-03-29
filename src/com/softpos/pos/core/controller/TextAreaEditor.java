@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import javax.swing.*;
 
@@ -13,9 +13,11 @@ public class TextAreaEditor extends DefaultCellEditor {
     editorComponent = scrollPane;
 
     delegate = new DefaultCellEditor.EditorDelegate() {
+      @Override
       public void setValue(Object value) {
         textArea.setText((value != null) ? value.toString() : "");
       }
+      @Override
       public Object getCellEditorValue() {
         return textArea.getText();
       }

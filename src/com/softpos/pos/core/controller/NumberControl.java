@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import java.text.DecimalFormat;
 import util.MSG;
@@ -69,10 +69,10 @@ public class NumberControl {
 
     public static double UP_DOWN_25NewTotal(double d) {
         String money = "" + d;
-        if (money.indexOf(".") != -1) {
+        if (money.contains(".")) {
             String m = money.replace('.', ',');
             int multi = 1;
-            if (m.indexOf("-") != -1) {
+            if (m.contains("-")) {
                 multi = -1;
             }
             String[] data = m.split(",");
@@ -125,17 +125,14 @@ public class NumberControl {
     }
 
     public static int UP_DOWN_NATURAL_BAHT(double d) {
-
         return (int) Math.round(d);
     }
 
     public static double DOWN_BAHT(double d) {
-
         return Math.floor(d);
     }
 
     public static double UP_BAHT(double d) {
-
         return Math.ceil(d);
     }
 

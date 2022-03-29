@@ -1,5 +1,6 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;

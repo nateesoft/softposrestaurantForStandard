@@ -1,5 +1,11 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.CreditPaymentRec;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.model.TranRecord;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -471,25 +477,6 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     private void bntExitClick() {
         this.dispose();
-    }
-
-    public static void main(String args[]) {
-        new MySQLConnect();
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                CopyBill dialog = new CopyBill(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

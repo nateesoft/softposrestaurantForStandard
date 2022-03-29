@@ -1,5 +1,6 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.TPromotionBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.ProductBean;
@@ -9,7 +10,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import util.MSG;
 
@@ -22,9 +22,6 @@ public class PromotionControl {
     }
 
     public void saveTempPromotion(TempPromotion bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -32,12 +29,11 @@ public class PromotionControl {
                     + "values('" + bean.getTableNo() + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','"
                     + bean.getPCode() + "','" + bean.getPQty() + "','"
                     + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }

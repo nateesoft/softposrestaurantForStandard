@@ -1,5 +1,6 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
@@ -18,18 +19,14 @@ public class TableFileControl {
     public static final int TABLE_NOT_SETUP = 0;
     public static final int TABLE_EXIST_DATA = 3;
     public static final int TABLE_EXIST_DATA_IS_ACTIVE = 4;
-    private MySQLConnect mysql = new MySQLConnect();
 
     public TableFileControl() {
     }
 
     public void saveTableFile(TableFileBean tableBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "insert into tablefile "
                     + "(Tcode,SoneCode,TLoginDate,MacNo,Cashier,TLoginTime,TCurTime,TCustomer,"
                     + "TItem,TAmount,TOnAct,Service,ServiceAmt,EmpDisc,EmpDiscAmt,FastDisc,"
@@ -61,9 +58,9 @@ public class TableFileControl {
                     + tableBean.getChkBill() + "','" + tableBean.getChkBillTime() + "','"
                     + tableBean.getStkCode1() + "','" + tableBean.getStkCode2() + "','"
                     + tableBean.getTDesk() + "','" + tableBean.getTUser() + "','" + tableBean.getTPause() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -72,12 +69,9 @@ public class TableFileControl {
     }
 
     public void updateTableFile(TableFileBean tableFile) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "update tablefile set "
                     + "Tcode='" + tableFile.getTcode() + "', SoneCode='" + tableFile.getSoneCode() + "', TLoginDate='"
                     + tableFile.getTLoginDate() + "', MacNo='" + tableFile.getMacNo() + "', Cashier='"
@@ -104,9 +98,9 @@ public class TableFileControl {
                     + tableFile.getTDesk() + "', TUser='" + tableFile.getTUser() + "', TPause='' "
                     + tableFile.getTPause() + "' "
                     + "where TCode='" + tableFile + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -116,10 +110,7 @@ public class TableFileControl {
 
     public int checkTableRead(String tableNo, String user) {
         int result;
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * "
@@ -172,72 +163,68 @@ public class TableFileControl {
 
     public List<TableFileBean> getALlHoldTable() {
         List<TableFileBean> allTable = new ArrayList<>();
-        String sql = "select * from tablefile where TAmount>0";
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TableFileBean bean = new TableFileBean();
-                bean.setTcode(rs.getString("Tcode"));
-                bean.setSoneCode(rs.getString("SoneCode"));
-                bean.setMacNo(rs.getString("MacNo"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTLoginTime(rs.getString("TLoginTime"));
-                bean.setTCurTime(rs.getString("TCurTime"));
-                bean.setTCustomer(rs.getInt("TCustomer"));
-                bean.setTItem(rs.getInt("TItem"));
-                bean.setTAmount(rs.getFloat("TAmount"));
-                bean.setTOnAct(rs.getString("TOnAct"));
-                bean.setService(rs.getFloat("Service"));
-                bean.setServiceAmt(rs.getFloat("ServiceAmt"));
-                bean.setEmpDisc(rs.getString("EmpDisc"));
-                bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
-                bean.setFastDisc(rs.getString("FastDisc"));
-                bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
-                bean.setTrainDisc(rs.getString("TrainDisc"));
-                bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
-                bean.setMemDisc(rs.getString("MemDisc"));
-                bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
-                bean.setSubDisc(rs.getString("SubDisc"));
-                bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
-                bean.setDiscBath(rs.getFloat("DiscBath"));
-                bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
-                bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
-                bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
-                bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
-                bean.setMemCode(rs.getString("MemCode"));
-                bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
-                bean.setMemName(rs.getString("MemName"));
-                bean.setFood(rs.getFloat("Food"));
-                bean.setDrink(rs.getFloat("Drink"));
-                bean.setProduct(rs.getFloat("Product"));
-                bean.setNetTotal(rs.getFloat("NetTotal"));
-                bean.setPrintTotal(rs.getFloat("PrintTotal"));
-                bean.setPrintChkBill(rs.getString("PrintChkBill"));
-                bean.setPrintCnt(rs.getInt("PrintCnt"));
-                bean.setPrintTime1(rs.getString("PrintTime1"));
-                bean.setPrintTime2(rs.getString("PrintTime2"));
-                bean.setChkBill(rs.getString("ChkBill"));
-                bean.setChkBillTime(rs.getString("ChkBillTime"));
-                bean.setStkCode1(rs.getString("StkCode1"));
-                bean.setStkCode2(rs.getString("StkCode2"));
-                bean.setTDesk(rs.getInt("TDesk"));
-                bean.setTUser(rs.getString("TUser"));
-                bean.setTPause(rs.getString("TPause"));
+            mysql.open();
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile where TAmount>0")) {
+                while (rs.next()) {
+                    TableFileBean bean = new TableFileBean();
+                    bean.setTcode(rs.getString("Tcode"));
+                    bean.setSoneCode(rs.getString("SoneCode"));
+                    bean.setMacNo(rs.getString("MacNo"));
+                    bean.setCashier(rs.getString("Cashier"));
+                    bean.setTLoginTime(rs.getString("TLoginTime"));
+                    bean.setTCurTime(rs.getString("TCurTime"));
+                    bean.setTCustomer(rs.getInt("TCustomer"));
+                    bean.setTItem(rs.getInt("TItem"));
+                    bean.setTAmount(rs.getFloat("TAmount"));
+                    bean.setTOnAct(rs.getString("TOnAct"));
+                    bean.setService(rs.getFloat("Service"));
+                    bean.setServiceAmt(rs.getFloat("ServiceAmt"));
+                    bean.setEmpDisc(rs.getString("EmpDisc"));
+                    bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
+                    bean.setFastDisc(rs.getString("FastDisc"));
+                    bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
+                    bean.setTrainDisc(rs.getString("TrainDisc"));
+                    bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
+                    bean.setMemDisc(rs.getString("MemDisc"));
+                    bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
+                    bean.setSubDisc(rs.getString("SubDisc"));
+                    bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
+                    bean.setDiscBath(rs.getFloat("DiscBath"));
+                    bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
+                    bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
+                    bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
+                    bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
+                    bean.setMemCode(rs.getString("MemCode"));
+                    bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
+                    bean.setMemName(rs.getString("MemName"));
+                    bean.setFood(rs.getFloat("Food"));
+                    bean.setDrink(rs.getFloat("Drink"));
+                    bean.setProduct(rs.getFloat("Product"));
+                    bean.setNetTotal(rs.getFloat("NetTotal"));
+                    bean.setPrintTotal(rs.getFloat("PrintTotal"));
+                    bean.setPrintChkBill(rs.getString("PrintChkBill"));
+                    bean.setPrintCnt(rs.getInt("PrintCnt"));
+                    bean.setPrintTime1(rs.getString("PrintTime1"));
+                    bean.setPrintTime2(rs.getString("PrintTime2"));
+                    bean.setChkBill(rs.getString("ChkBill"));
+                    bean.setChkBillTime(rs.getString("ChkBillTime"));
+                    bean.setStkCode1(rs.getString("StkCode1"));
+                    bean.setStkCode2(rs.getString("StkCode2"));
+                    bean.setTDesk(rs.getInt("TDesk"));
+                    bean.setTUser(rs.getString("TUser"));
+                    bean.setTPause(rs.getString("TPause"));
 
-                try {
-                    bean.setTLoginDate(rs.getDate("TLoginDate"));
-                    //bean.setMemBegin(rs.getDate("MemBegin"));
-                    //bean.setMemEnd(rs.getDate("MemEnd"));
-                } catch (SQLException e) {
-                    System.out.println("Error Date: " + e.getMessage());
+                    try {
+                        bean.setTLoginDate(rs.getDate("TLoginDate"));
+                    } catch (SQLException e) {
+                        System.out.println("Error Date: " + e.getMessage());
+                    }
+
+                    allTable.add(bean);
                 }
-
-                allTable.add(bean);
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -249,72 +236,69 @@ public class TableFileControl {
 
     public List<TableFileBean> getALlTable() {
         List<TableFileBean> allTable = new ArrayList<>();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            String sql = "select * from tablefile";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TableFileBean bean = new TableFileBean();
-                bean.setTcode(rs.getString("Tcode"));
-                bean.setSoneCode(rs.getString("SoneCode"));
-                bean.setMacNo(rs.getString("MacNo"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTLoginTime(rs.getString("TLoginTime"));
-                bean.setTCurTime(rs.getString("TCurTime"));
-                bean.setTCustomer(rs.getInt("TCustomer"));
-                bean.setTItem(rs.getInt("TItem"));
-                bean.setTAmount(rs.getFloat("TAmount"));
-                bean.setTOnAct(rs.getString("TOnAct"));
-                bean.setService(rs.getFloat("Service"));
-                bean.setServiceAmt(rs.getFloat("ServiceAmt"));
-                bean.setEmpDisc(rs.getString("EmpDisc"));
-                bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
-                bean.setFastDisc(rs.getString("FastDisc"));
-                bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
-                bean.setTrainDisc(rs.getString("TrainDisc"));
-                bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
-                bean.setMemDisc(rs.getString("MemDisc"));
-                bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
-                bean.setSubDisc(rs.getString("SubDisc"));
-                bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
-                bean.setDiscBath(rs.getFloat("DiscBath"));
-                bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
-                bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
-                bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
-                bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
-                bean.setMemCode(rs.getString("MemCode"));
-                bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
-                bean.setMemName(rs.getString("MemName"));
-                bean.setFood(rs.getFloat("Food"));
-                bean.setDrink(rs.getFloat("Drink"));
-                bean.setProduct(rs.getFloat("Product"));
-                bean.setNetTotal(rs.getFloat("NetTotal"));
-                bean.setPrintTotal(rs.getFloat("PrintTotal"));
-                bean.setPrintChkBill(rs.getString("PrintChkBill"));
-                bean.setPrintCnt(rs.getInt("PrintCnt"));
-                bean.setPrintTime1(rs.getString("PrintTime1"));
-                bean.setPrintTime2(rs.getString("PrintTime2"));
-                bean.setChkBill(rs.getString("ChkBill"));
-                bean.setChkBillTime(rs.getString("ChkBillTime"));
-                bean.setStkCode1(rs.getString("StkCode1"));
-                bean.setStkCode2(rs.getString("StkCode2"));
-                bean.setTDesk(rs.getInt("TDesk"));
-                bean.setTUser(rs.getString("TUser"));
-                bean.setTPause(rs.getString("TPause"));
+            mysql.open();
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile")) {
+                while (rs.next()) {
+                    TableFileBean bean = new TableFileBean();
+                    bean.setTcode(rs.getString("Tcode"));
+                    bean.setSoneCode(rs.getString("SoneCode"));
+                    bean.setMacNo(rs.getString("MacNo"));
+                    bean.setCashier(rs.getString("Cashier"));
+                    bean.setTLoginTime(rs.getString("TLoginTime"));
+                    bean.setTCurTime(rs.getString("TCurTime"));
+                    bean.setTCustomer(rs.getInt("TCustomer"));
+                    bean.setTItem(rs.getInt("TItem"));
+                    bean.setTAmount(rs.getFloat("TAmount"));
+                    bean.setTOnAct(rs.getString("TOnAct"));
+                    bean.setService(rs.getFloat("Service"));
+                    bean.setServiceAmt(rs.getFloat("ServiceAmt"));
+                    bean.setEmpDisc(rs.getString("EmpDisc"));
+                    bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
+                    bean.setFastDisc(rs.getString("FastDisc"));
+                    bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
+                    bean.setTrainDisc(rs.getString("TrainDisc"));
+                    bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
+                    bean.setMemDisc(rs.getString("MemDisc"));
+                    bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
+                    bean.setSubDisc(rs.getString("SubDisc"));
+                    bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
+                    bean.setDiscBath(rs.getFloat("DiscBath"));
+                    bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
+                    bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
+                    bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
+                    bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
+                    bean.setMemCode(rs.getString("MemCode"));
+                    bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
+                    bean.setMemName(rs.getString("MemName"));
+                    bean.setFood(rs.getFloat("Food"));
+                    bean.setDrink(rs.getFloat("Drink"));
+                    bean.setProduct(rs.getFloat("Product"));
+                    bean.setNetTotal(rs.getFloat("NetTotal"));
+                    bean.setPrintTotal(rs.getFloat("PrintTotal"));
+                    bean.setPrintChkBill(rs.getString("PrintChkBill"));
+                    bean.setPrintCnt(rs.getInt("PrintCnt"));
+                    bean.setPrintTime1(rs.getString("PrintTime1"));
+                    bean.setPrintTime2(rs.getString("PrintTime2"));
+                    bean.setChkBill(rs.getString("ChkBill"));
+                    bean.setChkBillTime(rs.getString("ChkBillTime"));
+                    bean.setStkCode1(rs.getString("StkCode1"));
+                    bean.setStkCode2(rs.getString("StkCode2"));
+                    bean.setTDesk(rs.getInt("TDesk"));
+                    bean.setTUser(rs.getString("TUser"));
+                    bean.setTPause(rs.getString("TPause"));
+                    try {
+                        bean.setTLoginDate(rs.getDate("TLoginDate"));
+                        bean.setMemBegin(rs.getDate("MemBegin"));
+                        bean.setMemEnd(rs.getDate("MemEnd"));
+                    } catch (SQLException e) {
+                        System.out.println("Error Date: " + e.getMessage());
+                    }
 
-                try {
-                    bean.setTLoginDate(rs.getDate("TLoginDate"));
-                    bean.setMemBegin(rs.getDate("MemBegin"));
-                    bean.setMemEnd(rs.getDate("MemEnd"));
-                } catch (SQLException e) {
-                    System.out.println("Error Date: " + e.getMessage());
+                    allTable.add(bean);
                 }
-
-                allTable.add(bean);
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -326,23 +310,22 @@ public class TableFileControl {
 
     public List<TableSetup> getTable(String TCode) {
         List<TableSetup> allTable = new ArrayList<>();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "select t2.Code_ID, t1.TCode from tablefile t1 , tablesetup t2 "
                     + "where t1.TCode=t2.TCode "
                     + "and Code_ID like '" + TCode + "%' "
                     + "order by Code_ID";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TableSetup bean = new TableSetup();
-                bean.setCode_ID(rs.getString("Code_ID"));
-                bean.setTCode(rs.getString("TCode"));
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    TableSetup bean = new TableSetup();
+                    bean.setCode_ID(rs.getString("Code_ID"));
+                    bean.setTCode(rs.getString("TCode"));
 
-                allTable.add(bean);
+                    allTable.add(bean);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -354,76 +337,71 @@ public class TableFileControl {
 
     public TableFileBean getData(String table) {
         TableFileBean bean = new TableFileBean();
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "select * "
                     + "from tablefile "
                     + "where Tcode='" + table + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                bean.setTcode(rs.getString("Tcode"));
-                bean.setSoneCode(rs.getString("SoneCode"));
-                bean.setMacNo(rs.getString("MacNo"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTLoginTime(rs.getString("TLoginTime"));
-                bean.setTCurTime(rs.getString("TCurTime"));
-                bean.setTCustomer(rs.getInt("TCustomer"));
-                bean.setTItem(rs.getInt("TItem"));
-                bean.setTAmount(rs.getFloat("TAmount"));
-                bean.setTOnAct(rs.getString("TOnAct"));
-                bean.setService(rs.getFloat("Service"));
-                bean.setServiceAmt(rs.getFloat("ServiceAmt"));
-                bean.setEmpDisc(rs.getString("EmpDisc"));
-                bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
-                bean.setFastDisc(rs.getString("FastDisc"));
-                bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
-                bean.setTrainDisc(rs.getString("TrainDisc"));
-                bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    bean.setTcode(rs.getString("Tcode"));
+                    bean.setSoneCode(rs.getString("SoneCode"));
+                    bean.setMacNo(rs.getString("MacNo"));
+                    bean.setCashier(rs.getString("Cashier"));
+                    bean.setTLoginTime(rs.getString("TLoginTime"));
+                    bean.setTCurTime(rs.getString("TCurTime"));
+                    bean.setTCustomer(rs.getInt("TCustomer"));
+                    bean.setTItem(rs.getInt("TItem"));
+                    bean.setTAmount(rs.getFloat("TAmount"));
+                    bean.setTOnAct(rs.getString("TOnAct"));
+                    bean.setService(rs.getFloat("Service"));
+                    bean.setServiceAmt(rs.getFloat("ServiceAmt"));
+                    bean.setEmpDisc(rs.getString("EmpDisc"));
+                    bean.setEmpDiscAmt(rs.getFloat("EmpDiscAmt"));
+                    bean.setFastDisc(rs.getString("FastDisc"));
+                    bean.setFastDiscAmt(rs.getFloat("FastDiscAmt"));
+                    bean.setTrainDisc(rs.getString("TrainDisc"));
+                    bean.setTrainDiscAmt(rs.getFloat("TrainDiscAmt"));
 
-                bean.setMemDisc(rs.getString("MemDisc"));
-                bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
-                bean.setSubDisc(rs.getString("SubDisc"));
-                bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
-                bean.setDiscBath(rs.getFloat("DiscBath"));
-                bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
-                bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
-                bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
-                bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
-                bean.setMemCode(rs.getString("MemCode"));
-                if (bean.getMemCode() == null) {
-                    bean.setMemCode("");
-                }
-                bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
-                bean.setMemName(ThaiUtil.ASCII2Unicode(rs.getString("MemName")));
-                if (bean.getMemName() == null) {
-                    bean.setMemName("");
-                }
-                bean.setFood(rs.getFloat("Food"));
-                bean.setDrink(rs.getFloat("Drink"));
-                bean.setProduct(rs.getFloat("Product"));
+                    bean.setMemDisc(rs.getString("MemDisc"));
+                    bean.setMemDiscAmt(rs.getFloat("MemDiscAmt"));
+                    bean.setSubDisc(rs.getString("SubDisc"));
+                    bean.setSubDiscAmt(rs.getFloat("SubDiscAmt"));
+                    bean.setDiscBath(rs.getFloat("DiscBath"));
+                    bean.setProDiscAmt(rs.getFloat("ProDiscAmt"));
+                    bean.setSpaDiscAmt(rs.getFloat("SpaDiscAmt"));
+                    bean.setCuponDiscAmt(rs.getFloat("CuponDiscAmt"));
+                    bean.setItemDiscAmt(rs.getFloat("ItemDiscAmt"));
+                    bean.setMemCode(rs.getString("MemCode"));
+                    if (bean.getMemCode() == null) {
+                        bean.setMemCode("");
+                    }
+                    bean.setMemCurAmt(rs.getFloat("MemCurAmt"));
+                    bean.setMemName(ThaiUtil.ASCII2Unicode(rs.getString("MemName")));
+                    if (bean.getMemName() == null) {
+                        bean.setMemName("");
+                    }
+                    bean.setFood(rs.getFloat("Food"));
+                    bean.setDrink(rs.getFloat("Drink"));
+                    bean.setProduct(rs.getFloat("Product"));
 
-                bean.setNetTotal(rs.getFloat("NetTotal"));
-                bean.setPrintTotal(rs.getFloat("PrintTotal"));
-                bean.setPrintChkBill(rs.getString("PrintChkBill"));
-                bean.setPrintCnt(rs.getInt("PrintCnt"));
-                bean.setPrintTime1(rs.getString("PrintTime1"));
-                bean.setPrintTime2(rs.getString("PrintTime2"));
-                bean.setChkBill(rs.getString("ChkBill"));
-                bean.setChkBillTime(rs.getString("ChkBillTime"));
-                bean.setStkCode1(rs.getString("StkCode1"));
-                bean.setStkCode2(rs.getString("StkCode2"));
-                bean.setTDesk(rs.getInt("TDesk"));
-                bean.setTUser(rs.getString("TUser"));
-                bean.setTPause(rs.getString("TPause"));
+                    bean.setNetTotal(rs.getFloat("NetTotal"));
+                    bean.setPrintTotal(rs.getFloat("PrintTotal"));
+                    bean.setPrintChkBill(rs.getString("PrintChkBill"));
+                    bean.setPrintCnt(rs.getInt("PrintCnt"));
+                    bean.setPrintTime1(rs.getString("PrintTime1"));
+                    bean.setPrintTime2(rs.getString("PrintTime2"));
+                    bean.setChkBill(rs.getString("ChkBill"));
+                    bean.setChkBillTime(rs.getString("ChkBillTime"));
+                    bean.setStkCode1(rs.getString("StkCode1"));
+                    bean.setStkCode2(rs.getString("StkCode2"));
+                    bean.setTDesk(rs.getInt("TDesk"));
+                    bean.setTUser(rs.getString("TUser"));
+                    bean.setTPause(rs.getString("TPause"));
+                }
+
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -434,25 +412,21 @@ public class TableFileControl {
     }
 
     public void setDefaultTableFile(String table) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        //clear = update to default not delete
-        String sql = "update tablefile set "
-                + "MacNo='', Cashier='', TLoginTime='00:00:00', TCurTime='00:00', TCustomer='0', TItem='0', TAmount='0.00', TOnAct='N', "
-                + "Service='0.00', ServiceAmt='0.00', EmpDisc='', EmpDiscAmt='0.00', FastDisc='', FastDiscAmt='0.00', TrainDisc='', "
-                + "TrainDiscAmt='0.00', MemDisc='', MemDiscAmt='0.00', SubDisc='', SubDiscAmt='0.00', DiscBath='0.00', ProDiscAmt='0.00', "
-                + "SpaDiscAmt='0.00', CuponDiscAmt='0.00', ItemDiscAmt='0.00', MemCode='', MemCurAmt='0.00', MemName='', "
-                + "Food='0.00', Drink='0.00', Product='0.00', NetTotal='0.00', PrintTotal='0.00', PrintChkBill='N', "
-                + "PrintCnt='0', PrintTime1='', PrintTime2='', ChkBill='N', ChkBillTime='00:00:00', StkCode2='', TDesk='0', "
-                + "TUser='', TPause='N' "
-                + "where Tcode='" + table + "'";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            mysql.open();
+            String sql = "update tablefile set "
+                    + "MacNo='', Cashier='', TLoginTime='00:00:00', TCurTime='00:00', TCustomer='0', TItem='0', TAmount='0.00', TOnAct='N', "
+                    + "Service='0.00', ServiceAmt='0.00', EmpDisc='', EmpDiscAmt='0.00', FastDisc='', FastDiscAmt='0.00', TrainDisc='', "
+                    + "TrainDiscAmt='0.00', MemDisc='', MemDiscAmt='0.00', SubDisc='', SubDiscAmt='0.00', DiscBath='0.00', ProDiscAmt='0.00', "
+                    + "SpaDiscAmt='0.00', CuponDiscAmt='0.00', ItemDiscAmt='0.00', MemCode='', MemCurAmt='0.00', MemName='', "
+                    + "Food='0.00', Drink='0.00', Product='0.00', NetTotal='0.00', PrintTotal='0.00', PrintChkBill='N', "
+                    + "PrintCnt='0', PrintTime1='', PrintTime2='', ChkBill='N', ChkBillTime='00:00:00', StkCode2='', TDesk='0', "
+                    + "TUser='', TPause='N' "
+                    + "where Tcode='" + table + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
             if (table.contains("-")) {
                 sql = "delete from tablefile where Tcode='" + table + "'";
                 try (Statement stmt1 = mysql.getConnection().createStatement()) {
@@ -467,12 +441,9 @@ public class TableFileControl {
     }
 
     public void updateTableActive(String table, String customer, String emp) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "update tablefile set "
                     + "TOnAct='Y',"
                     + "TLoginDate=now(),"
@@ -482,9 +453,9 @@ public class TableFileControl {
                     + "TCurTime=curtime() "
                     + "where tcode='" + table + "' "
                     + "and tOnAct='N'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
 
             PromotionControl proControl = new PromotionControl();
             proControl.updatePromotion(table);
@@ -494,23 +465,22 @@ public class TableFileControl {
             serviceControl.updateService(table);
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
     public void updateMacno(String table, String username) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "update tablefile set "
                     + "MacNo='" + Value.MACNO + "',"
                     + "TUser='" + username + "' "
                     + "where Tcode='" + table + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -519,12 +489,9 @@ public class TableFileControl {
     }
 
     public void createNewTableSplit(TableFileBean table, String newTable) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String chk = "select * from tablefile where tcode='" + newTable + "'";
             Statement stmt = mysql.getConnection().createStatement();
             if (stmt.executeQuery(chk).next()) {
@@ -547,12 +514,9 @@ public class TableFileControl {
     }
 
     public String getSplitTable(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "select * from tablefile where Tcode='" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -560,37 +524,34 @@ public class TableFileControl {
                 String[] data = rs.getString("Tcode").split("-");
                 if (data.length <= 1) {
                     return tableNo;
-                } else {
-                    int index = 0;
-                    try {
-                        index = Integer.parseInt(data[1]) + 1;
-                    } catch (NumberFormatException e) {
-                        index = 1;
-                    }
-                    rs.close();
-                    stmt.close();
-                    return getSplitTable(data[0] + "-" + index);
                 }
+                int index;
+                try {
+                    index = Integer.parseInt(data[1]) + 1;
+                } catch (NumberFormatException e) {
+                    index = 1;
+                }
+                rs.close();
+                stmt.close();
+                return getSplitTable(data[0] + "-" + index);
             } else {
                 rs.close();
                 stmt.close();
-                return tableNo;
+                
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            return tableNo;
         } finally {
             mysql.close();
         }
+        
+        return tableNo;
     }
 
     public static void updateTableFile(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
+            mysql.open();
             double TAmount = 0.00;
             BalanceControl bControl = new BalanceControl();
             List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
@@ -605,9 +566,9 @@ public class TableFileControl {
             String sql = "update tablefile "
                     + "set TAmount='" + TAmount + "' "
                     + "where Tcode='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
 
             //คำนวณโปรโมชัน + ค่าบริการ และคำนวณภาษีมูลค่าเพิ่ม
             PromotionControl proControl = new PromotionControl();
@@ -619,29 +580,25 @@ public class TableFileControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
     public boolean checkTableOpened(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "select Cashier from tablefile "
                     + "where TOnact='Y' "
                     + "and tcode='" + tableNo + "';";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                rs.close();
-                stmt.close();
-                return true;
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    rs.close();
+                    stmt.close();
+                    return true;
+                }
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -652,17 +609,13 @@ public class TableFileControl {
     }
 
     public void createNewTable(String tableTemp) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate("delete from tablefile where tcode='" + tableTemp + "';");
-            stmt.executeUpdate("insert into tablefile(Tcode) values('" + tableTemp + "');");
-
-            stmt.close();
+            mysql.open();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate("delete from tablefile where tcode='" + tableTemp + "';");
+                stmt.executeUpdate("insert into tablefile(Tcode) values('" + tableTemp + "');");
+            }
             setDefaultTableFile(tableTemp);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -671,17 +624,14 @@ public class TableFileControl {
         }
     }
 
-    void updateTableNotActive(String TABLE_NO) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+    public void updateTableNotActive(String TABLE_NO) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "update tablefile set tonact='N' where tcode='" + TABLE_NO + "';";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -690,16 +640,13 @@ public class TableFileControl {
     }
 
     void updateTableActive(String TABLE_2) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         try {
+            mysql.open();
             String sql = "update tablefile set tonact='Y' where tcode='" + TABLE_2 + "';";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -708,44 +655,41 @@ public class TableFileControl {
     }
 
     public int getItemCount(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
         int countItem = 0;
         try {
+            mysql.open();
             String sql = "select r_linkindex from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_linkindex<>'' "
                     + "group by R_LinkIndex";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                countItem++;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    countItem++;
+                }
+                
+                rs.close();
+                
+                String sql1 = "select r_index from balance "
+                        + "where r_table='" + tableNo + "' "
+                        + "and r_linkindex=''";
+                rs = stmt.executeQuery(sql1);
+                while (rs.next()) {
+                    countItem++;
+                }
+                
+                rs.close();
+                String sql2 = "select r_index from balance "
+                        + "where r_table='" + tableNo + "' "
+                        + "and r_linkindex is null";
+                rs = stmt.executeQuery(sql2);
+                while (rs.next()) {
+                    countItem++;
+                }
+                
+                rs.close();
             }
-
-            rs.close();
-
-            String sql1 = "select r_index from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and r_linkindex=''";
-            rs = stmt.executeQuery(sql1);
-            while (rs.next()) {
-                countItem++;
-            }
-
-            rs.close();
-            String sql2 = "select r_index from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and r_linkindex is null";
-            rs = stmt.executeQuery(sql2);
-            while (rs.next()) {
-                countItem++;
-            }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {

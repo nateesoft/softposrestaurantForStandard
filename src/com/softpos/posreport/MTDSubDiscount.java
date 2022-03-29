@@ -1,6 +1,5 @@
 package com.softpos.posreport;
 
-import com.softpos.posreport.MTDInvoice;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -15,11 +14,11 @@ import util.DateChooseDialog;
 import database.MySQLConnect;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import soft.virtual.KeyBoardDialog;
 import util.MSG;
 
@@ -510,28 +509,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 
                 prn.CutPaper();
                 prn.closePrint();
-            } else {
-//                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
             }
         }
         InitScreen();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MTDInvoice dialog = new MTDInvoice(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

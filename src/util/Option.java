@@ -3,7 +3,6 @@ package util;
 public class Option {    
     
     public static String[] splitPrice(String PLU){
-        //check data normal
         String PLUCode = PLU;
         String QTY = "1.00";
         

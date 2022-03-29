@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import database.ConfigFile;
 import database.ConfigFileServer;
@@ -70,9 +70,4 @@ public class UploadPicToServer {
         return FileName;
     }
 
-    public static void main(String[] args) {
-        UploadPicToServer upload = new UploadPicToServer();
-//        upload.checkFile();
-        upload.upLoadFilePicToServer("D:/Backup/652/branch20210802.sql");
-    }
 }

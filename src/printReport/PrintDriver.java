@@ -19,10 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.main.program.BalanceControl;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.SendTerminalReportAuto;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.SendTerminalReportAuto;
+import com.softpos.pos.core.controller.Value;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -359,26 +359,4 @@ public class PrintDriver {
         return result;
     }
 
-    public static void main(String[] args) {
-        Value.printerDriverName = "kic1";
-        PrintDriver pd = new PrintDriver();
-        //pd.addText("<font size=-6>ทดสอบภาษาไทย</font>abcdefghijklmnopqrstuvwxy<i><font color=red size=-6>z1234567890</font></i>");
-        String fontName1 = "Tahoma";
-        fontName1 = "TIS11_3_FontA11";
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-        pd.addText("<font face=" + fontName1 + " size=-1>" + " &nbsp;  &nbsp;   JF1001" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=1>" + " &nbsp;  &nbsp;   ซีฟู้ดพริกไทยดำกระทะร้อน" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=2>" + " &nbsp;  &nbsp;   ซีฟู้ดพริกไทยดำกระทะร้อน" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=1>" + " &nbsp;  &nbsp;   รวมภาษีมูลค่าเพิ่มแล้ว" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=2>" + " &nbsp;  &nbsp;   รวมภาษีมูลค่าเพิ่มแล้ว" + "</font>");
-        pd.printHTML();
-
-    }
 }

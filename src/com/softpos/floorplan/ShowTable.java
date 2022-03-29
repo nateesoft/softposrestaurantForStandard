@@ -20,9 +20,9 @@ import javax.swing.table.TableColumnModel;
 import database.MySQLConnect;
 import java.awt.GraphicsEnvironment;
 import java.sql.Statement;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.TableFileControl;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
 import util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
@@ -311,59 +311,12 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         }
     }//GEN-LAST:event_ShowTableLoginMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        new MySQLConnect();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                ShowTable dialog = new ShowTable(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
     private void LoadDataToGrid() {
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-//            String sql = "select * from tablefile order by tcode";
-            String sql = "select tcode from tablefile order by tcode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-//                BalanceControl.updateProSerTable(rs.getString("tcode"), null);
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        mysql.open();
-        try {
-//            String LoadTableFile = "select * from tablefile "
-//                    + "where tonact='Y' "
-//                    + "or TAmount>0 "
-//                    + "or TItem > 0 "
-//                    + "or Tcustomer > 0 "
-//                    + "order by tcurtime";
             String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
                     + "TOnAct, ChkBill, PrintChkBill"
                     + " from tablefile "

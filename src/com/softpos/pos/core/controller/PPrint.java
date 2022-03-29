@@ -1,5 +1,6 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.pos.core.model.BillNoBean;
@@ -73,13 +74,6 @@ public class PPrint {
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
     private String SPLIT = "=";
-
-    public static void main(String[] args) {
-        PPrint prt = new PPrint();
-        prt.OpenPrint("COM2");
-        prt.InitPrinter();
-        prt.closePrintExit();
-    }
 
     public void PPrint() {
         POSHW = POSHWSetup.Bean(Value.getMacno());

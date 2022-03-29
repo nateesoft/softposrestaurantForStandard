@@ -1,11 +1,12 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 public class SmpCoupon {
-    String MacNo = "" ;
-    String RefNo = "" ;
-    String SmpCouponID = "" ;
-    String SmpCouponName = ""  ;
-    String SmpCouponExp = "" ;
-    double SmpCouponqty = 0.0 ;
-    double SmpCouponTotal = 0.0 ;
+
+    public static String MacNo = "";
+    public static String RefNo = "";
+    public static String SmpCouponID = "";
+    public static String SmpCouponName = "";
+    public static String SmpCouponExp = "";
+    public static double SmpCouponqty = 0.0;
+    public static double SmpCouponTotal = 0.0;
 }

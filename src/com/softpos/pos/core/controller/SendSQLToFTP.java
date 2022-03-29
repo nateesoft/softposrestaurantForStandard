@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import database.ConfigFileServer;
 import java.io.File;
@@ -423,8 +423,4 @@ public class SendSQLToFTP {
         return fileName;
     }
 
-//    public static void main(String[] args) {
-//        SendSQLToFTP send = new SendSQLToFTP();
-//        send.SendSQLToFTP();
-//    }
 }

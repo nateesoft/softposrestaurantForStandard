@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import util.MSG;
 
 public class MySQLConnect {

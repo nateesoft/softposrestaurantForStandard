@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PUtility;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
@@ -43,12 +44,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         processError = false;
         processFinish = false;
         crMsg.setText("กรุณารูดบัติเครดิต..ที่เครื่องอนุมัติบัตรเครดิต");
-    }
-
-    public static void main(String[] args) {
-        EDCProcessDialog edc = new EDCProcessDialog(null, true);
-        edc.processEDC("COM6", 120.00);
-        edc.setVisible(true);
     }
 
     public boolean openPort(String portName) {

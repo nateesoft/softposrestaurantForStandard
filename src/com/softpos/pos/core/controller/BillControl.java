@@ -1,18 +1,5 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.main.program.BalanceControl;
-import com.softpos.main.program.BranchControl;
-import com.softpos.main.program.CompanyConfig;
-import com.softpos.main.program.DateControl;
-import com.softpos.main.program.POSConfigSetup;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PosControl;
-import com.softpos.main.program.PromotionControl;
-import com.softpos.main.program.PropControl;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.TableFileControl;
-import com.softpos.main.program.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BranchBean;

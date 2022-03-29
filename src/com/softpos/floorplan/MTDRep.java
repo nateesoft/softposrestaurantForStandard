@@ -11,8 +11,8 @@ import com.softpos.posreport.MTDSubDiscount;
 import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.UserRecord;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.posreport.MTDCoupon;
 import com.softpos.posreport.MTDGiftVoucher;
 import com.softpos.posreport.MTDHourlyOpenTB;
@@ -579,23 +579,6 @@ public class MTDRep extends javax.swing.JDialog {
         frm9.setVisible(false);
         frm10.setVisible(false);
         
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MTDRep dialog = new MTDRep(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

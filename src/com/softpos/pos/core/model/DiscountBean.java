@@ -1,7 +1,5 @@
 package com.softpos.pos.core.model;
 
-import com.softpos.pos.core.model.CuponBean;
-
 public class DiscountBean {
 
     private double festDiscount = 0;

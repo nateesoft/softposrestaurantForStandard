@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;

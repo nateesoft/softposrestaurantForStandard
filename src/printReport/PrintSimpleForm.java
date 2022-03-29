@@ -1,6 +1,6 @@
 package printReport;
 
-import com.softpos.main.program.BranchControl;
+import com.softpos.pos.core.controller.BranchControl;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import javax.print.PrintService;
 import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.main.program.TableFileControl;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import java.util.List;
@@ -79,11 +79,6 @@ public class PrintSimpleForm {
             }
         }
         return ans;
-    }
-
-    public static void main(String[] args) {
-        PrintSimpleForm psf = new PrintSimpleForm();
-        psf.printTest("KIC1", "ทดสอบการส่งข้อมูลออกปริ้นเตอร Test Test");
     }
 
     public void KIC_FORM_1(String printerName, final String tableNo, final String[] PCode) {

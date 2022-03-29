@@ -1,7 +1,7 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.PointTypeBean;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -931,23 +931,4 @@ public class SendTerminalReportAuto {
         }
     }
     
-    public static void main(String[] args) {
-        SendTerminalReportAuto sendEmailReport = new SendTerminalReportAuto();
-        try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-//            for (int i = 0; i < 10; i++) {
-
-            sendEmailReport.beforeProcess();
-//                if (i == 9) {
-//                    i = 0;
-//                }
-
-//            }
-            c.close();
-        } catch (Exception e) {
-            MSG.ERR(e.getMessage());
-//            
-        }
-    }
 }

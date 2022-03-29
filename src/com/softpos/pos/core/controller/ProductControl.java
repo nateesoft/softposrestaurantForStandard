@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
@@ -391,34 +391,19 @@ public class ProductControl {
         return isExist;
     }
 
-    public static void main(String[] args) {
-        ProductControl control = new ProductControl();
-        control.searchAllProductBy("เหล้า");
-        System.out.println(control.getData("11010340180"));
-    }
-
     public static boolean checkProductItem(String menuCode) {
         boolean isProduct = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-//            String sql = "select * from soft_menusetup "
-//                    + "where menucode='" + menuCode + "' "
-//                    + "and pcode<>'';";
             String sql = "select pcode from soft_menusetup "
                     + "where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
-//            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-                isProduct = true;
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    isProduct = true;
+                }
             }
-
-            rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {

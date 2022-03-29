@@ -1,6 +1,6 @@
 package com.softpos.pos.core.model;
 
-import com.softpos.main.program.BranchControl;
+import com.softpos.pos.core.controller.BranchControl;
 import java.util.Date;
 
 public class BranchBean {

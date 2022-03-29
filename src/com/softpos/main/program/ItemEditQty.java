@@ -1,17 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import util.MSG;
 
 /**
  *
@@ -95,9 +95,10 @@ public class ItemEditQty extends javax.swing.JDialog {
 
             if (balanceBean != null) {
                 try {
-                    MySQLConnect c = new MySQLConnect();
-                    c.open();
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open();
                     balanceBean.setR_Quan(XNewQty);
+                    balanceBean.setR_Price(newAmount);
                     balanceBean.setR_Total(XNewAmount);
                     NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-"));
                     if (!txtNewPDesc.getText().replace("null", "").equals("")) {
@@ -116,8 +117,9 @@ public class ItemEditQty extends javax.swing.JDialog {
                                 + "and r_plucode='" + txtPCode.getText() + "';";
                         balanceBean.setR_PName(NewDesc);
                         try {
-                            c.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
-                        } catch (Exception e) {
+                            mysql.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
+                        } catch (SQLException e) {
+                            MSG.ERR(this, e.getMessage());
                         }
                     } else {
                         if (balanceBean.getR_Price() != 0) {
@@ -138,10 +140,10 @@ public class ItemEditQty extends javax.swing.JDialog {
                             + "TAmount= TAmount+" + (XNewAmount) + " "
                             + "where tcode='" + tableNo + "';";
 
-                    c.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
-                    c.getConnection().createStatement().executeUpdate(sqlUpdateTableFile);
+                    mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
+                    mysql.getConnection().createStatement().executeUpdate(sqlUpdateTableFile);
                     try {
-                        c.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
+                        mysql.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
                     } catch (Exception e) {
                         System.out.println(e);
                     }
@@ -459,53 +461,6 @@ public class ItemEditQty extends javax.swing.JDialog {
     private void txtNewPDescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNewPDescMouseClicked
         txtPAmountEditActionPerformed(null);
     }//GEN-LAST:event_txtNewPDescMouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ItemEditQty.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ItemEditQty.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ItemEditQty.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ItemEditQty.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ItemEditQty dialog = new ItemEditQty(new javax.swing.JDialog(), true, "1", "1/002", null);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cancel;

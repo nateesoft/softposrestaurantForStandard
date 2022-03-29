@@ -11,14 +11,14 @@ import com.softpos.main.program.GetUserAction;
 import com.softpos.posreport.GiftVoucherRep;
 import com.softpos.posreport.InvRep;
 import com.softpos.posreport.PLURep;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
 import com.softpos.posreport.PromotionRep;
-import com.softpos.main.program.PublicVar;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.posreport.TerminalRep;
 import com.softpos.posreport.TopSaleRep;
-import com.softpos.main.program.UserRecord;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.posreport.VoidRep;
 import util.MSG;
 import com.softpos.posreport.DailyHourlyOpenTB;
@@ -705,22 +705,6 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 //        frm13.setVisible(false);
 //        frm14.setVisible(false);
 //    }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DailyRep dialog = new DailyRep(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList FunctionList;

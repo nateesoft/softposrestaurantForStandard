@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

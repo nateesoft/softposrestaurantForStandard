@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -18,6 +18,7 @@ public class TextAreaRenderer extends JTextArea
         setWrapStyleWord(true);
     }
 
+    @Override
     public Component getTableCellRendererComponent(//
             JTable table, Object obj, boolean isSelected,
             boolean hasFocus, int row, int column) {

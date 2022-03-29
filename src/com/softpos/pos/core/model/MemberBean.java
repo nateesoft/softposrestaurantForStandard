@@ -4,7 +4,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import java.sql.Statement;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;

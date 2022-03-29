@@ -1,4 +1,4 @@
-package com.softpos.main.program;
+package com.softpos.pos.core.controller;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -37,9 +37,6 @@ public class TextAreaRendererTest extends JFrame {
     setSize(600, 600);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
-  }
-  public static void main(String[] args) {
-    new TextAreaRendererTest();
   }
 }
 

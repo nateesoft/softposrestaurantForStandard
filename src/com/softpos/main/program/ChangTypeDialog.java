@@ -1,5 +1,7 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -462,26 +464,6 @@ private void tblshowpluKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         }
     }
 }//GEN-LAST:event_tblshowpluKeyPressed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new MySQLConnect();
-                ChangTypeDialog dialog = new ChangTypeDialog(new javax.swing.JFrame(), true, "1", "E");
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox ChkAllType;

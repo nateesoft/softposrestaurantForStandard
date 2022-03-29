@@ -29,15 +29,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.main.program.CreditPaymentRec;
+import com.softpos.pos.core.controller.CreditPaymentRec;
 import com.softpos.main.program.GetUserAction;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PublicVar;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.model.TranRecord;
-import com.softpos.main.program.UserRecord;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.MemmaterController;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
@@ -764,25 +764,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Cleartblshowplu();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        new MySQLConnect();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                RefundBill dialog = new RefundBill(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntExit;
     private javax.swing.JButton bntNew;

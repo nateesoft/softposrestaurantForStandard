@@ -1,6 +1,20 @@
 package com.softpos.main.program;
 
-import com.softpos.core.logger.LoggerController;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.ButtonCustom;
+import com.softpos.pos.core.controller.MenuMGR;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.TableFileBean;
@@ -10,8 +24,8 @@ import printReport.PrintSimpleForm;
 import com.softpos.floorplan.RefundBill;
 import com.softpos.floorplan.ShowTable;
 import com.softpos.floorplan.PaidinFrm;
-import static com.softpos.main.program.BalanceControl.updateProSerTable;
-import static com.softpos.main.program.BalanceControl.updateProSerTableMemVIP;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.member.MemberControl;
 import database.MySQLConnect;
@@ -36,8 +50,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -3327,7 +3339,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     Statement stmt = mysql.getConnection().createStatement();
                     String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
                     stmt.executeUpdate(sql1);
-                    
+
                     String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
                     if (stmt.executeUpdate(sql2) > 0) {
                         // reset load poshwsetup
@@ -3835,11 +3847,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 txtPluCode.requestFocus();
                             }
                         }
-                    } // หากไม่สามารถให้ส่วนลดรายการได้
-                    else {
+                    } else {
                         MSG.WAR(this, "รายการสินค้านี้มีการให้ส่วนลดอื่นไปแล้วไม่สามารถให้ส่วนลดได้อีก");
                     }
-
                 } else if (typeIndex.equals("ItemVoid")) {
                     if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
                         cancelItemBeforeHold();
@@ -3853,7 +3863,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         }
                     }
                 } else if (typeIndex.equals("ItemMove")) {
-//                    ซ่อนไว้ก่อนที่ jeffer ยังไม่ได้ใช้ (29/02/2016)
                     MoveItemDialog m = new MoveItemDialog(null, true, txtTable.getText());
                     m.setVisible(true);
                 } else if (typeIndex.equals("EditQty")) {
@@ -4413,6 +4422,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
+    private String getButtonIndex(int i) {
+        if ((i + 1) < 10) {
+            return "0" + (i + 1);
+        }
+        return "" + (i + 1);
+    }
+
     public class TableTestFormatRenderer extends DefaultTableCellRenderer {
 
         private Format formatter;
@@ -4433,20 +4449,20 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void loadButtonProductMenu(String menuCode) {
         ButtonCustom buttonCustom = new ButtonCustom();
         List<MenuMGR> listMenu = buttonCustom.getDataButtonLayout(menuCode);
-        if (listMenu.isEmpty()) {
-            return;
-        }
         JButton[] btnGrid = new JButton[]{
             btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
             btnP9, btnP10, btnP11, btnP12, btnP13, btnP14, btnP15, btnP16
         };
-        for (JButton btn : btnGrid) {
+        for (int i = 0; i < btnGrid.length; i++) {
+            JButton btn = btnGrid[i];
             btn = buttonCustom.buttonDefault(btn);
+            String btnIndex = getButtonIndex(i);
+            btn.setName(menuCode + btnIndex);
+            addMouseEvent(btn, i);
         }
         for (int i = 0; i < listMenu.size(); i++) {
             MenuMGR menu = listMenu.get(i);
             btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
-            addMouseEvent(btnGrid[menu.getMIndex()], menu.getMIndex());
             btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
                 if (menu.getPCode().equals("")) {
                     loadButtonProductMenu(menu.getMenuCode());

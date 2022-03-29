@@ -1,12 +1,23 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.discount.DiscountDialog;
-import static com.softpos.main.program.BalanceControl.updateProSerTable;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.awt.Color;
