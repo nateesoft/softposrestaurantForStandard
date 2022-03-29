@@ -3,7 +3,6 @@ package com.softpos.pos.core.model;
 import java.util.Date;
 
 public class TSaleBean {
-
     private String R_Index = "0";
     private String R_Refno;
     private String R_Table;

@@ -6,12 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class ProductControl {
 
-    private ArrayList<ProductBean> dataProduct = null;
+    private List<ProductBean> dataProduct = null;
     public static final int PRODUCT_NOT_FOUND = 0;
     public static final int PRODUCT_ACTIVE = 1;
     public static final int PRODUCT_NOT_ACTIVE = 2;
@@ -100,10 +101,7 @@ public class ProductControl {
         return productBean;
     }
 
-    public ArrayList<ProductBean> searchAllProductBy(String PCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<ProductBean> searchAllProductBy(String PCode) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -111,7 +109,6 @@ public class ProductControl {
             String sql = "select * from product "
                     + "where PCode like '%" + PCode + "%' "
                     + "or PDesc like '%" + PCode + "%'";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
@@ -174,7 +171,6 @@ public class ProductControl {
                 dataProduct.add(p);
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -184,15 +180,12 @@ public class ProductControl {
         return dataProduct;
     }
 
-    public ArrayList<ProductBean> searchAllProductBy2(String key) {
-        ArrayList<ProductBean> arrList = new ArrayList<>();
+    public List<ProductBean> searchAllProductBy2(String key) {
+        List<ProductBean> arrList = new ArrayList<>();
         if (key.trim().equals("")) {
             return arrList;
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -204,8 +197,6 @@ public class ProductControl {
                     + "and PActive='Y' and PFix='F' "
                     + "group by PCode "
                     + "limit 0, 20";
-
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
@@ -224,7 +215,6 @@ public class ProductControl {
                 arrList.add(product);
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -234,15 +224,12 @@ public class ProductControl {
         return arrList;
     }
 
-    public ArrayList<ProductBean> searchAllProductBy3(String key) {
-        ArrayList<ProductBean> arrList = new ArrayList<>();
+    public List<ProductBean> searchAllProductBy3(String key) {
+        List<ProductBean> arrList = new ArrayList<>();
         if (key.trim().equals("")) {
             return arrList;
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -276,7 +263,6 @@ public class ProductControl {
                 arrList.add(product);
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -286,15 +272,11 @@ public class ProductControl {
         return arrList;
     }
 
-    public ArrayList<ProductBean> getAllProductByGroup(String PGroup) {
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<ProductBean> getAllProductByGroup(String PGroup) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
@@ -356,7 +338,6 @@ public class ProductControl {
                 dataProduct.add(p);
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -368,26 +349,20 @@ public class ProductControl {
 
     public boolean productExist(String PCode) {
         boolean isExist = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select PCode from product where PCode='" + PCode + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
             mysql.close();
         }
-
         return isExist;
     }
 

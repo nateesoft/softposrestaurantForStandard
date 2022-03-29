@@ -32,23 +32,14 @@ public class PropControl {
     
     public void sampleLoadProp(){
         Properties prop = new Properties();
- 
     	try {
-               //load a properties file
-    		prop.load(new FileInputStream("test.properties"));
- 
-               //get the property value and print it out
-                System.out.println(prop.getProperty("DB_SERVER"));
-    		System.out.println(prop.getProperty("DB_ROOT"));
-    		System.out.println(prop.getProperty("DB_PASSWORD"));
- 
+            prop.load(new FileInputStream("test.properties"));
     	} catch (IOException ex) {
             MSG.ERR(null, ex.getMessage());
         }
     }
     
     public String getMacNo(){
-       
         return Value.MACNO;
     }
     
@@ -63,9 +54,7 @@ public class PropControl {
             bean.setPassword(prop.getProperty("DB_PASS"));            
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT")));
             bean.setCharset(prop.getProperty("DB_CHARSET"));
-        } catch (IOException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             MSG.ERR(null, e.getMessage());
         }
         
@@ -83,14 +72,11 @@ public class PropControl {
             bean.setPassword(prop.getProperty("DB_PASS_CLIENT"));            
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT_CLIENT")));
             bean.setCharset(prop.getProperty("DB_CHARSET_CLIENT"));
-        } catch (IOException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             MSG.ERR(null, e.getMessage());
         }
         
         return bean;
     }
-    
     
 }

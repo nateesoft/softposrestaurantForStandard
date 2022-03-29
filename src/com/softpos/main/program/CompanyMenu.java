@@ -1,23 +1,24 @@
 package com.softpos.main.program;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyMenu {
     
     private String headName;
-    private ArrayList<MenuSetup> menuSetupData;
+    private final List<MenuSetup> menuSetupData;
     public static final String TYPE_PRODUCT = "P";
     public static final String TYPE_GROUP = "S";
     
     public CompanyMenu(){
-        menuSetupData = new ArrayList<MenuSetup>();
+        menuSetupData = new ArrayList<>();
     }
     
     public void addMenuSetup(MenuSetup menu){
         menuSetupData.add(menu);
     }
     
-    public ArrayList<MenuSetup> getAllMenuSetup(){
+    public List<MenuSetup> getAllMenuSetup(){
         return menuSetupData;
     }
     

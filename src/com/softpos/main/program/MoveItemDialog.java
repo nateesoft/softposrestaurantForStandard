@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -474,7 +474,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            e.printStackTrace();
+                            
                         } finally {
                             mysql.close();
                         }
@@ -504,8 +504,8 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     c.open();
                     String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
                     c.getConnection().createStatement().executeUpdate(sql);
-                } catch (Exception e) {
-                    MSG.ERR(e.toString());
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
                 }
 //                tfControl.updateTableActive(TABLE_2);
                 Value.TableSelected = TABLE_2;
@@ -704,7 +704,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
     private void loadTable1() {
         BalanceControl bc = new BalanceControl();
-        ArrayList<BalanceBean> listBalance = bc.getAllBalance(txtTable1.getText());
+        List<BalanceBean> listBalance = bc.getAllBalance(txtTable1.getText());
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         table1.setRowHeight(35);
         table1.setFont(new Font("Norasi", Font.PLAIN, 14));
@@ -735,7 +735,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
     private void loadTable2() {
         BalanceControl bc = new BalanceControl();
-        ArrayList<BalanceBean> listBalance = bc.getAllBalance(txtTable2.getText());
+        List<BalanceBean> listBalance = bc.getAllBalance(txtTable2.getText());
         DefaultTableModel model = (DefaultTableModel) table2.getModel();
         table2.setRowHeight(35);
         table2.setFont(new Font("Norasi", Font.PLAIN, 14));
@@ -792,7 +792,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

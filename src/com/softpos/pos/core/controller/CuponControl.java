@@ -6,17 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import sun.natee.project.util.DateFormat;
 import util.MSG;
 
 public class CuponControl {
 
-    public ArrayList<CuponBean> listCupon() {
-        /*** OPEN CONNECTION ***/
+    public List<CuponBean> listCupon() {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         
-        ArrayList<CuponBean> listBean = new ArrayList<>();
+        List<CuponBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cupon";
             Statement stmt = mysql.getConnection().createStatement();
@@ -64,7 +64,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -72,12 +72,11 @@ public class CuponControl {
         return listBean;
     }
 
-    public ArrayList<CuponBean> listCupon(String CuCode) {
-        /*** OPEN CONNECTION ***/
+    public List<CuponBean> listCupon(String CuCode) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         
-        ArrayList<CuponBean> listBean = new ArrayList<>();
+        List<CuponBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cupon where CuCode='" + CuCode + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -125,7 +124,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -182,7 +181,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -225,7 +224,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }
@@ -262,7 +261,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }

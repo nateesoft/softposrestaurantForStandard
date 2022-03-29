@@ -141,7 +141,7 @@ public class ItemDisControl {
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                e.printStackTrace();
+                
             }
 
             //update tablefile
@@ -155,7 +155,7 @@ public class ItemDisControl {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         }
 
         BalanceControl.updateProSerTable(Table, memberBean);

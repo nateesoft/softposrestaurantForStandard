@@ -167,7 +167,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="&#xe43;&#xe2a;&#xe48;&#xe20;&#xe32;&#xe1e;&#xe1e;&#xe37;&#xe49;&#xe19;&#xe2b;&#xe25;&#xe31;&#xe07; &#xe41;&#xe25;&#xe30; Layout">
                   <Font PropertyName="font" name="Tahoma" size="12" style="1"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -550,7 +549,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="&#xe04;&#xe38;&#xe13;&#xe2a;&#xe21;&#xe1a;&#xe31;&#xe15;&#xe34;&#xe02;&#xe2d;&#xe07;&#xe1b;&#xe38;&#xe48;&#xe21;">
                   <Font PropertyName="font" name="Tahoma" size="12" style="1"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>

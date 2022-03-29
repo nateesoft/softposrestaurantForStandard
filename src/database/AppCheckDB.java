@@ -23,7 +23,7 @@ public class AppCheckDB {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
             
             try {
                 String sqlUpd = "alter table mgrbuttonsetup add check_extra char(1) default 'N'";
@@ -32,7 +32,7 @@ public class AppCheckDB {
                 stmt.close();
             } catch (SQLException ex) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
         } finally{
             mysql.close();

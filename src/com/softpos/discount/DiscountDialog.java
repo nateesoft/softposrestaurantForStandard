@@ -801,13 +801,13 @@ public class DiscountDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBahtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBahtActionPerformed
-        if (posConfig.getP_DiscBathChk().equals("Y")) {
+        if ("Y".equals(posConfig.getP_DiscBathChk())) {
             txtBahtAmt.setFocusable(true);
             txtBahtAmt.selectAll();
             txtBahtAmt.requestFocus();
-        } else {
-            JOptionPane.showMessageDialog(this, "ระบบถูกกำหนดว่า ห้ามให้ส่วนลดรายการนี้ !");
+            return;
         }
+        JOptionPane.showMessageDialog(this, "ระบบถูกกำหนดว่า ห้ามให้ส่วนลดรายการนี้ !");
     }//GEN-LAST:event_btnBahtActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -858,9 +858,6 @@ public class DiscountDialog extends javax.swing.JDialog {
         discBean.setBahtDiscount(BahtDiscount);
         discBean.setCuponSpecialDiscount(CuponSpecialDiscount);
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
@@ -907,7 +904,6 @@ public class DiscountDialog extends javax.swing.JDialog {
 
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        e.printStackTrace();
                     }
                 }
                 if (discBean.getBahtDiscount() > 0) {
@@ -921,8 +917,8 @@ public class DiscountDialog extends javax.swing.JDialog {
                         }
                         rsBL.close();
                         mysql.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
                     }
                 }
                 stmt.close();
@@ -933,7 +929,6 @@ public class DiscountDialog extends javax.swing.JDialog {
                 BalanceControl.updateProSerTable(tableNo, memberBean);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -978,7 +973,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                     String sql = "";
                     for (String data2 : saleTypeDiscCheck) {
                         saleTypeE = saleTypeDiscCheck[0];
-                        if (saleTypeE.equals("Y")) {
+                        if ("Y".equals(saleTypeE)) {
                             if (typeNormalN > 0) {
                                 sql = "update balance set "
                                         + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -1000,8 +995,8 @@ public class DiscountDialog extends javax.swing.JDialog {
                             }
                         }
                         saleTypeT = saleTypeDiscCheck[1];
-                        if (saleTypeT.equals("Y")) {
-                            if (saleTypeE.equals("Y")) {
+                        if ("E".equals(saleTypeT)) {
+                            if ("Y".equals(saleTypeE)) {
                                 if (typeNormalN > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -1435,7 +1430,6 @@ public class DiscountDialog extends javax.swing.JDialog {
                 BalanceControl.updateProSerTable(tableNo, memberBean);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -1585,7 +1579,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1658,7 +1651,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1729,7 +1721,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1801,7 +1792,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1864,7 +1854,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1890,7 +1879,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1916,7 +1904,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1942,7 +1929,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1968,7 +1954,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2026,7 +2011,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2103,7 +2087,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2147,7 +2130,6 @@ public class DiscountDialog extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 } finally {
                     mysql.close();
                 }
@@ -2187,7 +2169,6 @@ public class DiscountDialog extends javax.swing.JDialog {
                     stmt.executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 } finally {
                     mysql.close();
                 }
@@ -2255,7 +2236,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2325,7 +2305,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2488,7 +2467,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2521,7 +2499,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2548,7 +2525,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -2590,7 +2566,6 @@ public class DiscountDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

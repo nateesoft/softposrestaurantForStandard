@@ -4,13 +4,13 @@ import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class PublicVar {
 
-    public static ArrayList<SmpCoupon> SmpCouponArray;
+    public static List<SmpCoupon> SmpCouponArray;
     public static String UseTouchScreen;
     public static TranRecord KicRec;
     public static String ProcessType;

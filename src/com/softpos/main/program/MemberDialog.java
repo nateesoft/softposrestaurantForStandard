@@ -275,16 +275,8 @@ public class MemberDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        String q = txtCode.getText().trim();
-        if (q.equals("null")){
-         System.out.println(q);   
-        }else{
-            System.out.println(q);
-        }
-            
-        
         UpdateMember("Ins");
-            selectMember();  
+        selectMember();  
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -525,7 +517,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -553,8 +545,8 @@ public class MemberDialog extends javax.swing.JDialog {
                     c.getConnection().createStatement().executeUpdate(sql);
                     break;
             }
-        } catch (Exception e) {
-            MSG.ERR(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

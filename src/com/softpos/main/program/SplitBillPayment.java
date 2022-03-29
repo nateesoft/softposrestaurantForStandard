@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
@@ -308,7 +308,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        e.printStackTrace();
+                        
                     } finally {
                         mysql.close();
                     }
@@ -384,7 +384,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        e.printStackTrace();
+                        
                     } finally {
                         mysql.close();
                     }
@@ -477,7 +477,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
         }
 
         BalanceControl bControl = new BalanceControl();
-        ArrayList<BalanceBean> balance = bControl.getAllBalance(txtTable1.getText());
+        List<BalanceBean> balance = bControl.getAllBalance(txtTable1.getText());
         for (int i = 0; i < balance.size(); i++) {
             BalanceBean bean = (BalanceBean) balance.get(i);
             if (bean.getR_Void().equals("V")) {
@@ -507,7 +507,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
         }
 
         BalanceControl bControl = new BalanceControl();
-        ArrayList<BalanceBean> balance = bControl.getAllBalance(txtTable2.getText());
+        List<BalanceBean> balance = bControl.getAllBalance(txtTable2.getText());
         for (int i = 0; i < balance.size(); i++) {
             BalanceBean bean = (BalanceBean) balance.get(i);
             if (bean.getR_Void().equals("V")) {

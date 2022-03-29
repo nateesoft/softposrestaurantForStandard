@@ -11,9 +11,6 @@ public class StoreDept {
 
     public boolean store(DeptButtonBean bean) {
         String sql = "";
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -26,7 +23,7 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
-            e.printStackTrace();
+            
             return false;
         } finally{
             mysql.close();
@@ -54,7 +51,7 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
-            e.printStackTrace();
+            
             return false;
         }
     }

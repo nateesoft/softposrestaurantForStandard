@@ -114,7 +114,6 @@ public class PaidinFrm extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

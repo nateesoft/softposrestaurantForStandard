@@ -77,13 +77,8 @@ public class MySQLConnectWebOnline {
             getDbVar();
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-            //System.out.println("Database Connected.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+        } catch (ClassNotFoundException | SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 
@@ -98,17 +93,6 @@ public class MySQLConnectWebOnline {
                 //System.out.println("Database Closed.");
             } catch (SQLException ex) {
                 Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    private void showError(Exception e) {
-        String strErr = e.getMessage();
-        if (strErr.indexOf("No operations") != -1
-                || strErr.indexOf("Communications link failure") != -1) {
-            int confirm = JOptionPane.showConfirmDialog(null, msgError);
-            if (confirm == JOptionPane.YES_OPTION) {
-                System.exit(0);
             }
         }
     }
@@ -178,7 +162,7 @@ public class MySQLConnectWebOnline {
                 fs.close();
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
         }
     }

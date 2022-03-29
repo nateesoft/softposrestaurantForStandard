@@ -230,7 +230,6 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             } finally {
                 mysql.close();
             }
@@ -353,7 +352,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -402,7 +400,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

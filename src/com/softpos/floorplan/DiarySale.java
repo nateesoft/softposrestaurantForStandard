@@ -308,7 +308,6 @@ public class DiarySale extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

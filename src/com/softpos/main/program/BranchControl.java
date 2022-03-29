@@ -9,22 +9,13 @@ import util.MSG;
 
 public class BranchControl {
 
-    private BranchBean bean;
-
-    public BranchControl() {
-        bean = getData();
-    }
-
-    public BranchBean getBranch() {
-        return bean;
-    }
+    private static BranchBean branchBean = null;
 
     public static void updateKicItemNo() {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        
 
         try {
             mysql.open();
@@ -35,183 +26,183 @@ public class BranchControl {
 //            stmt.close();
         } catch (Exception e) {
             MSG.ERR(null, e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
     }
 
     public static BranchBean getData() {
-        BranchBean bean = new BranchBean();
-        /**
-         * * OPEN CONNECTION **
-         */
+        if (branchBean != null) {
+            return branchBean;
+        }
         MySQLConnect mysql = new MySQLConnect();
-       
         try {
             mysql.open();
             String sql = "select * from branch";
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
-                bean.setCode(rs.getString("Code"));
-                bean.setName(ThaiUtil.ASCII2Unicode(rs.getString("Name")));
-                bean.setAddressNo(rs.getString("AddressNo"));
-                bean.setLocality(rs.getString("Locality"));
-                bean.setSubProvince(rs.getString("SubProvince"));
-                bean.setProvince(rs.getString("Province"));
-                bean.setPost(rs.getString("Post"));
-                bean.setTel_No(rs.getString("Tel_No"));
-                bean.setFax_No(rs.getString("Fax_No"));
-                bean.setE_Mail(rs.getString("E_Mail"));
-                bean.setManager(rs.getString("Manager"));
-                bean.setLocation_Area(rs.getString("Location_Area"));
-                bean.setSer_Area(rs.getFloat("Ser_Area"));
-                bean.setCou_Area(rs.getFloat("Cou_Area"));
-                bean.setKic_Area(rs.getFloat("Kic_Area"));
-                bean.setTot_Area(rs.getFloat("Tot_Area"));
-                bean.setCost(rs.getFloat("Cost"));
-                bean.setCharge(rs.getFloat("Charge"));
-                bean.setFlageCost(rs.getString("FlageCost"));
-                bean.setGp(rs.getFloat("Gp"));
-                bean.setFlageGp(rs.getString("FlageGp"));
-                bean.setRemark(rs.getString("Remark"));
-                bean.setArBillNo(rs.getFloat("ArBillNo"));
-                bean.setEarneatBillNo(rs.getFloat("EarneatBillNo"));
-                bean.setReturnBillNo(rs.getFloat("ReturnBillNo"));
+                branchBean = new BranchBean();
+                branchBean.setCode(rs.getString("Code"));
+                branchBean.setName(ThaiUtil.ASCII2Unicode(rs.getString("Name")));
+                branchBean.setAddressNo(rs.getString("AddressNo"));
+                branchBean.setLocality(rs.getString("Locality"));
+                branchBean.setSubProvince(rs.getString("SubProvince"));
+                branchBean.setProvince(rs.getString("Province"));
+                branchBean.setPost(rs.getString("Post"));
+                branchBean.setTel_No(rs.getString("Tel_No"));
+                branchBean.setFax_No(rs.getString("Fax_No"));
+                branchBean.setE_Mail(rs.getString("E_Mail"));
+                branchBean.setManager(rs.getString("Manager"));
+                branchBean.setLocation_Area(rs.getString("Location_Area"));
+                branchBean.setSer_Area(rs.getFloat("Ser_Area"));
+                branchBean.setCou_Area(rs.getFloat("Cou_Area"));
+                branchBean.setKic_Area(rs.getFloat("Kic_Area"));
+                branchBean.setTot_Area(rs.getFloat("Tot_Area"));
+                branchBean.setCost(rs.getFloat("Cost"));
+                branchBean.setCharge(rs.getFloat("Charge"));
+                branchBean.setFlageCost(rs.getString("FlageCost"));
+                branchBean.setGp(rs.getFloat("Gp"));
+                branchBean.setFlageGp(rs.getString("FlageGp"));
+                branchBean.setRemark(rs.getString("Remark"));
+                branchBean.setArBillNo(rs.getFloat("ArBillNo"));
+                branchBean.setEarneatBillNo(rs.getFloat("EarneatBillNo"));
+                branchBean.setReturnBillNo(rs.getFloat("ReturnBillNo"));
                 try {
-                    bean.setPrintAutoSumDate(rs.getDate("PrintAutoSumDate"));
+                    branchBean.setPrintAutoSumDate(rs.getDate("PrintAutoSumDate"));
                 } catch (SQLException e) {
                     System.out.println("Error Date: " + e.getMessage());
                 }
-                bean.setSaveOrder(rs.getString("SaveOrder"));
-                bean.setSaveOrderCopy(rs.getString("SaveOrderCopy"));
-                bean.setSaveOrderChk(rs.getString("SaveOrderChk"));
-                bean.setKIC1(rs.getString("KIC1"));
-                bean.setKIC2(rs.getString("KIC2"));
-                bean.setKIC3(rs.getString("KIC3"));
-                bean.setKIC4(rs.getString("KIC4"));
-                bean.setKIC5(rs.getString("KIC5"));
-                bean.setKIC6(rs.getString("KIC6"));
-                bean.setKIC7(rs.getString("KIC7"));
-                bean.setKIC8(rs.getString("KIC8"));
-                bean.setKIC9(rs.getString("KIC9"));
-                bean.setSmartCard(rs.getString("SmartCard"));
-                bean.setGetFile(rs.getString("GetFile"));
-                bean.setRetFile(rs.getString("RetFile"));
-                bean.setPointFile(rs.getString("PointFile"));
-                bean.setCntLoop(rs.getInt("CntLoop"));
-                bean.setInvNo(rs.getFloat("InvNo"));
-                bean.setInvCashNo(rs.getFloat("InvCashNo"));
-                bean.setInvCash(rs.getFloat("InvCash"));
-                bean.setInvActive(rs.getString("InvActive"));
-                bean.setCreditAct(rs.getString("CreditAct"));
-                bean.setPromotionGP(rs.getString("PromotionGP"));
-                bean.setLockTime(rs.getInt("LockTime"));
-                bean.setKicItemNo(rs.getInt("KicItemNo"));
-                bean.setPT1(rs.getString("PT1"));
-                bean.setPT2(rs.getString("PT2"));
-                bean.setPT3(rs.getString("PT3"));
-                bean.setPT4(rs.getString("PT4"));
-                bean.setPT5(rs.getString("PT5"));
-                bean.setPONO(rs.getInt("PONO"));
-                bean.setPrintKicForm(rs.getString("PrintKicForm"));
-                bean.setPrintInvForm(rs.getString("PrintInvForm"));
-                bean.setPSelectStk(rs.getString("PSelectStk"));
-                bean.setPStkChk(rs.getString("PStkChk"));
-                bean.setPMinStkChk(rs.getString("PMinStkChk"));
-                bean.setRoundUpTime(rs.getFloat("RoundUpTime"));
-                bean.setGiftStatusChk(rs.getString("GiftStatusChk"));
-                bean.setKICCopy1(rs.getString("KICCopy1"));
-                bean.setKICCopy2(rs.getString("KICCopy2"));
-                bean.setKICCopy3(rs.getString("KICCopy3"));
-                bean.setKICCopy4(rs.getString("KICCopy4"));
-                bean.setKICCopy5(rs.getString("KICCopy5"));
-                bean.setKICCopy6(rs.getString("KICCopy6"));
-                bean.setKICCopy7(rs.getString("KICCopy7"));
-                bean.setKICCopy8(rs.getString("KICCopy8"));
-                bean.setKICCopy9(rs.getString("KICCopy9"));
-                bean.setKICChk1(rs.getString("KICChk1"));
-                bean.setKICChk2(rs.getString("KICChk2"));
-                bean.setKICChk3(rs.getString("KICChk3"));
-                bean.setKICChk4(rs.getString("KICChk4"));
-                bean.setKICChk5(rs.getString("KICChk5"));
-                bean.setKICChk6(rs.getString("KICChk6"));
-                bean.setKICChk7(rs.getString("KICChk7"));
-                bean.setKICChk8(rs.getString("KICChk8"));
-                bean.setKICChk9(rs.getString("KICChk9"));
-                bean.setUpdateBranchPoint(rs.getString("UpdateBranchPoint"));
-                bean.setKicName1(rs.getString("KicName1"));
-                bean.setKicName2(rs.getString("KicName2"));
-                bean.setKicName3(rs.getString("KicName3"));
-                bean.setKicName4(rs.getString("KicName4"));
-                bean.setKicName5(rs.getString("KicName5"));
-                bean.setKicName6(rs.getString("KicName6"));
-                bean.setKicName7(rs.getString("KicName7"));
-                bean.setKicName8(rs.getString("KicName8"));
-                bean.setKicName9(rs.getString("KicName9"));
-                bean.setKicPrintOnReceipt1(rs.getString("KicPrintOnReceipt1"));
-                bean.setKicPrintOnReceipt2(rs.getString("KicPrintOnReceipt2"));
-                bean.setKicPrintOnReceipt3(rs.getString("KicPrintOnReceipt3"));
-                bean.setKicPrintOnReceipt4(rs.getString("KicPrintOnReceipt4"));
-                bean.setKicPrintOnReceipt5(rs.getString("KicPrintOnReceipt5"));
-                bean.setKicPrintOnReceipt6(rs.getString("KicPrintOnReceipt6"));
-                bean.setKicPrintOnReceipt7(rs.getString("KicPrintOnReceipt7"));
-                bean.setKicPrintOnReceipt8(rs.getString("KicPrintOnReceipt8"));
-                bean.setKicPrintOnReceipt9(rs.getString("KicPrintOnReceipt9"));
-                bean.setKicQue(rs.getInt("KicQue"));
-                bean.setKic10(rs.getString("Kic10"));
-                bean.setKic11(rs.getString("Kic11"));
-                bean.setKic12(rs.getString("Kic12"));
-                bean.setKic13(rs.getString("Kic13"));
-                bean.setKic14(rs.getString("Kic14"));
-                bean.setKic15(rs.getString("Kic15"));
-                bean.setKic16(rs.getString("Kic16"));
-                bean.setKic17(rs.getString("Kic17"));
-                bean.setKic18(rs.getString("Kic18"));
-                bean.setKic19(rs.getString("Kic19"));
-                bean.setKic20(rs.getString("Kic20"));
-                bean.setKicCopy10(rs.getString("KicCopy10"));
-                bean.setKicCopy11(rs.getString("KicCopy11"));
-                bean.setKicCopy12(rs.getString("KicCopy12"));
-                bean.setKicCopy13(rs.getString("KicCopy13"));
-                bean.setKicCopy14(rs.getString("KicCopy14"));
-                bean.setKicCopy15(rs.getString("KicCopy15"));
-                bean.setKicCopy16(rs.getString("KicCopy16"));
-                bean.setKicCopy17(rs.getString("KicCopy17"));
-                bean.setKicCopy18(rs.getString("KicCopy18"));
-                bean.setKicCopy19(rs.getString("KicCopy19"));
-                bean.setKicCopy20(rs.getString("KicCopy20"));
-                bean.setKicChk10(rs.getString("KicChk10"));
-                bean.setKicChk11(rs.getString("KicChk11"));
-                bean.setKicChk12(rs.getString("KicChk12"));
-                bean.setKicChk13(rs.getString("KicChk13"));
-                bean.setKicChk14(rs.getString("KicChk14"));
-                bean.setKicChk15(rs.getString("KicChk15"));
-                bean.setKicChk16(rs.getString("KicChk16"));
-                bean.setKicChk17(rs.getString("KicChk17"));
-                bean.setKicChk18(rs.getString("KicChk18"));
-                bean.setKicChk19(rs.getString("KicChk19"));
-                bean.setKicChk20(rs.getString("KicChk20"));
+                branchBean.setSaveOrder(rs.getString("SaveOrder"));
+                branchBean.setSaveOrderCopy(rs.getString("SaveOrderCopy"));
+                branchBean.setSaveOrderChk(rs.getString("SaveOrderChk"));
+                branchBean.setKIC1(rs.getString("KIC1"));
+                branchBean.setKIC2(rs.getString("KIC2"));
+                branchBean.setKIC3(rs.getString("KIC3"));
+                branchBean.setKIC4(rs.getString("KIC4"));
+                branchBean.setKIC5(rs.getString("KIC5"));
+                branchBean.setKIC6(rs.getString("KIC6"));
+                branchBean.setKIC7(rs.getString("KIC7"));
+                branchBean.setKIC8(rs.getString("KIC8"));
+                branchBean.setKIC9(rs.getString("KIC9"));
+                branchBean.setSmartCard(rs.getString("SmartCard"));
+                branchBean.setGetFile(rs.getString("GetFile"));
+                branchBean.setRetFile(rs.getString("RetFile"));
+                branchBean.setPointFile(rs.getString("PointFile"));
+                branchBean.setCntLoop(rs.getInt("CntLoop"));
+                branchBean.setInvNo(rs.getFloat("InvNo"));
+                branchBean.setInvCashNo(rs.getFloat("InvCashNo"));
+                branchBean.setInvCash(rs.getFloat("InvCash"));
+                branchBean.setInvActive(rs.getString("InvActive"));
+                branchBean.setCreditAct(rs.getString("CreditAct"));
+                branchBean.setPromotionGP(rs.getString("PromotionGP"));
+                branchBean.setLockTime(rs.getInt("LockTime"));
+                branchBean.setKicItemNo(rs.getInt("KicItemNo"));
+                branchBean.setPT1(rs.getString("PT1"));
+                branchBean.setPT2(rs.getString("PT2"));
+                branchBean.setPT3(rs.getString("PT3"));
+                branchBean.setPT4(rs.getString("PT4"));
+                branchBean.setPT5(rs.getString("PT5"));
+                branchBean.setPONO(rs.getInt("PONO"));
+                branchBean.setPrintKicForm(rs.getString("PrintKicForm"));
+                branchBean.setPrintInvForm(rs.getString("PrintInvForm"));
+                branchBean.setPSelectStk(rs.getString("PSelectStk"));
+                branchBean.setPStkChk(rs.getString("PStkChk"));
+                branchBean.setPMinStkChk(rs.getString("PMinStkChk"));
+                branchBean.setRoundUpTime(rs.getFloat("RoundUpTime"));
+                branchBean.setGiftStatusChk(rs.getString("GiftStatusChk"));
+                branchBean.setKICCopy1(rs.getString("KICCopy1"));
+                branchBean.setKICCopy2(rs.getString("KICCopy2"));
+                branchBean.setKICCopy3(rs.getString("KICCopy3"));
+                branchBean.setKICCopy4(rs.getString("KICCopy4"));
+                branchBean.setKICCopy5(rs.getString("KICCopy5"));
+                branchBean.setKICCopy6(rs.getString("KICCopy6"));
+                branchBean.setKICCopy7(rs.getString("KICCopy7"));
+                branchBean.setKICCopy8(rs.getString("KICCopy8"));
+                branchBean.setKICCopy9(rs.getString("KICCopy9"));
+                branchBean.setKICChk1(rs.getString("KICChk1"));
+                branchBean.setKICChk2(rs.getString("KICChk2"));
+                branchBean.setKICChk3(rs.getString("KICChk3"));
+                branchBean.setKICChk4(rs.getString("KICChk4"));
+                branchBean.setKICChk5(rs.getString("KICChk5"));
+                branchBean.setKICChk6(rs.getString("KICChk6"));
+                branchBean.setKICChk7(rs.getString("KICChk7"));
+                branchBean.setKICChk8(rs.getString("KICChk8"));
+                branchBean.setKICChk9(rs.getString("KICChk9"));
+                branchBean.setUpdateBranchPoint(rs.getString("UpdateBranchPoint"));
+                branchBean.setKicName1(rs.getString("KicName1"));
+                branchBean.setKicName2(rs.getString("KicName2"));
+                branchBean.setKicName3(rs.getString("KicName3"));
+                branchBean.setKicName4(rs.getString("KicName4"));
+                branchBean.setKicName5(rs.getString("KicName5"));
+                branchBean.setKicName6(rs.getString("KicName6"));
+                branchBean.setKicName7(rs.getString("KicName7"));
+                branchBean.setKicName8(rs.getString("KicName8"));
+                branchBean.setKicName9(rs.getString("KicName9"));
+                branchBean.setKicPrintOnReceipt1(rs.getString("KicPrintOnReceipt1"));
+                branchBean.setKicPrintOnReceipt2(rs.getString("KicPrintOnReceipt2"));
+                branchBean.setKicPrintOnReceipt3(rs.getString("KicPrintOnReceipt3"));
+                branchBean.setKicPrintOnReceipt4(rs.getString("KicPrintOnReceipt4"));
+                branchBean.setKicPrintOnReceipt5(rs.getString("KicPrintOnReceipt5"));
+                branchBean.setKicPrintOnReceipt6(rs.getString("KicPrintOnReceipt6"));
+                branchBean.setKicPrintOnReceipt7(rs.getString("KicPrintOnReceipt7"));
+                branchBean.setKicPrintOnReceipt8(rs.getString("KicPrintOnReceipt8"));
+                branchBean.setKicPrintOnReceipt9(rs.getString("KicPrintOnReceipt9"));
+                branchBean.setKicQue(rs.getInt("KicQue"));
+                branchBean.setKic10(rs.getString("Kic10"));
+                branchBean.setKic11(rs.getString("Kic11"));
+                branchBean.setKic12(rs.getString("Kic12"));
+                branchBean.setKic13(rs.getString("Kic13"));
+                branchBean.setKic14(rs.getString("Kic14"));
+                branchBean.setKic15(rs.getString("Kic15"));
+                branchBean.setKic16(rs.getString("Kic16"));
+                branchBean.setKic17(rs.getString("Kic17"));
+                branchBean.setKic18(rs.getString("Kic18"));
+                branchBean.setKic19(rs.getString("Kic19"));
+                branchBean.setKic20(rs.getString("Kic20"));
+                branchBean.setKicCopy10(rs.getString("KicCopy10"));
+                branchBean.setKicCopy11(rs.getString("KicCopy11"));
+                branchBean.setKicCopy12(rs.getString("KicCopy12"));
+                branchBean.setKicCopy13(rs.getString("KicCopy13"));
+                branchBean.setKicCopy14(rs.getString("KicCopy14"));
+                branchBean.setKicCopy15(rs.getString("KicCopy15"));
+                branchBean.setKicCopy16(rs.getString("KicCopy16"));
+                branchBean.setKicCopy17(rs.getString("KicCopy17"));
+                branchBean.setKicCopy18(rs.getString("KicCopy18"));
+                branchBean.setKicCopy19(rs.getString("KicCopy19"));
+                branchBean.setKicCopy20(rs.getString("KicCopy20"));
+                branchBean.setKicChk10(rs.getString("KicChk10"));
+                branchBean.setKicChk11(rs.getString("KicChk11"));
+                branchBean.setKicChk12(rs.getString("KicChk12"));
+                branchBean.setKicChk13(rs.getString("KicChk13"));
+                branchBean.setKicChk14(rs.getString("KicChk14"));
+                branchBean.setKicChk15(rs.getString("KicChk15"));
+                branchBean.setKicChk16(rs.getString("KicChk16"));
+                branchBean.setKicChk17(rs.getString("KicChk17"));
+                branchBean.setKicChk18(rs.getString("KicChk18"));
+                branchBean.setKicChk19(rs.getString("KicChk19"));
+                branchBean.setKicChk20(rs.getString("KicChk20"));
+                
+                branchBean.setImageHomePath(rs.getString("IMG_HOME_PATH"));
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
 
-        return bean;
+        return branchBean;
     }
 
     public static String[] getKicData20() {
-        BranchBean bb = BranchControl.getData();
         String[] kic;
-
-        kic = new String[]{bb.getKIC1(), bb.getKIC2(), bb.getKIC3(), bb.getKIC4(), bb.getKIC5(), bb.getKIC6(), bb.getKIC7(), bb.getKIC8(), bb.getKIC9(), bb.getKic10(), bb.getKic11(), bb.getKic12(), bb.getKic13(), bb.getKic14(), bb.getKic15(), bb.getKic16(), bb.getKic17(), bb.getKic18(), bb.getKic19(), bb.getKic20()};
-
+        kic = new String[]{
+            branchBean.getKIC1(), branchBean.getKIC2(), branchBean.getKIC3(), branchBean.getKIC4(), branchBean.getKIC5(), 
+            branchBean.getKIC6(), branchBean.getKIC7(), branchBean.getKIC8(), branchBean.getKIC9(), branchBean.getKic10(), 
+            branchBean.getKic11(), branchBean.getKic12(), branchBean.getKic13(), branchBean.getKic14(), branchBean.getKic15(), 
+            branchBean.getKic16(), branchBean.getKic17(), branchBean.getKic18(), branchBean.getKic19(), branchBean.getKic20()
+        };
         return kic;
     }
 
@@ -221,7 +212,7 @@ public class BranchControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        
+
         try {
             mysql.open();
             String sql = "select KICCopy" + kicNo + " from branch";
@@ -234,7 +225,7 @@ public class BranchControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

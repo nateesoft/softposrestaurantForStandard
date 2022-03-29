@@ -19,8 +19,11 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.main.program.BranchControl;
 import com.softpos.main.program.GetPassword;
+import com.softpos.main.program.POSHWSetup;
 import com.softpos.main.program.PPrint;
+import com.softpos.main.program.PosControl;
 import com.softpos.main.program.PublicVar;
 import com.softpos.main.program.UserRecord;
 import com.softpos.main.program.Value;
@@ -68,6 +71,7 @@ public class Login extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        lbVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Login Sale System www.softpos.co.th tel.02-116-6615 Hotline: 086-320-3877");
@@ -254,6 +258,10 @@ public class Login extends javax.swing.JDialog {
         jLabel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 770));
 
+        lbVersion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbVersion.setText("Update: 27/03/2022");
+        jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -404,6 +412,7 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbPass;
     private javax.swing.JLabel lbUser;
+    private javax.swing.JLabel lbVersion;
     private javax.swing.JProgressBar pbCheckUpdate;
     private javax.swing.JTextField txtMacNo;
     private javax.swing.JPasswordField txtPass;
@@ -427,9 +436,6 @@ public class Login extends javax.swing.JDialog {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
         } else {
-            /**
-             * * OPEN CONNECTION **
-             */
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
 
@@ -466,11 +472,10 @@ public class Login extends javax.swing.JDialog {
                             if (TUserRec.GetUserAction(loginname)) {
                                 if (TUserRec.Sale1.equals("Y")) {
                                     PublicVar.TUserRec = TUserRec;
-                                    PPrint Prn = new PPrint();
-//                                    Prn.printLogin(txtUser.getText());
                                     UpdateLogin(loginname);
                                     PosHwSetupOnAct("Y");
                                     Value.USERCODE = txtUser.getText();
+                                    PublicVar.Branch_Code = BranchControl.getData().getCode();
                                     dispose();
                                     FloorPlanDialog floorPlan = new FloorPlanDialog();
                                     floorPlan.setVisible(true);
@@ -484,17 +489,11 @@ public class Login extends javax.swing.JDialog {
                             }
                         }
                     } else {
-                        try {
-                            String SQLposhwsetupCheckOnact = "select onact onact from poshwsetup where terminal='" + Value.MACNO + "';";
-                            ResultSet rsPOSHWOnAct = mysql.getConnection().createStatement().executeQuery(SQLposhwsetupCheckOnact);
-                            if (rsPOSHWOnAct.next()) {
-                                String POSOnActCheck = rsPOSHWOnAct.getString("onact");
-                                if (POSOnActCheck.equals("Y")) {
-                                    JOptionPane.showMessageDialog(this, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
-                                    System.exit(0);
-                                }
-                            }
-                        } catch (Exception e) {
+                        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+                        String POSOnActCheck = poshwSetup.getOnAct();
+                        if (POSOnActCheck.equals("Y")) {
+                            JOptionPane.showMessageDialog(this, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+                            System.exit(0);
                         }
                         MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
                         GetPassword frm = new GetPassword(null, true);
@@ -508,12 +507,10 @@ public class Login extends javax.swing.JDialog {
                                 if (TUserRec.GetUserAction(loginname)) {
                                     if (TUserRec.Sale1.equals("Y")) {
                                         PublicVar.TUserRec = TUserRec;
-                                        PPrint Prn = new PPrint();
-                                        //Prn.printLogin(txtUser.getText());
                                         UpdateLogin(loginname);
                                         PosHwSetupOnAct("Y");
                                         Value.USERCODE = txtUser.getText();
-
+                                        PublicVar.Branch_Code = BranchControl.getData().getCode();
                                         dispose();
                                         FloorPlanDialog floorPlan = new FloorPlanDialog();
                                         floorPlan.setVisible(true);
@@ -539,7 +536,6 @@ public class Login extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                e.printStackTrace();
                 clearlogin();
             } finally {
                 mysql.close();
@@ -601,44 +597,41 @@ public class Login extends javax.swing.JDialog {
 
     private void checkUpdate() {
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                //check ftp file date
-                try {
-                    pbCheckUpdate.setStringPainted(true);
-                    pbCheckUpdate.setMinimum(0);
-                    pbCheckUpdate.setMaximum(100);
-
-                    for (int i = 1; i <= 100; i++) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        new Thread(() -> {
+            //check ftp file date
+            try {
+                pbCheckUpdate.setStringPainted(true);
+                pbCheckUpdate.setMinimum(0);
+                pbCheckUpdate.setMaximum(100);
+                
+                for (int i = 1; i <= 100; i++) {
+                    pbCheckUpdate.setValue(i);
+                    pbCheckUpdate.setString("Check Update: (" + i + " %)");
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException e) {
                     }
-
-//                    pbCheckUpdate.setString("SoftPOS Update:V8.2 29/05/2020 15:00");
-                    pbCheckUpdate.setString("SoftPOS Update:V8.2 12/08/2020 00:35");
-                } catch (Exception e) {
-                    MSG.ERR(e.toString());
                 }
+                pbCheckUpdate.setString("SoftPOS Update:V8.2 12/08/2020 00:35");
+            } catch (Exception e) {
+                MSG.ERR(e.getMessage());
             }
         }).start();
     }
 
     public void PosHwSetupOnAct(String Onact) {
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
-            c.getConnection().createStatement().executeUpdate(sql);
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Statement stmt = mysql.getConnection().createStatement();
+            if(stmt.executeUpdate(sql)>0){
+                // reset load poshwsetup
+                PosControl.resetPosHwSetup();
+            }
+            mysql.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 

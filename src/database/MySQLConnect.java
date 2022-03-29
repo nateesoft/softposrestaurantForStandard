@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.softpos.main.program.Value;
-import javax.swing.JOptionPane;
 import util.MSG;
 
 public class MySQLConnect {
@@ -73,19 +72,14 @@ public class MySQLConnect {
     }
 
     public void open() {
-
         try {
             con = null;
             getDbVar();
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-            //System.out.println("Database Connected.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-//            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+        } catch (ClassNotFoundException | SQLException e) {
+            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+            System.exit(0);
         }
     }
 
@@ -97,7 +91,6 @@ public class MySQLConnect {
         if (con != null) {
             try {
                 con.close();
-                //System.out.println("Database Closed.");
             } catch (SQLException ex) {
                 Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -106,17 +99,6 @@ public class MySQLConnect {
             con.close();
         } catch (SQLException ex) {
             Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void showError(Exception e) {
-        String strErr = e.getMessage();
-        if (strErr.indexOf("No operations") != -1
-                || strErr.indexOf("Communications link failure") != -1) {
-            int confirm = JOptionPane.showConfirmDialog(null, msgError);
-            if (confirm == JOptionPane.YES_OPTION) {
-                System.exit(0);
-            }
         }
     }
 
@@ -183,7 +165,7 @@ public class MySQLConnect {
                 fs.close();
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
         }
     }
@@ -193,7 +175,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"startService.bat");
             System.out.println("MySQL server start successfully!");
         } catch (IOException e) {
-            e.printStackTrace();
+            
         }
     }
 
@@ -202,7 +184,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"stopService.bat");
             System.out.println("MySQL server stopped successfully!");
         } catch (IOException e) {
-            e.printStackTrace();
+            
         }
     }
 

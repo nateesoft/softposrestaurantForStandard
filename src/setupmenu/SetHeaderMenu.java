@@ -1,5 +1,6 @@
 package setupmenu;
 
+import com.softpos.main.program.PosControl;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -352,18 +353,18 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 + "head7='" + head7 + "',"
                 + "head8='" + head8 + "',"
                 + "head9='" + head9 + "'";
-        Statement stmt = mysql.getConnection().createStatement();
-        if (stmt.executeUpdate(sql) > 0) {
-            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
+        try (Statement stmt = mysql.getConnection().createStatement()) {
+            if (stmt.executeUpdate(sql) > 0) {
+                MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
+            }
         }
-
-        stmt.close();
     } catch (SQLException e) {
         MSG.ERR(this, e.getMessage());
-        e.printStackTrace();
     } finally {
         mysql.close();
     }
+    
+    PosControl.resetDataCompany();
 
     dispose();
 }//GEN-LAST:event_cmdOkActionPerformed
@@ -552,7 +553,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }

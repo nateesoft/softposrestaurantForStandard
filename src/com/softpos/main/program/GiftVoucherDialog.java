@@ -307,7 +307,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                e.printStackTrace();
+                
             }
         }
 
@@ -466,7 +466,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             stmt.close();
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -512,7 +512,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
 //                return;
 //            }
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            
 //        }
     }
 
@@ -547,7 +547,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }

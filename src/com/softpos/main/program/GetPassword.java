@@ -227,6 +227,7 @@ private void XPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         int TempPro = (Integer.parseInt(TempDate) + Integer.parseInt(TempMonth) + Integer.parseInt(TempYear)) * DayOfWeek(TempDay);
         String TempPro2 = PassFmt.format(TempPro).trim();
         RetVal = password.equals(TempPro2);
+        System.out.println("TempPro:"+TempPro);
 
         return RetVal;
     }

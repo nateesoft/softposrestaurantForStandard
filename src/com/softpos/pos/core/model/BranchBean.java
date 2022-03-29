@@ -140,6 +140,7 @@ public class BranchBean {
     private String KicChk18 = "N";
     private String KicChk19 = "N";
     private String KicChk20 = "N";
+    private String imageHomePath = "";
     
     public static BranchBean Bean(){
         return new BranchControl().getData();
@@ -1224,6 +1225,13 @@ public class BranchBean {
     public void setKicChk20(String KicChk20) {
         this.KicChk20 = KicChk20;
     }
-    
+
+    public String getImageHomePath() {
+        return imageHomePath;
+    }
+
+    public void setImageHomePath(String imageHomePath) {
+        this.imageHomePath = imageHomePath;
+    }
     
 }

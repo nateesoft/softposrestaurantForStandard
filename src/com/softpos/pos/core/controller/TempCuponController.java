@@ -9,15 +9,13 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import util.MSG;
 
 public class TempCuponController {
 
-    public ArrayList<TempCuponBean> listTempcupon() {
-        ArrayList<TempCuponBean> listBean = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<TempCuponBean> listTempcupon() {
+        List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -47,7 +45,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -55,11 +53,8 @@ public class TempCuponController {
         return listBean;
     }
 
-    public ArrayList<TempCuponBean> listTempcupon(String R_Index) {
-        ArrayList<TempCuponBean> listBean = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+    public List<TempCuponBean> listTempcupon(String R_Index) {
+        List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -90,7 +85,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -130,7 +125,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -152,7 +147,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         }
 
         try {
@@ -162,7 +157,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         }
 
         mysql.close();
@@ -201,7 +196,7 @@ public class TempCuponController {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally{
             mysql.close();
         }

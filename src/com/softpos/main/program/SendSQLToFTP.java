@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
 import database.ConfigFileServer;
@@ -14,10 +9,6 @@ import java.io.OutputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-/**
- *
- * @author Dell
- */
 public class SendSQLToFTP {
 
     public void SendSQLToFTP() {

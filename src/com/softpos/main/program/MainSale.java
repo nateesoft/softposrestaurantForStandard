@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.core.logger.LoggerController;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.TableFileBean;
@@ -15,14 +16,11 @@ import com.softpos.pos.core.model.MemberBean;
 import com.softpos.member.MemberControl;
 import database.MySQLConnect;
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -36,14 +34,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -53,11 +51,11 @@ import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
 import util.Option;
 import util.MSG;
+import util.ValidateValue;
 
 public class MainSale extends javax.swing.JDialog {
 
     private PPrint Prn = new PPrint();
-    private Timer timer;
     private DefaultTableModel model;
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private boolean TableOpenStatus;
@@ -66,7 +64,7 @@ public class MainSale extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private POSConfigSetup CONFIG;
     public static String INDEX_NAME = "";
-    private ArrayList<Integer> historyBack;
+    private List<Integer> historyBack;
     private DecimalFormat dc1 = new DecimalFormat("#,##0.00");
     private MemberBean memberBean;
     private String tableNo;
@@ -78,9 +76,8 @@ public class MainSale extends javax.swing.JDialog {
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
-//        btnPrintKic.setEnabled(false);
+
         MMainMenu1.setVisible(true);
-        jMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
         txtDiscount.setVisible(true);
@@ -95,7 +92,7 @@ public class MainSale extends javax.swing.JDialog {
         if (btnLangEN.isSelected()) {
             PublicVar.languagePrint = "EN";
         }
-        if (tableNo.indexOf("(") != -1) {
+        if (tableNo.contains("(")) {
             String T1 = tableNo.substring(0, tableNo.indexOf("("));
             tableNo = T1;
         }
@@ -105,37 +102,22 @@ public class MainSale extends javax.swing.JDialog {
         if (memberBean == null) {
             BalanceControl.updateProSerTable(tableNo, memberBean);
         } else {
-            if (!memberBean.getMember_Code().equals("")) {
+            if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
                 BalanceControl.updateProSerTable(tableNo, memberBean);
                 txtMember1.setText(memberBean.getMember_NameThai());
-                txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore() + " แต้ม");
+                txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
             } else if (tbBean.getMemDiscAmt() != 0) {
                 updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
             }
-
         }
         txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        setupMenu();
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        loadButtonProductMenu("A");
         Value.MemberAlready = false;
-//        try {
-//            Image im = ImageIO.read(getClass().getResource("/images/tb.png"));
-//            setIconImage(im);
-//        } catch (IOException ex) {
-//            MSG.ERR(null, ex.getMessage());
-//        }
-//        loadVariable();
-
-        TimeOfDay time = new TimeOfDay();
-        timer = new Timer(1000, time);
-        timer.start();
 
         POSHW = POSHWSetup.Bean(Value.getMacno());
         CONFIG = POSConfigSetup.Bean();
 
         initScreen();
-//        setupMenu();
         super.setTitle(super.getTitle() + " (" + Value.USERCODE + ") " + "พนักงาน: " + PublicVar._UserName);
         BranchBean branchBean = BranchControl.getData();
         if (branchBean.getLocation_Area().equals("02")) {
@@ -148,31 +130,13 @@ public class MainSale extends javax.swing.JDialog {
 
         historyBack = new ArrayList<>();
 
-        //setUndecorated(true);
         setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
-        Dimension d = getMaximumSize();
-        setSize(1024, 768);
-        setLocationRelativeTo(null);
         sumSplit();
         txtPluCode.setEditable(true);
         txtPluCode.setFocusable(true);
         txtPluCode.requestFocus();
-        jMenu1.setVisible(true);
         MAddNewMember1.setVisible(true);
-
-        //String[] CheckTOrder = CheckTOrder();
-        tbpMain.setUI(new BasicTabbedPaneUI() {
-            @Override
-            protected int calculateTabAreaHeight(int tab_placement, int run_count, int max_tab_height) {
-                if (tbpMain.getTabCount() > 1) {
-                    return -1;
-                } else {
-                    return -1;
-                }
-            }
-        });
         upDateTableFile();
-
         showCustomerInput();
     }
 
@@ -182,10 +146,7 @@ public class MainSale extends javax.swing.JDialog {
             try {
                 String TempFile = POSHW.getEJDailyPath();
                 File fObject = new File(TempFile);
-                if (!fObject.exists()) {
-                    return false;
-                }
-                return true;
+                return fObject.exists();
             } catch (HeadlessException e) {
                 MSG.ERR(this, "ไม่สามารถสร้าง Log File/EJFile ตามตำแหน่งที่เก็บข้อมูล Log File/EJ ได้ กรุณาติดต่อเจ้าหน้าที่ Support...");
                 return false;
@@ -204,56 +165,6 @@ public class MainSale extends javax.swing.JDialog {
         this.setVisible(false);
     }
 
-//    private void loadVariable() {
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        try {
-//            Statement stmt = mysql.getConnection().createStatement();
-//            String SQLQuery2 = "select *from billno order by b_ondate";
-//            ResultSet rec2 = stmt.executeQuery(SQLQuery2);
-//            rec2.first();
-//            if (rec2.getRow() == 0) {
-//                PublicVar.SaleDate = new Date();
-//            } else {
-//                PublicVar.SaleDate = rec2.getDate("b_Ondate");
-//            }
-//            rec2.close();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            MSG.ERR(this, e.getMessage());
-//            e.printStackTrace();
-//        }
-//        //check cr_cardno1 max = 100;
-//        try {
-//            String sql = "show columns from invcashdoc";
-//            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            while (rs.next()) {
-//                String field = rs.getString(1);
-//                String type = rs.getString(2);
-//                if (field.equalsIgnoreCase("crno")) {
-//                    if (!type.equalsIgnoreCase("varchar(100)")) {
-//                        //modify
-//                        String sql2 = "alter table invcashdoc "
-//                                + "change CrNo CrNo varchar(100) NOT NULL Default '' ";
-//                        Statement stmt2 = mysql.getConnection().createStatement();
-//                        stmt2.executeUpdate(sql2);
-//                        stmt2.close();
-//                    }
-//                }
-//            }
-//            rs.close();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            //MSG.ERR(this, e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//        mysql.close();
-//    }
     private void showSaleType(String SaleType) {
         txtShowETD.setVisible(false);
         txtShowETD.setText(SaleType);
@@ -301,9 +212,7 @@ public class MainSale extends javax.swing.JDialog {
         jLabel1.setText("จำนวนรายการสินค้า: 0 รายการ");
 
         changeSaleType("E");
-
         getTableAction();
-
     }
 
     private void getTableAction() {
@@ -318,16 +227,6 @@ public class MainSale extends javax.swing.JDialog {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblShowBalance = new javax.swing.JTable();
-        txtPluCode = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        txtTable = new javax.swing.JTextField();
-        txtShowETD = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        txtCust = new javax.swing.JTextField();
-        txtTypeDesc = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         btnCancel = new javax.swing.JButton();
@@ -339,7 +238,39 @@ public class MainSale extends javax.swing.JDialog {
         lbTotalAmount = new javax.swing.JLabel();
         tbpMain = new javax.swing.JTabbedPane();
         pMenu1 = new javax.swing.JPanel();
+        btnP1 = new javax.swing.JButton();
+        btnP2 = new javax.swing.JButton();
+        btnP3 = new javax.swing.JButton();
+        btnP4 = new javax.swing.JButton();
+        btnP5 = new javax.swing.JButton();
+        btnP6 = new javax.swing.JButton();
+        btnP7 = new javax.swing.JButton();
+        btnP8 = new javax.swing.JButton();
+        btnP9 = new javax.swing.JButton();
+        btnP10 = new javax.swing.JButton();
+        btnP11 = new javax.swing.JButton();
+        btnP12 = new javax.swing.JButton();
+        btnP13 = new javax.swing.JButton();
+        btnP14 = new javax.swing.JButton();
+        btnP15 = new javax.swing.JButton();
+        btnP16 = new javax.swing.JButton();
         pMenu2 = new javax.swing.JPanel();
+        btnP17 = new javax.swing.JButton();
+        btnP18 = new javax.swing.JButton();
+        btnP19 = new javax.swing.JButton();
+        btnP20 = new javax.swing.JButton();
+        btnP21 = new javax.swing.JButton();
+        btnP22 = new javax.swing.JButton();
+        btnP23 = new javax.swing.JButton();
+        btnP24 = new javax.swing.JButton();
+        btnP25 = new javax.swing.JButton();
+        btnP26 = new javax.swing.JButton();
+        btnP27 = new javax.swing.JButton();
+        btnP28 = new javax.swing.JButton();
+        btnP29 = new javax.swing.JButton();
+        btnP30 = new javax.swing.JButton();
+        btnP31 = new javax.swing.JButton();
+        btnP32 = new javax.swing.JButton();
         pMenu3 = new javax.swing.JPanel();
         pMenu4 = new javax.swing.JPanel();
         pMenu5 = new javax.swing.JPanel();
@@ -350,13 +281,20 @@ public class MainSale extends javax.swing.JDialog {
         pSubMenu1 = new javax.swing.JPanel();
         pSubMenu2 = new javax.swing.JPanel();
         pSubMenu3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        txtTable = new javax.swing.JTextField();
+        txtShowETD = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtCust = new javax.swing.JTextField();
+        txtTypeDesc = new javax.swing.JTextField();
+        jPanel6 = new javax.swing.JPanel();
+        txtDisplayDiscount = new javax.swing.JTextField();
         jPanelMember = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        txtMember1 = new javax.swing.JTextField();
-        txtMember2 = new javax.swing.JTextField();
-        txtDisplayDiscount = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        txtPluCode = new javax.swing.JTextField();
         txtDiscount = new javax.swing.JTextField();
         btnPrintKic = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
@@ -366,8 +304,14 @@ public class MainSale extends javax.swing.JDialog {
         lbCredit = new javax.swing.JLabel();
         lbCreditMoney = new javax.swing.JLabel();
         lbCreditAmt = new javax.swing.JLabel();
+        txtMember1 = new javax.swing.JTextField();
+        txtMember2 = new javax.swing.JTextField();
+        jPanel7 = new javax.swing.JPanel();
         btnLangTH = new javax.swing.JRadioButton();
         btnLangEN = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblShowBalance = new javax.swing.JTable();
         jMenuBar11 = new javax.swing.JMenuBar();
         MMainMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -391,9 +335,6 @@ public class MainSale extends javax.swing.JDialog {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
 
         jPopupMenu1.setBackground(new java.awt.Color(102, 153, 0));
         jPopupMenu1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -420,214 +361,23 @@ public class MainSale extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("โปรแกรมร้านอาหาร");
         setBackground(new java.awt.Color(255, 204, 204));
-        setModal(true);
         setUndecorated(true);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
 
-        tblShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tblShowBalance.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Code", "Product Name", "QTY.", "Price", "Total", "Void Flag", "Type Sale", "Print to Kic", "Order Send", "Promotion", "RIndex", "Pause", "Employ", "Time"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblShowBalance.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tblShowBalance.setFocusable(false);
-        tblShowBalance.setRequestFocusEnabled(false);
-        tblShowBalance.setRowHeight(25);
-        tblShowBalance.setSelectionBackground(new java.awt.Color(102, 153, 255));
-        tblShowBalance.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tblShowBalance.setShowVerticalLines(false);
-        tblShowBalance.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblShowBalanceMouseClicked(evt);
-            }
-        });
-        tblShowBalance.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblShowBalanceKeyPressed(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tblShowBalance);
-        if (tblShowBalance.getColumnModel().getColumnCount() > 0) {
-            tblShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
-            tblShowBalance.getColumnModel().getColumn(0).setPreferredWidth(50);
-            tblShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
-            tblShowBalance.getColumnModel().getColumn(1).setPreferredWidth(265);
-            tblShowBalance.getColumnModel().getColumn(2).setPreferredWidth(65);
-        }
-
-        txtPluCode.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        txtPluCode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-        txtPluCode.setMargin(new java.awt.Insets(2, 0, 2, 2));
-        txtPluCode.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtPluCodeMouseClicked(evt);
-            }
-        });
-        txtPluCode.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtPluCodeFocusGained(evt);
-            }
-        });
-        txtPluCode.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtPluCodeKeyPressed(evt);
-            }
-        });
-
-        jPanel1.setBackground(new java.awt.Color(204, 51, 0));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        txtTable.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
-        txtTable.setForeground(new java.awt.Color(255, 0, 0));
-        txtTable.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        txtTable.setDisabledTextColor(java.awt.Color.red);
-        txtTable.setFocusable(false);
-        txtTable.setMargin(new java.awt.Insets(2, 10, 2, 2));
-        txtTable.setRequestFocusEnabled(false);
-        txtTable.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtTableFocusGained(evt);
-            }
-        });
-        txtTable.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtTableKeyPressed(evt);
-            }
-        });
-
-        txtShowETD.setEditable(false);
-        txtShowETD.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
-        txtShowETD.setForeground(new java.awt.Color(255, 255, 255));
-        txtShowETD.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtShowETD.setText("E");
-        txtShowETD.setDisabledTextColor(java.awt.Color.black);
-        txtShowETD.setEnabled(false);
-        txtShowETD.setFocusable(false);
-        txtShowETD.setRequestFocusEnabled(false);
-        txtShowETD.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtShowETDMouseClicked(evt);
-            }
-        });
-
-        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel14.setText("ลูกค้า");
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("โต๊ะ");
-
-        txtCust.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
-        txtCust.setForeground(new java.awt.Color(255, 0, 0));
-        txtCust.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtCust.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        txtCust.setDisabledTextColor(java.awt.Color.black);
-        txtCust.setFocusable(false);
-        txtCust.setRequestFocusEnabled(false);
-        txtCust.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtCustMouseClicked(evt);
-            }
-        });
-        txtCust.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCustActionPerformed(evt);
-            }
-        });
-        txtCust.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtCustFocusGained(evt);
-            }
-        });
-        txtCust.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtCustKeyPressed(evt);
-            }
-        });
-
-        txtTypeDesc.setEditable(false);
-        txtTypeDesc.setBackground(new java.awt.Color(204, 204, 255));
-        txtTypeDesc.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        txtTypeDesc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTypeDesc.setText("DINE IN");
-        txtTypeDesc.setBorder(null);
-        txtTypeDesc.setCaretColor(new java.awt.Color(255, 255, 255));
-        txtTypeDesc.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtTypeDescMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtTypeDesc)))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)
-                    .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         btnCancel.setBackground(new java.awt.Color(204, 51, 0));
-        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancel.setText("<html>ยกเลิกรายการ<br />ก่อนส่งครัว</html>");
+        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
         btnCancel.setFocusable(false);
         btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCancel.setRequestFocusEnabled(false);
@@ -707,28 +457,20 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnPayment);
 
+        jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 649, 500, 90));
+
         jPanel3.setBackground(new java.awt.Color(204, 51, 0));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lbTotalAmount.setBackground(new java.awt.Color(153, 255, 153));
         lbTotalAmount.setFont(new java.awt.Font("Tahoma", 1, 60)); // NOI18N
         lbTotalAmount.setForeground(new java.awt.Color(255, 255, 255));
         lbTotalAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbTotalAmount.setText("0.00");
+        jPanel3.add(lbTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 490, 94));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-        );
+        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 2, 500, -1));
 
         tbpMain.setBackground(new java.awt.Color(255, 255, 255));
         tbpMain.setForeground(new java.awt.Color(255, 255, 255));
@@ -745,9 +487,43 @@ public class MainSale extends javax.swing.JDialog {
 
         pMenu1.setBackground(new java.awt.Color(255, 255, 255));
         pMenu1.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu1.add(btnP1);
+        pMenu1.add(btnP2);
+        pMenu1.add(btnP3);
+        pMenu1.add(btnP4);
+        pMenu1.add(btnP5);
+        pMenu1.add(btnP6);
+        pMenu1.add(btnP7);
+        pMenu1.add(btnP8);
+        pMenu1.add(btnP9);
+        pMenu1.add(btnP10);
+        pMenu1.add(btnP11);
+        pMenu1.add(btnP12);
+        pMenu1.add(btnP13);
+        pMenu1.add(btnP14);
+        pMenu1.add(btnP15);
+        pMenu1.add(btnP16);
+
         tbpMain.addTab("", pMenu1);
 
         pMenu2.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu2.add(btnP17);
+        pMenu2.add(btnP18);
+        pMenu2.add(btnP19);
+        pMenu2.add(btnP20);
+        pMenu2.add(btnP21);
+        pMenu2.add(btnP22);
+        pMenu2.add(btnP23);
+        pMenu2.add(btnP24);
+        pMenu2.add(btnP25);
+        pMenu2.add(btnP26);
+        pMenu2.add(btnP27);
+        pMenu2.add(btnP28);
+        pMenu2.add(btnP29);
+        pMenu2.add(btnP30);
+        pMenu2.add(btnP31);
+        pMenu2.add(btnP32);
+
         tbpMain.addTab("", pMenu2);
 
         pMenu3.setLayout(new java.awt.GridLayout(4, 4));
@@ -780,35 +556,145 @@ public class MainSale extends javax.swing.JDialog {
         pSubMenu3.setLayout(new java.awt.GridLayout(4, 4));
         tbpMain.addTab("", pSubMenu3);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        jPanel4.add(tbpMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 103, 500, 540));
+
+        jPanel1.setBackground(new java.awt.Color(204, 51, 0));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtTable.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtTable.setForeground(new java.awt.Color(255, 0, 0));
+        txtTable.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtTable.setDisabledTextColor(java.awt.Color.red);
+        txtTable.setFocusable(false);
+        txtTable.setMargin(new java.awt.Insets(2, 10, 2, 2));
+        txtTable.setRequestFocusEnabled(false);
+        txtTable.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTableFocusGained(evt);
+            }
+        });
+        txtTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTableKeyPressed(evt);
+            }
+        });
+
+        txtShowETD.setEditable(false);
+        txtShowETD.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+        txtShowETD.setForeground(new java.awt.Color(255, 255, 255));
+        txtShowETD.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtShowETD.setText("E");
+        txtShowETD.setDisabledTextColor(java.awt.Color.black);
+        txtShowETD.setEnabled(false);
+        txtShowETD.setFocusable(false);
+        txtShowETD.setRequestFocusEnabled(false);
+        txtShowETD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtShowETDMouseClicked(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("ลูกค้า");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("โต๊ะ");
+
+        txtCust.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtCust.setForeground(new java.awt.Color(255, 0, 0));
+        txtCust.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCust.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtCust.setDisabledTextColor(java.awt.Color.black);
+        txtCust.setFocusable(false);
+        txtCust.setRequestFocusEnabled(false);
+        txtCust.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCustFocusGained(evt);
+            }
+        });
+        txtCust.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtCustMouseClicked(evt);
+            }
+        });
+        txtCust.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCustKeyPressed(evt);
+            }
+        });
+
+        txtTypeDesc.setEditable(false);
+        txtTypeDesc.setBackground(new java.awt.Color(204, 204, 255));
+        txtTypeDesc.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtTypeDesc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTypeDesc.setText("DINE IN");
+        txtTypeDesc.setBorder(null);
+        txtTypeDesc.setCaretColor(new java.awt.Color(255, 255, 255));
+        txtTypeDesc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtTypeDescMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addComponent(tbpMain, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 13, Short.MAX_VALUE)))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 546, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(99, 99, 99)
-                    .addComponent(tbpMain, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(83, Short.MAX_VALUE)))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
+                    .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText(" 0  รายการ");
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtDisplayDiscount.setEditable(false);
+        txtDisplayDiscount.setBackground(new java.awt.Color(255, 153, 153));
+        txtDisplayDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtDisplayDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDisplayDiscount.setText("Discount");
+        txtDisplayDiscount.setBorder(null);
+        txtDisplayDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPanel6.add(txtDisplayDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 153, 170, 40));
+
+        jPanelMember.setBackground(new java.awt.Color(255, 255, 153));
+        jPanelMember.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel12.setBackground(new java.awt.Color(255, 255, 153));
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel12.setText("สมาชิก : ");
+        jPanelMember.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 70, 30));
+
+        jPanel6.add(jPanelMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 185, -1));
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("แป้นพิมพ์");
@@ -818,67 +704,22 @@ public class MainSale extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 35, 97, 30));
 
-        jPanelMember.setBackground(new java.awt.Color(255, 255, 153));
-
-        jLabel12.setBackground(new java.awt.Color(255, 255, 153));
-        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("สมาชิก : ");
-
-        txtMember1.setEditable(false);
-        txtMember1.setBackground(new java.awt.Color(0, 102, 204));
-        txtMember1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtMember1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtMember1.setText(" <ค้นหาสมาชิก> ");
-        txtMember1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtMember1.setFocusable(false);
-        txtMember1.setRequestFocusEnabled(false);
-        txtMember1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtMember1MouseClicked(evt);
+        txtPluCode.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtPluCode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtPluCode.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        txtPluCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPluCodeFocusGained(evt);
             }
         });
-        txtMember1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMember1ActionPerformed(evt);
+        txtPluCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPluCodeKeyPressed(evt);
             }
         });
-
-        txtMember2.setEditable(false);
-        txtMember2.setBackground(new java.awt.Color(0, 102, 204));
-        txtMember2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtMember2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtMember2.setText(": แต้มสะสม");
-        txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanelMemberLayout = new javax.swing.GroupLayout(jPanelMember);
-        jPanelMember.setLayout(jPanelMemberLayout);
-        jPanelMemberLayout.setHorizontalGroup(
-            jPanelMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMemberLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtMember1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtMember2))
-        );
-        jPanelMemberLayout.setVerticalGroup(
-            jPanelMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMemberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtMember1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(txtMember2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        txtDisplayDiscount.setEditable(false);
-        txtDisplayDiscount.setBackground(new java.awt.Color(255, 153, 153));
-        txtDisplayDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        txtDisplayDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtDisplayDiscount.setText("Discount");
-        txtDisplayDiscount.setBorder(null);
-        txtDisplayDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 257, 30));
 
         txtDiscount.setEditable(false);
         txtDiscount.setBackground(new java.awt.Color(255, 153, 153));
@@ -887,6 +728,7 @@ public class MainSale extends javax.swing.JDialog {
         txtDiscount.setText("0.00");
         txtDiscount.setBorder(null);
         txtDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPanel6.add(txtDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 153, 330, 40));
 
         btnPrintKic.setBackground(new java.awt.Color(0, 0, 204));
         btnPrintKic.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -897,6 +739,7 @@ public class MainSale extends javax.swing.JDialog {
                 btnPrintKicActionPerformed(evt);
             }
         });
+        jPanel6.add(btnPrintKic, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 35, 139, 30));
 
         jPanel5.setBackground(new java.awt.Color(51, 51, 51));
         jPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -961,6 +804,39 @@ public class MainSale extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jPanel6.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 108, 505, 40));
+
+        txtMember1.setEditable(false);
+        txtMember1.setBackground(new java.awt.Color(0, 102, 204));
+        txtMember1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtMember1.setText(" <ค้นหาสมาชิก> ");
+        txtMember1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtMember1.setFocusable(false);
+        txtMember1.setRequestFocusEnabled(false);
+        txtMember1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtMember1MouseClicked(evt);
+            }
+        });
+        txtMember1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMember1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(txtMember1, new org.netbeans.lib.awtextra.AbsoluteConstraints(191, 70, 189, 36));
+
+        txtMember2.setEditable(false);
+        txtMember2.setBackground(new java.awt.Color(0, 102, 204));
+        txtMember2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtMember2.setText(": แต้มสะสม");
+        txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel6.add(txtMember2, new org.netbeans.lib.awtextra.AbsoluteConstraints(386, 70, 119, 36));
+
+        jPanel7.setBackground(new java.awt.Color(204, 255, 204));
+
+        btnLangTH.setBackground(new java.awt.Color(204, 255, 204));
         buttonGroup1.add(btnLangTH);
         btnLangTH.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnLangTH.setSelected(true);
@@ -971,6 +847,7 @@ public class MainSale extends javax.swing.JDialog {
             }
         });
 
+        btnLangEN.setBackground(new java.awt.Color(204, 255, 204));
         buttonGroup1.add(btnLangEN);
         btnLangEN.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnLangEN.setText("EN");
@@ -979,6 +856,102 @@ public class MainSale extends javax.swing.JDialog {
                 btnLangENItemStateChanged(evt);
             }
         });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setText(" 0  รายการ");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLangTH)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLangEN)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel1)
+                    .addComponent(btnLangTH)
+                    .addComponent(btnLangEN))
+                .addContainerGap())
+        );
+
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 505, -1));
+
+        tblShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tblShowBalance.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "Product Name", "QTY.", "Price", "Total", "Void Flag", "Type Sale", "Print to Kic", "Order Send", "Promotion", "RIndex", "Pause", "Employ", "Time"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblShowBalance.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tblShowBalance.setFocusable(false);
+        tblShowBalance.setRequestFocusEnabled(false);
+        tblShowBalance.setRowHeight(25);
+        tblShowBalance.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        tblShowBalance.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tblShowBalance.setShowVerticalLines(false);
+        tblShowBalance.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblShowBalanceMouseClicked(evt);
+            }
+        });
+        tblShowBalance.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblShowBalanceKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblShowBalance);
+        if (tblShowBalance.getColumnModel().getColumnCount() > 0) {
+            tblShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
+            tblShowBalance.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tblShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblShowBalance.getColumnModel().getColumn(1).setPreferredWidth(265);
+            tblShowBalance.getColumnModel().getColumn(2).setPreferredWidth(65);
+        }
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         jMenuBar11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -989,13 +962,8 @@ public class MainSale extends javax.swing.JDialog {
         MMainMenu1.setText("เมนูหลักระบบ (Main Menu)         ");
         MMainMenu1.setDelay(100);
         MMainMenu1.setDoubleBuffered(true);
-        MMainMenu1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        MMainMenu1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         MMainMenu1.setRequestFocusEnabled(false);
-        MMainMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MMainMenuActionPerformed(evt);
-            }
-        });
 
         jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem3.setText("ย้ายรายการ");
@@ -1133,18 +1101,13 @@ public class MainSale extends javax.swing.JDialog {
         jMenuBar11.add(MMainMenu1);
 
         jMenu2.setText("กำหนดรายละเอียดสินค้า     ");
-        jMenu2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jMenu2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jCheckBoxMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PAGE_DOWN, 0));
         jCheckBoxMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jCheckBoxMenuItem3.setSelected(true);
         jCheckBoxMenuItem3.setText("การกำหนดรายละเอียด Option");
         jCheckBoxMenuItem3.setActionCommand("การกำหนดรายละเอียด Option\nปลดล็อกการวอย Void Unlock");
-        jCheckBoxMenuItem3.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxMenuItem3ItemStateChanged(evt);
-            }
-        });
         jCheckBoxMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxMenuItem3ActionPerformed(evt);
@@ -1154,38 +1117,6 @@ public class MainSale extends javax.swing.JDialog {
 
         jMenuBar11.add(jMenu2);
 
-        jMenu1.setText("ช่วยเหลือ (Help)     ");
-        jMenu1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-
-        jCheckBoxMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PAGE_DOWN, 0));
-        jCheckBoxMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("ใช้คีย์ลัด ไม่แสดงปุ่มคำสั่ง");
-        jCheckBoxMenuItem1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxMenuItem1ItemStateChanged(evt);
-            }
-        });
-        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jCheckBoxMenuItem1);
-
-        jCheckBoxMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PAGE_UP, 0));
-        jCheckBoxMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jCheckBoxMenuItem2.setSelected(true);
-        jCheckBoxMenuItem2.setText("ซ่อน Number Pad");
-        jCheckBoxMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jCheckBoxMenuItem2);
-
-        jMenuBar11.add(jMenu1);
-
         setJMenuBar(jMenuBar11);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1193,75 +1124,24 @@ public class MainSale extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtDisplayDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtDiscount))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jPanelMember, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnPrintKic, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(2, 2, 2)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtPluCode, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnLangTH)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnLangEN)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnLangTH)
-                            .addComponent(btnLangEN))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnPrintKic, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPluCode, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDisplayDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-    //คำสั่งกำหนดเบอร์โต๊ะ
-
     private void tableOpened() {
         if (!txtTable.getText().trim().equals("")) {
             txtTableOnExit();
             showSum();
-            if (CONFIG.getP_EmpUse().equals("Y")) {
-
-            } else {
+            if (!CONFIG.getP_EmpUse().equals("Y")) {
                 if (PublicVar.TableRec_TCustomer == 0) {
                     txtCust.setEditable(true);
                     txtCust.requestFocus();
@@ -1272,40 +1152,45 @@ public class MainSale extends javax.swing.JDialog {
                     txtPluCode.requestFocus();
                 }
             }
-        } else {
-            if (txtTable.getText().trim().length() > 5) {
-                MSG.ERR(this, "หมายเลขโต๊ะต้องกำหนดเป็นตัวเลข 0-9 เท่านั้น และกำหนดได้ไม่เกิน 5 ตัวอักษร...");
-                txtTable.selectAll();
-                txtTable.requestFocus();
-            }
+            return;
+        }
+        if (txtTable.getText().trim().length() > 5) {
+            MSG.ERR(this, "หมายเลขโต๊ะต้องกำหนดเป็นตัวเลข 0-9 เท่านั้น และกำหนดได้ไม่เกิน 5 ตัวอักษร...");
+            txtTable.selectAll();
+            txtTable.requestFocus();
         }
     }
 
 private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
-//    String[] CheckTOrder = CheckTOrder();
-//    if(CheckTOrder[0].equals("N")){
-
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        tableOpened();
-    } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        txtTable.setText("");
-        bntlogoffuserClick();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F1) {
-        showFloorPlan();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        showTableAvialble();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F8) {
-        showPaidIn();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F9) {
-        showPaidOut();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F6) {
-        showBillDuplicate();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F7) {
-        showRefundBill();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F12) {
-        showPayAR();
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_ENTER:
+            tableOpened();
+            break;
+        case KeyEvent.VK_ESCAPE:
+            txtTable.setText("");
+            bntlogoffuserClick();
+            break;
+        case KeyEvent.VK_F5:
+            showTableAvialble();
+            break;
+        case KeyEvent.VK_F8:
+            showPaidIn();
+            break;
+        case KeyEvent.VK_F9:
+            showPaidOut();
+            break;
+        case KeyEvent.VK_F6:
+            showBillDuplicate();
+            break;
+        case KeyEvent.VK_F7:
+            showRefundBill();
+            break;
+        case KeyEvent.VK_F12:
+            showPayAR();
+            break;
+        default:
+            break;
     }
-//    }
 
 }//GEN-LAST:event_txtTableKeyPressed
 
@@ -1330,7 +1215,6 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 String r_linkindex = rs.getString("r_linkindex");
                 String r_index = rs.getString("r_index");
                 String voidStr = rs.getString("r_void");
-//                String PName = PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 30);
                 String PName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
 
                 if (voidStr.equals("V")) {
@@ -1381,22 +1265,18 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     }
                 }
                 if (!str.equals("")) {
-                    if (str.indexOf("-") != -1) {
+                    if (str.contains("-")) {
                         str = "<html><font color=red>" + str + "</font></html>";
                     }
                     model.addRow(new Object[]{"", str});
                 }
-
-                //ถ้าเป็นสินค้า Set
             }
 
             RowCount = model.getRowCount();
             showCell(RowCount - 1, 0);
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
@@ -1404,96 +1284,15 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         showSum();
     }
 
-//    private void loadDataFromBalance(String P_Table) {
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        try {
-//            String sql = "select * from balance "
-//                    + "where r_table='" + P_Table + "' "
-//                    + "order by r_index";
-////            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-//
-//            int size = model.getRowCount();
-//            for (int i = 0; i <= size - 1; i++) {
-//                model.removeRow(0);
-//            }
-//
-//            while (rs.next()) {
-//                String r_index = rs.getString("r_index");
-//                String r_linkindex = rs.getString("r_linkindex");
-//                String plucode = rs.getString("r_plucode");
-//                String PName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
-//                double quan = rs.getDouble("r_quan");
-//                double price = rs.getDouble("r_price");
-//                double total = rs.getDouble("r_total");
-//                String voidStr = rs.getString("r_void");
-//                String etd = rs.getString("r_etd");
-//                String kicprint = rs.getString("r_kicprint");
-//                String kicok = rs.getString("r_kicok");
-//                String prtype = rs.getString("r_prtype");
-//                String pause = rs.getString("r_pause");
-//
-//                if (voidStr.equals("V")) {
-//                    PName = "<html><strike><font color=red>" + PName + "</font></strike></html>";
-//                }
-//                if (r_index.equals(r_linkindex)) {
-//                    PName = "<html><b><font color=blue>" + PName + "</font></b></html>";
-//                }
-////                if (r_linkindex.equals("")) {
-////                    PName = "<html><b><font color=green>" + PName + "</font></b></html>";
-////                }
-//                Object[] input = {
-//                    plucode, PName, quan, price, total, voidStr, etd, kicprint, kicok, prtype, r_index, pause};
-//
-//                model.addRow(input);
-//
-//                String str = "";
-//                for (int i = 1; i <= 9; i++) {
-//                    if (!rs.getString("R_Opt" + i).equals("")) {
-//                        if (voidStr.equals("V")) {
-//                            str += "  - ";
-//                        } else {
-//                            str += "  + ";
-//                        }
-//                        str += ThaiUtil.ASCII2Unicode(rs.getString("R_Opt" + i)) + ",";
-//                    }
-//                }
-//                if (!str.equals("")) {
-//                    if (str.indexOf("-") != -1) {
-//                        str = "<html><font color=red>" + str + "</font></html>";
-//                    }
-//                    model.addRow(new Object[]{"", str});
-//                }
-////                updateProSerTable(tableNo, memberBean);
-//            }
-//            size = model.getRowCount();
-//            showCell(size - 1, 0);
-//            rs.close();
-////            stmt.close();
-//            txtPluCode.requestFocus();
-//        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-//            e.printStackTrace();
-//        } finally {
-//            mysql.close();
-//        }
-//
-//        showSum();
-//    }
     private void showSum() { //คำสั่งกำหนดให้ไปโชว์ค่ายอดเงินในส่วนต่างๆ
         //show sum
         TableFileControl tCon = new TableFileControl();
         TableFileBean tfBean = tCon.getData(tableNo);
-        double totalDiscount = 0.00;
+        double totalDiscount;
         totalDiscount = tfBean.getProDiscAmt() + tfBean.getSpaDiscAmt() + tfBean.getCuponDiscAmt()
                 + tfBean.getFastDiscAmt() + tfBean.getEmpDiscAmt() + tfBean.getTrainDiscAmt()
                 + tfBean.getSubDiscAmt() + tfBean.getDiscBath() + tfBean.getItemDiscAmt();
         if (CONFIG.getP_VatType().equals("I")) {
-//            lbTotalAmount.setText("" + dc1.format(NumberControl.UP_DOWN_NATURAL_BAHT(tfBean.getNetTotal())));
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
                 lbTotalAmount.setText("" + dc1.format(NumberControl.UP_DOWN_NATURAL_BAHT((tfBean.getNetTotal()))));
             } else {
@@ -1512,12 +1311,11 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
 
         // for member
         String MemberCode = tfBean.getMemCode();
-//        String MemberNameThai = tfBean.getMemName();
-        if (MemberCode != null && !MemberCode.equals("")) {
+        if (ValidateValue.isNotEmpty(MemberCode)) {
             Value.MemberAlready = true;
             memberBean = MemberBean.getMember(MemberCode);
             txtMember1.setText(memberBean.getMember_NameThai());
-            txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore() + " แต้ม");
+            txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
         }
     }
 
@@ -1525,7 +1323,6 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         txtPluCode.setEditable(true);
         txtPluCode.requestFocus();
-        //txtCust.setSelectionEnd(0);
 
         txtCustOnExit();
     }
@@ -1538,7 +1335,6 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 if (TableRec_TCustomer > 999) {
                     MSG.ERR("จำนวนลูกค้าป้อนได้ไม่เกิน 999 คน...");
                     txtCust.requestFocus();
-                    txtCust.equals("1");
                 } else {
                     if (txtCust.getText().equals("0")) {
                         updateCustomerCount(TableRec_TCustomer = 1);
@@ -1563,30 +1359,40 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPluCodeKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (!isTakeOrder()) {
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            pCodeEnter();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            //ProcessErrorColect();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F1) {
-            FindProduct find = new FindProduct(null, true);
-            find.setVisible(true);
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                pCodeEnter();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                break;
+            case KeyEvent.VK_F1:
+                FindProduct find = new FindProduct(null, true);
+                find.setVisible(true);
+                if (!find.getPCode().equals("")) {
+                    txtPluCode.setText(txtPluCode.getText() + find.getPCode());
 
-            if (!find.getPCode().equals("")) {
-                txtPluCode.setText(txtPluCode.getText() + find.getPCode());
-
-            }
-        } else if (evt.getKeyCode() == KeyEvent.VK_F3) {
-            showHoldTable();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F4) {
-            showCheckBill();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F6) {
-            showBillCheck();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F9) {
-            showCustomerInput();
-        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            selectedTableBalance();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F11) {
-            showMember();
+                }
+                break;
+            case KeyEvent.VK_F3:
+                showHoldTable();
+                break;
+            case KeyEvent.VK_F4:
+                showCheckBill();
+                break;
+            case KeyEvent.VK_F6:
+                showBillCheck();
+                break;
+            case KeyEvent.VK_F9:
+                showCustomerInput();
+                break;
+            case KeyEvent.VK_UP:
+                selectedTableBalance();
+                break;
+            case KeyEvent.VK_F11:
+                showMember();
+                break;
+            default:
+                break;
         }
     }
 
@@ -1609,19 +1415,13 @@ private void tblShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             }
 
             if (r_index != null && !strVoid.equalsIgnoreCase("V")) {
-
                 selectedOptionBill();
-
                 txtPluCode.requestFocus();
             }
         }
     }
 
 }//GEN-LAST:event_tblShowBalanceKeyPressed
-
-private void MMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MMainMenuActionPerformed
-
-}//GEN-LAST:event_MMainMenuActionPerformed
 
 private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
@@ -1796,15 +1596,21 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }//GEN-LAST:event_MCancelArPayment1ActionPerformed
 
     private void txtShowETDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtShowETDMouseClicked
-        if (txtShowETD.getText().equals("E")) {
-            txtShowETD.setText("T");
-            changeSaleType("T");
-        } else if (txtShowETD.getText().equals("T")) {
-            txtShowETD.setText("D");
-            changeSaleType("D");
-        } else if (txtShowETD.getText().equals("D")) {
-            txtShowETD.setText("E");
-            changeSaleType("E");
+        switch (txtShowETD.getText()) {
+            case "E":
+                txtShowETD.setText("T");
+                changeSaleType("T");
+                break;
+            case "T":
+                txtShowETD.setText("D");
+                changeSaleType("D");
+                break;
+            case "D":
+                txtShowETD.setText("E");
+                changeSaleType("E");
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_txtShowETDMouseClicked
 
@@ -1816,7 +1622,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
         showHoldTable();
-//        ClearApp();
     }//GEN-LAST:event_btnHoldActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
@@ -1827,38 +1632,25 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 c.open();
                 c.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             }
         }
         if (lbTotalAmount.getText().equals("0.00")) {
             JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
             showCheckBill();
-
-//            loadDataFromBalance(tableNo);
-//            ClearApp();
         }
 
     }//GEN-LAST:event_btnPaymentActionPerformed
 
     private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
         showSplitBill();
-
     }//GEN-LAST:event_btnSplitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         cancelItemBeforeHold();
-
     }//GEN-LAST:event_btnCancelActionPerformed
-
-    private void jCheckBoxMenuItem1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ItemStateChanged
-        //panelMenuFunction.setVisible(jCheckBoxMenuItem1.isSelected());
-    }//GEN-LAST:event_jCheckBoxMenuItem1ItemStateChanged
-
-    private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
-
-    }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void txtTableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTableFocusGained
         if (!Value.TableSelected.equals("")) {
@@ -1878,14 +1670,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         isSelected = true;
     }//GEN-LAST:event_txtCustFocusGained
 
-    private void txtPluCodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPluCodeMouseClicked
-        if (evt.getClickCount() == 2) {
-
-        }
-    }//GEN-LAST:event_txtPluCodeMouseClicked
-
     private void txtCustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCustMouseClicked
-        //showCustomerInput();
         CustomerCountDialog ccd = new CustomerCountDialog(null, true, txtTable.getText(), txtShowETD.getText());
         ccd.setVisible(true);
 
@@ -1895,19 +1680,19 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         MGRButtonMenu mgr = new MGRButtonMenu(null, true, buttonName, buttonIndex);
         mgr.setVisible(true);
-        setupMenu();
+        loadButtonProductMenu("A");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (tableNo.indexOf("T") != -1) {
+        if (tableNo.contains("T")) {
             txtShowETD.setText("T");
             changeSaleType("T");
             txtTypeDesc.setText(SALE_TAKE_AWAY);
-        } else if (tableNo.indexOf("DE") != -1) {
+        } else if (tableNo.contains("DE")) {
             txtShowETD.setText("D");
             changeSaleType("D");
             txtTypeDesc.setText(SALE_Delivery);
-        } else if (tableNo.indexOf("E") != -1) {
+        } else if (tableNo.contains("E")) {
             txtShowETD.setText("E");
             changeSaleType("E");
             txtTypeDesc.setText(SALE_DINE_IN);
@@ -1920,7 +1705,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         isTakeOrder();
 
-        //MSG.WAR(txtTypeDesc.getText());
         if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
             CustomerName ccd = new CustomerName(null, true, txtTable.getText(), txtShowETD.getText());
             ccd.setVisible(true);
@@ -1928,13 +1712,11 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }//GEN-LAST:event_formWindowOpened
 
     private void jMenuBar11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuBar11MouseClicked
-        if (MMainMenu1.isVisible() == false && jMenu1.isVisible() == false && jMenu2.isVisible() == false) {
+        if (MMainMenu1.isVisible() == false && jMenu2.isVisible() == false) {
             MMainMenu1.setVisible(true);
-            jMenu1.setVisible(true);
             jMenu2.setVisible(true);
         } else {
             MMainMenu1.setVisible(false);
-            jMenu1.setVisible(false);
             jMenu2.setVisible(false);
         }
     }//GEN-LAST:event_jMenuBar11MouseClicked
@@ -1949,8 +1731,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     c.open();
                     c.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                     c.close();
-                } catch (Exception e) {
-                    MSG.ERR(e.toString());
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
                 }
             }
             kichenPrintAfterPrintCheck();
@@ -1965,14 +1747,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mgr.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jCheckBoxMenuItem3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem3ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxMenuItem3ItemStateChanged
-
-    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
-
     private void jCheckBoxMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem3ActionPerformed
         OptionMenuSet browse = new OptionMenuSet(null, true);
         browse.setVisible(true);
@@ -1982,19 +1756,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         new KeyBoardDialog(null, true, 4).get(txtPluCode, 4);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void txtCustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustActionPerformed
-
-    }//GEN-LAST:event_txtCustActionPerformed
-
     private void txtMember1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMember1MouseClicked
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
         this.memberBean = MemberBean.getMember(MBD.getMemCode());
         updateProSerTable(tableNo, memberBean);
-        if (!memberBean.getMember_Code().equals("")) {
+        if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
             txtMember1.setText(memberBean.getMember_NameThai());
             txtMember2.setText(QtyIntFmt.format(memberBean.getMember_TotalScore()));
-//            loadDataFromBalance(tableNo);
             tblShowPluShow(txtTable.getText());
         }
 
@@ -2002,7 +1771,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void tbpMainMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbpMainMouseClicked
         clearHistory();
-        addHistory(tbpMain.getSelectedIndex());//
+        addHistory(tbpMain.getSelectedIndex());
     }//GEN-LAST:event_tbpMainMouseClicked
 
     private void txtTypeDescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTypeDescMouseClicked
@@ -2121,9 +1890,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             txtTable.setText("");
             tbpMain.setSelectedIndex(0);
             Value.TableSelected = "";
-//            dispose();
         } else {
-//            loadDataFromBalance(tableNo);
             tblShowPluShow(txtTable.getText());
             showSum();
             setVisible(true);
@@ -2131,8 +1898,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void bntVoidClick() {
-        String Name = "";
-        String Name1 = "";
         int row = getSelectedRowIndex();
         if (row == -1) {
             return;
@@ -2154,7 +1919,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 isPermit = true;
-                Name = ThaiUtil.ASCII2Unicode(rs.getString("Name"));
             }
 
             rs.close();
@@ -2182,9 +1946,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                     rs.close();
                     stmt.close();
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    e.printStackTrace();
                 }
 
                 if (!hasValue) {
@@ -2221,9 +1984,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                                     rs.close();
                                     stmt.close();
-                                } catch (Exception e) {
+                                } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    e.printStackTrace();
                                 }
 
                                 if (!hasValue) {
@@ -2269,7 +2031,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     stmt.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    e.printStackTrace();
                                 }
 
                                 if (!hasValue) {
@@ -2305,10 +2066,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             bean.setR_VoidUser("");
             bean.setR_VoidTime("");
             bean.setR_DiscBath(0.00);
-
-            if (PublicVar.Branch_Saveorder.equals("Y")) {
-//                PrintSaveOrder(IndexRow) ;
-            }
 
             String StkRemark;
             String DocNo;
@@ -2346,10 +2103,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (PBPack <= 0) {
                         PBPack = 1;
                     }
-//                    double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan()) / PBPack;
                     double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                     double R_Total = 0;
-                    System.out.println("ตัดสต็อก " + R_PluCode);
                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate,
                             StkRemark, R_QuanIng, R_Total, bean.getCashier(),
                             "Y", "", "", "");//edit by  nathee 30/10/2016
@@ -2402,10 +2157,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         PBPack = 1;
                     }
                     String pname = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
-//                    double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan()) / PBPack;
                     double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                     double R_Total = 0;
-                    System.out.println("ตัดสต็อก -" + R_PluCode + " " + pname + " จำนวน -" + R_QuanIng);
                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate, StkRemark, -1 * R_QuanIng, R_Total,
                             PublicVar.TUserRec.UserCode, "Y", "", "", "");
                 }
@@ -2452,7 +2205,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 Statement stmt = mysql.getConnection().createStatement();
                 stmt.executeUpdate(updateBalance);
                 stmt.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
             }
         }
@@ -2468,7 +2221,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void showCell(int row, int column) {
-        //System.err.println("ROW[" + row + "],COLUMN[" + column + "]");
         int sizeTable = tblShowBalance.getRowCount();
         if (row > 0) {
             if (row > sizeTable - 1) {
@@ -2545,7 +2297,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (PluCode.length() <= 3) {
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String SqlQuery = "select *from menulist where menuitem=('" + PluCode + "') and (menuactive='Y')";
+                            String SqlQuery = "select *from menulist "
+                                    + "where menuitem=('" + PluCode + "') "
+                                    + "and (menuactive='Y')";
                             ResultSet rec = stmt.executeQuery(SqlQuery);
                             rec.first();
                             if (rec.getRow() == 0) {
@@ -2568,7 +2322,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                 }
                 try {
-
                     Statement stmt = mysql.getConnection().createStatement();
                     String sql = "select * "
                             + "from product "
@@ -2628,8 +2381,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 if (PublicVar.ChangTypeOK) {
                     if (ChangOk) {
                         clearDataMem();
-
-//                        loadDataFromBalance(txtTable.getText());
                         tblShowPluShow(txtTable.getText());
                         txtPluCode.requestFocus();
                     }
@@ -2647,7 +2398,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String PluCode;
         String StrQty;
         String TempCode = txtPluCode.getText();
-        if (!TempCode.equals(null) || !TempCode.equals("null")) {
+        if (TempCode != null) {
             if (TempCode.substring(0, 1).equals("*")) {
                 TempCode = TempCode.replace("*", "");
             }
@@ -2658,31 +2409,28 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         boolean found = false;
         double Qty;
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         //check outofstock
         try {
             String sql = "select * from outstocklist "
                     + "where pcode='" + TempCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                MSG.ERR("สินค้ามีไม่ในสต๊อก หรือถูกยกเลิกการขายไปแล้ว กรุณาตรวจสอบ !!!");
-                txtPluCode.setText("");
-                txtPluCode.requestFocus();
-                return false;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    MSG.ERR("สินค้ามีไม่ในสต๊อก หรือถูกยกเลิกการขายไปแล้ว กรุณาตรวจสอบ !!!");
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                    return false;
+                }
+                rs.close();
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             return false;
         }
 
-        if (TempCode.length() > 0) {
+        if (TempCode != null && TempCode.length() > 0) {
             int index = TempCode.indexOf("*");
             if (index != -1) {
                 StrQty = TempCode.substring(0, index);
@@ -2832,10 +2580,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         return RetVal;
     }
 
-    private void getPrice() {
-        txtPluCode.setEditable(false);
-    }
-
     private void saveToBalance() {
         String PCode = txtPluCode.getText();
 
@@ -2853,12 +2597,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         double Price = 0.00;
         if (productBean.getPStatus().equals("S")) {
-            getPrice();
+            txtPluCode.setEditable(false);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -2960,12 +2701,18 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         String[] subPercent = memberBean.getMember_DiscountRate().split("/");
                         int Percent = 0;
                         if (subPercent.length == 3) {
-                            if (balance.getR_Normal().equals("N")) {
-                                Percent = Integer.parseInt(subPercent[0].trim());
-                            } else if (balance.getR_Normal().equals("C")) {
-                                Percent = Integer.parseInt(subPercent[1].trim());
-                            } else if (balance.getR_Normal().equals("S")) {
-                                Percent = Integer.parseInt(subPercent[2].trim());
+                            switch (balance.getR_Normal()) {
+                                case "N":
+                                    Percent = Integer.parseInt(subPercent[0].trim());
+                                    break;
+                                case "C":
+                                    Percent = Integer.parseInt(subPercent[1].trim());
+                                    break;
+                                case "S":
+                                    Percent = Integer.parseInt(subPercent[2].trim());
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                         balance.setR_PrSubDisc(Percent);
@@ -2997,7 +2744,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String StkRemark = "SAL";
                     String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
                     if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
-                        System.out.println("กำลังตัดสต๊อกสินค้านี้" + productBean.getPCode() + productBean.getPDesc());
                         PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                 balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
                     }
@@ -3018,10 +2764,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 if (PBPack <= 0) {
                                     PBPack = 1;
                                 }
-//                                double R_QuanIng = (rs.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
                                 double R_QuanIng = (rs.getDouble("PingQty") * balance.getR_Quan());
                                 double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
                                 PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                         balance.getCashier(), "Y", "", "", "");
                             }
@@ -3047,7 +2791,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         }
                         stmt1.close();
                         rsPSET.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         MSG.NOTICE(e.toString());
                     }
                     //update promotion
@@ -3065,8 +2809,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.close();
         }
     }
-
-    private String indexList = "";
 
     private void kichenPrint() {
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
@@ -3118,27 +2860,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 if (kicMaster[iKic - 1].equals("N")) {
                                     //NOT PRINT or Print already
                                 } else {
-//                                    printerName = rKic;
                                     printerName = "kic" + rKic;
                                     String printerForm = BranchControl.getForm(rKic);
-//                                    if (printerForm.equals("1") || printerForm.equals("2")) {
-//                                    if (printerForm.equals("2")) {
-//                                        String sql1 = "select * from balance "
-//                                                + "where r_table='" + txtTable.getText() + "' "
-//                                                + "and R_PrintOK='Y' "
-//                                                + "and R_KicPrint<>'P' "
-//                                                + "and R_Kic<>'' "
-//                                                + "and R_kic='" + rKic + "' "
-//                                                + "group by r_plucode";
-//                                        Statement stmt2 = mysql.getConnection().createStatement();
-//                                        ResultSet rs1 = stmt2.executeQuery(sql1);
-//                                        while (rs1.next()) {
-//                                            String PCode = rs1.getString("R_PluCode");
-//                                            if (Value.printkic) {
-//                                                printSimpleForm.KIC_FORM_2(printerName, txtTable.getText(), new String[]{PCode});
-//                                            }
-//                                        }
-//                                    }
                                     if (printerForm.equals("1")) {
                                         String sql1 = "select * from balance "
                                                 + "where r_table='" + txtTable.getText() + "' "
@@ -3160,7 +2883,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         }
                                         rs1.close();
                                         stmt2.close();
-//                                    } 
 
                                     } else if (printerForm.equals("6")) {
                                         String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
@@ -3168,15 +2890,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                                 + "and R_PrintOK='Y' "
                                                 + "and R_KicPrint<>'P' "
                                                 + "and R_Kic<>'' "
-                                                //                                                + "and R_Void<>'V' "
                                                 + "and R_KIC='" + rKic + "' "
                                                 + "group by r_plucode,r_void order by r_opt1";
-//                                        String sql2 = "select * from balance "
-//                                                + "where r_table='" + txtTable.getText() + "' "
-//                                                + "and R_PrintOK='Y' "
-//                                                + "and R_KicPrint<>'P' "
-//                                                + "and R_Kic<>'' "
-//                                                + "and R_Void<>'V' and R_KIC='"+rKic+"'";
                                         Statement stmt2 = mysql.getConnection().createStatement();
                                         ResultSet rs2 = stmt2.executeQuery(sql2);
                                         while (rs2.next()) {
@@ -3186,24 +2901,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                                 double qty = rs2.getDouble("R_Quan");
                                                 double priceTotal = rs2.getDouble("Total");
                                                 printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
-//                                                printBillCheck();
-//                                                printBillVoidCheck();
                                             }
                                         }
-                                        //update r_kicprint
-//                                        try {
-//                                            String sql = "update balance "
-//                                                    + "set r_kicprint='P',"
-//                                                    + "r_pause='Y' "
-//                                                    + "where r_table='" + txtTable.getText() + "' "
-//                                                    + "and r_kicprint<>'P' "
-//                                                    + "and r_printOk='Y' "
-//                                                    + "and r_kic<>'';";
-//                                            Statement stmt = mysql.getConnection().createStatement();
-//                                            stmt.executeUpdate(sql);
-//                                        } catch (SQLException e) {
-//                                            MSG.ERR(this, e.getMessage());
-//                                        }
                                         rs2.close();
                                         stmt2.close();
                                     } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
@@ -3270,7 +2969,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.close();
             }
         } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(null, "HeadlessException:" + e.getMessage());
         }
     }
 
@@ -3342,12 +3041,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                                 + "and R_Kic<>'' "
                                                 + "and R_Void<>'V' and R_KIC='" + rKic + "' "
                                                 + "group by r_plucode order by r_opt1";
-//                                        String sql2 = "select * from balance "
-//                                                + "where r_table='" + txtTable.getText() + "' "
-//                                                + "and R_PrintOK='Y' "
-//                                                + "and R_KicPrint<>'P' "
-//                                                + "and R_Kic<>'' "
-//                                                + "and R_Void<>'V' ";
                                         Statement stmt2 = mysql.getConnection().createStatement();
                                         ResultSet rs2 = stmt2.executeQuery(sql2);
                                         while (rs2.next()) {
@@ -3357,7 +3050,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                                 double qty = rs2.getDouble("R_Quan");
                                                 double priceTotal = rs2.getDouble("Total");
                                                 printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
-//                                                printBillCheck();
                                             }
                                         }
 
@@ -3368,17 +3060,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         if (printerForm.equals("3")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_3("", printerName, txtTable.getText(), iKic);
-//                                                printBillVoidCheck();
                                             }
                                         } else if (printerForm.equals("4")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
-//                                                printBillVoidCheck();
                                             }
                                         } else if (printerForm.equals("5")) {
                                             if (Value.printkic) {
                                                 printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
-//                                                printBillVoidCheck();
                                             }
                                         }
                                     } else {
@@ -3389,15 +3078,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
                         }
-                    } else {
-
                     }
                 }
 
                 rsKic.close();
                 stmt1.close();
 
-//                CheckKicPrint();
                 //update r_kicprint
                 try {
                     String sql = "update balance "
@@ -3418,18 +3104,24 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.close();
             }
         } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(null, "HeadlessException:" + e.getMessage());
         }
     }
 
     private void changeSaleType(String SaleType) {
         // description กำหนดประเภทการขาย
-        if (SaleType.equals("E")) {
-            txtTypeDesc.setText(SALE_DINE_IN);
-        } else if (SaleType.equals("T")) {
-            txtTypeDesc.setText(SALE_TAKE_AWAY);
-        } else if (SaleType.equals("D")) {
-            txtTypeDesc.setText(SALE_Delivery);
+        switch (SaleType) {
+            case "E":
+                txtTypeDesc.setText(SALE_DINE_IN);
+                break;
+            case "T":
+                txtTypeDesc.setText(SALE_TAKE_AWAY);
+                break;
+            case "D":
+                txtTypeDesc.setText(SALE_Delivery);
+                break;
+            default:
+                break;
         }
 
         String oldType = txtShowETD.getText();
@@ -3496,16 +3188,15 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 + "tlogintime=curtime(),"
                                 + "TCurTime=curtime()"
                                 + "where tcode='" + txtTable.getText().trim() + "'";
-                        Statement stmt1 = mysql.getConnection().createStatement();
-                        stmt1.executeUpdate(UpdateTable);
-                        stmt1.close();
+                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                            stmt1.executeUpdate(UpdateTable);
+                        }
                         tbpMain.setSelectedIndex(0);
 
                         //load data to table
-//                        loadDataFromBalance(txtTable.getText());
                         tblShowPluShow(txtTable.getText());
                         TableOpenStatus = true;
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         MSG.ERR(this, ex.getMessage());
                         TableOpenStatus = false;
                         txtTable.setText("");
@@ -3541,11 +3232,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void txtPluCodeOnExit() {
-        long s = System.currentTimeMillis();
         saveToBalance();
         tblShowPluShow(txtTable.getText());
-        long e = System.currentTimeMillis();
-        System.out.println("Time Estimate: " + (e - s));
         txtPluCode.setText("");
         txtPluCode.requestFocus();
     }
@@ -3561,7 +3249,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     c.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                     c.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.toString());
+                    MSG.ERR(e.getMessage());
                 }
             }
             kichenPrint();
@@ -3576,15 +3264,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 c.getConnection().createStatement().executeUpdate(sql);
                 c.close();
             } catch (SQLException e) {
-                MSG.ERR(e.toString());
+                MSG.ERR(e.getMessage());
             }
         }
     }
 
     private void updateCustomerCount(int custCount) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -3592,10 +3277,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "set tcustomer='" + custCount + "',"
                     + "macno='" + Value.MACNO + "' "
                     + "where tcode='" + txtTable.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (Exception e) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
             mysql.close();
@@ -3604,9 +3289,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void holdTableAndSave() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         BalanceBean balanceBean = new BalanceBean();
         mysql.open();
@@ -3622,9 +3304,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "macno='" + Value.MACNO + "',"
                     + "tlogindate='" + balanceBean.getR_LoginDate() + "' "
                     + "where tcode='" + txtTable.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(UpdateTableFile);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(UpdateTableFile);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -3639,17 +3321,18 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             if (model.getRowCount() == 0) {
                 PublicVar.P_LineCount = 1;
                 PublicVar.P_LogoffOK = false;
-                /**
-                 * * OPEN CONNECTION **
-                 */
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String QryUpdatePosuser = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
-                    stmt.executeUpdate(QryUpdatePosuser);
-                    String QryUpdatePosHeSetup = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
-                    stmt.executeUpdate(QryUpdatePosHeSetup);
+                    String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
+                    stmt.executeUpdate(sql1);
+                    
+                    String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
+                    if (stmt.executeUpdate(sql2) > 0) {
+                        // reset load poshwsetup
+                        PosControl.resetPosHwSetup();
+                    }
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -3682,9 +3365,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private boolean updateLogout(String UserCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -3728,20 +3408,15 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (txtTable.getText().trim().length() > 0) {
                         txtTable.setEditable(false);
                         txtTableOnExit();
-                        //ShowSum();
-                        if (CONFIG.getP_EmpUse().equals("Y")) {
-
+                        if (PublicVar.TableRec_TCustomer == 0) {
+                            txtCust.setEditable(true);
+                            txtCust.requestFocus();
+                            txtCust.selectAll();
                         } else {
-                            if (PublicVar.TableRec_TCustomer == 0) {
-                                txtCust.setEditable(true);
-                                txtCust.requestFocus();
-                                txtCust.selectAll();
-                            } else {
-                                txtPluCode.setEditable(true);
-                                txtPluCode.requestFocus();
-                                txtCust.setSelectionEnd(0);
-                                txtCust.setEditable(false);
-                            }
+                            txtPluCode.setEditable(true);
+                            txtPluCode.requestFocus();
+                            txtCust.setSelectionEnd(0);
+                            txtCust.setEditable(false);
                         }
                     }
                 }
@@ -3881,13 +3556,43 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JButton btnHold;
     private javax.swing.JRadioButton btnLangEN;
     private javax.swing.JRadioButton btnLangTH;
+    private javax.swing.JButton btnP1;
+    private javax.swing.JButton btnP10;
+    private javax.swing.JButton btnP11;
+    private javax.swing.JButton btnP12;
+    private javax.swing.JButton btnP13;
+    private javax.swing.JButton btnP14;
+    private javax.swing.JButton btnP15;
+    private javax.swing.JButton btnP16;
+    private javax.swing.JButton btnP17;
+    private javax.swing.JButton btnP18;
+    private javax.swing.JButton btnP19;
+    private javax.swing.JButton btnP2;
+    private javax.swing.JButton btnP20;
+    private javax.swing.JButton btnP21;
+    private javax.swing.JButton btnP22;
+    private javax.swing.JButton btnP23;
+    private javax.swing.JButton btnP24;
+    private javax.swing.JButton btnP25;
+    private javax.swing.JButton btnP26;
+    private javax.swing.JButton btnP27;
+    private javax.swing.JButton btnP28;
+    private javax.swing.JButton btnP29;
+    private javax.swing.JButton btnP3;
+    private javax.swing.JButton btnP30;
+    private javax.swing.JButton btnP31;
+    private javax.swing.JButton btnP32;
+    private javax.swing.JButton btnP4;
+    private javax.swing.JButton btnP5;
+    private javax.swing.JButton btnP6;
+    private javax.swing.JButton btnP7;
+    private javax.swing.JButton btnP8;
+    private javax.swing.JButton btnP9;
     private javax.swing.JButton btnPayment;
     private javax.swing.JButton btnPrintKic;
     private javax.swing.JButton btnSplit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -3896,7 +3601,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar11;
     private javax.swing.JMenuItem jMenuItem1;
@@ -3910,6 +3614,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelMember;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -3947,16 +3654,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JTextField txtTypeDesc;
     // End of variables declaration//GEN-END:variables
 
-    private void showFloorPlan() {
-        if (txtTable.hasFocus() && txtTable.getText().trim().equals("") && txtTable.getText().endsWith("")) {
-//            dispose();
-        } else {
-            MSG.ERR(this, "กรุณาพักโต๊ะก่อนการใช้งาน Floor Plan");
-        }
-    }
-
     private void showSplitBill() {
-        //if (txtPluCode.hasFocus() && model.getRowCount() > 0) {
         SplitBillPayment sp = new SplitBillPayment(null, true, txtTable.getText());
         sp.setVisible(true);
 
@@ -3967,15 +3665,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             txtCustOnExit();
             txtDiscount.setText(BalanceControl.GetDiscount(txtTable.getText()));
         }
-
-        // }
         sumSplit();
     }
 
     private void showMember() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         if (Value.MemberAlready == true) {
@@ -3990,14 +3683,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             + "MemCurAmt='0.00', "
                             + "MemName='' "
                             + "where TCode='" + txtTable.getText() + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sql);
+                    }
                     showMember();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    JOptionPane.showMessageDialog(this, e.getMessage());
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
                 }
             }
         } else {
@@ -4007,7 +3698,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             if (frm.getMemCode() != null) {
                 Value.MemberAlready = true;
                 memberBean = MemberBean.getMember(frm.getMemCode());
-                String memDisc = memberBean.getMember_DiscountRate();
                 // update member in tablefile
                 SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 try {
@@ -4020,11 +3710,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             + "MemBegin='" + simp.format(memberBean.getMember_Brithday()) + "', "
                             + "MemEnd='" + simp.format(memberBean.getMember_ExpiredDate()) + "' "
                             + "where TCode='" + txtTable.getText() + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sql);
+                    }
+                } catch (SQLException e) {
                     JOptionPane.showMessageDialog(this, e.getMessage());
                 }
 
@@ -4036,9 +3725,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
             }
         }
-
         mysql.close();
-
         showSum();
     }
 
@@ -4082,7 +3769,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void showCheckBill() {
         if (model.getRowCount() > 0) {
-//            loadDataFromBalance(tableNo);
             kichenPrint();
             bntPaymentClick();
             showSum();
@@ -4102,14 +3788,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void selectedOptionBill() {
         int row = tblShowBalance.getSelectedRow();
         String chkPCode = "" + tblShowBalance.getValueAt(row, 0);
-        System.out.println(chkPCode);
         if (chkPCode.equals("")) {
             return;
         }
 
         String chkRIndex = "" + tblShowBalance.getValueAt(row, 10);
         //find data set
-        if (!checkRIndex(chkRIndex, chkPCode) && chkRIndex != null) {
+        if (!checkRIndex(chkRIndex) && chkRIndex != null) {
             return;
         }
 
@@ -4131,7 +3816,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     tblShowPluShow(txtTable.getText());
                 } else if (typeIndex.equals("TypeSale")) {
                     if (model.getRowCount() > 0) {
-
                         if (!PCode.equals("") && !PVoid.equals("V")) {
                             changTypeClick();
                         } else {
@@ -4139,7 +3823,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         }
                     }
                 } else if (typeIndex.equals("ItemDiscount")) {
-
                     // ตรวจสอบว่าสามารถให้ส่วนลดได้อีกหรือไม่ ?
                     if (checkCanDisc(RIndex)) {
                         if (model.getRowCount() > 0) {
@@ -4180,7 +3863,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
             BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
             //load data from balance
-//            loadDataFromBalance(txtTable.getText());
             tblShowPluShow(txtTable.getText());
         }
     }
@@ -4197,7 +3879,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             pluCode = pluCode.substring(0, pluCode.length() - 1);
 
-            int qtySet = 0;
+            int qtySet;
             if (Value.autoqty) {
                 GetQty frm = new GetQty(null, true, pluCode);
                 frm.setVisible(true);
@@ -4211,7 +3893,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     txtPluCode.setText(QtyIntFmt.format(qtySet).trim() + "*" + pluCode);
                     if (seekPluCode()) {
                         if (PublicVar.P_Status.equals("S")) {
-                            getPrice();
+                            txtPluCode.setEditable(false);
                         } else {
                             txtPluCodeOnExit();
                         }
@@ -4224,7 +3906,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } else {
             if (findPluCode()) {
                 if (PublicVar.P_Status.equals("S")) {
-                    getPrice();
+                    txtPluCode.setEditable(false);
                 } else {
                     txtPluCodeOnExit();
                 }
@@ -4240,7 +3922,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private String buttonName;
-
     private int buttonIndex;
 
     private void addMouseEvent(final JButton btn, final int index) {
@@ -4278,23 +3959,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         });
     }
 
-    private void clearPanelMenu() {
-        pMenu1.removeAll();
-        pMenu2.removeAll();
-        pMenu3.removeAll();
-        pMenu4.removeAll();
-        pMenu5.removeAll();
-        pMenu6.removeAll();
-        pMenu7.removeAll();
-        pMenu8.removeAll();
-        pMenu9.removeAll();
-    }
-
     private boolean checkCanDisc(String RIndex) {
         boolean result = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -4303,11 +3969,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "and R_QuanCanDisc>0";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                result = true;
-            } else {
-                result = false;
-            }
+            result = rs.next();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             result = false;
@@ -4319,81 +3981,32 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void sumSplit() {
-        POSConfigSetup.Bean().getP_Service();
-        String table = txtTable.getText();
-
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select sum(R_Total) from balance where R_Table ='" + table + "'and R_Void <> 'V'";
-//            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            while (rs.next()) {
-
-                double RTotal = rs.getDouble("sum(R_Total)");
-                try {
-                    double totalServiceAmt = 0;
-                    double serviceAmt = POSConfigSetup.Bean().getP_Service();
-                    if (serviceAmt == 0) {
-                        totalServiceAmt = 0;
-                    } else {
-                        totalServiceAmt = RTotal / POSConfigSetup.Bean().getP_Service();
-                    }
-
-                } catch (Exception e) {
-//                    txtTotalService.setText("0.00");
-                }
-            }
-            rs.close();
-//            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        }
-
         updatetable();
     }
 
     private void updatetable() {
-
         String table = txtTable.getText();
-        String ta = lbTotalAmount.getText();
-//        String tc = txtTotalAmount.getText();
         String cus = txtCust.getText();
-//        String ser = txtTotalService.getText();
-
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "SELECT COUNT(R_PName) FROM balance where r_table = '" + table + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-
-            while (rs.next()) {
-                String R_PName = rs.getString("COUNT(R_PName)");
-                String UpdateTableFile = "update tablefile "
-                        + "set tonact='N',"
-                        + "macno='" + Value.MACNO + "',"
-                        + "TCurTime = CurTime(),"
-                        + "TCustomer = '" + cus + "',"
-                        + "TItem = '" + R_PName + "',"
-                        //                        + "TAmount = '" + tc + "',"
-                        + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
-                        //                        + "ServiceAmt = '" + ser + "',"
-                        //                        + "NetTotal = '" + ta.replace(",", "") + "'"
-                        + "where tcode='" + txtTable.getText() + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
-                stmt1.executeUpdate(UpdateTableFile);
-                stmt1.close();
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                while (rs.next()) {
+                    String R_PName = rs.getString("COUNT(R_PName)");
+                    String UpdateTableFile = "update tablefile "
+                            + "set tonact='N',"
+                            + "macno='" + Value.MACNO + "',"
+                            + "TCurTime = CurTime(),"
+                            + "TCustomer = '" + cus + "',"
+                            + "TItem = '" + R_PName + "',"
+                            + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
+                            + "where tcode='" + txtTable.getText() + "'";
+                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        stmt1.executeUpdate(UpdateTableFile);
+                    }
+                }
             }
-
-            rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
@@ -4403,58 +4016,18 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean isTakeOrder() {
         boolean isTakeOrder = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "SELECT TakeOrderChk,terminal FROM poshwsetup "
-                    + "where Terminal = '" + Value.MACNO + "' "
-                    + "and TakeOrderChk='Y'";
-//            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-
-//                String sqlBL = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
-//                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlBL);
-//                if (rs2.next()) {
-                btnPayment.setVisible(false);
-                btnSplit.setVisible(false);
-//                } 
-//                else {
-//                    btnPayment.setVisible(true);
-//                    btnSplit.setVisible(true);
-//                }
-//                if  (ConfigFile.getProperties("useprint").equals("false")){
-                bntPrintCheckBill.setVisible(false);
-//                }
-
-                isTakeOrder = true;
-
-            }
-//            if (rs.next()) {
-//                btnSplit.setVisible(false);
-//                btnPayment.setVisible(false);
-//
-//                isTakeOrder = true;
-//            }
-
-            rs.close();
-//            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-        } finally {
-            mysql.close();
+        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+        if (poshwSetup.getTakeOrderChk().equals("Y")) {
+            btnPayment.setVisible(false);
+            btnSplit.setVisible(false);
+            bntPrintCheckBill.setVisible(false);
+            isTakeOrder = true;
         }
 
         return isTakeOrder;
     }
 
     private void updateTempTset(BalanceBean bBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
@@ -4462,12 +4035,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             String sqlUpd = "update tempset set "
                     + "PIndex='" + bBean.getR_Index() + "' "
                     + "where PTableNo='" + bBean.getR_Table() + "' ";
-//            Statement stmt = mysql.getConnection().createStatement();
             mysql.getConnection().createStatement().executeUpdate(sqlUpd);
 
             String sql = "select * from tempset "
                     + "where PIndex='" + bBean.getR_Index() + "' ";
-//            Statement stmt1 = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 if (rs.getString("PCode").equals(bBean.getR_PluCode())) {
@@ -4514,18 +4085,25 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         balance.setR_Set(productBean.getPSet());
 
                         if (balance.getR_Status().equals("P")) {
-                            if (etd.equals("E")) {
-                                balance.setR_Price(productBean.getPPrice11());
-                            } else if (etd.equals("T")) {
-                                balance.setR_Price(productBean.getPPrice12());
-                            } else if (etd.equals("D")) {
-                                balance.setR_Price(productBean.getPPrice13());
-                            } else if (etd.equals("P")) {
-                                balance.setR_Price(productBean.getPPrice14());
-                            } else if (etd.equals("W")) {
-                                balance.setR_Price(productBean.getPPrice15());
-                            } else {
-                                txtShowETD.setText("E");
+                            switch (etd) {
+                                case "E":
+                                    balance.setR_Price(productBean.getPPrice11());
+                                    break;
+                                case "T":
+                                    balance.setR_Price(productBean.getPPrice12());
+                                    break;
+                                case "D":
+                                    balance.setR_Price(productBean.getPPrice13());
+                                    break;
+                                case "P":
+                                    balance.setR_Price(productBean.getPPrice14());
+                                    break;
+                                case "W":
+                                    balance.setR_Price(productBean.getPPrice15());
+                                    break;
+                                default:
+                                    txtShowETD.setText("E");
+                                    break;
                             }
                         }
 
@@ -4554,7 +4132,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         //Process stock out
                         String StkRemark = "SAL";
                         String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
-
                         if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
                             PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                     balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
@@ -4562,34 +4139,23 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                         //ตัดสต็อกสินค้าที่มี Ingredent
                         try {
-
                             String sql1 = "select i.*,pdesc,PBPack,pstock,pactive "
                                     + "from product p, pingredent i "
                                     + "where p.pcode=i.pingcode "
                                     + "and i.pcode='" + balance.getR_PluCode() + "' "
                                     + "and PFix='L' and PStock='Y'";
-                            Statement stmt2 = mysql.getConnection().createStatement();
-                            ResultSet rs1 = stmt2.executeQuery(sql1);
-                            while (rs1.next()) {
-                                String R_PluCode = rs1.getString("PingCode");
-                                double PBPack = rs1.getDouble("PBPack");
-                                if (PBPack <= 0) {
-                                    PBPack = 1;
+                            try (Statement stmt2 = mysql.getConnection().createStatement(); ResultSet rs1 = stmt2.executeQuery(sql1)) {
+                                while (rs1.next()) {
+                                    String R_PluCode = rs1.getString("PingCode");
+                                    double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan());
+                                    double R_Total = 0;
+                                    if (rs1.getString("pstock").equals("Y") && rs1.getString("pactive").equals("Y")) {
+                                        PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
+                                                balance.getCashier(), "Y", "", "", "");
+                                    }
                                 }
-//                                double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
-                                double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan());
-                                double R_Total = 0;
-                                System.out.println("ตัดสต็อก " + R_PluCode);
-                                if (rs1.getString("pstock").equals("Y") && rs1.getString("pactive").equals("Y")) {
-                                    PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
-                                            balance.getCashier(), "Y", "", "", "");
-                                }
-
                             }
-
-                            rs1.close();
-                            stmt2.close();
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
                         }
                     }
@@ -4599,16 +4165,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             //clear tempset
             try {
                 String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-                Statement stmt2 = mysql.getConnection().createStatement();
-                stmt2.executeUpdate(sqlClear);
-                stmt2.close();
-            } catch (Exception e) {
+                try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                    stmt2.executeUpdate(sqlClear);
+                }
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             }
 
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -4617,88 +4181,65 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from tempset "
                     + "where PIndex='" + R_Index + "' "
                     + "and PCode='" + PCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            if (rs.next()) {
-                String opt = ThaiUtil.Unicode2ASCII(rs.getString("POption"));
-                String sql1 = "update balance "
-                        + "set R_Opt1='" + opt + "',"
-                        + "R_LinkIndex='" + R_Index + "' "
-                        + "where R_Table='" + TableNo + "' "
-                        + "and R_PluCode='" + PCode + "' "
-                        + "and R_LinkIndex=''";
-                Statement stmt1 = mysql.getConnection().createStatement();
-                stmt1.executeUpdate(sql1);
-                stmt1.close();
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    String opt = ThaiUtil.Unicode2ASCII(rs.getString("POption"));
+                    String sql1 = "update balance "
+                            + "set R_Opt1='" + opt + "',"
+                            + "R_LinkIndex='" + R_Index + "' "
+                            + "where R_Table='" + TableNo + "' "
+                            + "and R_PluCode='" + PCode + "' "
+                            + "and R_LinkIndex=''";
+                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        stmt1.executeUpdate(sql1);
+                    }
+                }
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }
-
     }
 
-    private boolean checkRIndex(String chkRIndex, String code) {
-        boolean isCheck = true;//defalse ต้องเป็นถูกไว้ก่อน
-        /**
-         * * OPEN CONNECTION **
-         */
+    private boolean checkRIndex(String chkRIndex) {
+        boolean isCheck = true;
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select r_linkindex from balance "
                     + "where r_index='" + chkRIndex + "' "
                     + "and r_linkindex<>''";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                isCheck = false;
-                String r_linkindex = rs.getString("r_linkindex");
-                if (r_linkindex.equals(chkRIndex)) {
-                    isCheck = true;
-                } else {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
                     isCheck = false;
+                    String r_linkindex = rs.getString("r_linkindex");
+                    isCheck = r_linkindex.equals(chkRIndex);
+                } else {
+                    isCheck = true;
                 }
-            } else {
-                isCheck = true;
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
             mysql.close();
         }
-
         return isCheck;
     }
 
     private void cancelItemBeforeHold() {
         BalanceControl bc = new BalanceControl();
-
         int[] rows = tblShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
         String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
-        /**
-         * * OPEN CONNECTION **
-         */
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         for (int i = 0; i < rows.length; i++) {
@@ -4714,7 +4255,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 if (r_linkIndex == null || r_linkIndex.equals("null")) {
                     r_linkIndex = "";
                 }
-                if (!r_linkIndex.equals("") && r_linkIndex != null) {
+                if (!r_linkIndex.equals("")) {
                     if (!bean.getR_Index().equals(bean.getR_LinkIndex())) {
                         isMenuSet = true;
                         r_index = r_linkIndex;
@@ -4722,14 +4263,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         isMenuSet = true;
                     }
                 }
-//                if (!bean.getR_LinkIndex().equals("")) {
-//                    if (!bean.getR_Index().equals(bean.getR_LinkIndex())) {
-//                        isMenuSet = true;
-//                        r_index = bean.getR_LinkIndex();
-//                    } else {
-//                        isMenuSet = true;
-//                    }
-//                }
 
                 String sql = "delete from balance "
                         + "where r_index='" + r_index + "' "
@@ -4739,8 +4272,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.getConnection().createStatement().executeUpdate(sqldelTempSet);
 
                 int result = stmt.executeUpdate(sql);
-//                String sqlDelTempset = "delete from tempset where ptableno='" + txtTable.getText() + "'";
-//                mysql.getConnection().createStatement().executeUpdate(sqlDelTempset);
                 stmt.close();
                 if (result <= 0) {
                     MSG.WAR("รายการอาหาร " + bean.getR_PName() + " ถูกส่งครัวไปแล้ว ไม่สามารถลบออกได้ จะต้อง Void เท่านั้น");
@@ -4760,13 +4291,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         ResultSet rs = stmt1.executeQuery(sql1);
                         while (rs.next()) {
                             String R_PluCode = rs.getString("PingCode");
-                            double PBPack = rs.getDouble("PBPack");
-                            if (PBPack <= 0) {
-                                PBPack = 1;
-                            }
                             double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                             double R_Total = 0;
-                            System.out.println("ตัดสต็อก -" + R_PluCode);
                             PUtility.ProcessStockOut(DocNo, bean.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
                                     R_Total, bean.getCashier(), "Y", "", "", "");
                         }
@@ -4775,7 +4301,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         stmt1.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        e.printStackTrace();
                     }
 
                     //ตรวจสอบถ้าเป็น menu set ให้ลบข้อมูลภายใน Set ด้วย
@@ -4814,7 +4339,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         }
                                         double R_QuanIng = (rs2.getDouble("PingQty") * bean2.getR_Quan());
                                         double R_Total = 0;
-                                        System.out.println("ตัดสต็อก -" + R_PluCode);
                                         PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
                                                 R_Total, bean2.getCashier(), "Y", "", "", "");
                                     }
@@ -4823,23 +4347,20 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     stmt4.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    e.printStackTrace();
                                 }
                             }
 
                             rs.close();
                             stmt2.close();
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            e.printStackTrace();
                         }
                     }
                     // ################ END คืน Stock 
                 }
 
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
             }
         }
 
@@ -4852,9 +4373,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void upDateTableFile() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -4862,10 +4380,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "TOnAct= 'Y',"
                     + "macno='" + Value.MACNO + "' "
                     + "WHERE Tcode='" + txtTable.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-//            dispose();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -4874,9 +4391,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void CheckKicPrint() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -4884,34 +4398,18 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "from balance where r_table='" + tableNo + "'"
                     + " and r_kicprint <> 'P' "
                     + " and R_PName <> ''";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-                if (CheckBillBeforeCash.equals("Y")) {
-                    printBillVoidCheck();
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                    if (CheckBillBeforeCash.equals("Y")) {
+                        printBillVoidCheck();
+                    }
                 }
-//                printBillCheck();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
             mysql.close();
-
-        }
-
-    }
-
-    class TimeOfDay implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            SimpleDateFormat tf = new SimpleDateFormat("(HH:mm:ss)", Locale.ENGLISH);
-            String St = tf.format(new Date());
-            //txtShowTime.setText(St);
         }
     }
 
@@ -4932,366 +4430,91 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
-//----------SetupMenu-----------------------
-    private void setupMenu() { //คำสั่งกำหนด Buttom เมนูอาหาร
-        clearPanelMenu();
-        final MGRButtonMenu mgr = new MGRButtonMenu();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
-        loadHeaderMenu();
-//        String[] menuAt = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "J"};
-        String[] menuAt = new String[]{"A", "B"};
-//        final JPanel[] panel = new JPanel[]{pMenu1, pMenu2, pMenu3, pMenu4, pMenu5, pMenu6, pMenu7, pMenu8, pMenu9};
-        final JPanel[] panel = new JPanel[]{pMenu1, pMenu2};
-        final int sizeButtonFix = 15;
-        for (int a = 0; a < menuAt.length; a++) {  //การเพิ่ม Buttom ในเมนู Item
-            for (int b = 0; b < sizeButtonFix; b++) {
-                String MCode;
-                if ((b + 1) < 10) {
-                    MCode = menuAt[a] + "0" + (b + 1);
-                } else {
-                    MCode = menuAt[a] + (b + 1);
+    private void loadButtonProductMenu(String menuCode) {
+        ButtonCustom buttonCustom = new ButtonCustom();
+        List<MenuMGR> listMenu = buttonCustom.getDataButtonLayout(menuCode);
+        if (listMenu.isEmpty()) {
+            return;
+        }
+        JButton[] btnGrid = new JButton[]{
+            btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
+            btnP9, btnP10, btnP11, btnP12, btnP13, btnP14, btnP15, btnP16
+        };
+        for (JButton btn : btnGrid) {
+            btn = buttonCustom.buttonDefault(btn);
+        }
+        for (int i = 0; i < listMenu.size(); i++) {
+            MenuMGR menu = listMenu.get(i);
+            btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
+            addMouseEvent(btnGrid[menu.getMIndex()], menu.getMIndex());
+            btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
+                if (menu.getPCode().equals("")) {
+                    loadButtonProductMenu(menu.getMenuCode());
+                } else if (!txtCust.getText().trim().equals("")) {
+                    addProductFromButtonMenu(menu.getPCode());
                 }
-
-                final JButton btn1 = mgr.getButtonLayout(MCode, b);
-                btn1.setFocusable(false);
-                btn1.setOpaque(false);
-
-                addMouseEvent(btn1, b);
-                btn1.addActionListener(new ActionListener() {
-
-//                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        boolean isAllow = false;
-                        String customerCount = txtCust.getText();
-                        String r_etd = txtShowETD.getText();
-
-                        int cusInt = 0;
-                        try {
-                            cusInt = Integer.parseInt(customerCount);
-                        } catch (NumberFormatException e1) {
-                            System.err.println(e1.getMessage());
-                        }
-
-                        if (r_etd.equalsIgnoreCase("E") && cusInt > 0) {
-                            isAllow = true;
-                        } else if (r_etd.equalsIgnoreCase("T") && cusInt > 0) {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
-                            MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
-                            try {
-                                String sql = "select memname from tablefile "
-                                        + "where tcode='" + txtTable.getText() + "'";
-                                Statement stmt = mysql.getConnection().createStatement();
-                                ResultSet rs = stmt.executeQuery(sql);
-                                if (rs.next()) {
-                                    isAllow = true;
-                                } else {
-                                    isAllow = false;
-                                }
-
-                                rs.close();
-                                stmt.close();
-                            } catch (SQLException e1) {
-                                MSG.ERR(e1.getMessage());
-                            }
-                        } else if (r_etd.equalsIgnoreCase("D") && cusInt > 0) {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
-                            MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
-                            try {
-                                String sql = "select memname from tablefile "
-                                        + "where tcode='" + txtTable.getText() + "'";
-                                Statement stmt = mysql.getConnection().createStatement();
-                                ResultSet rs = stmt.executeQuery(sql);
-                                if (rs.next()) {
-                                    isAllow = true;
-                                } else {
-                                    isAllow = false;
-                                }
-
-                                rs.close();
-                                stmt.close();
-                            } catch (SQLException e1) {
-                                MSG.ERR(e1.getMessage());
-                            }
-                        }
-
-                        if (isAllow) {
-                            if (btn1.getText() == null) {
-                                return;
-                            }
-                            if (!showPopupOption(btn1.getName())) {
-                                return;
-                            }
-                            String[] data = checkGroup(btn1.getName());
-
-                            if (data[0].equals("0")) {
-                                addHistory(tbpMain.getSelectedIndex());
-                                pSubMenu1.removeAll();
-
-                                String MCode2;
-                                for (int c = 0; c < sizeButtonFix; c++) {
-                                    if ((c + 1) < 10) {
-                                        MCode2 = btn1.getName() + "0" + (c + 1);
-                                    } else {
-                                        MCode2 = btn1.getName() + (c + 1);
-                                    }
-
-                                    final JButton btn2 = mgr.getButtonLayout(MCode2, c);
-                                    btn2.setFocusable(false);
-                                    addMouseEvent(btn2, c);
-                                    btn2.setName(MCode2);
-                                    pSubMenu1.add(btn2);
-                                    tbpMain.setSelectedIndex(9);
-
-                                    btn2.addActionListener(new ActionListener() {
-
-                                        @Override
-                                        public void actionPerformed(ActionEvent e) {
-                                            if (btn2.getText() == null) {
-                                                return;
-                                            }
-
-                                            if (!showPopupOption(btn2.getName())) {
-                                                return;
-                                            }
-
-//                                          }
-                                            String[] data = checkGroup(btn2.getName());
-
-                                            if (data[0].equals("0")) {
-                                                addHistory(9);
-                                                addHistory(tbpMain.getSelectedIndex());
-                                                pSubMenu2.removeAll();
-
-                                                String MCode3;
-                                                for (int d = 0; d < sizeButtonFix; d++) {
-                                                    if ((d + 1) < 10) {
-                                                        MCode3 = btn2.getName() + "0" + (d + 1);
-                                                    } else {
-                                                        MCode3 = btn2.getName() + (d + 1);
-                                                    }
-
-                                                    final JButton btn3 = mgr.getButtonLayout(MCode3, d);
-                                                    btn3.setFocusable(false);
-                                                    addMouseEvent(btn3, d);
-                                                    btn3.setName(MCode3);
-                                                    pSubMenu2.add(btn3);
-                                                    tbpMain.setSelectedIndex(10);
-
-                                                    btn3.addActionListener(new ActionListener() {
-
-                                                        @Override
-                                                        public void actionPerformed(ActionEvent e) {
-                                                            if (btn3.getText() == null) {
-                                                                return;
-                                                            }
-                                                            if (!showPopupOption(btn3.getName())) {
-                                                                return;
-                                                            }
-                                                            String[] data = checkGroup(btn3.getName());
-                                                            if (data[0].equals("0")) {
-                                                                addHistory(10);
-                                                                addHistory(tbpMain.getSelectedIndex());
-                                                                pSubMenu3.removeAll();
-
-                                                                String MCode4;
-                                                                for (int f = 0; f < sizeButtonFix; f++) {
-                                                                    if ((f + 1) < 10) {
-                                                                        MCode4 = btn3.getName() + "0" + (f + 1);
-                                                                    } else {
-                                                                        MCode4 = btn3.getName() + (f + 1);
-                                                                    }
-                                                                    //setupMenu();
-                                                                    final JButton btn4 = mgr.getButtonLayout(MCode4, f);
-                                                                    btn4.setFocusable(false);
-                                                                    addMouseEvent(btn4, f);
-                                                                    btn4.setName(MCode4);
-                                                                    btn4.addActionListener(new ActionListener() {
-
-                                                                        @Override
-                                                                        public void actionPerformed(ActionEvent e) {
-                                                                            if (btn4.getText() == null) {
-                                                                                return;
-                                                                            }
-
-                                                                            if (!showPopupOption(btn4.getName())) {
-                                                                                return;
-                                                                            }
-
-                                                                            String[] data = checkGroup(btn4.getName());
-
-                                                                            if (data[0].equals("1") && !data[1].equals("")) {
-                                                                                //add Product
-                                                                                String PCode = data[1];
-                                                                                addProductFromButtonMenu(PCode);
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                    pSubMenu3.add(btn4);
-                                                                    tbpMain.setSelectedIndex(11);
-                                                                }
-
-                                                                JButton btnBack = new JButton("กลับ");
-                                                                btnBack.setFocusable(false);
-                                                                btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                                                                btnBack.setBackground(Color.RED);
-                                                                btnBack.addActionListener(new ActionListener() {
-
-                                                                    @Override
-                                                                    public void actionPerformed(ActionEvent e) {
-                                                                        backHistory();
-                                                                    }
-                                                                });
-                                                                pSubMenu3.add(btnBack);
-                                                            } else {
-                                                                // add product
-                                                                if (data[0].equals("1")) {
-                                                                    String PCode = data[1];
-                                                                    addProductFromButtonMenu(PCode);
-                                                                }
-                                                            }
-                                                        }
-
-                                                    });
-                                                }
-
-                                                JButton btnBack = new JButton("กลับ");
-                                                btnBack.setFocusable(false);
-                                                btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                                                btnBack.setBackground(Color.RED);
-                                                btnBack.addActionListener(new ActionListener() {
-
-                                                    @Override
-                                                    public void actionPerformed(ActionEvent e) {
-                                                        backHistory();
-                                                    }
-                                                });
-                                                pSubMenu2.add(btnBack);
-//                                                pSubMenu2.add(new JButton());
-                                            } else {
-                                                //add product
-                                                if (data[0].equals("1")) {
-                                                    String PCode = data[1];
-                                                    addProductFromButtonMenu(PCode);
-                                                    //UpdateTemPSet();
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-
-                                JButton btnBack = new JButton("กลับ");
-                                btnBack.setFocusable(false);
-                                btnBack.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-                                btnBack.setBackground(Color.RED);
-                                btnBack.addActionListener(new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        backHistory();
-                                    }
-                                });
-                                pSubMenu1.add(btnBack);
-//                                pSubMenu1.add(new JButton());
-
-                            } else {
-                                //add product
-                                if (data[0].equals("1")) {
-                                    String PCode = data[1];
-                                    addProductFromButtonMenu(PCode);
-                                }
-                            }
-                        } else {//ระบุจำนวนลูกค้า หากเปิดโต๊ะใหม่
-                            //JOptionPane.showMessageDialog(null, "กรุณาระบุจำนวนลูกค้า");
-
-                        }
-                    }
-
-                    private String[] checkGroup(String MenuCode) {
-                        String[] data = new String[]{"", ""};
-                        /**
-                         * * OPEN CONNECTION **
-                         */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
-                        try {
-                            String sql = "select MenuType, PCode "
-                                    + "from soft_menusetup where MenuCode='" + MenuCode + "'";
-                            Statement stmt = mysql.getConnection().createStatement();
-                            ResultSet rs = stmt.executeQuery(sql);
-                            if (rs.next()) {
-                                String MenuType = rs.getString("MenuType");
-                                String PCode = rs.getString("PCode");
-                                data[0] = MenuType;
-                                data[1] = PCode;
-                            }
-
-                            rs.close();
-                            stmt.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
-                        } finally {
-                            mysql.close();
-                        }
-
-                        return data;
-                    }
-
-                    private void addProductFromButtonMenu(String PCode) {
-                        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
-                        if (findPluCode()) {
-                            if (PublicVar.P_Status.equals("S")) {
-                                getPrice();
-                            } else {
-                                //สามารถเลือกจำนวนได้เลย
-                                double qtySet = 0;
-                                if (Value.autoqty) {
-                                    GetQty frm = new GetQty(null, true, txtPluCode.getText());
-                                    frm.setVisible(true);
-
-                                    qtySet = frm.ReturnQty;
-                                } else {
-                                    qtySet = PublicVar.P_Qty;
-                                }
-
-                                if (!txtPluCode.getText().trim().equals("")) {
-                                    if (qtySet > 0) {
-                                        txtPluCode.setText("" + qtySet + "*" + PCode);
-                                        if (seekPluCode()) {
-                                            if (PublicVar.P_Status.equals("S")) {
-                                                getPrice();
-                                            } else {
-                                                txtPluCodeOnExit();
-                                            }
-                                        }
-                                    } else {
-                                        txtPluCode.setText("");
-                                        txtPluCode.requestFocus();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                });
-                panel[a].add(btn1);
-            }
-
-            panel[a].add(new JButton());
+            });
         }
 
+        // add back button
+        btnGrid[15].setText("กลับ");
+        btnGrid[15].setName(menuCode);
+        btnGrid[15].setFocusable(false);
+        btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+        btnGrid[15].setBackground(Color.RED);
+        btnGrid[15].addActionListener((ActionEvent e) -> {
+            JButton btn = (JButton) e.getSource();
+            if (btn.getName() != null) {
+                String btnName = btn.getName();
+                if (btnName.length() >= 3) {
+                    String backMenu = btnName.substring(0, btnName.length() - 2);
+                    loadButtonProductMenu(backMenu);
+                }
+            }
+        });
+    }
+
+    private void addProductFromButtonMenu(String PCode) {
+        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
+        if (findPluCode()) {
+            if (PublicVar.P_Status.equals("S")) {
+                txtPluCode.setEditable(false);
+                return;
+            }
+
+            //สามารถเลือกจำนวนได้เลย
+            double qtySet;
+            if (Value.autoqty) {
+                GetQty frm = new GetQty(null, true, txtPluCode.getText());
+                frm.setVisible(true);
+                qtySet = frm.ReturnQty;
+            } else {
+                qtySet = PublicVar.P_Qty;
+            }
+
+            if (!txtPluCode.getText().trim().equals("")) {
+                if (qtySet > 0) {
+                    txtPluCode.setText("" + qtySet + "*" + PCode);
+                    if (seekPluCode()) {
+                        if (PublicVar.P_Status.equals("S")) {
+                            txtPluCode.setEditable(false);
+                        } else {
+                            txtPluCodeOnExit();
+                        }
+                    }
+                } else {
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                }
+            }
+        }
     }
 
     private void addHistory(int index) {
         int size = historyBack.size();
         boolean isExists = false;
         for (int i = 0; i < size; i++) {
-            int a = (Integer) historyBack.get(i);
+            int a = historyBack.get(i);
             if (a == index) {
                 isExists = true;
                 break;
@@ -5302,17 +4525,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
-    private void backHistory() {
-        int size = historyBack.size();
-        if (size > 0) {
-            tbpMain.setSelectedIndex(historyBack.get(size - 1));
-            historyBack.remove(size - 1);
-        } else {
-            clearHistory();
-            tbpMain.setSelectedIndex(0);
-        }
-    }
-
     private void loadHeaderMenu() {
         /**
          * * OPEN CONNECTION **
@@ -5320,7 +4532,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-//            String sql = "SELECT * FROM company limit 1";
             String sql = "SELECT * FROM company limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -5378,7 +4589,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
-    //ShowPopupOption(PCode);
     private boolean showPopupOption(String MenuCode) {
         /**
          * * OPEN CONNECTION **
@@ -5408,18 +4618,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                         //check before order foods
                         boolean checkBefore = rss.getString("Check_before").equals("Y");
-                        boolean passBefore = true;
+                        boolean passBefore;
                         if (checkBefore) {
                             try {
                                 String sqlChkTable = "select * from balance "
                                         + "where r_table='" + txtTable.getText() + "'";
                                 Statement stmt2 = mysql.getConnection().createStatement();
                                 ResultSet rsTb = stmt2.executeQuery(sqlChkTable);
-                                if (rsTb.next()) {
-                                    passBefore = true;
-                                } else {
-                                    passBefore = false;
-                                }
+                                passBefore = rsTb.next();
 
                                 rsTb.close();
                                 stmt2.close();
@@ -5430,8 +4636,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                             if (!passBefore) {
                                 MSG.WAR("ไม่มีรายการอาหาร กรุณาเลือกเมนูอาหารหลักก่อน");
-                                passBefore = false;
-
                                 return false;
                             }
                         }
@@ -5463,9 +4667,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                             rsA1.close();
                             stmt3.close();
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            e.printStackTrace();
                         }
 
                         //end loop autoadd
@@ -5493,34 +4696,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.close();
         }
 
-        return true;
-    }
-
-    private boolean showPopupOptionAfterOrder(String MenuCode) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sqll = "select * from optionset where pcode='" + MenuCode + "'";
-            Statement stmt1 = mysql.getConnection().createStatement();
-            ResultSet rss = stmt1.executeQuery(sqll);
-            String main = "main";
-            String PCode = "";
-            String pname = "";
-            if (rss.next()) {
-                PCode = rss.getString("pcode");
-                pname = rss.getString(ThaiUtil.ASCII2Unicode("pdesc"));
-                ModalPopup popup = new ModalPopup(null, true, PCode, pname, tableNo, main, MenuCode);
-                popup.setVisible(true);
-                String sqlGetTempOption = "select * from tempset where ptableno='" + tableNo + "' and pcode='" + MenuCode + "'";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetTempOption);
-                while (rs.next()) {
-                    String sql2 = "update balance set ";
-                }
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-        }
         return true;
     }
 
@@ -5552,30 +4727,31 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void showCustomerInput() {
         String r_etd = txtShowETD.getText();
         String customerCount = txtCust.getText();
+        int cc = 0;
         try {
-            int cc = Integer.parseInt(customerCount);
-            if (PublicVar.defaultCustomer.equals("true")) {
-                int cuscount = Integer.parseInt(PublicVar.defaultCustomerQty);
-                cc = cuscount;
-                txtCust.setText("" + cc);
-                updateCustomerCount(cc);
-            }
-            if (cc == 0 && r_etd.equalsIgnoreCase("E")) {
-                CustomerCountDialog ccd = new CustomerCountDialog(null, true, txtTable.getText(), txtShowETD.getText());
-                ccd.setVisible(true);
+            cc = Integer.parseInt(customerCount);
+        } catch (NumberFormatException e) {
+        }
 
-                txtCust.setText("" + ccd.getCountCustomer());
-                int custCount = ccd.getCountCustomer();
-                if (r_etd.equalsIgnoreCase("T")) {
+        if (PublicVar.defaultCustomer.equals("true")) {
+            int cuscount = Integer.parseInt(PublicVar.defaultCustomerQty);
+            cc = cuscount;
+            txtCust.setText("" + cc);
+            updateCustomerCount(cc);
+        }
+        if (cc == 0 && r_etd.equalsIgnoreCase("E")) {
+            CustomerCountDialog ccd = new CustomerCountDialog(null, true, txtTable.getText(), txtShowETD.getText());
+            ccd.setVisible(true);
+
+            txtCust.setText("" + ccd.getCountCustomer());
+            int custCount = ccd.getCountCustomer();
+            if (r_etd.equalsIgnoreCase("T")) {
+                txtCustOnExit();
+            } else {
+                if (custCount > 0) {
                     txtCustOnExit();
-                } else {
-                    if (custCount > 0) {
-                        txtCustOnExit();
-                    }
                 }
             }
-        } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
         }
     }
 }

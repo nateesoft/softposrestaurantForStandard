@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
@@ -169,13 +170,9 @@ public class TableFileControl {
         return result;
     }
 
-    public ArrayList<TableFileBean> getALlHoldTable() {
-        ArrayList<TableFileBean> allTable = new ArrayList<>();
+    public List<TableFileBean> getALlHoldTable() {
+        List<TableFileBean> allTable = new ArrayList<>();
         String sql = "select * from tablefile where TAmount>0";
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -250,12 +247,8 @@ public class TableFileControl {
         return allTable;
     }
 
-    public ArrayList<TableFileBean> getALlTable() {
-        ArrayList<TableFileBean> allTable = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+    public List<TableFileBean> getALlTable() {
+        List<TableFileBean> allTable = new ArrayList<>();
         mysql.open();
         try {
             String sql = "select * from tablefile";
@@ -331,12 +324,8 @@ public class TableFileControl {
         return allTable;
     }
 
-    public ArrayList<TableSetup> getTable(String TCode) {
-        ArrayList<TableSetup> allTable = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
-        //MySQLConnect mysql = new MySQLConnect();
+    public List<TableSetup> getTable(String TCode) {
+        List<TableSetup> allTable = new ArrayList<>();
         mysql.open();
         try {
             String sql = "select t2.Code_ID, t1.TCode from tablefile t1 , tablesetup t2 "
@@ -386,7 +375,6 @@ public class TableFileControl {
                 bean.setTCustomer(rs.getInt("TCustomer"));
                 bean.setTItem(rs.getInt("TItem"));
                 bean.setTAmount(rs.getFloat("TAmount"));
-                System.out.print(rs.getFloat("TAmount"));
                 bean.setTOnAct(rs.getString("TOnAct"));
                 bean.setService(rs.getFloat("Service"));
                 bean.setServiceAmt(rs.getFloat("ServiceAmt"));
@@ -465,11 +453,11 @@ public class TableFileControl {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
-            if (table.indexOf("-") != -1) {
+            if (table.contains("-")) {
                 sql = "delete from tablefile where Tcode='" + table + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
-                stmt1.executeUpdate(sql);
-                stmt1.close();
+                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    stmt1.executeUpdate(sql);
+                }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -504,7 +492,7 @@ public class TableFileControl {
             //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
             ServiceControl serviceControl = new ServiceControl();
             serviceControl.updateService(table);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         }
     }
@@ -605,7 +593,7 @@ public class TableFileControl {
         try {
             double TAmount = 0.00;
             BalanceControl bControl = new BalanceControl();
-            ArrayList<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
+            List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
             for (int i = 0; i < dataBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) dataBean.get(i);
                 if (!bean.getR_Void().equals("V")) {
@@ -629,7 +617,7 @@ public class TableFileControl {
             ServiceControl serviceControl = new ServiceControl();
             serviceControl.updateService(tableNo);
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         }
     }
@@ -760,7 +748,6 @@ public class TableFileControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
         } finally {
             mysql.close();
         }

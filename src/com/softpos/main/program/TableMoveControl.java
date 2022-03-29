@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TableMoveControl {
 
@@ -58,8 +59,8 @@ public class TableMoveControl {
 
             // Check table form exist data
             BalanceControl bControl = new BalanceControl();
-            ArrayList<BalanceBean> dataBalanceFrom = bControl.getAllBalance(tableFrom);
-            ArrayList<BalanceBean> dataBalanceDest = bControl.getAllBalance(tableDest);
+            List<BalanceBean> dataBalanceFrom = bControl.getAllBalance(tableFrom);
+            List<BalanceBean> dataBalanceDest = bControl.getAllBalance(tableDest);
 
             // Table from no data
             if (dataBalanceFrom.isEmpty()) {
@@ -101,7 +102,7 @@ public class TableMoveControl {
 
     public static void moveProduct(String table1, String table2, String R_Index) {
         BalanceControl bControl = new BalanceControl();
-        ArrayList<BalanceBean> dataBalanceFrom = bControl.getBalanceIndex(R_Index);
+        List<BalanceBean> dataBalanceFrom = bControl.getBalanceIndex(R_Index);
 
         for (int i = 0; i < dataBalanceFrom.size(); i++) {
             BalanceBean bean = (BalanceBean) dataBalanceFrom.get(i);

@@ -101,7 +101,6 @@ public class ItemEditQty extends javax.swing.JDialog {
                     balanceBean.setR_Total(XNewAmount);
                     NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-"));
                     if (!txtNewPDesc.getText().replace("null", "").equals("")) {
-                        System.out.println(true);
                         this.XNewAmount = XNewQty * newAmount;
                         balanceBean.setR_Total(XNewAmount);
                         if (balanceBean.getR_Price() != 0) {
@@ -124,7 +123,6 @@ public class ItemEditQty extends javax.swing.JDialog {
                         if (balanceBean.getR_Price() != 0) {
                             newAmount = balanceBean.getR_Price();
                         }
-                        System.out.println(false);
                         this.XNewAmount = XNewQty * newAmount;
                         balanceBean.setR_Total(XNewAmount);
                         sqlUpdateBalance = "update balance set "

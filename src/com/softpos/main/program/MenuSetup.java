@@ -2,6 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.model.ProductBean;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuSetup {
     
@@ -13,7 +14,7 @@ public class MenuSetup {
     private ArrayList<ProductBean> productList;
     
     public MenuSetup(){
-        productList = new ArrayList<ProductBean>();
+        productList = new ArrayList<>();
     }
 
     public MenuSetup(String Code_ID, String Code_Type, String PCode, String ShortName, String PPathName) {
@@ -29,7 +30,7 @@ public class MenuSetup {
         productList.add(product);
     }
     
-    public ArrayList<ProductBean> getAllProduct(){
+    public List<ProductBean> getAllProduct(){
         return productList;
     }
     

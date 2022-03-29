@@ -1,14 +1,10 @@
 package com.softpos.main.program;
 
-import database.MySQLConnect;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -89,31 +85,9 @@ public class Value {
         }
 
         if (!macno.equals("")) {
-            //check macno in database
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
-            try {
-                String sql = "select * "
-                        + "from poshwsetup "
-                        + "where OnAct='N' "
-                        + "and Terminal='" + macno + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-                if (rs.next()) {
-                    macno = rs.getString("Terminal");
-                } else {
-//                    macno = "Macno not available!";
-                }
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                macno = "";
-            } finally {
-                mysql.close();
+            POSHWSetup poshwSetup = PosControl.getData(macno);
+            if(poshwSetup.getOnAct().equals("N")){
+                macno = poshwSetup.getTerminal();
             }
         }
 

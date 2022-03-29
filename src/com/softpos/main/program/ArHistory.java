@@ -670,7 +670,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            e.printStackTrace();
+                            
                         }
                         prn.print("----------------------------------------");
                         prn.print("");
@@ -770,7 +770,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             }
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1()).trim() + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2()).trim() + "_";
@@ -858,7 +858,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                e.printStackTrace();
+                
             } finally {
                 mysql.close();
             }

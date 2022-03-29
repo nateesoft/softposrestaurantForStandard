@@ -1,10 +1,5 @@
 package com.softpos.pos.core.model;
 
-import com.softpos.pos.core.model.BranchBean;
-import com.softpos.main.program.BranchControl;
-import com.softpos.pos.core.model.CompanyBean;
-import com.softpos.main.program.PosControl;
-import com.softpos.main.program.PublicVar;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +7,6 @@ import java.util.Date;
 import com.softpos.main.program.Value;
 import java.sql.Statement;
 import sun.natee.project.util.ThaiUtil;
-import util.DateConvert;
 import util.MSG;
 
 public class MemberBean {
@@ -219,7 +213,7 @@ public class MemberBean {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            e.printStackTrace();
+            
         } finally {
             mysql.close();
         }
@@ -803,60 +797,4 @@ public class MemberBean {
         this.Member_PriceChk = Member_PriceChk;
     }
 
-    public void MemberPaymentScore(String Member_Code) {
-        try {
-            MySQLConnect c = new MySQLConnect();
-            DateConvert dc = new DateConvert();
-            PosControl posControl = new PosControl();
-            CompanyBean CompanyBean = new CompanyBean();
-            CompanyBean = posControl.getCompany();
-            BranchControl branch = new BranchControl();
-            BranchBean BranchBean = branch.getBranch();
-            
-            c.open();
-            //เช็คการคิดแต้มสำหรับสาขา
-            if (BranchBean.getCode().equals(PublicVar.Branch_Code)) {
-            String sql = "select * from " + Value.db_member + ".pointtype";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-                //CheckExpire Date Point วันที่หมดอายุเก็บแต้มสะสมในประเภทสะสมแต้ม CRM
-                String Point_FinishDateService = rs.getString("Point_FinishDateService");
-                int pointDateExpire = dc.getCheckExpireDate(Point_FinishDateService);
-                if (pointDateExpire >= 0) {
-                    //Time Active
-                    int timeActive = dc.getCheckExpireTime(rs.getString("Point_StartTimeService1"), rs.getString("Point_FinishTimeService1"));
-                    if (timeActive >= 0) {
-                        int memberExpire = dc.getCheckExpireDate(Member_PointExpiredDate + "");
-                        //CheckExpire Member วันที่หมดอายุสะสมแต้มของสมาชิกคนนั้นๆ
-                        if (memberExpire >= 0) {
-                            //CheckDate Can Use Point เช็ค Point Type ว่าใช้วันไหนได้บ้าง
-                            String[] strs = rs.getString("Point_TypeDateService").split(",");
-                            for (String data : strs) {
-                                //CheckExpire Time1 Point1 
-                                //CheckExpire Time2 Point2
-                                //CheckExpire Time3 Point3
-                            }
-                            //CalPoint
-                            this.Member_CurPoint = 0;
-
-                        }
-                    }
-
-                }
-
-            }
-            rs.close();
-            c.close();
-            } else {
-                this.Member_CurPoint = 0;
-            }
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
-        }
-    }
-
-//    public static void main(String[] args) {
-//        MemberBean bean = new MemberBean();
-//        bean.getMemberPaymentScore("9990200006661");
-//    }
 }

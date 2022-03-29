@@ -7,7 +7,7 @@ public class Option {
         String PLUCode = PLU;
         String QTY = "1.00";
         
-        if(PLU.indexOf("*")!=-1){
+        if(PLU.contains("*")){
             int indexStar = PLU.indexOf("*");
             if(indexStar>0){
                 PLUCode = PLU.substring(indexStar+1, PLUCode.length());

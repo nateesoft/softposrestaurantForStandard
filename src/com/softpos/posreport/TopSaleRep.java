@@ -801,7 +801,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            //e.printStackTrace();
+            //
         } finally {
             mysql.close();
         }

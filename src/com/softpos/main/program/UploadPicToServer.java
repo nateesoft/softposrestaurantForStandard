@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
 import database.ConfigFile;
 import database.ConfigFileServer;
 
-/**
- *
- * @author Dell-Softpos
- */
 public class UploadPicToServer {
 
     FTPUtility ftp = new FTPUtility();
@@ -29,11 +20,11 @@ public class UploadPicToServer {
                 ftp.upload(server + filename, localFile);
                 System.out.println("Upload file " + localFile + "/" + server + "/" + filename + "success");
             } catch (Exception e) {
-                e.printStackTrace();
+                
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            
 //            MSG.ERR(e.toString());
         }
         return sqlUpdate;
@@ -52,10 +43,10 @@ public class UploadPicToServer {
                 ftp.upload(localFile, "ftp://" + server + "/test.sql");
                 System.out.println("Upload file " + localFile + "/" + server + "/" + filename + "success");
             } catch (Exception e) {
-                e.printStackTrace();
+                
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            
 //            MSG.ERR(e.toString());
         }
         return sqlUpdate;
@@ -72,7 +63,7 @@ public class UploadPicToServer {
                  FileName = strs[i];  
                 
             } catch (Exception e) {
-                e.printStackTrace();
+                
             }
 
         }
