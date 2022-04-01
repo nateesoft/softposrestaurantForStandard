@@ -80,6 +80,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private int refresh = 1;
     private Font fontA = new Font("Tahoma", Font.PLAIN, 14);
     private Font fontB = new Font("Tahoma", Font.BOLD, 11);
+    private Font fontC = new Font("Tahoma", Font.BOLD, 16);
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
 
@@ -1599,7 +1600,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         for (int i = 0; i < floorTab.length; i++) {
             JLabel lab = new JLabel(ThaiUtil.ASCII2Unicode(floorTab[i]));
             add(lab);
-            lab.setFont(fontB);
+            lab.setFont(fontC);
             if (lab.getText().trim().equals("")) {
                 lab.setHorizontalAlignment(SwingConstants.CENTER);
             }

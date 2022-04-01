@@ -22,7 +22,7 @@ public class MemberDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        txtCode.requestFocus();
+        txtTel.requestFocus();
         this.tableNo = table;
     }
 
@@ -277,7 +277,7 @@ public class MemberDialog extends javax.swing.JDialog {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         UpdateMember("Ins");
-        selectMember();  
+        selectMember();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -285,7 +285,8 @@ public class MemberDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        loadAllMember(txtCode.getText(), txtName.getText(), txtTel.getText());
+        loadSearchMember(txtCode.getText(), txtName.getText(), txtTel.getText());
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyPressed
@@ -375,8 +376,8 @@ public class MemberDialog extends javax.swing.JDialog {
             }
 
             String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "order by Member_Code "
-                    + "limit 0,100";
+                    + "order by Member_Code; ";
+//                    + "limit 0,100";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -421,8 +422,63 @@ public class MemberDialog extends javax.swing.JDialog {
                     + "where Member_Code like '%" + memCode + "%' "
                     + "and Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
                     + "and Member_HomeTel like '%" + memTel + "%' "
-                    + "order by Member_Code "
-                    + "limit 0,10";
+                    + "order by Member_Code ";
+//                    + "limit 0,10";
+            Statement stmt = mysql.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("Member_Code"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                    rs.getString("Member_HomeTel"),
+                    "",
+                    rs.getString("Member_Mobile"),
+                    rs.getString("Member_ExpiredDate")
+
+                });
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(this, e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+        tbMember.requestFocus();
+    }
+
+    private void loadSearchMember(String memCode, String memName, String memTel) {
+        /**
+         * * OPEN CONNECTION **
+         */
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            model = (DefaultTableModel) tbMember.getModel();
+            tbMember.setRowHeight(35);
+
+            int size = model.getRowCount();
+            for (int i = 0; i < size; i++) {
+                model.removeRow(0);
+            }
+
+            String sql = "";
+            if (!memCode.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_Code like '%" + memCode + "%' "
+                        + "order by Member_Code ";
+//                    + "limit 0,10";
+            } else if (!memName.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
+                        + "order by Member_Code ";
+            } else if (!memTel.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' "
+                        + "order by Member_Code ";
+            }
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -478,7 +534,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
@@ -489,9 +545,9 @@ public class MemberDialog extends javax.swing.JDialog {
             MySQLConnect c = new MySQLConnect();
             c.open();
             String sql = "";
-            String memCode = MemCode+"";
-            if (memCode.equals("null")){
-                MemCode ="";
+            String memCode = MemCode + "";
+            if (memCode.equals("null")) {
+                MemCode = "";
             }
             if (choice.equals("Ins")) {
                 sql = "Update tablefile set memcode='" + MemCode + "',memname='" + ThaiUtil.Unicode2ASCII(MemName) + "' where tcode='" + tableNo + "';";

@@ -88,12 +88,12 @@ public class MainSale extends javax.swing.JDialog {
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
-
+        jMenuBar11.setVisible(false);
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
         txtDiscount.setVisible(true);
-        jPanelMember.setVisible(false);
+//        jPanelMember.setVisible(false);
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
@@ -303,8 +303,6 @@ public class MainSale extends javax.swing.JDialog {
         txtTypeDesc = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         txtDisplayDiscount = new javax.swing.JTextField();
-        jPanelMember = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         txtPluCode = new javax.swing.JTextField();
         txtDiscount = new javax.swing.JTextField();
@@ -469,7 +467,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnPayment);
 
-        jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 649, 500, 90));
+        jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 629, 580, 100));
 
         jPanel3.setBackground(new java.awt.Color(204, 51, 0));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -480,12 +478,10 @@ public class MainSale extends javax.swing.JDialog {
         lbTotalAmount.setForeground(new java.awt.Color(255, 255, 255));
         lbTotalAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbTotalAmount.setText("0.00");
-        jPanel3.add(lbTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 490, 94));
+        jPanel3.add(lbTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 570, 80));
 
-        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 2, 500, -1));
+        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 2, 580, 90));
 
-        tbpMain.setBackground(new java.awt.Color(255, 255, 255));
-        tbpMain.setForeground(new java.awt.Color(255, 255, 255));
         tbpMain.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tbpMain.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         tbpMain.setFocusable(false);
@@ -568,7 +564,7 @@ public class MainSale extends javax.swing.JDialog {
         pSubMenu3.setLayout(new java.awt.GridLayout(4, 4));
         tbpMain.addTab("", pSubMenu3);
 
-        jPanel4.add(tbpMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 103, 500, 540));
+        jPanel4.add(tbpMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 103, 580, 520));
 
         jPanel1.setBackground(new java.awt.Color(204, 51, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -661,15 +657,15 @@ public class MainSale extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -697,17 +693,6 @@ public class MainSale extends javax.swing.JDialog {
         txtDisplayDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
         jPanel6.add(txtDisplayDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 153, 170, 40));
 
-        jPanelMember.setBackground(new java.awt.Color(255, 255, 153));
-        jPanelMember.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel12.setBackground(new java.awt.Color(255, 255, 153));
-        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("สมาชิก : ");
-        jPanelMember.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 70, 30));
-
-        jPanel6.add(jPanelMember, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 185, -1));
-
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("แป้นพิมพ์");
         jButton1.setRequestFocusEnabled(false);
@@ -731,7 +716,7 @@ public class MainSale extends javax.swing.JDialog {
                 txtPluCodeKeyPressed(evt);
             }
         });
-        jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 257, 30));
+        jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 170, 30));
 
         txtDiscount.setEditable(false);
         txtDiscount.setBackground(new java.awt.Color(255, 153, 153));
@@ -740,7 +725,7 @@ public class MainSale extends javax.swing.JDialog {
         txtDiscount.setText("0.00");
         txtDiscount.setBorder(null);
         txtDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
-        jPanel6.add(txtDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 153, 330, 40));
+        jPanel6.add(txtDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 153, 240, 40));
 
         btnPrintKic.setBackground(new java.awt.Color(0, 0, 204));
         btnPrintKic.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -816,7 +801,7 @@ public class MainSale extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel6.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 108, 505, 40));
+        jPanel6.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 108, 420, 40));
 
         txtMember1.setEditable(false);
         txtMember1.setBackground(new java.awt.Color(0, 102, 204));
@@ -836,7 +821,7 @@ public class MainSale extends javax.swing.JDialog {
                 txtMember1ActionPerformed(evt);
             }
         });
-        jPanel6.add(txtMember1, new org.netbeans.lib.awtextra.AbsoluteConstraints(191, 70, 189, 36));
+        jPanel6.add(txtMember1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 280, 36));
 
         txtMember2.setEditable(false);
         txtMember2.setBackground(new java.awt.Color(0, 102, 204));
@@ -844,7 +829,7 @@ public class MainSale extends javax.swing.JDialog {
         txtMember2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMember2.setText(": แต้มสะสม");
         txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel6.add(txtMember2, new org.netbeans.lib.awtextra.AbsoluteConstraints(386, 70, 119, 36));
+        jPanel6.add(txtMember2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 140, 36));
 
         jPanel7.setBackground(new java.awt.Color(204, 255, 204));
 
@@ -895,7 +880,7 @@ public class MainSale extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 505, -1));
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
         tblShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShowBalance.setModel(new javax.swing.table.DefaultTableModel(
@@ -953,14 +938,14 @@ public class MainSale extends javax.swing.JDialog {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1138,11 +1123,11 @@ public class MainSale extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -1771,12 +1756,23 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void txtMember1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMember1MouseClicked
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
+
         this.memberBean = MemberBean.getMember(MBD.getMemCode());
+
         updateProSerTable(tableNo, memberBean);
-        if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
-            txtMember1.setText(memberBean.getMember_NameThai());
-            txtMember2.setText(QtyIntFmt.format(memberBean.getMember_TotalScore()));
-            tblShowPluShow(txtTable.getText());
+        try {
+            if (ValidateValue.isNotEmpty(memberBean.getMember_Code()) && memberBean != null) {
+                txtMember1.setText(memberBean.getMember_NameThai());
+                txtMember2.setText(QtyIntFmt.format(memberBean.getMember_TotalScore()));
+                tblShowPluShow(txtTable.getText());
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        if (memberBean == null) {
+            memberBean = null;
+            txtMember1.setText(" <ค้นหาสมาชิก> ");
+            txtMember2.setText(": แต้มสะสม");
         }
 
     }//GEN-LAST:event_txtMember1MouseClicked
@@ -1819,6 +1815,11 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void txtMember1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMember1ActionPerformed
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
+        String memberCode = MBD.getMemCode();
+        if (memberCode.equals("")) {
+            txtMember1.setText(" <ค้นหาสมาชิก> ");
+            txtMember2.setText(": แต้มสะสม");
+        }
     }//GEN-LAST:event_txtMember1ActionPerformed
 
     private void btnLangTHItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnLangTHItemStateChanged
@@ -3609,7 +3610,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel9;
@@ -3629,7 +3629,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JPanel jPanelMember;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;

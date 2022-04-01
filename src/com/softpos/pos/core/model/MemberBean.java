@@ -208,12 +208,15 @@ public class MemberBean {
                 //bean.setMember_BranchNearOffice(rs.getString("Member_BranchNearOffice"));
                 //bean.setMember_BranchReques(rs.getString("Member_BranchReques"));
                 //bean.setMember_PriceChk(rs.getString("Member_PriceChk"));
+            } else {
+                bean = null;
+                
             }
 
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         } finally {
             mysql.close();
         }

@@ -7,6 +7,7 @@ import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.MemberBean;
 import database.ConfigFile;
 import printReport.PrintDriver;
 import gnu.io.CommPortIdentifier;
@@ -137,7 +138,7 @@ public class PPrint {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
                             PUtility.ShowMsg("Can not Open Port...1\n" + e.getMessage());
-                            
+
                         } catch (RuntimeException re) {
                             MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName() + "\n" + re.getMessage());
                         }
@@ -145,7 +146,7 @@ public class PPrint {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
                             PUtility.ShowMsg("Can not Open Port...2\n" + e.getMessage());
-                            
+
                         }
                         try {
                             try {
@@ -163,7 +164,7 @@ public class PPrint {
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
                             PUtility.ShowMsg("Can not Open Port...3\n" + e.getMessage());
-                            
+
                         }
                     }
                 }
@@ -715,7 +716,7 @@ public class PPrint {
                         rsGetCountBillno.close();
                         c.close();
                     } catch (Exception e) {
-                        
+
                     }
                 }
                 Date dateP = new Date();
@@ -972,7 +973,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-                    
+
                 } finally {
                     mysql.close();
                 }
@@ -996,11 +997,19 @@ public class PPrint {
             }
             if (!bBean.getB_MemCode().equals("")) {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "สมาชิก - " + bBean.getB_MemCode()) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + ThaiUtil.ASCII2Unicode(bBean.getB_MemName())) + "_";
+//                t += ("colspan=3 align=left><font face=Angsana New size=2> " + ThaiUtil.ASCII2Unicode(bBean.getB_MemName())) + "_";
+                MemberBean MemBean = new MemberBean();
+                MemBean = MemberBean.getMember(bBean.getB_MemCode());
+                t += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
+                t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
+                t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
+                t += "align=lefts colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark2()) + "_";
+                t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
+
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มครั้งนี้ :           " + NumberUtil.showNumber(bBean.getB_MemCurSum()) + " แต้ม") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   แต้มสะสมถึง  --- -- ----   " + NumberUtil.showNumber(bBean.getB_SumScore()) + " แต้ม") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   บัตรหมดอายุวันที่ : " + DateUtil.toDateLocal(bBean.getB_MemEnd())) + "_";
+
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
             t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Receipt No: " + _RefNo + Space + "COM:" + Space + bBean.getB_MacNo()) + "_";
@@ -1071,7 +1080,7 @@ public class PPrint {
                         rsGetCountBillno.close();
                         c.close();
                     } catch (Exception e) {
-                        
+
                     }
                 }
                 Date dateP = new Date();
@@ -1569,7 +1578,7 @@ public class PPrint {
                         print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
                         String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "';";
                         String giffno;
-                        
+
                         MySQLConnect mysql = new MySQLConnect();
                         try {
                             mysql.open();
@@ -1733,7 +1742,7 @@ public class PPrint {
         double totalDiscount;
         String cuponCode = "";
         if (CONFIG.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoid(tableNo);
+            List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoidSum(tableNo);
             TableFileControl tCon = new TableFileControl();
             TableFileBean tBean = tCon.getData(tableNo);
             int ItemCnt = 0;
@@ -1903,6 +1912,15 @@ public class PPrint {
                 t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting2().trim().replace(" ", Space) + "_";
             }
             t += "align=center colspan=3>_";
+            String t2 = "";
+            if (!tBean.getMemCode().equals("")) {
+                MemberBean MemBean = new MemberBean();
+                MemBean = MemberBean.getMember(tBean.getMemCode());
+                t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
+                t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
+                t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
+                t2 += "align=lefts colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark2()) + "_";
+            }
 
             //Check Language เปลี่ยนภาษาไทย
             if (PublicVar.languagePrint.equals("TH")) {
@@ -1913,6 +1931,7 @@ public class PPrint {
             //print
             String[] strs = t.split("_");
             String[] strsHead1 = t1.split("_");
+            String[] strsMember = t2.split("_");
 
             for (String data1 : strsHead1) {
                 pd.addTextIFont(data1);
@@ -1925,6 +1944,14 @@ public class PPrint {
 
             for (String data : strs) {
                 pd.addTextIFont(data);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+
+            }
+            for (String dataMem : strsMember) {
+                pd.addTextIFont(dataMem);
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -2103,10 +2130,19 @@ public class PPrint {
                 t1 = t1.replace("CC", "ลูกค้า : ").replace("Seat: ", "ที่").replace("NAME", "ชื่อ").replace("Service", "ค่าบริการ").replace("VAT", "ภาษีมูลค่าเพิ่ม").replace("Sub-TOTAL", "มูลค่ารวม").replace("No Receipt", "ไม่ใช่ใบเสร็จรับเงิน");
                 t1 = t1.replace("Net-Amount", "รวม").replace("Net-Total", "รวมที่ต้องชำระ").replace("Round", "ปัดเศษ").replace("Terminal", "หมายเลขเครื่อง");
             }
-
+            String t2 = "";
+            if (!tBean.getMemCode().equals("")) {
+                MemberBean MemBean = new MemberBean();
+                MemBean = MemberBean.getMember(tBean.getMemCode());
+                t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
+                t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
+                t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
+                t2 += "align=lefts colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark2()) + "_";
+            }
             //print
             String[] strs = t.split("_");
             String[] strsHead1 = t1.split("_");
+            String[] strsMember = t2.split("_");
 
             for (String data1 : strsHead1) {
                 pd.addTextIFont(data1);
@@ -2117,6 +2153,13 @@ public class PPrint {
             }
 
             for (String data : strs) {
+                pd.addTextIFont(data);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+            }
+            for (String data : strsMember) {
                 pd.addTextIFont(data);
                 try {
                     Thread.sleep(50);
@@ -2157,7 +2200,7 @@ public class PPrint {
         } else {
             BalanceControl bc = new BalanceControl();
             List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoid(tableNo);
-
+            
             int QtyLength = 5;
             int AmtLength = 10;
             int SubLength = 20;
@@ -2427,7 +2470,7 @@ public class PPrint {
                             }
                             String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
                             String NameVoid = "";
-                            
+
                             MySQLConnect mysql = new MySQLConnect();
                             try {
                                 mysql.open();
@@ -2562,7 +2605,7 @@ public class PPrint {
                     }
                     String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
                     String NameVoid = "";
-                    
+
                     MySQLConnect mysql = new MySQLConnect();
                     try {
                         mysql.open();
@@ -2575,7 +2618,7 @@ public class PPrint {
                     } finally {
                         mysql.close();
                     }
-                    
+
                     SelectStye(12);
                     t += (Space + "VOID...Item by : " + ThaiUtil.ASCII2Unicode(NameVoid));
                     if (!bean.getR_Opt1().equals("")) {
@@ -2733,7 +2776,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 } finally {
                     mysql.close();
                 }
@@ -3368,7 +3411,7 @@ public class PPrint {
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                 } finally {
-                     mysql.close();
+                    mysql.close();
                 }
             }
 
@@ -5653,7 +5696,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
@@ -5994,7 +6037,7 @@ public class PPrint {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         }
 
         mysql.close();

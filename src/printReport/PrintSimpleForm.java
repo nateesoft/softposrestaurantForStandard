@@ -36,6 +36,8 @@ public class PrintSimpleForm {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
+    private String ETD = "";
+    private String CustomerIn = "";
 
     public String DataFullR(String Str, int Len) {
         String ReturnStr;
@@ -520,7 +522,7 @@ public class PrintSimpleForm {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -861,9 +863,10 @@ public class PrintSimpleForm {
             }
         }
         mysql.open();
+        TableFileControl tCon = new TableFileControl();
+        TableFileBean tBean = tCon.getData(tableNo);
         try {
-            TableFileControl tCon = new TableFileControl();
-            TableFileBean tBean = tCon.getData(tableNo);
+
             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
@@ -878,16 +881,17 @@ public class PrintSimpleForm {
                     + "group by R_PluCode, R_LinkIndex, R_ETD "
                     + "order by R_ETD, R_Index";
 
-            String ETD;
+//            String ETD;
             boolean printHeader = false;
             boolean printTable = false;
             String tempHeader = "";
             String tableHead = "";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+
             while (rs.next()) {
                 String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
-                ETD = rs.getString("R_ETD");
+                this.ETD = rs.getString("R_ETD");
                 if (tempHeader.equals("")) {
                     tempHeader = ETD;
                 }
@@ -901,6 +905,7 @@ public class PrintSimpleForm {
 
                 //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
                 ArrayList<String[]> listOpt = new ArrayList<>();
+                //ไม่วอย ออฟชั่นไม่มี
                 try {
                     String sqlOpt = "select * from balance "
                             + "where r_table='" + tableNo + "' "
@@ -948,25 +953,28 @@ public class PrintSimpleForm {
                         ETD = "*** ทานในร้าน ***";
                     } else if (ETD.equals("T")) {
                         ETD = "*** ห่อกลับ ***";
-                    } else if (ETD.equals("T")) {
+                    } else if (ETD.equals("D")) {
                         ETD = "*** ส่งถึงบ้าน ***";
-                    } else if (ETD.equals("T")) {
+                    } else if (ETD.equals("P")) {
                         ETD = "*** ปิ่นโต ***";
                     } else if (ETD.equals("W")) {
                         ETD = "*** ขายส่ง ***";
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    if (!ETD.equals("E")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------") + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+                    } else {
+                        t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+                    }
+
                     printHeader = true;
                     printTable = true;
                     //Print header
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
                     //Print Table to Bottom
-                    if (!tBean.getMemName().equals("")) {
-                        t += "colspan=3 align=left><font face=Angsana New size=5>" + ("Name CC: " + tBean.getMemName() + " / " + tableHead) + "_";
-                    } else {
-                        t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
-                    }
+                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                 }
 
@@ -1035,7 +1043,8 @@ public class PrintSimpleForm {
         }
         //Print VOID
         try {
-            TableFileControl tCon = new TableFileControl();
+            tCon = new TableFileControl();
+            tBean = tCon.getData(tableNo);
             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
@@ -1052,7 +1061,7 @@ public class PrintSimpleForm {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            String ETD = "";
+            ETD = "";
             String custCount = "";
 
             boolean printHeader = false;
@@ -1113,7 +1122,7 @@ public class PrintSimpleForm {
                     stmt1.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 }
 //                                    *********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                 if (!printHeader) {
@@ -1125,42 +1134,72 @@ public class PrintSimpleForm {
                         ETD = "*** ทานในร้าน ***";
                     } else if (ETD.equals("T")) {
                         ETD = "*** ห่อกลับ ***";
-                    } else if (ETD.equals("T")) {
+                    } else if (ETD.equals("D")) {
                         ETD = "*** ส่งถึงบ้าน ***";
-                    } else if (ETD.equals("T")) {
+                    } else if (ETD.equals("P")) {
                         ETD = "*** ปิ่นโต ***";
                     } else if (ETD.equals("W")) {
                         ETD = "*** ขายส่ง ***";
                     }
-//                    if (ETD.equals("E")) {
-//                        ETD = "*** DINE IN ***";
-//                    } else if (ETD.equals("T")) {
-//                        ETD = "*** TAKE AWAY ***";
-//                    } else if (ETD.equals("T")) {
-//                        ETD = "*** DELIVERY ***";
-//                    } else if (ETD.equals("T")) {
-//                        ETD = "*** PINTO ***";
-//                    } else if (ETD.equals("W")) {
-//                        ETD = "*** WHOLE SALE ***";
-//                    }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    if (!ETD.equals("E")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + ("---------------") + "_";
+                    }
                     t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
-//                    printHeader = true;
-//                    printTable = true;
+                    printHeader = true;
+                    printTable = true;
                     //Print header
-//                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
                     //Print Table to Bottom
-//                    if (!tBean.getMemName().equals("")) {
-//                        t += "colspan=3 align=left><font face=Angsana New size=5>" + ("Name CC: " + tBean.getMemName() + " / " + tableHead) + "_";
-//                    } else {
-//                        t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
-//                    }
-//                    t += "colspan=3 align=left><font face=Angsana New size=3>" + ("" + simp.format(new Date())) + "_";
-//                    t += "colspan=2 align=left><font face=Angsana New size=3>" + "Terminal : " + Space + macNo + "</td><td align=right><font face=Angsana New size=3>" + (" Name :" + TUser) + "_";
-//                    t += "colspan=3 align=right><font face=Angsana New size=3>" + ("Terminal : " + macNo) + "_";
-//                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                 }
+//                if (!printHeader) {
+//                    if (!printTable) {
+//                        tableHead = "Table " + rs.getString("TCode");
+//                    }
+//                    //print ETD
+//                    if (ETD.equals("E")) {
+//                        ETD = "*** ทานในร้าน ***";
+//                    } else if (ETD.equals("T")) {
+//                        ETD = "*** ห่อกลับ ***";
+//                    } else if (ETD.equals("T")) {
+//                        ETD = "*** ส่งถึงบ้าน ***";
+//                    } else if (ETD.equals("T")) {
+//                        ETD = "*** ปิ่นโต ***";
+//                    } else if (ETD.equals("W")) {
+//                        ETD = "*** ขายส่ง ***";
+//                    }
+////                    if (ETD.equals("E")) {
+////                        ETD = "*** DINE IN ***";
+////                    } else if (ETD.equals("T")) {
+////                        ETD = "*** TAKE AWAY ***";
+////                    } else if (ETD.equals("T")) {
+////                        ETD = "*** DELIVERY ***";
+////                    } else if (ETD.equals("T")) {
+////                        ETD = "*** PINTO ***";
+////                    } else if (ETD.equals("W")) {
+////                        ETD = "*** WHOLE SALE ***";
+////                    }
+//                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+//                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+////                    printHeader = true;
+////                    printTable = true;
+//                    //Print header
+////                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+//
+//                    //Print Table to Bottom
+////                    if (!tBean.getMemName().equals("")) {
+////                        t += "colspan=3 align=left><font face=Angsana New size=5>" + ("Name CC: " + tBean.getMemName() + " / " + tableHead) + "_";
+////                    } else {
+////                        t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
+////                    }
+////                    t += "colspan=3 align=left><font face=Angsana New size=3>" + ("" + simp.format(new Date())) + "_";
+////                    t += "colspan=2 align=left><font face=Angsana New size=3>" + "Terminal : " + Space + macNo + "</td><td align=right><font face=Angsana New size=3>" + (" Name :" + TUser) + "_";
+////                    t += "colspan=3 align=right><font face=Angsana New size=3>" + ("Terminal : " + macNo) + "_";
+////                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+//                }
 
                 String product = (productName);
 
@@ -1223,7 +1262,7 @@ public class PrintSimpleForm {
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 }
                 //END TEMP UPDATE
             }
@@ -1233,11 +1272,13 @@ public class PrintSimpleForm {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         }
+        //หาที่มีข้อความพิเศษ ยังไม่ได้พิมพ์และไม่ได้วอย
+
         try {
-            TableFileControl tCon = new TableFileControl();
-            TableFileBean tBean = tCon.getData(tableNo);
+            tCon = new TableFileControl();
+            tBean = tCon.getData(tableNo);
             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
@@ -1254,16 +1295,15 @@ public class PrintSimpleForm {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            String ETD = "";
+            ETD = "";
             String custCount = "";
             boolean printHeader = false;
             boolean printTable = false;
             String tempHeader = "";
             String tableHead = "";
-
             while (rs.next()) {
                 String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
-                ETD = rs.getString("R_ETD");
+                this.ETD = rs.getString("R_ETD");
                 if (tempHeader.equals("")) {
                     tempHeader = ETD;
                 }
@@ -1314,17 +1354,43 @@ public class PrintSimpleForm {
                     stmt1.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+
                 }
 //                                    *********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
+//                if (!printHeader) {
+//                    if (!printTable) {
+//                        tableHead = "Table " + rs.getString("TCode");
+//                    }
+//                    //Print header
+//                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+//                }
                 if (!printHeader) {
                     if (!printTable) {
                         tableHead = "Table " + rs.getString("TCode");
                     }
+                    //print ETD
+                    if (ETD.equals("E")) {
+                        ETD = "*** ทานในร้าน ***";
+                    } else if (ETD.equals("T")) {
+                        ETD = "*** ห่อกลับ ***";
+                    } else if (ETD.equals("T")) {
+                        ETD = "*** ส่งถึงบ้าน ***";
+                    } else if (ETD.equals("T")) {
+                        ETD = "*** ปิ่นโต ***";
+                    } else if (ETD.equals("W")) {
+                        ETD = "*** ขายส่ง ***";
+                    }
+                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+                    printHeader = true;
+                    printTable = true;
                     //Print header
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                }
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
 
+                    //Print Table to Bottom
+                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "C " + tBean.getTCustomer() + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                }
                 String product = (productName);
                 String R_Index = rs.getString("R_Index");
                 t += keepTextShow(R_Index, qty, product);

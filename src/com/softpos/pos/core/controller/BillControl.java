@@ -27,10 +27,11 @@ import util.DateConvert;
 import util.DateUtil;
 
 public class BillControl {
-
+    
     private final POSConfigSetup posConfig;
     private final MemmaterController memControl = new MemmaterController();
-
+    private MemberBean memberBean;
+    
     public BillControl() {
         posConfig = PosControl.getData();
     }
@@ -430,7 +431,8 @@ public class BillControl {
             try {
                 TableFileControl tableControl = new TableFileControl();
                 TableFileBean tableFile = tableControl.getData(table);
-
+                this.memberBean = MemberBean.getMember(tableFile.getMemCode());
+                
                 BillNoBean billNo = new BillNoBean();
                 double cashPay = billBean.getB_Cash();
                 double creditPay = billBean.getB_CrAmt1();
@@ -641,7 +643,7 @@ public class BillControl {
             return BillNo;
         }
 
-        List<BalanceBean> balance = balanceControl.getAllBalance(table);
+        List<BalanceBean> balance = balanceControl.getAllBalanceSum(table);
 
         //for T_Sale
         DecimalFormat dfFormat = new DecimalFormat("##.00");
@@ -1306,7 +1308,8 @@ public class BillControl {
     }
 
     public List<TSaleBean> getAllTSaleNovoidSum(String billNo) {
-        String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
+        String sql = "select * from t_sale "
+                + "where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
