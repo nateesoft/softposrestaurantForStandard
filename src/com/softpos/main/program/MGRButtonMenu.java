@@ -23,34 +23,34 @@ import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class MGRButtonMenu extends javax.swing.JDialog {
-
+    
     private String menuCode;
     private int menuIndex;
     private boolean editOK = false;
-
+    
     public MGRButtonMenu(java.awt.Frame parent, boolean modal, String menuCode, int menuIndex) {
         super(parent, modal);
         initComponents();
-
+        
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
-
+        
         loadInit(menuCode, menuIndex);
-
+        
         if (menuCode.length() == 9) {
             cbTypeMenu.setSelectedIndex(1);
             cbTypeMenu.setEnabled(false);
         }
     }
-
+    
     public MGRButtonMenu() {
-
+        
     }
-
+    
     public boolean getOK() {
         return editOK;
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -647,7 +647,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         } else {
             txtPCode.setEnabled(true);
             btnFindProduct.setEnabled(true);
-
+            
             txtPCode.requestFocus();
         }
     }//GEN-LAST:event_cbTypeMenuItemStateChanged
@@ -674,14 +674,14 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private void btnBGColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBGColorActionPerformed
         Color color = JColorChooser.showDialog(this, "Setting Font Color.", btnBGColor.getBackground());
         btnBGColor.setBackground(color);
-
+        
         autoPreview();
     }//GEN-LAST:event_btnBGColorActionPerformed
 
     private void btnFontColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFontColorActionPerformed
         Color color = JColorChooser.showDialog(this, "Setting Font Color.", btnFontColor.getForeground());
         btnFontColor.setForeground(color);
-
+        
         autoPreview();
     }//GEN-LAST:event_btnFontColorActionPerformed
 
@@ -692,7 +692,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         chooser.setCurrentDirectory(file);
         chooser.setMultiSelectionEnabled(false);
         FileFilter filter = new FileFilter() {
-
+            
             @Override
             public boolean accept(File f) {
                 boolean success;
@@ -702,7 +702,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                         || f.isDirectory();
                 return success;
             }
-
+            
             @Override
             public String getDescription() {
                 return "gif, jpg, png";
@@ -715,7 +715,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         File selected = chooser.getSelectedFile();
         if (selected != null) {
             txtPathIMG.setText(selected.getPath());
-
+            
             autoPreview();
         }
     }//GEN-LAST:event_btnFindIMGActionPerformed
@@ -778,7 +778,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         if (browse.getSelectPlu() != null) {
             txtPCode.setText(browse.getSelectPlu().getCode());
             txtPDesc.setText(browse.getSelectPlu().getName());
-
+            
             txtShortName.setText(browse.getSelectPlu().getName());
             txtShortName.requestFocus();
         }
@@ -843,19 +843,19 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         mgr.setMenuType(cbTypeMenu.getSelectedIndex());
         mgr.setPCode(txtPCode.getText());
         mgr.setMenuShowText(txtShortName.getText());
-
+        
         String imgPath = txtPathIMG.getText();
         imgPath = imgPath.replace("\\", "/");
         mgr.setIMG(imgPath);
-
+        
         mgr.setFontColor(getColorButtonText(btnFontColor));
         mgr.setBGColor(getColorButtonBG(btnBGColor));
-
+        
         mgr.setLayout(cbLayoutMenu.getSelectedIndex());
         mgr.setFontSize(Integer.parseInt(txtFontSize.getText()));
         mgr.setFontName(cbFontList.getSelectedItem().toString());
         mgr.setImgSize(Integer.parseInt(txtImgSize.getText()));
-
+        
         String fontAttr;
         if (chkFontBold.isSelected()) {
             fontAttr = "B";
@@ -867,10 +867,10 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             fontAttr = "P";
         }
         mgr.setFontAttr(fontAttr);
-
+        
         mgr.setOptSet("N");
         mgr.setPSet("N");
-
+        
         if (cbTypeMenu.getSelectedIndex() == 0) {
             if (txtShortName.getText().trim().equals("")) {
                 txtShortName.requestFocus();
@@ -895,7 +895,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             }
         }
     }
-
+    
     private void delete(String menucode) {
         String ShortName = txtShortName.getText();
         /**
@@ -914,10 +914,10 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         } finally {
             mysql.close();
         }
-
+        
         dispose();
     }
-
+    
     private void saveMenu(MenuMGR mgr) {
         /**
          * * OPEN CONNECTION **
@@ -948,7 +948,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             mysql.close();
         }
     }
-
+    
     private void saveMenuAll(MenuMGR mgr) {
         /**
          * * OPEN CONNECTION **
@@ -977,23 +977,23 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             mysql.close();
         }
     }
-
+    
     private String getColorButtonBG(JButton btn) {
         int red = btn.getBackground().getRed();
         int green = btn.getBackground().getGreen();
         int blue = btn.getBackground().getBlue();
-
+        
         return red + "," + green + "," + blue;
     }
-
+    
     private String getColorButtonText(JButton btn) {
         int red = btn.getForeground().getRed();
         int green = btn.getForeground().getGreen();
         int blue = btn.getForeground().getBlue();
-
+        
         return red + "," + green + "," + blue;
     }
-
+    
     private void loadInit(String menuCode, int menuIndex) {
         loadFontList();
         /**
@@ -1023,7 +1023,8 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                 m.setFontName(rs.getString("FontName"));
                 m.setMIndex(rs.getInt("M_Index"));
                 m.setFontAttr(rs.getString("FontAttr"));
-
+                m.setImgSize(rs.getInt("IMG_Size"));
+                m.setFontColor(rs.getString("FontColor"));
                 cbTypeMenu.setSelectedIndex(m.getMenuType());
                 if (m.getMenuType() == 0) {
                     txtPCode.setEnabled(false);
@@ -1042,14 +1043,14 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     if (rsFind.next()) {
                         txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
                     }
-
+                    
                     rsFind.close();
                     stmt1.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     
                 }
-
+                
                 txtShortName.setText(m.getMenuShowText());
                 ButtonCustom buttonCustom = new ButtonCustom();
                 Color BGColor = buttonCustom.getColorFormat(m.getBGColor());
@@ -1071,21 +1072,21 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     chkFontItalic.setSelected(false);
                     chkFontBoldAndItalic.setSelected(false);
                 }
-
+                
                 btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
                 if (m.getFontName().equals("")) {
                     cbFontList.setSelectedItem("Tahoma");
                 } else {
                     cbFontList.setSelectedItem(m.getFontName());
                 }
-
+                
                 cbLayoutMenu.setSelectedIndex(m.getLayout());
                 txtPathIMG.setText(m.getIMG());
                 txtImgSize.setText("" + m.getImgSize());
-
+                txtFontSize.setText(m.getFontSize() + "");
                 autoPreview();
             }
-
+            
             rs.close();
             stmt.close();
         } catch (SQLException e) {
@@ -1094,11 +1095,11 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             mysql.close();
         }
     }
-
+    
     private void autoPreview() {
         buttonLayout5.setBackground(btnBGColor.getBackground());
         buttonLayout7.setBackground(btnBGColor.getBackground());
-
+        
         buttonLayout1.setForeground(btnFontColor.getForeground());
         buttonLayout2.setForeground(btnFontColor.getForeground());
         buttonLayout3.setForeground(btnFontColor.getForeground());
@@ -1106,7 +1107,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         buttonLayout5.setForeground(btnFontColor.getForeground());
         buttonLayout6.setForeground(btnFontColor.getForeground());
         buttonLayout7.setForeground(btnFontColor.getForeground());
-
+        
         int size = 14;
         try {
             size = Integer.parseInt(txtFontSize.getText());
@@ -1127,14 +1128,14 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         } else {
             font = new Font(fontText, Font.PLAIN, size);
         }
-
+        
         buttonLayout1.setFont(font);
         buttonLayout2.setFont(font);
         buttonLayout3.setFont(font);
         buttonLayout4.setFont(font);
         buttonLayout5.setFont(font);
         buttonLayout7.setFont(font);
-
+        
         String nickName = txtShortName.getText().trim();
         if (!nickName.equals("")) {
             buttonLayout1.setText("<html>" + nickName + "</html>");
@@ -1144,7 +1145,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             buttonLayout5.setText("<html>" + nickName + "</html>");
             buttonLayout7.setText("<html>" + nickName + "</html>");
         }
-
+        
         if (!txtPathIMG.getText().trim().equals("")) {
             File file = new File(txtPathIMG.getText());
             if (file.exists()) {
@@ -1156,7 +1157,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             }
         }
     }
-
+    
     private void updateImage(JButton button, File file) {
         ImageIcon icon = new ImageIcon(file.getPath());
         int scale = 1; // 2 times smaller
@@ -1172,7 +1173,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         int newWidth = width / scale;
         button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(newWidth, -1, Image.SCALE_SMOOTH)));
     }
-
+    
     private void updateImageFull(JButton button, File file) {
         ImageIcon icon = new ImageIcon(file.getPath());
         int scale = 1; // 2 times smaller
@@ -1189,24 +1190,24 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(newWidth, -1,
                 java.awt.Image.SCALE_SMOOTH)));
     }
-
+    
     private void loadFontList() {
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         cbFontList.removeAllItems();
         for (String font : fonts) {
             cbFontList.addItem(font);
         }
-
+        
         cbFontList.setSelectedItem("Tahoma");
     }
-
+    
     private void Selectmenu() {
         String pcode = txtPCode.getText();
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-
+        
         try {
             mysql.open();
             String sqlFind = "select PDesc from product "
@@ -1225,5 +1226,5 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             mysql.close();
         }
     }
-
+    
 }
