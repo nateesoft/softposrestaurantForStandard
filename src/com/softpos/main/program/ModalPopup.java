@@ -249,9 +249,6 @@ public class ModalPopup extends javax.swing.JDialog {
         button[23] = jButton24;
         button[24] = jButton25;
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -266,7 +263,6 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //
                         JButton btn = (JButton) e.getSource();
                         String ProMain = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
 
@@ -275,9 +271,6 @@ public class ModalPopup extends javax.swing.JDialog {
                     }
 
                     private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
@@ -288,16 +281,15 @@ public class ModalPopup extends javax.swing.JDialog {
                             ResultSet rss = stmt1.executeQuery(sqll);
                             if (rss.next()) {
                                 String pcode = rss.getString("pcode");
-
                                 String tempset = "INSERT INTO tempset "
                                         + "(PTableNo, PIndex, PCode, PDesc, "
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + Main + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                Statement stmt2 = mysql.getConnection().createStatement();
-                                stmt2.executeUpdate(tempset);
-                                stmt2.close();
+                                try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                                    stmt2.executeUpdate(tempset);
+                                }
                             } else {
                                 String pcode = PCode;
                                 String tempset = "INSERT INTO tempset "
@@ -306,21 +298,18 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                Statement stmt2 = mysql.getConnection().createStatement();
-                                stmt2.executeUpdate(tempset);
-                                stmt2.close();
+                                try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                                    stmt2.executeUpdate(tempset);
+                                }
                             }
-
                             rss.close();
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
-                            
                         } finally {
                             mysql.close();
                         }
                     }
-
                 });
                 count++;
             }
@@ -333,14 +322,12 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
         } finally {
             mysql.close();
         }
     }
 
     private void loadProductSideDish() {
-        //JOptionPane.showMessageDialog(this, "Show SideDish");
         JButton[] button = new JButton[25];
         button[0] = jButton1;
         button[1] = jButton2;
@@ -370,12 +357,8 @@ public class ModalPopup extends javax.swing.JDialog {
 
         button[24].setText("SKIP");
         button[24].setBackground(Color.GREEN);
-        button[24].addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadProductExtra();
-            }
+        button[24].addActionListener((ActionEvent e) -> {
+            loadProductExtra();
         });
 
         for (JButton currentButton : button) {
@@ -389,9 +372,6 @@ public class ModalPopup extends javax.swing.JDialog {
             button1.setBackground(Color.PINK);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -419,9 +399,6 @@ public class ModalPopup extends javax.swing.JDialog {
                     }
 
                     private void UpdateTempmenusetSideDish(String Index, String PCodeSet, String PNameSet, String ProFree, String free) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
@@ -447,7 +424,6 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
-                            
                         } finally {
                             mysql.close();
                         }
@@ -463,14 +439,11 @@ public class ModalPopup extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             MSG.ERR(null, e.getMessage());
-            
         }
     }
 
     private void loadProductExtra() {
-        //JOptionPane.showMessageDialog(this, "Show Extra");
         JButton[] button = new JButton[25];
         button[0] = jButton1;
         button[1] = jButton2;
@@ -511,17 +484,10 @@ public class ModalPopup extends javax.swing.JDialog {
 
         button[24].setText("SKIP");
         button[24].setBackground(Color.GREEN);
-        button[24].addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+        button[24].addActionListener((ActionEvent e) -> {
+            dispose();
         });
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -561,9 +527,6 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     private boolean checkLimiExtra(String TableNo) {
                         boolean checkExtra = false;
-                        /**
-                         * * OPEN CONNECTION **
-                         */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
@@ -591,14 +554,11 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
                         } finally {
                             mysql.close();
                         }
-
                         return checkExtra;
                     }
-
                 });
                 count++;
             }
@@ -618,7 +578,6 @@ public class ModalPopup extends javax.swing.JDialog {
     }
 
     private void loadProductExtraOption(String PCodeItem) {
-
         JButton[] button = new JButton[25];
         button[0] = jButton1;
         button[1] = jButton2;
@@ -658,9 +617,6 @@ public class ModalPopup extends javax.swing.JDialog {
             button1.setIcon(null);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -687,21 +643,17 @@ public class ModalPopup extends javax.swing.JDialog {
                     }
 
                     private void UpdateTempmenusetExtraOption(String PCode, String POption) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
                             String sql = "update tempset set "
                                     + "POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
                                     + "where PCode='" + PCode + "'";
-                            Statement stmt = mysql.getConnection().createStatement();
-                            stmt.executeUpdate(sql);
-                            stmt.close();
+                            try (Statement stmt = mysql.getConnection().createStatement()) {
+                                stmt.executeUpdate(sql);
+                            }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
                         } finally {
                             mysql.close();
                         }
@@ -721,35 +673,20 @@ public class ModalPopup extends javax.swing.JDialog {
         }
     }
 
-    private void loadProductOptionAfterClick() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-
-        } catch (Exception e) {
-        }
-    }
-
     private boolean showPopupOption(String pCodeItem) {
         boolean isCheck = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from optionset where pcode ='" + pCodeItem + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                isCheck = true;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    isCheck = true;
+                }
+                
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             System.err.println(e.getMessage());
@@ -762,9 +699,6 @@ public class ModalPopup extends javax.swing.JDialog {
     }
 
     private void UpdateTempmenusetExtra(String Index, String PCode, String PName, String Option, String TryName) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -780,9 +714,9 @@ public class ModalPopup extends javax.swing.JDialog {
                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCode + "', "
                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
                         + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
-                Statement stmt1 = mysql.getConnection().createStatement();
-                stmt1.executeUpdate(tempset);
-                stmt1.close();
+                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    stmt1.executeUpdate(tempset);
+                }
             }
 
             rs.close();
@@ -798,26 +732,21 @@ public class ModalPopup extends javax.swing.JDialog {
 
     private boolean loadMenu2Pcs() {
         boolean show = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select qty from mgrbuttonsetup "
                     + "where pcode='" + PCode + "' "
                     + "and check_qty='Y'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                show = true;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    show = true;
+                }
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
         } finally {
             mysql.close();
         }
@@ -853,12 +782,9 @@ public class ModalPopup extends javax.swing.JDialog {
         button[23] = jButton24;
         button[24] = jButton25;
 
-        /**
-         * * OPEN CONNECTION **
-         */
         mysql.open();
         try {
-            String menuSub = "";
+            String menuSub = MenuCode;
             if (MenuCode.length() > 5) {
                 menuSub = MenuCode.substring(0, 5);
             }
@@ -884,9 +810,6 @@ public class ModalPopup extends javax.swing.JDialog {
                     }
 
                     private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
@@ -903,16 +826,15 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '" + pstock + "','" + Main + "', "
                                         + "'', CURTIME())";
-                                Statement stmt1 = mysql.getConnection().createStatement();
-                                stmt1.executeUpdate(tempset);
-                                stmt1.close();
+                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                    stmt1.executeUpdate(tempset);
+                                }
                             }
 
                             rss.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
-                            
                         } finally {
                             mysql.close();
                         }

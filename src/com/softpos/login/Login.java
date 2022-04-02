@@ -258,7 +258,7 @@ public class Login extends javax.swing.JDialog {
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 770));
 
         lbVersion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbVersion.setText("Update: 01/04/2022");
+        lbVersion.setText("Update: 02/04/2022");
         jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -944,27 +944,14 @@ public class PUtility {
     }
 
     public static boolean ChkIntValue(String Str) {
-        String NumList[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-        char ch;
-        String Tmp;
-        int Num = 0;
-        int Chk;
-        for (int j = 0; j < Str.length(); j++) {
-            ch = Str.charAt(j);
-            Tmp = "";
-            Tmp = Tmp + ch;
-
-            Chk = 0;
-            for (String NumList1 : NumList) {
-                if (NumList1.equals(Tmp)) {
-                    Chk++;
-                }
-            }
-            if (Chk > 0) {
-                Num++;
-            }
+        try {
+            Integer.parseInt(Str);
+            return true;
+        } catch (NumberFormatException e) {
+            System.err.println(e.getMessage());
         }
-        return Num == Str.length() && Str.length() != 0;
+        
+        return false;
     }
 
     public static String DataFull2(String Str, int Len) {
