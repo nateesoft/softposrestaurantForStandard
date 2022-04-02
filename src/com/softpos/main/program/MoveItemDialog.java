@@ -503,15 +503,17 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 //none active table1
                 TableFileControl tfControl = new TableFileControl();
                 tfControl.updateTableNotActive(TABLE_NO);
+                
+                MySQLConnect mysql = new MySQLConnect();
                 try {
-                    MySQLConnect c = new MySQLConnect();
-                    c.open();
+                    mysql.open();
                     String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally {
+                    mysql.close();
                 }
-//                tfControl.updateTableActive(TABLE_2);
                 Value.TableSelected = TABLE_2;
                 dispose();
             }

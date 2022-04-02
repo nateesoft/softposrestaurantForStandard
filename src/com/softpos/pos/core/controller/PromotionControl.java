@@ -1206,8 +1206,8 @@ public class PromotionControl {
     public String promotionCheck(String pcode) {
         String procode = "";
         String prodesc = "";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
             String sql = "select "
                     + "p.pcode, "
                     + "p.pdesc, "
@@ -1222,14 +1222,17 @@ public class PromotionControl {
                     + "left join protab pt "
                     + "on p.ppromotion1 = pt.procode "
                     + "where pcode='" + pcode + "'";
-            c.open();
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-                procode = rs.getString("procode");
-                prodesc = rs.getString("prodesc");
+            mysql.open();
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    procode = rs.getString("procode");
+                    prodesc = rs.getString("prodesc");
+                }
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
         return procode + ":" + prodesc;
     }

@@ -45,27 +45,27 @@ public class PrintToKic extends javax.swing.JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-        setState(JFrame.ICONIFIED);
-        for (int i = 0; i < 10; i++) {
-            //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            if (i == 9) {
-                i = 0;
-            }
-            if (ConfigFile.getProperties("printkic").equals("true")) {
-                System.out.println("PROCESS " + refresh + "sec/" + i);
-                kicPrintFromPDA();
-                try {
-                    Thread.sleep(refresh * 700);
+                setState(JFrame.ICONIFIED);
+                for (int i = 0; i < 10; i++) {
+                    //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    if (i == 9) {
+                        i = 0;
+                    }
+                    if (ConfigFile.getProperties("printkic").equals("true")) {
+                        System.out.println("PROCESS " + refresh + "sec/" + i);
+                        kicPrintFromPDA();
+                        try {
+                            Thread.sleep(refresh * 700);
 //                        Thread.sleep(refresh);
-                } catch (InterruptedException ex) {
-                    MSG.ERR(ex.toString());
-                }
-            }
-            if (ConfigFile.getProperties("printerStation").equals("true")) {
+                        } catch (InterruptedException ex) {
+                            MSG.ERR(ex.toString());
+                        }
+                    }
+                    if (ConfigFile.getProperties("printerStation").equals("true")) {
 
-            }
-        }
+                    }
+                }
             }
         }).start();
     }
@@ -261,47 +261,49 @@ public class PrintToKic extends javax.swing.JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-        if (kicPrintting == false) {
-            try {
-                MySQLConnect c = new MySQLConnect();
-                String sql = "select "
-                        //                                                                                + "b.*,"
-                        + "r_table,"
-                        + "sum(b.r_quan) qty,"
-                        + "sum(b.r_total) total"
-                        + " from balance b "
-                        + "where trantype='PDA' "
-                        + "and r_kicprint<>'P' "
-                        + "and r_void<>'V' "
-                        + "and r_kic<>'0' "
-                        + "and r_printOK='Y' "
-                        + "and r_pause='P' "
-                        + "group by r_table "
-                        + "order by r_etd,r_index;";
-                c.open();
-                ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-                if (rs.next() && !rs.wasNull() && kicPrintting == false) {
-                    kicPrintting = true;
-                    tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
-                    kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
-                    lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
+                if (kicPrintting == false) {
+                    MySQLConnect mysql = new MySQLConnect();
+                    try {
+                        String sql = "select "
+                                //                                                                                + "b.*,"
+                                + "r_table,"
+                                + "sum(b.r_quan) qty,"
+                                + "sum(b.r_total) total"
+                                + " from balance b "
+                                + "where trantype='PDA' "
+                                + "and r_kicprint<>'P' "
+                                + "and r_void<>'V' "
+                                + "and r_kic<>'0' "
+                                + "and r_printOK='Y' "
+                                + "and r_pause='P' "
+                                + "group by r_table "
+                                + "order by r_etd,r_index;";
+                        mysql.open();
+                        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                        if (rs.next() && !rs.wasNull() && kicPrintting == false) {
+                            kicPrintting = true;
+                            tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
+                            kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
+                            lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
+                        }
+                        kicPrintting = false;
+                        rs.close();
+                    } catch (SQLException e) {
+                        MSG.ERR(e.toString());
+                    } finally {
+                        mysql.close();
+                    }
+
+                    try {
+                        String sqlDel = "delete from balance where r_table='';";
+                        mysql.open();
+                        mysql.getConnection().createStatement().executeUpdate(sqlDel);
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql.close();
+                    }
                 }
-                kicPrintting = false;
-                c.close();
-                rs.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.toString());
-            }
-            try {
-                String sqlDel = "delete from balance where r_table='';";
-                MySQLConnect c = new MySQLConnect();
-                c.open();
-                c.getConnection().createStatement().executeUpdate(sqlDel);
-                c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
             }
         }).start();
 
@@ -477,26 +479,28 @@ public class PrintToKic extends javax.swing.JFrame {
     }
 
     public void printCheckBillStation() {
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
             String sql = "select * form balance "
                     + "wehre r_table='" + tableNo + "' "
                     + "and PDAPrintCheckStation <>'N' ";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-                try {
-                    String sqlUpdate = "update balance set PDAPrintCheckStation='N' where r_table='" + tableNo + "';";
-                    c.getConnection().createStatement().executeUpdate(sqlUpdate);
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    MySQLConnect mysql2 = new MySQLConnect();
+                    try {
+                        String sqlUpdate = "update balance set PDAPrintCheckStation='N' where r_table='" + tableNo + "';";
+                        mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql2.close();
+                    }
                 }
-
             }
-            rs.close();
-            c.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

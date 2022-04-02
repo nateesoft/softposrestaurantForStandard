@@ -1620,10 +1620,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (btnClickPrintKic == true) {
             String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P';";
             try {
-                MySQLConnect c = new MySQLConnect();
-                c.open();
-                c.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
-                c.close();
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open();
+                mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
+                mysql.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
             }

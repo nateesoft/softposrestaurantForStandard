@@ -196,8 +196,8 @@ public class BillControl {
             }
 
             if (bean.getB_AccrAmt() > 0) {
+                MySQLConnect mysql2 = new MySQLConnect();
                 try {
-                    MySQLConnect c = new MySQLConnect();
                     String sqlInsAccr = "INSERT INTO accr "
                             + "(ArNo, ArDate, ArCode, ArTotal, ArVat,"
                             + " ArDisc, ArVatMon, ArAccNo, ArMark, ArNet, "
@@ -212,11 +212,12 @@ public class BillControl {
                             + "'', '', '', '','', "
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
-                    c.open();
-                    c.getConnection().createStatement().executeUpdate(sqlInsAccr);
-                    c.close();
+                    mysql2.open();
+                    mysql2.getConnection().createStatement().executeUpdate(sqlInsAccr);
                 } catch (SQLException e) {
-                    MSG.NOTICE(e.toString());
+                    MSG.ERR(e.getMessage());
+                } finally {
+                    mysql2.close();
                 }
             }
         } catch (SQLException e) {
@@ -960,24 +961,26 @@ public class BillControl {
 
             double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
             double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
+            
+            MySQLConnect mysql = new MySQLConnect();
             try {
                 String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time;";
-                MySQLConnect ce = new MySQLConnect();
-                ce.open();
-                Statement stmt = ce.getConnection().createStatement();
+                mysql.open();
+                Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sqlUpdate);
                 if (rs.next()) {
                     String r_index = rs.getString("R_Index");
                     String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                    try (Statement stmt1 = ce.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
                         stmt1.executeUpdate(sqlUpdateT_sale);
                     }
                 }
-                stmt.close();
                 rs.close();
-                ce.close();
+                stmt.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+            } finally {
+                mysql.close();
             }
 
             BillControl.saveBillNo(billNo, memberBean);
@@ -996,7 +999,6 @@ public class BillControl {
             tableControl.setDefaultTableFile(table);
 
             //move tempgift
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
                 String sql = "select * from tempgift";

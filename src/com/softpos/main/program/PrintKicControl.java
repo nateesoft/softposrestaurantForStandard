@@ -2,9 +2,12 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
+import java.awt.HeadlessException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.MSG;
 
 /**
  *
@@ -194,45 +197,48 @@ public class PrintKicControl extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             model.removeRow(0);//ลบข้อมูลบนตารางจนเหลือ 0 ก่อนที่จะโหลดขึ้นมาใหม่
         }
+
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
                     + "from product "
                     + "where pfix='F' "
                     + "and pgroup <'12' "
                     + "order by pgroup,pcode";
-            ResultSet rsGetKic = c.getConnection().createStatement().executeQuery(sql);
-            while (rsGetKic.next()) {
-                String pcode = rsGetKic.getString("pcode");
-                String pdesc = ThaiUtil.ASCII2Unicode(rsGetKic.getString("pdesc"));
-                String pkic = rsGetKic.getString("pkic");
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            while (rs.next()) {
+                String pcode = rs.getString("pcode");
+                String pdesc = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
+                String pkic = rs.getString("pkic");
                 model.addRow(new Object[]{pcode, pdesc, pkic});
             }
-            rsGetKic.close();
-            c.close();
-        } catch (Exception e) {
-
+            rs.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
     public void btnSave() {
         DefaultTableModel model = (DefaultTableModel) tblKicSetup.getModel();
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            
+            mysql.open();
             for (int i = 0; i < model.getRowCount(); i++) {
                 String code = model.getValueAt(i, 0).toString();
                 String kic = model.getValueAt(i, 2).toString();
                 String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
-                c.getConnection().createStatement().executeUpdate(sql);
-                System.out.println(sql);
+                mysql.getConnection().createStatement().executeUpdate(sql);
             }
             JOptionPane.showMessageDialog(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
-            c.close();
+
             loadData();
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
 
     }

@@ -961,21 +961,19 @@ public class MoveGroupTable extends javax.swing.JDialog {
     }
 
     private void updateForVoidAfterMoveTable(String table) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'";
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            c.getConnection().createStatement().executeUpdate(sql);
-            c.close();
+            mysql.open();
+            mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
     private void tmpTableBeforeMove(String table) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -985,11 +983,11 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 "create table if not exists tmp_tablefile select * from tablefile where tcode='" + table + "';",
                 "create table if not exists tmp_balance select * from balance where r_table = '" + table + "';"
             };
-            Statement stmt = mysql.getConnection().createStatement();
-            for (String sql1 : sql) {
-                stmt.executeUpdate(sql1);
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                for (String sql1 : sql) {
+                    stmt.executeUpdate(sql1);
+                }
             }
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {

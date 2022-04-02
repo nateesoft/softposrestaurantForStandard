@@ -2275,19 +2275,20 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 do {
                     t += "colspan=3 align=left><font face=Angsana New size=1>" + "อ้างถึงใบเสร็จเลขที่" + TAB + "มูลค่า..." + "_";
                     t += "colspan=3 align=left><font face=Angsana New size=1>" + rec.getString("arno") + TAB + DatefmtShow.format(rec.getDate("ardate")) + TAB + PUtility.DataFullR(DecFmt.format(rec.getDouble("arnet")), 11) + "_";
+                    MySQLConnect mysql2 = new MySQLConnect();
                     try {
                         String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "'";
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
-                        ResultSet rsCustfile = c.getConnection().createStatement().executeQuery(sqlGetCustFile);
+                        mysql2.open();
+                        ResultSet rsCustfile = mysql2.getConnection().createStatement().executeQuery(sqlGetCustFile);
                         if (rsCustfile.next()) {
                             ArName = ThaiUtil.ASCII2Unicode(rsCustfile.getString("sp_desc"));
                             t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (ArName) + "_";
                         }
                         rsCustfile.close();
-                        c.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql2.close();
                     }
                     t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(_NetTotal) + "_";
                     if (_Cash > 0) {

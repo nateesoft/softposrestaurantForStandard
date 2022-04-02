@@ -32,6 +32,7 @@ public class SendTerminalReportAuto {
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     public String filePath = "";
     public String fileName = "";
+    
     MySQLConnect c = new MySQLConnect();
     
     public void ProcessProc() throws FileNotFoundException, UnsupportedEncodingException {

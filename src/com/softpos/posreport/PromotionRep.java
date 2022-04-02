@@ -284,16 +284,16 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public void PrintPromotionDriver(String MacNo1, String MacNo2) {
         String t = "";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "select "
                     + "tp.PrCode PrCode,pt.ProDesc ProDesc,sum(tp.PQty) PQty, sum(tp.PrAmt) PrAmt "
                     + "from t_promotion tp "
                     + "left join protab pt on tp.prcode = pt.ProCode "
                     + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
                     + "group by tp.prcode";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -330,10 +330,12 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             rs.close();
-            c.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 

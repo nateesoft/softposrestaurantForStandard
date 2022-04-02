@@ -541,10 +541,10 @@ public class MemberDialog extends javax.swing.JDialog {
     }
 
     public void UpdateMember(String choice) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            String sql = "";
+            mysql.open();
+            String sql;
             String memCode = MemCode + "";
             if (memCode.equals("null")) {
                 MemCode = "";
@@ -556,14 +556,16 @@ public class MemberDialog extends javax.swing.JDialog {
             }
             switch (choice) {
                 case "Ins":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
                 case "Del":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

@@ -16,52 +16,12 @@ import util.MSG;
 public class MySQLConnect {
 
     private Connection con = null;
-    private String HostName = null;
-    private String DbName = null;
-    private String UserName = null;
-    private String Password = null;
-    private String PortNumber = null;
+    public static String HostName = null;
+    public static String DbName = null;
+    public static String UserName = null;
+    public static String Password = null;
+    public static String PortNumber = null;
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
-
-    public String getHostName() {
-        return HostName;
-    }
-
-    public void setHostName(String HostName) {
-        this.HostName = HostName;
-    }
-
-    public String getDbName() {
-        return DbName;
-    }
-
-    public void setDbName(String DbName) {
-        this.DbName = DbName;
-    }
-
-    public String getUserName() {
-        return UserName;
-    }
-
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String Password) {
-        this.Password = Password;
-    }
-
-    public String getPortNumber() {
-        return PortNumber;
-    }
-
-    public void setPortNumber(String PortNumber) {
-        this.PortNumber = PortNumber;
-    }
 
     public String getMsgError() {
         return msgError;
@@ -73,8 +33,6 @@ public class MySQLConnect {
 
     public void open() {
         try {
-            con = null;
-            getDbVar();
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
         } catch (ClassNotFoundException | SQLException e) {
@@ -95,78 +53,70 @@ public class MySQLConnect {
                 Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        try {
-            con.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
-    public void getDbVar() {
-        if (HostName == null) {
-            try {
-                FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
-                DataInputStream ds = new DataInputStream(fs);
-                BufferedReader br = new BufferedReader(new InputStreamReader(ds));
-                String tmp;
-                while ((tmp = br.readLine()) != null) {
-                    String[] data = tmp.split(",", tmp.length());
-                    if (data[0].equalsIgnoreCase("server")) {
-                        HostName = data[1];
-                    } else if (data[0].equalsIgnoreCase("database")) {
-                        DbName = data[1];
-                        Value.DATABASE = data[1];
-                    } else if (data[0].equalsIgnoreCase("user")) {
-                        UserName = data[1];
-                    } else if (data[0].equalsIgnoreCase("pass")) {
-                        Password = data[1];
-                    } else if (data[0].equalsIgnoreCase("port")) {
-                        PortNumber = data[1];
-                    } else if (data[0].equalsIgnoreCase("macno")) {
-                        Value.MACNO = data[1];
-                    } else if (data[0].equalsIgnoreCase("language")) {
-                        Value.LANG = data[1];
-                    } else if (data[0].equalsIgnoreCase("db_member")) {
-                        Value.db_member = data[1];
-                    } else if (data[0].equalsIgnoreCase("useprint")) {
-                        try {
-                            Value.useprint = Boolean.parseBoolean(data[1]);
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
-                            Value.useprint = false;
-                        }
-                    } else if (data[0].equalsIgnoreCase("printkic")) {
-                        try {
-                            Value.printkic = Boolean.parseBoolean(data[1]);
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
-                            Value.printkic = false;
-                        }
-                    } else if (data[0].equalsIgnoreCase("autoqty")) {
-                        try {
-                            Value.autoqty = Boolean.parseBoolean(data[1]);
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
-                            Value.autoqty = false;
-                        }
-                    } else if (data[0].equalsIgnoreCase("printdriver")) {
-                        try {
-                            Value.printdriver = Boolean.parseBoolean(data[1]);
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
-                            Value.printdriver = false;
-                        }
-                    } else if (data[0].equalsIgnoreCase("printerName")) {
-                        Value.printerDriverName = data[1];
+    public static void getDbVar() {
+        try {
+            FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
+            DataInputStream ds = new DataInputStream(fs);
+            BufferedReader br = new BufferedReader(new InputStreamReader(ds));
+            String tmp;
+            while ((tmp = br.readLine()) != null) {
+                String[] data = tmp.split(",", tmp.length());
+                if (data[0].equalsIgnoreCase("server")) {
+                    HostName = data[1];
+                } else if (data[0].equalsIgnoreCase("database")) {
+                    DbName = data[1];
+                    Value.DATABASE = data[1];
+                } else if (data[0].equalsIgnoreCase("user")) {
+                    UserName = data[1];
+                } else if (data[0].equalsIgnoreCase("pass")) {
+                    Password = data[1];
+                } else if (data[0].equalsIgnoreCase("port")) {
+                    PortNumber = data[1];
+                } else if (data[0].equalsIgnoreCase("macno")) {
+                    Value.MACNO = data[1];
+                } else if (data[0].equalsIgnoreCase("language")) {
+                    Value.LANG = data[1];
+                } else if (data[0].equalsIgnoreCase("db_member")) {
+                    Value.db_member = data[1];
+                } else if (data[0].equalsIgnoreCase("useprint")) {
+                    try {
+                        Value.useprint = Boolean.parseBoolean(data[1]);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                        Value.useprint = false;
                     }
+                } else if (data[0].equalsIgnoreCase("printkic")) {
+                    try {
+                        Value.printkic = Boolean.parseBoolean(data[1]);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                        Value.printkic = false;
+                    }
+                } else if (data[0].equalsIgnoreCase("autoqty")) {
+                    try {
+                        Value.autoqty = Boolean.parseBoolean(data[1]);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                        Value.autoqty = false;
+                    }
+                } else if (data[0].equalsIgnoreCase("printdriver")) {
+                    try {
+                        Value.printdriver = Boolean.parseBoolean(data[1]);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                        Value.printdriver = false;
+                    }
+                } else if (data[0].equalsIgnoreCase("printerName")) {
+                    Value.printerDriverName = data[1];
                 }
-                br.close();
-                ds.close();
-                fs.close();
-            } catch (IOException e) {
-                MSG.ERR(e.getMessage());
-                
             }
+            br.close();
+            ds.close();
+            fs.close();
+        } catch (IOException e) {
+            MSG.ERR(e.getMessage());
         }
     }
 
@@ -175,7 +125,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"startService.bat");
             System.out.println("MySQL server start successfully!");
         } catch (IOException e) {
-            
+
         }
     }
 
@@ -184,7 +134,7 @@ public class MySQLConnect {
             Runtime.getRuntime().exec("cmd /c start d:\"\"stopService.bat");
             System.out.println("MySQL server stopped successfully!");
         } catch (IOException e) {
-            
+
         }
     }
 

@@ -42,7 +42,6 @@ public class Login extends javax.swing.JDialog {
         initComponents();
         txtUser.setText("");
         txtPass.setText("");
-        Value.MACNO = Value.getMacno();
         txtMacNo.setText("MAC NO. " + Value.MACNO);
         txtUser.requestFocus();
         TimeOfDay time = new TimeOfDay();
@@ -346,7 +345,8 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        new MySQLConnect();
+        MySQLConnect.getDbVar();
+        
         //create file to check program is exist
         File f = new File("softrestaurant.running");
         if (f.exists()) {

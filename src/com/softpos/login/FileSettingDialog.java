@@ -484,14 +484,11 @@ public class FileSettingDialog extends javax.swing.JDialog {
     }
 
     private void loadConfig() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.getDbVar();
-        
-        txtServer.setText(mysql.getHostName());
-        txtDatabase.setText(mysql.getDbName());
-        txtUser.setText(mysql.getUserName());
-        txtPass.setText(mysql.getPassword());
-        txtPort.setText(mysql.getPortNumber());
+        txtServer.setText(MySQLConnect.HostName);
+        txtDatabase.setText(MySQLConnect.DbName);
+        txtUser.setText(MySQLConnect.UserName);
+        txtPass.setText(MySQLConnect.Password);
+        txtPort.setText(MySQLConnect.PortNumber);
         txtCharSet.setText("");
         txtLang.setText(Value.LANG);
         txtMacno.setText(Value.MACNO);

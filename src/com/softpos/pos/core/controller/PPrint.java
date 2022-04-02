@@ -200,16 +200,8 @@ public class PPrint {
     String PrinterName = "";
 
     public void OpenDrawerDriver() {
-        try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            PrinterName = Value.printerDriverName;
-            c.close();
-        } catch (Exception e) {
-        }
+        PrinterName = Value.printerDriverName;
         byte[] open = {27, 112, 48, 55, 121};
-//        byte[] cutter = {29, 86,49};
-//        String printer = PrinterName;
         String printer = PrinterName;
         PrintServiceAttributeSet printserviceattributeset = new HashPrintServiceAttributeSet();
         printserviceattributeset.add(new PrinterName(printer, null));
@@ -241,7 +233,7 @@ public class PPrint {
             outputStream.flush();
             LineCount = 0;
         } catch (IOException ex) {
-            if (ex.getMessage().indexOf("nativeDrain") != -1) {
+            if (ex.getMessage().contains("nativeDrain")) {
                 //ex.printStackTrace();
                 //System.err.println(ex.getMessage());
             } else {
@@ -701,27 +693,27 @@ public class PPrint {
             CONFIG = POSConfigSetup.Bean();
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
+                    MySQLConnect mysql = new MySQLConnect();
                     try {
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
+                        mysql.open();
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rsGetCountBillno = c.getConnection().createStatement().executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         int Q = 0;
-                        if (rsGetCountBillno.next() && !rsGetCountBillno.wasNull()) {
-                            queue = rsGetCountBillno.getInt("cbillno");
+                        if (rs.next() && !rs.wasNull()) {
+                            queue = rs.getInt("cbillno");
                             queue++;
                         }
                         t += "colspan=3 align=center><font face=Angsana New size=5>" + "คิว(Queue): " + queue + "_";
-                        rsGetCountBillno.close();
-                        c.close();
-                    } catch (Exception e) {
-
+                        rs.close();
+                        
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
                 }
                 Date dateP = new Date();
-//            t += POSHW.getHeading1().toString() + "_";
-//            t += (POSHW.getHeading2()) + "_";
                 if (POSHW.getHeading1().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
@@ -738,13 +730,11 @@ public class PPrint {
                 } else {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
                 }
-//            t += "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Cposhwsetup();
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
-//            t += "colspan=3 align=center><font face=Angsana New size=-2>" + PPrint_DatefmtThai.format(dateP) + " " + PublicVar._UserName + " Mac:" + Value.MACNO;
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + PPrint_DatefmtThai.format(dateP)
                         + "</td><td align=right><font face=Angsana New size=2>"
@@ -754,7 +744,6 @@ public class PPrint {
                         + "</td><td align=right><font face=Angsana New size=2>"
                         + "NAME: " + Space
                         + getLastEmployee(tableNo) + "_";
-//                        + getLastEmployeeCheckBill(tableNo, _RefNo) + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
 
                 for (int i = 0; i < listTSale.size(); i++) {
@@ -765,22 +754,13 @@ public class PPrint {
                         VatStr = "-";
                     }
                     if (bean.getR_Void().equals("V")) {
-//                    t += ("VOID..." + "User :" + bean.getR_VoidUser()) + "_";
-//                    if (CONFIG.getP_CodePrn().equals("Y")) {
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(-1 * bean.getR_Quan()) + TAB2 + DecFmt.format(-1 * bean.getR_Total()) + bean.getR_ETD()) + "_";
-//                    } else {
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(-1 * bean.getR_Quan()) + TAB2 + DecFmt.format(-1 * bean.getR_Total()) + bean.getR_ETD()) + "_";
-//                    }
                     } else {
                         if (bean.getR_PrAmt() == 0) {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        //                                    + SubStringText(bean.getR_Normal() + VatStr + "" + bean.getR_PName(), 16)
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
@@ -790,7 +770,6 @@ public class PPrint {
                                             + (ThaiUtil.ASCII2Unicode(bean.getR_Opt1())) + "_";
                                 }
                             } else {
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -801,7 +780,6 @@ public class PPrint {
                         } else {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + bean.getR_PName()) + "_";
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -809,7 +787,6 @@ public class PPrint {
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + "_";
                             } else {
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -832,12 +809,10 @@ public class PPrint {
                     }
                 }
             } else {
-                Date dateP = new Date();
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "     อาหารและเครื่องดื่ม " + DecFmt.format(bBean.getB_Total())) + "_";
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
-//            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "TOTAL :" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_Total())) + "_";
 
             if (bBean.getB_ProDiscAmt() > 0) {
                 t += ("colspan=3 align=right><font face=Angsana New size=2> " + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(bBean.getB_ProDiscAmt())) + "_";
@@ -956,9 +931,6 @@ public class PPrint {
             if (bBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                /**
-                 * * OPEN CONNECTION **
-                 */
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
@@ -973,14 +945,11 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-
                 } finally {
                     mysql.close();
                 }
 
-//            t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bBean.getB_CrCode1() + TAB + crName) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + crName) + "_";
-//            t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CrAmt1())) + "_";
             }
@@ -997,7 +966,6 @@ public class PPrint {
             }
             if (!bBean.getB_MemCode().equals("")) {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
-//                t += ("colspan=3 align=left><font face=Angsana New size=2> " + ThaiUtil.ASCII2Unicode(bBean.getB_MemName())) + "_";
                 MemberBean MemBean = new MemberBean();
                 MemBean = MemberBean.getMember(bBean.getB_MemCode());
                 t += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
@@ -1064,28 +1032,27 @@ public class PPrint {
 
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
+                    MySQLConnect mysql = new MySQLConnect();
                     try {
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
+                        mysql.open();
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rsGetCountBillno = c.getConnection().createStatement().executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
-                        if (rsGetCountBillno.next() && !rsGetCountBillno.wasNull()) {
-                            queue = rsGetCountBillno.getInt("cbillno");
+                        if (rs.next() && !rs.wasNull()) {
+                            queue = rs.getInt("cbillno");
                             queue++;
                         }
                         t += "colspan=3 align=center><font face=Angsana New size=5>" + "คิว(Queue): " + queue + "_";
                         t1 += "colspan=3 align=center><font face=Angsana New size=4>" + "คิว(Queue): " + queue + "_";
 
-                        rsGetCountBillno.close();
-                        c.close();
-                    } catch (Exception e) {
-
+                        rs.close();
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
                 }
                 Date dateP = new Date();
-//            t += POSHW.getHeading1().toString() + "_";
-//            t += (POSHW.getHeading2()) + "_";
                 if (POSHW.getHeading1().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
@@ -1102,13 +1069,11 @@ public class PPrint {
                 } else {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
                 }
-//            t += "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Cposhwsetup();
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
-//            t += "colspan=3 align=center><font face=Angsana New size=-2>" + PPrint_DatefmtThai.format(dateP) + " " + PublicVar._UserName + " Mac:" + Value.MACNO;
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + PPrint_DatefmtThai.format(dateP)
                         + "</td><td align=right><font face=Angsana New size=2>"
@@ -1128,22 +1093,13 @@ public class PPrint {
                         VatStr = "-";
                     }
                     if (bean.getR_Void().equals("V")) {
-//                    t += ("VOID..." + "User :" + bean.getR_VoidUser()) + "_";
-//                    if (CONFIG.getP_CodePrn().equals("Y")) {
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(-1 * bean.getR_Quan()) + TAB2 + DecFmt.format(-1 * bean.getR_Total()) + bean.getR_ETD()) + "_";
-//                    } else {
-//                        t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(-1 * bean.getR_Quan()) + TAB2 + DecFmt.format(-1 * bean.getR_Total()) + bean.getR_ETD()) + "_";
-//                    }
                     } else {
                         if (bean.getR_PrAmt() == 0) {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        //                                    + SubStringText(bean.getR_Normal() + VatStr + "" + bean.getR_PName(), 16)
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
@@ -1153,7 +1109,6 @@ public class PPrint {
                                             + (ThaiUtil.ASCII2Unicode(bean.getR_Opt1())) + "_";
                                 }
                             } else {
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -1170,7 +1125,6 @@ public class PPrint {
                         } else {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -1178,7 +1132,6 @@ public class PPrint {
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + "_";
                             } else {
-//                            t += (bean.getR_Normal() + VatStr + bean.getR_PName() + TAB + IntFmt.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD()) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
@@ -1196,7 +1149,6 @@ public class PPrint {
                             if (bean.getR_PrType().equals("-P")) {
                                 if (bean.getR_PrAmt() > 0) {
                                     t += ("colspan=3 align=left><font face=Angsana New size=1> " + Space + "**Promotion  " + bean.getR_PrCode()) + "_";
-//                                    t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   **Promotion  " + bean.getR_PrCode() + " " + PUtility.SeekPromotionName(bean.getR_PrCode())) + "_";
                                 }
                             }
                             if (bean.getR_PrType().equals("-I")) {
@@ -1235,10 +1187,6 @@ public class PPrint {
             if (bBean.getB_ItemDiscAmt() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ItemDiscAmt())) + "-_";
             }
-//            if (bBean.getB_ServiceAmt() > 0) {
-//                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "ค่าบริการ (Service)     " + DecFmt.format(bBean.getB_ServiceAmt())) + "_";
-//            }
-
             if (bBean.getB_Earnest() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "หักคืนเงินมัดจำ  " + TAB + DecFmt.format(bBean.getB_Earnest())) + "_";
             }
@@ -6279,17 +6227,18 @@ public class PPrint {
 
     public String getCuponName(String cuCode) {
         String cuName = "";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "select cuname from cupon where cucode='" + cuCode + "'";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 cuName = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
             }
-            c.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
         return cuName;
     }
