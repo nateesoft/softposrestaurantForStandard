@@ -17,6 +17,8 @@ import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import printReport.PrintSimpleForm;
@@ -32,6 +34,8 @@ public class PrintToKic extends javax.swing.JFrame {
     private String tableNo = "";
     private int refresh = 30;
     private boolean kicPrintting = false;
+    boolean printkic = false;
+    MySQLConnect mysql = new MySQLConnect();
 
     /**
      * Creates new form PrintToKic
@@ -39,8 +43,28 @@ public class PrintToKic extends javax.swing.JFrame {
     public PrintToKic(java.awt.Frame parent, boolean modal) {
 ////        super(parent, modal);
         initComponents();
+        MySQLConnect.getDbVar();
         BranchBean BranchBean = new BranchBean();
         BranchBean = BranchControl.getData();
+        try {
+            String sqlGetSaveOrder = "select SaveOrder from branch";
+            mysql.open();
+            Statement stmt = mysql.getConnection().createStatement();
+            ResultSet rsGetSaveOrderConfig =stmt.executeQuery(sqlGetSaveOrder);
+            if (rsGetSaveOrderConfig.next() && !rsGetSaveOrderConfig.wasNull()) {
+                String config = rsGetSaveOrderConfig.getString("SaveOrder");
+                if (!config.equals("N")) {
+                    PublicVar.Branch_Saveorder = config;
+                }
+            }
+            
+            rsGetSaveOrderConfig.close();
+            stmt.close();
+            mysql.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
         lblProcessShow.setText("สถานะการพิมพ์");
         new Thread(new Runnable() {
             @Override
@@ -52,7 +76,7 @@ public class PrintToKic extends javax.swing.JFrame {
                     if (i == 9) {
                         i = 0;
                     }
-                    if (ConfigFile.getProperties("printkic").equals("true")) {
+                    if (printkic == true) {
                         System.out.println("PROCESS " + refresh + "sec/" + i);
                         kicPrintFromPDA();
                         try {
@@ -62,9 +86,9 @@ public class PrintToKic extends javax.swing.JFrame {
                             MSG.ERR(ex.toString());
                         }
                     }
-                    if (ConfigFile.getProperties("printerStation").equals("true")) {
-
-                    }
+//                    if (ConfigFile.getProperties("printerStation").equals("true")) {
+//
+//                    }
                 }
             }
         }).start();
@@ -262,7 +286,7 @@ public class PrintToKic extends javax.swing.JFrame {
             @Override
             public void run() {
                 if (kicPrintting == false) {
-                    MySQLConnect mysql = new MySQLConnect();
+//                    MySQLConnect mysql = new MySQLConnect();
                     try {
                         String sql = "select "
                                 //                                                                                + "b.*,"
@@ -282,6 +306,7 @@ public class PrintToKic extends javax.swing.JFrame {
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                         if (rs.next() && !rs.wasNull() && kicPrintting == false) {
                             kicPrintting = true;
+                            Thread.sleep(700);
                             tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
                             kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
                             lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
@@ -290,19 +315,21 @@ public class PrintToKic extends javax.swing.JFrame {
                         rs.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.toString());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(PrintToKic.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         mysql.close();
                     }
 
-                    try {
-                        String sqlDel = "delete from balance where r_table='';";
-                        mysql.open();
-                        mysql.getConnection().createStatement().executeUpdate(sqlDel);
-                    } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
-                    } finally {
-                        mysql.close();
-                    }
+//                    try {
+//                        String sqlDel = "delete from balance where r_table='';";
+//                        mysql.open();
+//                        mysql.getConnection().createStatement().executeUpdate(sqlDel);
+//                    } catch (SQLException e) {
+//                        MSG.ERR(e.getMessage());
+//                    } finally {
+//                        mysql.close();
+//                    }
                 }
             }
         }).start();
@@ -315,40 +342,28 @@ public class PrintToKic extends javax.swing.JFrame {
             String printerName;
             String[] kicMaster = BranchControl.getKicData20();
             // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-            String sqlShowKic = "select r_kic from balance "
+            String sqlShowKic = "select r_kic,r_etd from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_Kic<>'0' "
                     + "and R_Void<>'V' "
                     + "group by r_kic,r_etd "
-                    + "order by r_kic";
+                    + "order by r_kic, r_etd";
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
+//            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
-            String sqlGetSaveOrder = "select SaveOrder from branch";
 
             try {
-                ResultSet rsGetSaveOrderConfig = mysql.getConnection().createStatement().executeQuery(sqlGetSaveOrder);
-                if (rsGetSaveOrderConfig.next() && !rsGetSaveOrderConfig.wasNull()) {
-                    String config = rsGetSaveOrderConfig.getString("SaveOrder");
-                    if (!config.equals("N")) {
-                        PublicVar.Branch_Saveorder = config;
-                    }
-                }
-                rsGetSaveOrderConfig.close();
+
                 Statement stmt1 = mysql.getConnection().createStatement();
                 ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
 
-                ResultSet rsKicSaveOrder = mysql.getConnection().createStatement().executeQuery(sqlShowKic);
-                if (rsKicSaveOrder.next() && !rsKicSaveOrder.wasNull()) {
-                    if (!PublicVar.Branch_Saveorder.equals("N")) {
-                        printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-                    }
+                if (!PublicVar.Branch_Saveorder.equals("N")) {
+                    printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
                 }
-                rsKicSaveOrder.close();
                 //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
                 while (rsKic.next()) {
                     kicPrintting = true;
@@ -417,7 +432,8 @@ public class PrintToKic extends javax.swing.JFrame {
 
                                         if (printerForm.equals("3")) {
                                             if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
+                                                String retd = rsKic.getString("r_etd");
+                                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA");
 //                                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
 //                                                if (CheckBillBeforeCash.equals("Y")) {
 //                                                    printBillVoidCheck();
@@ -450,7 +466,6 @@ public class PrintToKic extends javax.swing.JFrame {
                         }
                     }
                 }
-
                 rsKic.close();
                 stmt1.close();
                 //update r_kicprint

@@ -13,11 +13,12 @@ public class PosControl {
     private static CompanyBean companyBean = null;
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
+    public static MySQLConnect mysql = new MySQLConnect();
 
     public static void resetPosHwSetup() {
         poshwsetup = null;
     }
-    
+
     public static void resetPOSConfigSetup() {
         posConfigSetup = null;
     }
@@ -25,7 +26,7 @@ public class PosControl {
     public static void resetDataCompany() {
         companyBean = null;
     }
-    
+
     public CompanyBean getCompany() {
         return getDataCompany();
     }
@@ -34,7 +35,7 @@ public class PosControl {
         if (companyBean != null) {
             return companyBean;
         }
-        MySQLConnect mysql = new MySQLConnect();
+
         mysql.open();
         try {
             String sql = "select * from company";
@@ -86,6 +87,8 @@ public class PosControl {
                     companyBean.setPdahead3(rs.getString("pdahead3"));
                     companyBean.setPdahead4(rs.getString("pdahead4"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -99,7 +102,7 @@ public class PosControl {
         if (posConfigSetup != null) {
             return posConfigSetup;
         }
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from posconfigsetup";
@@ -164,7 +167,10 @@ public class PosControl {
                     posConfigSetup.setP_SaleDecimal(rs.getString("P_SaleDecimal"));
                     posConfigSetup.setP_PayBahtRound(rs.getString("P_PayBahtRound"));
                 }
+                rs.close();
+                stmt.close();
             }
+
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
@@ -177,7 +183,7 @@ public class PosControl {
         if (poshwsetup != null) {
             return poshwsetup;
         }
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "'";
@@ -236,6 +242,8 @@ public class PosControl {
                     poshwsetup.setUseFloorPlan(rs.getString("UseFloorPlan"));
                     poshwsetup.setTakeOrderChk(rs.getString("TakeOrderChk"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

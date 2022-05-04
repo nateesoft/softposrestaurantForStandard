@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import soft.virtual.KeyBoardDialog;
 import util.MSG;
 
 /**
@@ -429,14 +430,26 @@ public class ItemEditQty extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void txtPQuanEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPQuanEditActionPerformed
-        double newQty = Double.parseDouble(txtPQuanEdit.getText().trim().replace(",", ""));
-        txtPAmountEdit.setText(dec1.format(newQty * XPrice));
-        this.XNewQty = newQty;
-        this.XNewAmount = newQty * XPrice;
-        txtPAmountEdit.requestFocus();
-        txtPAmountEdit.selectAll();
+        boolean strCheck = CheckStringOrNumberlic(txtPQuanEdit.getText().trim().replace(",", ""));
+
+        if (!strCheck == false) {
+            double newQty = Double.parseDouble(txtPQuanEdit.getText().trim().replace(",", ""));
+            txtPAmountEdit.setText(dec1.format(newQty * XPrice));
+            this.XNewQty = newQty;
+            this.XNewAmount = newQty * XPrice;
+            txtPAmountEdit.requestFocus();
+            txtPAmountEdit.selectAll();
+        } else {
+            MSG.NOTICE("กรุณากรอกเฉพาะตัวเลข");
+            txtPQuanEdit.setText("1");
+            double newQty = Double.parseDouble(txtPQuanEdit.getText().trim().replace(",", ""));
+            this.XNewQty = newQty;
+            txtPQuanEdit.requestFocus();
+        }
 
 //        OKActionPerformed(null);
+
+
     }//GEN-LAST:event_txtPQuanEditActionPerformed
 
     private void OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKActionPerformed
@@ -447,9 +460,28 @@ public class ItemEditQty extends javax.swing.JDialog {
         if (!txtPAmountEdit.getText().equals("")) {
             txtNewPDesc.requestFocus();
             txtNewPDesc.selectAll();
+        } else {
+            txtPAmountEdit.setText("1.00");
         }
     }//GEN-LAST:event_txtPAmountEditActionPerformed
+    public boolean CheckStringOrNumberlic(String text) {
+        boolean numeric = true;
 
+        try {
+            Double num = Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            numeric = false;
+        }
+
+        if (numeric) {
+            System.out.println(text + " is a number");
+            numeric = true;
+        } else {
+            numeric = false;
+            System.out.println(text + " is not a number");
+        }
+        return numeric;
+    }
     private void txtNewPDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewPDescActionPerformed
         OKActionPerformed(null);
     }//GEN-LAST:event_txtNewPDescActionPerformed

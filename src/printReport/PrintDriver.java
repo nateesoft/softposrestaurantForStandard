@@ -41,10 +41,10 @@ public class PrintDriver {
 
     private String textAll = "";
     private String textNormal = "";
-    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100 height=50>";
+    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100% height=50px>";
     private final String footer = "</table></body></html>";
     private final String fontName = "Angsana New";
-    private float width = 80;
+    private float width = 75;
     private float height = 72;
 
     public PrintDriver() {
@@ -53,20 +53,21 @@ public class PrintDriver {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (IllegalAccessException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (InstantiationException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (UnsupportedLookAndFeelException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         }
     }
 
     public void setResolution(float w, float h) {
+
         this.width = w;
         this.height = h;
     }
@@ -90,10 +91,14 @@ public class PrintDriver {
     }
 
     public void addTextIFont(String str) {
-        textAll += "<tr><td " + str + "</font></td></tr>";
+        textAll += "<tr><td " + str + "</td></tr>";
+//        textAll += "<tr><td " + str + "</font></td></tr>";
         textNormal += str + "\n";
     }
 
+//public void addTextIFont(String str) {
+//    textNormal += str + "\n";//    textAll += "<tr><td style='word-wrap: break-word; width: \"100px\"' " + str + "</font></td></tr>";
+//}
     public void addTextLn(String str, String size) {
         textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font><br>";
         textNormal += str + "\n";
@@ -168,7 +173,7 @@ public class PrintDriver {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                
+
             } finally {
                 mysql.close();
             }
@@ -216,7 +221,7 @@ public class PrintDriver {
             output.write(text);
 
         } catch (IOException e) {
-            
+
         } finally {
             if (output != null) {
                 try {

@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
 

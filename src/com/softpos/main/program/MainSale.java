@@ -80,15 +80,20 @@ public class MainSale extends javax.swing.JDialog {
     private DecimalFormat dc1 = new DecimalFormat("#,##0.00");
     private MemberBean memberBean;
     private String tableNo;
-    private String SALE_DINE_IN = "Dine In";
-    private String SALE_TAKE_AWAY = "Take Away";
-    private String SALE_Delivery = "Delivery";
+    private String SALE_DINE_IN = "นั่งทาน";
+    private String SALE_TAKE_AWAY = "ห่อกลับ";
+    private String SALE_Delivery = "เดลิเวอรี่";
+    private String SALE_Pinto = "ส่งประจำ";
+    private String SALE_WholeSale = "ขายส่ง";
     private boolean btnClickPrintKic = false;
+    private MySQLConnect mysql = new MySQLConnect();
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
+
         super(parent, modal);
         initComponents();
-        jMenuBar11.setVisible(false);
+
+//        jMenuBar11.setVisible(false);
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
@@ -863,8 +868,8 @@ public class MainSale extends javax.swing.JDialog {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnLangTH)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLangEN)
@@ -1212,7 +1217,15 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 String r_linkindex = rs.getString("r_linkindex");
                 String r_index = rs.getString("r_index");
                 String voidStr = rs.getString("r_void");
-                String PName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+                String R_ETD = ThaiUtil.ASCII2Unicode(rs.getString("R_ETD"));
+                if (R_ETD.equals("E")) {
+                    R_ETD = "E";
+                } else if (R_ETD.equals("T")) {
+                    R_ETD = "T";
+                } else if (R_ETD.equals("D")) {
+                    R_ETD = "D";
+                }
+                String PName = R_ETD + " " + ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
 
                 if (voidStr.equals("V")) {
                     PName = "<html><strike><font color=red>" + PName + "</font></strike></html>";
@@ -1618,9 +1631,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
         if (btnClickPrintKic == true) {
-            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P';";
+            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
             try {
-                MySQLConnect mysql = new MySQLConnect();
+//                MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 mysql.close();
@@ -1628,6 +1641,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
             }
         }
+
         if (lbTotalAmount.getText().equals("0.00")) {
             JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
@@ -1718,7 +1732,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
-                String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P';";
+                String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and mcno='" + PublicVar.MacNo + "';";
                 try {
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
@@ -1788,6 +1802,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             changeSaleType("D");
             txtTypeDesc.setText(SALE_Delivery);
         } else if (txtTypeDesc.getText().equals(SALE_Delivery)) {
+            txtShowETD.setText("P");
+            changeSaleType("P");
+            txtTypeDesc.setText(SALE_Pinto);
+        } else if (txtTypeDesc.getText().equals(SALE_Pinto)) {
+            txtShowETD.setText("W");
+            changeSaleType("W");
+            txtTypeDesc.setText(SALE_WholeSale);
+        } else if (txtTypeDesc.getText().equals(SALE_WholeSale)) {
             txtShowETD.setText("E");
             changeSaleType("E");
             txtTypeDesc.setText(SALE_DINE_IN);
@@ -2825,17 +2847,24 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             String printerName;
             String[] kicMaster = BranchControl.getKicData20();
             // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-            String sqlShowKic = "select r_kic from balance "
-                    + "where r_table='" + txtTable.getText() + "' "
+//            String sqlShowKic = "select r_kic from balance "
+//                    + "where r_table='" + txtTable.getText() + "' "
+//                    + "and R_PrintOK='Y' "
+//                    + "and R_KicPrint<>'P' "
+//                    + "and R_Kic<>'' "
+//                    + "group by r_kic "
+//                    + "order by r_kic";
+            String sqlShowKic = "select r_kic,r_etd from balance "
+                    + "where r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_Kic<>'' "
-                    + "group by r_kic "
-                    + "order by r_kic";
+                    + "group by r_kic,r_etd "
+                    + "order by r_kic,r_etd";
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
+//            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sqlGetSaveOrder = "select SaveOrder from branch";
 
@@ -2857,6 +2886,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
                     }
                 }
+                rsKicSaveOrder.close();
+
                 //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
                 while (rsKic.next()) {
                     String rKic = rsKic.getString("r_kic");
@@ -2917,8 +2948,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
 
                                         if (printerForm.equals("3")) {
+
                                             if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_3("", printerName, txtTable.getText(), iKic);
+//                                                printSimpleForm.KIC_FORM_3("", printerName, txtTable.getText(), iKic);
+                                                String retd = rsKic.getString("r_etd");
+                                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "");
+//                                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
                                                 String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
                                                 if (CheckBillBeforeCash.equals("Y")) {
                                                     printBillVoidCheck();
@@ -2953,9 +2988,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                 }
 
-                rsKic.close();
-                stmt1.close();
-
                 CheckKicPrint();
 
                 //update r_kicprint
@@ -2967,16 +2999,22 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             + "and r_kicprint<>'P' "
                             + "and r_printOk='Y' "
                             + "and r_kic<>'';";
+                    mysql.open();
                     Statement stmt = mysql.getConnection().createStatement();
                     stmt.executeUpdate(sql);
+                    mysql.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 }
+                rsKic.close();
+                stmt1.close();
+
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
             } finally {
                 mysql.close();
             }
+
         } catch (HeadlessException e) {
             MSG.ERR(null, "HeadlessException:" + e.getMessage());
         }
@@ -3254,7 +3292,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' "
                         + "where r_kicprint<>'P' and r_table='" + tableNo + "';";
                 try {
-                    MySQLConnect mysql = new MySQLConnect();
+//                    MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
                     mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                     mysql.close();
@@ -3300,7 +3338,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void holdTableAndSave() {
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         BalanceBean balanceBean = new BalanceBean();
         mysql.open();
         try {
@@ -3317,6 +3355,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "where tcode='" + txtTable.getText() + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(UpdateTableFile);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -3382,9 +3421,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "update posuser set onact='N',macno='' where username='" + UserCode + "'";
             stmt.executeUpdate(SQLQuery);
-            stmt.close();
-            Value.CASHIER = "";
 
+            Value.CASHIER = "";
+            stmt.close();
             return true;
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
@@ -4394,7 +4433,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void CheckKicPrint() {
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select r_kicprint "

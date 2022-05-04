@@ -83,6 +83,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private Font fontC = new Font("Tahoma", Font.BOLD, 16);
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
+    private MySQLConnect mysql = new MySQLConnect();
 
     public FloorPlanDialog() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
@@ -942,7 +943,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        MSG.NOTICE("SoftPOS Update:V8.2 12/08/2020 00:35");
+        MSG.NOTICE("SoftPOS Update:V8.2 22/04/2022 12:42");
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -1446,7 +1447,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select code_id, t1.tcode, tcustomer, tonact,tlogintime,titem,"
@@ -1614,9 +1615,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     public void PrintCheckBillFromPDA() {
         //ฟังก์ชั่นสั่งเช็คบิลสำหรับ PDA
-
+        System.out.println("PrintCheckBillFromPDA= loop");
         if (!POSHW.getTakeOrderChk().equals("Y")) {
-            MySQLConnect mysql = new MySQLConnect();
+//            MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
                 String sql = "select * from "
@@ -1653,7 +1654,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             if (UpdateLogout(PublicVar._RealUser)) {
                 clearTemp();
 
-                MySQLConnect mysql = new MySQLConnect();
+//                MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -1675,7 +1676,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 System.exit(0);
             }
         } else {
-            MySQLConnect mysql = new MySQLConnect();
+//            MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
                 String sql1 = "update poshwsetup set onact='N' where terminal='" + Value.MACNO + "'";
@@ -1699,7 +1700,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     boolean UpdateLogout(String UserCode) {
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1722,7 +1723,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String tableTemp = Value.TEMP_TABLE_REFUND;
         boolean checkExistTempRefund = false;
 
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from sp_temp_refund;";
@@ -1817,7 +1818,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void refund() {
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         boolean isPermit = false;
         try {
@@ -1969,7 +1970,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+//                    MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
                     // check P_EmpUse
                     try {
@@ -2052,7 +2053,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         private void showPOS(String tableNo) {
             MainSale ms = new MainSale(null, true, tableNo);
             String sql = "delete from tempset where ptableno='" + tableNo + "';";
-            MySQLConnect mysql = new MySQLConnect();
+//            MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sql);
@@ -2166,7 +2167,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
         try {
@@ -2326,7 +2327,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
-        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from tempset "

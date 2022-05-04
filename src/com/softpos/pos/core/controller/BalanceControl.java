@@ -46,6 +46,7 @@ public class BalanceControl {
         return tempIndex;
     }
 
+    
     public boolean saveBalance(BalanceBean bb) {
         try {
             ProductControl pc = new ProductControl();
@@ -248,7 +249,7 @@ public class BalanceControl {
                     + bean.getR_Order() + "','" + bean.getR_PItemNo() + "','" + bean.getR_PKicQue() + "','"
                     + bean.getR_MemSum() + "','" + bean.getR_MoveItem() + "','" + bean.getR_MoveFrom() + "','"
                     + bean.getR_MoveUser() + "','" + bean.getR_MoveFlag() + "','" + bean.getR_MovePrint() + "','"
-                    + bean.getR_Pause() + "','','','" + bean.getR_LinkIndex() + "','','" + bean.getR_Index() + "','" + bean.getVoidMSG() + "','" + bean.getR_PEName() + "')";
+                    + bean.getR_Pause() + "','','','" + bean.getR_LinkIndex() + "','','" + bean.getR_Index() + "','" + ThaiUtil.Unicode2ASCII(bean.getVoidMSG()) + "','" + bean.getR_PEName() + "')";
             int iUpdate = mysql.getConnection().createStatement().executeUpdate(sqlInsert);
             String sqlUpNull = "update balance set r_linkindex='' where r_linkindex=''";
             mysql.getConnection().createStatement().executeUpdate(sqlUpNull);
@@ -367,7 +368,9 @@ public class BalanceControl {
                     }
                     beanData.add(balanceBean);
                 }
+                rs.close();
             }
+            
         } catch (SQLException e) {
             MSG.ERR("BalanceControl:" + e.getMessage());
         } finally {
@@ -394,7 +397,7 @@ public class BalanceControl {
                     + "where r_table='" + table + "' "
                     + "and r_plucode<>'8899' "
                     + "and r_void<>'V' "
-                    + "group by r_plucode,r_etd "
+                    + "group by r_plucode,r_etd,r_Pname "
                     + "order by r_time, r_index";
 //            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
@@ -742,8 +745,8 @@ public class BalanceControl {
                             + "and r_void<>'V' "
                             + "and r_plucode<>'8899' "
                             + "and r_normal='N' "
-                            + "group by r_plucode,r_etd "
-                            + "order by r_etd,r_normal,r_index,"
+                            + "group by r_plucode,r_pname,r_etd "
+                            + "order by r_etd,r_normal,r_type,r_index,"
                             + "r_time";
                 }
                 if (i == 1) {
@@ -756,8 +759,8 @@ public class BalanceControl {
                             + "and r_void<>'V' "
                             + "and r_plucode<>'8899' "
                             + "and r_normal='C' "
-                            + "group by r_plucode,r_etd "
-                            + "order by r_etd,r_normal,r_index,"
+                            + "group by r_plucode,r_pname,r_etd "
+                            + "order by r_etd,r_normal,r_type,r_index,"
                             + "r_time";
                 }
                 if (i == 2) {
@@ -770,8 +773,8 @@ public class BalanceControl {
                             + "and r_void<>'V' "
                             + "and r_plucode<>'8899' "
                             + "and r_normal='S' "
-                            + "group by r_plucode,r_etd "
-                            + "order by r_etd,r_normal,r_index,"
+                            + "group by r_plucode,r_pname,r_etd "
+                            + "order by r_etd,r_normal,r_type,r_index,"
                             + "r_time";
                 }
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);

@@ -591,7 +591,7 @@ public class PPrint {
             if (Value.printdriver) {
                 PrintDriver pd = new PrintDriver();
                 pd.addTextLn("Log In User : " + user);
-                pd.addTextLn("Log In Time : " + PPrint_DatefmtThai.format(dateP));
+                pd.addTextLn("Log In Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / ").replace("/", " / "));
 
                 pd.printNormal();
             } else {
@@ -599,7 +599,7 @@ public class PPrint {
                     if (OpenPrint(Value.getComPort())) {
                         InitPrinter();
                         print("Log In User : " + user);
-                        print("Log In Time : " + PPrint_DatefmtThai.format(dateP));
+                        print("Log In Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / ").replace("/", " / "));
                         print("");
                         print("");
                         print("");
@@ -625,7 +625,7 @@ public class PPrint {
             if (Value.printdriver) {
                 PrintDriver pd = new PrintDriver();
                 pd.addTextLn("Log Out User : " + Value.USERCODE);
-                pd.addTextLn("Log Out Time : " + PPrint_DatefmtThai.format(dateP));
+                pd.addTextLn("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
 
                 pd.printNormal();
             } else {
@@ -633,7 +633,7 @@ public class PPrint {
                     if (OpenPrint(Value.getComPort())) {
                         InitPrinter();
                         print("Log Out User : " + Value.USERCODE);
-                        print("Log Out Time : " + PPrint_DatefmtThai.format(dateP));
+                        print("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
                         print("");
                         print("");
                         print("");
@@ -706,7 +706,7 @@ public class PPrint {
                         }
                         t += "colspan=3 align=center><font face=Angsana New size=5>" + "คิว(Queue): " + queue + "_";
                         rs.close();
-                        
+
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                     } finally {
@@ -736,7 +736,7 @@ public class PPrint {
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
-                        + PPrint_DatefmtThai.format(dateP)
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
                         + "</td><td align=right><font face=Angsana New size=2>"
                         + "TABLE :" + Space + tableNo + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
@@ -1069,13 +1069,29 @@ public class PPrint {
                 } else {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
                 }
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
+                if (POSHW.getHeading3().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                if (POSHW.getHeading4().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
+//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Cposhwsetup();
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
-                        + PPrint_DatefmtThai.format(dateP)
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
                         + "</td><td align=right><font face=Angsana New size=2>"
                         + "TABLE :" + Space + tableNo + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
@@ -1160,7 +1176,54 @@ public class PPrint {
                     }
                 }
             } else {
+                if (POSHW.getHeading1().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                if (POSHW.getHeading2().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                if (POSHW.getHeading3().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                if (POSHW.getHeading4().trim().length() >= 18) {
+                    String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
+//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
+                Cposhwsetup();
                 Date dateP = new Date();
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
+                t += "colspan=2 align=left><font face=Angsana New size=2> "
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
+                        + "</td><td align=right><font face=Angsana New size=2>"
+                        + "TABLE :" + Space + tableNo + "_";
+                t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
+                        + " Seat :"
+                        + "</td><td align=right><font face=Angsana New size=2>"
+                        + "NAME: " + Space
+                        + getLastEmployeeCheckBill(tableNo, _RefNo) + "_";
+
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "     อาหารและเครื่องดื่ม " + DecFmt.format(bBean.getB_Total())) + "_";
             }
@@ -1414,7 +1477,7 @@ public class PPrint {
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(" ");
-                        print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
+                        print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
                         print(PUtility.DataFullR("CC : " + IntFmt.format(bBean.getB_Cust()) + " Seat", 15) + PUtility.DataFullR(" ", 11) + PUtility.DataFullR("NAME: " + getLastEmployeeCheckBill(tableNo, _RefNo), 15));
                         print(PUtility.DataFullR("COM: " + Value.MACNO, 15));
                         if (!tBean.getMemName().trim().equals("")) {
@@ -1486,7 +1549,7 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         print("----------------------------------------");
                         print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
@@ -1729,11 +1792,27 @@ public class PPrint {
             } else {
                 t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
             }
+            if (POSHW.getHeading3().length() >= 18) {
+                String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
+                for (String data : strs) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                }
+            } else {
+                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
+            }
+            if (POSHW.getHeading4().length() >= 18) {
+                String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
+                for (String data : strs) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                }
+            } else {
+                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
+            }
             t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------_";
             Cposhwsetup();
             Date dateP = new Date();
             t1 += "colspan=2 align=left><font face=Angsana New size=2> "
-                    + PPrint_DatefmtThai.format(dateP) + "_";
+                    + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
             t1 += "colspan=3 align=left><font face=Angsana New size=2> "
                     + "TABLE :" + Space + tableNo + "_";
             t1 += "colspan=2 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(tBean.getTCustomer())
@@ -1949,7 +2028,7 @@ public class PPrint {
             Cposhwsetup();
             Date dateP = new Date();
             t1 += "colspan=2 align=left><font face=Angsana New size=-2> "
-                    + PPrint_DatefmtThai.format(dateP)
+                    + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
                     + "</td><td align=right><font face=Angsana New size=-2>"
                     + "TABLE :" + Space + tableNo + "_";
             t1 += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(tBean.getTCustomer())
@@ -2148,7 +2227,7 @@ public class PPrint {
         } else {
             BalanceControl bc = new BalanceControl();
             List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoid(tableNo);
-            
+
             int QtyLength = 5;
             int AmtLength = 10;
             int SubLength = 20;
@@ -2176,7 +2255,7 @@ public class PPrint {
                     SelectStye(1);
                     print(" ");
                     Date dateP = new Date();
-                    print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
+                    print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
                     print("CC : " + PUtility.DataFullR(IntFmt.format(tBean.getTCustomer()), 2) + " Seat" + PUtility.DataFullR(" ", 11) + PUtility.DataFullR("NAME: " + getLastEmployee(tableNo), 15));
                     if (!tBean.getMemName().equals("")) {
                         print(" ");
@@ -2398,7 +2477,7 @@ public class PPrint {
 
                     print(" ");
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP) + PUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + PUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
                     print("COM: " + Value.MACNO);
                     print(" ");
                     print("----------------------------------------");
@@ -2539,7 +2618,7 @@ public class PPrint {
 
             t += "colspan=3 align=center>_";
             Date dateP = new Date();
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + PPrint_DatefmtThai.format(dateP) + "</td><td align=right><font face=Angsana New size=1>" + "NAME:" + Space + getLastEmployee(tableNo) + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=1>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "</td><td align=right><font face=Angsana New size=1>" + "NAME:" + Space + getLastEmployee(tableNo) + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=1>" + "COM: " + Value.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + "------------------------------------------------------------" + "_");
             for (int i = 0; i < listBean.size(); i++) {
@@ -2693,7 +2772,7 @@ public class PPrint {
                 print("      รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน) ");
                 print("               Table Check        ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
 
                 print("----------------------------------------");
                 print("Table     Amount    Open-Time  Customer");
@@ -2766,7 +2845,7 @@ public class PPrint {
                 print("   รายงานยอดการเงิน (Terminal Report)");
                 print("หมายเลขเครื่อง : " + Value.MACNO);
 
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
                 print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -2831,7 +2910,7 @@ public class PPrint {
                 print("          AR Payment Report");
                 print("หมายเลขเครื่อง : " + Value.MACNO);
 
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                 print("----------------------------------------");
@@ -3017,7 +3096,7 @@ public class PPrint {
                     InitPrinter();
                     print("   Daily Sale (Terminal Report)");
                     Cposhwsetup();
-                    print("Printed On" + PPrint_DatefmtThai.format(dateP));
+                    print("Printed On" + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
                     print("Cashier:" + PublicVar._User + " Mac:" + macNo);
                     print("");
                     print(POSHW.getHeading1());
@@ -3296,7 +3375,7 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + "(Daily Sale..Terminal Report)" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=1>_");
             Cposhwsetup();
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + " Mac:" + macNo + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + "Cashier:" + PublicVar._User + " Mac:" + macNo + "_");
 
             double NetSale_VatExclude = frec.Net_Sale * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-------------------------------------------------" + "_");
@@ -3492,7 +3571,7 @@ public class PPrint {
                     print("   รายงานพนักงานขาย (Cashier Report)");
                     print("รหัสพนักงาน : " + frec.Cashier1);
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     print("----------------------------------------");
                     print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
                     print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -3554,7 +3633,7 @@ public class PPrint {
                     print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
                     print("          AR Payment Report");
                     print("รหัสพนักงานขาย : " + frec.Cashier1);
-                    print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     print("----------------------------------------");
                     print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                     print("----------------------------------------");
@@ -3656,7 +3735,7 @@ public class PPrint {
                     print("    รายงานการทำรายการ Void ");
                     print("          Void Report");
                     print("รหัสพนักงานขาย : " + frec.Cashier1);
-                    print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     print("----------------------------------------");
                     print("Mac Cashier Table Time  User-Void T_Void");
                     print("    Ref-No  PLU-Code       Qty    Amount");
@@ -3743,7 +3822,7 @@ public class PPrint {
                     print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
                     print(" ");
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     print("----------------------------------------");
                     print("รายละเอียด");
                     print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -3841,7 +3920,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("(Daily..Department Report)" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP) + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
         t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_");
         t += "align=left><font face=Angsana New size=1>" + ("พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_");
         t += "align=left><font face=Angsana New size=1>" + ("รหัสกลุ่มสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_");
@@ -3915,7 +3994,7 @@ public class PPrint {
                 print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
                 print(" ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("DEPT");
                 print(" ชาร์จหน่วยงาน           ชาร์จบุคคล  ");
@@ -3981,7 +4060,7 @@ public class PPrint {
                 print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
                 print(" ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("DEPT");
                 print(" ชาร์จหน่วยงาน           ชาร์จบุคคล  ");
@@ -4058,7 +4137,7 @@ public class PPrint {
                     print("รหัสสินค้า (PLU) " + GArray[0].Plu1 + "..." + GArray[0].Plu2);
                     print(" ");
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     print("----------------------------------------");
                     print("รายละเอียด");
                     print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -4163,7 +4242,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "(PLU Report)" + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>_";
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP) + Space + PublicVar._User + " Mac:" + Space + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + PublicVar._User + " Mac:" + Space + Value.MACNO + "_";
         t += "align=left><font face=Angsana New size=1>" + "หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_";
         t += "align=left><font face=Angsana New size=1>" + "พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_";
         t += "align=left><font face=Angsana New size=1>" + "รหัสกลุ่มสินค้า : " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_";
@@ -4255,7 +4334,7 @@ public class PPrint {
                 print("รหัสสินค้า (PLU) " + GArray[0].Plu1 + "..." + GArray[0].Plu2);
                 print(" ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("DEPT");
                 print("PLU ");
@@ -4346,7 +4425,7 @@ public class PPrint {
                 print("รหัสสินค้า (PLU) " + GArray[0].Plu1 + "..." + GArray[0].Plu2);
                 print(" ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("DEPT");
                 print("PLU ");
@@ -4425,7 +4504,7 @@ public class PPrint {
                 print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                 print(" ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                 print("----------------------------------------");
                 print("เวลา    จำนวนบิล   จำนวนลูกค้า    จำนวนเงิน");
                 print("----------------------------------------");
@@ -4498,7 +4577,7 @@ public class PPrint {
                     POSHW = POSHWSetup.Bean(Value.getMacno());
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
                         print("----------------------------------------");
                         for (int i = 0; i < listBean.size(); i++) {
                             TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -4570,7 +4649,7 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP) + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5));
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5));
                         print("----------------------------------------");
                         print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     }
@@ -4796,7 +4875,7 @@ public class PPrint {
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 Date dateP = new Date();
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
-                        + PPrint_DatefmtThai.format(dateP)
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
                         + "</td><td align=right><font face=Angsana New size=2>"
                         + "TABLE :" + Space + tBean.getB_Table() + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(tBean.getB_Cust())
@@ -4882,10 +4961,29 @@ public class PPrint {
                     }
                 }
             } else {
+                if (POSHW.getHeading1().length() >= 18) {
+                    String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                if (POSHW.getHeading2().length() >= 18) {
+                    String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
+                    for (String data : strs) {
+                        t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
+                    }
+                } else {
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
+                t += "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Date dateP = new Date();
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP) + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5) + "_");
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------");
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength) + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + "</td></font><td align=right><font face=Angsana New size=2>-" + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength) + "_");
             }
 
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -5088,7 +5186,7 @@ public class PPrint {
                     }
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         print("----------------------------------------");
                         for (int i = 0; i < listBean.size(); i++) {
                             TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -5148,7 +5246,7 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         print("----------------------------------------");
                         print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
@@ -5358,7 +5456,7 @@ public class PPrint {
         }
         if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
             Date dateP = new Date();
-            t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             for (int i = 0; i < listBean.size(); i++) {
                 TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -5436,7 +5534,7 @@ public class PPrint {
             }
         } else {
             Date dateP = new Date();
-            t += ("colspan=3 align=center><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength) + "_");
         }
@@ -5613,7 +5711,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Daily...Table Check" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=1>_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP)) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ")) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Table" + Space + "Amount" + Space + "Open-Time" + Space + "Customer") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";

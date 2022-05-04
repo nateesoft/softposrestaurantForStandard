@@ -107,6 +107,15 @@ public class BalanceBean {
     private String VoidMSG = "";
     private String R_PEName;
     private double R_ServiceAmt;
+    private String R_Indulgent;
+
+    public String getR_Indulgent() {
+        return R_Indulgent;
+    }
+
+    public void setR_Indulgent(String R_Indulgent) {
+        this.R_Indulgent = R_Indulgent;
+    }
 
     public String getR_logindate() {
         return R_logindate;

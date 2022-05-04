@@ -32,9 +32,9 @@ public class ChangTypeDialog extends javax.swing.JDialog {
     public ChangTypeDialog(java.awt.Frame parent, boolean modal, String tableNo, String tempETD) {
         super(parent, modal);
         initComponents();
-        bntDelivery.setVisible(false);
-        bntPinto.setVisible(false);
-        bntWholeSale.setVisible(false);
+//        bntDelivery.setVisible(false);
+//        bntPinto.setVisible(false);
+//        bntWholeSale.setVisible(false);
         this.tableNo = tableNo;
         this.tempETD = tempETD;
 
