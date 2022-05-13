@@ -3,13 +3,13 @@ package com.softpos.main.program;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.webapp.promotion.ItemDisControl;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class ItemDiscount extends javax.swing.JDialog {

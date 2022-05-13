@@ -2,6 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -15,7 +16,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class ChangTypeDialog extends javax.swing.JDialog {

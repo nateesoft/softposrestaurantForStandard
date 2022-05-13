@@ -13,9 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import sun.natee.project.util.DateFormat;
-import sun.natee.project.util.ThaiUtil;
 import util.DateConvert;
+import util.DateFormat;
 import util.MSG;
 
 public class BalanceControl {

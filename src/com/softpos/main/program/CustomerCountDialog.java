@@ -1,12 +1,12 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class CustomerCountDialog extends javax.swing.JDialog {

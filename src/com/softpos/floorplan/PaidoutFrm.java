@@ -12,10 +12,10 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import printReport.PrintDriver;
 import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import java.sql.SQLException;
 import java.sql.Statement;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {

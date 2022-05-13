@@ -1,5 +1,6 @@
 package setupmenu;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect_Bak;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
 import util.JTableUtility;
 
 public class DlgBrowseProduct extends javax.swing.JDialog {

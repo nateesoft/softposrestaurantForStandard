@@ -40,7 +40,7 @@ public class ButtonCustom {
                 menuMGR.setMenuCode(rs.getString("MenuCode"));
                 menuMGR.setMenuType(rs.getInt("MenuType"));
                 menuMGR.setPCode(rs.getString("PCode"));
-                menuMGR.setMenuShowText(sun.natee.project.util.ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                menuMGR.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
                 menuMGR.setIMG(rs.getString("IMG"));
                 menuMGR.setFontColor(rs.getString("FontColor"));
                 menuMGR.setBGColor(rs.getString("BGColor"));
@@ -77,7 +77,7 @@ public class ButtonCustom {
                 bean.setMenuCode(rs.getString("MenuCode"));
                 bean.setMenuType(rs.getInt("MenuType"));
                 bean.setPCode(rs.getString("PCode"));
-                bean.setMenuShowText(sun.natee.project.util.ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
                 bean.setIMG(rs.getString("IMG"));
                 bean.setFontColor(rs.getString("FontColor"));
                 bean.setBGColor(rs.getString("BGColor"));

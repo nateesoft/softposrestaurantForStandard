@@ -4,7 +4,6 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import com.softpos.pos.core.model.CustomerBean;
 import java.sql.SQLException;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 /**

@@ -9,8 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.NumberFormat;
 import util.MSG;
+import util.NumberFormat;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
 

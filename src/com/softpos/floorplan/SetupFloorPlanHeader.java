@@ -1,13 +1,13 @@
 package com.softpos.floorplan;
 
 import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.CompanyBean;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class SetupFloorPlanHeader extends javax.swing.JDialog {

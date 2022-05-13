@@ -1,6 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 // Panel Option ข้อความพิเศษ สำหรับสินค้าแต่ละรายการ

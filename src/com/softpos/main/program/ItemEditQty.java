@@ -61,7 +61,7 @@ public class ItemEditQty extends javax.swing.JDialog {
 
         if (balanceBean != null) {
             txtPCode.setText(balanceBean.getR_PluCode());
-            txtPDesc.setText(sun.natee.project.util.ThaiUtil.ASCII2Unicode(balanceBean.getR_PName()));
+            txtPDesc.setText(ThaiUtil.ASCII2Unicode(balanceBean.getR_PName()));
             txtPQuan.setText("" + dec1.format(balanceBean.getR_Quan()));
             txtPrice.setText(dec1.format(balanceBean.getR_Price()));
             txtPAmount.setText(dec1.format(balanceBean.getR_Total()));

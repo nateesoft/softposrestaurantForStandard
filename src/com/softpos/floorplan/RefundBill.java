@@ -35,12 +35,12 @@ import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.MemmaterController;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class RefundBill extends javax.swing.JDialog {

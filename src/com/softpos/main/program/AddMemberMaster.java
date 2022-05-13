@@ -1,8 +1,8 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
-import sun.natee.project.util.ThaiUtil;
 
 public class AddMemberMaster extends javax.swing.JDialog {
 

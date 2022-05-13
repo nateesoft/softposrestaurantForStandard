@@ -1,10 +1,10 @@
 package setupmenu;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.DeptButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class StoreDept {

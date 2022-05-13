@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -8,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class MemberDialog extends javax.swing.JDialog {

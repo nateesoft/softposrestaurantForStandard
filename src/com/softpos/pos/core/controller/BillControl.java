@@ -16,14 +16,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import sun.natee.project.util.DateFormat;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.MemmaterController;
 import java.text.DecimalFormat;
 import java.util.List;
 import util.DateConvert;
+import util.DateFormat;
 import util.DateUtil;
 
 public class BillControl {

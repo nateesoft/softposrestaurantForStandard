@@ -4,7 +4,6 @@ import com.softpos.pos.core.model.BranchBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class BranchControl {

@@ -21,12 +21,12 @@ import java.util.Locale;
 import javax.print.PrintService;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import java.util.List;
-import sun.natee.project.util.ThaiUtil;
 import util.DateConvert;
 import util.MSG;
 

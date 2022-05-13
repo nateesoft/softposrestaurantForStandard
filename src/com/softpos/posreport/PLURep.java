@@ -9,8 +9,8 @@ import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PluRec;
+import com.softpos.pos.core.controller.ThaiUtil;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class PLURep extends javax.swing.JDialog {

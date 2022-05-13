@@ -18,6 +18,7 @@ import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.discount.DiscountDialog;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -35,9 +36,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
 import soft.virtual.JTableControl;
-import sun.natee.project.util.NumberFormat;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
+import util.NumberFormat;
 
 public class CheckBill extends javax.swing.JDialog {
 

@@ -5,6 +5,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
@@ -24,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
 import util.DateChooseDialog;
 import util.MSG;
 

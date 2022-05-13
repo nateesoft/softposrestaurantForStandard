@@ -1,12 +1,12 @@
 package com.softpos.pos.core.model;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import com.softpos.pos.core.controller.Value;
 import java.sql.Statement;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class MemberBean {

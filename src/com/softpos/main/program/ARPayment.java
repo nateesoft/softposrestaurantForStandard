@@ -8,6 +8,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -27,7 +28,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class ARPayment extends javax.swing.JDialog {

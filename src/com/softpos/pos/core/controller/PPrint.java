@@ -1,7 +1,5 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
@@ -41,7 +39,6 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import javax.swing.JOptionPane;
-import sun.natee.project.util.ThaiUtil;
 import util.DateUtil;
 import util.MSG;
 import util.NumberUtil;

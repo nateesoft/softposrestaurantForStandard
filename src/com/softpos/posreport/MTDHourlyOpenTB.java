@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.KeyBoardDialog;
 import util.DateChooseDialog;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
@@ -20,6 +19,7 @@ import java.util.Date;
 import com.softpos.pos.core.controller.PublicVar;
 import java.text.ParseException;
 import printReport.PrintDriver;
+import soft.virtual.KeyBoardDialog;
 import util.MSG;
 
 /**

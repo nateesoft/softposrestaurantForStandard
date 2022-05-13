@@ -12,6 +12,7 @@ import com.softpos.pos.core.controller.CuponControl;
 import com.softpos.pos.core.controller.CuponListControl;
 import com.softpos.pos.core.model.CuponlistBean;
 import com.softpos.pos.core.controller.TempCuponController;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.TempCuponBean;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -32,7 +33,6 @@ import java.sql.Statement;
 import java.util.List;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class CouponDiscount extends javax.swing.JDialog {

@@ -20,12 +20,12 @@ import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import java.sql.SQLException;
 import java.sql.Statement;
-import sun.natee.project.util.NumberFormat;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
+import util.NumberFormat;
 
 public class DiscountDialog extends javax.swing.JDialog {
 

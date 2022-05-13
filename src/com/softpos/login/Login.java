@@ -24,12 +24,13 @@ import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import database.ConfigFile;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
+import util.OSValidator;
 
 public class Login extends javax.swing.JDialog {
 
@@ -366,23 +367,26 @@ public class Login extends javax.swing.JDialog {
             }
         }
 
-        Font myfont = new Font("Norasi", Font.PLAIN, 14);
-        UIManager.put("Label.font", myfont);
-        UIManager.put("Button.font", myfont);
+        if(OSValidator.isWindows()){
+            Font myfont = new Font("Norasi", Font.PLAIN, 14);
+            UIManager.put("Label.font", myfont);
+            UIManager.put("Button.font", myfont);
 
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-            UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                    "Norasi", java.awt.Font.PLAIN, 14)));
-        } catch (ClassNotFoundException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (InstantiationException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (IllegalAccessException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (UnsupportedLookAndFeelException e) {
-            MSG.ERR(null, e.getMessage());
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
+                        "Norasi", java.awt.Font.PLAIN, 14)));
+            } catch (ClassNotFoundException e) {
+                MSG.ERR(null, e.getMessage());
+            } catch (InstantiationException e) {
+                MSG.ERR(null, e.getMessage());
+            } catch (IllegalAccessException e) {
+                MSG.ERR(null, e.getMessage());
+            } catch (UnsupportedLookAndFeelException e) {
+                MSG.ERR(null, e.getMessage());
+            }
         }
+        
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {

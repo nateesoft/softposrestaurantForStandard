@@ -5,6 +5,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.ThaiUtil;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -23,7 +24,6 @@ import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class CancelArPayment extends javax.swing.JDialog {

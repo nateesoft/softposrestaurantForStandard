@@ -3,6 +3,9 @@ package com.softpos.pos.core.controller;
 public class ThaiUtil {
 
     public static String Unicode2ASCII(String unicode) { // แปลง Unicode เป็น ASCII 
+        if (unicode == null) {
+            return "";
+        }
         StringBuilder ascii = new StringBuilder(unicode); // กำหนดพื้นที่ใช้งานชั่วคราว
         int code;
         for (int i = 0; i < unicode.length(); i++) { // ลูปเท่าจำนวนตัวอักษร
@@ -16,7 +19,7 @@ public class ThaiUtil {
     }
 
     public static String ASCII2Unicode(String ascii) {
-        if(ascii==null){
+        if (ascii == null) {
             return "";
         }
         StringBuilder unicode = new StringBuilder(ascii);

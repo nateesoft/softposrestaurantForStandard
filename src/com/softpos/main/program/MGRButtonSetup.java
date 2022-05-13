@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.AppCheckDB;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -9,7 +10,6 @@ import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import setupmenu.DlgBrowseProduct;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class MGRButtonSetup extends javax.swing.JDialog {

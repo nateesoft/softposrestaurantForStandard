@@ -10,6 +10,7 @@ import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.controller.CustomerConrol;
+import com.softpos.pos.core.controller.ThaiUtil;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import com.softpos.pos.core.model.CustomerBean;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 import util.NumberToString;
 

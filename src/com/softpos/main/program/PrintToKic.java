@@ -7,12 +7,12 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import database.MySQLConnect;
 import java.awt.Cursor;
-import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +20,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 import printReport.PrintSimpleForm;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 /**

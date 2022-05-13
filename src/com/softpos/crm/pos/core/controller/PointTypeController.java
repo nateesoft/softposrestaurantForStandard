@@ -1,12 +1,12 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.PointTypeBean;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import sun.natee.project.util.ThaiUtil;
 import util.DateUtil;
 import util.MSG;
 
