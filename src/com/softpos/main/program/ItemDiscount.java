@@ -1,10 +1,12 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.webapp.promotion.ItemDisControl;
 import java.awt.event.KeyEvent;
-import database.MySQLConnect;
 import java.text.DecimalFormat;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
@@ -482,27 +484,6 @@ private void btnExitKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_b
             tempstr = tempstr + Str;
             txtDiscBaht.setText(tempstr);
         }
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        new MySQLConnect();
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                ItemDiscount dialog = new ItemDiscount(new javax.swing.JFrame(), true, "1", "1/002", null);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

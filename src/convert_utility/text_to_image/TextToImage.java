@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -28,15 +30,6 @@ public class TextToImage {
     }
     public int getCharecter(){
         return charecter;
-    }
-    
-    public static void main(String[] args){
-        TextToImage t = new TextToImage();
-        
-        String[] fonts = t.getAvailableFontFamilyNames();
-        for(int i=0; i<fonts.length; i++){
-//            System.out.println(fonts[i]);
-        }
     }
 
     private String formatImage;
@@ -91,8 +84,8 @@ public class TextToImage {
         }
 
 
-        public Vector<String> readTextFile(File file) throws FileNotFoundException, IOException {
-            Vector<String> text = new Vector<String>();
+        public List<String> readTextFile(File file) throws FileNotFoundException, IOException {
+            List text = new ArrayList<>();
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String lineStr;
@@ -131,7 +124,7 @@ public class TextToImage {
             }
 
             ImageOutputStream imageOut = null;
-            Vector<String> text = null;
+            List<String> text;
             try {
                     //read text file
                 text = readTextFile(txtFile);

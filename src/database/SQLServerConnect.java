@@ -54,10 +54,8 @@ public class SQLServerConnect {
             System.out.println("Not connect database !");
             return null;
         }
-        ResultSet rs = null;
-
         Statement stmt = conn.createStatement();
-        rs = stmt.executeQuery(sql);
+        ResultSet rs = stmt.executeQuery(sql);
 
         return rs;
     }

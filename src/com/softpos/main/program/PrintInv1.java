@@ -1,5 +1,12 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.controller.CustomerConrol;
@@ -288,6 +295,11 @@ public class PrintInv1 extends javax.swing.JDialog {
                 txtDocNoFocusLost(evt);
             }
         });
+        txtDocNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDocNoActionPerformed(evt);
+            }
+        });
         txtDocNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtDocNoKeyPressed(evt);
@@ -406,7 +418,9 @@ public class PrintInv1 extends javax.swing.JDialog {
                             .addComponent(txtPoNo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtContact, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDocNo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(txtDocNo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(271, 271, 271)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1122,6 +1136,10 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void txtDocNoRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocNoRefActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDocNoRefActionPerformed
+
+    private void txtDocNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDocNoActionPerformed
 
     public void InvNoExit() {
         String TempInvNo = txtDocNo.getText();
@@ -2180,26 +2198,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         }
         pd.printHTML();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        new MySQLConnect();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                PrintInv1 dialog = new PrintInv1(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

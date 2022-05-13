@@ -21,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import util.MSG;
 
 public final class DateChooserDialog extends javax.swing.JDialog {
 
@@ -304,23 +303,6 @@ private void tblCalendarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
         }
 }//GEN-LAST:event_tblCalendarKeyPressed
-
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DateChooserDialog dialog = new DateChooserDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbMonth;

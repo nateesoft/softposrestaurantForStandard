@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 import java.text.DecimalFormat;
@@ -15,10 +10,7 @@ public class NumberToString {
 
     public String number(double num) {
         DecimalFormat df = new DecimalFormat("#,###,###,###.00");
-        String textReturn = "";
-//        double num = 1234567821.25;
-//        double num = 1821.25;
-//      1,234,567,890.25;
+        String textReturn;
         String numText = df.format(num);
         String numTextDecimal = df.format(num);
         numText = numText.replace(",", "");
@@ -27,22 +19,19 @@ public class NumberToString {
         String a = "";
         String b = "";
 
-        String aa = "";
+        String aa;
         String bb = "";
         String decimalText = "";
         int round = result.length;
 
         numTextDecimal = numTextDecimal.replace(",", "");
-//        numTextDecimal = numTextDecimal.substring(numText.length());
         try {
             decimalText = numTextDecimal.substring(numTextDecimal.lastIndexOf(".") + 1);
         } catch (Exception e) {
             
         }
         if (!decimalText.equals("00")) {
-//            int roundDecimal = numTextDecimal.length();
             int roundDecimal = 3;
-//            char[] resultDecimal = numTextDecimal.replaceAll("\\W", decimalText).toCharArray();
             char[] resultDecimal = decimalText.toCharArray();
             //หาค่าจากทศนิยม
 
@@ -167,9 +156,4 @@ public class NumberToString {
         return numberText + digit;
     }
 
-//    public static void main(String[] args) {
-//        NumberToString numberToText = new NumberToString();
-//        numberToText.number(712.15);
-//        numberToText.number(712);
-//    }
 }

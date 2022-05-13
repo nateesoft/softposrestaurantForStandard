@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PUtility;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,10 +35,7 @@ public class EDCControl extends JDialog implements SerialPortEventListener {
     String CardType = "";
     Boolean ProcessError = false;
     Boolean ProcessFinish = false;
-    //Double Amount = 0.0 ;
-    /**
-     * Creates new form EDCControl
-     */
+
     public EDCControl(java.awt.Frame parent, boolean modal, String PortName, Double Amount) {
         super(parent, modal);
         initComponents();

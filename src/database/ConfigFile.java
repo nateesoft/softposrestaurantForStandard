@@ -18,7 +18,7 @@ public class ConfigFile {
             BufferedReader br = new BufferedReader(new InputStreamReader(ds));
             String tmp;  
             while ((tmp = br.readLine()) != null)   {
-                if(tmp.indexOf(keyword)!=-1){
+                if(tmp.contains(keyword)){
                     str = tmp.split(",", tmp.length())[1];
                     break;
                 }

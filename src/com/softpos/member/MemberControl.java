@@ -4,8 +4,8 @@ import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.main.program.POSConfigSetup;
-import com.softpos.main.program.PosControl;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PosControl;
 import java.sql.SQLException;
 import java.sql.Statement;
 import util.DateConvert;
@@ -119,6 +119,7 @@ public class MemberControl {
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         }

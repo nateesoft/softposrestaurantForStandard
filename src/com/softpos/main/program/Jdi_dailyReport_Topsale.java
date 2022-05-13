@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-
 public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
    
     DefaultTableModel model;
@@ -381,23 +380,6 @@ private void tblDeptKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         this.dispose();
     }
 }//GEN-LAST:event_tblDeptKeyPressed
-
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Jdi_dailyReport_Topsale dialog = new Jdi_dailyReport_Topsale(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

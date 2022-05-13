@@ -2,8 +2,9 @@ package util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 public class DirectoryUtility {
 
@@ -13,13 +14,11 @@ public class DirectoryUtility {
     
     public static boolean createDir(File file) throws IOException {
         boolean success = file.mkdir();
-//        System.out.println(file.getCanonicalPath() + " Create. ==> " + success);
         return success;
     }
 
     public static boolean deleteDir(File file) throws IOException {
         boolean success = file.delete();
-//        System.out.println(file.getCanonicalPath() + " Delete. ==> " + success);
         return success;
     }
 
@@ -27,12 +26,11 @@ public class DirectoryUtility {
         try {
             StringTokenizer st = new StringTokenizer(pathFile.trim(), "/");
             String path = "";
-            File f = null;
             int countToken = st.countTokens();
             for (int i = 0; st.hasMoreTokens(); i++) {
                 if (i < countToken - 1) {
                     path += "/" + st.nextToken();
-                    f = new File(path);
+                    File f = new File(path);
                     if (!f.exists()) {
                         createDir(f);
                     }
@@ -42,14 +40,14 @@ public class DirectoryUtility {
             }
             File file = new File(pathFile);
             return file;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Vector<File> getFilesInDirectory(String path) {
+    public static List<File> getFilesInDirectory(String path) {
         try {
-            Vector<File> file = new Vector<File>();
+            List<File> file = new ArrayList<>();
             File pathName = new File(path);
             System.out.println("Path " + pathName.getPath());
             String[] fileNames = pathName.list();
@@ -62,15 +60,15 @@ public class DirectoryUtility {
                 }
             }
             return file;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         
     }
 
-    public static Vector<File> getAllFilesInDirectory(String path) {
+    public static List<File> getAllFilesInDirectory(String path) {
         try {
-            files = new Vector<File>();
+            files = new ArrayList<>();
             findAllFilesInDirectory(path);
             return files;
         } catch (Exception e) {
@@ -78,7 +76,7 @@ public class DirectoryUtility {
         }
     }
     
-    private static Vector<File> files;
+    private static List<File> files;
 
     private static void findAllFilesInDirectory(String path){
         try {
@@ -92,7 +90,7 @@ public class DirectoryUtility {
                     files.add(f.getCanonicalFile());
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

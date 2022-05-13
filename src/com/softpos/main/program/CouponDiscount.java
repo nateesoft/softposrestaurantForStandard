@@ -1,5 +1,11 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.CouponRec;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.controller.CuponControl;
@@ -647,25 +653,6 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         txtCuQty.setText("");
         txtCuQty.requestFocus(false);
         txtCucode.requestFocus(true);
-    }
-
-    public static void main(String args[]) {
-        new MySQLConnect();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                CouponDiscount dialog = new CouponDiscount(new javax.swing.JFrame(), true, "", "", "", 0.00);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

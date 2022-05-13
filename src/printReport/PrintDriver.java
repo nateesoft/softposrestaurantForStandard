@@ -19,10 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.main.program.BalanceControl;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.SendTerminalReportAuto;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.SendTerminalReportAuto;
+import com.softpos.pos.core.controller.Value;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,10 +41,10 @@ public class PrintDriver {
 
     private String textAll = "";
     private String textNormal = "";
-    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100 height=50>";
+    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100% height=50px>";
     private final String footer = "</table></body></html>";
     private final String fontName = "Angsana New";
-    private float width = 80;
+    private float width = 75;
     private float height = 72;
 
     public PrintDriver() {
@@ -53,20 +53,21 @@ public class PrintDriver {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (IllegalAccessException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (InstantiationException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         } catch (UnsupportedLookAndFeelException e) {
 //            MSG.ERR(e.getMessage());
-            
+
         }
     }
 
     public void setResolution(float w, float h) {
+
         this.width = w;
         this.height = h;
     }
@@ -90,10 +91,14 @@ public class PrintDriver {
     }
 
     public void addTextIFont(String str) {
-        textAll += "<tr><td " + str + "</font></td></tr>";
+        textAll += "<tr><td " + str + "</td></tr>";
+//        textAll += "<tr><td " + str + "</font></td></tr>";
         textNormal += str + "\n";
     }
 
+//public void addTextIFont(String str) {
+//    textNormal += str + "\n";//    textAll += "<tr><td style='word-wrap: break-word; width: \"100px\"' " + str + "</font></td></tr>";
+//}
     public void addTextLn(String str, String size) {
         textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font><br>";
         textNormal += str + "\n";
@@ -168,7 +173,7 @@ public class PrintDriver {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                
+
             } finally {
                 mysql.close();
             }
@@ -216,7 +221,7 @@ public class PrintDriver {
             output.write(text);
 
         } catch (IOException e) {
-            
+
         } finally {
             if (output != null) {
                 try {
@@ -359,26 +364,4 @@ public class PrintDriver {
         return result;
     }
 
-    public static void main(String[] args) {
-        Value.printerDriverName = "kic1";
-        PrintDriver pd = new PrintDriver();
-        //pd.addText("<font size=-6>ทดสอบภาษาไทย</font>abcdefghijklmnopqrstuvwxy<i><font color=red size=-6>z1234567890</font></i>");
-        String fontName1 = "Tahoma";
-        fontName1 = "TIS11_3_FontA11";
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดกุ้ง      1   120.00E</font>");
-//        pd.addText("<font size=-6>N-ข้าวผัดหมูแดง   1    95.00E</font>");
-        pd.addText("<font face=" + fontName1 + " size=-1>" + " &nbsp;  &nbsp;   JF1001" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=1>" + " &nbsp;  &nbsp;   ซีฟู้ดพริกไทยดำกระทะร้อน" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=2>" + " &nbsp;  &nbsp;   ซีฟู้ดพริกไทยดำกระทะร้อน" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=1>" + " &nbsp;  &nbsp;   รวมภาษีมูลค่าเพิ่มแล้ว" + "</font>");
-        pd.addText("<font face=" + fontName1 + " size=2>" + " &nbsp;  &nbsp;   รวมภาษีมูลค่าเพิ่มแล้ว" + "</font>");
-        pd.printHTML();
-
-    }
 }

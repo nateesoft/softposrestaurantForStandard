@@ -8,8 +8,8 @@ import com.softpos.crm.pos.core.modal.BranchFileBean;
 import com.softpos.crm.pos.core.modal.MPluBean;
 import com.softpos.crm.pos.core.modal.MTranBean;
 import com.softpos.crm.pos.core.modal.PointTypeBean;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.BillControl;
 import database.MySQLConnect;
 import java.sql.SQLException;
@@ -52,51 +52,54 @@ public class MemmaterController {
 
         // update MTran vs Billno
         MTranController mTranCon = new MTranController();
-        MTranBean mTranBean = new MTranBean();
-        mTranBean.setService_Date(billBean.getB_OnDate());
-        mTranBean.setMember_Code(memberCode);
-        mTranBean.setBranch_Code(PublicVar.Branch_Code);
-        mTranBean.setReceipt_No(billBean.getB_MacNo() + "/" + billBean.getB_Refno());
-        mTranBean.setSale_Type(generateSaleType(billBean.getB_ETD()));
-        mTranBean.setGrossAmount(billBean.getB_Total() + billBean.getB_ServiceAmt());
-        mTranBean.setDiscountAmount(billBean.getB_MemDiscAmt());
-        mTranBean.setNetAmount(billBean.getB_NetTotal());
-        mTranBean.setMechine_Code(billBean.getB_MacNo());
-        mTranBean.setEmployee_Code(Value.USERCODE);
-        mTranBean.setService_Time(billBean.getB_Ontime());
-        mTranBean.setScore(pointTotal);
-        mTranBean.setTranferFlag("N");
 
-        mTranCon.create(mTranBean);
+        if (mTranCon.checkReceiptNoExist(billBean.getB_Refno())) {
+            MTranBean mTranBean = new MTranBean();
+            mTranBean.setService_Date(billBean.getB_OnDate());
+            mTranBean.setMember_Code(memberCode);
+            mTranBean.setBranch_Code(PublicVar.Branch_Code);
+            mTranBean.setReceipt_No(billBean.getB_MacNo() + "/" + billBean.getB_Refno());
+            mTranBean.setSale_Type(generateSaleType(billBean.getB_ETD()));
+            mTranBean.setGrossAmount(billBean.getB_Total() + billBean.getB_ServiceAmt());
+            mTranBean.setDiscountAmount(billBean.getB_MemDiscAmt());
+            mTranBean.setNetAmount(billBean.getB_NetTotal());
+            mTranBean.setMechine_Code(billBean.getB_MacNo());
+            mTranBean.setEmployee_Code(Value.USERCODE);
+            mTranBean.setService_Time(billBean.getB_Ontime());
+            mTranBean.setScore(pointTotal);
+            mTranBean.setTranferFlag("N");
+            
+            mTranCon.create(mTranBean);
 
-        // Mplu VS T_Sale
-        BillControl billControl = new BillControl();
-        List<TSaleBean> listTSale = billControl.getAllTSale(billBean.getB_Refno());
+            // Mplu VS T_Sale
+            BillControl billControl = new BillControl();
+            List<TSaleBean> listTSale = billControl.getAllTSale(billBean.getB_Refno());
 
-        MPluController mPluCon = new MPluController();
-        List<MPluBean> listMPlu = new ArrayList<>();
-        for (TSaleBean tSaleBean : listTSale) {
-            MPluBean pluBean = new MPluBean();
-            pluBean.setService_Date(tSaleBean.getR_Date());
-            pluBean.setMember_Code(mTranBean.getMember_Code());
-            pluBean.setBranch_Code(PublicVar.Branch_Code);
-            pluBean.setReceipt_No(mTranBean.getReceipt_No());
-            pluBean.setPLU_Group(tSaleBean.getR_Group());
-            pluBean.setSale_Type(tSaleBean.getR_ETD());
-            pluBean.setPLU_GroupName("");
-            pluBean.setPLU_Code(tSaleBean.getR_PluCode());
-            pluBean.setPLU_Name(ThaiUtil.Unicode2ASCII(tSaleBean.getR_PName()));
-            pluBean.setPLU_Amount(tSaleBean.getR_Total());
-            pluBean.setPLU_Quantity(tSaleBean.getR_Quan());
-            pluBean.setPLU_Price(tSaleBean.getR_Price());
-            pluBean.setTranferFlag("N");
+            MPluController mPluCon = new MPluController();
+            List<MPluBean> listMPlu = new ArrayList<>();
+            for (TSaleBean tSaleBean : listTSale) {
+                MPluBean pluBean = new MPluBean();
+                pluBean.setService_Date(tSaleBean.getR_Date());
+                pluBean.setMember_Code(mTranBean.getMember_Code());
+                pluBean.setBranch_Code(PublicVar.Branch_Code);
+                pluBean.setReceipt_No(mTranBean.getReceipt_No());
+                pluBean.setPLU_Group(tSaleBean.getR_Group());
+                pluBean.setSale_Type(tSaleBean.getR_ETD());
+                pluBean.setPLU_GroupName("");
+                pluBean.setPLU_Code(tSaleBean.getR_PluCode());
+                pluBean.setPLU_Name(ThaiUtil.Unicode2ASCII(tSaleBean.getR_PName()));
+                pluBean.setPLU_Amount(tSaleBean.getR_Total());
+                pluBean.setPLU_Quantity(tSaleBean.getR_Quan());
+                pluBean.setPLU_Price(tSaleBean.getR_Price());
+                pluBean.setTranferFlag("N");
 
-            listMPlu.add(pluBean);
+                listMPlu.add(pluBean);
+            }
+            mPluCon.create(listMPlu);
+
+            // update memmaster
+            updateMemberPoint(memberCode, mTranBean.getService_Date(), pointTotal);
         }
-        mPluCon.create(listMPlu);
-
-        // update memmaster
-        updateMemberPoint(memberCode, mTranBean.getService_Date(), pointTotal);
 
         return pointTotal;
     }
@@ -156,7 +159,7 @@ public class MemmaterController {
         mysql.open();
         try {
             String sql = "update " + Value.db_member + ".memmaster "
-                    + "set Member_TotalScore=Member_TotalScore-" + (int)scoreRemove + " "
+                    + "set Member_TotalScore=Member_TotalScore-" + (int) scoreRemove + " "
                     + "where Member_Code='" + memberCode + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);

@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.MySQLConnect;
 import java.sql.Statement;
-import com.softpos.main.program.CreditRec;
-import com.softpos.main.program.FinalcialRec;
-import com.softpos.main.program.PPrint;
+import com.softpos.pos.core.controller.CreditRec;
+import com.softpos.pos.core.controller.FinalcialRec;
+import com.softpos.pos.core.controller.PPrint;
 import util.MSG;
 
 public class TerminalRep extends javax.swing.JDialog {
@@ -388,26 +388,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
 
         mysql.close();
         prn.PrintTerminalEngForm(frec, CrArray, txtMacNo.getText());
-    }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                TerminalRep dialog = new TerminalRep(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

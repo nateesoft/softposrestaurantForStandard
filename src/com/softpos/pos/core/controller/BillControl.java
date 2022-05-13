@@ -1,18 +1,5 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.main.program.BalanceControl;
-import com.softpos.main.program.BranchControl;
-import com.softpos.main.program.CompanyConfig;
-import com.softpos.main.program.DateControl;
-import com.softpos.main.program.POSConfigSetup;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PosControl;
-import com.softpos.main.program.PromotionControl;
-import com.softpos.main.program.PropControl;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.TableFileControl;
-import com.softpos.main.program.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BranchBean;
@@ -40,10 +27,11 @@ import util.DateConvert;
 import util.DateUtil;
 
 public class BillControl {
-
+    
     private final POSConfigSetup posConfig;
     private final MemmaterController memControl = new MemmaterController();
-
+    private MemberBean memberBean;
+    
     public BillControl() {
         posConfig = PosControl.getData();
     }
@@ -208,8 +196,8 @@ public class BillControl {
             }
 
             if (bean.getB_AccrAmt() > 0) {
+                MySQLConnect mysql2 = new MySQLConnect();
                 try {
-                    MySQLConnect c = new MySQLConnect();
                     String sqlInsAccr = "INSERT INTO accr "
                             + "(ArNo, ArDate, ArCode, ArTotal, ArVat,"
                             + " ArDisc, ArVatMon, ArAccNo, ArMark, ArNet, "
@@ -224,11 +212,12 @@ public class BillControl {
                             + "'', '', '', '','', "
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
-                    c.open();
-                    c.getConnection().createStatement().executeUpdate(sqlInsAccr);
-                    c.close();
+                    mysql2.open();
+                    mysql2.getConnection().createStatement().executeUpdate(sqlInsAccr);
                 } catch (SQLException e) {
-                    MSG.NOTICE(e.toString());
+                    MSG.ERR(e.getMessage());
+                } finally {
+                    mysql2.close();
                 }
             }
         } catch (SQLException e) {
@@ -443,7 +432,8 @@ public class BillControl {
             try {
                 TableFileControl tableControl = new TableFileControl();
                 TableFileBean tableFile = tableControl.getData(table);
-
+                this.memberBean = MemberBean.getMember(tableFile.getMemCode());
+                
                 BillNoBean billNo = new BillNoBean();
                 double cashPay = billBean.getB_Cash();
                 double creditPay = billBean.getB_CrAmt1();
@@ -654,7 +644,7 @@ public class BillControl {
             return BillNo;
         }
 
-        List<BalanceBean> balance = balanceControl.getAllBalance(table);
+        List<BalanceBean> balance = balanceControl.getAllBalanceSum(table);
 
         //for T_Sale
         DecimalFormat dfFormat = new DecimalFormat("##.00");
@@ -971,24 +961,26 @@ public class BillControl {
 
             double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
             double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
+            
+            MySQLConnect mysql = new MySQLConnect();
             try {
                 String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time;";
-                MySQLConnect ce = new MySQLConnect();
-                ce.open();
-                Statement stmt = ce.getConnection().createStatement();
+                mysql.open();
+                Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sqlUpdate);
                 if (rs.next()) {
                     String r_index = rs.getString("R_Index");
                     String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                    try (Statement stmt1 = ce.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
                         stmt1.executeUpdate(sqlUpdateT_sale);
                     }
                 }
-                stmt.close();
                 rs.close();
-                ce.close();
+                stmt.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+            } finally {
+                mysql.close();
             }
 
             BillControl.saveBillNo(billNo, memberBean);
@@ -1007,7 +999,6 @@ public class BillControl {
             tableControl.setDefaultTableFile(table);
 
             //move tempgift
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
                 String sql = "select * from tempgift";
@@ -1319,7 +1310,8 @@ public class BillControl {
     }
 
     public List<TSaleBean> getAllTSaleNovoidSum(String billNo) {
-        String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
+        String sql = "select * from t_sale "
+                + "where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();

@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.Locale;
 import database.MySQLConnect;
 import java.sql.Statement;
-import com.softpos.main.program.POSHWSetup;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PublicVar;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
@@ -32,9 +32,6 @@ public class PromotionRep extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
 
-    /**
-     * Creates new form PromotionRep
-     */
     public PromotionRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -287,16 +284,16 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public void PrintPromotionDriver(String MacNo1, String MacNo2) {
         String t = "";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "select "
                     + "tp.PrCode PrCode,pt.ProDesc ProDesc,sum(tp.PQty) PQty, sum(tp.PrAmt) PrAmt "
                     + "from t_promotion tp "
                     + "left join protab pt on tp.prcode = pt.ProCode "
                     + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
                     + "group by tp.prcode";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -333,10 +330,12 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             rs.close();
-            c.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 
@@ -386,23 +385,6 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
         }
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PromotionRep dialog = new PromotionRep(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,5 +1,13 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.CreditPaymentRec;
+import com.softpos.pos.core.controller.SmpCoupon;
+import com.softpos.pos.core.controller.CreditRec;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -1225,28 +1233,6 @@ private void _CreditAmtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         ShowSubtotal();
         bntfunction.requestFocus();
     }
-//    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//        bntfunction.requestFocus();
-//        double TempCreditAmt;
-//        TempCreditAmt = double.parsedouble(PUtility.ConvertReal(_CreditAmt.getText()));
-//        if (double.parsedouble(PUtility.ConvertReal(_CreditAmt.getText())) > (double.parsedouble(PUtility.ConvertReal(DecFmt.format(_CurAmount))))) {
-//            JOptionPane.showMessageDialog(this, "ยอดรับชำระด้วยบัตรเครดิต มากกว่ายอดที่ต้องจ่ายจริง...");
-//            _CreditAmt.setValue(_CurAmount);
-//            _CreditAmt.requestFocus(true);
-//            _CreditAmt.selectAll();
-//        } else {
-//            _CreditAmt.setFocusable(false);
-//            if (TempCreditAmt > 0) {
-//                _CrCardNo.setFocusable(true);
-//                _CrCardNo.requestFocus();
-//            } else {
-//                JOptionPane.showMessageDialog(this, "ยอดรับชำระด้วยบัตรเครดิต ต้องมากกว่า 0 บาท...");
-//                _CreditAmt.setValue(_CurAmount);
-//                _CreditAmt.requestFocus(true);
-//                _CreditAmt.selectAll();
-//            }
-//        }
-//    }
 
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         if (!DecFmt.format(Double.parseDouble(_CreditAmt.getText())).equals(DecFmt.format(_CurAmount))) {
@@ -1291,21 +1277,6 @@ private void _CrCardNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         bntfunction.requestFocus();
-        /*
-         if (!_CrCardNo.getText().equals("")) {
-         if (_CrCardNo.getText().length() <= 16) {
-         _CrCardNoExit();
-         _CrAppNo.setFocusable(true);
-         _CrAppNo.requestFocus();
-         } else {
-         JOptionPane.showMessageDialog(this, "รหัสบัตรเครดิต ป้อนได้ไม่เกิน 16 ตัวอักษร...");
-         _CrCardNo.requestFocus();
-         }
-         } else {
-         GetEDC();
-         }
-         *
-         */
     }
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         if (!_CrCardNo.getText().equals("")) {
@@ -1430,7 +1401,6 @@ private void c_bnt24MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_c_bnt24MouseReleased
 
 private void c_bntplus5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntplus5MouseClicked
-//inputfrombnt("+");
 }//GEN-LAST:event_c_bntplus5MouseClicked
 
 private void c_bntplus5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntplus5MouseReleased
@@ -1438,58 +1408,11 @@ private void c_bntplus5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST
 }//GEN-LAST:event_c_bntplus5MouseReleased
 
 private void c_bntbs5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntbs5MouseClicked
-    /*
-     if (txtTable.hasFocus()) {
-     String tempstr = "";
-     String tempstr2 = "";
-     tempstr = txtTable.getText();
-     for (int i = 0; i < tempstr.length() - 1; i++) {
-     tempstr2 = tempstr2 + tempstr.charAt(i);
-     }
-     txtTable.setText(tempstr2);
-     }
-     if (txtEmp.hasFocus()) {
-     String tempstr = "";
-     String tempstr2 = "";
-     tempstr = txtEmp.getText();
-     for (int i = 0; i < tempstr.length() - 1; i++) {
-     tempstr2 = tempstr2 + tempstr.charAt(i);
-     }
-     txtEmp.setText(tempstr2);
-     }
-     if (txtCust.hasFocus()) {
-     String tempstr = "";
-     String tempstr2 = "";
-     tempstr = txtCust.getText();
-     for (int i = 0; i < tempstr.length() - 1; i++) {
-     tempstr2 = tempstr2 + tempstr.charAt(i);
-     }
-     txtCust.setText(tempstr2);
-     }
-     if (txtPluCode.hasFocus()) {
-     String tempstr = "";
-     String tempstr2 = "";
-     tempstr = txtPluCode.getText();
-     for (int i = 0; i < tempstr.length() - 1; i++) {
-     tempstr2 = tempstr2 + tempstr.charAt(i);
-     }
-     txtPluCode.setText(tempstr2);
-     }
-     if (txtPrice.hasFocus()) {
-     String tempstr = "";
-     String tempstr2 = "";
-     tempstr = txtPrice.getText();
-     for (int i = 0; i < tempstr.length() - 1; i++) {
-     tempstr2 = tempstr2 + tempstr.charAt(i);
-     }
-     txtPrice.setText(tempstr2);
-     }
-     */
 }//GEN-LAST:event_c_bntbs5MouseClicked
 
 private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntbs5MouseReleased
     if (txtArCode.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
         tempstr = txtArCode.getText();
         for (int i = 0; i
@@ -1499,7 +1422,7 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         txtArCode.setText(tempstr2);
     }
     if (_TCash.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
         tempstr = _TCash.getText();
         for (int i = 0; i
@@ -1509,7 +1432,7 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         _TCash.setText(tempstr2);
     }
     if (_CreditAmt.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
 
         tempstr = _CreditAmt.getText();
@@ -1521,7 +1444,7 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         _CreditAmt.setText(tempstr2);
     }
     if (_TGiftvoucher.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
         tempstr = _TGiftvoucher.getText();
         for (int i = 0; i
@@ -1532,7 +1455,7 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }
 
     if (_CrCardNo.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
         tempstr = _CrCardNo.getText();
         for (int i = 0; i
@@ -1542,7 +1465,7 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         _CrCardNo.setText(tempstr2);
     }
     if (_CrAppNo.hasFocus()) {
-        String tempstr = "";
+        String tempstr;
         String tempstr2 = "";
         tempstr = _CrAppNo.getText();
         for (int i = 0; i
@@ -1554,7 +1477,6 @@ private void c_bntbs5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_c_bntbs5MouseReleased
 
 private void c_bnt4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt4MouseClicked
-//inputfrombnt("4");
 }//GEN-LAST:event_c_bnt4MouseClicked
 
 private void c_bnt4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt4MouseReleased
@@ -1562,7 +1484,6 @@ private void c_bnt4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt4MouseReleased
 
 private void c_bnt5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt5MouseClicked
-//inputfrombnt("5");
 }//GEN-LAST:event_c_bnt5MouseClicked
 
 private void c_bnt5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt5MouseReleased
@@ -1570,7 +1491,6 @@ private void c_bnt5MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt5MouseReleased
 
 private void c_bnt6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt6MouseClicked
-//inputfrombnt("6");
 }//GEN-LAST:event_c_bnt6MouseClicked
 
 private void c_bnt6MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt6MouseReleased
@@ -1578,7 +1498,6 @@ private void c_bnt6MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt6MouseReleased
 
 private void c_bntsubMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntsubMouseClicked
-//inputfrombnt("-");
 }//GEN-LAST:event_c_bntsubMouseClicked
 
 private void c_bntsubMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntsubMouseReleased
@@ -1586,7 +1505,6 @@ private void c_bntsubMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_c_bntsubMouseReleased
 
 private void c_bntsubActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntsubActionPerformed
-// TODO add your handling code here:
 }//GEN-LAST:event_c_bntsubActionPerformed
 
 private void c_bntescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntescMouseClicked
@@ -1594,7 +1512,6 @@ private void c_bntescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_c_bntescMouseClicked
 
 private void c_bnt25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt25MouseClicked
-//inputfrombnt("1");
 }//GEN-LAST:event_c_bnt25MouseClicked
 
 private void c_bnt25MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt25MouseReleased
@@ -1602,7 +1519,6 @@ private void c_bnt25MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_c_bnt25MouseReleased
 
 private void c_bnt2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt2MouseClicked
-//inputfrombnt("2");
 }//GEN-LAST:event_c_bnt2MouseClicked
 
 private void c_bnt2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt2MouseReleased
@@ -1610,7 +1526,6 @@ private void c_bnt2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt2MouseReleased
 
 private void c_bnt3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt3MouseClicked
-//inputfrombnt("3");
 }//GEN-LAST:event_c_bnt3MouseClicked
 
 private void c_bnt3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt3MouseReleased
@@ -1618,7 +1533,6 @@ private void c_bnt3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt3MouseReleased
 
 private void c_bntmultiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntmultiMouseClicked
-//inputfrombnt("*");
 }//GEN-LAST:event_c_bntmultiMouseClicked
 
 private void c_bntmultiMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntmultiMouseReleased
@@ -1676,7 +1590,6 @@ private void c_bntenterMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST
 }//GEN-LAST:event_c_bntenterMouseReleased
 
 private void c_bntenterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntenterActionPerformed
-// TODO add your handling code here:
 }//GEN-LAST:event_c_bntenterActionPerformed
 
 private void c_bnt0MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bnt0MouseClicked
@@ -1687,7 +1600,6 @@ private void c_bnt0MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_c_bnt0MouseReleased
 
 private void c_bntdotMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntdotMouseClicked
-//inputfrombnt(".");
 }//GEN-LAST:event_c_bntdotMouseClicked
 
 private void c_bntdotMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntdotMouseReleased
@@ -1695,23 +1607,6 @@ private void c_bntdotMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_c_bntdotMouseReleased
 
 private void c_bntclrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntclrMouseClicked
-    /*
-     if (txtTable.hasFocus()) {
-     txtTable.setText("");
-     }
-     if (txtEmp.hasFocus()) {
-     txtEmp.setText("");
-     }
-     if (txtCust.hasFocus()) {
-     txtCust.setText("");
-     }
-     if (txtPluCode.hasFocus()) {
-     txtPluCode.setText("");
-     }
-     if (txtPrice.hasFocus()) {
-     txtPrice.setText("");
-     }
-     */
 }//GEN-LAST:event_c_bntclrMouseClicked
 
 private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntclrMouseReleased
@@ -1737,7 +1632,6 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_c_bntclrMouseReleased
 
 private void c_bntsalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntsalMouseClicked
-//inputfrombnt("/");
 }//GEN-LAST:event_c_bntsalMouseClicked
 
 private void c_bntsalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_bntsalMouseReleased
@@ -1764,7 +1658,6 @@ private void txtArCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 }//GEN-LAST:event_txtArCodeKeyPressed
 
 private void txtSumArNetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSumArNetActionPerformed
-// TODO add your handling code here:
 }//GEN-LAST:event_txtSumArNetActionPerformed
 
 private void tblArKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblArKeyPressed
@@ -1839,17 +1732,14 @@ private void tblArPayFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_tblArPayFocusGained
 
 private void _CrAppNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event__CrAppNoFocusLost
-    // TODO add your handling code here:
     _CrAppNoExit();
 }//GEN-LAST:event__CrAppNoFocusLost
 
 private void _CreditAmtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event__CreditAmtFocusLost
-    // TODO add your handling code here:
     _CreditAmtExit();
 }//GEN-LAST:event__CreditAmtFocusLost
 
 private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event__CrCardNoFocusLost
-    // TODO add your handling code here:
     _CrCardNoExit();
 }//GEN-LAST:event__CrCardNoFocusLost
 
@@ -1858,14 +1748,12 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void _TCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__TCashActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event__TCashActionPerformed
     public void GetEDC() {
     }
 
     public void txtArCodeExit() {
         if (txtArCode.getText().equals("")) {
-            //JOptionPane.showMessageDialog(this, "กรุณาป้อนรหัสลูกหนี้ภายนอก..");
             txtArCode.setText("");
         } else {
             if (SeekAr(txtArCode.getText())) {
@@ -1882,7 +1770,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 MSG.WAR_MSG(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในฐานข้อมูลลูกหนี้ภายนออก...");
                 ClearAr();
                 txtArCode.setText("");
-
             }
         }
     }
@@ -1967,7 +1854,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     public void ShowSubtotal() {
         _TGiftvoucher.setText(DecFmt.format(_Gift_Voucher));
         _TCash.setText(DecFmt.format(_PayAmt));
-        //_CreditAmt.setText(DecFmt.format(_Cr_Amount1));
         _CrCardNo.setText(_Cr_CardNo1);
         _CrAppNo.setText(_Cr_App_Code1);
         _CrName.setText(_Cr_Name1);
@@ -1980,7 +1866,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
         _CurAmount = _NetTotal - (_Gift_Voucher + _Cr_Amount1 + _PayAmt);
         ShowDigital("จำนวนเงิน :", _CurAmount);
-        //bntfunction.requestFocus();
     }
 
     public void ShowDigital(String Msg, double Amount) {
@@ -2001,12 +1886,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         Giftvoucher frm = new Giftvoucher(null, true);
         frm.setVisible(true);
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
+            mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTempGift = "select sum(giftamt) "
                     + "from tempgift where macno='" + Value.MACNO + "'";
@@ -2029,7 +1911,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         _TGiftvoucherExit();
         bntfunction.requestFocus();
-
     }
 
     public void bntCreditClick() {
@@ -2046,29 +1927,18 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             _Cr_Name1 = CrRec.CrName;
             _Cr_Code1 = CrRec.CrCode;
             _Cr_Bank = CrRec.CrBank;
-            //_Cr_Charge = CrRec.Charge;
-            //_Cr_CardNo1 = "";
-            //_Cr_App_Code1 = "";
-            //_Cr_Amount1 = 0.0;
         } else {
             MSG.WAR_MSG(this, "ไม่พบข้อมูลบัตรเครดิตที่ต้องการ...");
         }
-
     }
 
     public void _TGiftvoucherExit() {
-        double GiftOver = 0.0;
         double CurValue;
         CurValue = Double.parseDouble(PUtility.ConvertReal(_TGiftvoucher.getText()));
         _Gift_Voucher = CurValue;
         if (_Gift_Voucher > _NetTotal) {
             if (PUtility.ShowConfirmMsg("*** ยอดการชำระด้วยบัตรกำนัล/บัตรของขวัญ มากกว่ายอดที่ต้องจ่ายจริง ยืนยันการทำรายการหรือไม่ ? ")) {
-                GiftOver = _Gift_Voucher - _NetTotal;
-                //AddToDept23(GiftOver);
             } else {
-                /**
-                 * * OPEN CONNECTION **
-                 */
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
@@ -2084,7 +1954,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 } finally {
                     mysql.close();
                 }
-
                 _Gift_Voucher = 0.0;
             }
         }
@@ -2121,24 +1990,20 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         String RetVal;
         int TempBill = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from branch ";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            int Cnt = 0;
-            if (rec.getRow() == 0) {
-                TempBill = 0;
-            } else {
-                TempBill = rec.getInt("arbillno");
+            mysql.open();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String SqlQuery = "select *from branch ";
+                try (ResultSet rec = stmt.executeQuery(SqlQuery)) {
+                    rec.first();
+                    if (rec.getRow() == 0) {
+                        TempBill = 0;
+                    } else {
+                        TempBill = rec.getInt("arbillno");
+                    }
+                }
             }
-            rec.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         }
@@ -2146,10 +2011,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         String TempStr = IntFmt.format(TempBill);
         RetVal = PUtility.Addzero(TempStr, 7);
         try {
-            Statement stmt1 = mysql.getConnection().createStatement();
-            String SqlQuery = "update branch set arbillno=" + TempBill;
-            stmt1.executeUpdate(SqlQuery);
-            stmt1.close();
+            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                stmt1.executeUpdate("update branch set arbillno=" + TempBill);
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         }
@@ -2166,9 +2030,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         if (_SubTotalOK) {
             ArCode = txtArCode.getText();
 
-            /**
-             * * OPEN CONNECTION **
-             */
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
@@ -2196,14 +2057,16 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SqlQuery = "select *from  accr where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark='Y')";
+                String SqlQuery = "select *from  accr where (arcode='" + ArCode + "') "
+                        + "and (arflage<>'Y') and (armark='Y')";
                 ResultSet rec = stmt.executeQuery(SqlQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
                 } else {
                     do {
                         Statement stmt2 = mysql.getConnection().createStatement();
-                        String InsertQuery = "insert into t_ar  (ref_no,arcode,billno,billdate,amount,fat,terminal,cashier) "
+                        String InsertQuery = "insert into t_ar  "
+                                + "(ref_no,arcode,billno,billdate,amount,fat,terminal,cashier) "
                                 + "values (?,?,?,?,?,?,?,?)";
                         PreparedStatement prm = mysql.getConnection().prepareStatement(InsertQuery);
                         prm.setString(1, XRef_No);
@@ -2299,12 +2162,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prn.print("----------------------------------------");
 
                     double SumCardAmt = 0.0;
-                    /**
-                     * * OPEN CONNECTION **
-                     */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
                     try {
+                        mysql.open();
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select *from accr where ardocpay='" + XRef_No + "'";
                         ResultSet rec = stmt.executeQuery(SqlQuery);
@@ -2378,9 +2238,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public void PrintBillArDriver(String XRef_No, String ArCode, String ReferentNo) {
         String t = "";
-        String ArName = "";
-//        double SumCardAmt = 0.0;
-        double ArVat = 0.0;
+        String ArName;
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {
@@ -2417,21 +2275,20 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 do {
                     t += "colspan=3 align=left><font face=Angsana New size=1>" + "อ้างถึงใบเสร็จเลขที่" + TAB + "มูลค่า..." + "_";
                     t += "colspan=3 align=left><font face=Angsana New size=1>" + rec.getString("arno") + TAB + DatefmtShow.format(rec.getDate("ardate")) + TAB + PUtility.DataFullR(DecFmt.format(rec.getDouble("arnet")), 11) + "_";
-//                    SumCardAmt = SumCardAmt + rec.getDouble("arnet");
-                    ArVat = rec.getDouble("ArNet");
+                    MySQLConnect mysql2 = new MySQLConnect();
                     try {
                         String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "'";
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
-                        ResultSet rsCustfile = c.getConnection().createStatement().executeQuery(sqlGetCustFile);
+                        mysql2.open();
+                        ResultSet rsCustfile = mysql2.getConnection().createStatement().executeQuery(sqlGetCustFile);
                         if (rsCustfile.next()) {
                             ArName = ThaiUtil.ASCII2Unicode(rsCustfile.getString("sp_desc"));
                             t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (ArName) + "_";
                         }
                         rsCustfile.close();
-                        c.close();
-                    } catch (Exception e) {
-                        MSG.NOTICE(e.toString());
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql2.close();
                     }
                     t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(_NetTotal) + "_";
                     if (_Cash > 0) {
@@ -2508,9 +2365,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     RetVal = true;
                 }
             }
-
         }
-
         return RetVal;
     }
 
@@ -2535,7 +2390,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         if (!ESCKEY) {
             if (!_CrCardNo.getText().equals("")) {
                 if (_CrCardNo.getText().length() <= 16) {
-                    //_CrCardNoExit();
                     _CrAppNo.setFocusable(true);
                     _CrAppNo.requestFocus();
                 } else {
@@ -2550,12 +2404,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public boolean SeekCredit(String CrCode) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
+            mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
             String SeekCuList = "select *from creditfile where crcode='" + CrCode + "'";
 
@@ -2586,19 +2437,12 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public Boolean SeekAr(String ArCode) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-
         try {
+            mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from custfile where sp_code='" + ArCode + "'";
-
-            ResultSet rec = stmt.executeQuery(SqlQuery);
+            ResultSet rec = stmt.executeQuery("select *from custfile where sp_code='" + ArCode + "'");
             rec.first();
-            int Cnt = 0;
             if (rec.getRow() == 0) {
                 RetVal = false;
             } else {
@@ -2607,27 +2451,24 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 txtArCr.setValue(rec.getDouble("sp_cramt"));
             }
             rec.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR_MSG(this, e.getMessage());
+        } finally {
+            mysql.close();
         }
         return RetVal;
     }
 
     public Boolean ChkSumArCr(String ArCode) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
+            mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select sum(arnet),count(arno) from accr where (arcode='" + ArCode + "') and (arflage<>'Y')";
 
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
-            int Cnt = 0;
             if (rec.getRow() == 0) {
                 RetVal = false;
             } else {
@@ -2656,12 +2497,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public void LoadAr(String ArCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
+            mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from accr where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark<>'Y')";
 
@@ -2988,24 +2826,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                ARPayment dialog = new ARPayment(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea CreditList;
     private javax.swing.JLabel Digital_Amount;

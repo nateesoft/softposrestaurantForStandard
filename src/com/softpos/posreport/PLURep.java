@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import database.MySQLConnect;
 import java.sql.Statement;
 import com.softpos.main.program.Jdi_report_SalePLU;
-import com.softpos.main.program.PPrint;
-import com.softpos.main.program.PUtility;
-import com.softpos.main.program.PluRec;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PluRec;
 import soft.virtual.KeyBoardDialog;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
@@ -17,9 +17,6 @@ public class PLURep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
 
-    /**
-     * Creates new form PLURep
-     */
     public PLURep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -1024,23 +1021,6 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
         prn.PrintPlu(GArray);
         txtMacNo1.requestFocus();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PLURep dialog = new PLURep(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

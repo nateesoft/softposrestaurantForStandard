@@ -230,7 +230,10 @@
                               <Component id="txtPoNo" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                               <Component id="txtContact" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                               <Component id="txtDate" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
-                              <Component id="txtDocNo" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  <Component id="txtDocNo" min="-2" pref="114" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -600,6 +603,7 @@
           </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDocNoFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDocNoActionPerformed"/>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDocNoKeyPressed"/>
           </Events>
         </Component>

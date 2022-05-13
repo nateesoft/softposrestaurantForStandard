@@ -1,12 +1,23 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.discount.DiscountDialog;
-import static com.softpos.main.program.BalanceControl.updateProSerTable;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -1564,19 +1575,20 @@ public class CheckBill extends javax.swing.JDialog {
         }
         new Thread(() -> {
             String sql = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
+            MySQLConnect mysql = new MySQLConnect();
             try {
-                MySQLConnect c = new MySQLConnect();
-                c.open();
-                final ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+                mysql.open();
+                final ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 boolean isTakeOrder = isTakeOrder();
                 if (rs.next() && isTakeOrder == true) {
                     MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
                 } else {
                     checkBillOK();
                 }
-                c.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+            } finally {
+                mysql.close();
             }
         }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
@@ -2529,26 +2541,26 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     public void UpdateMember(String choice) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "";
             if (choice.equals("Ins")) {
-//                sql = "Update tablefile set memcode='" + MemCode + "',memname='" + ThaiUtil.Unicode2ASCII(MemName) + "' where tcode='" + tableNo + "';";
             } else {
                 sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
             }
             switch (choice) {
                 case "Ins":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
                 case "Del":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
             }
-            c.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

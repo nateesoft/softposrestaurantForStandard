@@ -1,7 +1,7 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MTranBean;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +36,26 @@ public class MTranController {
         return bean;
     }
 
+    public boolean checkReceiptNoExist(String receiptNo) {
+        boolean isNoExist = true;
+        MySQLConnect mysql = new MySQLConnect();
+        try {
+            mysql.open();
+            String sql = "select Receipt_No from " + Value.db_member + ".mtran "
+                    + "where Receipt_No='" + receiptNo + "'";
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    isNoExist = false;
+                }
+            }
+        } catch (SQLException e) {
+            MSG.ERR("MTranController:" + e.getMessage());
+        } finally {
+            mysql.close();
+        }
+        return isNoExist;
+    }
+    
     private static MTranBean mappingBean(ResultSet rs) throws SQLException {
         MTranBean bean = new MTranBean();
         bean.setService_Date(rs.getDate("Service_Date"));

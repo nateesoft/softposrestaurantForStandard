@@ -146,12 +146,6 @@ public class convertToChar {
         } else {
             outPrice += "ถ้วน";
         }
-//        System.out.println(a+" convert is :" + outPrice);
         return outPrice;
-    }
-
-    public static void main(String[] args) {
-        convertToChar c = new convertToChar();
-       
     }
 }

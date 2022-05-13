@@ -1,6 +1,6 @@
 package setupmenu;
 
-import com.softpos.main.program.PosControl;
+import com.softpos.pos.core.controller.PosControl;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -12,9 +12,6 @@ import util.MSG;
 
 public class SetHeaderMenu extends javax.swing.JDialog {
 
-    /**
-     * Creates new form SetHeaderMenu
-     */
     public SetHeaderMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -481,17 +478,6 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             KeyBoardDialog.get(txtHeader7);
         }
     }//GEN-LAST:event_txtHeader9MouseClicked
-
-    public static void main(String args[]) {
-        new MySQLConnect();
-        SetHeaderMenu dialog = new SetHeaderMenu(new javax.swing.JFrame(), true);
-        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                System.exit(0);
-            }
-        });
-        dialog.setVisible(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdCancel;

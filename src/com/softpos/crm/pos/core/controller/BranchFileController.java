@@ -1,7 +1,7 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.BranchFileBean;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +13,6 @@ import util.MSG;
  * @author nathee
  */
 public class BranchFileController {
-
-    public static void main(String[] args) {
-        BranchFileController.getData("001");
-    }
 
     public static BranchFileBean getData(String branchCode) {
         BranchFileBean bean = null;

@@ -3,6 +3,7 @@ package com.softpos.pos.core.controller;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import com.softpos.pos.core.model.CustomerBean;
+import java.sql.SQLException;
 import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
@@ -15,10 +16,11 @@ public class CustomerConrol {
     public CustomerBean getCustomer(String custCode) {
         CustomerBean bean = new CustomerBean();
         String sql = "select * from customer where sp_code='" + custCode + "'";
+        MySQLConnect mysql = new MySQLConnect();
+
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            mysql.open();
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 bean.setSp_code(rs.getString("sp_code"));
                 bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
@@ -31,9 +33,11 @@ public class CustomerConrol {
                 bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
                 bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
             }
-            c.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            mysql.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
         return bean;
 

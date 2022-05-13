@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ public class MemberDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        txtCode.requestFocus();
+        txtTel.requestFocus();
         this.tableNo = table;
     }
 
@@ -276,7 +277,7 @@ public class MemberDialog extends javax.swing.JDialog {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         UpdateMember("Ins");
-        selectMember();  
+        selectMember();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -284,7 +285,8 @@ public class MemberDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        loadAllMember(txtCode.getText(), txtName.getText(), txtTel.getText());
+        loadSearchMember(txtCode.getText(), txtName.getText(), txtTel.getText());
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyPressed
@@ -335,46 +337,6 @@ public class MemberDialog extends javax.swing.JDialog {
         }
     }
 
-    public static void main(String args[]) {
-        new MySQLConnect();
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MemberDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MemberDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MemberDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MemberDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MemberDialog dialog = new MemberDialog(new javax.swing.JDialog(), true, "");
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelMember;
     private javax.swing.JButton jButton3;
@@ -414,8 +376,8 @@ public class MemberDialog extends javax.swing.JDialog {
             }
 
             String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "order by Member_Code "
-                    + "limit 0,100";
+                    + "order by Member_Code; ";
+//                    + "limit 0,100";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -460,8 +422,63 @@ public class MemberDialog extends javax.swing.JDialog {
                     + "where Member_Code like '%" + memCode + "%' "
                     + "and Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
                     + "and Member_HomeTel like '%" + memTel + "%' "
-                    + "order by Member_Code "
-                    + "limit 0,10";
+                    + "order by Member_Code ";
+//                    + "limit 0,10";
+            Statement stmt = mysql.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("Member_Code"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                    rs.getString("Member_HomeTel"),
+                    "",
+                    rs.getString("Member_Mobile"),
+                    rs.getString("Member_ExpiredDate")
+
+                });
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(this, e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+        tbMember.requestFocus();
+    }
+
+    private void loadSearchMember(String memCode, String memName, String memTel) {
+        /**
+         * * OPEN CONNECTION **
+         */
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            model = (DefaultTableModel) tbMember.getModel();
+            tbMember.setRowHeight(35);
+
+            int size = model.getRowCount();
+            for (int i = 0; i < size; i++) {
+                model.removeRow(0);
+            }
+
+            String sql = "";
+            if (!memCode.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_Code like '%" + memCode + "%' "
+                        + "order by Member_Code ";
+//                    + "limit 0,10";
+            } else if (!memName.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
+                        + "order by Member_Code ";
+            } else if (!memTel.equals("")) {
+                sql = "select * from " + Value.db_member + ".memmaster "
+                        + "where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' "
+                        + "order by Member_Code ";
+            }
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -517,20 +534,20 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+
         } finally {
             mysql.close();
         }
     }
 
     public void UpdateMember(String choice) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            String sql = "";
-            String memCode = MemCode+"";
-            if (memCode.equals("null")){
-                MemCode ="";
+            mysql.open();
+            String sql;
+            String memCode = MemCode + "";
+            if (memCode.equals("null")) {
+                MemCode = "";
             }
             if (choice.equals("Ins")) {
                 sql = "Update tablefile set memcode='" + MemCode + "',memname='" + ThaiUtil.Unicode2ASCII(MemName) + "' where tcode='" + tableNo + "';";
@@ -539,14 +556,16 @@ public class MemberDialog extends javax.swing.JDialog {
             }
             switch (choice) {
                 case "Ins":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
                 case "Del":
-                    c.getConnection().createStatement().executeUpdate(sql);
+                    mysql.getConnection().createStatement().executeUpdate(sql);
                     break;
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

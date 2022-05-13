@@ -5,15 +5,18 @@
  */
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import database.SQLServerConnect;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.MSG;
 
 /**
  *
@@ -233,20 +236,20 @@ public class UpdateData extends javax.swing.JDialog {
                             DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
                             ArrayList<Object[]> ListObj = LoadData();
                             try {
-                                MySQLConnect c = new MySQLConnect();
-                                c.open();
+                                MySQLConnect mysql = new MySQLConnect();
+                                mysql.open();
                                 if (ListObj != null && ListObj.size() > 0) {
                                     for (int i = 0; i < ListObj.size(); i++) {
                                         String sql = ThaiUtil.ASCII2Unicode(ListObj.get(i)[0].toString());
                                         model.addRow(new Object[]{sql});
                                         try {
-                                            c.getConnection().createStatement().executeUpdate(sql);
+                                            mysql.getConnection().createStatement().executeUpdate(sql);
                                             lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
                                         } catch (Exception e) {
                                         }
                                     }
                                 }
-                                c.close();
+                                mysql.close();
                             } catch (Exception e) {
                             }
                             setFlag(true);
@@ -271,31 +274,31 @@ public class UpdateData extends javax.swing.JDialog {
     }
 
     public ArrayList<Object[]> LoadData() {
-
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ArrayList<Object[]> ListObj = new ArrayList<>();
         String BType = "-";
+        
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            SQLServerConnect sv = new SQLServerConnect();
-            MySQLConnect c = new MySQLConnect();
-
-            c.open();
+            mysql.open();
             String sqlGetBType = "Select btype btype from tranconfig";
-            ResultSet rsGetBtype = c.getConnection().createStatement().executeQuery(sqlGetBType);
+            ResultSet rsGetBtype = mysql.getConnection().createStatement().executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {
                 BType = rsGetBtype.getString("btype");
             }
             String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
-            ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql);
-            while (rs.next()) {
-                String sqlUpdate = "";
-                sqlUpdate = rs.getString("qforbranch");
-                ListObj.add(new Object[]{sqlUpdate});
+            try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
+                while (rs.next()) {
+                    String sqlUpdate = rs.getString("qforbranch");
+                    ListObj.add(new Object[]{sqlUpdate});
+                }
             }
-            sv.close();
-            rs.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            MSG.ERR(this, e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         return ListObj;
     }
@@ -316,48 +319,6 @@ public class UpdateData extends javax.swing.JDialog {
             PanelStatus.setBackground(Color.red);
             JOptionPane.showMessageDialog(this, "ไม่สามารถเชื่อมต่อฐานข้อมูลเซิร์ฟเวอร์ได้กรุณาตรวจสอบอินเทอร์เน็ต");
         }
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UpdateData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UpdateData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UpdateData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                UpdateData dialog = new UpdateData(new javax.swing.JDialog(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

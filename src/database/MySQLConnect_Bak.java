@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.softpos.main.program.Value;
+import com.softpos.pos.core.controller.Value;
 import javax.swing.JOptionPane;
 import util.MSG;
 
@@ -42,8 +42,8 @@ public class MySQLConnect_Bak {
 
     private static void showError(Exception e) {
         String strErr = e.getMessage();
-        if (strErr.indexOf("No operations") != -1||
-                strErr.indexOf("Communications link failure")!=-1) {
+        if (strErr.contains("No operations")||
+                strErr.contains("Communications link failure")) {
             int confirm = JOptionPane.showConfirmDialog(null, msgError);
             if (confirm == JOptionPane.YES_OPTION) {
                 System.exit(0);
@@ -61,9 +61,7 @@ public class MySQLConnect_Bak {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
             System.out.println("Database Connected.");
-        } catch (ClassNotFoundException e) {
-            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
         }
     }
