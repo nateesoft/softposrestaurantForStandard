@@ -324,7 +324,8 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     + "or TAmount>0 "
                     + "or TItem > 0 "
                     + "or Tcustomer > 0 "
-                    + "order by tcurtime";
+//                    + "order by tcurtime";
+                    + "order by tcode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(LoadTableFile);
 

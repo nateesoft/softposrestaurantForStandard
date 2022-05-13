@@ -13,7 +13,6 @@ public class PosControl {
     private static CompanyBean companyBean = null;
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
-    public static MySQLConnect mysql = new MySQLConnect();
 
     public static void resetPosHwSetup() {
         poshwsetup = null;
@@ -35,7 +34,7 @@ public class PosControl {
         if (companyBean != null) {
             return companyBean;
         }
-
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from company";
@@ -84,6 +83,7 @@ public class PosControl {
                     companyBean.setFloorTab4(rs.getString("FloorTab4"));
                     companyBean.setFloorTab5(rs.getString("FloorTab5"));
                     companyBean.setFloorTab6(rs.getString("FloorTab6"));
+                    companyBean.setFloorTab7(rs.getString("FloorTab7"));
                     companyBean.setPdahead3(rs.getString("pdahead3"));
                     companyBean.setPdahead4(rs.getString("pdahead4"));
                 }
@@ -95,6 +95,7 @@ public class PosControl {
         } finally {
             mysql.close();
         }
+        PublicVar.companyBean = companyBean;
         return companyBean;
     }
 
@@ -102,7 +103,7 @@ public class PosControl {
         if (posConfigSetup != null) {
             return posConfigSetup;
         }
-//        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from posconfigsetup";
@@ -176,6 +177,7 @@ public class PosControl {
         } finally {
             mysql.close();
         }
+        PublicVar.posConfigSetup = posConfigSetup;
         return posConfigSetup;
     }
 
@@ -183,7 +185,7 @@ public class PosControl {
         if (poshwsetup != null) {
             return poshwsetup;
         }
-//        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "'";
@@ -250,6 +252,7 @@ public class PosControl {
         } finally {
             mysql.close();
         }
+        PublicVar.poshwsetup = poshwsetup;
         return poshwsetup;
     }
 

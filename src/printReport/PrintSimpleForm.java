@@ -1608,7 +1608,7 @@ public class PrintSimpleForm {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
                     t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
 
@@ -1656,7 +1656,7 @@ public class PrintSimpleForm {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
                     t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
@@ -1704,7 +1704,7 @@ public class PrintSimpleForm {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
                     t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
@@ -1752,7 +1752,7 @@ public class PrintSimpleForm {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
                     t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
@@ -1800,7 +1800,7 @@ public class PrintSimpleForm {
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
                     t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
@@ -2127,7 +2127,7 @@ public class PrintSimpleForm {
                     }
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp()+ "_";
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }

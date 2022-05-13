@@ -9,25 +9,17 @@ import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.SendSQLToFTP;
 import com.softpos.pos.core.model.TSaleBean;
 import database.ConfigFile;
 import database.MySQLConnect;
 import database.MySQLConnectWebOnline;
-import java.awt.Dialog;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import static org.apache.poi.hssf.usermodel.HeaderFooter.date;
 import sun.natee.project.util.ThaiUtil;
 import util.DateConvert;
 //import util.ExportSQLImportSQL;
@@ -40,12 +32,10 @@ import util.MSG;
 public final class Api_RealTimeSales extends javax.swing.JFrame {
 
     private boolean FlageCheckProcess = false;
-    private MySQLConnect c = new MySQLConnect();
     BranchBean branchBean = new BranchBean();
     BranchControl branControl = new BranchControl();
-    private boolean todayVoid = false;
-    private MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
-    public String ErrorText = "Error.." + "\r\n";
+    final private MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
+    public String ErrorText = "Log Error.." + "\r\n";
     public String LogQuery = "Log SQL.." + "\r\n";
     String logTab = "Log Check..." + "\r\n";
     DateConvert dc = new DateConvert();
@@ -53,7 +43,12 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     public Api_RealTimeSales() {
         setUndecorated(true);
         initComponents();
+
         branchBean = new BranchBean();
+        
+        MySQLConnect.getDbVar();
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
         branchBean = BranchControl.getData();
         new Thread(new Runnable() {
 
@@ -64,13 +59,13 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 processRun();
             }
         }).start();
-
     }
 
     public void processRun() {
 //        uploadSQL();
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            c.open();
+            mysql.open();
             myOnline.open();
 //            uploadMaster();
             for (int i = 0; i < 10; i++) {
@@ -78,7 +73,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 i = 0;
                 uploadCheckConfig();
                 myOnline.close();
-                c.close();
+                mysql.close();
             }
             myOnline.close();
         } catch (Exception e) {
@@ -89,7 +84,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 txtLogErr.setText(logTab + ErrorText);
                 Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
             }
-            c.open();
+            mysql.open();
             e.printStackTrace();
         }
 
@@ -240,14 +235,16 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     }
 
     public void uploadBillno() {
+
         try {
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             myOnline.open();
             DateConvert dc = new DateConvert();
             String sql = "select b_refno from billno where B_SendOnline='N';";
-            Statement stmtLocal = c.getConnection().createStatement();
+            Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
-            Statement stmtLocalUpdate = c.getConnection().createStatement();
+            Statement stmtLocalUpdate = mysql.getConnection().createStatement();
             try {
                 ResultSet rs = stmtLocal.executeQuery(sql);
                 while (rs.next()) {
@@ -316,7 +313,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             }
             stmtLocal.close();
             stmtServer.close();
-            c.close();
+            mysql.close();
             myOnline.close();
         } catch (Exception e) {
             ErrorText += e.toString();
@@ -327,10 +324,11 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 
     public void uploadT_Sale() {
         try {
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             myOnline.open();
-            Statement stmtLocalUpdate = c.getConnection().createStatement();
-            Statement stmtLocal = c.getConnection().createStatement();
+            Statement stmtLocalUpdate = mysql.getConnection().createStatement();
+            Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             String sql = "select * from t_sale where r_sendOnline='N' order by macno,r_refno,r_index;";
             ResultSet rs = stmtLocal.executeQuery(sql);
@@ -593,7 +591,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             System.out.println("Loop T_Sale Finished;");
             FlageCheckProcess = false;
             rs.close();
-            c.close();
+            mysql.close();
             Thread.sleep(10 * 1000);
 //            uploadCheckConfig();
         } catch (Exception e) {
@@ -605,9 +603,10 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 
     public void uploadCreditFile() {
         try {
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             myOnline.open();
-            Statement stmtLocal = c.getConnection().createStatement();
+            Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             String sqlGetCreditFile = "select crcode,crname from creditfile order by crcode;";
             ResultSet rsCredit = stmtLocal.executeQuery(sqlGetCreditFile);
@@ -633,7 +632,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             }
             myOnline.close();
             rsCredit.close();
-            c.close();
+            mysql.close();
             stmtLocal.close();
             stmtServer.close();
         } catch (Exception e) {
@@ -645,9 +644,10 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 
     private void uploadGroupFile() {
         try {
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             myOnline.open();
-            Statement stmtLocal = c.getConnection().createStatement();
+            Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             Statement stmtServerDel = myOnline.getConnection().createStatement();
             String sqlGetGroupFile = "select groupcode,groupname from groupfile order by groupcode;";
@@ -671,7 +671,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                     txtLogErr.setText(logTab + ErrorText);
                 }
             }
-            c.close();
+            mysql.close();
             myOnline.close();
             stmtServerDel.close();
             rsGroupFile.close();
@@ -686,9 +686,10 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 
     private void uploadProtab() {
         try {
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             myOnline.open();
-            Statement stmtLocal = c.getConnection().createStatement();
+            Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             Statement stmtServerDel = myOnline.getConnection().createStatement();
             String sqlGetProtab = "select procode,prodesc from protab order by procode;";
@@ -713,7 +714,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             }
             myOnline.close();
             rsProtab.close();
-            c.close();
+            mysql.close();
         } catch (Exception e) {
             System.out.println(e);
             ErrorText += e.toString();
@@ -737,9 +738,10 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     }
 
     private void checkBillVoid() throws SQLException {
-        c.open();
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
         myOnline.open();
-        Statement stmtLocal = c.getConnection().createStatement();
+        Statement stmtLocal = mysql.getConnection().createStatement();
         Statement stmtServerBillno = myOnline.getConnection().createStatement();
         Statement stmtServerTSale = myOnline.getConnection().createStatement();
         String sql = "select b_void,b_refno,b_macno from billno where b_void='V' and void_sendOnline='N';";
@@ -778,7 +780,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         stmtServerTSale.close();
         System.out.println("Loop Bill Void Finished;");
         myOnline.close();
-        c.close();
+        mysql.close();
 
     }
 
@@ -795,7 +797,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 //            MSG.NOTICE(e.toString());
 //        }
 //    }
-
 //    public void stkfileUpdate(String pcode) {
 //        try {
 ////            c.open();
@@ -828,7 +829,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 ////            MSG.NOTICE(e.toString());
 //        }
 //    }
-
     /**
      * @param args the command line arguments
      */

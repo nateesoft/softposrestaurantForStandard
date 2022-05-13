@@ -396,7 +396,7 @@ public class BalanceControl {
                     + "from balance b "
                     + "where r_table='" + table + "' "
                     + "and r_plucode<>'8899' "
-                    + "and r_void<>'V' "
+//                    + "and r_void<>'V' "
                     + "group by r_plucode,r_etd,r_Pname "
                     + "order by r_time, r_index";
 //            Statement stmt = mysql.getConnection().createStatement();

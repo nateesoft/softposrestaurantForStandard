@@ -35,7 +35,6 @@ public class PrintToKic extends javax.swing.JFrame {
     private int refresh = 30;
     private boolean kicPrintting = false;
     boolean printkic = false;
-    MySQLConnect mysql = new MySQLConnect();
 
     /**
      * Creates new form PrintToKic
@@ -44,6 +43,7 @@ public class PrintToKic extends javax.swing.JFrame {
 ////        super(parent, modal);
         initComponents();
         MySQLConnect.getDbVar();
+        MySQLConnect mysql = new MySQLConnect();
         BranchBean BranchBean = new BranchBean();
         BranchBean = BranchControl.getData();
         try {
@@ -286,7 +286,7 @@ public class PrintToKic extends javax.swing.JFrame {
             @Override
             public void run() {
                 if (kicPrintting == false) {
-//                    MySQLConnect mysql = new MySQLConnect();
+MySQLConnect mysql = new MySQLConnect();
                     try {
                         String sql = "select "
                                 //                                                                                + "b.*,"
@@ -353,7 +353,7 @@ public class PrintToKic extends javax.swing.JFrame {
             /**
              * * OPEN CONNECTION **
              */
-//            MySQLConnect mysql = new MySQLConnect();
+            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
 
             try {

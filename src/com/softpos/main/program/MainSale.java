@@ -86,7 +86,6 @@ public class MainSale extends javax.swing.JDialog {
     private String SALE_Pinto = "ส่งประจำ";
     private String SALE_WholeSale = "ขายส่ง";
     private boolean btnClickPrintKic = false;
-    private MySQLConnect mysql = new MySQLConnect();
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
 
@@ -887,7 +886,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
-        tblShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tblShowBalance.setFont(new java.awt.Font("Angsana New", 0, 20)); // NOI18N
         tblShowBalance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -931,10 +930,10 @@ public class MainSale extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tblShowBalance);
         if (tblShowBalance.getColumnModel().getColumnCount() > 0) {
             tblShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
-            tblShowBalance.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tblShowBalance.getColumnModel().getColumn(0).setPreferredWidth(0);
             tblShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
-            tblShowBalance.getColumnModel().getColumn(1).setPreferredWidth(265);
-            tblShowBalance.getColumnModel().getColumn(2).setPreferredWidth(65);
+            tblShowBalance.getColumnModel().getColumn(1).setPreferredWidth(390);
+            tblShowBalance.getColumnModel().getColumn(2).setPreferredWidth(45);
         }
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
@@ -1224,11 +1223,16 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     R_ETD = "T";
                 } else if (R_ETD.equals("D")) {
                     R_ETD = "D";
+                } else if (R_ETD.equals("P")) {
+                    R_ETD = "P";
+                } else if (R_ETD.equals("W")) {
+                    R_ETD = "W";
                 }
                 String PName = R_ETD + " " + ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
 
                 if (voidStr.equals("V")) {
-                    PName = "<html><strike><font color=red>" + PName + "</font></strike></html>";
+                    PName = "<html><div align= 'left'><strike><font color=red>" + PName + "</font></strike></div></html>";
+                    
                 }
                 if (r_index.equals(r_linkindex)) {
                     PName = "<html><b><font color=blue>" + PName + "</font></b></html>";
@@ -1633,7 +1637,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (btnClickPrintKic == true) {
             String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
             try {
-//                MySQLConnect mysql = new MySQLConnect();
+                MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 mysql.close();
@@ -1645,6 +1649,19 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (lbTotalAmount.getText().equals("0.00")) {
             JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
+            try {
+                MySQLConnect mysql = new MySQLConnect();
+
+                String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+                mysql.open();
+                mysql.getConnection().createStatement().executeUpdate(sql);
+                kichenPrint();
+                sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
+                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.close();
+            } catch (Exception e) {
+                MSG.NOTICE(e.toString());
+            }
             showCheckBill();
         }
 
@@ -1742,7 +1759,22 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     MSG.ERR(e.getMessage());
                 }
             }
+            try {
+                MySQLConnect mysql = new MySQLConnect();
+
+                String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+                mysql.open();
+                mysql.getConnection().createStatement().executeUpdate(sql);
+                kichenPrint();
+                sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
+                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.close();
+            } catch (Exception e) {
+                MSG.NOTICE(e.toString());
+            }
+
             kichenPrintAfterPrintCheck();
+
             printBillCheck();
         } else {
             MSG.NOTICE("มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -2864,7 +2896,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             /**
              * * OPEN CONNECTION **
              */
-//            MySQLConnect mysql = new MySQLConnect();
+            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sqlGetSaveOrder = "select SaveOrder from branch";
 
@@ -3292,13 +3324,23 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' "
                         + "where r_kicprint<>'P' and r_table='" + tableNo + "';";
                 try {
-//                    MySQLConnect mysql = new MySQLConnect();
+                    MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
                     mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                     mysql.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                 }
+            }
+            try {
+                MySQLConnect mysql = new MySQLConnect();
+
+                String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+                mysql.open();
+                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.close();
+            } catch (Exception e) {
+                MSG.NOTICE(e.toString());
             }
             kichenPrint();
             holdTableAndSave();
@@ -3308,7 +3350,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
         try {
             MySQLConnect mysql = new MySQLConnect();
-            String sql = "update tablefile set tonact ='N',tcurtime='00:00:00',tcustomer='0' "
+            String sql = "update tablefile set "
+                    + "tonact ='N',tcurtime='00:00:00',tcustomer='0' "
                     + "where tcode='" + txtTable.getText() + "';";
             mysql.open();
             mysql.getConnection().createStatement().executeUpdate(sql);
@@ -3338,7 +3381,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void holdTableAndSave() {
-//        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         BalanceBean balanceBean = new BalanceBean();
         mysql.open();
         try {
@@ -3351,7 +3394,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             String UpdateTableFile = "update tablefile "
                     + "set tonact='N', tlogintime ='" + balanceBean.getLoginTime() + "',"
                     + "macno='" + Value.MACNO + "',"
-                    + "tlogindate='" + balanceBean.getR_LoginDate() + "' "
+                    + "tlogindate='" + balanceBean.getR_LoginDate() + "' ,"
+                    + "tpause='Y' "
                     + "where tcode='" + txtTable.getText() + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(UpdateTableFile);
@@ -4420,7 +4464,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         try {
             String sql = "UPDATE tablefile SET "
                     + "TOnAct= 'Y',"
-                    + "macno='" + Value.MACNO + "' "
+                    + "macno='" + Value.MACNO + "' ,"
+                    + "tpause='N' "
                     + "WHERE Tcode='" + txtTable.getText() + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
@@ -4433,7 +4478,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void CheckKicPrint() {
-//        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select r_kicprint "
@@ -4802,4 +4847,5 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         }
     }
+
 }

@@ -1844,7 +1844,7 @@ public class PPrint {
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "></td><td align=left colspan=2>"
                                         + "<font face=Angsana New size=2>"
-                                        + (ThaiUtil.ASCII2Unicode(bean.getR_Opt1())) + "_";
+                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 30) + "_";
                             }
                         }
                     } else {
@@ -2061,7 +2061,7 @@ public class PPrint {
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "></td><td align=left colspan=2>"
                                         + "<font face=Angsana New size=1>"
-                                        + (ThaiUtil.ASCII2Unicode(bean.getR_Opt1())) + "_";
+                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()),20) + "_";
                             }
                         }
                     } else {
