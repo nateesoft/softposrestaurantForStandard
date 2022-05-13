@@ -119,6 +119,7 @@ public class MemberControl {
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         }
