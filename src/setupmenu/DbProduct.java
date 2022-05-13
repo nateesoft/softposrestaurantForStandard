@@ -2,29 +2,29 @@ package setupmenu;
 
 import java.util.List;
 import java.util.Map;
+import util.DatabaseUtility;
 
-public class DbProduct extends DatabaseInfo {
+public class DbProduct {
 
-    public DbProduct() {
-        super();
-    }
-    
-    @Override
-    public List<Map<String,Object>> getAllData(){
+    private final DatabaseUtility du = new DatabaseUtility();
+
+    public List<Map<String, Object>> getAllData() {
         return du.queryList("SELECT * FROM product WHERE pactive = 'Y' and pfix='F' ORDER BY pcode");
     }
-    public Map<String,Object> getAtPk(String pcode){
-        return du.querySingle("SELECT * FROM product WHERE pcode=? AND pactive = 'Y' and PFix='F'",pcode);
+
+    public Map<String, Object> getAtPk(String pcode) {
+        return du.querySingle("SELECT * FROM product WHERE pcode=? AND pactive = 'Y' and PFix='F'", pcode);
     }
-    public List<Map<String,Object>> getAtPgroup(String pgroup){
+
+    public List<Map<String, Object>> getAtPgroup(String pgroup) {
         return du.queryList("SELECT * FROM product WHERE pgroup=? AND pactive = 'Y' and pfix='F' ORDER BY pcode", pgroup);
     }
-    
-    public boolean seekAtPk(String pcode){
+
+    public boolean seekAtPk(String pcode) {
         boolean success = false;
-        Map<String,Object> data = getAtPk(pcode);
-        if(data != null){
-            if(!data.isEmpty()){
+        Map<String, Object> data = getAtPk(pcode);
+        if (data != null) {
+            if (!data.isEmpty()) {
                 success = true;
             }
         }

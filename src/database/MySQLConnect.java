@@ -22,6 +22,10 @@ public class MySQLConnect {
     public static String Password = null;
     public static String PortNumber = null;
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
+    
+    static {
+        getDbVar();
+    }
 
     public String getMsgError() {
         return msgError;

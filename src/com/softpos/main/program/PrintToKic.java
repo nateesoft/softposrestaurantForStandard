@@ -40,7 +40,6 @@ public class PrintToKic extends javax.swing.JFrame {
     public PrintToKic(java.awt.Frame parent, boolean modal) {
 ////        super(parent, modal);
         initComponents();
-        MySQLConnect.getDbVar();
         MySQLConnect mysql = new MySQLConnect();
         BranchBean BranchBean = new BranchBean();
         BranchBean = BranchControl.getData();
@@ -48,14 +47,14 @@ public class PrintToKic extends javax.swing.JFrame {
             String sqlGetSaveOrder = "select SaveOrder from branch";
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rsGetSaveOrderConfig =stmt.executeQuery(sqlGetSaveOrder);
+            ResultSet rsGetSaveOrderConfig = stmt.executeQuery(sqlGetSaveOrder);
             if (rsGetSaveOrderConfig.next() && !rsGetSaveOrderConfig.wasNull()) {
                 String config = rsGetSaveOrderConfig.getString("SaveOrder");
                 if (!config.equals("N")) {
                     PublicVar.Branch_Saveorder = config;
                 }
             }
-            
+
             rsGetSaveOrderConfig.close();
             stmt.close();
             mysql.close();
@@ -284,7 +283,7 @@ public class PrintToKic extends javax.swing.JFrame {
             @Override
             public void run() {
                 if (kicPrintting == false) {
-MySQLConnect mysql = new MySQLConnect();
+                    MySQLConnect mysql = new MySQLConnect();
                     try {
                         String sql = "select "
                                 //                                                                                + "b.*,"
@@ -497,7 +496,7 @@ MySQLConnect mysql = new MySQLConnect();
             String sql = "select * form balance "
                     + "wehre r_table='" + tableNo + "' "
                     + "and PDAPrintCheckStation <>'N' ";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     MySQLConnect mysql2 = new MySQLConnect();
                     try {
@@ -518,6 +517,8 @@ MySQLConnect mysql = new MySQLConnect();
     }
 
     public static void main(String args[]) {
+        MySQLConnect.getDbVar();
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

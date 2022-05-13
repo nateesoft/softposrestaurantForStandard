@@ -102,6 +102,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กำหนดคุณสมบัติปุ่มเมนูใช้งานลัด");
+        setAlwaysOnTop(true);
         setUndecorated(true);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
@@ -133,7 +134,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("เลือกประเภท");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ใส่ภาพพื้นหลัง และ Layout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ใส่ภาพพื้นหลัง และ Layout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
         jPanel1.setMaximumSize(new java.awt.Dimension(731, 296));
 
         buttonLayout3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -289,7 +290,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDelImg)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFindIMG, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                        .addComponent(btnFindIMG, javax.swing.GroupLayout.PREFERRED_SIZE, 71, Short.MAX_VALUE)
                         .addGap(14, 14, 14))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(chkSaveTemplateAll)
@@ -367,7 +368,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "คุณสมบัติของปุ่ม", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "คุณสมบัติของปุ่ม", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         txtFontSize.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtFontSize.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -549,7 +550,6 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         btnFindProduct.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnFindProduct.setText("ค้นหา");
         btnFindProduct.setEnabled(false);
-        btnFindProduct.setOpaque(false);
         btnFindProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindProductActionPerformed(evt);

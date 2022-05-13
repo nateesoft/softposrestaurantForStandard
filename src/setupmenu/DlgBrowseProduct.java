@@ -1,7 +1,6 @@
 package setupmenu;
 
 import com.softpos.pos.core.controller.ThaiUtil;
-import database.MySQLConnect_Bak;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.util.List;
@@ -15,8 +14,6 @@ public class DlgBrowseProduct extends javax.swing.JDialog {
     public DlgBrowseProduct(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        new MySQLConnect_Bak();
         
         initTblGroup();
         initTblPlu();
@@ -46,6 +43,7 @@ public class DlgBrowseProduct extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("แสดงรายการรหัสสินค้า (PLU List)");
+        setAlwaysOnTop(true);
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -490,5 +488,10 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             table.setRowSelectionInterval(row, row);
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
         }
+    }
+    
+    public static void main(String[] args) {
+        DlgBrowseProduct dlg = new DlgBrowseProduct(null, true);
+        dlg.setVisible(true);
     }
 }

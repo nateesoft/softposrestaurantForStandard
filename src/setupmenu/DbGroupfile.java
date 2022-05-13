@@ -2,43 +2,27 @@ package setupmenu;
 
 import java.util.List;
 import java.util.Map;
+import util.DatabaseUtility;
 
-public class DbGroupfile extends DatabaseInfo {
-    private static String sql_getAllData ;
-    private static String sql_getAtPk ;
-    private static String sql_seekAtPk;
-    static {
-        sql_getAllData = "SELECT * FROM groupfile";
-        sql_getAtPk = "SELECT * FROM groupfile WHERE groupcode=?";
-        sql_seekAtPk = "SELECT * FROM groupfile WHERE groupcode=?";
-    }
+public class DbGroupfile {
+    
+    private final DatabaseUtility du = new DatabaseUtility();
 
-    public DbGroupfile() {
-        super();
-    }
-    
-    
-    @Override
-    public List<Map<String,Object>> getAllData(){
-//        dbUtility.dbconnect();
-//        du.setConnect(dbUtility.con);
-        List<Map<String,Object>> result = du.queryList(sql_getAllData);
-//        du.close();
+    public List<Map<String, Object>> getAllData() {
+        List<Map<String, Object>> result = du.queryList("SELECT * FROM groupfile");
         return result;
     }
-    public Map<String,Object> getAtPk(String groupcode){
-//        dbUtility.dbconnect();
-//        du.setConnect(dbUtility.con);
-        Map<String,Object> result = du.querySingle(sql_getAtPk,groupcode);
-//        du.close();
+
+    public Map<String, Object> getAtPk(String groupcode) {
+        Map<String, Object> result = du.querySingle("SELECT * FROM groupfile WHERE groupcode=?", groupcode);
         return result;
     }
-    
-    public boolean seekAtPk(String groupcode){
+
+    public boolean seekAtPk(String groupcode) {
         boolean success = false;
-        Map<String,Object> data = du.querySingle(sql_seekAtPk, groupcode);
-        if(data != null){
-            if(!data.isEmpty()){
+        Map<String, Object> data = du.querySingle("SELECT * FROM groupfile WHERE groupcode=?", groupcode);
+        if (data != null) {
+            if (!data.isEmpty()) {
                 success = true;
             }
         }

@@ -346,8 +346,6 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        MySQLConnect.getDbVar();
-        
         //create file to check program is exist
         File f = new File("softrestaurant.running");
         if (f.exists()) {
