@@ -2,33 +2,36 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
-public class Giftvoucher extends javax.swing.JDialog {
+public final class Giftvoucher extends javax.swing.JDialog {
 
-    DefaultTableModel model;
-    SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    Double GiftAmt;
+    private DefaultTableModel model;
+    private SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private Double giftAmt;
 
     /**
      * Creates new form Giftvoucher
+     *
+     * @param parent
+     * @param modal
      */
     public Giftvoucher(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -48,14 +51,11 @@ public class Giftvoucher extends javax.swing.JDialog {
 
         int[] ColSize = {60, 50, 50, 100, 200, 80, 90};
         for (int i = 0; i < 7; i++) {
-            int vColIndex = 0;
             TableColumn col = tblShow.getColumnModel().getColumn(i);
             col.setPreferredWidth(ColSize[i]);
         }
-        DecimalFormat DoubleFmt = new DecimalFormat("##,###,##0.00");
-        DecimalFormat IntegerFmt = new DecimalFormat("##,###,##0");
-        DecimalFormat PersentFmt = new DecimalFormat("#,##0.00%");
-        ActivateModuel();
+
+        activateModuel();
     }
 
     /**
@@ -69,7 +69,7 @@ public class Giftvoucher extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        TGiftNo = new javax.swing.JTextField();
+        txtGiftNo = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblShow = new javax.swing.JTable();
         bntClearAll = new javax.swing.JButton();
@@ -84,10 +84,10 @@ public class Giftvoucher extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
         jLabel1.setText("Barcode");
 
-        TGiftNo.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
-        TGiftNo.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtGiftNo.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtGiftNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                TGiftNoKeyPressed(evt);
+                txtGiftNoKeyPressed(evt);
             }
         });
 
@@ -99,7 +99,7 @@ public class Giftvoucher extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TGiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtGiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(369, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -107,7 +107,7 @@ public class Giftvoucher extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TGiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGiftNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -209,21 +209,25 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     bntOKClick();
 }//GEN-LAST:event_bntOKActionPerformed
 
-private void TGiftNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TGiftNoKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        bntOKClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        TGiftNoExit();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        bntOKClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F3) {
-        bntClearAllClick();
+private void txtGiftNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGiftNoKeyPressed
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_ESCAPE:
+            bntOKClick();
+            break;
+        case KeyEvent.VK_ENTER:
+            tGiftNoExit();
+            break;
+        case KeyEvent.VK_F5:
+            bntOKClick();
+            break;
+        case KeyEvent.VK_F3:
+            bntClearAllClick();
+            break;
+        default:
+            break;
     }
 
-}//GEN-LAST:event_TGiftNoKeyPressed
+}//GEN-LAST:event_txtGiftNoKeyPressed
 
 private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
@@ -238,105 +242,100 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public void bntClearAllClick() {
-        /**
-         * * OPEN CONNECTION **
-         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String DeleteGift = "delete from tempgift where (macno=?) ";
-            PreparedStatement prm = mysql.getConnection().prepareStatement(DeleteGift);
+            PreparedStatement prm = mysql.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
             prm.setString(1, Value.MACNO);
             prm.executeUpdate();
-            stmt.close();
-            ClearGrid();
+
+            clearGrid();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
 
-        TGiftNo.setText("");
+        txtGiftNo.setText("");
     }
 
-    public void ActivateModuel() {
-        TGiftNo.setText("");
-        ClearGrid();
-        ShowDataToGrid();
+    void activateModuel() {
+        txtGiftNo.setText("");
+        clearGrid();
+        showDataToGrid();
     }
 
-    public void ClearGrid() {
-        int RowCount = model.getRowCount();
-        for (int i = 0; i <= RowCount - 1; i++) {
+    public void clearGrid() {
+        int rowCount = model.getRowCount();
+        for (int i = 0; i <= rowCount - 1; i++) {
             model.removeRow(0);
         }
     }
 
-    public void TGiftNoExit() {
-        String GiftBarcode = TGiftNo.getText().trim();
-        if (!GiftBarcode.equals("")) {
-            if ((GiftBarcode.length() == 20) || (GiftBarcode.length() == 26)) {
-                GetValidVoucher(GiftBarcode);
-                TGiftNo.setText("");
-                TGiftNo.requestFocus();
+    public void tGiftNoExit() {
+        String giftBarcode = txtGiftNo.getText().trim();
+        if (!giftBarcode.equals("")) {
+            if ((giftBarcode.length() == 20) || (giftBarcode.length() == 26)) {
+                getValidVoucher(giftBarcode);
+                txtGiftNo.setText("");
+                txtGiftNo.requestFocus();
             } else {
                 MSG.ERR("Barcode บัตรกำนัล/บัตรของขวัญ ไม่ถูกต้อง...");
-                TGiftNo.setText("");
-                TGiftNo.requestFocus();
+                txtGiftNo.setText("");
+                txtGiftNo.requestFocus();
             }
         }
-        ShowDataToGrid();
+
+        showDataToGrid();
     }
 
-    public void GetValidVoucher(String GiftBarcode) {
-        String GiftType = GiftBarcode.substring(0, 2);
-        String GiftPrice = GiftBarcode.substring(2, 5);
-        String GiftModel = GiftBarcode.substring(5, 8);
-        String GiftLot = GiftBarcode.substring(8, 13);
-        String GiftExp = GiftBarcode.substring(13, 19);
-        System.out.println(GiftType + ".." + GiftPrice + ".." + GiftModel + ".." + GiftLot + ".." + GiftExp);
-        String yy = GiftExp.substring(0, 2);
-        String mm = GiftExp.substring(2, 4);
-        String dd = GiftExp.substring(4, 6);
-        String GiftExp2 = dd + "-" + mm + "-" + yy;
-        String GiftCode = GiftBarcode.substring(0, 19);
-        String GiftNo = "";
-        if (GiftBarcode.length() == 26) {
-            GiftNo = GiftBarcode.substring(19, 26);
+    public void getValidVoucher(String giftBarcode) {
+        String giftType = giftBarcode.substring(0, 2);
+        String giftPrice = giftBarcode.substring(2, 5);
+        String giftModel = giftBarcode.substring(5, 8);
+        String giftLot = giftBarcode.substring(8, 13);
+        String giftExp = giftBarcode.substring(13, 19);
+        String yy = giftExp.substring(0, 2);
+        String mm = giftExp.substring(2, 4);
+        String dd = giftExp.substring(4, 6);
+        String giftExp2 = dd + "-" + mm + "-" + yy;
+        String giftCode = giftBarcode.substring(0, 19);
+        String giftNo;
+        if (giftBarcode.length() == 26) {
+            giftNo = giftBarcode.substring(19, 26);
         } else {
-            GiftNo = "";
+            giftNo = "";
         }
-        if (GiftBarcode.length() == 26) {
+        if (giftBarcode.length() == 26) {
             if (PublicVar.Branch_GiftStatusChk.equals("Y")) {
-                if (SeekGiftStatus(GiftCode, GiftNo)) {
-                    if (SeekGiftPrice(GiftPrice)) {
-                        if (!GiftExp.equals("000000")) {
-                            if (ChkExpDate(GiftExp, GiftExp2)) {
+                if (findGiftStatus(giftCode, giftNo)) {
+                    if (findGiftPrice(giftPrice)) {
+                        if (!giftExp.equals("000000")) {
+                            if (checkExpDate(giftExp, giftExp2)) {
                                 /**
                                  * * OPEN CONNECTION **
                                  */
                                 MySQLConnect mysql = new MySQLConnect();
                                 mysql.open();
                                 try {
-                                    Statement stmt = mysql.getConnection().createStatement();
-                                    String InsertGift = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
+                                    String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                             + "values (?,?,?,?,?,?,?,?,?,?)";
-                                    PreparedStatement prm11 = mysql.getConnection().prepareStatement(InsertGift);
+                                    PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
                                     prm11.setString(1, Value.MACNO);
-                                    prm11.setString(2, GiftBarcode);
-                                    prm11.setString(3, GiftType);
-                                    prm11.setString(4, GiftPrice);
-                                    prm11.setString(5, GiftModel);
-                                    prm11.setString(6, GiftLot);
-                                    prm11.setString(7, GiftExp2);
-                                    prm11.setString(8, GiftCode);
-                                    prm11.setString(9, GiftNo);
-                                    prm11.setDouble(10, GiftAmt);
+                                    prm11.setString(2, giftBarcode);
+                                    prm11.setString(3, giftType);
+                                    prm11.setString(4, giftPrice);
+                                    prm11.setString(5, giftModel);
+                                    prm11.setString(6, giftLot);
+                                    prm11.setString(7, giftExp2);
+                                    prm11.setString(8, giftCode);
+                                    prm11.setString(9, giftNo);
+                                    prm11.setDouble(10, giftAmt);
                                     prm11.executeUpdate();
-                                    stmt.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
+                                    AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
                                 } finally {
                                     mysql.close();
                                 }
@@ -348,24 +347,24 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             MySQLConnect mysql = new MySQLConnect();
                             mysql.open();
                             try {
-                                Statement stmt = mysql.getConnection().createStatement();
-                                String InsertGift = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
+                                String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                         + "values (?,?,?,?,?,?,?,?,?,?)";
-                                PreparedStatement prm11 = mysql.getConnection().prepareStatement(InsertGift);
+                                PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
                                 prm11.setString(1, Value.MACNO);
-                                prm11.setString(2, GiftBarcode);
-                                prm11.setString(3, GiftType);
-                                prm11.setString(4, GiftPrice);
-                                prm11.setString(5, GiftModel);
-                                prm11.setString(6, GiftLot);
-                                prm11.setString(7, GiftExp2);
-                                prm11.setString(8, GiftCode);
-                                prm11.setString(9, GiftNo);
-                                prm11.setDouble(10, GiftAmt);
+                                prm11.setString(2, giftBarcode);
+                                prm11.setString(3, giftType);
+                                prm11.setString(4, giftPrice);
+                                prm11.setString(5, giftModel);
+                                prm11.setString(6, giftLot);
+                                prm11.setString(7, giftExp2);
+                                prm11.setString(8, giftCode);
+                                prm11.setString(9, giftNo);
+                                prm11.setDouble(10, giftAmt);
+
                                 prm11.executeUpdate();
-                                stmt.close();
                             } catch (SQLException e) {
                                 MSG.ERR(e.getMessage());
+                                AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
                             } finally {
                                 mysql.close();
                             }
@@ -374,33 +373,33 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 }
             }
         } else {
-            if (SeekGiftPrice(GiftPrice)) {
-                if (!GiftExp.equals("000000")) {
-                    if (ChkExpDate(GiftExp, GiftExp2)) {
+            if (findGiftPrice(giftPrice)) {
+                if (!giftExp.equals("000000")) {
+                    if (checkExpDate(giftExp, giftExp2)) {
                         /**
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
-                            String InsertGift = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
+                            String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                     + "values (?,?,?,?,?,?,?,?,?,?)";
-                            PreparedStatement prm11 = mysql.getConnection().prepareStatement(InsertGift);
+                            PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
                             prm11.setString(1, Value.MACNO);
-                            prm11.setString(2, GiftBarcode);
-                            prm11.setString(3, GiftType);
-                            prm11.setString(4, GiftPrice);
-                            prm11.setString(5, GiftModel);
-                            prm11.setString(6, GiftLot);
-                            prm11.setString(7, GiftExp2);
-                            prm11.setString(8, GiftCode);
-                            prm11.setString(9, GiftNo);
-                            prm11.setDouble(10, GiftAmt);
+                            prm11.setString(2, giftBarcode);
+                            prm11.setString(3, giftType);
+                            prm11.setString(4, giftPrice);
+                            prm11.setString(5, giftModel);
+                            prm11.setString(6, giftLot);
+                            prm11.setString(7, giftExp2);
+                            prm11.setString(8, giftCode);
+                            prm11.setString(9, giftNo);
+                            prm11.setDouble(10, giftAmt);
+
                             prm11.executeUpdate();
-                            stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -412,25 +411,25 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
-                        String InsertGift = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
+                        String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                 + "values (?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement prm11 = mysql.getConnection().prepareStatement(InsertGift);
+                        PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
                         prm11.setString(1, Value.MACNO);
-                        prm11.setString(2, GiftBarcode);
-                        prm11.setString(3, GiftType);
-                        prm11.setString(4, GiftPrice);
-                        prm11.setString(5, GiftModel);
-                        prm11.setString(6, GiftLot);
-                        prm11.setString(7, GiftExp2);
-                        prm11.setString(8, GiftCode);
-                        prm11.setString(9, GiftNo);
-                        prm11.setDouble(10, GiftAmt);
+                        prm11.setString(2, giftBarcode);
+                        prm11.setString(3, giftType);
+                        prm11.setString(4, giftPrice);
+                        prm11.setString(5, giftModel);
+                        prm11.setString(6, giftLot);
+                        prm11.setString(7, giftExp2);
+                        prm11.setString(8, giftCode);
+                        prm11.setString(9, giftNo);
+                        prm11.setDouble(10, giftAmt);
+
                         prm11.executeUpdate();
-                        stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                    }finally{
+                        AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+                    } finally {
                         mysql.close();
                     }
                 }
@@ -439,8 +438,8 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     }
 
-    public Boolean SeekGiftStatus(String GiftCode, String GiftNo) {
-        Boolean ReturnValue = false;
+    public boolean findGiftStatus(String giftCode, String giftNo) {
+        boolean isValid = false;
         /**
          * * OPEN CONNECTION **
          */
@@ -448,30 +447,29 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from giftstatus where (gcode='" + GiftCode + "') and (gno= '" + GiftNo + "') ";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String sql = "select *from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') ";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                isValid = true;
+            } else {
                 MSG.ERR("บัตรของขวัญนี้ยังไม่มีการลงทะเบียบจากสำนักงานใหญ่...ไม่สามารถนำมาใช้บริการได้...");
-                ReturnValue
-                        = false;
-            } else {
-                ReturnValue = true;
+                isValid = false;
             }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
+            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
 
-        return ReturnValue;
+        return isValid;
     }
 
-    public Boolean SeekGiftPrice(String GiftPrice) {
-        Boolean ReturnValue = false;
+    public Boolean findGiftPrice(String GiftPrice) {
+        Boolean isValid = false;
         /**
          * * OPEN CONNECTION **
          */
@@ -479,46 +477,41 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from giftprice where (pricecode='" + GiftPrice + "')";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR("รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
-                GiftAmt
-                        = 0.0;
-                ReturnValue
-                        = false;
+            ResultSet rs = stmt.executeQuery("select * from giftprice where (pricecode='" + GiftPrice + "')");
+            if (rs.next()) {
+                giftAmt = rs.getDouble("priceamt");
+                isValid = true;
             } else {
-                GiftAmt = rec.getDouble("priceamt");
-                ReturnValue
-                        = true;
+                MSG.ERR("รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
+                giftAmt = 0.0;
+                isValid = false;
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
+            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
-        
-        return ReturnValue;
+
+        return isValid;
     }
 
-    public Boolean ChkExpDate(String GiftExp, String GiftExp2) {
-        Date date = new Date();
-        SimpleDateFormat DateChk = new SimpleDateFormat("yyMMdd", Locale.ENGLISH);
-        String CurDate = DateChk.format(date);//"091201" ;
-        if (CurDate.compareTo(GiftExp) > 0) {
-            MSG.ERR(this, "บัตรหมดอายุการใช่งานแล้วตั้งแต่วันที่ " + GiftExp2);
+    public boolean checkExpDate(String giftExp, String giftExp2) {
+        SimpleDateFormat dateCheck = new SimpleDateFormat("yyMMdd", Locale.ENGLISH);
+        String curDate = dateCheck.format(new Date());//"091201" ;
+        if (curDate.compareTo(giftExp) > 0) {
+            MSG.ERR(this, "บัตรหมดอายุการใช่งานแล้วตั้งแต่วันที่ " + giftExp2);
             return false;
         } else {
             return true;
         }
     }
 
-    public void ShowDataToGrid() {
-        ClearGrid();
-        int LineCnt = 1;
+    public void showDataToGrid() {
+        clearGrid();
+        int lineCount = 1;
         /**
          * * OPEN CONNECTION **
          */
@@ -526,38 +519,30 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTempGift = "select *from tempgift where macno='" + Value.MACNO + "'";
-            ResultSet rec = stmt.executeQuery(LoadTempGift);
-            Date dt = new Date();
-            ClearGrid();
-            rec.first();
-            if (rec.getRow() == 0) {
-
-            } else {
-                do {
-                    try {
-                        Object[] input = {
-                            rec.getString("gifttype"),
-                            rec.getString("giftmodel"),
-                            rec.getString("giftlot"),
-                            rec.getString("giftexp"),
-                            rec.getString("giftbarcode"),
-                            rec.getString("giftno"),
-                            rec.getDouble("giftamt")
-                        };
-                        model.addRow(input);
-                    } catch (SQLException e) {
-                    }
-                    LineCnt++;
-                } while (rec.next());
+            String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "'";
+            ResultSet rs = stmt.executeQuery(LoadTempGift);
+            if (rs.next()) {
+                Object[] input = {
+                    rs.getString("gifttype"),
+                    rs.getString("giftmodel"),
+                    rs.getString("giftlot"),
+                    rs.getString("giftexp"),
+                    rs.getString("giftbarcode"),
+                    rs.getString("giftno"),
+                    rs.getDouble("giftamt")
+                };
+                model.addRow(input);
+                lineCount++;
+                
                 showCell(0, 0);
-                //ShowTableLogin.setRowSelectionInterval(0, 0);
             }
-            rec.close();
+
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
+            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
 
@@ -573,12 +558,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TGiftNo;
     private javax.swing.JButton bntClearAll;
     private javax.swing.JButton bntOK;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblShow;
+    private javax.swing.JTextField txtGiftNo;
     // End of variables declaration//GEN-END:variables
 }

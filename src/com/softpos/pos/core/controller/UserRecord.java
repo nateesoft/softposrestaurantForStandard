@@ -1,9 +1,11 @@
 package com.softpos.pos.core.controller;
 
+import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.MySQLConnect;
 import java.sql.Statement;
+import util.AppLogUtil;
+import util.MSG;
 
 public class UserRecord {
 
@@ -118,12 +120,12 @@ public class UserRecord {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select  *from posuser Where(username= '" + XUserCode + "')";
+            String sql = "select  * from posuser Where(username= '" + XUserCode + "')";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             rs.first();
             if (rs.getRow() == 0) {
-                PUtility.showError("รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+                MSG.WAR("รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                 return false;
             } else {
                 UserCode = rs.getString("username");
@@ -230,9 +232,10 @@ public class UserRecord {
                 return true;
             }
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(UserRecord.class, "error", e.getMessage());
             return false;
-        }finally{
+        } finally {
             mysql.close();
         }
     }

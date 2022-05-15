@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import util.AppLogUtil;
 import util.MSG;
 
 public class GiftDialogList extends javax.swing.JDialog {
@@ -151,8 +152,8 @@ public class GiftDialogList extends javax.swing.JDialog {
 
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
+            MSG.WAR(e.getMessage());
+            AppLogUtil.log(GiftDialogList.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

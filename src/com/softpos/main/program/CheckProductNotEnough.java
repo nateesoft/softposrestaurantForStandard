@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CheckProductNotEnough extends javax.swing.JDialog {
@@ -292,7 +293,6 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             if (rs.next()) {
                 txtPCode.setText(rs.getString("pcode"));
                 txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
-
                 btnAdd.requestFocus();
             } else {
                 MSG.ERR(this, "ไม่พบรายการสินค้ารายการนี้ในระบบ กรุณาป้อนข้อมูลอีกครั้ง");
@@ -304,7 +304,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(CheckProductNotEnough.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -337,7 +337,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(CheckProductNotEnough.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -372,7 +372,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(CheckProductNotEnough.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -400,7 +400,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                
+                AppLogUtil.log(CheckProductNotEnough.class, "error", e.getMessage());
             } finally{
                 mysql.close();
             }

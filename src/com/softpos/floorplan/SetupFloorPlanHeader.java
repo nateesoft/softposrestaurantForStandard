@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SetupFloorPlanHeader extends javax.swing.JDialog {
@@ -335,6 +336,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(SetupFloorPlanHeader.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

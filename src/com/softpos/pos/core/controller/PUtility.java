@@ -2,19 +2,20 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.TranRecord;
+import database.MySQLConnect;
 import java.awt.Font;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PUtility {
@@ -94,7 +95,7 @@ public class PUtility {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SqlQuery = "select *from product where pcode='" + TempCode + "'";
+                String SqlQuery = "select * from product where pcode='" + TempCode + "'";
                 ResultSet rec = stmt.executeQuery(SqlQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
@@ -188,11 +189,12 @@ public class PUtility {
                         stmt3.close();
                     } catch (SQLException e) {
                         MSG.ERR(null, e.getMessage());
+                        AppLogUtil.log(PUtility.class, "error", e.getMessage());
                     }
-
                 }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -212,18 +214,16 @@ public class PUtility {
             String LoadTableFile = "select *from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
             ResultSet rec = stmt.executeQuery(LoadTableFile);
             rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
+            RetVal = rec.getRow() != 0;
             rec.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return RetVal;
     }
 
@@ -304,6 +304,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -388,6 +389,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -409,9 +411,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return RetValue;
     }
 
@@ -492,6 +496,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -579,6 +584,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -666,6 +672,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -750,8 +757,9 @@ public class PUtility {
             } else {
                 ReturnVal = rec.getString("reduleDiscount").equals("Y");
             }
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -769,7 +777,7 @@ public class PUtility {
             TempUser = XUser + "-" + i;
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from billno where b_cashier=" + "'" + TempUser + "'";
+                String SQLQuery = "select * from billno where b_cashier=" + "'" + TempUser + "'";
                 ResultSet rec = stmt.executeQuery(SQLQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
@@ -782,8 +790,9 @@ public class PUtility {
                         break;
                     }
                 }
-            } catch (SQLException ex) {
-                MSG.ERR(ex.getMessage());
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e.getMessage());
             }
         }
 
@@ -799,7 +808,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from billno where b_cashier=" + "'" + XUser + "'";
+            String SQLQuery = "select * from billno where b_cashier=" + "'" + XUser + "'";
             ResultSet rec = stmt.executeQuery(SQLQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -807,11 +816,13 @@ public class PUtility {
             } else {
                 ReturnVal = rec.getString("b_roundclose").equals("Y");
             }
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnVal;
 
     }
@@ -1147,7 +1158,7 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From PosConfigSetup ;
-            String SQLQuery = "select *from branch ";
+            String SQLQuery = "select * from branch ";
             ResultSet rec = stmt.executeQuery(SQLQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1159,10 +1170,12 @@ public class PUtility {
             }
             rec.close();
         } catch (SQLException e) {
-            showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return PublicVar.Branch_Code + PUtility.Addzero(StrRefBillNo, 7);
     }
 
@@ -1186,7 +1199,7 @@ public class PUtility {
                 ResultSet rec = stmt.executeQuery(SQLQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
-                    showError("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
+                    MSG.WAR("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
                 } else {
                     PublicVar.Procode = rec.getString("ptcode");
                     PublicVar.PDate1 = rec.getDate("ptstartdate");
@@ -1204,10 +1217,12 @@ public class PUtility {
                 }
                 rec.close();
             } catch (SQLException e) {
-                showError(e.getMessage());
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
+            
             if ((SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate1)) >= 0) && (SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate2)) <= 0)) {
                 //if (!((CurDate.compareTo(PublicVar.PDate1) < 0) || (CurDate.compareTo(PublicVar.PDate2) > 0))) {
                 if (PublicVar.PSTRDay.contains(CurDay)) {
@@ -1224,6 +1239,7 @@ public class PUtility {
                 }
             }
         }
+        
         return ReturnValue;
     }
 
@@ -1237,7 +1253,7 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From Promotion ;
-            String SQLQuery = "select *from protab where procode=" + "'" + XPro1 + "'";
+            String SQLQuery = "select * from protab where procode=" + "'" + XPro1 + "'";
             ResultSet rec = stmt.executeQuery(SQLQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1292,7 +1308,9 @@ public class PUtility {
             }
             rec.close();
         } catch (SQLException e) {
-            showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            
             ReturnVal = false;
         } finally {
             mysql.close();
@@ -1311,6 +1329,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1423,9 +1442,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1435,7 +1456,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from product where pcode='" + TCode + "'";
+            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
             ResultSet rec = stmt.executeQuery(UserGroupFile);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1447,9 +1468,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1460,7 +1483,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from product where pcode='" + TCode + "'";
+            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
             ResultSet rec = stmt.executeQuery(UserGroupFile);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1472,9 +1495,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1510,9 +1535,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1534,9 +1561,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1546,7 +1575,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from cupon where cucode='" + TCode + "'";
+            String UserGroupFile = "select * from cupon where cucode='" + TCode + "'";
             ResultSet rec = stmt.executeQuery(UserGroupFile);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1558,9 +1587,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1570,7 +1601,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from custfile where sp_code='" + TCode + "'";
+            String UserGroupFile = "select * from custfile where sp_code='" + TCode + "'";
             ResultSet rec = stmt.executeQuery(UserGroupFile);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1582,9 +1613,11 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
@@ -1611,14 +1644,16 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return ReturnValues;
     }
 
     public static Boolean SeekPromotion2(String Macno, String TCode) {
-        boolean ReturnVal = false;
+        boolean foundData = false;
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -1626,15 +1661,17 @@ public class PUtility {
                 String SeekPromotion2 = "select *from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "')";
                 try (ResultSet rec = stmt.executeQuery(SeekPromotion2)) {
                     rec.first();
-                    ReturnVal = rec.getRow() != 0;
+                    foundData = rec.getRow() != 0;
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
-        return ReturnVal;
+        
+        return foundData;
     }
 
     public static Boolean ChkPromotion(String XPro1, TranRecord TranRec) {

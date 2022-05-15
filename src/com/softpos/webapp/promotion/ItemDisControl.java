@@ -1,15 +1,16 @@
 package com.softpos.webapp.promotion;
 
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.webapp.service.ServiceControl;
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ItemDisControl {
@@ -141,7 +142,7 @@ public class ItemDisControl {
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                
+                AppLogUtil.log(ItemDisControl.class, "error", e.getMessage());
             }
 
             //update tablefile

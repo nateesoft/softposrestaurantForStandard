@@ -1,23 +1,24 @@
 package com.softpos.posreport;
 
 import com.softpos.pos.core.controller.POSConfigSetup;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class VoidRep extends javax.swing.JDialog {
@@ -364,9 +365,11 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(VoidRep.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
+                    
                     prn.print("----------------------------------------");
                     prn.print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
                     prn.print("----------------------------------------");
@@ -458,9 +461,11 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(VoidRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("จำนวน Void :" + IntFmt.format(SumVoid) + TAB + "จำนวนเงิน :" + TAB + DecFmt.format(SumAmount) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

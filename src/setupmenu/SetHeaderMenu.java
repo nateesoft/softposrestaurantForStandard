@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SetHeaderMenu extends javax.swing.JDialog {
@@ -357,6 +358,7 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
     } catch (SQLException e) {
         MSG.ERR(this, e.getMessage());
+        AppLogUtil.log(SetHeaderMenu.class, "error", e.getMessage());
     } finally {
         mysql.close();
     }
@@ -539,7 +541,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(SetHeaderMenu.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }

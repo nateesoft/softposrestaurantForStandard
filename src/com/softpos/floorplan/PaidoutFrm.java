@@ -16,6 +16,7 @@ import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {
@@ -97,7 +98,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
                         Prn.print("");
                         Prn.CutPaper();
                     } catch (Exception e2) {
-                        MSG.ERR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");
+                        MSG.WAR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");
                         return;
                     }
                     Prn.closePrint();
@@ -113,13 +114,11 @@ public class PaidoutFrm extends javax.swing.JDialog {
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
-            if (txtAmount.getText().equals("")) {
-
-            }
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PaidoutFrm.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

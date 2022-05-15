@@ -23,6 +23,7 @@ import java.sql.Statement;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.Value;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
@@ -208,7 +209,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     if (evt.getKeyCode() == KeyEvent.VK_F8) {
         int maxrow;
         int currow = 0;
-        String TableSelected = "";
+        String TableSelected;
         maxrow = ShowTableLogin.getRowCount();
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {
@@ -230,6 +231,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ShowTable.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -354,6 +356,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ShowTable.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

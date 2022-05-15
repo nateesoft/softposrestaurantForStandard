@@ -2,12 +2,25 @@ package com.softpos.floorplan;
 
 import com.softpos.crm.pos.core.controller.MPluController;
 import com.softpos.crm.pos.core.controller.MTranController;
+import com.softpos.main.program.GetUserAction;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.CreditPaymentRec;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BillNoBean;
+import com.softpos.pos.core.model.MemmaterController;
+import com.softpos.pos.core.model.TranRecord;
 import convert_utility.text_to_image.TextToImage;
+import database.MySQLConnect;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import database.MySQLConnect;
-import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,20 +40,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.pos.core.controller.CreditPaymentRec;
-import com.softpos.main.program.GetUserAction;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.model.TranRecord;
-import com.softpos.pos.core.controller.UserRecord;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.model.MemmaterController;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class RefundBill extends javax.swing.JDialog {
@@ -463,7 +464,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
+        
         try {
             String sql = "update t_sale set r_refund='V' "
                     + "where (macno='" + macno + "') "
@@ -473,6 +476,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
 
         try {
@@ -484,7 +488,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
+        
         try {
             String sql = "update t_cupon set refund='V' "
                     + "where (terminal='" + macno + "') "
@@ -494,6 +500,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
 
         try {
@@ -505,7 +512,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
+        
         try {
             String sql = "update t_gift set fat='V'  where (macno='" + macno + "') and (refno='" + BillNo + "')";
             Statement stmt = mysql.getConnection().createStatement();
@@ -513,7 +522,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
+        
         try {
             String sql = "delete from accr where (arno='" + PublicVar.Branch_Code + "/" + macno + "/" + BillNo + "')";
             Statement stmt = mysql.getConnection().createStatement();
@@ -521,6 +532,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
         }
 
         if (!memcode.equals("")) {
@@ -528,14 +540,16 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 Statement stmt = mysql.getConnection().createStatement();
                 BillNoBean bBean = bCon.getData(BillNo);
 
-                String SqlQuery = "update memmaster set "
+                String SqlQuery = "update " + Value.db_member + ".memmaster set "
                         + "m_sum=m_sum-" + bBean.getB_NetTotal() + " "
                         + "where (m_code='" + memcode + "')";
                 stmt.executeUpdate(SqlQuery);
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
             }
+            
             try {
                 String SqlQuery = "delete from mtran where m_billno='" + macno + "/" + BillNo + "'";
                 Statement stmt = mysql.getConnection().createStatement();
@@ -543,7 +557,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
             }
+            
             try {
                 String SqlQuery = "delete from mtranplu where m_billno='" + macno + "/" + BillNo + "'";
                 Statement stmt = mysql.getConnection().createStatement();
@@ -551,6 +567,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
             }
         }
         // Return Stock
@@ -574,9 +591,10 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-        
-        mysql.close();
     }
 
     public void Cleartblshowplu() {
@@ -646,6 +664,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
             InitRefund();
         }finally{
             mysql.close();
@@ -732,9 +751,11 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
             rec.close();
             stmt.close();
-
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
@@ -801,9 +822,12 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }
-        if (isPermit) {
+            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+        } finally {
             mysql.close();
+        }
+        
+        if (isPermit) {
             return true;
         } else {
             GetUserAction getuser = new GetUserAction(null, true);
@@ -814,7 +838,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 UserRecord supUser = new UserRecord();
                 if (supUser.GetUserAction(loginname)) {
                     if (supUser.Sale2.equals("Y")) {
-                        mysql.close();
                         return true;
                     }else{
                         MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
@@ -825,7 +848,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
         }
         
-        mysql.close();
         return false;
     }
 

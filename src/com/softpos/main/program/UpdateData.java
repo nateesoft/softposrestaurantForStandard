@@ -12,10 +12,11 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -228,46 +229,42 @@ public class UpdateData extends javax.swing.JDialog {
             @Override
             @SuppressWarnings({"static-access", "UnusedAssignment"})
             public void run() {
-                try {
-                    DecimalFormat df = new DecimalFormat("#,###");
-                    while (!flag) {
-                        try {
-                            setFlag(true);
-                            DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
-                            ArrayList<Object[]> ListObj = LoadData();
-                            try {
-                                MySQLConnect mysql = new MySQLConnect();
-                                mysql.open();
-                                if (ListObj != null && ListObj.size() > 0) {
-                                    for (int i = 0; i < ListObj.size(); i++) {
-                                        String sql = ThaiUtil.ASCII2Unicode(ListObj.get(i)[0].toString());
-                                        model.addRow(new Object[]{sql});
-                                        try {
-                                            mysql.getConnection().createStatement().executeUpdate(sql);
-                                            lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                }
-                                mysql.close();
-                            } catch (Exception e) {
-                            }
-                            setFlag(true);
-                        } catch (Exception e) {
-                        }
-                    }
+                DecimalFormat df = new DecimalFormat("#,###");
+                while (!flag) {
+                    setFlag(true);
+                    DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
+                    ArrayList<Object[]> ListObj = LoadData();
+                    MySQLConnect mysql = new MySQLConnect();
                     try {
-                        Thread.sleep(200);
-                        System.out.println("Success View Data");
-                        btnUpdate.setEnabled(flag);
+                        mysql.open();
+                        Statement stmt = mysql.getConnection().createStatement();
+                        if (ListObj != null && !ListObj.isEmpty()) {
+                            for (int i = 0; i < ListObj.size(); i++) {
+                                String sql = ThaiUtil.ASCII2Unicode(ListObj.get(i)[0].toString());
+                                model.addRow(new Object[]{sql});
 
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
+                                stmt.executeUpdate(sql);
+                                lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
+                            }
+                        }
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(UpdateData.class, "error", e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
-                    pbCheckUpdate.setString("Load data Complete ");
-                } catch (Exception e) {
+
+                    setFlag(true);
                 }
+                try {
+                    Thread.sleep(200);
+                    System.out.println("Success View Data");
+                    btnUpdate.setEnabled(flag);
+
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                } catch (InterruptedException e) {
+                }
+                pbCheckUpdate.setString("Load data Complete ");
             }
         }).start();
 
@@ -277,7 +274,7 @@ public class UpdateData extends javax.swing.JDialog {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ArrayList<Object[]> ListObj = new ArrayList<>();
         String BType = "-";
-        
+
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
@@ -287,7 +284,7 @@ public class UpdateData extends javax.swing.JDialog {
                 BType = rsGetBtype.getString("btype");
             }
             String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
-            try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     String sqlUpdate = rs.getString("qforbranch");
                     ListObj.add(new Object[]{sqlUpdate});
@@ -295,10 +292,11 @@ public class UpdateData extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(UpdateData.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
-        
+
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         return ListObj;
     }
@@ -317,7 +315,7 @@ public class UpdateData extends javax.swing.JDialog {
         } catch (Exception e) {
             lblStatus.setText("OFFLINE");
             PanelStatus.setBackground(Color.red);
-            JOptionPane.showMessageDialog(this, "ไม่สามารถเชื่อมต่อฐานข้อมูลเซิร์ฟเวอร์ได้กรุณาตรวจสอบอินเทอร์เน็ต");
+            MSG.WAR(this, "ไม่สามารถเชื่อมต่อฐานข้อมูลเซิร์ฟเวอร์ได้กรุณาตรวจสอบอินเทอร์เน็ต");
         }
     }
 

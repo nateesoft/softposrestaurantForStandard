@@ -1,12 +1,13 @@
 package com.softpos.pos.core.model;
 
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import com.softpos.pos.core.controller.Value;
 import java.sql.Statement;
+import java.util.Date;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MemberBean {
@@ -216,7 +217,7 @@ public class MemberBean {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(MemberBean.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

@@ -17,6 +17,7 @@ import database.MySQLConnect;
 import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindCustomer extends javax.swing.JDialog {
@@ -107,7 +108,7 @@ public class FindCustomer extends javax.swing.JDialog {
                    }
                    LineCnt++ ;
                 } while (rec.next());
-                int RowCount = model.getRowCount();
+                model.getRowCount();
                 showCell(0,0) ;
                 //ShowTableLogin.setRowSelectionInterval(0, 0);
             }
@@ -116,6 +117,7 @@ public class FindCustomer extends javax.swing.JDialog {
             tblShowMember.requestFocus();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }
@@ -162,6 +164,7 @@ public class FindCustomer extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }
@@ -208,6 +211,7 @@ public class FindCustomer extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }
@@ -252,6 +256,7 @@ public class FindCustomer extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

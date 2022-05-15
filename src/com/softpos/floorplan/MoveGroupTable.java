@@ -13,6 +13,7 @@ import com.softpos.pos.core.controller.TableMoveControl;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MoveGroupTable extends javax.swing.JDialog {
@@ -650,8 +651,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                } finally {
-                    mysql.close();
+                    AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
                 }
 
                 // backup tmp
@@ -664,7 +664,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 /*
                  ค้นหาปริ้นเตอร์ในตารางนั้นๆ ก่อนว่ามีปริ้นเตอร์อะไรบ้าง ที่จะต้องปริ้นออก
                  */
-                mysql.open();
                 try {
                     String sql1 = "select r_kic from balance where r_table='" + txtTable2.getText() + "' group by r_kic;";
                     Statement stmt = mysql.getConnection().createStatement();
@@ -677,6 +676,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
                 } finally {
                     mysql.close();
                 }
@@ -684,12 +684,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 //แยกปริ้นเตอร์ สำหรับพิมพ์ออกจากระบบ
                 String[] RKic = strKic.split(",");
                 for (String RKic1 : RKic) {
-                    try {
-                        s.KIC_FORM_Move(txtTable1.getText(), txtTable2.getText(), RKic1);
-                    } catch (Exception ex) {
-                        MSG.ERR(ex.getMessage());
-                        ex.printStackTrace();
-                    }
+                    s.KIC_FORM_Move(txtTable1.getText(), txtTable2.getText(), RKic1);
                 }
 
                 // clear tmp
@@ -891,7 +886,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 if (rs.next()) {
                     jButton2.requestFocus();
                 } else {
-                    MSG.ERR(this, "กรุณาระบุรหัสบริกรให้ถูกต้อง เนื่องจากไม่พบข้อมูลในระบบ !!!");
+                    MSG.WAR(this, "กรุณาระบุรหัสบริกรให้ถูกต้อง เนื่องจากไม่พบข้อมูลในระบบ !!!");
                     txtUser.setText("");
                     txtUser.requestFocus();
                 }
@@ -899,6 +894,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -968,6 +964,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -990,6 +987,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

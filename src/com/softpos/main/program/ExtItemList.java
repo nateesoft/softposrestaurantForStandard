@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import com.softpos.pos.core.model.CustomerBean;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ExtItemList extends javax.swing.JDialog {
@@ -210,11 +211,12 @@ public class ExtItemList extends javax.swing.JDialog {
                 String sql = "delete from customer where sp_code='" + code + "'";
                 Statement stmt = mysql.getConnection().createStatement();
                 if (stmt.executeUpdate(sql) > 0) {
-                    MSG.ERR(this, "ลบข้อมูลเรียบร้อยแล้ว");
+                    MSG.NOTICE(this, "ลบข้อมูลเรียบร้อยแล้ว");
                 }
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
+                AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -292,7 +294,8 @@ public class ExtItemList extends javax.swing.JDialog {
 
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
+            AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

@@ -1,9 +1,10 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.CustomerBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import com.softpos.pos.core.model.CustomerBean;
 import java.sql.SQLException;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -35,9 +36,11 @@ public class CustomerConrol {
             mysql.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CustomerConrol.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return bean;
 
     }

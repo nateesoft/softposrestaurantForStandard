@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -676,7 +678,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
+                            AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -762,10 +764,11 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 
@@ -782,7 +785,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void bntOKClick() {
         if (ChkValidDate()) {
             String TempCode1 = arcode1.getText();
-            String TempCode2 = "";
+            String TempCode2;
             Date TempDate1 = new Date();
             Date TempDate2 = new Date();
             XTotalCnt = 0.0;
@@ -790,7 +793,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -833,13 +836,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         model2.addRow(input);
                     } while (rec.next());
                     showCell(0, 0);
-
                 }
                 rec.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }

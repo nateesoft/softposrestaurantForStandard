@@ -10,6 +10,7 @@ import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import setupmenu.DlgBrowseProduct;
+import util.AppLogUtil;
 import util.MSG;
 
 public class OptionMenuSet extends javax.swing.JDialog {
@@ -327,6 +328,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -422,12 +424,14 @@ public class OptionMenuSet extends javax.swing.JDialog {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
+            
             LoadOpt();
 
             txtOptionName.setText("");
             txtOptionName.requestFocus();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -467,7 +471,8 @@ public class OptionMenuSet extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-        }finally{
+            AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
 

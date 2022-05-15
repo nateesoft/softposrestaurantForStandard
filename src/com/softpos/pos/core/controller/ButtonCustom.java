@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -56,6 +57,7 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -95,6 +97,7 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

@@ -1,8 +1,7 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +9,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
 
@@ -166,7 +166,6 @@ public class ServiceControl {
             stmt3.close();
             // update all discount
 
-            try {
                 if (tAmount > 0 && ("00:00:00".equals(tBean.getTLoginTime()) || tBean.getTLoginTime() == null)) {
                     String sqlUpdateDate = "update tablefile set "
                             + "tlogindate='" + dc.GetCurrentDate() + "', "
@@ -176,14 +175,12 @@ public class ServiceControl {
                     stmt5.executeUpdate(sqlUpdateDate);
 
                 }
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ServiceControl.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
     }
 
     public static double getDouble(double db, String type) {

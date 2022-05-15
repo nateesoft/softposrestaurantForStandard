@@ -24,6 +24,7 @@ import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CancelArPayment extends javax.swing.JDialog {
@@ -38,7 +39,6 @@ public class CancelArPayment extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    
 
     /**
      * Creates new form CancelArPaymentClick
@@ -109,7 +109,9 @@ public class CancelArPayment extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
 
         tblShow.requestFocus();
@@ -143,39 +145,27 @@ public class CancelArPayment extends javax.swing.JDialog {
             String SQLQuery = "update billar set fat='V',uservoid='" + PublicVar._User + "' where ref_no='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update t_ar set fat='V' where ref_no='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update t_crar set fat='V' where ref_no='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update accr set ardocpay='',arflage='N' where ardocpay='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
 
-        mysql.close();
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update t_ar set fat='V' where ref_no='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update t_crar set fat='V' where ref_no='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update accr set ardocpay='',arflage='N' where ardocpay='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
+        }
     }
 
     public void PrintCancelArPayment(String TempBillNo) {
@@ -217,6 +207,9 @@ public class CancelArPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
                     prn.print("----------------------------------------");
                     prn.print("Sub-Total................." + DecFmt.format(SumAmount));
@@ -227,8 +220,6 @@ public class CancelArPayment extends javax.swing.JDialog {
 
                     prn.CutPaper();
                     prn.closePrint();
-                } else {
-//                PUtility.showError("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
                 }
             }
 
@@ -283,12 +274,17 @@ public class CancelArPayment extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+            } finally {
+                mysql.close();
             }
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------")+"_";
-            t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount*-1)+"_";
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------")+"_";
+            
+            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
+            t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount * -1) + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1().trim()) + "_";

@@ -2,31 +2,34 @@ package com.softpos.pos.core.controller;
 
 import database.MySQLConnect;
 import java.awt.HeadlessException;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import printReport.convertToChar;
+import util.AppLogUtil;
 import util.MSG;
 
 public final class ViewReport {
 
     private Statement stmt;
-    DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
-    SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
+    private SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     public void printReportPVat(String vatNo) {
         ResultSet rs1;
@@ -34,9 +37,8 @@ public final class ViewReport {
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
-
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
                 rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
@@ -51,7 +53,8 @@ public final class ViewReport {
                 }
                 rs1.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
             }
 
             String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
@@ -81,7 +84,8 @@ public final class ViewReport {
 
                 rs.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
             }
 
             if (check > 0) {
@@ -96,6 +100,7 @@ public final class ViewReport {
                     }
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(ViewReport.class, "error", e.getMessage());
                 }
                 try {
                     Float cp = Float.parseFloat(cashPay);
@@ -208,7 +213,7 @@ public final class ViewReport {
             }
             rs1.close();
         } catch (SQLException e) {
-            MSG.NOTICE(e.getMessage());
+            MSG.ERR(e.getMessage());
         }
 
         String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
@@ -262,8 +267,8 @@ public final class ViewReport {
                 }
             }
             rs.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
 
         if (check > 0) {
@@ -278,7 +283,9 @@ public final class ViewReport {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
             }
+            
             try {
                 Map parameters = new HashMap();
 
@@ -328,6 +335,7 @@ public final class ViewReport {
 
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
+                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
                 JasperViewer v = new JasperViewer(jasperPrint, false);
                 JDialog j = new JDialog(new JFrame(), true);
@@ -337,9 +345,9 @@ public final class ViewReport {
                 j.setLocationRelativeTo(null);
                 j.setVisible(true);
                 v.setTitle("Report...");
-                mysql.close();
             } catch (HeadlessException | NumberFormatException | JRException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
             }
         } else {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
@@ -365,11 +373,11 @@ public final class ViewReport {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
             }
-            
-            Date dates;
+
             try {
-                dates = outFmt.parse(str);
+                Date dates = outFmt.parse(str);
                 date1 = inFmt.format(dates);
 
                 dates = outFmt.parse(end);
@@ -407,7 +415,7 @@ public final class ViewReport {
                 }
 
                 mysql.close();
-            } catch (Exception e) {
+            } catch (HeadlessException | JRException e) {
                 MSG.ERR(e.getMessage());
             }
             mysql.close();
@@ -478,7 +486,7 @@ public final class ViewReport {
             }
 
             mysql.close();
-        } catch (Exception e) {
+        } catch (HeadlessException | JRException e) {
             MSG.ERR(e.getMessage());
         }
 
@@ -512,11 +520,11 @@ public final class ViewReport {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/stockInhand_balanceVender.jasper"));
 
             JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
-        } catch (JRException ex) {
-            Logger.getLogger(ViewReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException e) {
+            AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
     }
 
 }

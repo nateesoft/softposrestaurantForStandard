@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import util.AppLogUtil;
 import util.MSG;
 
 public class AddNewArCustomer extends javax.swing.JDialog {
@@ -590,10 +591,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        
         if (!TempCode.equals("")) {
             if (PUtility.ShowConfirmMsg("ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SQLQuery = "delete from custfile where sp_code='" + TempCode + "'";
@@ -601,13 +603,16 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                } finally {
+                    mysql.close();
                 }
+                
                 ClearVariable();
             }
         }
 
-        mysql.close();
+        
     }
 
     public void bntSaveClick() {
@@ -638,8 +643,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                } finally {
+                    mysql.close();
                 }
+                
                 ClearVariable();
             } else {
                 try {
@@ -654,11 +662,13 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                } finally {
+                    mysql.close();
                 }
+                
                 ClearVariable();
             }
-
-            mysql.close();
         }
 
     }
@@ -721,7 +731,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-
+                AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -751,7 +761,9 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
 
         return RetVal;

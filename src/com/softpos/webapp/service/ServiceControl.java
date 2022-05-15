@@ -1,5 +1,6 @@
 package com.softpos.webapp.service;
 
+import com.softpos.main.program.FindMember;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import com.softpos.pos.core.model.BalanceBean;
@@ -10,6 +11,7 @@ import com.softpos.pos.core.controller.PosControl;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ServiceControl {
@@ -21,6 +23,8 @@ public class ServiceControl {
     }
 
     public void updateService(String table) {
+        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             BalanceControl balanceControl = new BalanceControl();
             List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
@@ -84,7 +88,7 @@ public class ServiceControl {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open();
             String sql = "select * from tablefile where Tcode='" + table + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -109,11 +113,12 @@ public class ServiceControl {
                     + "NetTotal = " + Total_Vat_Amt + " "
                     + "where Tcode = '" + table + "'";
             Statement stmt2 = mysql.getConnection().createStatement();
-            int iUpd = stmt2.executeUpdate(sqlUpd);
-            mysql.close();
+            stmt2.executeUpdate(sqlUpd);
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(ServiceControl.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

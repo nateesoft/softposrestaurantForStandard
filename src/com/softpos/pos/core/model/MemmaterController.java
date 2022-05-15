@@ -8,16 +8,17 @@ import com.softpos.crm.pos.core.modal.BranchFileBean;
 import com.softpos.crm.pos.core.modal.MPluBean;
 import com.softpos.crm.pos.core.modal.MTranBean;
 import com.softpos.crm.pos.core.modal.PointTypeBean;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.DateUtil;
 import util.MSG;
@@ -42,6 +43,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MemmaterController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -166,6 +168,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MemmaterController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

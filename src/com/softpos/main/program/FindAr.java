@@ -14,6 +14,7 @@ import database.MySQLConnect;
 import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindAr extends javax.swing.JDialog {
@@ -199,6 +200,7 @@ public void LoadDataToGrid() {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindAr.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

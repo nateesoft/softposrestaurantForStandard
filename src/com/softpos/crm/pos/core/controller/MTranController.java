@@ -6,6 +6,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.DateUtil;
 import util.MSG;
 
@@ -28,7 +29,8 @@ public class MTranController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("MTranController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MTranController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -49,7 +51,8 @@ public class MTranController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("MTranController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MTranController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -95,7 +98,8 @@ public class MTranController {
                 resultCreate = stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR("MTranController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MTranController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -114,7 +118,8 @@ public class MTranController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR("MTranController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MTranController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

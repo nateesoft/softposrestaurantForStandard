@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CuponListControl {
@@ -33,7 +34,7 @@ public class CuponListControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-                        
+            AppLogUtil.log(CuponListControl.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }
@@ -64,7 +65,7 @@ public class CuponListControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CuponListControl.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }
@@ -92,7 +93,7 @@ public class CuponListControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CuponListControl.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }
@@ -122,7 +123,7 @@ public class CuponListControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CuponListControl.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }
@@ -142,7 +143,7 @@ public class CuponListControl {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CuponListControl.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }

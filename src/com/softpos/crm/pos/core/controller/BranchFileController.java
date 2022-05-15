@@ -6,6 +6,7 @@ import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -27,7 +28,8 @@ public class BranchFileController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("BranchFileController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -55,7 +57,8 @@ public class BranchFileController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("BranchFileController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

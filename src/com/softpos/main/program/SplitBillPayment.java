@@ -1,12 +1,12 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.model.TableFileBean;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SplitBillPayment extends javax.swing.JDialog {
@@ -311,7 +312,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-
+                        AppLogUtil.log(SplitBillPayment.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
@@ -387,7 +388,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-
+                        AppLogUtil.log(SplitBillPayment.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }

@@ -1,7 +1,12 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,13 +14,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class InvRep extends javax.swing.JDialog {
@@ -284,9 +285,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(InvRep.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
+                    
                     prn.print("----------------------------------------");
                     prn.print(" ");
                     prn.print(" ");
@@ -348,7 +351,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String SqlQuery = "select * from billno "
                     + "where (b_macno>='" + MacNo1 + "') "
                     + "and (b_macno<='" + MacNo2 + "') "
-                    //                    + "and b_ondate=curdate() "
                     + "order by b_refno";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
@@ -381,9 +383,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(InvRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");

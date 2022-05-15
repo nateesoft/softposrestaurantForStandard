@@ -1,20 +1,21 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CouponRep extends javax.swing.JDialog {
@@ -246,7 +247,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        
+                        AppLogUtil.log(CouponRep.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
@@ -329,7 +330,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -354,85 +355,18 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
     }
 
-//    public void PrintCupon() {
-//        String MacNo1 = txtMacNo1.getText();
-//        String MacNo2 = txtMacNo2.getText();
-//        Double SumQty = 0.0;
-//        Double SumAmt = 0.0;
-//        if (!Value.getComPort().equals("NONE")) {
-//            if (prn.OpenPrint(Value.getComPort())) {
-//                prn.InitPrinter();
-//                prn.print(POSHW.getHeading1());
-//                prn.print(POSHW.getHeading2());
-//                prn.print(POSHW.getHeading3());
-//                prn.print(POSHW.getHeading4());
-//                prn.print("REG ID :" + Value.MACNO);
-//                prn.print("      รายงานส่วนลดบัตรคูปองพิเศษ");
-//                prn.print("         (Coupon Report)");
-//                prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
-//                prn.print(" ");
-//                prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
-//                prn.print("----------------------------------------");
-//                prn.print("บัตรคูปอง                 จำนวน      ส่วนลด ");
-//                prn.print("----------------------------------------");
-//
-//                /**
-//                 * * OPEN CONNECTION **
-//                 */
-//                MySQLConnect mysql = new MySQLConnect();
-//                mysql.open();
-//                try {
-//                    Statement stmt = mysql.getConnection().createStatement();
-//                    String SqlQuery = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
-//                            + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
-//                    ResultSet rec = stmt.executeQuery(SqlQuery);
-//                    rec.first();
-//                    if (rec.getRow() == 0) {
-//                    } else {
-//                        do {
-//                            prn.print(PUtility.DataFullR(rec.getString("cucode"), 3) + "  " + PUtility.DataFullR(rec.getString("cuname"), 30));
-//                            prn.print("                    " + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(cuamt)")), 11));
-//                            SumQty = SumQty + rec.getDouble("sum(cuquan)");
-//                            SumAmt = SumAmt + rec.getDouble("sum(cuamt)");
-//                        } while (rec.next());
-//                    }
-//                    rec.close();
-//                    stmt.close();
-//                } catch (SQLException e) {
-//                    MSG.ERR(e.getMessage());
-//                    
-//                } finally {
-//                    mysql.close();
-//                }
-//
-//                prn.print("----------------------------------------");
-//                prn.print("                    " + PUtility.DataFull(IntFmt.format(SumQty), 8) + PUtility.DataFull(DecFmt.format(SumAmt), 11));
-//                prn.print("----------------------------------------");
-//                prn.print(" ");
-//                prn.print(" ");
-//                prn.print(" ");
-//                prn.CutPaper();
-//                prn.closePrint();
-//            } else {
-////                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
-//            }
-//        }
-//        txtMacNo1.requestFocus();
-//    }
     public void bntExitClick() {
         this.dispose();
     }
 
     public void inputfrombnt(String str) {
         if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
+            String tempstr = txtMacNo1.getText();
             tempstr = tempstr + str;
             txtMacNo1.setText(tempstr);
         }
         if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
+            String tempstr = txtMacNo2.getText();
             tempstr = tempstr + str;
             txtMacNo2.setText(tempstr);
         }

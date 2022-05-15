@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import util.AppLogUtil;
 import util.MSG;
 
 // Panel Option ข้อความพิเศษ สำหรับสินค้าแต่ละรายการ
@@ -252,10 +253,8 @@ public class ModalPopup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from optionset "
-                    + "where pcode='" + PCode + "'";
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery("select * from optionset where pcode='" + PCode + "'");
             int count = 0;
             while (rs.next()) {
                 button[count].setText("<html><center>" + ThaiUtil.ASCII2Unicode(rs.getString("OptionName")) + "</center></html>");
@@ -306,6 +305,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
+                            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -322,6 +322,7 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -424,6 +425,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
+                            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -440,6 +442,9 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
@@ -554,9 +559,11 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
+                        
                         return checkExtra;
                     }
                 });
@@ -571,7 +578,7 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -654,6 +661,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -666,8 +674,7 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            System.err.println(e.getMessage());
-            
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -689,8 +696,7 @@ public class ModalPopup extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            System.err.println(e.getMessage());
-            
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -723,7 +729,7 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -747,6 +753,7 @@ public class ModalPopup extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -835,6 +842,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
+                            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
@@ -851,11 +859,11 @@ public class ModalPopup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            System.err.println(e.getMessage());
-            
+            AppLogUtil.log(ModalPopup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return show;
     }
 }

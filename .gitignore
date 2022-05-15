@@ -3,3 +3,7 @@
 /lib/*
 connect.ini
 /nbproject/
+*.log
+*.xml
+*.properties
+*.ini

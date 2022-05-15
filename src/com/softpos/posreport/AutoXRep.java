@@ -1,15 +1,5 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import com.softpos.pos.core.controller.CreditRec;
 import com.softpos.pos.core.controller.FinalcialRec;
 import com.softpos.pos.core.controller.HourlyRec;
@@ -19,6 +9,17 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PluRec;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import util.AppLogUtil;
 import util.MSG;
 
 public class AutoXRep extends javax.swing.JDialog {
@@ -601,16 +602,12 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String SqlQuery = "select *from billno";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
-            if (rec.getRow() == 0) {
-                ReturnVal = false;
-            } else {
-                ReturnVal = true;
-            }
+            ReturnVal = rec.getRow() != 0;
             rec.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -627,19 +624,15 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from balance";
+            String SqlQuery = "select * from balance";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
-            if (rec.getRow() == 0) {
-                ReturnVal = true;
-            } else {
-                ReturnVal = false;
-            }
+            ReturnVal = rec.getRow() == 0;
             rec.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -659,7 +652,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from billno where b_macno='" + Value.MACNO + "' order by b_refno";
+            String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "' order by b_refno";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -795,12 +788,12 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from paidiofile where (terminal='" + Value.MACNO + "') and (flage='I') ";
+            String SqlQuery = "select * from paidiofile where (terminal='" + Value.MACNO + "') and (flage='I') ";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -814,7 +807,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         try {
@@ -833,7 +826,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         try {
@@ -852,10 +845,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
 
-        mysql.close();
         if (Value.printdriver) {
             prn.PrintTerminalEngForm(frec, CrArray, Value.MACNO);
         } else {
@@ -865,7 +859,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
-
         prn.InitPrinter();
         prn.print("   รายงานยอดการเงิน (Terminal Report)");
         prn.print("          Automatic X-Report)   ");
@@ -959,7 +952,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         prn.print("----------------------------------------");
@@ -986,8 +979,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
+        
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
         prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
         try {
@@ -1006,7 +1000,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -1015,6 +1009,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("ยอดยกเลิกรายการ การรับชำระจากลูกหนี้ภายนอก");
         prn.print("AR Pay-No    Amount  Mac  User User Void ");
         prn.print("----------------------------------------");
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
@@ -1031,8 +1026,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         prn.print("----------------------------------------");
         prn.print("");
         prn.print("");
@@ -1043,8 +1041,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
         prn.CutPaper();
-
-        mysql.close();
     }
 
     public void ProcessCashier() {
@@ -1068,14 +1064,13 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
     }
 
     public void ProcessOneCashier(String TempCashNo) {
-
         FinalcialRec frec = new FinalcialRec();
         CreditRec[] CrArray;
 
@@ -1224,7 +1219,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         try {
@@ -1243,7 +1238,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
 
         try {
@@ -1262,8 +1257,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from t_sale where (r_void='V') and (cashier='" + TempCashNo + "')  and (macno='" + Value.MACNO + "')";
@@ -1280,15 +1276,15 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
+        
         PrintCashier(frec, CrArray, false);
     }
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray, boolean ChkVoid) {
-
         prn.InitPrinter();
         prn.print("   รายงานพนักงานขาย (Cashier Report)");
         prn.print("        (Automatic Xreport)");
@@ -1384,7 +1380,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("Total Amount  ", 26) + PUtility.DataFull(DecFmt.format(SumAmt), 13));
@@ -1410,8 +1406,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
+        
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
         prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
         try {
@@ -1430,8 +1427,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
+        
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
         prn.print("----------------------------------------");
         prn.print(" ");
@@ -1454,8 +1452,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         }
+        
         prn.print("----------------------------------------");
         prn.print("");
         prn.print("");
@@ -1491,8 +1490,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             }
+            
             prn.print("----------------------------------------");
             prn.print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
             prn.print("----------------------------------------");
@@ -1512,7 +1512,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void ProcessGroup() {
-        String TempGroup = "";
+        String TempGroup;
         int ArraySize = 0;
         PluRec[] GArray;
         GArray = new PluRec[1];
@@ -1702,10 +1702,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         if (Value.printdriver) {
             prn.PrintGroupDriver(GArray);
         } else {
@@ -1785,11 +1786,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void ProcessPlu() {
-        String TempGroup = "";
-        String TempPlu = "";
-        String TempName = "";
-        int ArraySize = 0;
-        boolean Found = false;
+        String TempGroup;
+        String TempPlu;
+        String TempName;
+        int ArraySize;
         PluRec[] GArray;
         GArray = new PluRec[1];
         ArraySize = 0;
@@ -1985,10 +1985,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         if (Value.printdriver) {
             prn.PrintPluDriver(GArray);
         } else {
@@ -2081,439 +2082,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         hl.ProcessProc();
     }
 
-//    public void ProcessHourly() {
-//        String MacNo1 = Value.MACNO;
-//        String MacNo2 = Value.MACNO;
-//        int C0 = 0;
-//        int C1 = 0;
-//        int C2 = 0;
-//        int C3 = 0;
-//        int C4 = 0;
-//        int C5 = 0;
-//        int C6 = 0;
-//        int C7 = 0;
-//        int C8 = 0;
-//        int C9 = 0;
-//        int C10 = 0;
-//        int C11 = 0;
-//        int C12 = 0;
-//        int C13 = 0;
-//        int C14 = 0;
-//        int C15 = 0;
-//        int C16 = 0;
-//        int C17 = 0;
-//        int C18 = 0;
-//        int C19 = 0;
-//        int C20 = 0;
-//        int C21 = 0;
-//        int C22 = 0;
-//        int C23 = 0;
-//        int SumC = 0;
-//        
-//        int B0 = 0;
-//        int B1 = 0;
-//        int B2 = 0;
-//        int B3 = 0;
-//        int B4 = 0;
-//        int B5 = 0;
-//        int B6 = 0;
-//        int B7 = 0;
-//        int B8 = 0;
-//        int B9 = 0;
-//        int B10 = 0;
-//        int B11 = 0;
-//        int B12 = 0;
-//        int B13 = 0;
-//        int B14 = 0;
-//        int B15 = 0;
-//        int B16 = 0;
-//        int B17 = 0;
-//        int B18 = 0;
-//        int B19 = 0;
-//        int B20 = 0;
-//        int B21 = 0;
-//        int B22 = 0;
-//        int B23 = 0;
-//        int SumB = 0;
-//        
-//        Double S0 = 0.0;
-//        Double S1 = 0.0;
-//        Double S2 = 0.0;
-//        Double S3 = 0.0;
-//        Double S4 = 0.0;
-//        Double S5 = 0.0;
-//        Double S6 = 0.0;
-//        Double S7 = 0.0;
-//        Double S8 = 0.0;
-//        Double S9 = 0.0;
-//        Double S10 = 0.0;
-//        Double S11 = 0.0;
-//        Double S12 = 0.0;
-//        Double S13 = 0.0;
-//        Double S14 = 0.0;
-//        Double S15 = 0.0;
-//        Double S16 = 0.0;
-//        Double S17 = 0.0;
-//        Double S18 = 0.0;
-//        Double S19 = 0.0;
-//        Double S20 = 0.0;
-//        Double S21 = 0.0;
-//        Double S22 = 0.0;
-//        Double S23 = 0.0;
-//        Double SumS = 0.0;
-//
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        MySQLConnect mysql = new MySQLConnect();
-//        mysql.open();
-//        try {
-//            Statement stmt = mysql.getConnection().createStatement();
-//            String SqlQuery = "select *from billno where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') and (b_void<>'V')";
-//            ResultSet rec = stmt.executeQuery(SqlQuery);
-//            rec.first();
-//            String XTime = "";
-//            String TempTime = "";
-//            if (rec.getRow() == 0) {
-//            } else {
-//                do {
-//                    TempTime = rec.getString("b_ontime");
-//                    XTime = rec.getString("b_ontime").substring(0, 2);
-//                    if (XTime.equals("00")) {
-//                        B0++;
-//                        C0 = C0 + rec.getInt("b_cust");
-//                        S0 = S0 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("01")) {
-//                        B1++;
-//                        C1 = C1 + rec.getInt("b_cust");
-//                        S1 = S1 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("02")) {
-//                        B2++;
-//                        C2 = C2 + rec.getInt("b_cust");
-//                        S2 = S2 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("03")) {
-//                        B3++;
-//                        C3 = C0 + rec.getInt("b_cust");
-//                        S3 = S3 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("04")) {
-//                        B4++;
-//                        C4 = C4 + rec.getInt("b_cust");
-//                        S4 = S4 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("05")) {
-//                        B5++;
-//                        C5 = C5 + rec.getInt("b_cust");
-//                        S5 = S5 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("06")) {
-//                        B6++;
-//                        C6 = C6 + rec.getInt("b_cust");
-//                        S6 = S6 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("07")) {
-//                        B7++;
-//                        C7 = C7 + rec.getInt("b_cust");
-//                        S7 = S7 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("08")) {
-//                        B8++;
-//                        C8 = C8 + rec.getInt("b_cust");
-//                        S8 = S8 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("09")) {
-//                        B9++;
-//                        C9 = C9 + rec.getInt("b_cust");
-//                        S9 = S9 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("10")) {
-//                        B10++;
-//                        C10 = C10 + rec.getInt("b_cust");
-//                        S10 = S10 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("11")) {
-//                        B11++;
-//                        C11 = C11 + rec.getInt("b_cust");
-//                        S11 = S11 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("12")) {
-//                        B12++;
-//                        C12 = C12 + rec.getInt("b_cust");
-//                        S12 = S12 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("13")) {
-//                        B13++;
-//                        C13 = C13 + rec.getInt("b_cust");
-//                        S13 = S13 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("14")) {
-//                        B14++;
-//                        C14 = C14 + rec.getInt("b_cust");
-//                        S14 = S14 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("15")) {
-//                        B15++;
-//                        C15 = C15 + rec.getInt("b_cust");
-//                        S15 = S15 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("16")) {
-//                        B16++;
-//                        C16 = C16 + rec.getInt("b_cust");
-//                        S16 = S16 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("17")) {
-//                        B17++;
-//                        C17 = C17 + rec.getInt("b_cust");
-//                        S17 = S17 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("18")) {
-//                        B18++;
-//                        C18 = C18 + rec.getInt("b_cust");
-//                        S18 = S18 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("19")) {
-//                        B19++;
-//                        C19 = C19 + rec.getInt("b_cust");
-//                        S19 = S19 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("20")) {
-//                        B20++;
-//                        C20 = C20 + rec.getInt("b_cust");
-//                        S20 = S20 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("21")) {
-//                        B21++;
-//                        C21 = C21 + rec.getInt("b_cust");
-//                        S21 = S21 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("22")) {
-//                        B22++;
-//                        C22 = C22 + rec.getInt("b_cust");
-//                        S22 = S22 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    if (XTime.equals("23")) {
-//                        B23++;
-//                        C23 = C23 + rec.getInt("b_cust");
-//                        S23 = S23 + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    }
-//                    SumB++;
-//                    SumC = SumC + rec.getInt("b_cust");
-//                    SumS = SumS + (rec.getDouble("b_netvat") + rec.getDouble("b_netnonvat"));
-//                    
-//                } while (rec.next());
-//            }
-//            rec.close();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-//            
-//        } finally {
-//            mysql.close();
-//        }
-//        
-//        int ArraySize = 0;
-//        HourlyRec HRec = new HourlyRec();
-//        HourlyRec[] HArray;
-//        HArray = new HourlyRec[1];
-//        if (ArraySize == 0) {
-//            HRec = new HourlyRec();
-//            HRec.TTime = "00:00";
-//            HRec.TBill = B0;
-//            HRec.TCust = C0;
-//            HRec.TAmount = S0;
-//            ArraySize = HArray.length;
-//            HArray[ArraySize - 1] = HRec;
-//        }
-//        HourlyRec HRec1 = new HourlyRec();
-//        HRec1.TTime = "01:00";
-//        HRec1.TBill = B1;
-//        HRec1.TCust = C1;
-//        HRec1.TAmount = S1;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec1;
-//        HourlyRec HRec2 = new HourlyRec();
-//        HRec2.TTime = "02:00";
-//        HRec2.TBill = B2;
-//        HRec2.TCust = C2;
-//        HRec2.TAmount = S2;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec1;
-//        HourlyRec HRec3 = new HourlyRec();
-//        HRec3.TTime = "03:00";
-//        HRec3.TBill = B3;
-//        HRec3.TCust = C3;
-//        HRec3.TAmount = S3;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec3;
-//        HourlyRec HRec4 = new HourlyRec();
-//        HRec4.TTime = "04:00";
-//        HRec4.TBill = B4;
-//        HRec4.TCust = C4;
-//        HRec4.TAmount = S4;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec4;
-//        HourlyRec HRec5 = new HourlyRec();
-//        HRec5.TTime = "05:00";
-//        HRec5.TBill = B5;
-//        HRec5.TCust = C5;
-//        HRec5.TAmount = S5;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec5;
-//        HourlyRec HRec6 = new HourlyRec();
-//        HRec6.TTime = "06:00";
-//        HRec6.TBill = B6;
-//        HRec6.TCust = C6;
-//        HRec6.TAmount = S6;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec6;
-//        HourlyRec HRec7 = new HourlyRec();
-//        HRec7.TTime = "07:00";
-//        HRec7.TBill = B7;
-//        HRec7.TCust = C7;
-//        HRec7.TAmount = S7;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec7;
-//        HourlyRec HRec8 = new HourlyRec();
-//        HRec8.TTime = "08:00";
-//        HRec8.TBill = B8;
-//        HRec8.TCust = C8;
-//        HRec8.TAmount = S8;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec8;
-//        HourlyRec HRec9 = new HourlyRec();
-//        HRec9.TTime = "09:00";
-//        HRec9.TBill = B9;
-//        HRec9.TCust = C9;
-//        HRec9.TAmount = S9;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec9;
-//        HourlyRec HRec10 = new HourlyRec();
-//        HRec10.TTime = "10:00";
-//        HRec10.TBill = B10;
-//        HRec10.TCust = C10;
-//        HRec10.TAmount = S10;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec10;
-//        HourlyRec HRec11 = new HourlyRec();
-//        HRec11.TTime = "11:00";
-//        HRec11.TBill = B11;
-//        HRec11.TCust = C11;
-//        HRec11.TAmount = S11;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec11;
-//        HourlyRec HRec12 = new HourlyRec();
-//        HRec12.TTime = "12:00";
-//        HRec12.TBill = B12;
-//        HRec12.TCust = C12;
-//        HRec12.TAmount = S12;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec12;
-//        HourlyRec HRec13 = new HourlyRec();
-//        HRec13.TTime = "13:00";
-//        HRec13.TBill = B13;
-//        HRec13.TCust = C13;
-//        HRec13.TAmount = S13;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec13;
-//        HourlyRec HRec14 = new HourlyRec();
-//        HRec14.TTime = "14:00";
-//        HRec14.TBill = B14;
-//        HRec14.TCust = C14;
-//        HRec14.TAmount = S14;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec14;
-//        HourlyRec HRec15 = new HourlyRec();
-//        HRec15.TTime = "15:00";
-//        HRec15.TBill = B15;
-//        HRec15.TCust = C15;
-//        HRec15.TAmount = S15;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec15;
-//        HourlyRec HRec16 = new HourlyRec();
-//        HRec16.TTime = "16:00";
-//        HRec16.TBill = B16;
-//        HRec16.TCust = C16;
-//        HRec16.TAmount = S16;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec16;
-//        HourlyRec HRec17 = new HourlyRec();
-//        HRec17.TTime = "17:00";
-//        HRec17.TBill = B17;
-//        HRec17.TCust = C17;
-//        HRec17.TAmount = S17;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec17;
-//        HourlyRec HRec18 = new HourlyRec();
-//        HRec18.TTime = "18:00";
-//        HRec18.TBill = B18;
-//        HRec18.TCust = C18;
-//        HRec18.TAmount = S18;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec18;
-//        HourlyRec HRec19 = new HourlyRec();
-//        HRec19.TTime = "19:00";
-//        HRec19.TBill = B19;
-//        HRec19.TCust = C19;
-//        HRec19.TAmount = S19;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec19;
-//        HourlyRec HRec20 = new HourlyRec();
-//        HRec20.TTime = "20:00";
-//        HRec20.TBill = B20;
-//        HRec20.TCust = C20;
-//        HRec20.TAmount = S20;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec20;
-//        HourlyRec HRec21 = new HourlyRec();
-//        HRec21.TTime = "21:00";
-//        HRec21.TBill = B21;
-//        HRec21.TCust = C21;
-//        HRec21.TAmount = S21;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec21;
-//        HourlyRec HRec22 = new HourlyRec();
-//        HRec22.TTime = "22:00";
-//        HRec22.TBill = B22;
-//        HRec22.TCust = C22;
-//        HRec22.TAmount = S22;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec22;
-//        HourlyRec HRec23 = new HourlyRec();
-//        HRec23.TTime = "23:00";
-//        HRec23.TBill = B23;
-//        HRec23.TCust = C23;
-//        HRec23.TAmount = S23;
-//        HArray = PUtility.addHourlyArray(HArray);
-//        ArraySize = HArray.length;
-//        HArray[ArraySize - 1] = HRec23;
-//        
-//        PrintHourly(HArray, MacNo1, MacNo2);
-//    }
     public void PrintHourly(HourlyRec[] HArray, String MacNo1, String MacNo2) {
         Double SumB = 0.0;
         Double SumC = 0.0;
@@ -2614,7 +2182,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -2681,7 +2249,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -2724,9 +2292,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
-            } finally {
-                mysql.close();
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             }
 
             try {
@@ -2748,10 +2314,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
-            } finally {
-                mysql.close();
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             }
+            
             prn.InitPrinter();
             prn.print("         รายงานการรับชำระด้วยบัตรเครดิต");
             prn.print("               (Credit Report)");
@@ -2773,7 +2338,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             Double SumTotalAmt = 0.0;
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SqlQuery = "select *from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+                String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
                 ResultSet rec = stmt.executeQuery(SqlQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
@@ -2802,8 +2367,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
+            } finally {
+                mysql.close();
             }
+            
             if (SumCard > 0) {
                 prn.print("       Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + "    " + PUtility.DataFull(DecFmt.format(SumCardAmt), 11));
                 prn.print("                 " + "-----------------------");
@@ -2845,7 +2413,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2896,7 +2464,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AutoXRep.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }

@@ -33,6 +33,7 @@ import java.sql.Statement;
 import java.util.List;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CouponDiscount extends javax.swing.JDialog {
@@ -428,7 +429,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -507,6 +508,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -554,6 +556,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -583,6 +586,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -614,6 +618,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -738,31 +743,46 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         int countCheck = 0;
                         for (int i = 0; i < listBean.size(); i++) {
                             CuponlistBean lBean = (CuponlistBean) listBean.get(i);
-                            try {
-                                String sql1 = "select * from balance "
-                                        + "where r_quancandisc>0 "
-                                        + "and r_table='" + tableNo + "' "
-                                        + "and r_plucode='" + lBean.getPCode() + "'";
-                                Statement stmt1 = mysql.getConnection().createStatement();
-                                ResultSet rs1 = stmt1.executeQuery(sql1);
-                                while (rs1.next()) {
-                                    countCheck += rs1.getInt("r_quancandisc");
+                            String sql1 = "select * from balance "
+                                    + "where r_quancandisc>0 "
+                                    + "and r_table='" + tableNo + "' "
+                                    + "and r_plucode='" + lBean.getPCode() + "'";
+                            Statement stmt1 = mysql.getConnection().createStatement();
+                            ResultSet rs1 = stmt1.executeQuery(sql1);
+                            while (rs1.next()) {
+                                countCheck += rs1.getInt("r_quancandisc");
 
-                                    //ตรวจสอบประเภทการให้ส่วนลด
-                                    if (cBean.getCuSelectDisc().equals("1")) {//คิดยอดรวมสินค้า
-                                        itemForDisc--;
-                                        if (cBean.getCuDisc() > 0) {//ตรวจสอบส่วนลด % ก่อน
-                                            int itemDisc = cuponQty;
-                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                cuponQty -= itemDisc;
-                                            } else {
-                                                cuponQty = 0;
-                                            }
+                                //ตรวจสอบประเภทการให้ส่วนลด
+                                if (cBean.getCuSelectDisc().equals("1")) {//คิดยอดรวมสินค้า
+                                    itemForDisc--;
+                                    if (cBean.getCuDisc() > 0) {//ตรวจสอบส่วนลด % ก่อน
+                                        int itemDisc = cuponQty;
+                                        if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                            itemDisc = rs1.getInt("R_QuanCanDisc");
+                                            cuponQty -= itemDisc;
+                                        } else {
+                                            cuponQty = 0;
+                                        }
 
 //                                            updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc(), rs1);
-                                            updatePercentCupon(1, cuCode, cBean.getCuDisc(), rs1);
-                                        } else if (cBean.getCuDiscBath() > 0) {//ส่วนสอบส่วนลดบาท
+                                        updatePercentCupon(1, cuCode, cBean.getCuDisc(), rs1);
+                                    } else if (cBean.getCuDiscBath() > 0) {//ส่วนสอบส่วนลดบาท
+                                        int itemDisc = cuponQty;
+                                        if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                            itemDisc = rs1.getInt("R_QuanCanDisc");
+                                            cuponQty -= itemDisc;
+                                        } else {
+                                            cuponQty = 0;
+                                        }
+
+                                        updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath(), cuCode);
+                                    }
+                                } else if (cBean.getCuSelectDisc().equals("2")) {//คิดตามประเภทสินค้า NN/CC/SS
+                                    itemForDisc--;
+                                    //ตรวจสอบประเภทสินค้า
+                                    String productType = rs1.getString("R_Normal");
+                                    if (productType.equals("N")) {//Normal
+                                        if (cBean.getCuDisc1() > 0) {
                                             int itemDisc = cuponQty;
                                             if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
                                                 itemDisc = rs1.getInt("R_QuanCanDisc");
@@ -771,92 +791,73 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                                 cuponQty = 0;
                                             }
 
-                                            updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath(), cuCode);
+                                            updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc1(), rs1);
+                                        } else if (cBean.getCuDiscBath1() > 0) {
+                                            int itemDisc = cuponQty;
+                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                                itemDisc = rs1.getInt("R_QuanCanDisc");
+                                                cuponQty -= itemDisc;
+                                            } else {
+                                                cuponQty = 0;
+                                            }
+
+                                            updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath1(), cuCode);
                                         }
-                                    } else if (cBean.getCuSelectDisc().equals("2")) {//คิดตามประเภทสินค้า NN/CC/SS
-                                        itemForDisc--;
-                                        //ตรวจสอบประเภทสินค้า
-                                        String productType = rs1.getString("R_Normal");
-                                        if (productType.equals("N")) {//Normal
-                                            if (cBean.getCuDisc1() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
-
-                                                updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc1(), rs1);
-                                            } else if (cBean.getCuDiscBath1() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
-
-                                                updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath1(), cuCode);
+                                    } else if (productType.equals("C")) {//Consign
+                                        if (cBean.getCuDisc2() > 0) {
+                                            int itemDisc = cuponQty;
+                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                                itemDisc = rs1.getInt("R_QuanCanDisc");
+                                                cuponQty -= itemDisc;
+                                            } else {
+                                                cuponQty = 0;
                                             }
-                                        } else if (productType.equals("C")) {//Consign
-                                            if (cBean.getCuDisc2() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
 
-                                                updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc2(), rs1);
-                                            } else if (cBean.getCuDiscBath2() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
-
-                                                updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath2(), cuCode);
+                                            updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc2(), rs1);
+                                        } else if (cBean.getCuDiscBath2() > 0) {
+                                            int itemDisc = cuponQty;
+                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                                itemDisc = rs1.getInt("R_QuanCanDisc");
+                                                cuponQty -= itemDisc;
+                                            } else {
+                                                cuponQty = 0;
                                             }
-                                        } else if (productType.equals("S")) {//Special
-                                            if (cBean.getCuDisc3() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
 
-                                                updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc3(), rs1);
-                                            } else if (cBean.getCuDiscBath3() > 0) {
-                                                int itemDisc = cuponQty;
-                                                if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                                    itemDisc = rs1.getInt("R_QuanCanDisc");
-                                                    cuponQty -= itemDisc;
-                                                } else {
-                                                    cuponQty = 0;
-                                                }
-
-                                                updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath3(), cuCode);
-                                            }
+                                            updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath2(), cuCode);
                                         }
-                                    } else {
-                                        MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
-                                        txtCuQty.setText("0");
-                                        txtCuQty.selectAll();
-                                        txtCuQty.requestFocus();
+                                    } else if (productType.equals("S")) {//Special
+                                        if (cBean.getCuDisc3() > 0) {
+                                            int itemDisc = cuponQty;
+                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                                itemDisc = rs1.getInt("R_QuanCanDisc");
+                                                cuponQty -= itemDisc;
+                                            } else {
+                                                cuponQty = 0;
+                                            }
+
+                                            updatePercentCupon(itemDisc, cuCode, cBean.getCuDisc3(), rs1);
+                                        } else if (cBean.getCuDiscBath3() > 0) {
+                                            int itemDisc = cuponQty;
+                                            if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                                itemDisc = rs1.getInt("R_QuanCanDisc");
+                                                cuponQty -= itemDisc;
+                                            } else {
+                                                cuponQty = 0;
+                                            }
+
+                                            updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath3(), cuCode);
+                                        }
                                     }
+                                } else {
+                                    MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
+                                    txtCuQty.setText("0");
+                                    txtCuQty.selectAll();
+                                    txtCuQty.requestFocus();
                                 }
-
-                                rs1.close();
-                                stmt1.close();
-                            } catch (Exception e) {
-                                System.err.println(e.getMessage());
                             }
+
+                            rs1.close();
+                            stmt1.close();
                         }
 
                         if (countCheck == 0) {
@@ -864,150 +865,140 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             txtCuQty.setText("0");
                             txtCuQty.selectAll();
                             txtCuQty.requestFocus();
-                        } else {
-
                         }
                     }
                     //******* END *******//
                 } else if (cBean.getCuType().equals("B")) {
-                    try {
-                        String sql1 = "select * from balance "
-                                + "where R_PRAmt='0' "
-                                + "and R_Discount ='Y' "
-                                + "and r_table='" + tableNo + "' "
-                                + "and r_void<>'V' ";
-//                        String sql1 = "select * from balance "
-//                                + "where r_quancandisc>0 "
-//                                + "and r_table='" + tableNo + "' "
-//                                + "and r_void<>'V' ";
-                        Statement stmt1 = mysql.getConnection().createStatement();
-                        ResultSet rs1 = stmt1.executeQuery(sql1);
-                        while (rs1.next()) {
-                            //ตรวจสอบประเภทการให้ส่วนลด
-                            if (cBean.getCuSelectDisc().equals("1")) {//คิดยอดรวมสินค้า
+                    String sql1 = "select * from balance "
+                            + "where R_PRAmt='0' "
+                            + "and R_Discount ='Y' "
+                            + "and r_table='" + tableNo + "' "
+                            + "and r_void<>'V' ";
+                    Statement stmt1 = mysql.getConnection().createStatement();
+                    ResultSet rs1 = stmt1.executeQuery(sql1);
+                    while (rs1.next()) {
+                        //ตรวจสอบประเภทการให้ส่วนลด
+                        if (cBean.getCuSelectDisc().equals("1")) {//คิดยอดรวมสินค้า
 
-                                itemForDisc--;
-                                if (cBean.getCuDisc() > 0) {//ตรวจสอบส่วนลด % ก่อน
-                                    int itemDisc = cuponQty;
-                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                        itemDisc = rs1.getInt("R_QuanCanDisc");
-                                        cuponQty -= itemDisc;
-                                    } else {
-                                        cuponQty = 0;
-                                    }
-
-                                    updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc(), rs1);
-                                } else if (cBean.getCuBDiscBath() > 0) {//ส่วนสอบส่วนลดบาท
-                                    int itemDisc = cuponQty;
-                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                        itemDisc = rs1.getInt("R_QuanCanDisc");
-                                        cuponQty -= itemDisc;
-                                    } else {
-                                        cuponQty = 0;
-                                    }
-                                    updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuBDiscBath(), cuCode);
-                                } else if (cBean.getCuDiscBath() > 0) {
-                                    int itemDisc = cuponQty;
-                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                        itemDisc = rs1.getInt("R_QuanCanDisc");
-                                        cuponQty -= itemDisc;
-                                    } else {
-                                        cuponQty = 0;
-                                    }
-                                    if (cBean.getCuDiscBath() > totalAmount) {
-                                        cBean.setCuDiscBath(totalAmount);
-                                        cuponQty = 0;
-                                    }
-                                    updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath(), cuCode);
-                                    if (cuponQty <= 0) {
-                                        break;
-                                    }
+                            itemForDisc--;
+                            if (cBean.getCuDisc() > 0) {//ตรวจสอบส่วนลด % ก่อน
+                                int itemDisc = cuponQty;
+                                if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                    itemDisc = rs1.getInt("R_QuanCanDisc");
+                                    cuponQty -= itemDisc;
+                                } else {
+                                    cuponQty = 0;
                                 }
-                            } else if (cBean.getCuSelectDisc().equals("2")) {//คิดตามประเภทสินค้า NN/CC/SS
-                                itemForDisc--;
-                                //ตรวจสอบประเภทสินค้า
-                                String productType = rs1.getString("R_Normal");
-                                if (productType.equals("N")) {//Normal
-                                    if (cBean.getCuDisc1() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
 
-                                        updatePercentCupon(itemForDisc, cuCode, cBean.getCuDisc1(), rs1);
-
-                                    } else if (cBean.getCuDiscBath1() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
-
-                                        updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath1(), cuCode);
-                                    }
-                                } else if (productType.equals("C")) {//Consign
-                                    if (cBean.getCuDisc2() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
-
-                                        updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc2(), rs1);
-                                    } else if (cBean.getCuDiscBath2() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
-
-                                        updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath2(), cuCode);
-                                    }
-                                } else if (productType.equals("S")) {//Special
-                                    if (cBean.getCuDisc3() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
-
-                                        updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc3(), rs1);
-                                    } else if (cBean.getCuDiscBath3() > 0) {
-                                        int itemDisc = cuponQty;
-                                        if (rs1.getInt("R_QuanCanDisc") > 0) {
-                                            itemDisc = rs1.getInt("R_QuanCanDisc");
-                                            cuponQty -= itemDisc;
-                                        } else {
-                                            cuponQty = 0;
-                                        }
-
-                                        updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath3(), cuCode);
-                                    }
+                                updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc(), rs1);
+                            } else if (cBean.getCuBDiscBath() > 0) {//ส่วนสอบส่วนลดบาท
+                                int itemDisc = cuponQty;
+                                if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                    itemDisc = rs1.getInt("R_QuanCanDisc");
+                                    cuponQty -= itemDisc;
+                                } else {
+                                    cuponQty = 0;
                                 }
-                            } else {
-                                MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
-                                txtCuQty.setText("0");
-                                txtCuQty.selectAll();
-                                txtCuQty.requestFocus();
+                                updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuBDiscBath(), cuCode);
+                            } else if (cBean.getCuDiscBath() > 0) {
+                                int itemDisc = cuponQty;
+                                if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                    itemDisc = rs1.getInt("R_QuanCanDisc");
+                                    cuponQty -= itemDisc;
+                                } else {
+                                    cuponQty = 0;
+                                }
+                                if (cBean.getCuDiscBath() > totalAmount) {
+                                    cBean.setCuDiscBath(totalAmount);
+                                    cuponQty = 0;
+                                }
+                                updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath(), cuCode);
+                                if (cuponQty <= 0) {
+                                    break;
+                                }
                             }
-                        }
+                        } else if (cBean.getCuSelectDisc().equals("2")) {//คิดตามประเภทสินค้า NN/CC/SS
+                            itemForDisc--;
+                            //ตรวจสอบประเภทสินค้า
+                            String productType = rs1.getString("R_Normal");
+                            if (productType.equals("N")) {//Normal
+                                if (cBean.getCuDisc1() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
 
-                        rs1.close();
-                        stmt1.close();
-                    } catch (Exception e) {
-                        System.err.println(e.getMessage());
+                                    updatePercentCupon(itemForDisc, cuCode, cBean.getCuDisc1(), rs1);
+
+                                } else if (cBean.getCuDiscBath1() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") < itemDisc) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
+
+                                    updateBathCupon(rs1, itemDisc, cBean.getCuDiscBath1(), cuCode);
+                                }
+                            } else if (productType.equals("C")) {//Consign
+                                if (cBean.getCuDisc2() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
+
+                                    updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc2(), rs1);
+                                } else if (cBean.getCuDiscBath2() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
+
+                                    updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath2(), cuCode);
+                                }
+                            } else if (productType.equals("S")) {//Special
+                                if (cBean.getCuDisc3() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
+
+                                    updatePercentCupon(rs1.getInt("R_QuanCanDisc"), cuCode, cBean.getCuDisc3(), rs1);
+                                } else if (cBean.getCuDiscBath3() > 0) {
+                                    int itemDisc = cuponQty;
+                                    if (rs1.getInt("R_QuanCanDisc") > 0) {
+                                        itemDisc = rs1.getInt("R_QuanCanDisc");
+                                        cuponQty -= itemDisc;
+                                    } else {
+                                        cuponQty = 0;
+                                    }
+
+                                    updateBathCupon(rs1, rs1.getInt("R_QuanCanDisc"), cBean.getCuDiscBath3(), cuCode);
+                                }
+                            }
+                        } else {
+                            MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
+                            txtCuQty.setText("0");
+                            txtCuQty.selectAll();
+                            txtCuQty.requestFocus();
+                        }
                     }
+
+                    rs1.close();
+                    stmt1.close();
                 } else {
                     MSG.WAR("ไม่พบข้อมูลบัตรคูปองที่ท่านต้องการใช้งาน !");
                     txtCuQty.setText("0");
@@ -1020,7 +1011,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1091,7 +1082,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1129,7 +1120,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.executeUpdate(sql3);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1156,7 +1147,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CouponDiscount.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

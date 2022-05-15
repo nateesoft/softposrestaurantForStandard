@@ -1,13 +1,14 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.CreditRec;
 import com.softpos.pos.core.controller.FinalcialRec;
 import com.softpos.pos.core.controller.PPrint;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class TerminalRep extends javax.swing.JDialog {
@@ -323,6 +324,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
         }
 
         try {
@@ -330,7 +332,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             String SqlQuery = "select * from paidiofile "
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='I' ";
-//                    + "and date=curdate()";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -344,13 +345,14 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from paidiofile "
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='O' ";
-//                    + "and date=curdate()";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -364,13 +366,12 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
         }
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale "
                     + "where r_void='V' ";
-            //+ "and macno='" + txtMacNo.getText() + "' "
-//                    + "and r_date=curdate()";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -384,9 +385,11 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
 
-        mysql.close();
         prn.PrintTerminalEngForm(frec, CrArray, txtMacNo.getText());
     }
 

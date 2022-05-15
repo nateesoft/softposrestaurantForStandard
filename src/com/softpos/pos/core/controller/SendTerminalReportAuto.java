@@ -1,21 +1,22 @@
 package com.softpos.pos.core.controller;
 
+import database.ConfigFile;
 import database.MySQLConnect;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import util.DateConvert;
-import util.MSG;
-import database.ConfigFile;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import printReport.PrintDriver;
+import util.AppLogUtil;
+import util.DateConvert;
+import util.MSG;
 
 public class SendTerminalReportAuto {
     
@@ -208,13 +209,13 @@ public class SendTerminalReportAuto {
             rsGetSumBillno.close();
             rsGetEntertain.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         }
         
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_paidio where (flage='I') and (terminal>='001') and (terminal<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
+            String SqlQuery = "select * from s_paidio where (flage='I') and (terminal>='001') and (terminal<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -227,12 +228,13 @@ public class SendTerminalReportAuto {
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_paidio where (flage='O') and (terminal>='001') and (terminal<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
+            String SqlQuery = "select * from s_paidio where (flage='O') and (terminal>='001') and (terminal<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -245,12 +247,13 @@ public class SendTerminalReportAuto {
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_void where (macno>='001') and (macno<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
+            String SqlQuery = "select * from s_void where (macno>='001') and (macno<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -263,12 +266,13 @@ public class SendTerminalReportAuto {
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_invoice where (b_macno>='001') and (b_macno<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "') and (b_void<>'V') and (b_cramt1<>0)";
+            String SqlQuery = "select * from s_invoice where (b_macno>='001') and (b_macno<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "') and (b_void<>'V') and (b_cramt1<>0)";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             Boolean XFound;
@@ -313,9 +317,10 @@ public class SendTerminalReportAuto {
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         }
+        
         PrintTerminalEngFormDriver(frec, CrArray, "001", "999");
     }
     
@@ -549,8 +554,8 @@ public class SendTerminalReportAuto {
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -731,11 +736,11 @@ public class SendTerminalReportAuto {
             stmt.close();
             listObj.add(new Object[]{countb_refnoD});
         } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-        
-        mysql.close();
         
         return listObj;
     }
@@ -770,9 +775,9 @@ public class SendTerminalReportAuto {
             
             rec.close();
             stmt.close();
-        } catch (SQLException ex) {
-//            MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -816,9 +821,9 @@ public class SendTerminalReportAuto {
             credit[1] = dAmt + "";
             rec.close();
             stmt.close();
-        } catch (SQLException ex) {
-//            MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

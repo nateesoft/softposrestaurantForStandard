@@ -1,17 +1,18 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -67,7 +68,6 @@ public class ItemEditQty extends javax.swing.JDialog {
             txtPAmount.setText(dec1.format(balanceBean.getR_Total()));
             XQty = balanceBean.getR_Quan();
             XPrice = balanceBean.getR_Price();
-            this.XPrice = XPrice;
             XTotal = balanceBean.getR_Total();
             XPDisc = balanceBean.getR_PrDisc();
             XPAmount = balanceBean.getR_PrAmt();
@@ -80,48 +80,41 @@ public class ItemEditQty extends javax.swing.JDialog {
         if (XNewQty > 0.0000001) {
             BalanceControl bCon = new BalanceControl();
             balanceBean = bCon.getBalanceIndex(tableNo, RIndex);
-            String newdesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim());
             double newAmount = Double.parseDouble(txtPAmountEdit.getText().replace(",", ""));
-            String sqlUpdateBalance = "";
+            String sqlUpdateBalance;
             SimpleDateFormat Datefmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
             Date dateP = new Date();
-            String sqlKeepTempEdit = "INSERT INTO tempeditqty "
-                    + "(OnDate, Time, Emp, "
-                    + "Pcode, Pdesc, OldQty, "
-                    + "OldPrice, NewQty, NewPrice) "
+            String sql = "INSERT INTO tempeditqty (OnDate, Time, Emp, Pcode, Pdesc, OldQty, OldPrice, NewQty, NewPrice) "
                     + "VALUES ("
                     + "'" + balanceBean.getR_Date() + "', '" + Datefmt.format(dateP) + "', '" + balanceBean.getR_Emp() + "/" + balanceBean.getR_Table() + "',"
                     + " '" + balanceBean.getR_PluCode() + "', '" + ThaiUtil.Unicode2ASCII(balanceBean.getR_ETD() + "-" + balanceBean.getR_PName() + "-" + balanceBean.getR_Opt1()) + "','" + XQty + "',"
                     + " '" + XPrice + "','" + XNewQty + "','" + newAmount + "');";
 
             if (balanceBean != null) {
+                MySQLConnect mysql = new MySQLConnect();
                 try {
-                    MySQLConnect mysql = new MySQLConnect();
                     mysql.open();
                     balanceBean.setR_Quan(XNewQty);
                     balanceBean.setR_Price(newAmount);
                     balanceBean.setR_Total(XNewAmount);
                     NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-"));
+                    
+                    Statement stmt = mysql.getConnection().createStatement();
                     if (!txtNewPDesc.getText().replace("null", "").equals("")) {
                         this.XNewAmount = XNewQty * newAmount;
                         balanceBean.setR_Total(XNewAmount);
                         if (balanceBean.getR_Price() != 0) {
                             newAmount = balanceBean.getR_Price();
                         }
+                        
                         sqlUpdateBalance = "update balance set "
                                 + "r_total='" + balanceBean.getR_Total() + "'"
                                 + ",r_quan='" + balanceBean.getR_Quan() + "' "
                                 + ThaiUtil.Unicode2ASCII(",r_pname='" + NewDesc + "' ")
-                                //                                + ThaiUtil.Unicode2ASCII(",r_opt1='" + NewDesc + "' ")
                                 + ",r_price='" + newAmount + "' "
                                 + "where r_index='" + RIndex + "' "
                                 + "and r_plucode='" + txtPCode.getText() + "';";
                         balanceBean.setR_PName(NewDesc);
-                        try {
-                            mysql.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
-                        }
                     } else {
                         if (balanceBean.getR_Price() != 0) {
                             newAmount = balanceBean.getR_Price();
@@ -136,22 +129,19 @@ public class ItemEditQty extends javax.swing.JDialog {
                                 + "and r_plucode='" + txtPCode.getText() + "';";
                     }
 
-                    String sqlUpdateTableFile = "";
-                    sqlUpdateTableFile = "update tablefile set "
-                            + "TAmount= TAmount+" + (XNewAmount) + " "
-                            + "where tcode='" + tableNo + "';";
-
-                    mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
-                    mysql.getConnection().createStatement().executeUpdate(sqlUpdateTableFile);
-                    try {
-                        mysql.getConnection().createStatement().executeUpdate(sqlKeepTempEdit);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                } catch (Exception e) {
-
+                    stmt.executeUpdate(sqlUpdateBalance);
+                    
+                    String sqlUpdateTableFile = "update tablefile set TAmount= TAmount+" + (XNewAmount) + " where tcode='" + tableNo + "';";
+                    stmt.executeUpdate(sqlUpdateTableFile);
+                    stmt.executeUpdate(sql);
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                    AppLogUtil.log(ItemEditQty.class, "error", e.getMessage());
+                } finally {
+                    mysql.close();
                 }
             }
+            
             BalanceControl.updateProSerTable(tableNo, memberBean);
             this.dispose();
         } else {
@@ -430,7 +420,7 @@ public class ItemEditQty extends javax.swing.JDialog {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void txtPQuanEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPQuanEditActionPerformed
-        boolean strCheck = CheckStringOrNumberlic(txtPQuanEdit.getText().trim().replace(",", ""));
+        boolean strCheck = checkStringOrNumberlic(txtPQuanEdit.getText().trim().replace(",", ""));
 
         if (!strCheck == false) {
             double newQty = Double.parseDouble(txtPQuanEdit.getText().trim().replace(",", ""));
@@ -447,9 +437,6 @@ public class ItemEditQty extends javax.swing.JDialog {
             txtPQuanEdit.requestFocus();
         }
 
-//        OKActionPerformed(null);
-
-
     }//GEN-LAST:event_txtPQuanEditActionPerformed
 
     private void OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKActionPerformed
@@ -464,7 +451,7 @@ public class ItemEditQty extends javax.swing.JDialog {
             txtPAmountEdit.setText("1.00");
         }
     }//GEN-LAST:event_txtPAmountEditActionPerformed
-    public boolean CheckStringOrNumberlic(String text) {
+    public boolean checkStringOrNumberlic(String text) {
         boolean numeric = true;
 
         try {

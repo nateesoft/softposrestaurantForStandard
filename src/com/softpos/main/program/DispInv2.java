@@ -21,6 +21,7 @@ import database.MySQLConnect;
 import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -145,9 +146,11 @@ public class DispInv2 extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(DispInv2.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
+            
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));
             TotalAmt2.setText(DecFmt.format(XAmt2));

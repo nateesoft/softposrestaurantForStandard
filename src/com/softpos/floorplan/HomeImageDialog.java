@@ -8,6 +8,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFileChooser;
+import util.AppLogUtil;
 import util.MSG;
 
 public class HomeImageDialog extends javax.swing.JDialog {
@@ -200,6 +201,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -249,6 +251,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

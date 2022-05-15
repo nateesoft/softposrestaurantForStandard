@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.floorplan.ShowTable;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.POSHWSetup;
@@ -29,6 +30,7 @@ import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import database.ConfigFile;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 import util.OSValidator;
 
@@ -448,7 +450,7 @@ public class Login extends javax.swing.JDialog {
                 ResultSet rs = stmt.executeQuery(sql);
                 rs.first();
                 if (rs.getRow() == 0) {
-                    MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+                    MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                     clearlogin();
                 } else {
                     PublicVar._RealUser = rs.getString("username");
@@ -466,7 +468,7 @@ public class Login extends javax.swing.JDialog {
                     ResultSet rs2 = stmt2.executeQuery(sqlCheckBillno);
                     if (!rs2.next()) {
                         if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                            MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                            MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                             clearlogin();
                         } else {
                             UserRecord TUserRec = new UserRecord();
@@ -481,11 +483,11 @@ public class Login extends javax.swing.JDialog {
                                     FloorPlanDialog floorPlan = new FloorPlanDialog();
                                     floorPlan.setVisible(true);
                                 } else {
-                                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                    MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
                                     clearlogin();
                                 }
                             } else {
-                                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                                MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                                 clearlogin();
                             }
                         }
@@ -537,6 +539,7 @@ public class Login extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
+                AppLogUtil.log(Login.class, "error", e.getMessage());
                 clearlogin();
             } finally {
                 mysql.close();
@@ -621,8 +624,8 @@ public class Login extends javax.swing.JDialog {
     }
 
     public void PosHwSetupOnAct(String Onact) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
             Statement stmt = mysql.getConnection().createStatement();
@@ -630,9 +633,11 @@ public class Login extends javax.swing.JDialog {
                 // reset load poshwsetup
                 PosControl.resetPosHwSetup();
             }
-            mysql.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ShowTable.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

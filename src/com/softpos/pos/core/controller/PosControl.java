@@ -5,6 +5,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PosControl {
@@ -91,9 +92,11 @@ public class PosControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         PublicVar.companyBean = companyBean;
         return companyBean;
     }
@@ -173,9 +176,11 @@ public class PosControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         PublicVar.posConfigSetup = posConfigSetup;
         return posConfigSetup;
     }
@@ -248,9 +253,11 @@ public class PosControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         PublicVar.poshwsetup = poshwsetup;
         return poshwsetup;
     }

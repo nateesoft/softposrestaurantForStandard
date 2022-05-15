@@ -1,16 +1,17 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PluRec;
 import com.softpos.pos.core.controller.ThaiUtil;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PLURep extends javax.swing.JDialog {
@@ -509,14 +510,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             String SqlQuery = "select *from t_sale where macno between'"+ MacNo1 + "' and '" + MacNo2 + "' "
                     + "and cashier between '" + CashNo1 + "' and '" + CashNo2 + "' "
                     + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
-//                    + "and r_plucode between'" + Plu1 + "' and '" + Plu2 + "' "
                     + "and r_void<>'V' and r_refund<>'V' Order by r_group,r_plucode";
-//            String SqlQuery = "select *from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
-//                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
-//                    + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
-//                    + "and (r_plucode>='" + Plu1 + "') and (r_plucode<='" + Plu2 + "') "
-//                    + "and (r_void<>'V') and (r_refund<>'V') Order by r_group,r_plucode";
-//            System.out.println(SqlQuery);
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             TempGroup = "";
@@ -699,6 +693,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PLURep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1016,9 +1011,11 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PLURep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         prn.PrintPlu(GArray);
         txtMacNo1.requestFocus();
     }

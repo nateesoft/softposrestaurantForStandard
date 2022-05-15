@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MemberDialog extends javax.swing.JDialog {
@@ -375,9 +376,7 @@ public class MemberDialog extends javax.swing.JDialog {
                 model.removeRow(0);
             }
 
-            String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "order by Member_Code; ";
-//                    + "limit 0,100";
+            String sql = "select * from " + Value.db_member + ".memmaster order by Member_Code; ";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -396,6 +395,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -442,6 +442,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -497,6 +498,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -518,10 +520,9 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         }
-        mysql.open();
+        
         try {
             String sqlUpdate = "update balance "
                     + "set "
@@ -534,7 +535,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -564,6 +565,7 @@ public class MemberDialog extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

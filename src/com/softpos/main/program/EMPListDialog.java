@@ -5,8 +5,10 @@ import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 public class EMPListDialog extends javax.swing.JDialog {
@@ -191,8 +193,9 @@ public class EMPListDialog extends javax.swing.JDialog {
 
             rs.close();
             stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(EMPListDialog.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

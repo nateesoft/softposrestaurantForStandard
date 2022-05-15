@@ -1,22 +1,24 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindMember extends javax.swing.JDialog {
@@ -88,7 +90,7 @@ public class FindMember extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select *from memmaster order by m_name";
+            String sql = "select * from " + Value.db_member + ".memmaster order by m_name";
             ResultSet rs = stmt.executeQuery(sql);
             ClearGrid();
 
@@ -117,6 +119,7 @@ public class FindMember extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR_MSG(this, e.getMessage());
+            AppLogUtil.log(FindMember.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -139,13 +142,13 @@ public class FindMember extends javax.swing.JDialog {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String LoadTableFile = "select *from memmaster where m_code = '" + TempStr + "' order by m_name";
+                String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_code = '" + TempStr + "' order by m_name";
                 ResultSet rec = stmt.executeQuery(LoadTableFile);
                 Date dt = new Date();
                 ClearGrid();
                 rec.first();
                 if (rec.getRow() == 0) {
-                    MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                    MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
                     TMemCode.requestFocus();
                 } else {
                     do {
@@ -179,9 +182,11 @@ public class FindMember extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(FindMember.class, "error", e.getMessage());
             }finally{
                 mysql.close();
             }
+            
         } else {
             PUtility.ShowMsg("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
             TMemCode.setText("");
@@ -199,13 +204,13 @@ public class FindMember extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from memmaster where m_name like '" + TempStr + "' order by m_name";
+            String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_name like '" + TempStr + "' order by m_name";
             ResultSet rec = stmt.executeQuery(LoadTableFile);
             Date dt = new Date();
             ClearGrid();
             rec.first();
             if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
                 TMemName.requestFocus();
             } else {
                 do {
@@ -239,6 +244,7 @@ public class FindMember extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindMember.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }
@@ -254,13 +260,13 @@ public class FindMember extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from memmaster where (m_tel like '" + TempStr + "') or (m_mobile like '" + TempStr + "') or (m_office like '" + TempStr + "') order by m_name";
+            String LoadTableFile = "select * from " + Value.db_member + ".memmaster where (m_tel like '" + TempStr + "') or (m_mobile like '" + TempStr + "') or (m_office like '" + TempStr + "') order by m_name";
             ResultSet rec = stmt.executeQuery(LoadTableFile);
             Date dt = new Date();
             ClearGrid();
             rec.first();
             if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
                 TMemTel.requestFocus();
             } else {
                 do {
@@ -293,6 +299,7 @@ public class FindMember extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindMember.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

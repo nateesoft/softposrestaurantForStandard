@@ -10,6 +10,7 @@ import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import setupmenu.DlgBrowseProduct;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MGRButtonSetup extends javax.swing.JDialog {
@@ -56,6 +57,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1016,9 +1018,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from mgrbuttonsetup "
-                    + "where pcode='" + txtPCode.getText() + "' "
-                    + "order by pcode";
+            String sql = "select * from mgrbuttonsetup where pcode='" + txtPCode.getText() + "' order by pcode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -1037,11 +1037,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     isExtraNoLimit = true;
                 }
 
-                try {
-                    qtyAmt = rs.getInt("qty");
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
+                qtyAmt = rs.getInt("qty");
 
                 model4.addRow(new Object[]{
                     rs.getString("pcode"),
@@ -1064,6 +1060,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1088,12 +1085,12 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'";
             Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'");
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1159,6 +1156,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
             }
         }
 
@@ -1182,8 +1180,9 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                 Statement stmt = mysql.getConnection().createStatement();
                 stmt.executeUpdate(sql);
                 stmt.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
             }
         }
 
@@ -1208,8 +1207,9 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                 Statement stmt = mysql.getConnection().createStatement();
                 stmt.executeUpdate(sql);
                 stmt.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
             }
         }
 
@@ -1244,6 +1244,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1277,6 +1278,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1310,6 +1312,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

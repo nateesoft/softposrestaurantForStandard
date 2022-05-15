@@ -1,9 +1,9 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MoveItemDialog extends javax.swing.JDialog {
@@ -478,17 +479,15 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            
+                            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
                         } finally {
                             mysql.close();
                         }
                     }
                 }
 
-                //load table1
-                loadTable1();
 
-                //load table2
+                loadTable1();
                 loadTable2();
             }
         }
@@ -511,9 +510,11 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     mysql.getConnection().createStatement().executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
                 } finally {
                     mysql.close();
                 }
+                
                 Value.TableSelected = TABLE_2;
                 dispose();
             }
@@ -615,16 +616,14 @@ public class MoveItemDialog extends javax.swing.JDialog {
                                 stmt.close();
                             } catch (SQLException e) {
                                 MSG.ERR(this, e.getMessage());
+                                AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
                             } finally {
                                 mysql.close();
                             }
                         }
                     }
 
-                    //load table1
                     loadTable1();
-
-                    //load table2
                     loadTable2();
                 }
             }
@@ -755,7 +754,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -780,6 +779,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

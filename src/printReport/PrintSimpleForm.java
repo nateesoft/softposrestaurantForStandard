@@ -2992,7 +2992,7 @@ public class PrintSimpleForm {
     int line22 = 25;
     int lineLineLin = 0;
 
-    public void KIC_FORM_Move(final String table, final String tableto, final String kicName) throws Exception {
+    public void KIC_FORM_Move(final String table, final String tableto, final String kicName) {
         lineLineLin = -75;
         try {
             String t = "";

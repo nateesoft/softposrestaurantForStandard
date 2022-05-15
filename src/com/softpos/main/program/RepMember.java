@@ -1,14 +1,17 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,10 +19,9 @@ import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -633,7 +635,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from mtran left join memmaster on mtran.m_code=memmaster.m_code "
+                String SQLQuery = "select *from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
                         + "where (mtran.m_code>='" + TempCode1 + "') and (mtran.m_code<='" + TempCode2 + "') and (m_date>='" + Datefmt.format(TempDate1) + "') and (m_date<='" + Datefmt.format(TempDate2) + "') order by mtran.m_code,m_date,m_billno";
                 ResultSet rec = stmt.executeQuery(SQLQuery);
                 rec.first();
@@ -661,6 +663,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(RepMember.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }

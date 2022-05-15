@@ -5,6 +5,7 @@ import com.softpos.pos.core.model.PluButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class StorePlu {
@@ -23,7 +24,9 @@ public class StorePlu {
             }
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage() + "\n" + sql);
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(StorePlu.class, "error", e.getMessage());
+            
             return false;
         } finally {
             mysql.close();
@@ -31,14 +34,13 @@ public class StorePlu {
     }
 
     public boolean storeUpdate(PluButtonBean bean) {
-        String sql = "";
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            sql = "UPDATE menusetup SET "
+            String sql = "UPDATE menusetup SET "
                     + "code_type = '" + bean.getButtonType().toCharArray()[0] + "',"
                     + "pcode = '" + bean.getPcode() + "',"
                     + "shortname = '" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "',"
@@ -50,8 +52,12 @@ public class StorePlu {
             stmt.close();
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage() + "\n" + sql);
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(StorePlu.class, "error", e.getMessage());
+            
             return false;
+        } finally {
+            mysql.close();
         }
     }
 }

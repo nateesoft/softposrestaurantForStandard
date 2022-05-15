@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CancelCashBack extends javax.swing.JDialog {
@@ -190,6 +191,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -213,12 +215,12 @@ public class CancelCashBack extends javax.swing.JDialog {
                     dispose();
                 }
             } else {
-                MSG.WAR_MSG(this, "กรุณาเลือกราย !!!");
+                MSG.WAR(this, "กรุณาเลือกราย !!!");
                 table.requestFocus();
             }
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
-            
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

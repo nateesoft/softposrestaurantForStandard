@@ -5,6 +5,7 @@ import com.softpos.pos.core.model.ListButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class StoreList {
@@ -23,7 +24,9 @@ public class StoreList {
             }
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage() + "\n" + sql);
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(StoreList.class, "error", e.getMessage());
+            
             return false;
         } finally{
             mysql.close();
@@ -45,12 +48,16 @@ public class StoreList {
                     + "ppathname = '" + bean.getPicture() + "',"
                     + "pcolor='" + bean.getPcolor() + "' "
                     + "WHERE code_id = '" + bean.getButtonName() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            int i = stmt.executeUpdate(sql);
-            stmt.close();
+            int i;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                i = stmt.executeUpdate(sql);
+            }
+            
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage() + "\n" + sql);
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(StoreList.class, "error", e.getMessage());
+            
             return false;
         } finally{
             mysql.close();

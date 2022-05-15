@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import util.AppLogUtil;
 import util.MSG;
 
 public class DiarySale extends javax.swing.JDialog {
@@ -263,6 +264,7 @@ public class DiarySale extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiarySale.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

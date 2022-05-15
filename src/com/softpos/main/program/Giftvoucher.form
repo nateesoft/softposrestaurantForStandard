@@ -76,7 +76,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="TGiftNo" min="-2" pref="172" max="-2" attributes="0"/>
+                  <Component id="txtGiftNo" min="-2" pref="172" max="-2" attributes="0"/>
                   <EmptySpace pref="369" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -86,7 +86,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="TGiftNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtGiftNo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -103,14 +103,14 @@
             <Property name="text" type="java.lang.String" value="Barcode"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TGiftNo">
+        <Component class="javax.swing.JTextField" name="txtGiftNo">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Norasi" size="14" style="1"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TGiftNoKeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtGiftNoKeyPressed"/>
           </Events>
         </Component>
       </SubComponents>

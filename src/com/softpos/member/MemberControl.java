@@ -1,14 +1,12 @@
 package com.softpos.member;
 
+import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PosControl;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.DateConvert;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MemberControl {
@@ -51,6 +49,9 @@ public class MemberControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
@@ -122,6 +123,9 @@ public class MemberControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
@@ -202,37 +206,9 @@ public class MemberControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }
-    }
-
-    public void getScoreMemberToCheckBill(String table, MemberBean memberBean) {
-        MySQLConnect mysql = new MySQLConnect();
-        try {
-            mysql.open();
-            DateConvert dc = new DateConvert();
-            if (!memberBean.getMember_Code().equals("")) {
-                String expireDate = memberBean.getMember_ExpiredDate().toString();
-                String date = dc.GetCurrentDate();
-                int compare = Integer.parseInt(expireDate) - Integer.parseInt(date);
-                if (compare > 0) {
-
-                }
-                
-            }
+            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
-        }
-    }
-
-    public void setPoint(MemberBean memberBean) {
-        try {
-            DateConvert dc = new DateConvert();
-            POSConfigSetup posConfig;
-            PosControl posControl = new PosControl();
-            posConfig = posControl.getData();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
         }
     }
 

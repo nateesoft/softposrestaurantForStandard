@@ -1,5 +1,10 @@
 package printReport;
 
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.SendTerminalReportAuto;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -8,21 +13,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import javax.print.PrintService;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.standard.MediaPrintableArea;
-import javax.swing.JEditorPane;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.SendTerminalReportAuto;
-import com.softpos.pos.core.controller.Value;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,9 +21,20 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.PrintService;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.swing.JEditorPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
 
@@ -168,12 +169,12 @@ public class PrintDriver {
                         + "set r_kicprint='P' "
                         + "where r_index='" + bean.getR_Index() + "' "
                         + "and r_table='" + bean.getR_Table() + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-
+                AppLogUtil.log(PrintDriver.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }

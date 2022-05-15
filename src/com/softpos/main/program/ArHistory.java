@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -675,8 +677,11 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
+                            AppLogUtil.log(ArHistory.class, "error", e.getMessage());
+                        } finally {
+                            mysql.close();
                         }
+                        
                         prn.print("----------------------------------------");
                         prn.print("");
                         prn.print("");
@@ -700,13 +705,13 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String t = "";
         try {
             String TempCode1 = arcode1.getText();
-            String TempCode2 = "";
+            String TempCode2;
             Date TempDate1 = new Date();
             Date TempDate2 = new Date();
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -760,7 +765,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 if (rec.getRow() == 0) {
                 } else {
                     do {
-                        String PayDate = "";
+                        String PayDate;
                         if (rec.getString("arflage").equals("Y")) {
                             PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
                         } else {
@@ -775,7 +780,9 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArHistory.class, "error", e.getMessage());
+            } finally {
+                mysql.close();
             }
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1()).trim() + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2()).trim() + "_";
@@ -863,7 +870,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArHistory.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }

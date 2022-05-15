@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CustomerName extends javax.swing.JDialog {
@@ -207,6 +208,7 @@ public class CustomerName extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -230,6 +232,7 @@ public class CustomerName extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

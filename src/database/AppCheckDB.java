@@ -3,6 +3,7 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class AppCheckDB {
@@ -20,6 +21,7 @@ public class AppCheckDB {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(AppCheckDB.class, "error", e.getMessage());
             try {
                 String sqlUpd = "alter table mgrbuttonsetup add check_extra char(1) default 'N'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -27,7 +29,7 @@ public class AppCheckDB {
                 }
             } catch (SQLException ex) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(AppCheckDB.class, "error", e.getMessage());
             }
         } finally{
             mysql.close();

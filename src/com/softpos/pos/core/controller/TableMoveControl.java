@@ -1,14 +1,14 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import util.AppLogUtil;
+import util.MSG;
 
 public class TableMoveControl {
 
@@ -35,13 +35,13 @@ public class TableMoveControl {
                         + "and r_movefrom<>'' "
                         + "and r_table='" + tableDest + "'";
                 stmt1.executeUpdate(sql2);
-
                 stmt1.close();
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(TableMoveControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

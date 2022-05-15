@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
 import soft.virtual.JTableControl;
+import util.AppLogUtil;
 import util.MSG;
 import util.NumberFormat;
 
@@ -1275,23 +1276,19 @@ public class CheckBill extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDiscountAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiscountAllActionPerformed
-        try {
-            backupTempBalnace();
-            double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
-            DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
-                    txtMember1.getText(), txtMember2.getText());
-            dd.setVisible(true);
-            if (dd.getDiscountBean() != null) {
-                discBean = dd.getDiscountBean();
-                txtDiscountAmount.setText("" + discBean.getTotalDiscount());
-                loadTableBill();
-            } else {
-                restoreTempBalance();
-            }
-            LoadDisc();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+        backupTempBalnace();
+        double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
+        DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
+                txtMember1.getText(), txtMember2.getText());
+        dd.setVisible(true);
+        if (dd.getDiscountBean() != null) {
+            discBean = dd.getDiscountBean();
+            txtDiscountAmount.setText("" + discBean.getTotalDiscount());
+            loadTableBill();
+        } else {
+            restoreTempBalance();
         }
+        LoadDisc();
     }//GEN-LAST:event_btnDiscountAllActionPerformed
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
@@ -1587,6 +1584,7 @@ public class CheckBill extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(CheckBill.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -2219,6 +2217,7 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(CheckBill.class, "error", e.getMessage());
                 }
                 txtArAmount.setFocusable(true);
                 txtArAmount.setText(txtTotalAmount.getText());
@@ -2236,6 +2235,7 @@ public class CheckBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2278,6 +2278,7 @@ public class CheckBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException ex) {
             MSG.ERR(ex.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", ex.getMessage());
         } finally {
             mysql.close();
         }
@@ -2290,11 +2291,12 @@ public class CheckBill extends javax.swing.JDialog {
         try {
             String sql = "delete from tempset "
                     + "where PTableNo='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2331,17 +2333,24 @@ public class CheckBill extends javax.swing.JDialog {
         }).start();
     }
 
-    private void backupTempBalnace() throws SQLException {
+    private void backupTempBalnace() {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
-        String sql2 = "insert ignore into temp_balance select * from balance "
-                + "where r_table='" + tableNo + "' order by r_index";
-        try (Statement stmt = mysql.getConnection().createStatement()) {
-            stmt.executeUpdate(sql1);
-            stmt.executeUpdate(sql2);
+        try {
+            String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
+            String sql2 = "insert ignore into temp_balance select * from balance "
+                    + "where r_table='" + tableNo + "' order by r_index";
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql1);
+                stmt.executeUpdate(sql2);
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-        mysql.close();
+
     }
 
     private void restoreTempBalance() {
@@ -2361,11 +2370,12 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(CheckBill.class, "error", e.getMessage());
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2377,11 +2387,12 @@ public class CheckBill extends javax.swing.JDialog {
         mysql.open();
         try {
             String sql = "delete from tempgift";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2425,85 +2436,81 @@ public class CheckBill extends javax.swing.JDialog {
                 while (rsKic.next()) {
                     String rKic = rsKic.getString("r_kic");
                     if (!rKic.equals("")) {
-                        try {
-                            int iKic = Integer.parseInt(rKic);
-                            if (iKic - 1 < 0) {
-                                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                        int iKic = Integer.parseInt(rKic);
+                        if (iKic - 1 < 0) {
+                            //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                        } else {
+                            if (kicMaster[iKic - 1].equals("N")) {
+                                //NOT PRINT or Print already
                             } else {
-                                if (kicMaster[iKic - 1].equals("N")) {
-                                    //NOT PRINT or Print already
-                                } else {
-                                    printerName = "KIC" + rKic;
-                                    String printerForm = BranchControl.getForm(rKic);
-                                    if (printerForm.equals("1") || printerForm.equals("2")) {
-                                        String sql1 = "select * from balance "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_Void <> 'V' "
-                                                + "group by r_plucode";
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs1 = stmt2.executeQuery(sql1);
-                                        while (rs1.next()) {
-                                            String PCode = rs1.getString("R_PluCode");
-                                            if (printerForm.equals("1")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-                                                }
-                                            } else if (printerForm.equals("2")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_2(printerName, tableNo, new String[]{PCode});
-                                                }
+                                printerName = "KIC" + rKic;
+                                String printerForm = BranchControl.getForm(rKic);
+                                if (printerForm.equals("1") || printerForm.equals("2")) {
+                                    String sql1 = "select * from balance "
+                                            + "where r_table='" + tableNo + "' "
+                                            + "and R_PrintOK='Y' "
+                                            + "and R_KicPrint<>'P' "
+                                            + "and R_Kic<>'' "
+                                            + "and R_Void <> 'V' "
+                                            + "group by r_plucode";
+                                    Statement stmt2 = mysql.getConnection().createStatement();
+                                    ResultSet rs1 = stmt2.executeQuery(sql1);
+                                    while (rs1.next()) {
+                                        String PCode = rs1.getString("R_PluCode");
+                                        if (printerForm.equals("1")) {
+                                            if (Value.printkic) {
+                                                printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
+                                            }
+                                        } else if (printerForm.equals("2")) {
+                                            if (Value.printkic) {
+                                                printSimpleForm.KIC_FORM_2(printerName, tableNo, new String[]{PCode});
                                             }
                                         }
-
-                                        rs1.close();
-                                        stmt2.close();
-                                    } else if (printerForm.equals("6")) {
-                                        String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_Void<>'V' and R_KIC='" + rKic + "' "
-                                                + "group by r_plucode order by r_opt1";
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs2 = stmt2.executeQuery(sql2);
-                                        while (rs2.next()) {
-                                            if (Value.printkic) {
-
-                                                String R_Index = rs2.getString("R_Index");
-                                                String R_Plucode = rs2.getString("R_Plucode");
-                                                double qty = rs2.getDouble("R_Quan");
-                                                double priceTotal = rs2.getDouble("Total");
-                                                printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_Plucode, qty, priceTotal);
-                                            }
-                                        }
-
-                                        rs2.close();
-                                        stmt2.close();
-                                    } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-                                        if (printerForm.equals("3")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
-                                            }
-                                        } else if (printerForm.equals("4")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_4(printerName, tableNo);
-                                            }
-                                        } else if (printerForm.equals("5")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_5(printerName, tableNo);
-                                            }
-                                        }
-                                    } else {
-                                        MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ในระบบที่สามารใช้งานได้ !!!");
                                     }
+
+                                    rs1.close();
+                                    stmt2.close();
+                                } else if (printerForm.equals("6")) {
+                                    String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
+                                            + "where r_table='" + tableNo + "' "
+                                            + "and R_PrintOK='Y' "
+                                            + "and R_KicPrint<>'P' "
+                                            + "and R_Kic<>'' "
+                                            + "and R_Void<>'V' and R_KIC='" + rKic + "' "
+                                            + "group by r_plucode order by r_opt1";
+                                    Statement stmt2 = mysql.getConnection().createStatement();
+                                    ResultSet rs2 = stmt2.executeQuery(sql2);
+                                    while (rs2.next()) {
+                                        if (Value.printkic) {
+
+                                            String R_Index = rs2.getString("R_Index");
+                                            String R_Plucode = rs2.getString("R_Plucode");
+                                            double qty = rs2.getDouble("R_Quan");
+                                            double priceTotal = rs2.getDouble("Total");
+                                            printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_Plucode, qty, priceTotal);
+                                        }
+                                    }
+
+                                    rs2.close();
+                                    stmt2.close();
+                                } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
+                                    if (printerForm.equals("3")) {
+                                        if (Value.printkic) {
+                                            printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
+                                        }
+                                    } else if (printerForm.equals("4")) {
+                                        if (Value.printkic) {
+                                            printSimpleForm.KIC_FORM_4(printerName, tableNo);
+                                        }
+                                    } else if (printerForm.equals("5")) {
+                                        if (Value.printkic) {
+                                            printSimpleForm.KIC_FORM_5(printerName, tableNo);
+                                        }
+                                    }
+                                } else {
+                                    MSG.WAR(this, "ไม่พบฟอร์มปริ้นเตอร์ในระบบที่สามารใช้งานได้ !!!");
                                 }
                             }
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
                         }
                     }
                 }
@@ -2512,19 +2519,16 @@ public class CheckBill extends javax.swing.JDialog {
                 stmt1.close();
 
                 //update r_kicprint
-                try {
-                    String sql = "update balance "
-                            + "set r_kicprint='P',"
-                            + "r_pause='Y' "
-                            + "where r_table='" + tableNo + "' "
-                            + "and r_kicprint<>'P' "
-                            + "and r_printOk='Y' "
-                            + "and r_kic<>'';";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                }
+                String sql = "update balance "
+                        + "set r_kicprint='P',"
+                        + "r_pause='Y' "
+                        + "where r_table='" + tableNo + "' "
+                        + "and r_kicprint<>'P' "
+                        + "and r_printOk='Y' "
+                        + "and r_kic<>'';";
+                Statement stmt = mysql.getConnection().createStatement();
+                stmt.executeUpdate(sql);
+
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
             } finally {
@@ -2559,6 +2563,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

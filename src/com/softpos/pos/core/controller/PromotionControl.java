@@ -1,16 +1,16 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.model.TPromotionBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.ProtabBean;
+import com.softpos.pos.core.model.TPromotionBean;
 import database.MySQLConnect;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PromotionControl {
@@ -34,6 +34,7 @@ public class PromotionControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -139,6 +140,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -241,6 +243,7 @@ public class PromotionControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -346,6 +349,7 @@ public class PromotionControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -957,8 +961,9 @@ public class PromotionControl {
 
                         }//END TYPE 5
 
-                    } catch (Exception e) {
+                    } catch (NumberFormatException | SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
                     }
                 }
             }
@@ -986,13 +991,14 @@ public class PromotionControl {
                     + "NetTotal = '" + NetTotal + "' "
                     + "where TCode='" + table + "'";
             Statement stmt1 = mysql.getConnection().createStatement();
-            int update = stmt1.executeUpdate(updateTableFile);
+            stmt1.executeUpdate(updateTableFile);
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
     }
 
     public void saveTPromotion(TPromotionBean bean) {
@@ -1010,9 +1016,11 @@ public class PromotionControl {
             }
             rs.close();
             stmtGetPro.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.toString());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         }
+        
         try {
             String sql = "insert into t_promotion "
                     + "(R_Index,R_RefNo,Terminal,Cashier,PrCode,PrType,PCode,PDisc,PDiscBath,PPrice,PQty,PrTotalAmt,PrAmt,Flage) "
@@ -1025,13 +1033,11 @@ public class PromotionControl {
 //                    + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','" + bean.getPCode() + "','" + bean.getPDisc() + "','" + bean.getPDiscBath()
 //                    + "','" + bean.getPPrice() + "','" + bean.getPQty() + "','" + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "','" + bean.getFlage() + "')";
             Statement stmt = mysql.getConnection().createStatement();
-            int update = stmt.executeUpdate(sql);
-            if (update > 0) {
-
-            }
+            stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1053,6 +1059,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1065,12 +1072,12 @@ public class PromotionControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "delete from tpromotion2 where TCode='" + table + "'";
             Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate("delete from tpromotion2 where TCode='" + table + "'");
             stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1090,8 +1097,9 @@ public class PromotionControl {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1110,6 +1118,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1131,7 +1140,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1150,7 +1159,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1178,7 +1187,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1197,7 +1206,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1231,9 +1240,11 @@ public class PromotionControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return procode + ":" + prodesc;
     }
 }

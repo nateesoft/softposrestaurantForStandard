@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ChangTypeDialog extends javax.swing.JDialog {
@@ -105,7 +106,9 @@ public class ChangTypeDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(ChangTypeDialog.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

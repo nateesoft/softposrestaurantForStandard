@@ -4,6 +4,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class DiscountControl {
@@ -40,12 +41,9 @@ public class DiscountControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
-        } finally {
-            mysql.close();
+            AppLogUtil.log(DiscountControl.class, "error", e.getMessage());
         }
-
-        mysql.open();
+        
         //หามูลค่าบัตรลดคูปอง
         try {
             String sql = "select sum(R_PrCuAmt) SUM_R_PrCuAmt "

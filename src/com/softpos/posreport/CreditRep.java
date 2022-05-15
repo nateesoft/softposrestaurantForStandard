@@ -1,21 +1,22 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CreditRep extends javax.swing.JDialog {
@@ -274,7 +275,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CreditRep.class, "error", e.getMessage());
         }
 
         try {
@@ -402,7 +403,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CreditRep.class, "error", e.getMessage());
         }
 
         try {
@@ -414,7 +415,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         + "and (B_Cashier>='" + CashNo1 + "') "
                         + "and (B_Cashier<='" + CashNo2 + "') "
                         + "and (B_Void<>'V')and (B_CrAmt1<>'0') ";
-//                        + "and B_OnDate=curdate() ";
                 ResultSet rec = stmt.executeQuery(SqlQuery);
                 rec.first();
                 if (rec.getRow() == 0) {
@@ -432,8 +432,9 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CreditRep.class, "error", e.getMessage());
         }
+        
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -473,7 +474,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         Double SumTotalAmt = 0.0;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+            String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -501,7 +502,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CreditRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         if (SumCard > 0) {
             t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + ("Total Slip " + Space + PUtility.DataFull(IntFmt.format(SumCard), 6) + TAB + PUtility.DataFull(DecFmt.format(SumCardAmt), 11)) + "_";
         }
@@ -519,6 +524,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             } catch (InterruptedException e) {
             }
         }
+        
         pd.printHTML();
     }
 
@@ -542,6 +548,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(CreditRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

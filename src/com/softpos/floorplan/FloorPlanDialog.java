@@ -64,6 +64,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import util.Option;
 import com.softpos.pos.core.model.MemberBean;
+import util.AppLogUtil;
 import util.DateConvert;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
@@ -79,7 +80,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private Font fontC = new Font("Tahoma", Font.BOLD, 16);
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
-//    private MySQLConnect mysql = new MySQLConnect();
 
     public FloorPlanDialog() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
@@ -1020,6 +1020,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     rs.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                 } finally {
                     mysql.close();
                 }
@@ -1061,7 +1062,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
-                MSG.ERR("ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
+                MSG.WAR("ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
 //                txtPluCode.setText("");
                 rec.close();
                 stmt.close();
@@ -1221,6 +1222,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         stmt1.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                     }
 
                     //update promotion
@@ -1234,6 +1236,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             rec.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
 //            txtPluCode.requestFocus();
         } finally {
             mysql.close();
@@ -1511,6 +1514,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                         }
 
 //                        btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")" + r_time);
@@ -1557,6 +1561,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                 } catch (NumberFormatException e) {
                     MSG.ERR(this, e.getMessage());
+                    AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                 }
             }
 
@@ -1564,6 +1569,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1634,6 +1640,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -1663,6 +1670,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                     System.exit(0);
                 } finally {
                     mysql.close();
@@ -1684,6 +1692,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -1707,6 +1716,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
             return false;
         } finally {
             mysql.close();
@@ -1770,10 +1780,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                 rs.close();
                 stmt.close();
-
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1834,7 +1844,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
+        
         if (isPermit) {
             RefundBill refund = new RefundBill(null, true);
             refund.setVisible(true);
@@ -1850,15 +1865,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         RefundBill refund = new RefundBill(null, true);
                         refund.setVisible(true);
                     } else {
-                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
                     }
                 } else {
-                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
             }
         }
-
-        mysql.close();
     }
 
     class TableSetup {
@@ -1966,6 +1979,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 mysql.getConnection().createStatement().executeUpdate(sql);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
@@ -2027,6 +2041,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             } catch (HeadlessException | SQLException e1) {
                                 login.setVisible(false);
                                 MSG.ERR(e1.getMessage());
+                                AppLogUtil.log(FloorPlanDialog.class, "error", e1.getMessage());
                             } finally {
                                 mysql.close();
                             }
@@ -2279,6 +2294,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             stmt2.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
                         }
                     }
                 }
@@ -2292,11 +2308,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 stmt2.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
             }
 
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2328,6 +2346,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2339,9 +2358,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenu9.setText(dc.dateGetToShow(dc.GetCurrentDate()).replace(" ", "") + " " + dc.GetCurrentTime() + " USER " + Value.CASHIER);
         try {
             Thread.sleep(900);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FloorPlanDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (InterruptedException ex) {}
     }
 
 }

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -31,7 +32,8 @@ public class MPluController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -88,7 +90,8 @@ public class MPluController {
             prm.clearParameters();
             resultCreate = prm.executeBatch();
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -107,7 +110,8 @@ public class MPluController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

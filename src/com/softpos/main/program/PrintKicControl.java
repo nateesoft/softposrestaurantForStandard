@@ -5,8 +5,8 @@ import database.MySQLConnect;
 import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -216,6 +216,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -232,11 +233,12 @@ public class PrintKicControl extends javax.swing.JDialog {
                 String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
                 mysql.getConnection().createStatement().executeUpdate(sql);
             }
-            JOptionPane.showMessageDialog(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
+            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
 
             loadData();
         } catch (HeadlessException | SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

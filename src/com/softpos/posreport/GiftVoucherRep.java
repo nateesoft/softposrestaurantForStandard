@@ -1,20 +1,22 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
+import util.AppLogUtil;
+import util.MSG;
 
 public class GiftVoucherRep extends javax.swing.JDialog {
 
@@ -287,13 +289,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_gift "
+                        String SqlQuery = "select * from t_gift "
                                 + "where (macno>='" + MacNo1 + "') "
                                 + "and (macno<='" + MacNo2 + "') "
                                 + "and (cashier>='" + CashNo1 + "') "
                                 + "and (cashier<='" + CashNo2 + "') "
                                 + "and (fat<>'V') "
-                                //                                + "and ondate=curdate() "
                                 + "order by giftbarcode";
                         ResultSet rec = stmt.executeQuery(SqlQuery);
                         rec.first();
@@ -308,7 +309,8 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         rec.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        PUtility.showError(e.getMessage());
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(GiftVoucherRep.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
@@ -330,6 +332,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 }
             }
         }
+        
         txtMacNo1.requestFocus();
     }
 
@@ -396,7 +399,8 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(GiftVoucherRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 public class VoidPopupDialog extends javax.swing.JDialog {
@@ -201,7 +202,8 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(VoidPopupDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

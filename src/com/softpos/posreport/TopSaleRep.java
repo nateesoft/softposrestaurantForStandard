@@ -1,18 +1,5 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import javax.swing.UIManager;
 import com.softpos.main.program.Jdi_dailyReport_Topsale;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
@@ -20,8 +7,22 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import javax.swing.UIManager;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class TopSaleRep extends javax.swing.JDialog {
@@ -498,6 +499,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         }
 
         try {
@@ -532,9 +534,11 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
+        
         Jdi_dailyReport_Topsale top = new Jdi_dailyReport_Topsale(new Frame(), true);
         top.setData(topsale);
         top.setHeaderPage(MacNo1, MacNo2, CashNo1, CashNo2, Group1, Group2, txtCntOrder.getText());
@@ -557,11 +561,11 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
-            stmt.executeUpdate(SqlQuery);
+            stmt.executeUpdate("delete from temptopsale where terminal='" + Value.MACNO + "'");
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         }
 
         try {
@@ -571,7 +575,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             System.out.println(SqlQuery);
@@ -591,6 +594,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         }
 
         if (Value.printdriver) {
@@ -644,8 +648,11 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
-                    mysql.close();
+                    
                     prn.print("----------------------------------------");
                     prn.print(" ");
                     prn.print(" ");
@@ -677,6 +684,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         }
 
         try {
@@ -686,7 +694,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
@@ -705,6 +712,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         }
 
         if (POSHW.getHeading1().trim().length() >= 18) {
@@ -737,7 +745,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("กลุ่มสินค้า") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลำดับ" + Space + "รหัสสินค้า" + Space + "จำนวน" + Space + "จำนวนเงิน ") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-        String TempGroup = "";
+        String TempGroup;
         int Cnt = 1;
         //int CntOrder = 10 ;
         try {
@@ -766,8 +774,11 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-        mysql.close();
+        
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
 
@@ -798,7 +809,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            //
+            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

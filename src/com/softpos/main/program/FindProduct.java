@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindProduct extends javax.swing.JDialog {
@@ -248,6 +249,7 @@ public class FindProduct extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindProduct.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

@@ -1,5 +1,10 @@
 package com.softpos.posreport;
 
+import com.softpos.main.program.Jdi_depReport;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PluRec;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -7,11 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.UIManager;
-import com.softpos.main.program.Jdi_depReport;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PluRec;
-import com.softpos.pos.core.controller.Value;
+import util.AppLogUtil;
 import util.MSG;
 
 public class DeptRep extends javax.swing.JDialog {
@@ -346,9 +347,8 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String CashNo2 = txtCashNo2.getText();
         String Group1 = txtGroup1.getText();
         String Group2 = txtGroup2.getText();
-        String TempGroup = "";
+        String TempGroup;
         int ArraySize = 0;
-        Boolean Found = false;
         PluRec[] GArray;
         GArray = new PluRec[1];
         ArraySize = 0;
@@ -389,7 +389,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             GroupRec.Plu1 = "";
             GroupRec.Plu2 = "";
             GroupRec.GroupCode = TempGroup;
-            new PUtility();//เพิ่มนะครับ
             GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
             GroupRec.PCode = "";
             GroupRec.PName = "";
@@ -541,6 +540,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DeptRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -757,6 +757,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DeptRep.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

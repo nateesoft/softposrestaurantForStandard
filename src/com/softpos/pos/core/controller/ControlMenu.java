@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ControlMenu {
@@ -87,6 +88,7 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -125,7 +127,7 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -154,9 +156,9 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(null, ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -195,6 +197,7 @@ public class ControlMenu {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         }
 
         List<MenuSetup> menuAll = new ArrayList<>();
@@ -222,11 +225,12 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(null, ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
 
         return menuAll;
     }
@@ -296,6 +300,7 @@ public class ControlMenu {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -395,7 +400,7 @@ public class ControlMenu {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(ControlMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

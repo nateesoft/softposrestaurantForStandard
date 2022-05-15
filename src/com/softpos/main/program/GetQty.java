@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class GetQty extends javax.swing.JDialog {
@@ -806,6 +807,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(GetQty.class, "error", e.getMessage());
         }finally{
             mysql.close();
         }

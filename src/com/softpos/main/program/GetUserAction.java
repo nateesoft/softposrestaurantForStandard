@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import database.MySQLConnect;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class GetUserAction extends javax.swing.JDialog {
@@ -286,6 +287,7 @@ public class GetUserAction extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(GetUserAction.class, "error", e.getMessage());
             clearlogin();
         }finally{
             mysql.close();

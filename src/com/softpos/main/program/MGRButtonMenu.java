@@ -17,9 +17,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import setupmenu.DlgBrowseProduct;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MGRButtonMenu extends javax.swing.JDialog {
@@ -655,7 +655,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private void txtPCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPCodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txtShortName.requestFocus();
-            Selectmenu();
+            selectmenu();
         }
     }//GEN-LAST:event_txtPCodeKeyPressed
 
@@ -911,6 +911,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.WAR(e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -938,12 +939,13 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate("delete from soft_menusetup where MenuCode='" + mgr.getMenuCode() + "'");
             if (stmt.executeUpdate(sql) > 0) {
-                JOptionPane.showMessageDialog(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+                MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
                 dispose();
             }
             stmt.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -968,11 +970,12 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             Statement stmt = mysql.getConnection().createStatement();
             if (stmt.executeUpdate(sql) > 0) {
                 stmt.close();
-                JOptionPane.showMessageDialog(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+                MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
                 dispose();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1033,27 +1036,20 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     btnFindProduct.setEnabled(true);
                 }
                 txtPCode.setText(m.getPCode());
-                try {
-                    String sqlFind = "select PDesc from product "
-                            + "where pcode='" + m.getPCode() + "' "
-                            + "and PActive='Y'";
-                    Statement stmt1 = mysql.getConnection().createStatement();
-                    ResultSet rsFind = stmt1.executeQuery(sqlFind);
-                    if (rsFind.next()) {
-                        txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
-                    }
-
-                    rsFind.close();
-                    stmt1.close();
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                    
+                
+                Statement stmt1 = mysql.getConnection().createStatement();
+                ResultSet rsFind = stmt1.executeQuery("select PDesc from product where pcode='" + m.getPCode() + "' and PActive='Y'");
+                if (rsFind.next()) {
+                    txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
                 }
+
+                rsFind.close();
+                stmt1.close();
 
                 txtShortName.setText(m.getMenuShowText());
                 ButtonCustom buttonCustom = new ButtonCustom();
-                Color BGColor = buttonCustom.getColorFormat(m.getBGColor());
-                btnBGColor.setBackground(BGColor);
+                Color bgColor = buttonCustom.getColorFormat(m.getBGColor());
+                btnBGColor.setBackground(bgColor);
                 if (m.getFontAttr().equals("B")) {
                     chkFontBold.setSelected(true);
                     chkFontItalic.setSelected(false);
@@ -1090,6 +1086,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1200,27 +1197,23 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         cbFontList.setSelectedItem("Tahoma");
     }
 
-    private void Selectmenu() {
-        String pcode = txtPCode.getText();
+    private void selectmenu() {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-
         try {
             mysql.open();
-            String sqlFind = "select PDesc from product "
-                    + "where pcode='" + pcode + "' "
-                    + "and PActive='Y'";
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rsFind = stmt.executeQuery(sqlFind);
-            if (rsFind.next()) {
-                txtShortName.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
+            ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y'");
+            if (rs.next()) {
+                txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
             }
-            rsFind.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

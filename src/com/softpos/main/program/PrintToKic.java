@@ -17,10 +17,9 @@ import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import printReport.PrintSimpleForm;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -41,8 +40,7 @@ public class PrintToKic extends javax.swing.JFrame {
 ////        super(parent, modal);
         initComponents();
         MySQLConnect mysql = new MySQLConnect();
-        BranchBean BranchBean = new BranchBean();
-        BranchBean = BranchControl.getData();
+        BranchBean BranchBean = BranchControl.getData();
         try {
             String sqlGetSaveOrder = "select SaveOrder from branch";
             mysql.open();
@@ -58,9 +56,13 @@ public class PrintToKic extends javax.swing.JFrame {
             rsGetSaveOrderConfig.close();
             stmt.close();
             mysql.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
+        
         printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
         lblProcessShow.setText("สถานะการพิมพ์");
         new Thread(new Runnable() {
@@ -310,23 +312,12 @@ public class PrintToKic extends javax.swing.JFrame {
                         }
                         kicPrintting = false;
                         rs.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(e.toString());
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(PrintToKic.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException | SQLException e) {
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
-
-//                    try {
-//                        String sqlDel = "delete from balance where r_table='';";
-//                        mysql.open();
-//                        mysql.getConnection().createStatement().executeUpdate(sqlDel);
-//                    } catch (SQLException e) {
-//                        MSG.ERR(e.getMessage());
-//                    } finally {
-//                        mysql.close();
-//                    }
                 }
             }
         }).start();
@@ -460,6 +451,7 @@ public class PrintToKic extends javax.swing.JFrame {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
+                            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
                         }
                     }
                 }
@@ -478,6 +470,7 @@ public class PrintToKic extends javax.swing.JFrame {
                     stmt.executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
+                    AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
                 }
                 kicPrintting = false;
             } catch (SQLException e) {
@@ -487,6 +480,7 @@ public class PrintToKic extends javax.swing.JFrame {
             }
         } catch (HeadlessException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
         }
     }
 
@@ -504,6 +498,7 @@ public class PrintToKic extends javax.swing.JFrame {
                         mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
                     } finally {
                         mysql2.close();
                     }
@@ -511,6 +506,7 @@ public class PrintToKic extends javax.swing.JFrame {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

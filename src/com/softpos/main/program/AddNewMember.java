@@ -1,7 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import util.AppLogUtil;
 import util.DateUtil;
 import util.MSG;
 
@@ -823,12 +825,12 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SQLQuery = "delete from memmaster where m_code='" + TempCode + "'";
+                    String SQLQuery = "delete from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+                    AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
                 } finally {
                     mysql.close();
                 }
@@ -865,7 +867,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SQLQuery = "update memmaster set m_name='" + M_Name.getText() + "',"
+                        String SQLQuery = "update " + Value.db_member + ".memmaster set m_name='" + M_Name.getText() + "',"
                                 + "m_brid='" + Datefmt.format(TempDate1) + "',"
                                 + "m_begin='" + Datefmt.format(TempDate2) + "',"
                                 + "m_end='" + Datefmt.format(TempDate3) + "',"
@@ -880,7 +882,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        
+                            AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
@@ -894,7 +896,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SQLQuery = "insert into memmaster (m_code,m_bran,m_barcode,m_type,m_name,m_card,m_sex,m_status,"
+                        String SQLQuery = "insert into " + Value.db_member + ".memmaster (m_code,m_bran,m_barcode,m_type,m_name,m_card,m_sex,m_status,"
                                 + "m_brid,m_begin,m_end,m_nation,m_occu,m_incom,m_company,m_email,m_addr1,m_addr2,m_addr3,"
                                 + "m_addr4,m_addr5,m_addr6,m_post,m_tel,m_fax,m_wise,m_chai,m_food,m_rem1,m_rem2,m_last,m_sum,"
                                 + "m_discrate,m_mobile,m_office) "
@@ -937,7 +939,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        
+                        AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
                     } finally {
                         mysql.close();
                     }
@@ -992,7 +994,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         M_Code.setText(TempCode);
                     }
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SQLQuery = "Select *from memmaster where m_code='" + TempCode + "'";
+                    String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
                     ResultSet rec = stmt.executeQuery(SQLQuery);
                     rec.first();
                     if (rec.getRow() == 0) {
@@ -1048,7 +1050,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR_MSG(this, e.getMessage());
-                    
+                    AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
                 } finally{
                     mysql.close();
                 }
@@ -1071,7 +1073,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from memmaster where m_code='" + TempCode + "'";
+            String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
             ResultSet rec = stmt.executeQuery(SQLQuery);
             rec.first();
             if (rec.getRow() == 0) {
@@ -1083,7 +1085,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }

@@ -1,6 +1,8 @@
-package automation.test;
+package util;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,25 +12,42 @@ import java.util.logging.SimpleFormatter;
  *
  * @author nathee
  */
-public class Log4jExample {
+public class AppLogUtil {
 
-    private static final Logger LOGGER = Logger.getLogger("Log4jExample");
+    static SimpleDateFormat logDateFmt = new SimpleDateFormat("yyyy-MM-dd");
+    static FileHandler fh = null;
 
-    public static void main(String[] args) {
-        FileHandler fh = null;
-        try {
-            fh = new FileHandler("MyLogFile.log");
-        } catch (IOException ex) {
-            Logger.getLogger(Log4jExample.class.getName()).log(Level.SEVERE, null, ex);
+    static int getLineNumber() {
+        return Thread.currentThread().getStackTrace()[2].getLineNumber();
+    }
+
+    public static void log(Class t, String type, String msg) {
+        Logger logger = Logger.getLogger(t.getName());
+        if (fh == null) {
+            try {
+                fh = new FileHandler("application-" + logDateFmt.format(new Date()) + ".log", true);
+            } catch (IOException ex) {
+            }
         }
+
         if (fh != null) {
-            LOGGER.addHandler(fh);
+            logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
 
-            LOGGER.info("info msg");
-            LOGGER.warning("warning message");
-            LOGGER.severe("error message");
+            switch (type) {
+                case "error":
+                    logger.log(Level.SEVERE, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    break;
+                case "warning":
+                    logger.log(Level.WARNING, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    logger.warning(msg);
+                    break;
+                default:
+                    logger.log(Level.INFO, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    logger.info(msg);
+                    break;
+            }
         }
     }
 }

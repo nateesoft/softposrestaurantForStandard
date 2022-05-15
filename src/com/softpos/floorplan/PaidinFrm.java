@@ -14,6 +14,7 @@ import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PaidinFrm extends javax.swing.JDialog {
@@ -114,6 +115,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PaidinFrm.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

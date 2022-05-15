@@ -1,11 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
-import java.awt.Color;
 import database.MySQLConnect;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class OptionMsg extends javax.swing.JDialog {
@@ -127,6 +128,7 @@ public class OptionMsg extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -220,6 +222,7 @@ public class OptionMsg extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -256,7 +259,8 @@ public class OptionMsg extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                }finally{
+                    AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
+                } finally {
                     mysql.close();
                 }
             }

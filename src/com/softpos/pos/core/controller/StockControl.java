@@ -1,14 +1,15 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.ProductBean;
-import com.softpos.pos.core.model.StkFileBean;
 import com.softpos.pos.core.model.STCardBean;
+import com.softpos.pos.core.model.StkFileBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import util.AppLogUtil;
 import util.MSG;
 
 public class StockControl {
@@ -22,25 +23,24 @@ public class StockControl {
     }
 
     public boolean Active(String stock) {
+        boolean isActive = false;
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         String sql = "select * from stockfile where StkCode='" + stock + "' and flage='Y'";
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                rs.close();
-                stmt.close();
-                return true;
-            } else {
-                return false;
-            }
+            isActive = rs.next();
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            return false;
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+
+        return isActive;
     }
 
     public double GET_PRODUCT_QTY(String PCode, String stockCode) {
@@ -51,13 +51,14 @@ public class StockControl {
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
             String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "'";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     qty = rs.getDouble(1);
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -108,6 +109,7 @@ public class StockControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -139,13 +141,11 @@ public class StockControl {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            int Update = stmt.executeUpdate(sql);
-            if (Update > 0) {
-
-            }
+            stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -169,13 +169,11 @@ public class StockControl {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            int Update = stmt.executeUpdate(sql);
-            if (Update > 0) {
-
-            }
+            stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -229,6 +227,7 @@ public class StockControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -288,7 +287,8 @@ public class StockControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
+            AppLogUtil.log(StockControl.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
     }

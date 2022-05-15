@@ -5,6 +5,7 @@ import com.softpos.pos.core.model.DeptButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class StoreDept {
@@ -23,6 +24,7 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
+            AppLogUtil.log(StoreDept.class, "error", e.getMessage());
             
             return false;
         } finally{
@@ -51,8 +53,11 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
+            AppLogUtil.log(StoreDept.class, "error", e.getMessage());
             
             return false;
+        } finally {
+            mysql.close();
         }
     }
 }

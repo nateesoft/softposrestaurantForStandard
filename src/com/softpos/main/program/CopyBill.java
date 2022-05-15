@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import database.MySQLConnect;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CopyBill extends javax.swing.JDialog {
@@ -50,7 +51,7 @@ public class CopyBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -251,7 +252,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
+                MSG.WAR(this, "ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
                 txtBillNo.selectAll();
                 txtBillNo.requestFocus();
             } else {
@@ -261,7 +262,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -375,7 +376,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(CopyBill.class, "error", e.getMessage());
             }
 
             //Load Data From T_Sale
@@ -442,7 +443,9 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+            } finally {
+                mysql.close();
             }
 
             if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
@@ -457,6 +460,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     prn.PrintBillCopy(MyArray, BillNo, i, CreditArray);
                 }
                 try {
+                    mysql.open();
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "update billno set "
                             + "b_billcopy=b_billcopy+1 "
@@ -466,13 +470,12 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+                    AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+                } finally {
+                    mysql.close();
                 }
-
                 this.dispose();
             }
-
-            mysql.close();
     }
 
     private void bntExitClick() {

@@ -1,9 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.ProductBean;
-import com.softpos.pos.core.model.MemberBean;
 import com.softpos.member.MemberControl;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.DateFormat;
 import util.MSG;
@@ -29,7 +30,7 @@ public class BalanceControl {
             String sql = "select max(R_Index) R_Index "
                     + "from balance "
                     + "where r_table='" + tableNo + "';";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     tempIndex = rs.getString("R_Index");
                 } else {
@@ -37,7 +38,8 @@ public class BalanceControl {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("BalanceControl:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -45,7 +47,6 @@ public class BalanceControl {
         return tempIndex;
     }
 
-    
     public boolean saveBalance(BalanceBean bb) {
         try {
             ProductControl pc = new ProductControl();
@@ -256,7 +257,9 @@ public class BalanceControl {
             Value.ClearOPT();
             return iUpdate > 0;
         } catch (SQLException e) {
-            MSG.ERR("BalanceControl:saveBillNoSQL:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
+
             return false;
         } finally {
             mysql.close();
@@ -271,7 +274,7 @@ public class BalanceControl {
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' "
                     + "order by R_Index";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -369,12 +372,13 @@ public class BalanceControl {
                 }
                 rs.close();
             }
-            
         } catch (SQLException e) {
-            MSG.ERR("BalanceControl:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+
         return beanData;
     }
 
@@ -487,11 +491,11 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs.getDate("R_Date"));
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
                 }
 
                 beanData.add(balanceBean);
             }
+
             String sql1 = "select * from balance "
                     + "where r_table='" + table + "' "
                     + "and r_void<>'V' "
@@ -589,17 +593,15 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs1.getDate("R_Date"));
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
                 }
 
                 beanData.add(balanceBean);
             }
 
             rs1.close();
-//            stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -615,7 +617,7 @@ public class BalanceControl {
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' and r_void<>'V'"
                     + "order by R_ETD,R_Index,r_time";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -711,11 +713,10 @@ public class BalanceControl {
 
                     beanData.add(balanceBean);
                 }
-//            stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -983,7 +984,7 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -997,7 +998,7 @@ public class BalanceControl {
         mysql.open();
         try {
             String sql = "select * from balance where R_Index='" + R_Index + "'";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -1086,7 +1087,6 @@ public class BalanceControl {
                     try {
                         balanceBean.setR_Date(rs.getDate("R_Date"));
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
                     }
 
                     beanData.add(balanceBean);
@@ -1095,7 +1095,7 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1202,7 +1202,6 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs.getDate("R_Date"));
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
                 }
 
                 //balanceBean.setR_CashCard(""+rs.getFloat("R_CashCard"));
@@ -1213,7 +1212,7 @@ public class BalanceControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         }
 
         return beanData;
@@ -1236,7 +1235,7 @@ public class BalanceControl {
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1251,7 +1250,7 @@ public class BalanceControl {
                     + "from balance "
                     + "where R_Table = '" + R_Table + "' "
                     + "order by R_Index";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 String R_Index;
                 boolean notfound = false;
                 while (rs.next()) {
@@ -1282,6 +1281,7 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
 
             index = R_Table + "/001";
         } finally {
@@ -1295,10 +1295,10 @@ public class BalanceControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "delete from balance where R_Table='" + table + "'";
-            mysql.getConnection().createStatement().executeUpdate(sql);
+            mysql.getConnection().createStatement().executeUpdate("delete from balance where R_Table='" + table + "'");
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1315,7 +1315,7 @@ public class BalanceControl {
                     + "and R_Void<>'V' "
                     + "group by R_PluCode";
             double quan;
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 quan = R_Quan;
                 if (rs.next()) {
                     quan = rs.getDouble("R_Quan");
@@ -1325,6 +1325,8 @@ public class BalanceControl {
             return quan >= 0;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
+            
             return false;
         } finally {
             mysql.close();
@@ -1339,7 +1341,7 @@ public class BalanceControl {
             String sql = "select * from balance "
                     + "where R_PluCode='" + PCode + "' "
                     + "and R_Index='" + R_Index + "'";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     balanceBean.setR_Index(rs.getString("R_Index"));
                     balanceBean.setR_Table(rs.getString("R_Table"));
@@ -1425,6 +1427,7 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1440,7 +1443,7 @@ public class BalanceControl {
             String sql = "select * from balance "
                     + "where R_Table='" + Table + "' "
                     + "and R_Index='" + R_Index + "'";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -1531,6 +1534,8 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
+            
             return null;
         } finally {
             mysql.close();
@@ -1550,7 +1555,7 @@ public class BalanceControl {
                     + "and r_void='V' "
                     + "and r_pause='Y' "
                     + "and r_kicprint=''";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -1639,6 +1644,8 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
+            
             return null;
         } finally {
             mysql.close();
@@ -1655,11 +1662,12 @@ public class BalanceControl {
                     + "where R_Table = '" + r_Table + "' "
                     + "and R_PluCode = '" + r_PluCode + "' "
                     + "and R_Index = '" + r_Index + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1672,11 +1680,12 @@ public class BalanceControl {
             String sql = "delete from balance "
                     + "where R_Index='" + R_Index + "' "
                     + "and R_Table='" + table + "' ";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1687,7 +1696,7 @@ public class BalanceControl {
         try {
             mysql.open();
             String sql = "delete from temp_balance";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
 
                 sql = "insert into temp_balance select * from balance where R_Table='" + tableNo + "';";
@@ -1697,17 +1706,16 @@ public class BalanceControl {
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
 
             try {
-                mysql.open();
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try ( Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate("drop table if exists temp_balance;");
                     stmt.executeUpdate("create table temp_balance select * from balance limit 0,0;");
                 }
             } catch (SQLException e1) {
                 MSG.ERR(e1.getMessage());
-            } finally {
-                mysql.close();
+                AppLogUtil.log(BalanceControl.class, "error", e1.getMessage());
             }
         } finally {
             mysql.close();
@@ -1727,18 +1735,14 @@ public class BalanceControl {
             stmt.executeUpdate(sql);
 
             // clear table 1-1
-            sql = "delete from balance where R_Table='" + table2 + "'";
-            stmt.executeUpdate(sql);
-
-            sql = "insert into balance select * from temp_balance where R_Table='" + tableNo + "';";
-            stmt.executeUpdate(sql);
-
-            sql = "delete from temp_balance";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate("delete from balance where R_Table='" + table2 + "'");
+            stmt.executeUpdate("insert into balance select * from temp_balance where R_Table='" + tableNo + "';");
+            stmt.executeUpdate("delete from temp_balance");
 
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1768,7 +1772,7 @@ public class BalanceControl {
         try {
             mysql.open();
             String sql = "select procode,prodesc,pdate1,pdate2,ptype,psum1 from protab;";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next() && !rs.wasNull()) {
                     int dateEXP = Integer.parseInt(rs.getString("pdate2").replace("-", ""));
                     int nowDate = Integer.parseInt(dc.GetCurrentDate().replace("-", ""));
@@ -1780,6 +1784,7 @@ public class BalanceControl {
             }
         } catch (NumberFormatException | SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -1822,7 +1827,7 @@ public class BalanceControl {
         try {
             mysql.open();
             String sql = "select sum(R_PrAmt) + sum(R_Discbath) discount from balance where r_table='" + table + "' and r_void<>'V'";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     discount = rs.getDouble("discount");
                 } else {
@@ -1831,9 +1836,11 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BalanceControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
+        
         return df.format(discount);
     }
 

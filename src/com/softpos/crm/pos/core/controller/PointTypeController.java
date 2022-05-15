@@ -7,6 +7,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import util.AppLogUtil;
 import util.DateUtil;
 import util.MSG;
 
@@ -30,7 +31,9 @@ public class PointTypeController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("PointTypeController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PointTypeController.class, "error", e.getMessage());
+
         } finally {
             mysql.close();
         }
@@ -55,7 +58,8 @@ public class PointTypeController {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR("PointTypeController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PointTypeController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

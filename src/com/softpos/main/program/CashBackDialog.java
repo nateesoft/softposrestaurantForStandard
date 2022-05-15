@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CashBackDialog extends javax.swing.JDialog {
@@ -222,7 +223,9 @@ public class CashBackDialog extends javax.swing.JDialog {
             PrintReturnMoney(refStr);
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(CashBackDialog.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 

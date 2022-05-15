@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
 
 public class TempCuponController {
@@ -45,7 +46,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -58,8 +59,7 @@ public class TempCuponController {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from tempcupon "
-                    + "where R_Index='" + R_Index + "'";
+            String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -85,7 +85,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -125,7 +125,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -147,7 +147,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
         }
 
         try {
@@ -157,10 +157,10 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
-
-        mysql.close();
     }
 
     public void saveTempCupon(TempCuponBean bean) {
@@ -196,7 +196,7 @@ public class TempCuponController {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
         } finally{
             mysql.close();
         }

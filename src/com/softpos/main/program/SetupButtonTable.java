@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SetupButtonTable extends javax.swing.JDialog {
@@ -234,7 +235,9 @@ public class SetupButtonTable extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.WAR(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
+            
             dispose();
         } finally {
             mysql.close();
@@ -289,6 +292,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -316,10 +320,10 @@ public class SetupButtonTable extends javax.swing.JDialog {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
-        }finally{
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
+        } finally {
             mysql.close();
         }
     }

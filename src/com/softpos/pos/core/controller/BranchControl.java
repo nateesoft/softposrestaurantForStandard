@@ -4,6 +4,7 @@ import com.softpos.pos.core.model.BranchBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import util.AppLogUtil;
 import util.MSG;
 
 public class BranchControl {
@@ -15,17 +16,13 @@ public class BranchControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-
         try {
             mysql.open();
             String sql = "update branch set KicItemNo=KicItemNo+1";
-//            Statement stmt = mysql.getConnection().createStatement();
             mysql.getConnection().createStatement().executeUpdate(sql);
-//            stmt.executeUpdate(sql);
-//            stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -187,6 +184,7 @@ public class BranchControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -224,7 +222,7 @@ public class BranchControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }

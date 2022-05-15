@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 import util.NumberFormat;
 
@@ -309,7 +310,9 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                
+                AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
+            } finally {
+                mysql.close();
             }
         }
 
@@ -425,7 +428,8 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             stmt.close();
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
@@ -506,7 +510,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
         } finally {
             mysql.close();
         }
