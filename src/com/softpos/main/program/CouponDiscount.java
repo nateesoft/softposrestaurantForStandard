@@ -1,36 +1,36 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.CouponRec;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.model.CuponBean;
+import com.softpos.pos.core.controller.CouponRec;
 import com.softpos.pos.core.controller.CuponControl;
 import com.softpos.pos.core.controller.CuponListControl;
-import com.softpos.pos.core.model.CuponlistBean;
+import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TempCuponController;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.model.CuponBean;
+import com.softpos.pos.core.model.CuponlistBean;
+import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TempCuponBean;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
-import java.util.List;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -411,17 +411,17 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and ChkMember='N' "
                     + "order by cutype,cucode";
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rec = stmt.executeQuery(sql);
-            while (rec.next()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
                 Object[] row = new Object[ShowTable.getColumnCount()];
-                row[0] = rec.getString("cutype");
-                row[1] = rec.getString("cucode");
-                row[2] = ThaiUtil.ASCII2Unicode(rec.getString("cuname"));
+                row[0] = rs.getString("cutype");
+                row[1] = rs.getString("cucode");
+                row[2] = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
                 row[3] = getCountTable("" + row[1]);
 
                 model.addRow(row);
             }
-            rec.close();
+            rs.close();
             stmt.close();
 
             ShowTable.setToolTipText("");
@@ -473,38 +473,23 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (cutype is not null) "
                     + "and (cucode is not null) "
                     + "order by cutype,cucode";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            int Cnt = 0;
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    CouponRec CuRec = new CouponRec();
-                    if ((rec.getString("custrday").indexOf(CurDay) >= 0)) {
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            while(rs.next()){
+                CouponRec CuRec = new CouponRec();
+                    if ((rs.getString("custrday").indexOf(CurDay) >= 0)) {
 
-                        CuRec.CuType = rec.getString("cutype");
-                        CuRec.CuCode = rec.getString("cucode");
-                        CuRec.CuName = rec.getString("cuname");
-                        CuRec.CuDisc = rec.getDouble("cudisc");
-                        CuRec.CuDiscBath = rec.getDouble("cudiscbath");
-                        CuRec.ChkMember = rec.getString("chkmember");
-                        CuRec.CuQty = SeekTempCoupon(rec.getString("cucode"));
-                        CuRec.SMS_Code = SeekSMS_Code(rec.getString("cucode"));
-                        CuRec.M_Code = SeekM_Code(rec.getString("cucode"));
-//                        CuRec.CuSaleType = rec.getString("custrtype");
-//                        CuRec.SaleMin = rec.getDouble("cuminsale");
-                        if (CuRec.ChkMember.equals("Y")) {
-                            if (!PublicVar.TableRec_MemCode.equals("")) {
-                                Cnt++;
-                            }
-                        } else {
-                            Cnt++;
-                        }
+                        CuRec.CuType = rs.getString("cutype");
+                        CuRec.CuCode = rs.getString("cucode");
+                        CuRec.CuName = rs.getString("cuname");
+                        CuRec.CuDisc = rs.getDouble("cudisc");
+                        CuRec.CuDiscBath = rs.getDouble("cudiscbath");
+                        CuRec.ChkMember = rs.getString("chkmember");
+                        CuRec.CuQty = SeekTempCoupon(rs.getString("cucode"));
+                        CuRec.SMS_Code = SeekSMS_Code(rs.getString("cucode"));
+                        CuRec.M_Code = SeekM_Code(rs.getString("cucode"));
                     }
-
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -546,13 +531,11 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             String LoadTableFile = "select *from tempcupon "
                     + "where (r_table='" + tableNo + "') "
                     + "and (cucode='" + CuCode + "')";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                RetValue = rec.getInt("cuquan");
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            if(rs.next()){
+                RetValue = rs.getInt("cuquan");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -576,13 +559,11 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             String LoadTableFile = "select *from tempcupon "
                     + "where (r_table='" + tableNo + "') "
                     + "and (cucode='" + CuCode + "')";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                RetValue = rec.getString("sms_code");
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            if(rs.next()){
+                RetValue = rs.getString("sms_code");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -608,13 +589,11 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             String LoadTableFile = "select *from tempcupon "
                     + "where (r_table='" + tableNo + "') "
                     + "and (cucode='" + CuCode + "')";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                RetValue = rec.getString("m_code");
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            if(rs.next()){
+                RetValue = rs.getString("m_code");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

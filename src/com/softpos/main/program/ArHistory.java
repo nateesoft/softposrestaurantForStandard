@@ -1,11 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
@@ -658,22 +658,18 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             Statement stmt = mysql.getConnection().createStatement();
                             String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                            ResultSet rec = stmt.executeQuery(SQLQuery);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    String PayDate = "";
-                                    if (rec.getString("arflage").equals("Y")) {
-                                        PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                                    } else {
-                                        PayDate = "";
-                                    }
-                                    prn.print(rec.getString("arcode") + " " + ShowDatefmt.format(rec.getDate("ardate")) + " " + PUtility.DataFullR(rec.getString("arno"), 15) + " " + DecFmt.format(rec.getDouble("arnet")));
-                                    prn.print(rec.getString("arflage") + " " + PUtility.DataFullR(PayDate, 10) + " " + rec.getString("ardocpay"));
-                                } while (rec.next());
+                            ResultSet rs = stmt.executeQuery(SQLQuery);
+                            while (rs.next()) {
+                                String PayDate = "";
+                                if (rs.getString("arflage").equals("Y")) {
+                                    PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                                } else {
+                                    PayDate = "";
+                                }
+                                prn.print(rs.getString("arcode") + " " + ShowDatefmt.format(rs.getDate("ardate")) + " " + PUtility.DataFullR(rs.getString("arno"), 15) + " " + DecFmt.format(rs.getDouble("arnet")));
+                                prn.print(rs.getString("arflage") + " " + PUtility.DataFullR(PayDate, 10) + " " + rs.getString("ardocpay"));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -681,7 +677,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         } finally {
                             mysql.close();
                         }
-                        
+
                         prn.print("----------------------------------------");
                         prn.print("");
                         prn.print("");
@@ -760,23 +756,19 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String PayDate;
-                        if (rec.getString("arflage").equals("Y")) {
-                            PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                        } else {
-                            PayDate = "";
-                        }
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + rec.getString("arcode") + Space + ShowDatefmt.format(rec.getDate("ardate")) + Space + PUtility.DataFullR(rec.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("arnet")) + "_";
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + Space + rec.getString("arflage") + Space + PUtility.DataFullR(PayDate, 10) + Space + rec.getString("ardocpay") + "_";
-                        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-                    } while (rec.next());
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    String PayDate;
+                    if (rs.getString("arflage").equals("Y")) {
+                        PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                    } else {
+                        PayDate = "";
+                    }
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + rs.getString("arcode") + Space + ShowDatefmt.format(rs.getDate("ardate")) + Space + PUtility.DataFullR(rs.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("arnet")) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + Space + rs.getString("arflage") + Space + PUtility.DataFullR(PayDate, 10) + Space + rs.getString("ardocpay") + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -838,35 +830,31 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String PayDate;
-                        if (rec.getString("arflage").equals("Y")) {
-                            PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                        } else {
-                            PayDate = "";
-                        }
-                        XTotalCnt++;
-                        XTotalAmt = XTotalAmt + rec.getDouble("arnet");
-                        Object[] input = {rec.getString("arcode"),
-                            ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")),
-                            ShowDatefmt.format(rec.getDate("ardate")),
-                            rec.getString("arno"),
-                            rec.getString("arinvno"),
-                            rec.getDouble("arnet"),
-                            rec.getString("arflage"),
-                            PayDate,
-                            rec.getString("arbranpay"),
-                            rec.getString("ardocpay")
-                        };
-                        model2.addRow(input);
-                    } while (rec.next());
-                    showCell(0, 0);
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    String PayDate;
+                    if (rs.getString("arflage").equals("Y")) {
+                        PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                    } else {
+                        PayDate = "";
+                    }
+                    XTotalCnt++;
+                    XTotalAmt = XTotalAmt + rs.getDouble("arnet");
+                    Object[] input = {rs.getString("arcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                        ShowDatefmt.format(rs.getDate("ardate")),
+                        rs.getString("arno"),
+                        rs.getString("arinvno"),
+                        rs.getDouble("arnet"),
+                        rs.getString("arflage"),
+                        PayDate,
+                        rs.getString("arbranpay"),
+                        rs.getString("ardocpay")
+                    };
+                    model2.addRow(input);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());

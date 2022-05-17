@@ -2358,23 +2358,22 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (PluCode.length() <= 3) {
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String SqlQuery = "select *from menulist "
+                            String SqlQuery = "select * from menulist "
                                     + "where menuitem=('" + PluCode + "') "
                                     + "and (menuactive='Y')";
-                            ResultSet rec = stmt.executeQuery(SqlQuery);
-                            rec.first();
-                            if (rec.getRow() == 0) {
+                            ResultSet rs = stmt.executeQuery(SqlQuery);
+                            if (rs.next()) {
+                                PluCode = rs.getString("plucode");
+                            } else {
                                 MSG.ERR("ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
                                 txtPluCode.setText("");
-                                rec.close();
+                                rs.close();
                                 stmt.close();
                                 txtPluCode.selectAll();
                                 txtPluCode.requestFocus();
                                 return false;
-                            } else {
-                                PluCode = rec.getString("plucode");
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
 
                         } catch (SQLException e) {
@@ -2389,9 +2388,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             + "from product "
                             + "where pcode='" + PluCode + "' "
                             + "and pactive='Y'";
-                    ResultSet rec = stmt.executeQuery(sql);
-                    rec.first();
-                    if (rec.getRow() == 0) {
+                    ResultSet rs = stmt.executeQuery(sql);
+                    if (rs.next()) {
+                        found = true;
+                        PublicVar.P_Code = PluCode;
+                        PublicVar.P_Status = rs.getString("pstatus");
+                        PublicVar.P_Qty = Qty;
+                    } else {
                         TempStatus = "";
                         String TempCode2 = seekBarCode(PluCode);
                         if (TempCode2.equals("")) {
@@ -2404,18 +2407,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             PublicVar.P_Status = TempStatus;
                             PublicVar.P_Qty = Qty;
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
 
                         txtPluCode.selectAll();
                         txtPluCode.requestFocus();
-                    } else {
-                        found = true;
-                        PublicVar.P_Code = PluCode;
-                        PublicVar.P_Status = rec.getString("pstatus");
-                        PublicVar.P_Qty = Qty;
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
 
                 } catch (SQLException e) {
@@ -2518,20 +2516,19 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             Statement stmt = mysql.getConnection().createStatement();
                             String SqlQuery = "select *from menulist "
                                     + "where menuitem=('" + PluCode + "') and (menuactive='Y')";
-                            ResultSet rec = stmt.executeQuery(SqlQuery);
-                            rec.first();
-                            if (rec.getRow() == 0) {
+                            ResultSet rs = stmt.executeQuery(SqlQuery);
+                            if(rs.next()){
+                                PluCode = rs.getString("plucode");
+                            }else{
                                 MSG.WAR("ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
                                 txtPluCode.setText("");
-                                rec.close();
+                                rs.close();
                                 stmt.close();
                                 txtPluCode.selectAll();
                                 txtPluCode.requestFocus();
                                 return false;
-                            } else {
-                                PluCode = rec.getString("plucode");
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         }
                     } catch (SQLException e) {
@@ -2543,9 +2540,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from product "
                             + "where pcode='" + PluCode + "' and pactive='Y'";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    if(rs.next()){
+                        found = true;
+                        PublicVar.P_Code = PluCode;
+                        PublicVar.P_Status = rs.getString("pstatus");
+                        PublicVar.P_Qty = Qty;
+                    }else{
                         TempStatus = "";
                         String TempCode2 = seekBarCode(PluCode);
                         if (TempCode2.equals("")) {
@@ -2558,18 +2559,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             PublicVar.P_Status = TempStatus;
                             PublicVar.P_Qty = Qty;
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
 
                         txtPluCode.selectAll();
                         txtPluCode.requestFocus();
-                    } else {
-                        found = true;
-                        PublicVar.P_Code = PluCode;
-                        PublicVar.P_Status = rec.getString("pstatus");
-                        PublicVar.P_Qty = Qty;
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
 
                 } catch (SQLException e) {
@@ -2597,12 +2593,11 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from product where pcode='" + PCode + "' and pactive='Y'";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                isValid = false;
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            if(rs.next()){
+                isValid = true;
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
@@ -2624,16 +2619,15 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from product where pbarcode='" + BarCode + "' and pactive='Y'";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            if(rs.next()){
+                RetVal = rs.getString("pcode");
+                TempStatus = rs.getString("pstatus");
+            }else{
                 RetVal = "";
                 TempStatus = "";
-            } else {
-                RetVal = rec.getString("pcode");
-                TempStatus = rec.getString("pstatus");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -2869,7 +2863,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e.getMessage());
-            
+
             txtPluCode.requestFocus();
         } finally {
             mysql.close();
@@ -3321,7 +3315,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void bntHoldTableClick() {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-                    
+
         if (txtTable.getText().length() > 0 && tblShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' "
@@ -3340,7 +3334,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e.getMessage());
             }
-            
+
             kichenPrint();
             holdTableAndSave();
             PublicVar.ErrorColect = false;
@@ -3818,9 +3812,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
             }
         }
-        
+
         mysql.close();
-        
+
         showSum();
     }
 
@@ -4053,7 +4047,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean checkCanDisc(String RIndex) {
         boolean result = false;
-        
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -4066,12 +4060,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e.getMessage());
-            
+
             result = false;
         } finally {
             mysql.close();
         }
-        
+
         return result;
     }
 
@@ -4082,7 +4076,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void updatetable() {
         String table = txtTable.getText();
         String cus = txtCust.getText();
-        
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -4330,7 +4324,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } finally {
             mysql.close();
         }
-        
+
         return isCheck;
     }
 
@@ -4470,7 +4464,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
 
         mysql.close();
-        
+
         //update tablefile
         BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
         txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
@@ -4721,16 +4715,16 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "where o.pcode = n.pcode and n.menucode='" + MenuCode + "'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next()){
+            if (rs.next()) {
                 pcode = rs.getString("PCode");
                 pname = ThaiUtil.Unicode2ASCII(rs.getString("MenuShowText"));
                 main = "main";
-                
+
                 showModalPopup = true;
             }
             rs.close();
             stmt.close();
-            
+
             if (showModalPopup) {
                 ModalPopup popup = new ModalPopup(null, true, pcode, pname, tableNo, main, MenuCode);
                 popup.setVisible(true);
@@ -4752,7 +4746,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         + "where r_table='" + txtTable.getText() + "'";
                                 Statement stmt2 = mysql.getConnection().createStatement();
                                 ResultSet rsTb = stmt2.executeQuery(sqlChkTable);
-                                if(rsTb.next()){
+                                if (rsTb.next()) {
                                     passBefore = true;
                                 }
                                 rsTb.close();

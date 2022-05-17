@@ -1,23 +1,23 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
 import util.MSG;
@@ -347,17 +347,13 @@ public void InitScreen() {
         mysql.open();
                 try {
                     Statement stmt =  mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from s_tar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            prn.print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rec.getDouble("amount");
-                        } while (rec.next());
+                    String SqlQuery = "select * from s_tar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                            SumAmt = SumAmt + rs.getDouble("amount");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());

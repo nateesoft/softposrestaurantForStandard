@@ -995,9 +995,8 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     }
                     Statement stmt = mysql.getConnection().createStatement();
                     String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
-                    ResultSet rec = stmt.executeQuery(SQLQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
+                    ResultSet rs = stmt.executeQuery(SQLQuery);
+                    if (rs.next()) {
                         Calendar cal = Calendar.getInstance();
                         cal.add(Calendar.DAY_OF_MONTH, 44);
                         M_Brithday.setText(ShowDatefmt.format(cal.getTime()));
@@ -1021,19 +1020,19 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         GetDataValue();
                         M_Barcode.requestFocus();
                     } else {
-                        if (rec.getString("m_active").equals("Y")) {
-                            M_Name.setText(rec.getString("m_name"));
-                            M_Barcode.setText(rec.getString("m_barcode"));
-                            M_Brithday.setText(ShowDatefmt.format(rec.getDate("m_brid")));
-                            M_Begin.setText(ShowDatefmt.format(rec.getDate("m_begin")));
-                            M_End.setText(ShowDatefmt.format(rec.getDate("m_end")));
-                            M_HomeTel.setText(rec.getString("m_tel"));
-                            M_OfficeTel.setText(rec.getString("m_office"));
-                            M_Mobile.setText(rec.getString("m_mobile"));
-                            M_Reamrk1.setText(rec.getString("m_rem1"));
-                            M_Remark2.setText(rec.getString("m_rem2"));
+                        if (rs.getString("m_active").equals("Y")) {
+                            M_Name.setText(rs.getString("m_name"));
+                            M_Barcode.setText(rs.getString("m_barcode"));
+                            M_Brithday.setText(ShowDatefmt.format(rs.getDate("m_brid")));
+                            M_Begin.setText(ShowDatefmt.format(rs.getDate("m_begin")));
+                            M_End.setText(ShowDatefmt.format(rs.getDate("m_end")));
+                            M_HomeTel.setText(rs.getString("m_tel"));
+                            M_OfficeTel.setText(rs.getString("m_office"));
+                            M_Mobile.setText(rs.getString("m_mobile"));
+                            M_Reamrk1.setText(rs.getString("m_rem1"));
+                            M_Remark2.setText(rs.getString("m_rem2"));
                             Calendar cal = Calendar.getInstance();
-                            cal.setTime(rec.getDate("m_begin"));
+                            cal.setTime(rs.getDate("m_begin"));
                             cal.add(Calendar.DAY_OF_MONTH, 44);
                             M_NewEnd.setText("วันที่หมดอายุบัตรชั่วคราว : " + ShowDatefmt.format(cal.getTime()));
                             ProcessStr.setText("แก้ข้อมูลเก่า...");
@@ -1042,14 +1041,14 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             GetDataValue();
                             M_Name.requestFocus();
                         } else {
-                            PUtility.ShowMsg("รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
+                            MSG.WAR("รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
                             ClearVariable();
                         }
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR_MSG(this, e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
                 } finally{
                     mysql.close();
@@ -1074,14 +1073,9 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

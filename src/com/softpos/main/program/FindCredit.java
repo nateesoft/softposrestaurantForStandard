@@ -237,17 +237,14 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select *from branch ";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                ReturnValues = "";
-            } else {
-                ReturnValues = rec.getString("creditact");
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if (rs.next()) {
+                ReturnValues = rs.getString("creditact");
                 if (ReturnValues == null) {
                     ReturnValues = "";
                 }
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -277,25 +274,19 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             } else {
                 SQLQuery = "Select *from creditfile order by crbank,crcode";
             }
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {rec.getString("crbank"),
-                        rec.getString("crcode"),
-                        ThaiUtil.ASCII2Unicode(rec.getString("crname")),
-                        rec.getFloat("crcharge"),
-                        rec.getFloat("crredule"),
-                        rec.getString("crgetcardno")
-                    };
-                    model2.addRow(input);
-                } while (rec.next());
-                RowCount = model2.getRowCount();
-                showCell(0, 0);
-
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while (rs.next()) {
+                Object[] input = {rs.getString("crbank"),
+                    rs.getString("crcode"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("crname")),
+                    rs.getFloat("crcharge"),
+                    rs.getFloat("crredule"),
+                    rs.getString("crgetcardno")
+                };
+                model2.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

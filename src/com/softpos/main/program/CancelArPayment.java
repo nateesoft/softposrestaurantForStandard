@@ -1,16 +1,19 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,9 +21,6 @@ import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.awt.GraphicsEnvironment;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
@@ -86,26 +86,22 @@ public class CancelArPayment extends javax.swing.JDialog {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
-            ResultSet rec = stmt.executeQuery(sql);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {rec.getString("ref_no"),
-                        rec.getDate("ondate"),
-                        rec.getString("terminal"),
-                        rec.getString("cashier"),
-                        rec.getString("arcode"),
-                        ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")),
-                        rec.getDouble("stotal"),
-                        rec.getString("fat"),
-                        rec.getString("uservoid")
-                    };
-                    model2.addRow(input);
-                } while (rec.next());
-                showCell(0, 0);
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Object[] input = {rs.getString("ref_no"),
+                    rs.getDate("ondate"),
+                    rs.getString("terminal"),
+                    rs.getString("cashier"),
+                    rs.getString("arcode"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                    rs.getDouble("stotal"),
+                    rs.getString("fat"),
+                    rs.getString("uservoid")
+                };
+                model2.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -194,16 +190,12 @@ public class CancelArPayment extends javax.swing.JDialog {
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
-                        ResultSet rec = stmt.executeQuery(SQLQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(rec.getString("billno") + " " + DatefmtThai.format(rec.getDate("billdate")) + " " + DecFmt.format(-1 * rec.getDouble("amount")));
-                                SumAmount = SumAmount + rec.getDouble("amount");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SQLQuery);
+                        while (rs.next()) {
+                            prn.print(rs.getString("billno") + " " + DatefmtThai.format(rs.getDate("billdate")) + " " + DecFmt.format(-1 * rs.getDouble("amount")));
+                            SumAmount = SumAmount + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -259,18 +251,14 @@ public class CancelArPayment extends javax.swing.JDialog {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + "อ้างถึงใบกำกับภาษีเลขที่" + "</td></font><td align=right><font face=Angsana New size=1>" + "จำนวนเงิน" + "_";
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + rec.getString("billno") + TAB + DatefmtThai.format(rec.getDate("billdate")) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(-1 * rec.getDouble("amount")) + "_";
-                        SumAmount = SumAmount + rec.getDouble("amount");
-                    } while (rec.next());
+                String SQLQuery = "Select * from t_ar where ref_no='" + TempBillNo + "'";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + "อ้างถึงใบกำกับภาษีเลขที่" + "</td></font><td align=right><font face=Angsana New size=1>" + "จำนวนเงิน" + "_";
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + rs.getString("billno") + TAB + DatefmtThai.format(rs.getDate("billdate")) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(-1 * rs.getDouble("amount")) + "_";
+                    SumAmount = SumAmount + rs.getDouble("amount");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -278,7 +266,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             } finally {
                 mysql.close();
             }
-            
+
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
             t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount * -1) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

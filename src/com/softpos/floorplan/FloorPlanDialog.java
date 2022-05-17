@@ -1,6 +1,33 @@
 package com.softpos.floorplan;
 
 import com.softpos.login.FileSettingDialog;
+import com.softpos.main.program.CheckProductNotEnough;
+import com.softpos.main.program.CheckStockNow;
+import com.softpos.main.program.CopyBill;
+import com.softpos.main.program.DisplayEJ;
+import com.softpos.main.program.EmployLogin;
+import com.softpos.main.program.GetQty;
+import com.softpos.main.program.GetUserAction;
+import com.softpos.main.program.MainSale;
+import com.softpos.main.program.PrintKicControl;
+import com.softpos.main.program.SetupButtonTable;
+import com.softpos.main.program.UpdateData;
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.CompanyBean;
+import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -12,6 +39,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,51 +49,23 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.main.program.CheckProductNotEnough;
-import com.softpos.main.program.CheckStockNow;
-import com.softpos.main.program.CopyBill;
-import com.softpos.main.program.DisplayEJ;
-import com.softpos.main.program.EmployLogin;
-import com.softpos.main.program.GetQty;
-import com.softpos.main.program.GetUserAction;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.main.program.SetupButtonTable;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
-import util.MSG;
-import java.awt.event.MouseAdapter;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import javax.swing.ImageIcon;
-import com.softpos.main.program.MainSale;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PosControl;
-import com.softpos.main.program.PrintKicControl;
-import com.softpos.pos.core.model.ProductBean;
-import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.main.program.UpdateData;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
-import com.softpos.pos.core.model.CompanyBean;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
-import util.Option;
-import com.softpos.pos.core.model.MemberBean;
 import util.AppLogUtil;
 import util.DateConvert;
+import util.MSG;
+import util.Option;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
 
@@ -1035,7 +1035,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String emp = Value.EMP_CODE;
         String etd = r_etd;
         String[] data = Option.splitPrice(PCode);
-//        double R_Quan = Double.parseDouble(data[0]);
         double R_Quan = r_quan;
         PCode = data[1];
 
@@ -1045,9 +1044,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         balance.setStkCode(StkCode);
 
         double Price = 0.00;
-//        if (productBean.getPStatus().equals("S")) {
-//            getPrice();
-//        }
 
         /**
          * * OPEN CONNECTION **
@@ -1056,23 +1052,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from product "
-                    + "where pcode='" + PCode + "' "
-                    + "and pactive='Y'";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String sql = "select * from product where pcode='" + PCode + "' and pactive='Y'";
+            ResultSet rs = stmt.executeQuery(sql);
+            boolean checkFoundProduct = rs.next();
+            if (!checkFoundProduct) {
                 MSG.WAR("ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
-//                txtPluCode.setText("");
-                rec.close();
-                stmt.close();
-//                txtPluCode.selectAll();
-//                txtPluCode.requestFocus();
             } else {
                 if (!PUtility.CheckStockOK(PCode, R_Quan)) {
-//                    txtPluCode.setText("");
-//                    txtPluCode.selectAll();
-//                    txtPluCode.requestFocus();
                 } else {
                     balance.setR_Opt1(GetQty.OPTION_TEXT[0]);
                     balance.setR_Opt2(GetQty.OPTION_TEXT[1]);
@@ -1128,7 +1114,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 balance.setR_Price(productBean.getPPrice15());
                                 break;
                             default:
-//                                txtShowETD.setText("E");
                                 break;
                         }
                     } else {
@@ -1147,26 +1132,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_PrSubType("-M");
                         balance.setR_PrSubCode("MEM");
                         balance.setR_PrSubQuan(balance.getR_Quan());
-
-                        // คำนวณหาว่าลดเท่าไหร่
-//                        String[] subPercent = memberBean.getMember_DiscountRate().split("/");
-//                        int Percent = 0;
-//                        if (subPercent.length == 3) {
-//                            if (balance.getR_Normal().equals("N")) {
-//                                Percent = Integer.parseInt(subPercent[0].trim());
-//                            } else if (balance.getR_Normal().equals("C")) {
-//                                Percent = Integer.parseInt(subPercent[1].trim());
-//                            } else if (balance.getR_Normal().equals("S")) {
-//                                Percent = Integer.parseInt(subPercent[2].trim());
-//                            }
-//                        }
-//                        balance.setR_PrSubDisc(0);
-//                        balance.setR_PrSubBath(0);
-//                        balance.setR_PrSubAmt((0);
                         balance.setR_QuanCanDisc(0);// if member default 0
                     } else {
-//                        memberBean = null;
-                        // for not member
                         balance.setR_PrSubType("");
                         balance.setR_PrSubCode("");
                         balance.setR_PrSubQuan(0);// not member default 0
@@ -1177,7 +1144,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     }
 
                     balance.setR_Pause("P");
-
                     balanceControl.saveBalance(balance);
 
                     //update temptset
@@ -1196,21 +1162,21 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                     //ตัดสต็อกสินค้าที่มี Ingredent
                     try {
-                        String sql = "select i.*,pdesc,PBPack,pstock,pactive "
+                        String sql2 = "select i.*,pdesc,PBPack,pstock,pactive "
                                 + "from product p, pingredent i "
                                 + "where p.pcode=i.pingcode "
                                 + "and i.pcode='" + balance.getR_PluCode() + "' "
                                 + "and PFix='L' and PStock='Y'";
                         Statement stmt1 = mysql.getConnection().createStatement();
-                        ResultSet rs = stmt1.executeQuery(sql);
-                        while (rs.next()) {
-                            if (rs.getString("pstock").equals("Y") && rs.getString("pactive").equals("Y")) {
-                                String R_PluCode = rs.getString("PingCode");
-                                double PBPack = rs.getDouble("PBPack");
+                        ResultSet rs1 = stmt1.executeQuery(sql2);
+                        while (rs1.next()) {
+                            if (rs1.getString("pstock").equals("Y") && rs1.getString("pactive").equals("Y")) {
+                                String R_PluCode = rs1.getString("PingCode");
+                                double PBPack = rs1.getDouble("PBPack");
                                 if (PBPack <= 0) {
                                     PBPack = 1;
                                 }
-                                double R_QuanIng = (rs.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
+                                double R_QuanIng = (rs1.getDouble("PingQty") * balance.getR_Quan()) / PBPack;
                                 double R_Total = 0;
                                 PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                         balance.getCashier(), "Y", "", "", "");
@@ -1218,7 +1184,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                         }
 
-                        rs.close();
+                        rs1.close();
                         stmt1.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -1228,16 +1194,15 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     //update promotion
                     memberBean = null;
                     BalanceControl.updateProSerTable(tableNo, memberBean);
-                    String Discount = BalanceControl.GetDiscount(tableNo);
-//                    txtDiscount.setText("- " + Discount);
+                    BalanceControl.GetDiscount(tableNo);
                     PublicVar.ErrorColect = true;
                 } //end of Load Data
             }
-            rec.close();
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e.getMessage());
-//            txtPluCode.requestFocus();
         } finally {
             mysql.close();
         }

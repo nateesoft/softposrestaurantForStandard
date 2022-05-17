@@ -526,7 +526,7 @@ private void arcode2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_a
 }//GEN-LAST:event_arcode2KeyPressed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-   //arcode1.requestFocus();
+    //arcode1.requestFocus();
 }//GEN-LAST:event_formWindowActivated
 
 private void ardate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ardate1KeyPressed
@@ -635,31 +635,27 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
+                String SQLQuery = "select * from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
                         + "where (mtran.m_code>='" + TempCode1 + "') and (mtran.m_code<='" + TempCode2 + "') and (m_date>='" + Datefmt.format(TempDate1) + "') and (m_date<='" + Datefmt.format(TempDate2) + "') order by mtran.m_code,m_date,m_billno";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        XTotalCnt++;
-                        XTotalAmt = XTotalAmt + rec.getDouble("m_netamt");
-                        XTotalDisc = XTotalDisc + rec.getDouble("m_disc");
-                        Object[] input = {rec.getString("m_code"),
-                            rec.getString("m_name"),
-                            ShowDatefmt.format(rec.getDate("m_date")),
-                            rec.getString("m_billno"),
-                            rec.getDouble("m_netamt"),
-                            rec.getDouble("m_disc"),
-                            rec.getDouble("m_score"),
-                            rec.getDouble("m_sum")
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    XTotalCnt++;
+                    XTotalAmt = XTotalAmt + rs.getDouble("m_netamt");
+                    XTotalDisc = XTotalDisc + rs.getDouble("m_disc");
+                    Object[] input = {rs.getString("m_code"),
+                        rs.getString("m_name"),
+                        ShowDatefmt.format(rs.getDate("m_date")),
+                        rs.getString("m_billno"),
+                        rs.getDouble("m_netamt"),
+                        rs.getDouble("m_disc"),
+                        rs.getDouble("m_score"),
+                        rs.getDouble("m_sum")
 
-                        };
-                        model2.addRow(input);
-                    } while (rec.next());
-                    showCell(0, 0);
+                    };
+                    model2.addRow(input);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());

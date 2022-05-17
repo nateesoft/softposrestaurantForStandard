@@ -906,15 +906,11 @@ public class PPrint {
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rec.getString("giftbarcode") + rec.getString("giftno") + "@" + DecFmt.format(rec.getDouble("giftamt"))) + "_";
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while(rs.next()){
+                        t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -1323,16 +1319,12 @@ public class PPrint {
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rec.getString("giftbarcode") + rec.getString("giftno") + "@" + DecFmt.format(rec.getDouble("giftamt"))) + "_";
-                        } while (rec.next());
+                    String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while(rs.next()){
+                        t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -1617,16 +1609,12 @@ public class PPrint {
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while(rs.next()){
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -1638,7 +1626,7 @@ public class PPrint {
                         List<Object[]> list = printCuponName(_RefNo);
                         String CuName;
                         double CuDisc;
-                        if (list != null && list.size() > 0) {
+                        if (list != null && !list.isEmpty()) {
                             CuName = list.get(0)[0].toString();
                             CuDisc = Double.parseDouble(list.get(0)[1].toString());
                             print(" " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
@@ -2796,19 +2784,15 @@ public class PPrint {
                             + " left join tablefile on balance.r_table=tablefile.tcode "
                             + "where (r_void<>'V') or (r_void is null) "
                             + "group by r_table";
-                    ResultSet rec = stmt.executeQuery(ChkTable);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFull(rec.getString("r_table"), 6)
-                                    + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(r_total)")), 10) + "     "
-                                    + PUtility.DataFull(rec.getString("TCurTime"), 8) + "  "
-                                    + PUtility.DataFull(IntFmt.format(rec.getInt("tcustomer")), 5));
-                            SumTotal = SumTotal + rec.getDouble("sum(r_total)");
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(ChkTable);
+                    while(rs.next()){
+                        print(PUtility.DataFull(rs.getString("r_table"), 6)
+                                    + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
+                                    + PUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
+                                    + PUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
+                            SumTotal = SumTotal + rs.getDouble("sum(r_total)");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2928,17 +2912,13 @@ public class PPrint {
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rec.getDouble("amount");
-                        } while (rec.next());
+                    String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                            SumAmt = SumAmt + rs.getDouble("amount");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2956,18 +2936,14 @@ public class PPrint {
                 int CntBill = 0;
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            CntBill++;
-                            SumCash = SumCash + rec.getDouble("cash");
-                            SumCupon = SumCupon + rec.getDouble("cupon");
-                        } while (rec.next());
+                    String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        CntBill++;
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2976,17 +2952,12 @@ public class PPrint {
                 print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2999,17 +2970,12 @@ public class PPrint {
                 print("----------------------------------------");
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -3654,17 +3620,13 @@ public class PPrint {
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rec.getDouble("amount");
-                            } while (rec.next());
+                        String SqlQuery = "select * from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                                SumAmt = SumAmt + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3682,18 +3644,14 @@ public class PPrint {
                     int CntBill = 0;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                CntBill++;
-                                SumCash = SumCash + rec.getDouble("cash");
-                                SumCupon = SumCupon + rec.getDouble("cupon");
-                            } while (rec.next());
+                        String SqlQuery = "select * from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            CntBill++;
+                                SumCash = SumCash + rs.getDouble("cash");
+                                SumCupon = SumCupon + rs.getDouble("cupon");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3702,17 +3660,12 @@ public class PPrint {
                     print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                            } while (rec.next());
+                        String SqlQuery = "select * from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3725,17 +3678,12 @@ public class PPrint {
                     print("----------------------------------------");
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                            } while (rec.next());
+                        String SqlQuery = "select * from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3757,20 +3705,16 @@ public class PPrint {
                     Double SumAmount = 0.0;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(rec.getString("macno") + " " + PUtility.DataFullR(rec.getString("cashier"), 6) + " " + PUtility.DataFullR(rec.getString("r_table"), 5) + " " + PUtility.DataFullR(rec.getString("r_time"), 6) + "  " + PUtility.DataFullR(rec.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rec.getString("r_voidtime"), 6));
-                                print("     " + PUtility.DataFullR(rec.getString("r_pname"), 35));
-                                print("     " + rec.getString("r_refno") + " " + PUtility.DataFull(rec.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 8));
+                        String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
+                                print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
+                                print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
                                 SumVoid++;
-                                SumAmount = SumAmount + rec.getDouble("r_total");
-                            } while (rec.next());
+                                SumAmount = SumAmount + rs.getDouble("r_total");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -4703,20 +4647,16 @@ public class PPrint {
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                            ResultSet rec = stmt.executeQuery(CheckCoupon);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rec.getString("sms_code");
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            ResultSet rs = stmt.executeQuery(CheckCoupon);
+                            while(rs.next()){
+                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                    String SMS_Code = rs.getString("sms_code");
                                     if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
                                         print("     " + "SMS CODE " + SMS_Code);
                                     }
-                                } while (rec.next());
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -4752,16 +4692,12 @@ public class PPrint {
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while(rs.next()){
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -5039,15 +4975,11 @@ public class PPrint {
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                    ResultSet rec = stmt.executeQuery(CheckCoupon);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength) + "_");
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(CheckCoupon);
+                    while(rs.next()){
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -5079,16 +5011,12 @@ public class PPrint {
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String CheckGift = "select *from t_gift where (refno='" + RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rec.getString("giftbarcode") + rec.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength) + "_");
-                        } while (rec.next());
+                    String CheckGift = "select * from t_gift where (refno='" + RefNo + "')";
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while(rs.next()){
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rs.getString("giftbarcode") + rs.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength) + "_");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -5307,20 +5235,16 @@ public class PPrint {
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                            ResultSet rec = stmt.executeQuery(CheckCoupon);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rec.getString("sms_code");
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            ResultSet rs = stmt.executeQuery(CheckCoupon);
+                            while(rs.next()){
+                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                    String SMS_Code = rs.getString("sms_code");
                                     if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
                                         print("     " + "SMS CODE " + SMS_Code);
                                     }
-                                } while (rec.next());
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -5359,16 +5283,12 @@ public class PPrint {
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while(rs.next()){
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
@@ -5596,15 +5516,11 @@ public class PPrint {
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
-                ResultSet rec = stmt.executeQuery(CheckCoupon);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength) + "_");
-                    } while (rec.next());
+                ResultSet rs = stmt.executeQuery(CheckCoupon);
+                while(rs.next()){
+                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -5646,16 +5562,12 @@ public class PPrint {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                ResultSet rec = stmt.executeQuery(CheckGift);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += ("colspan=3 align=center><font face=Angsana New size=2>" + TAB + rec.getString("giftbarcode") + "@" + DecFmt.format(rec.getDouble("giftamt")) + "_");
-                    } while (rec.next());
+                String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                ResultSet rs = stmt.executeQuery(CheckGift);
+                while(rs.next()){
+                    t += ("colspan=3 align=center><font face=Angsana New size=2>" + TAB + rs.getString("giftbarcode") + "@" + DecFmt.format(rs.getDouble("giftamt")) + "_");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -5749,20 +5661,16 @@ public class PPrint {
                     + " left join tablefile on balance.r_table=tablefile.tcode "
                     + "where (r_void<>'V') or (r_void is null) "
                     + "group by r_table";
-            ResultSet rec = stmt.executeQuery(ChkTable);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(rec.getString("r_table"), 6)
-                            + PUtility.DataFullSpace(DecFmt.format(rec.getDouble("sum(r_total)")), 10) + Space
+            ResultSet rs = stmt.executeQuery(ChkTable);
+            while(rs.next()){
+                t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(rs.getString("r_table"), 6)
+                            + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
                             + "</td><td align=right><fonjt face=Angsana New size=1>"
-                            + PUtility.DataFullSpace(rec.getString("TCurTime"), 8) + Space
-                            + PUtility.DataFullSpace(IntFmt.format(rec.getInt("tcustomer")), 5)) + "_";
-                    SumTotal = SumTotal + rec.getDouble("sum(r_total)");
-                } while (rec.next());
+                            + PUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
+                            + PUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
+                    SumTotal = SumTotal + rs.getDouble("sum(r_total)");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -5837,20 +5745,20 @@ public class PPrint {
                     + "and b_macno='" + macNo + "' "
                     + "and b_void<>'V' "
                     + "group by B_CrCode1 order by B_CrCode1 ";
-            ResultSet rec = stmt.executeQuery(sql);
-            while (rec.next()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
                 String[] CreName = new String[]{"", "", ""};
-                String name = rec.getString("B_CrCode1");
+                String name = rs.getString("B_CrCode1");
                 String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "'";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
+                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
                 String creditName;
-                if (rs.next()) {
-                    creditName = ThaiUtil.ASCII2Unicode(rs.getString("crname"));
+                if (rs2.next()) {
+                    creditName = ThaiUtil.ASCII2Unicode(rs2.getString("crname"));
                     name = name + " : " + creditName;
                 }
-                rs.close();
-                String code = rec.getString("B_CardNo1");
-                String amount = rec.getString("B_CrAmt1");
+                rs2.close();
+                String code = rs2.getString("B_CardNo1");
+                String amount = rs2.getString("B_CrAmt1");
                 switch (code.length()) {
                     case 5:
                         code = code.substring(1, 5);
@@ -5897,7 +5805,7 @@ public class PPrint {
                 list.add(CreName);
             }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -5923,21 +5831,21 @@ public class PPrint {
                     + "and b_cramt1>'0' "
                     + "group by b_crcode1 "
                     + "order by b_crcode1 ";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             int dCardNo = 0;
             double dAmt = 0.00;
             String CardNo;
             String Amt;
-            while (rec.next()) {
-                CardNo = rec.getString("b_crcode1");
-                Amt = rec.getString("sum(b_cramt1)");
+            while (rs.next()) {
+                CardNo = rs.getString("b_crcode1");
+                Amt = rs.getString("sum(b_cramt1)");
 
                 dAmt += Double.parseDouble(Amt);
                 dCardNo += Integer.parseInt(CardNo);
             }
             credit[0] = dCardNo + "";
             credit[1] = dAmt + "";
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -6124,14 +6032,13 @@ public class PPrint {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String billnoT = "select macno from poshwsetup";
-            ResultSet rec = stmt.executeQuery(billnoT);
-
-            if (rec.next()) {
-                String regid = rec.getString("macno");
+            ResultSet rs = stmt.executeQuery(billnoT);
+            if (rs.next()) {
+                String regid = rs.getString("macno");
                 this.Regid = regid;
             }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

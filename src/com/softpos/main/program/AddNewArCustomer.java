@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -712,22 +712,20 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select *from custfile "
                         + "where sp_code='" + TempCode + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    sp_desc.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")));
-                    sp_address1.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_addr1")));
-                    sp_address2.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_addr2")));
-                    sp_zip.setText(rec.getString("sp_zip"));
-                    sp_tel.setText(rec.getString("tel"));
-                    sp_contack.setText(ThaiUtil.ASCII2Unicode(rec.getString("contack")));
-                    sp_remark.setText(ThaiUtil.ASCII2Unicode(rec.getString("remark")));
-                    sp_tax.setText(rec.getString("sp_tax"));
-                    sp_cramount.setValue(rec.getDouble("sp_cramt"));
-                    sp_crday.setValue(rec.getInt("sp_cr"));
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
+                    sp_address1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
+                    sp_address2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
+                    sp_zip.setText(rs.getString("sp_zip"));
+                    sp_tel.setText(rs.getString("tel"));
+                    sp_contack.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
+                    sp_remark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
+                    sp_tax.setText(rs.getString("sp_tax"));
+                    sp_cramount.setValue(rs.getDouble("sp_cramt"));
+                    sp_crday.setValue(rs.getInt("sp_cr"));
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -749,15 +747,10 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from custfile where sp_code='" + TempCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            String SQLQuery = "select * from custfile where sp_code='" + TempCode + "'";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

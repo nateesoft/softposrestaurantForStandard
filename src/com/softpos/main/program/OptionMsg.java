@@ -109,22 +109,18 @@ public class OptionMsg extends javax.swing.JDialog {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadOption = "select *from optionfile where pgroup='" + bean.getR_Group() + "'";
-            ResultSet rec = stmt.executeQuery(LoadOption);
+            ResultSet rs = stmt.executeQuery(LoadOption);
             //Clear tblOptionMsg       
             int RowCount = model1.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model1.removeRow(0);
             }
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {ThaiUtil.ASCII2Unicode(rec.getString("optionname"))};
+            while(rs.next()){
+                Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
                     model1.addRow(input);
-                } while (rec.next());
-                showCell1(0, 0);
             }
-            rec.close();
+            showCell1(0, 0);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

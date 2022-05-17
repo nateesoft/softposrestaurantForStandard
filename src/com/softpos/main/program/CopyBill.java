@@ -1,18 +1,18 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.CreditPaymentRec;
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.TranRecord;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import database.MySQLConnect;
 import java.sql.Statement;
+import java.util.Date;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -37,17 +37,12 @@ public class CopyBill extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from billno "
-                    + "where b_macno='" + Value.MACNO + "'";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.last();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    txtBillNo.setText(rec.getString("b_refno"));
-                } while (rec.next());
+            String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "'";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                txtBillNo.setText(rs.getString("b_refno"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -249,16 +244,15 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             String SqlQuery = "select * from billno "
                     + "where (b_macno='" + Value.MACNO + "') "
                     + "and (b_refno='" + BillNo + "')";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            if (rs.next()) {
+                processCopyBill();
+            } else {
                 MSG.WAR(this, "ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
                 txtBillNo.selectAll();
                 txtBillNo.requestFocus();
-            } else {
-                processCopyBill();
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -280,202 +274,197 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
-            try {
-                Statement stmt = mysql.getConnection().createStatement();
-                String SqlQuery = "select * from billno "
-                        + "where (b_macno='" + Value.MACNO + "') "
-                        + "and (b_refno='" + BillNo + "')";
-                ResultSet rec = stmt.executeQuery(SqlQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                    PUtility.ShowMsg("ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
-                    this.dispose();
-                } else {
-                    PublicVar.TableRec_RefNo = rec.getString("b_refno");
-                    PublicVar.TableRec_OnDate = rec.getDate("b_ondate");
-                    PublicVar.TableRec_OnTime = rec.getString("b_ontime");
-                    PublicVar.TableRec_TCode = rec.getString("b_table");
-                    PublicVar.TableRec_MacNo = rec.getString("b_macno");
-                    PublicVar.TableRec_Cashier = rec.getString("b_cashier");
-                    PublicVar.TableRec_TLogInTime = "";
-                    PublicVar.TableRec_TCurTime = "";
-                    PublicVar.TableRec_TLoginDate = date;
-                    PublicVar.TableRec_TOnAct = "";
-                    PublicVar.TableRec_TCustomer = rec.getInt("b_cust");
-                    PublicVar.TableRec_ETD = rec.getString("b_etd");
-                    PublicVar.TableRec_TAmount = rec.getDouble("b_total");
-                    PublicVar.TableRec_Food = rec.getDouble("b_food");
-                    PublicVar.TableRec_Drink = rec.getDouble("b_drink");
-                    PublicVar.TableRec_Product = rec.getDouble("b_product");
-                    PublicVar.TableRec_Service = rec.getDouble("b_service");
-                    PublicVar.TableRec_ServiceAmt = rec.getDouble("b_serviceamt");
-                    PublicVar.TableRec_FastDisc = rec.getString("b_fastdisc");
-                    PublicVar.TableRec_FastDiscAmt = rec.getDouble("b_fastdiscamt");
-                    PublicVar.TableRec_EmpDisc = rec.getString("b_empdisc");
-                    PublicVar.TableRec_EmpDiscAmt = rec.getDouble("b_empdiscamt");
-                    PublicVar.TableRec_TrainDisc = rec.getString("b_traindisc");
-                    PublicVar.TableRec_TrainDiscAmt = rec.getDouble("b_traindiscamt");
-                    PublicVar.TableRec_MemDisc = rec.getString("b_memdisc");
-                    PublicVar.TableRec_MemDiscAmt = rec.getDouble("b_memdiscamt");
-                    PublicVar.TableRec_SubDisc = rec.getString("b_subdisc");
-                    PublicVar.TableRec_SubDiscAmt = rec.getDouble("b_subdiscamt");
-                    PublicVar.TableRec_DiscBath = rec.getDouble("b_subdiscbath");
-                    PublicVar.TableRec_ProDiscAmt = rec.getDouble("b_prodiscamt");
-                    PublicVar.TableRec_SpaDiscAmt = rec.getDouble("b_spadiscamt");
-                    PublicVar.TableRec_CuponDiscAmt = rec.getDouble("b_cupondiscamt");
-                    PublicVar.TableRec_ItemDiscAmt = rec.getDouble("b_itemdiscamt");
-                    PublicVar.TableRec_MemCode = rec.getString("b_memcode");
-                    PublicVar.TableRec_MemName = rec.getString("b_memname");
-                    PublicVar.TableRec_MemBegin = null;
-                    PublicVar.TableRec_MemEnd = null;
-                    PublicVar.TableRec_MemBrid = null;
-                    PublicVar.TableRec_MemCurAmt = rec.getDouble("b_sumscore");
-                    PublicVar.TableRec_Score = rec.getDouble("b_memcursum");
-                    PublicVar.TableRec_SumScoreal = rec.getDouble("b_sumscore");
-                    PublicVar.TableRec_NetTotal = rec.getDouble("b_nettotal");
-                    PublicVar.TableRec_NetFood = rec.getDouble("b_netfood");
-                    PublicVar.TableRec_NetDrink = rec.getDouble("b_netdrink");
-                    PublicVar.TableRec_NetProduct = rec.getDouble("b_netproduct");
-                    PublicVar.TableRec_NetVat = rec.getDouble("b_netvat");
-                    PublicVar.TableRec_NetNonVat = rec.getDouble("b_netnonvat");
-                    PublicVar.TableRec_Vat = rec.getDouble("b_vat");
-                    PublicVar.TableRec_ArCode = rec.getString("b_accrcode");
-                    PublicVar.TableRec_AccrCr = rec.getInt("b_accrcr");
-                    PublicVar.TableRec_ArPayment = rec.getDouble("b_accramt");
-                    PublicVar.TableRec_PayAmt = rec.getDouble("b_payamt");
-                    PublicVar.TableRec_Ton = rec.getDouble("b_ton");
-                    PublicVar.TableRec_Earnest = rec.getDouble("b_earnest");
-                    PublicVar.TableRec_Gift_Voucher = rec.getDouble("b_giftvoucher");
-                    PublicVar.TableRec_Cash = rec.getDouble("b_cash");
-                    PublicVar.TableRec_Cr_Bank = rec.getString("b_crbank");   //For SMP
-                    PublicVar.TableRec_Cr_CardAmt = rec.getDouble("b_crcardamt");
-                    PublicVar.TableRec_Cr_CurPoint = rec.getInt("b_crcurpoint");
-                    PublicVar.TableRec_Cr_SumPoint = rec.getInt("b_crsumpoint");
-                    PublicVar.TableRec_Cr_Name1 = "";
-                    PublicVar.TableRec_Cr_Charge = rec.getDouble("b_crcharge1");
-                    PublicVar.TableRec_Cr_ChargeAmt = rec.getDouble("b_crchargeamt1");
-                    PublicVar.TableRec_Cr_Redule = 0.00;
-                    PublicVar.TableRec2_Cr_Code1 = rec.getString("b_crcode1");
-                    PublicVar.TableRec_Cr_CardNo1 = rec.getString("b_cardno1");
-                    PublicVar.TableRec_Cr_App_Code1 = rec.getString("b_appcode1");
-                    PublicVar.TableRec_Cr_Amount1 = rec.getDouble("b_cramt1");
-                    PublicVar.TableRec_PrintTotal = 0.00;
-                    PublicVar.TableRec_PrnCnt = 0;
-                    PublicVar.TableRec_BillCopy = 0;
-                    PublicVar.TableRec_PrnTime1 = "";
-                    PublicVar.TableRec_PrnTime2 = "";
-                    PublicVar.TableRec_BranCode = rec.getString("b_bran");
-                    PublicVar.TableRec_BranName = rec.getString("b_branname");
-                    PublicVar.TableRec_BranTel = rec.getString("b_tel");
-                    PublicVar.TableRec_BranTime = rec.getString("b_rectime");
-                    billcopy = rec.getInt("b_billcopy");
-                }
-                rec.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String SqlQuery = "select * from billno "
+                    + "where (b_macno='" + Value.MACNO + "') "
+                    + "and (b_refno='" + BillNo + "')";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            if (rs.next()) {
+                PublicVar.TableRec_RefNo = rs.getString("b_refno");
+                PublicVar.TableRec_OnDate = rs.getDate("b_ondate");
+                PublicVar.TableRec_OnTime = rs.getString("b_ontime");
+                PublicVar.TableRec_TCode = rs.getString("b_table");
+                PublicVar.TableRec_MacNo = rs.getString("b_macno");
+                PublicVar.TableRec_Cashier = rs.getString("b_cashier");
+                PublicVar.TableRec_TLogInTime = "";
+                PublicVar.TableRec_TCurTime = "";
+                PublicVar.TableRec_TLoginDate = date;
+                PublicVar.TableRec_TOnAct = "";
+                PublicVar.TableRec_TCustomer = rs.getInt("b_cust");
+                PublicVar.TableRec_ETD = rs.getString("b_etd");
+                PublicVar.TableRec_TAmount = rs.getDouble("b_total");
+                PublicVar.TableRec_Food = rs.getDouble("b_food");
+                PublicVar.TableRec_Drink = rs.getDouble("b_drink");
+                PublicVar.TableRec_Product = rs.getDouble("b_product");
+                PublicVar.TableRec_Service = rs.getDouble("b_service");
+                PublicVar.TableRec_ServiceAmt = rs.getDouble("b_serviceamt");
+                PublicVar.TableRec_FastDisc = rs.getString("b_fastdisc");
+                PublicVar.TableRec_FastDiscAmt = rs.getDouble("b_fastdiscamt");
+                PublicVar.TableRec_EmpDisc = rs.getString("b_empdisc");
+                PublicVar.TableRec_EmpDiscAmt = rs.getDouble("b_empdiscamt");
+                PublicVar.TableRec_TrainDisc = rs.getString("b_traindisc");
+                PublicVar.TableRec_TrainDiscAmt = rs.getDouble("b_traindiscamt");
+                PublicVar.TableRec_MemDisc = rs.getString("b_memdisc");
+                PublicVar.TableRec_MemDiscAmt = rs.getDouble("b_memdiscamt");
+                PublicVar.TableRec_SubDisc = rs.getString("b_subdisc");
+                PublicVar.TableRec_SubDiscAmt = rs.getDouble("b_subdiscamt");
+                PublicVar.TableRec_DiscBath = rs.getDouble("b_subdiscbath");
+                PublicVar.TableRec_ProDiscAmt = rs.getDouble("b_prodiscamt");
+                PublicVar.TableRec_SpaDiscAmt = rs.getDouble("b_spadiscamt");
+                PublicVar.TableRec_CuponDiscAmt = rs.getDouble("b_cupondiscamt");
+                PublicVar.TableRec_ItemDiscAmt = rs.getDouble("b_itemdiscamt");
+                PublicVar.TableRec_MemCode = rs.getString("b_memcode");
+                PublicVar.TableRec_MemName = rs.getString("b_memname");
+                PublicVar.TableRec_MemBegin = null;
+                PublicVar.TableRec_MemEnd = null;
+                PublicVar.TableRec_MemBrid = null;
+                PublicVar.TableRec_MemCurAmt = rs.getDouble("b_sumscore");
+                PublicVar.TableRec_Score = rs.getDouble("b_memcursum");
+                PublicVar.TableRec_SumScoreal = rs.getDouble("b_sumscore");
+                PublicVar.TableRec_NetTotal = rs.getDouble("b_nettotal");
+                PublicVar.TableRec_NetFood = rs.getDouble("b_netfood");
+                PublicVar.TableRec_NetDrink = rs.getDouble("b_netdrink");
+                PublicVar.TableRec_NetProduct = rs.getDouble("b_netproduct");
+                PublicVar.TableRec_NetVat = rs.getDouble("b_netvat");
+                PublicVar.TableRec_NetNonVat = rs.getDouble("b_netnonvat");
+                PublicVar.TableRec_Vat = rs.getDouble("b_vat");
+                PublicVar.TableRec_ArCode = rs.getString("b_accrcode");
+                PublicVar.TableRec_AccrCr = rs.getInt("b_accrcr");
+                PublicVar.TableRec_ArPayment = rs.getDouble("b_accramt");
+                PublicVar.TableRec_PayAmt = rs.getDouble("b_payamt");
+                PublicVar.TableRec_Ton = rs.getDouble("b_ton");
+                PublicVar.TableRec_Earnest = rs.getDouble("b_earnest");
+                PublicVar.TableRec_Gift_Voucher = rs.getDouble("b_giftvoucher");
+                PublicVar.TableRec_Cash = rs.getDouble("b_cash");
+                PublicVar.TableRec_Cr_Bank = rs.getString("b_crbank");   //For SMP
+                PublicVar.TableRec_Cr_CardAmt = rs.getDouble("b_crcardamt");
+                PublicVar.TableRec_Cr_CurPoint = rs.getInt("b_crcurpoint");
+                PublicVar.TableRec_Cr_SumPoint = rs.getInt("b_crsumpoint");
+                PublicVar.TableRec_Cr_Name1 = "";
+                PublicVar.TableRec_Cr_Charge = rs.getDouble("b_crcharge1");
+                PublicVar.TableRec_Cr_ChargeAmt = rs.getDouble("b_crchargeamt1");
+                PublicVar.TableRec_Cr_Redule = 0.00;
+                PublicVar.TableRec2_Cr_Code1 = rs.getString("b_crcode1");
+                PublicVar.TableRec_Cr_CardNo1 = rs.getString("b_cardno1");
+                PublicVar.TableRec_Cr_App_Code1 = rs.getString("b_appcode1");
+                PublicVar.TableRec_Cr_Amount1 = rs.getDouble("b_cramt1");
+                PublicVar.TableRec_PrintTotal = 0.00;
+                PublicVar.TableRec_PrnCnt = 0;
+                PublicVar.TableRec_BillCopy = 0;
+                PublicVar.TableRec_PrnTime1 = "";
+                PublicVar.TableRec_PrnTime2 = "";
+                PublicVar.TableRec_BranCode = rs.getString("b_bran");
+                PublicVar.TableRec_BranName = rs.getString("b_branname");
+                PublicVar.TableRec_BranTel = rs.getString("b_tel");
+                PublicVar.TableRec_BranTime = rs.getString("b_rectime");
+                billcopy = rs.getInt("b_billcopy");
+            } else {
+                MSG.WAR("ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
+                this.dispose();
             }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+        }
 
-            //Load Data From T_Sale
-            try {
-                Statement stmt = mysql.getConnection().createStatement();
-                String LoadBalance = "select * from t_sale "
-                        + "where (macno='" + Value.MACNO + "') "
-                        + "and (r_refno='" + BillNo + "')";
-                ResultSet rec = stmt.executeQuery(LoadBalance);
-                PublicVar.P_ItemCount = 0;
-                MyArray = null;
-                MyArray = new TranRecord[1];
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        PublicVar.P_ItemCount++;
-                        TranRecord TranRec = new TranRecord();
-                        TranRec.R_Index = rec.getString("r_index");
-                        TranRec.R_Date = rec.getDate("r_date");
-                        TranRec.R_Table = rec.getString("r_table");
-                        TranRec.R_Time = rec.getString("r_time");
-                        TranRec.Macno = rec.getString("macno");
-                        TranRec.Cashier = rec.getString("cashier");
-                        TranRec.R_Emp = rec.getString("r_emp");
-                        TranRec.R_Set = rec.getString("r_set");
-                        TranRec.R_Stock = rec.getString("r_stock");
-                        TranRec.R_PluCode = rec.getString("r_plucode");
-                        TranRec.R_PName = rec.getString("r_pname");
-                        TranRec.R_Unit = rec.getString("r_unit");
-                        TranRec.R_Group = rec.getString("r_group");
-                        TranRec.R_Status = rec.getString("r_status");
-                        TranRec.R_Normal = rec.getString("r_normal");
-                        TranRec.R_Discount = rec.getString("r_discount");
-                        TranRec.R_Service = rec.getString("r_service");
-                        TranRec.R_Vat = rec.getString("r_vat");
-                        TranRec.R_Type = rec.getString("r_type");
-                        TranRec.R_ETD = rec.getString("r_etd");
-                        TranRec.R_Quan = rec.getDouble("r_quan");
-                        TranRec.R_Price = rec.getDouble("r_price");
-                        TranRec.R_Total = rec.getDouble("r_total");
-                        TranRec.R_PrType = rec.getString("r_prtype");
-                        TranRec.R_PrCode = rec.getString("r_prcode");
-                        TranRec.R_PrDisc = rec.getDouble("r_prdisc");
-                        TranRec.R_PrBath = rec.getDouble("r_prbath");
-                        TranRec.R_PrAmt = rec.getDouble("r_pramt");
-                        TranRec.R_PrQuan = rec.getDouble("r_prquan");
-                        TranRec.R_Redule = rec.getDouble("r_redule");
-                        TranRec.R_KIC = rec.getString("r_kic");
-                        TranRec.R_KicPrint = rec.getString("r_kicprint");
-                        TranRec.R_Void = rec.getString("r_void");
-                        TranRec.R_VoidUser = rec.getString("r_voiduser");
-                        TranRec.R_VoidTime = rec.getString("r_voidtime");
-                        TranRec.R_DiscBath = rec.getDouble("r_discbath");
-                        if (PublicVar.P_ItemCount > 1) {
-                            MyArray = PUtility.addArray(MyArray);
-                        }
-                        ArraySize = MyArray.length;
-                        MyArray[ArraySize - 1] = TranRec;
-                    } while (rec.next());
+        //Load Data From T_Sale
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String LoadBalance = "select * from t_sale "
+                    + "where (macno='" + Value.MACNO + "') "
+                    + "and (r_refno='" + BillNo + "')";
+            ResultSet rs = stmt.executeQuery(LoadBalance);
+            PublicVar.P_ItemCount = 0;
+            MyArray = null;
+            MyArray = new TranRecord[1];
+            while (rs.next()) {
+                PublicVar.P_ItemCount++;
+                TranRecord TranRec = new TranRecord();
+                TranRec.R_Index = rs.getString("r_index");
+                TranRec.R_Date = rs.getDate("r_date");
+                TranRec.R_Table = rs.getString("r_table");
+                TranRec.R_Time = rs.getString("r_time");
+                TranRec.Macno = rs.getString("macno");
+                TranRec.Cashier = rs.getString("cashier");
+                TranRec.R_Emp = rs.getString("r_emp");
+                TranRec.R_Set = rs.getString("r_set");
+                TranRec.R_Stock = rs.getString("r_stock");
+                TranRec.R_PluCode = rs.getString("r_plucode");
+                TranRec.R_PName = rs.getString("r_pname");
+                TranRec.R_Unit = rs.getString("r_unit");
+                TranRec.R_Group = rs.getString("r_group");
+                TranRec.R_Status = rs.getString("r_status");
+                TranRec.R_Normal = rs.getString("r_normal");
+                TranRec.R_Discount = rs.getString("r_discount");
+                TranRec.R_Service = rs.getString("r_service");
+                TranRec.R_Vat = rs.getString("r_vat");
+                TranRec.R_Type = rs.getString("r_type");
+                TranRec.R_ETD = rs.getString("r_etd");
+                TranRec.R_Quan = rs.getDouble("r_quan");
+                TranRec.R_Price = rs.getDouble("r_price");
+                TranRec.R_Total = rs.getDouble("r_total");
+                TranRec.R_PrType = rs.getString("r_prtype");
+                TranRec.R_PrCode = rs.getString("r_prcode");
+                TranRec.R_PrDisc = rs.getDouble("r_prdisc");
+                TranRec.R_PrBath = rs.getDouble("r_prbath");
+                TranRec.R_PrAmt = rs.getDouble("r_pramt");
+                TranRec.R_PrQuan = rs.getDouble("r_prquan");
+                TranRec.R_Redule = rs.getDouble("r_redule");
+                TranRec.R_KIC = rs.getString("r_kic");
+                TranRec.R_KicPrint = rs.getString("r_kicprint");
+                TranRec.R_Void = rs.getString("r_void");
+                TranRec.R_VoidUser = rs.getString("r_voiduser");
+                TranRec.R_VoidTime = rs.getString("r_voidtime");
+                TranRec.R_DiscBath = rs.getDouble("r_discbath");
+                if (PublicVar.P_ItemCount > 1) {
+                    MyArray = PUtility.addArray(MyArray);
                 }
-                rec.close();
-                stmt.close();
+                ArraySize = MyArray.length;
+                MyArray[ArraySize - 1] = TranRec;
+            }
+            rs.close();
+            stmt.close();
 
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+        if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
+            PUtility.ShowMsg("บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
+            txtBillNo.requestFocus();
+        } else {
+            if (CopyPrn > CONFIG.getP_BillCopy()) {
+                CopyPrn = CONFIG.getP_BillCopy();
+                txtCopy.setText(Integer.toString(CopyPrn));
+            }
+            for (int i = 1; i <= CopyPrn; i++) {
+                prn.PrintBillCopy(MyArray, BillNo, i, CreditArray);
+            }
+            try {
+                mysql.open();
+                Statement stmt = mysql.getConnection().createStatement();
+                String SqlQuery = "update billno set "
+                        + "b_billcopy=b_billcopy+1 "
+                        + "where (b_refno='" + BillNo + "') "
+                        + "and (b_macno='" + Value.MACNO + "')";
+                stmt.executeUpdate(SqlQuery);
+                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(CopyBill.class, "error", e.getMessage());
             } finally {
                 mysql.close();
             }
-
-            if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
-                PUtility.ShowMsg("บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
-                txtBillNo.requestFocus();
-            } else {
-                if (CopyPrn > CONFIG.getP_BillCopy()) {
-                    CopyPrn = CONFIG.getP_BillCopy();
-                    txtCopy.setText(Integer.toString(CopyPrn));
-                }
-                for (int i = 1; i <= CopyPrn; i++) {
-                    prn.PrintBillCopy(MyArray, BillNo, i, CreditArray);
-                }
-                try {
-                    mysql.open();
-                    Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "update billno set "
-                            + "b_billcopy=b_billcopy+1 "
-                            + "where (b_refno='" + BillNo + "') "
-                            + "and (b_macno='" + Value.MACNO + "')";
-                    stmt.executeUpdate(SqlQuery);
-                    stmt.close();
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                    AppLogUtil.log(CopyBill.class, "error", e.getMessage());
-                } finally {
-                    mysql.close();
-                }
-                this.dispose();
-            }
+            this.dispose();
+        }
     }
 
     private void bntExitClick() {

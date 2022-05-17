@@ -1,8 +1,9 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
@@ -10,15 +11,15 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import util.AppLogUtil;
@@ -89,16 +90,19 @@ public class DispInv2 extends javax.swing.JDialog {
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
+            
             int RowCount = model2.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model2.removeRow(0);
             }
+            
             int XTotalCnt = 0;
             double XAmt1 = 0.0;
             double XAmt2 = 0.0;
             double XAmt3 = 0.0;
+            
             /**
              * * OPEN CONNECTION **
              */
@@ -106,43 +110,39 @@ public class DispInv2 extends javax.swing.JDialog {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from invcashdoc where (invdate>='" + Datefmt.format(TempDate1) + "') and (invdate<='" + Datefmt.format(TempDate2) + "') and substring(invno,1,1)='I' "
+                String SQLQuery = "select * from invcashdoc "
+                        + "where (invdate>='" + Datefmt.format(TempDate1) + "') and (invdate<='" + Datefmt.format(TempDate2) + "') "
+                        + "and substring(invno,1,1)='I' "
                         + "order by invno";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String VoidDate = "";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while(rs.next()){
+                    String VoidDate = "";
                         try {
-                            VoidDate = ShowDatefmt.format(rec.getDate("voiddate"));
-                        } catch (Exception e) {
-
+                            VoidDate = ShowDatefmt.format(rs.getDate("voiddate"));
+                        } catch (SQLException e) {
                         }
                         XTotalCnt++;
-                        Object[] input = {rec.getString("void"),
-                            rec.getString("invno"),
-                            ShowDatefmt.format(rec.getDate("invdate")),
-                            rec.getString("macno"),
-                            rec.getString("refno"),
-                            rec.getString("custcode"),
-                            rec.getString("custname"),
-                            rec.getDouble("subtotal"),
-                            rec.getDouble("vat"),
-                            rec.getDouble("amount"),
-                            rec.getString("voidmessage"),
-                            rec.getString("uservoid"),
+                        Object[] input = {rs.getString("void"),
+                            rs.getString("invno"),
+                            ShowDatefmt.format(rs.getDate("invdate")),
+                            rs.getString("macno"),
+                            rs.getString("refno"),
+                            rs.getString("custcode"),
+                            rs.getString("custname"),
+                            rs.getDouble("subtotal"),
+                            rs.getDouble("vat"),
+                            rs.getDouble("amount"),
+                            rs.getString("voidmessage"),
+                            rs.getString("uservoid"),
                             VoidDate
                         };
-                        XAmt1 = XAmt1 + rec.getDouble("subtotal");
-                        XAmt2 = XAmt2 + rec.getDouble("vat");
-                        XAmt3 = XAmt3 + rec.getDouble("amount");
+                        XAmt1 = XAmt1 + rs.getDouble("subtotal");
+                        XAmt2 = XAmt2 + rs.getDouble("vat");
+                        XAmt3 = XAmt3 + rs.getDouble("amount");
                         model2.addRow(input);
-                    } while (rec.next());
-                    RowCount = model2.getRowCount();
-                    showCell(0, 0);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());

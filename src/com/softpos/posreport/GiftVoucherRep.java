@@ -296,17 +296,13 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (cashier<='" + CashNo2 + "') "
                                 + "and (fat<>'V') "
                                 + "order by giftbarcode";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(rec.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9));
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(PUtility.DataFullR(rs.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
                                 Sumtotal++;
-                                SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                            } while (rec.next());
+                                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -384,19 +380,14 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     + "and (cashier>='" + CashNo1 + "') "
                     + "and (cashier<='" + CashNo2 + "') "
                     + "and (fat<>'V') "
-                    //                    + "and ondate=curdate() "
                     + "order by giftbarcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFull(rec.getString("giftno"), 27) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9) + "_");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFull(rs.getString("giftno"), 27) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9) + "_");
                     Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                } while (rec.next());
+                    SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

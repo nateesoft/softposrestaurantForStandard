@@ -1,20 +1,20 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import util.AppLogUtil;
@@ -25,11 +25,13 @@ public class FindCustomer extends javax.swing.JDialog {
     DefaultTableModel model;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
-    /** Creates new form FindMember */
+    /**
+     * Creates new form FindMember
+     */
     public FindCustomer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         initComponents();
         PublicVar.ReturnString = "";
         model = (DefaultTableModel) tblShowMember.getModel();
@@ -43,25 +45,24 @@ public class FindCustomer extends javax.swing.JDialog {
         header.setBackground(Color.yellow);
         header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
 
-        int[] ColSize = {80,150, 600, 150};
+        int[] ColSize = {80, 150, 600, 150};
         for (int i = 0; i < 4; i++) {
             int vColIndex = 0;
             TableColumn col = tblShowMember.getColumnModel().getColumn(i);
             col.setPreferredWidth(ColSize[i]);
         }
         ActivateModule();
-       
+
     }
-    
+
     public void ActivateModule() {
         //Clear Variable
         TMemCode.setText("");
         TMemName.setText("");
         TMemTel.setText("");
         ClearGrid();
-       
+
     }
-   
 
     public void ClearGrid() {
         int RowCount = model.getRowCount();
@@ -69,218 +70,189 @@ public class FindCustomer extends javax.swing.JDialog {
             model.removeRow(0);
         }
     }
+
     public String ChkValidDate(Date tdate) {
-        String ReturnValue = "00/00/0000" ;
+        String ReturnValue = "00/00/0000";
         try {
-            ReturnValue = Datefmtshow.format(tdate) ; 
+            ReturnValue = Datefmtshow.format(tdate);
         } catch (Exception e) {
-            ReturnValue = "00/00/0000" ;
+            ReturnValue = "00/00/0000";
         }
-        return ReturnValue ;
+        return ReturnValue;
     }
+
     public void bntShowMemberAllClick() {
-        int LineCnt = 1 ;
+        int LineCnt = 0;
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        try { 
-            Statement stmt =  mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from customer order by sp_desc";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
-            ClearGrid() ;
-            rec.first();
-            if (rec.getRow() == 0) {
-                 PUtility.showError("ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
-            } else {
-                do {
-                   try {
-                    Object[] input = {
-                        LineCnt,
-                        rec.getString("sp_code"),
-                        rec.getString("sp_desc"),
-                        rec.getString("tel")
-                    };
-                    model.addRow(input);
-                   } catch (SQLException e) {
-                   }
-                   LineCnt++ ;
-                } while (rec.next());
-                model.getRowCount();
-                showCell(0,0) ;
-                //ShowTableLogin.setRowSelectionInterval(0, 0);
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String LoadTableFile = "select * from customer order by sp_desc";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            ClearGrid();
+            while (rs.next()) {
+                LineCnt++;
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("sp_code"),
+                    rs.getString("sp_desc"),
+                    rs.getString("tel")
+                };
+                model.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            if (LineCnt == 0) {
+                PUtility.showError("ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
+            }
+            rs.close();
             stmt.close();
             tblShowMember.requestFocus();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
-        
+
     }
+
     public void ShowMemberByCode() {
-        int LineCnt = 1 ;
-         String TempStr = "%"+TMemCode.getText()+"%" ;
-         /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try { 
-            Statement stmt =  mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from customer where sp_code like '"+TempStr+"' order by sp_desc";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
-            ClearGrid() ;
-            rec.first();
-            if (rec.getRow() == 0) {
-               MSG.ERR(this,"ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
-               TMemCode.requestFocus();
-            } else {
-                do {
-                   try {
-                    Object[] input = {
-                        LineCnt,
-                        rec.getString("sp_code"),
-                        rec.getString("sp_desc"),
-                        rec.getString("tel")
-                    };
-                    model.addRow(input);
-                   } catch (SQLException e) {
-                   }
-                   LineCnt++ ;
-                } while (rec.next());
-                int RowCount = model.getRowCount();
-                showCell(0,0) ;
-                tblShowMember.requestFocus(true);
-                //ShowTableLogin.setRowSelectionInterval(0, 0);
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
-        }finally{
-            mysql.close();
-        }
-    }
-    
-    public void ShowMemberByName() {
-        int LineCnt = 1 ;
-        String TempStr = "%"+TMemName.getText()+"%" ;
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try { 
-            Statement stmt =  mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from customer where sp_desc like '"+TempStr+"' order by sp_desc";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
-            ClearGrid() ;
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR(this,"ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
-                TMemName.requestFocus();
-            } else {
-                do {
-                   try {
-                    Object[] input = {
-                        LineCnt,
-                        rec.getString("sp_code"),
-                        rec.getString("sp_desc"),
-                        rec.getString("tel")
-                    };
-                    model.addRow(input);
-                   } catch (SQLException e) {
-                   }
-                   LineCnt++ ;
-                } while (rec.next());
-                int RowCount = model.getRowCount();
-                showCell(0,0) ;
-                tblShowMember.requestFocus(true);
-                //ShowTableLogin.setRowSelectionInterval(0, 0);
-            }
-            rec.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
-        }finally{
-            mysql.close();
-        }
-    }
-    public void ShowMemberByTel() {
-        int LineCnt = 1 ;
-        String TempStr = "%"+TMemTel.getText()+"%" ;
+        int LineCnt = 0;
+        String TempStr = "%" + TMemCode.getText() + "%";
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            Statement stmt =  mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from customer where (tel like '" + TempStr + "') order by sp_desc";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
+            Statement stmt = mysql.getConnection().createStatement();
+            String LoadTableFile = "select *from customer where sp_code like '" + TempStr + "' order by sp_desc";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
-                TMemTel.requestFocus();
-            } else {
-                do {
-                    try {
-                        Object[] input = {
-                            LineCnt,
-                            rec.getString("sp_code"),
-                            rec.getString("sp_desc"),
-                            rec.getString("tel")
-                        };
-                        model.addRow(input);
-                    } catch (SQLException e) {
-                    }
-                    LineCnt++;
-                } while (rec.next());
-                int RowCount = model.getRowCount();
-                showCell(0, 0);
-                tblShowMember.requestFocus(true);
+            while (rs.next()) {
+                LineCnt++;
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("sp_code"),
+                    rs.getString("sp_desc"),
+                    rs.getString("tel")
+                };
+                model.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            tblShowMember.requestFocus(true);
+            if (LineCnt == 0) {
+                MSG.ERR(this, "ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
+                TMemCode.requestFocus();
+            }
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
-        
     }
-    public void showCell(int row, int column) {
-        if(row>0){
-        Rectangle rect = tblShowMember.getCellRect(row, column, true);
-        tblShowMember.scrollRectToVisible(rect);
-        tblShowMember.clearSelection();
-        tblShowMember.setRowSelectionInterval(row, row);
+
+    public void ShowMemberByName() {
+        int LineCnt = 0;
+        String TempStr = "%" + TMemName.getText() + "%";
+        /**
+         * * OPEN CONNECTION **
+         */
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String LoadTableFile = "select * from customer where sp_desc like '" + TempStr + "' order by sp_desc";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            ClearGrid();
+            while (rs.next()) {
+                LineCnt++;
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("sp_code"),
+                    rs.getString("sp_desc"),
+                    rs.getString("tel")
+                };
+                model.addRow(input);
+            }
+            showCell(0, 0);
+            tblShowMember.requestFocus(true);
+            if (LineCnt == 0) {
+                MSG.ERR(this, "ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
+                TMemName.requestFocus();
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
+
+    public void ShowMemberByTel() {
+        int LineCnt = 0;
+        String TempStr = "%" + TMemTel.getText() + "%";
+        /**
+         * * OPEN CONNECTION **
+         */
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String LoadTableFile = "select *from customer where (tel like '" + TempStr + "') order by sp_desc";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            ClearGrid();
+            while (rs.next()) {
+                LineCnt++;
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("sp_code"),
+                    rs.getString("sp_desc"),
+                    rs.getString("tel")
+                };
+                model.addRow(input);
+            }
+            if (LineCnt == 0) {
+                MSG.ERR(this, "ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
+                TMemTel.requestFocus();
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCustomer.class, "error", e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+    }
+
+    public void showCell(int row, int column) {
+        if (row > 0) {
+            Rectangle rect = tblShowMember.getCellRect(row, column, true);
+            tblShowMember.scrollRectToVisible(rect);
+            tblShowMember.clearSelection();
+            tblShowMember.setRowSelectionInterval(row, row);
+        }
+    }
+
     public void bntExitClick() {
-        PublicVar.ReturnString = "" ;
+        PublicVar.ReturnString = "";
         this.dispose();
     }
-    
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: 
-     * NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -481,104 +453,105 @@ public class FindCustomer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void bntShowMemAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntShowMemAllActionPerformed
-     bntShowMemberAllClick() ;
+    bntShowMemberAllClick();
 }//GEN-LAST:event_bntShowMemAllActionPerformed
 
 private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-    bntExitClick() ;
+    bntExitClick();
 }//GEN-LAST:event_bntExitActionPerformed
 
 private void TMemCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TMemCodeKeyPressed
-     if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
-         if (TMemCode.getText().length()>0) {
-            ShowMemberByCode() ;
-         } else {
-             TMemName.requestFocus();
-         }
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_F2) {
-        bntShowMemberAllClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_F5) {
-        bntOKClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_ESCAPE) {
-        bntExitClick() ;
-     }
-     
-    
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (TMemCode.getText().length() > 0) {
+            ShowMemberByCode();
+        } else {
+            TMemName.requestFocus();
+        }
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F2) {
+        bntShowMemberAllClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F5) {
+        bntOKClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        bntExitClick();
+    }
+
+
 }//GEN-LAST:event_TMemCodeKeyPressed
 
 private void TMemNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TMemNameKeyPressed
-    if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
-        if (TMemName.getText().length()>0) {
-           ShowMemberByName() ;
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (TMemName.getText().length() > 0) {
+            ShowMemberByName();
         } else {
             TMemTel.requestFocus();
         }
-     }
-    if (evt.getKeyCode()==KeyEvent.VK_F2) {
-        bntShowMemberAllClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_F5) {
-        bntOKClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_ESCAPE) {
-        bntExitClick() ;
-     }
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F2) {
+        bntShowMemberAllClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F5) {
+        bntOKClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        bntExitClick();
+    }
 }//GEN-LAST:event_TMemNameKeyPressed
 
 private void TMemTelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TMemTelKeyPressed
-    if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
-        if (TMemTel.getText().length()>0) {
-           ShowMemberByTel() ;
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (TMemTel.getText().length() > 0) {
+            ShowMemberByTel();
         } else {
             TMemCode.requestFocus();
         }
-     }
-    if (evt.getKeyCode()==KeyEvent.VK_F2) {
-        bntShowMemberAllClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_F5) {
-        bntOKClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_ESCAPE) {
-        bntExitClick() ;
-     }
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F2) {
+        bntShowMemberAllClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F5) {
+        bntOKClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        bntExitClick();
+    }
 }//GEN-LAST:event_TMemTelKeyPressed
 
 private void tblShowMemberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowMemberKeyPressed
-     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         GetSelectedRow();
     }
-     if (evt.getKeyCode()==KeyEvent.VK_F2) {
-        bntShowMemberAllClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_F5) {
-        bntOKClick() ;
-     }
-     if (evt.getKeyCode()==KeyEvent.VK_ESCAPE) {
-         TMemCode.setText("") ;
-         TMemName.setText("") ;
-         TMemTel.setText("") ;
-         ClearGrid() ;
-         TMemTel.requestFocus();
-     }
-     
-     
+    if (evt.getKeyCode() == KeyEvent.VK_F2) {
+        bntShowMemberAllClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_F5) {
+        bntOKClick();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        TMemCode.setText("");
+        TMemName.setText("");
+        TMemTel.setText("");
+        ClearGrid();
+        TMemTel.requestFocus();
+    }
+
+
 }//GEN-LAST:event_tblShowMemberKeyPressed
 
 private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
-       bntOKClick() ;
+    bntOKClick();
 }//GEN-LAST:event_bntOKActionPerformed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
     TMemTel.requestFocus();
 }//GEN-LAST:event_formWindowActivated
-public void bntOKClick() {
-    GetSelectedRow() ;
-}
-public void GetSelectedRow() {
+    public void bntOKClick() {
+        GetSelectedRow();
+    }
+
+    public void GetSelectedRow() {
         int maxrow;
         int currow = 0;
         String TableSelected = "";
@@ -588,10 +561,10 @@ public void GetSelectedRow() {
                 currow = i;
             }
         }
-        if (maxrow>0) { 
-           TableSelected = tblShowMember.getValueAt(currow, 1).toString();
-           PublicVar.ReturnString = TableSelected;
-           this.dispose();
+        if (maxrow > 0) {
+            TableSelected = tblShowMember.getValueAt(currow, 1).toString();
+            PublicVar.ReturnString = TableSelected;
+            this.dispose();
         }
     }
 

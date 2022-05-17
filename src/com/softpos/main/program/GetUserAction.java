@@ -1,10 +1,10 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PublicVar;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.MySQLConnect;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -275,15 +275,13 @@ public class GetUserAction extends javax.swing.JDialog {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from posuser Where(username= '" + loginname + "') and (password='" + password + "')";
-
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                clearlogin();
-            } else {
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
                 PublicVar.ReturnString = loginname;
                 this.dispose();
+            } else {
+                MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+                clearlogin();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());

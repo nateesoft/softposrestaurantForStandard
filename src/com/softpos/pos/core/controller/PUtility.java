@@ -96,27 +96,26 @@ public class PUtility {
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SqlQuery = "select * from product where pcode='" + TempCode + "'";
-                ResultSet rec = stmt.executeQuery(SqlQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    PName = rec.getString("pdesc");
-                    if (rec.getString("pstock").equals("Y")) {
+                ResultSet rs = stmt.executeQuery(SqlQuery);
+                if(rs.next()){
+                    PName = rs.getString("pdesc");
+                    if (rs.getString("pstock").equals("Y")) {
                         StkProc = true;
                     } else {
                         StkProc = false;
                     }
-                    if (rec.getString("pset").equals("Y")) {
+                    if (rs.getString("pset").equals("Y")) {
                         SetProc = true;
                     } else {
                         SetProc = false;
                     }
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
+                
                 if (StkProc) {
                     Statement stmt2 = mysql.getConnection().createStatement();
-                    String LoadTableFile = "select *from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
+                    String LoadTableFile = "select * from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
                     ResultSet rec2 = stmt2.executeQuery(LoadTableFile);
                     rec2.first();
                     if (rec2.getRow() == 0) {
@@ -211,11 +210,10 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            rec.first();
-            RetVal = rec.getRow() != 0;
-            rec.close();
+            String LoadTableFile = "select * from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -401,13 +399,10 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from product where pcode='" + PublicVar.P_Code + "' and pactive='Y'";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetValue = false;
-            }
-            rec.close();
+            String sql = "select * from product where pcode='" + PublicVar.P_Code + "' and pactive='Y'";
+            ResultSet rs = stmt.executeQuery(sql);
+            RetValue = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -429,13 +424,10 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from pset where pcode='" + XCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TempCode = rec.getString("psubcode");
-                    Double TempQty = rec.getDouble("psubqty") * XQty;
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while(rs.next()){
+                String TempCode = rs.getString("psubcode");
+                    Double TempQty = rs.getDouble("psubqty") * XQty;
                     Double TempAmt = 0.0;
                     String T_Rem = StkRemark;
                     Boolean StkProc = false;
@@ -490,9 +482,8 @@ public class PUtility {
                             prm4.executeUpdate();
                         }
                     }
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -511,16 +502,13 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from balanceset "
+            String sql = "select *from balanceset "
                     + "where r_plucode='" + XCode + "' "
                     + "and r_index='" + r_index + "' ";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TempCode = rec.getString("r_psubcode");
-                    Double TempQty = rec.getDouble("r_setqty") * XQty;
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String TempCode = rs.getString("r_psubcode");
+                    Double TempQty = rs.getDouble("r_setqty") * XQty;
                     Double TempAmt = 0.0;
                     String T_Rem = StkRemark;
                     Boolean StkProc = false;
@@ -578,9 +566,8 @@ public class PUtility {
                             prm4.executeUpdate();
                         }
                     }
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -600,14 +587,11 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from t_saleset where r_plucode='" + XCode + "' and r_index='" + r_index + "'  and r_refno='" + XDocNo + "' ";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TempCode = rec.getString("r_psubcode");
-                    Double TempQty = rec.getDouble("r_setqty") * XQty;
+            String SQLQuery = "select * from t_saleset where r_plucode='" + XCode + "' and r_index='" + r_index + "'  and r_refno='" + XDocNo + "' ";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while(rs.next()){
+                String TempCode = rs.getString("r_psubcode");
+                    Double TempQty = rs.getDouble("r_setqty") * XQty;
                     Double TempAmt = 0.0;
                     String T_Rem = StkRemark;
                     Boolean StkProc = false;
@@ -666,9 +650,8 @@ public class PUtility {
                             prm4.executeUpdate();
                         }
                     }
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -749,13 +732,12 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select *from cupon where cucode=" + "'" + XCode2 + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String SQLQuery = "select * from cupon where cucode=" + "'" + XCode2 + "'";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
+                ReturnVal = rs.getString("reduleDiscount").equals("Y");
+            }else{
                 ReturnVal = false;
-            } else {
-                ReturnVal = rec.getString("reduleDiscount").equals("Y");
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -778,17 +760,16 @@ public class PUtility {
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from billno where b_cashier=" + "'" + TempUser + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                    ReturnVal = i;
-                    break;
-                } else {
-                    if (rec.getString("b_roundclose").equals("Y")) {
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    if (rs.getString("b_roundclose").equals("Y")) {
                     } else {
                         ReturnVal = i;
                         break;
                     }
+                }else{
+                    ReturnVal = i;
+                    break;
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -809,12 +790,11 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from billno where b_cashier=" + "'" + XUser + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
+                ReturnVal = rs.getString("b_roundclose").equals("Y");
+            }else{
                 ReturnVal = false;
-            } else {
-                ReturnVal = rec.getString("b_roundclose").equals("Y");
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -824,7 +804,6 @@ public class PUtility {
         }
         
         return ReturnVal;
-
     }
 
     public static String ConvertReal(String TStr) {
@@ -1159,16 +1138,14 @@ public class PUtility {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From PosConfigSetup ;
             String SQLQuery = "select * from branch ";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                showError("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
-            } else {
-
-                int Refbillno = rec.getInt("Chargeno1");
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
+                int Refbillno = rs.getInt("Chargeno1");
                 StrRefBillNo = Integer.toString(Refbillno);
+            }else{
+                showError("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
             }
-            rec.close();
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e.getMessage());
@@ -1196,26 +1173,25 @@ public class PUtility {
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from mpointtype where ptcode= '" + ProCode + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    PublicVar.Procode = rs.getString("ptcode");
+                    PublicVar.PDate1 = rs.getDate("ptstartdate");
+                    PublicVar.PDate2 = rs.getDate("ptenddate");
+                    PublicVar.PSTRDay = rs.getString("ptstrday");
+                    PublicVar.PTime1S = rs.getString("ptstarttime1");
+                    PublicVar.PTime1E = rs.getString("ptendtime1");
+                    PublicVar.PDisc1 = rs.getDouble("ptrate1");
+                    PublicVar.PTime2S = rs.getString("ptstarttime2");
+                    PublicVar.PTime2E = rs.getString("ptendtime2");
+                    PublicVar.PDisc2 = rs.getDouble("ptrate2");
+                    PublicVar.PTime3S = rs.getString("ptstarttime3");
+                    PublicVar.PTime3E = rs.getString("ptendtime3");
+                    PublicVar.PDisc3 = rs.getDouble("ptrate3");
+                }else{
                     MSG.WAR("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
-                } else {
-                    PublicVar.Procode = rec.getString("ptcode");
-                    PublicVar.PDate1 = rec.getDate("ptstartdate");
-                    PublicVar.PDate2 = rec.getDate("ptenddate");
-                    PublicVar.PSTRDay = rec.getString("ptstrday");
-                    PublicVar.PTime1S = rec.getString("ptstarttime1");
-                    PublicVar.PTime1E = rec.getString("ptendtime1");
-                    PublicVar.PDisc1 = rec.getDouble("ptrate1");
-                    PublicVar.PTime2S = rec.getString("ptstarttime2");
-                    PublicVar.PTime2E = rec.getString("ptendtime2");
-                    PublicVar.PDisc2 = rec.getDouble("ptrate2");
-                    PublicVar.PTime3S = rec.getString("ptstarttime3");
-                    PublicVar.PTime3E = rec.getString("ptendtime3");
-                    PublicVar.PDisc3 = rec.getDouble("ptrate3");
                 }
-                rec.close();
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e.getMessage());
@@ -1254,59 +1230,58 @@ public class PUtility {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From Promotion ;
             String SQLQuery = "select * from protab where procode=" + "'" + XPro1 + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                ReturnVal = false;
-            } else {
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
                 String fixbranch = "";
                 if ((fixbranch.length() == 0) || (fixbranch.indexOf(PublicVar.Branch_Code) > 0)) {
-                    PublicVar.Procode = rec.getString("procode");
-                    PublicVar.ProDesc = rec.getString("prodesc");
-                    PublicVar.PDate1 = rec.getDate("pdate1");
-                    PublicVar.PDate2 = rec.getDate("pdate2");
-                    PublicVar.PSTRDay = rec.getString("pstrday");
-                    PublicVar.PTime1S = rec.getString("ptime1s");
-                    PublicVar.PTime1E = rec.getString("ptime1e");
-                    PublicVar.PDisc1 = rec.getDouble("pdisc1");
-                    PublicVar.PSpDisc1 = rec.getDouble("pspdisc1");
-                    PublicVar.PTS1 = rec.getString("pts1");
-                    PublicVar.PTime2S = rec.getString("ptime2s");
-                    PublicVar.PTime2E = rec.getString("ptime2e");
-                    PublicVar.PDisc2 = rec.getDouble("pdisc2");
-                    PublicVar.PSpDisc2 = rec.getDouble("pspdisc2");
-                    PublicVar.PTS2 = rec.getString("pts2");
-                    PublicVar.PTime3S = rec.getString("ptime3s");
-                    PublicVar.PTime3E = rec.getString("ptime3e");
-                    PublicVar.PDisc3 = rec.getDouble("pdisc3");
-                    PublicVar.PSpDisc3 = rec.getDouble("pspdisc3");
-                    PublicVar.PTS3 = rec.getString("pts3");
-                    PublicVar.PType = rec.getString("ptype");
-                    PublicVar.PSale1 = rec.getInt("psale1");
-                    PublicVar.PFree1 = rec.getInt("pfree1");
-                    PublicVar.PSum1 = rec.getInt("psum1");
-                    PublicVar.PDiscFree1 = rec.getDouble("pdiscfree1");
-                    PublicVar.PSale2 = rec.getInt("psale2");
-                    PublicVar.PFree2 = rec.getInt("pfree2");
-                    PublicVar.PSum2 = rec.getInt("psum2");
-                    PublicVar.PDiscFree2 = rec.getDouble("pdiscfree2");
-                    PublicVar.PSale3 = rec.getInt("psale3");
-                    PublicVar.PFree3 = rec.getInt("pfree3");
-                    PublicVar.PSum3 = rec.getInt("psum3");
-                    PublicVar.PDiscFree3 = rec.getDouble("pdiscfree3");
-                    PublicVar.PSale41 = rec.getInt("psale41");
-                    PublicVar.PSale42 = rec.getInt("psale42");
-                    PublicVar.PSale43 = rec.getInt("psale43");
-                    PublicVar.PFree41 = rec.getInt("pfree41");
-                    PublicVar.PFree42 = rec.getInt("pfree42");
-                    PublicVar.PFree43 = rec.getInt("pfree43");
-                    PublicVar.fixbranch = rec.getString("fixbranch");
+                    PublicVar.Procode = rs.getString("procode");
+                    PublicVar.ProDesc = rs.getString("prodesc");
+                    PublicVar.PDate1 = rs.getDate("pdate1");
+                    PublicVar.PDate2 = rs.getDate("pdate2");
+                    PublicVar.PSTRDay = rs.getString("pstrday");
+                    PublicVar.PTime1S = rs.getString("ptime1s");
+                    PublicVar.PTime1E = rs.getString("ptime1e");
+                    PublicVar.PDisc1 = rs.getDouble("pdisc1");
+                    PublicVar.PSpDisc1 = rs.getDouble("pspdisc1");
+                    PublicVar.PTS1 = rs.getString("pts1");
+                    PublicVar.PTime2S = rs.getString("ptime2s");
+                    PublicVar.PTime2E = rs.getString("ptime2e");
+                    PublicVar.PDisc2 = rs.getDouble("pdisc2");
+                    PublicVar.PSpDisc2 = rs.getDouble("pspdisc2");
+                    PublicVar.PTS2 = rs.getString("pts2");
+                    PublicVar.PTime3S = rs.getString("ptime3s");
+                    PublicVar.PTime3E = rs.getString("ptime3e");
+                    PublicVar.PDisc3 = rs.getDouble("pdisc3");
+                    PublicVar.PSpDisc3 = rs.getDouble("pspdisc3");
+                    PublicVar.PTS3 = rs.getString("pts3");
+                    PublicVar.PType = rs.getString("ptype");
+                    PublicVar.PSale1 = rs.getInt("psale1");
+                    PublicVar.PFree1 = rs.getInt("pfree1");
+                    PublicVar.PSum1 = rs.getInt("psum1");
+                    PublicVar.PDiscFree1 = rs.getDouble("pdiscfree1");
+                    PublicVar.PSale2 = rs.getInt("psale2");
+                    PublicVar.PFree2 = rs.getInt("pfree2");
+                    PublicVar.PSum2 = rs.getInt("psum2");
+                    PublicVar.PDiscFree2 = rs.getDouble("pdiscfree2");
+                    PublicVar.PSale3 = rs.getInt("psale3");
+                    PublicVar.PFree3 = rs.getInt("pfree3");
+                    PublicVar.PSum3 = rs.getInt("psum3");
+                    PublicVar.PDiscFree3 = rs.getDouble("pdiscfree3");
+                    PublicVar.PSale41 = rs.getInt("psale41");
+                    PublicVar.PSale42 = rs.getInt("psale42");
+                    PublicVar.PSale43 = rs.getInt("psale43");
+                    PublicVar.PFree41 = rs.getInt("pfree41");
+                    PublicVar.PFree42 = rs.getInt("pfree42");
+                    PublicVar.PFree43 = rs.getInt("pfree43");
+                    PublicVar.fixbranch = rs.getString("fixbranch");
                     ReturnVal = true;
                 } else {
                     ReturnVal = false;
                 }
+            }else{
+                ReturnVal = false;
             }
-            rec.close();
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e.getMessage());
@@ -1430,15 +1405,14 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from groupfile where groupcode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String UserGroupFile = "select * from groupfile where groupcode='" + TCode + "'";
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("groupname"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("groupname"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1457,14 +1431,13 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select * from product where pcode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("pdesc"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1484,14 +1457,13 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select * from product where pcode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("punit1"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("punit1"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1509,29 +1481,26 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from product where pcode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                ReturnValues = 0.0;
-            } else {
+            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
                 if (Etd.equals("E")) {
-                    ReturnValues = rec.getDouble("pprice11");
+                    ReturnValues = rs.getDouble("pprice11");
                 }
                 if (Etd.equals("T")) {
-                    ReturnValues = rec.getDouble("pprice12");
+                    ReturnValues = rs.getDouble("pprice12");
                 }
                 if (Etd.equals("D")) {
-                    ReturnValues = rec.getDouble("pprice13");
+                    ReturnValues = rs.getDouble("pprice13");
                 }
                 if (Etd.equals("P")) {
-                    ReturnValues = rec.getDouble("pprice14");
+                    ReturnValues = rs.getDouble("pprice14");
                 }
                 if (Etd.equals("W")) {
-                    ReturnValues = rec.getDouble("pprice15");
+                    ReturnValues = rs.getDouble("pprice15");
                 }
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1549,15 +1518,14 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from creditfile where crcode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String UserGroupFile = "select * from creditfile where crcode='" + TCode + "'";
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("crname"));
+            }else {
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("crname"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1576,14 +1544,13 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select * from cupon where cucode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("cuname"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1602,14 +1569,13 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select * from custfile where sp_code='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("sp_desc"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("sp_desc"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1632,15 +1598,14 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from protab where procode='" + TCode + "'";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String UserGroupFile = "select * from protab where procode='" + TCode + "'";
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if(rs.next()){
+                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("prodesc"));
+            }else{
                 ReturnValues = "*****";
-            } else {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rec.getString("prodesc"));
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1658,10 +1623,9 @@ public class PUtility {
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
-                String SeekPromotion2 = "select *from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "')";
-                try (ResultSet rec = stmt.executeQuery(SeekPromotion2)) {
-                    rec.first();
-                    foundData = rec.getRow() != 0;
+                String SeekPromotion2 = "select * from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "')";
+                try (ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
+                    foundData = rs.next();
                 }
             }
         } catch (SQLException e) {

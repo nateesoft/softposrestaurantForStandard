@@ -237,16 +237,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rec.getDouble("amount");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                                SumAmt = SumAmt + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -266,17 +262,13 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                CntBill++;
-                                SumCash = SumCash + rec.getDouble("cash");
-                                SumCupon = SumCupon + rec.getDouble("cupon");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            CntBill++;
+                                SumCash = SumCash + rs.getDouble("cash");
+                                SumCupon = SumCupon + rs.getDouble("cupon");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -290,16 +282,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -318,16 +305,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat='V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
