@@ -3,6 +3,7 @@ package com.softpos.pos.core.controller;
 import database.ConfigFile;
 import database.MySQLConnect;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import javax.mail.MessagingException;
 import printReport.PrintDriver;
 import util.AppLogUtil;
 import util.DateConvert;
@@ -33,8 +35,6 @@ public class SendTerminalReportAuto {
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     public String filePath = "";
     public String fileName = "";
-    
-    MySQLConnect c = new MySQLConnect();
     
     public void ProcessProc() throws FileNotFoundException, UnsupportedEncodingException {
         POSHW = POSHWSetup.Bean("001");
@@ -320,7 +320,7 @@ public class SendTerminalReportAuto {
         double AVG_CCE = 0.00;
         double AVG_CCT = 0.00;
         double AVG_CCD = 0.00;
-        if (list1 != null && list1.size() > 0) {
+        if (list1 != null && !list1.isEmpty()) {
             countCCE = Double.parseDouble(list1.get(0)[2].toString());
             nettotalE = Double.parseDouble(list1.get(0)[5].toString());
             
@@ -361,8 +361,6 @@ public class SendTerminalReportAuto {
             if (nettotalD == 0.00 & countCCD == 0) {
                 AVG_CCD = 0.00;
             }
-        } else {
-            
         }
         double totalDiscount;
         totalDiscount = frec.Vip_Disc + frec.Fast_Disc + frec.Emp_Disc
@@ -438,23 +436,23 @@ public class SendTerminalReportAuto {
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13)) + "_";
         }
         if (frec.Cupon_DiscCnt > 0) {
-//            MySQLConnect c = new MySQLConnect();
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
                         + "where s_date between'" + dc.GetCurrentDate() + "' "
                         + "and '" + dc.GetCurrentDate() + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
                     t += ("align=left><font face=Angsana New size=1>" + "Special Coupon" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(quan), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(cuamt), 13)) + "_";
                 }
                 rs.close();
-            } catch (Exception e) {
-                c.close();
+            } catch (SQLException e) {
+                mysql.close();
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================") + "_";
@@ -856,22 +854,21 @@ public class SendTerminalReportAuto {
     }
     
     public void beforeProcess() {
+        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             DateConvert dc1 = new DateConvert();
-            String timeNow = dc1.GetCurrentTime();
-//            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig; ";
-            ResultSet rsConfig = c.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
+            ResultSet rsConfig = mysql.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
             if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
                 String TimeSend = rsConfig.getString("TimeSend1");
 //                if (TranEmailAuto.equals("Y") && timeNow.equals(TimeSend)) {
                     Thread.sleep(3600 * 3);
                     try {
-                        c.open();
                         String sqlAddress = "select address from company";
-                        ResultSet rsAddress = c.getConnection().createStatement().executeQuery(sqlAddress);
+                        ResultSet rsAddress = mysql.getConnection().createStatement().executeQuery(sqlAddress);
                         if (rsAddress.next()) {
                             String data[] = rsAddress.getString("Address").split("/");
                             String username = data[0];
@@ -898,14 +895,15 @@ public class SendTerminalReportAuto {
                             System.exit(0);
                         }
                         rsAddress.close();
-                    } catch (Exception e) {
+                    } catch (IOException | InterruptedException | SQLException | MessagingException e) {
                         MSG.ERR(e.getMessage());
                     }
             }
             rsConfig.close();
-            c.close();
-        } catch (Exception e) {
+        } catch (InterruptedException | SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
     

@@ -4,7 +4,6 @@ import database.MySQLConnect;
 import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +25,6 @@ import util.MSG;
 
 public final class ViewReport {
 
-    private Statement stmt;
     private DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     private SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -92,7 +90,7 @@ public final class ViewReport {
                 String sqlBranch = "SELECT * FROM branch ";
                 String branchName = "";
                 try {
-                    rs = stmt.executeQuery(sqlBranch);
+                    rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
                     if (rs != null) {
                         if (rs.next()) {
                             branchName = rs.getString("Name");
@@ -199,9 +197,10 @@ public final class ViewReport {
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-
-            rs1 = stmt.executeQuery(sqlCompany);
+            mysql.open();
+            rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
             if (rs1 != null) {
                 if (rs1.next()) {
                     comName = rs1.getString("c.Name");
@@ -240,7 +239,7 @@ public final class ViewReport {
         String amount = "";
         String ramark = "";
         try {
-            rs = stmt.executeQuery(sql);
+            rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs != null) {
                 if (rs.next()) {
                     onDate = rs.getString("InvDate");
@@ -275,7 +274,7 @@ public final class ViewReport {
             String sqlBranch = "SELECT * FROM branch ";
             String branchName = "";
             try {
-                rs = stmt.executeQuery(sqlBranch);
+                rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
                 if (rs != null) {
                     if (rs.next()) {
                         branchName = rs.getString("Name");
@@ -333,9 +332,6 @@ public final class ViewReport {
                 parameters.put("amount", doubleFmt.format(amt));
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/debtVat.jasper"));
 
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
-                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
                 JasperViewer v = new JasperViewer(jasperPrint, false);
                 JDialog j = new JDialog(new JFrame(), true);
@@ -352,20 +348,22 @@ public final class ViewReport {
         } else {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
         }
+        
+        mysql.close();
     }
 
     public void printReportPVatDaily(String str, String end) {
-        ResultSet rs;
         String date1 = "";
         String date2 = "";
         String header = "รายงานการพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน ประจำวันที่ " + str + " - " + end;
         String sqlBranch = "SELECT * FROM branch ";
         String branchName = "";
+        
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
-                rs = stmt.executeQuery(sqlBranch);
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
                 if (rs != null) {
                     if (rs.next()) {
                         branchName = rs.getString("Name");
@@ -418,9 +416,10 @@ public final class ViewReport {
             } catch (HeadlessException | JRException e) {
                 MSG.ERR(e.getMessage());
             }
-            mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(e.toString());
+        } finally {
+            mysql.close();
         }
 
     }
@@ -432,24 +431,28 @@ public final class ViewReport {
         String header = "รายงานการพิมพ์ใบกำกับภาษี / ใบแจ้งหนี้ ประจำวันที่ " + str + " - " + end;
         String sqlBranch = "SELECT * FROM branch ";
         String branchName = "";
+        
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            rs = stmt.executeQuery(sqlBranch);
+            rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
             if (rs != null) {
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
-        Date dates = new Date();
+        
+        Date dates;
         try {
             dates = outFmt.parse(str);
             date1 = inFmt.format(dates);
 
             dates = outFmt.parse(end);
             date2 = inFmt.format(dates);
-        } catch (Exception e) {
+        } catch (ParseException e) {
         }
+        
         try {
             Map parameters = new HashMap();
             parameters.put("header", header);
@@ -464,11 +467,6 @@ public final class ViewReport {
                 MSG.ERR(null, e.getMessage());
             }
 
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
             int pageSize = jasperPrint.getPages().size();
             if (pageSize > 0) {
@@ -482,12 +480,12 @@ public final class ViewReport {
                 v.setTitle("Report...");
 
             } else {
-                MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
+                MSG.WAR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
             }
-
-            mysql.close();
         } catch (HeadlessException | JRException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
         }
 
     }

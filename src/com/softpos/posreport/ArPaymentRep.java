@@ -336,11 +336,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int bill = 0;
         int billVoid = 0;
         double billVoidAmt = 0.00;
+        
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            mysql.open();
             String sql = "select * from billar order by Ref_No,fat;";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -405,11 +406,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 t += "colspan=2 align=left><font face=Angsana New size=1>" + "เครดิต" + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + DecFmt.format(credit) + "_";
                 t += "colspan=3 align=right><font face=Angsana New size=1>" + "รับชำระ Ar." + TAB + bill + Space + "บิล" + "_";
             }
-            c.close();
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.NOTICE(e.toString());
+        } finally {
+            mysql.close();
         }
+        
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
         for (String data : strs) {

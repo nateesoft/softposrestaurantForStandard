@@ -50,25 +50,12 @@ public class PrintDriver {
 
     public PrintDriver() {
         try {
-            // Set System L&F
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-//            MSG.ERR(e.getMessage());
-
-        } catch (IllegalAccessException e) {
-//            MSG.ERR(e.getMessage());
-
-        } catch (InstantiationException e) {
-//            MSG.ERR(e.getMessage());
-
-        } catch (UnsupportedLookAndFeelException e) {
-//            MSG.ERR(e.getMessage());
-
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
     }
 
     public void setResolution(float w, float h) {
-
         this.width = w;
         this.height = h;
     }
@@ -93,13 +80,9 @@ public class PrintDriver {
 
     public void addTextIFont(String str) {
         textAll += "<tr><td " + str + "</td></tr>";
-//        textAll += "<tr><td " + str + "</font></td></tr>";
         textNormal += str + "\n";
     }
 
-//public void addTextIFont(String str) {
-//    textNormal += str + "\n";//    textAll += "<tr><td style='word-wrap: break-word; width: \"100px\"' " + str + "</font></td></tr>";
-//}
     public void addTextLn(String str, String size) {
         textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font><br>";
         textNormal += str + "\n";
@@ -113,7 +96,6 @@ public class PrintDriver {
         String[] temps = new String[]{"", "", ""};
         System.arraycopy(datas, 0, temps, 0, datas.length);
         textAll += "<tr><td><font face=" + fontName + " size=0>" + str + "</font></td></tr>";
-//        textAll += str + "\n";
         textNormal += str;
     }
 
@@ -169,7 +151,7 @@ public class PrintDriver {
                         + "set r_kicprint='P' "
                         + "where r_index='" + bean.getR_Index() + "' "
                         + "and r_table='" + bean.getR_Table() + "'";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try ( Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
                 }
             } catch (SQLException e) {
@@ -195,7 +177,10 @@ public class PrintDriver {
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-            editor.print(null, null, false, getPrinter(), attr, false);
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            }
         } catch (PrinterException ex) {
             MSG.ERR(ex.getMessage());
         }
@@ -246,7 +231,12 @@ public class PrintDriver {
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-            editor.print(null, null, false, getPrinterKitchen(), attr, false);
+            PrintService printService = getPrinterKitchen();
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.htmlFile(text);
+            }
         } catch (PrinterException ex) {
             MSG.ERR("printHTMLKitChen:" + ex.getMessage());
         }
@@ -264,7 +254,12 @@ public class PrintDriver {
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-            editor.print(null, null, false, getPrinterKitchen(), attr, false);
+            PrintService printService = getPrinterKitchen();
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.htmlFile(text);
+            }
         } catch (PrinterException ex) {
             MSG.ERR(ex.getMessage());
         }
@@ -279,7 +274,10 @@ public class PrintDriver {
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-            textArea.print(null, null, false, getPrinter(), attr, false);
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                textArea.print(null, null, false, printService, attr, false);
+            }
         } catch (PrinterException ex) {
             MSG.ERR(ex.getMessage());
         }
@@ -294,8 +292,10 @@ public class PrintDriver {
 
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
-
-            textArea.print(null, null, false, getPrinter(), attr, false);
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                textArea.print(null, null, false, printService, attr, false);
+            }
         } catch (PrinterException ex) {
             MSG.ERR(ex.getMessage());
         }
@@ -312,7 +312,11 @@ public class PrintDriver {
             }
         }
 
-        return printService[0];
+        if (printService.length > 0) {
+            return printService[0];
+        } else {
+            return null;
+        }
     }
 
     private PrintService getPrinterKitchen() {
@@ -324,7 +328,11 @@ public class PrintDriver {
             }
         }
 
-        return printService[0];
+        if (printService.length > 0) {
+            return printService[0];
+        }
+
+        return null;
     }
 
     public void close() {
@@ -332,13 +340,7 @@ public class PrintDriver {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
                     "Norasi", java.awt.Font.PLAIN, 14)));
-        } catch (ClassNotFoundException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (InstantiationException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (IllegalAccessException e) {
-            MSG.ERR(null, e.getMessage());
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             MSG.ERR(null, e.getMessage());
         }
     }

@@ -2872,44 +2872,41 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         try {
             String printerName;
             String[] kicMaster = BranchControl.getKicData20();
-            // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-            String sqlShowKic = "select r_kic,r_etd from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "group by r_kic,r_etd "
-                    + "order by r_kic,r_etd";
+
             /**
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
-            String sqlGetSaveOrder = "select SaveOrder from branch";
+
+            BranchBean branchBean = BranchControl.getData();
+            String config = branchBean.getSaveOrder();
+            if (!config.equals("N")) {
+                PublicVar.Branch_Saveorder = config;
+            }
 
             try {
-                ResultSet rsGetSaveOrderConfig = mysql.getConnection().createStatement().executeQuery(sqlGetSaveOrder);
-                if (rsGetSaveOrderConfig.next()) {
-                    String config = rsGetSaveOrderConfig.getString("SaveOrder");
-                    if (!config.equals("N")) {
-                        PublicVar.Branch_Saveorder = config;
+                // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+                String sqlShowKic = "select r_kic,r_etd from balance "
+                        + "where r_table='" + tableNo + "' "
+                        + "and R_PrintOK='Y' "
+                        + "and R_KicPrint<>'P' "
+                        + "and R_Kic<>'' "
+                        + "group by r_kic,r_etd "
+                        + "order by r_kic,r_etd";
+                try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlShowKic)) {
+                    if (rs.next()) {
+                        if (!PublicVar.Branch_Saveorder.equals("N")) {
+                            printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+                        }
                     }
                 }
-
-                Statement stmt1 = mysql.getConnection().createStatement();
-                ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
-
-                ResultSet rsKicSaveOrder = mysql.getConnection().createStatement().executeQuery(sqlShowKic);
-                if (rsKicSaveOrder.next()) {
-                    if (!PublicVar.Branch_Saveorder.equals("N")) {
-                        printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-                    }
-                }
-                rsKicSaveOrder.close();
 
                 //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
-                while (rsKic.next()) {
-                    String rKic = rsKic.getString("r_kic");
+                Statement stmt = mysql.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sqlShowKic);
+                while (rs.next()) {
+                    String rKic = rs.getString("r_kic");
                     if (!rKic.equals("")) {
                         try {
                             int iKic = Integer.parseInt(rKic);
@@ -2965,14 +2962,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         rs2.close();
                                         stmt2.close();
                                     } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-
                                         if (printerForm.equals("3")) {
-
                                             if (Value.printkic) {
-//                                                printSimpleForm.KIC_FORM_3("", printerName, txtTable.getText(), iKic);
-                                                String retd = rsKic.getString("r_etd");
+                                                String retd = rs.getString("r_etd");
                                                 printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "");
-//                                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
                                                 String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
                                                 if (CheckBillBeforeCash.equals("Y")) {
                                                     printBillVoidCheck();
@@ -3019,16 +3012,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             + "and r_kicprint<>'P' "
                             + "and r_printOk='Y' "
                             + "and r_kic<>'';";
-                    mysql.open();
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    mysql.close();
+                    Statement stmt2 = mysql.getConnection().createStatement();
+                    stmt2.executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
-                rsKic.close();
-                stmt1.close();
+                rs.close();
+                stmt.close();
 
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());

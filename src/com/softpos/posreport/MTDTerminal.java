@@ -998,23 +998,23 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         prn.print(PUtility.DataFullR("Discount Item                ", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13));
                     }
                     if (frec.Cupon_DiscCnt > 0) {
-                        MySQLConnect c = new MySQLConnect();
-                        c.open();
+                        MySQLConnect mysql = new MySQLConnect();
+                        mysql.open();
                         try {
                             String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                                     + "from s_cupon "
                                     + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                                     + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                                     + "and cuquan<>'0' and cuamt<>'0'";
-                            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+                            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                             while (rs.next()) {
                                 double cuamt = rs.getDouble("cuamt");
                                 double quan = rs.getDouble("cuquan");
                                 prn.print(PUtility.DataFullR("Special  Coupon              ", 20) + PUtility.DataFull(IntFmt.format(quan), 6) + PUtility.DataFull(DecFmt.format(cuamt), 13));
                             }
 
-                        } catch (Exception e) {
-                            c.close();
+                        } catch (SQLException e) {
+                            mysql.close();
                         }
                     }
                     //prn.print(PUtility.DataFullR("หักคืนเงินมัดจำ            ", 20) + PUtility.DataFull(IntFmt.format(frec.EarnestCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Earnest), 13));
@@ -1276,28 +1276,26 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFullR(DecFmt.format(frec.Item_Disc), 13)) + "_";
         }
         if (frec.Cupon_DiscCnt > 0) {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
                         + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                         + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
                     t += ("align=left><font face=Angsana New size=1>" + "Special Coupon" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(quan), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(cuamt), 13)) + "_";
                 }
 
-            } catch (Exception e) {
-                
-                c.close();
+            } catch (SQLException e) {
+                mysql.close();
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
-//        t += ("colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Gross-Sales", 26) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 13)) + "_";
         t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Gross-Sales" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Dept_Sum - totalDiscount) + "_");
 
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
@@ -1404,6 +1402,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += ("align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFullSpace(DecFmt.format(AVG_CCE), 13) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCD)) + "_";
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-----------------------------------------------") + "_";
         t = changeReportLanguage(t);
+        
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 

@@ -1,6 +1,13 @@
 package printReport;
 
 import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.TableFileBean;
+import database.ConfigFile;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -17,16 +24,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.print.PrintService;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.BranchBean;
-import database.ConfigFile;
-import java.util.List;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
 
@@ -40,7 +41,6 @@ public class PrintSimpleForm {
     private String TAB2 = TAB + TAB;
     private String ETD = "";
     private String CustomerIn = "";
-    MySQLConnect mysql = new MySQLConnect();
 
     public String DataFullR(String Str, int Len) {
         String ReturnStr;
@@ -243,7 +243,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -256,7 +256,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -280,10 +280,8 @@ public class PrintSimpleForm {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
         }
-        mysql.open();
+
         ItemVoidPrint(printerName, tableNo, PCode, "T");
         try {
             String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
@@ -431,7 +429,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -443,8 +441,6 @@ public class PrintSimpleForm {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
         }
 
         PrintDriver pd2 = new PrintDriver();
@@ -460,7 +456,6 @@ public class PrintSimpleForm {
 
         pd2.printHTMLKitChen();
 
-        mysql.open();
         ItemVoidPrint(printerName, tableNo, PCode, "D");
         try {
             String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
@@ -525,7 +520,6 @@ public class PrintSimpleForm {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -601,7 +595,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -813,7 +807,7 @@ public class PrintSimpleForm {
                                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                                             stmt1.executeUpdate(sqlK);
                                         }
                                     }
@@ -1027,7 +1021,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -1440,7 +1434,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -1487,32 +1481,30 @@ public class PrintSimpleForm {
         //__________________
         //28/04/2014 14:15 001/
         DateConvert dc = new DateConvert();
-        String t = "";
-        String t1 = "";
-        String tableHead = "";
-        String tableFooter = "";
+        String textToPrint = "";
+        String textToPrint2 = "";
+        String tableHead;
 
         BalanceBean bean = new BalanceBean();
-        PrintService[] ps = PrinterJob.lookupPrintServices();
-        try {
-            for (PrintService p : ps) {
-                String PrinterName = p.getName();
-                if (PrinterName.equalsIgnoreCase(printerName)) {
-                    break;
-                }
+        PrintService[] printerService = PrinterJob.lookupPrintServices();
+        for (PrintService p : printerService) {
+            String PrinterName = p.getName();
+            if (PrinterName.equalsIgnoreCase(printerName)) {
+                break;
             }
-        } catch (Exception e) {
-            System.out.println(e.toString());
         }
+
         tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
-        mysql.open();
+
         TableFileControl tCon = new TableFileControl();
         TableFileBean tBean = tCon.getData(tableNo);
+
         ArrayList<BalanceBean> listE = new ArrayList<>();
         ArrayList<BalanceBean> listT = new ArrayList<>();
         ArrayList<BalanceBean> listD = new ArrayList<>();
         ArrayList<BalanceBean> listP = new ArrayList<>();
         ArrayList<BalanceBean> listW = new ArrayList<>();
+
         if (tBean.getTPause().equals("Y")) {
             String sqlNovoid = "select  R_Void,R_Index, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "from balance b "
@@ -1522,12 +1514,16 @@ public class PrintSimpleForm {
                     + "and R_ETD='" + RETD + "' "
                     + "and R_Void<>'V' "
                     + "and R_Kic='" + R_Kic + "' "
-                    + "group by r_etd,r_kic,r_pname,r_Opt1,r_Opt2,r_Opt3,r_Opt4,r_Opt5,r_Opt6,r_Opt7,r_Opt8";
+                    + "group by R_Void,R_Index, R_PluCode, R_PName, "
+                    + "R_Quan,R_Price, b.Macno,R_Date, R_Time,"
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
+                    + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic";
             //loop Novoid
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sqlNovoid);
-
                 while (rs.next()) {
                     bean = new BalanceBean();
                     bean.setR_ETD(rs.getString("R_ETD"));
@@ -1564,268 +1560,268 @@ public class PrintSimpleForm {
                         listW.add(bean);
                     }
                 }
-                if (listE.size() > 0) {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ทานในร้าน ***") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listE.isEmpty()) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ทานในร้าน ***") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     for (int i = 0; i < listE.size(); i++) {
                         if (i == listE.size()) {
                             break;
                         } else {
-                            t += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listE.get(i).getR_Quan()) + Space + (listE.get(i).getR_PName()) + "_";
-
+                            textToPrint += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listE.get(i).getR_Quan()) + Space + (listE.get(i).getR_PName()) + "_";
                             if (!listE.get(i).getR_Opt1().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt1()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt1()) + "_";
                             }
                             if (!listE.get(i).getR_Opt2().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt2()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt2()) + "_";
                             }
                             if (!listE.get(i).getR_Opt3().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt3()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt3()) + "_";
                             }
                             if (!listE.get(i).getR_Opt4().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt4()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt4()) + "_";
                             }
                             if (!listE.get(i).getR_Opt5().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt5()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt5()) + "_";
                             }
                             if (!listE.get(i).getR_Opt6().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt6()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt6()) + "_";
                             }
                             if (!listE.get(i).getR_Opt7().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt7()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt7()) + "_";
                             }
                             if (!listE.get(i).getR_Opt8().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt8()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listE.get(i).getR_Opt8()) + "_";
                             }
                         }
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
 
                 }
-                if (listT.size() > 0) {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listT.isEmpty()) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ห่อกลับ ***") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ห่อกลับ ***") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     for (int i = 0; i < listT.size(); i++) {
                         if (i == listT.size()) {
                             break;
                         } else {
-                            t += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listT.get(i).getR_Quan()) + Space + (listT.get(i).getR_PName()) + "_";
+                            textToPrint += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listT.get(i).getR_Quan()) + Space + (listT.get(i).getR_PName()) + "_";
                             if (!listT.get(i).getR_Opt1().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt1()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt1()) + "_";
                             }
                             if (!listT.get(i).getR_Opt2().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt2()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt2()) + "_";
                             }
                             if (!listT.get(i).getR_Opt3().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt3()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt3()) + "_";
                             }
                             if (!listT.get(i).getR_Opt4().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt4()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt4()) + "_";
                             }
                             if (!listT.get(i).getR_Opt5().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt5()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt5()) + "_";
                             }
                             if (!listT.get(i).getR_Opt6().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt6()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt6()) + "_";
                             }
                             if (!listT.get(i).getR_Opt7().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt7()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt7()) + "_";
                             }
                             if (!listT.get(i).getR_Opt8().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt8()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listT.get(i).getR_Opt8()) + "_";
                             }
                         }
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listD.size() > 0) {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listD.isEmpty()) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ส่งถึงบ้าน ***") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ส่งถึงบ้าน ***") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listD.size(); i++) {
                         if (i == listD.size()) {
                             break;
                         } else {
-                            t += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listD.get(i).getR_Quan()) + Space + (listD.get(i).getR_PName()) + "_";
+                            textToPrint += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listD.get(i).getR_Quan()) + Space + (listD.get(i).getR_PName()) + "_";
                             if (!listD.get(i).getR_Opt1().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt1()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt1()) + "_";
                             }
                             if (!listD.get(i).getR_Opt2().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt2()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt2()) + "_";
                             }
                             if (!listD.get(i).getR_Opt3().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt3()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt3()) + "_";
                             }
                             if (!listD.get(i).getR_Opt4().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt4()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt4()) + "_";
                             }
                             if (!listD.get(i).getR_Opt5().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt5()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt5()) + "_";
                             }
                             if (!listD.get(i).getR_Opt6().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt6()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt6()) + "_";
                             }
                             if (!listD.get(i).getR_Opt7().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt7()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt7()) + "_";
                             }
                             if (!listD.get(i).getR_Opt8().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt8()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listD.get(i).getR_Opt8()) + "_";
                             }
                         }
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listP.size() > 0) {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listP.isEmpty()) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ปิ่นโต ***") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ปิ่นโต ***") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listP.size(); i++) {
                         if (i == listP.size()) {
                             break;
                         } else {
-                            t += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listP.get(i).getR_Quan()) + Space + (listP.get(i).getR_PName()) + "_";
+                            textToPrint += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listP.get(i).getR_Quan()) + Space + (listP.get(i).getR_PName()) + "_";
                             if (!listP.get(i).getR_Opt1().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt1()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt1()) + "_";
                             }
                             if (!listP.get(i).getR_Opt2().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt2()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt2()) + "_";
                             }
                             if (!listP.get(i).getR_Opt3().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt3()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt3()) + "_";
                             }
                             if (!listP.get(i).getR_Opt4().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt4()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt4()) + "_";
                             }
                             if (!listP.get(i).getR_Opt5().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt5()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt5()) + "_";
                             }
                             if (!listP.get(i).getR_Opt6().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt6()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt6()) + "_";
                             }
                             if (!listP.get(i).getR_Opt7().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt7()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt7()) + "_";
                             }
                             if (!listP.get(i).getR_Opt8().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt8()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listP.get(i).getR_Opt8()) + "_";
                             }
                         }
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listW.size() > 0) {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listW.isEmpty()) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ค้าส่ง ***") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ค้าส่ง ***") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listW.size(); i++) {
                         if (i == listW.size()) {
                             break;
                         } else {
-                            t += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listW.get(i).getR_Quan()) + Space + (listW.get(i).getR_PName()) + "_";
+                            textToPrint += "colspan=3 align=left><font face=Angsana New size=4>" + inf.format(listW.get(i).getR_Quan()) + Space + (listW.get(i).getR_PName()) + "_";
                             if (!listW.get(i).getR_Opt1().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt1()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt1()) + "_";
                             }
                             if (!listW.get(i).getR_Opt2().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt2()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt2()) + "_";
                             }
                             if (!listW.get(i).getR_Opt3().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt3()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt3()) + "_";
                             }
                             if (!listW.get(i).getR_Opt4().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt4()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt4()) + "_";
                             }
                             if (!listW.get(i).getR_Opt5().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt5()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt5()) + "_";
                             }
                             if (!listW.get(i).getR_Opt6().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt6()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt6()) + "_";
                             }
                             if (!listW.get(i).getR_Opt7().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt7()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt7()) + "_";
                             }
                             if (!listW.get(i).getR_Opt8().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt8()) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listW.get(i).getR_Opt8()) + "_";
                             }
                         }
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
                 rs.close();
                 stmt.close();
-            } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(PrintSimpleForm.class, "error", e);
             }
 
             //loop Void to Print
             //loop R_Indulgent =  Y : คือใส่จำนวนตามน้ำหนักมา
         }
-
-//        t = changeFontSize(t);
-        PrintDriver pd = new PrintDriver();
-        String[] strs = t.split("_");
+        PrintDriver printDriver = new PrintDriver();
+        String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
             Value.printerDriverKitChenName = printerName;
-            pd.addTextIFont(data1);
+            printDriver.addTextIFont(data1);
         }
         try {
-            pd.printHTMLKitChen();
+            printDriver.printHTMLKitChen();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(e.getMessage());
         }
+
         //Loop Void
         ArrayList<BalanceBean> listVE = new ArrayList<>();
         ArrayList<BalanceBean> listVT = new ArrayList<>();
@@ -1843,6 +1839,7 @@ public class PrintSimpleForm {
                     + "group by r_etd,r_kic,r_pname,r_Opt1,r_Opt2,r_Opt3,r_Opt4,r_Opt5,r_Opt6,r_Opt7,r_Opt8,r_Opt9 "
                     + "order by r_etd;";
             //loop Novoid
+            MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1883,264 +1880,265 @@ public class PrintSimpleForm {
                     }
                 }
 
-                if (listVE.size() > 0) {
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listVE.isEmpty()) {
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ทานในร้าน ***") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ทานในร้าน ***") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     for (int i = 0; i < listVE.size(); i++) {
                         if (i == listVE.size()) {
                             break;
                         } else {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVE.get(i).getR_Quan()) + Space + (listVE.get(i).getR_PName()) + "_";
+                            textToPrint2 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVE.get(i).getR_Quan()) + Space + (listVE.get(i).getR_PName()) + "_";
                             if (!listVE.get(i).getR_Opt1().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt1()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt1()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt2().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt2()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt2()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt3().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt3()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt3()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt4().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt4()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt4()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt5().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt5()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt5()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt6().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt6()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt6()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt7().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt7()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt7()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt8().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt8()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt8()) + "_";
                             }
                             if (!listVE.get(i).getR_Opt9().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt9()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVE.get(i).getR_Opt9()) + "_";
                             }
                         }
                     }
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     getEmpName(bean.getR_Emp());
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listVT.size() > 0) {
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ห่อกลับ ***") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listVT.isEmpty()) {
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ห่อกลับ ***") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                     for (int i = 0; i < listVT.size(); i++) {
                         if (i == listVT.size()) {
                             break;
                         } else {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVT.get(i).getR_Quan()) + Space + (listVT.get(i).getR_PName()) + "_";
+                            textToPrint2 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVT.get(i).getR_Quan()) + Space + (listVT.get(i).getR_PName()) + "_";
                             if (!listVT.get(i).getR_Opt1().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt1()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt1()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt2().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt2()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt2()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt3().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt3()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt3()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt4().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt4()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt4()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt5().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt5()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt5()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt6().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt6()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt6()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt7().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt7()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt7()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt8().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt8()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt8()) + "_";
                             }
                             if (!listVT.get(i).getR_Opt9().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt9()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVT.get(i).getR_Opt9()) + "_";
                             }
                         }
                     }
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listVD.size() > 0) {
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listVD.isEmpty()) {
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ส่งถึงบ้าน ***") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ส่งถึงบ้าน ***") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listVD.size(); i++) {
                         if (i == listVD.size()) {
                             break;
                         } else {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVD.get(i).getR_Quan()) + Space + (listVD.get(i).getR_PName()) + "_";
+                            textToPrint2 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVD.get(i).getR_Quan()) + Space + (listVD.get(i).getR_PName()) + "_";
                             if (!listVD.get(i).getR_Opt1().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt1()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt1()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt2().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt2()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt2()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt3().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt3()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt3()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt4().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt4()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt4()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt5().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt5()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt5()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt6().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt6()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt6()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt7().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt7()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt7()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt8().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt8()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt8()) + "_";
                             }
                             if (!listVD.get(i).getR_Opt9().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt9()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVD.get(i).getR_Opt9()) + "_";
                             }
                         }
                     }
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listVP.size() > 0) {
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listVP.isEmpty()) {
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ปิ่นโต ***") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ปิ่นโต ***") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listVP.size(); i++) {
                         if (i == listVP.size()) {
                             break;
                         } else {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVP.get(i).getR_Quan()) + Space + (listVP.get(i).getR_PName()) + "_";
+                            textToPrint2 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVP.get(i).getR_Quan()) + Space + (listVP.get(i).getR_PName()) + "_";
                             if (!listVP.get(i).getR_Opt1().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt1()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt1()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt2().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt2()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt2()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt3().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt3()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt3()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt4().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt4()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt4()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt5().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt5()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt5()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt6().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt6()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt6()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt7().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt7()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt7()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt8().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt8()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt8()) + "_";
                             }
                             if (!listVP.get(i).getR_Opt9().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt9()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVP.get(i).getR_Opt9()) + "_";
                             }
                         }
                     }
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
-                if (listVW.size() > 0) {
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                if (!listVW.isEmpty()) {
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Angsana New size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
 
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ค้าส่ง ***") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=5>" + ("*** ยกเลิก ค้าส่ง ***") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("") + "_";
                     for (int i = 0; i < listVW.size(); i++) {
                         if (i == listVW.size()) {
                             break;
                         } else {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVW.get(i).getR_Quan()) + Space + (listVW.get(i).getR_PName()) + "_";
+                            textToPrint2 += "colspan=3 align=left><font face=Angsana New size=5>" + inf.format(listVW.get(i).getR_Quan()) + Space + (listVW.get(i).getR_PName()) + "_";
                             if (!listVW.get(i).getR_Opt1().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt1()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt1()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt2().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt2()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt2()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt3().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt3()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt3()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt4().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt4()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt4()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt5().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt5()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt5()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt6().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt6()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt6()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt7().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt7()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt7()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt8().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt8()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt8()) + "_";
                             }
                             if (!listVW.get(i).getR_Opt9().equals("")) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt9()) + "_";
+                                textToPrint2 += "colspan=3 align=left><font face=Angsana New size=3>" + TAB + Space + "**" + (listVW.get(i).getR_Opt9()) + "_";
                             }
                         }
                     }
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
-                    t1 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp()+ "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
-                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + dc.GetCurrentTime() + "_";
+                    textToPrint2 += "colspan=1 align=left><font face=Angsana New size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Angsana New size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + printerName + "_";
+                    textToPrint2 += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
                 }
                 stmt.close();
                 rs.close();
-            } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
             } finally {
                 mysql.close();
             }
-//            t1 = changeFontSize(t1);
+
+            textToPrint2 = changeFontSize(textToPrint2);
             PrintDriver pd1 = new PrintDriver();
-            String[] strs1 = t1.split("_");
+            String[] strs1 = textToPrint2.split("_");
             for (String data2 : strs1) {
                 Value.printerDriverKitChenName = printerName;
                 pd1.addTextIFont(data2);
@@ -2148,7 +2146,7 @@ public class PrintSimpleForm {
             try {
                 pd1.printHTMLKitChen();
             } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
             }
         }
 
@@ -2740,7 +2738,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -2753,7 +2751,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(sqlK);
                         }
                     }
@@ -2767,7 +2765,7 @@ public class PrintSimpleForm {
                         + "where r_table='" + tableNo + "' "
                         + "and r_index='" + R_Index + "' "
                         + "and r_plucode='" + R_Plucode + "'";
-                try (Statement stmtUpdate = mysql.getConnection().createStatement()) {
+                try ( Statement stmtUpdate = mysql.getConnection().createStatement()) {
                     stmtUpdate.executeUpdate(sqlUPdate);
                 }
             } catch (SQLException e) {
@@ -2955,7 +2953,7 @@ public class PrintSimpleForm {
                                     + "and pcode='" + rs.getString("R_PluCode") + "' "
                                     + "and pkic='" + rs.getString("R_Kic") + "' "
                                     + "and pflage='N'";
-                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                                 stmt1.executeUpdate(SQLQuery2);
                             }
                         } else {
@@ -2968,7 +2966,7 @@ public class PrintSimpleForm {
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                     + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                                 stmt1.executeUpdate(sqlK);
                             }
                         }
@@ -2995,23 +2993,21 @@ public class PrintSimpleForm {
     public void KIC_FORM_Move(final String table, final String tableto, final String kicName) {
         lineLineLin = -75;
         try {
-            String t = "";
-            t += "colspan=3 align=left><font face=Angsana New size=5>" + (table + Space + "ย้าย:") + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=5>" + ("ไป>>>" + "_");
-            t += "colspan=3 align=left><font face=Angsana New size=5>" + ("โต๊ะ : " + tableto + "_");
-            t += "colspan=3 align=left><font face=Angsana New size=5>" + ("" + simp.format(new Date()) + "(" + kicName + ")" + "_");
-            PrintDriver pd = new PrintDriver();
-            String[] strs = t.split("_");
+            String textToPrint = "colspan=3 align=left><font face=Angsana New size=5>" + (table + Space + "ย้าย:") + "_";
+            textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("ไป>>>" + "_");
+            textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("โต๊ะ : " + tableto + "_");
+            textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("" + simp.format(new Date()) + "(" + kicName + ")" + "_");
+            PrintDriver printerDriver = new PrintDriver();
+            String[] strs = textToPrint.split("_");
             for (String data1 : strs) {
                 Value.printerDriverKitChenName = "kic" + kicName;
-                pd.addTextIFont(data1);
+                printerDriver.addTextIFont(data1);
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                 }
             }
-
-            pd.printHTMLKitChen();
+            printerDriver.printHTMLKitChen();
         } catch (Exception e) {
             MSG.ERR(e.getMessage());
         }
@@ -3019,7 +3015,7 @@ public class PrintSimpleForm {
     }
 
     public void KIC_FORM_SaveOrder(final String sql1, final String printerName, final String tableNo, final int R_Kic) {
-        String t = "";
+        String textToPrint = "";
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
@@ -3041,10 +3037,9 @@ public class PrintSimpleForm {
             String macNo = "";
             String TUser = "";
             boolean printHeader = false;
-            boolean printTable = false;
             String tempHeader = "";
-            t += "colspan=3 align=center><font face=Angsana New size=3>" + "SAVE ORDER" + "_";
-            t += "colspan=2 align=left><font face=Angsana New size=5>" + ("โต๊ะ : " + ThaiUtil.ASCII2Unicode(tableNo)) + "_";
+            textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "SAVE ORDER" + "_";
+            textToPrint += "colspan=2 align=left><font face=Angsana New size=5>" + ("โต๊ะ : " + ThaiUtil.ASCII2Unicode(tableNo)) + "_";
             while (rs.next()) {
                 ETD = rs.getString("R_ETD");
                 String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
@@ -3117,17 +3112,16 @@ public class PrintSimpleForm {
                         default:
                             break;
                     }
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5>" + ETD + "_";
                     printHeader = true;
-                    printTable = true;
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
                 }
 
                 String product = (productName);
                 String R_Index = rs.getString("R_Index");
-                t += keepTextShow(R_Index, qty, product);
+                textToPrint += keepTextShow(R_Index, qty, product);
 
                 //********* พิมพ์ข้อความพิเศษ *************
                 for (int x = 0; x < listOpt.size(); x++) {
@@ -3135,7 +3129,7 @@ public class PrintSimpleForm {
                     for (String OPT1 : OPT) {
                         if (OPT1 != null) {
                             if (!OPT1.trim().equals("")) {
-                                t += "colspan=3 align=left><font face=Angsana New size=3>" + Space + ("*** " + OPT1) + "_";
+                                textToPrint += "colspan=3 align=left><font face=Angsana New size=3>" + Space + ("*** " + OPT1) + "_";
                             }
                         }
                     }
@@ -3158,7 +3152,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -3171,7 +3165,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -3180,29 +3174,28 @@ public class PrintSimpleForm {
                 }
                 //END TEMP UPDATE
             }
-            t += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=2>" + "Terminal : " + Space + macNo + (" Name :" + TUser) + "_";
+            textToPrint += "colspan=3 align=center><font face=Angsana New size=3>" + ("-----------------------------------------") + "_";
+            textToPrint += "colspan=3 align=left><font face=Angsana New size=2>" + "Terminal : " + Space + macNo + (" Name :" + TUser) + "_";
             rs.close();
             stmt.close();
-
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
             mysql.close();
         }
 
-        PrintDriver pd = new PrintDriver();
-        String[] strs = t.split("_");
+        PrintDriver printDriver = new PrintDriver();
+        String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
             Value.printerDriverKitChenName = printerName;
-            pd.addTextIFont(data1);
+            printDriver.addTextIFont(data1);
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
             }
         }
 
-        pd.printHTMLKitChen();
+        printDriver.printHTMLKitChen();
 
     }
 
@@ -3343,7 +3336,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -3356,7 +3349,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -3415,7 +3408,7 @@ public class PrintSimpleForm {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String SQLQuery = "update branch set kicitemno =" + branchBean.getKicItemNo();
                 stmt.executeUpdate(SQLQuery);
             }
@@ -3491,7 +3484,7 @@ public class PrintSimpleForm {
 
     public String getEmpName(String Code) {
         String empName = "";
-//        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select Name from employ where code='" + Code + "';";

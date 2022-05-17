@@ -14,7 +14,6 @@ public class CustomerCountDialog extends javax.swing.JDialog {
     private int custCountTotal = 0;
     private String TABLE_NO;
     private String R_ETD;
-    private MySQLConnect mysql = new MySQLConnect();
 
     public CustomerCountDialog(java.awt.Dialog parent, boolean modal, String TABLE_NO, String R_ETD) {
         super(parent, modal);
@@ -476,7 +475,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             if (R_ETD.equals("T")) {
@@ -502,8 +501,10 @@ public class CustomerCountDialog extends javax.swing.JDialog {
                 stmt.executeUpdate(sql);
                 this.dispose();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+        } finally {
+            mysql.close();
         }
     }
 
@@ -511,7 +512,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        //MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "'";

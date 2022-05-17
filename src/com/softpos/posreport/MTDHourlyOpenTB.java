@@ -1,25 +1,25 @@
 package com.softpos.posreport;
 
 import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
-import util.DateChooseDialog;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
-import java.util.Date;
-import com.softpos.pos.core.controller.PublicVar;
-import java.text.ParseException;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.DateChooseDialog;
 import util.MSG;
 
 /**
@@ -56,18 +56,15 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
 
     public ArrayList<Object[]> LoadData() {
         ArrayList<Object[]> ListObj = new ArrayList<>();
-        MySQLConnect c = new MySQLConnect();
-        c.open();
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
         try {
             DecimalFormat df = new DecimalFormat("00.00");
             DecimalFormat df1 = new DecimalFormat("00.00");
-            DecimalFormat df2 = new DecimalFormat("#,##0");
             DefaultTableModel model = (DefaultTableModel) tblSalePerHour.getModel();
             int size1 = model.getRowCount();
             int sumCustE = 0;
             int sumCustT = 0;
-            int TotalCustE = 0;
-            int TotalCustT = 0;
             int totalCC = 0;
             double sumNet = 0.00;
             double sumBill = 0.00;
@@ -124,17 +121,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                         + "from s_invoice  "
                         + "where s_date between '" + dateFrom + "' and '" + dateTo + "' "
                         + "and b_logintime between'" + time1 + "' and '" + time2 + "' and b_void<>'V' and b_etd='T';";
-                //หาจำนวนลูกค้า E
-                String sqlE1 = "select sum(b_cust) sumB_custE1 "
-                        + "from s_invoice  "
-                        + "where s_date between '" + dateFrom + "' and '" + dateTo + "' "
-                        + "and b_void<>'V' and b_etd='E';";
-                //หาจำนวนลูกค้า T
-                String sqlT1 = "select sum(b_cust) sumB_custT1 "
-                        + "from s_invoice  "
-                        + "where s_date between '" + dateFrom + "' and '" + dateTo + "' "
-                        + "and b_void<>'V' and b_etd='T';";
-                ResultSet rsTypeE = c.getConnection().createStatement().executeQuery(sqlE);
+                ResultSet rsTypeE = mysql.getConnection().createStatement().executeQuery(sqlE);
                 if (rsTypeE.next()) {
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
@@ -143,7 +130,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumNet += sumNettotalE;
                     sumBill += sumBillE;
                 }
-                ResultSet rsTypeT = c.getConnection().createStatement().executeQuery(sqlT);
+                ResultSet rsTypeT = mysql.getConnection().createStatement().executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
                     sumBillT = rsTypeT.getInt("sumBillT");
@@ -151,14 +138,6 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumCustT += sumB_custT;
                     sumNet += sumNettotalT;
                     sumBill += sumBillT;
-                }
-                ResultSet rs1 = c.getConnection().createStatement().executeQuery(sqlE1);
-                if (rs1.next()) {
-                    TotalCustE = rs1.getInt("sumB_custE1");
-                }
-                ResultSet rs2 = c.getConnection().createStatement().executeQuery(sqlT1);
-                if (rs2.next()) {
-                    TotalCustT = rs2.getInt("sumB_custT1");
                 }
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
@@ -186,7 +165,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 IntFmt.format(sumBill),
                 IntFmt.format(sumNet)
             });
-            c.close();
+            mysql.close();
         } catch (Exception e) {
             MSG.ERR(e.getMessage());
         }

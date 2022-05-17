@@ -1,16 +1,16 @@
 package database;
 
+import com.softpos.pos.core.controller.Value;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.softpos.pos.core.controller.Value;
 import util.MSG;
 
 public class MySQLConnect {
@@ -22,7 +22,7 @@ public class MySQLConnect {
     public static String Password = null;
     public static String PortNumber = null;
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
-    
+
     static {
         getDbVar();
     }
@@ -36,12 +36,14 @@ public class MySQLConnect {
     }
 
     public void open() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-        } catch (ClassNotFoundException | SQLException e) {
-            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-            System.exit(0);
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+            } catch (ClassNotFoundException | SQLException e) {
+                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                System.exit(0);
+            }
         }
     }
 

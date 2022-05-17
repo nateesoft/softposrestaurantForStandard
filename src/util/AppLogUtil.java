@@ -1,5 +1,8 @@
 package util;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,8 +17,10 @@ import java.util.logging.SimpleFormatter;
  */
 public class AppLogUtil {
 
+    static int countRunning = 0;
     static SimpleDateFormat logDateFmt = new SimpleDateFormat("yyyy-MM-dd");
     static FileHandler fh = null;
+    static FileHandler fhHtml = null;
 
     public static void log(Class t, String type, Exception e) {
         Logger logger = Logger.getLogger(t.getName());
@@ -30,7 +35,7 @@ public class AppLogUtil {
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
-            
+
             String msg = e.getMessage();
             int lineNumber = e.getStackTrace()[0].getLineNumber();
 
@@ -48,5 +53,19 @@ public class AppLogUtil {
                     break;
             }
         }
+    }
+
+    public static void htmlFile(String htmlText) {
+        countRunning++;
+        try {
+            File f = new File("source_" + countRunning + ".html");
+            try ( BufferedWriter bw = new BufferedWriter(new FileWriter(f))) {
+                bw.write(htmlText);
+                bw.flush();
+                bw.close();
+            }
+        } catch (IOException e) {
+        }
+
     }
 }

@@ -111,7 +111,7 @@ public class ServiceMySQL extends javax.swing.JFrame {
 
         try {
 //            for (int i = 0; i < 1; i++) {
-            MySQLConnect c = new MySQLConnect();
+            MySQLConnect mysql = new MySQLConnect();
             MySQLConnect.stopMysql();
             jLabel1.setText("Stop Service");
             Thread.sleep(10 * 1000);
