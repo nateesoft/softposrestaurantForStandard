@@ -4,22 +4,22 @@ package com.softpos.posreport;
  *
  * @author Dell-Softpos
  */
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
@@ -458,7 +458,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from s_gift "
+                        String SqlQuery = "select * from s_gift "
                                 + "where (macno>='" + MacNo1 + "') "
                                 + "and (macno<='" + MacNo2 + "') "
                                 + "and (cashier>='" + CashNo1 + "') "
@@ -466,17 +466,13 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                                 + "and (fat<>'V') "
                                 + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                                 + "order by giftbarcode";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(rec.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9));
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(PUtility.DataFullR(rs.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
                                 Sumtotal++;
-                                SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                            } while (rec.next());
+                                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         PUtility.showError(e.getMessage());
@@ -545,7 +541,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_gift "
+            String SqlQuery = "select * from s_gift "
                     + "where (macno>='" + MacNo1 + "') "
                     + "and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') "
@@ -553,17 +549,13 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     + "and (fat<>'V') "
                     + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                     + "order by giftbarcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(rec.getString("giftno"), 27) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9) + "_");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(rs.getString("giftno"), 27) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9) + "_");
                     Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                } while (rec.next());
+                    SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());

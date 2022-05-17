@@ -1,19 +1,5 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.softpos.main.program.Jdi_MTDdepReport;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
@@ -21,7 +7,21 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PluRec;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
@@ -143,9 +143,7 @@ public class MTDDept extends javax.swing.JDialog {
                     + "and (s_dept<='" + txtMacNo2.getText() + "') "
                     + "group by s_dept order by s_dept";
 
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            TempGroup = "";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             Double SumEQty = 0.0;
             Double SumEAmt = 0.0;
             Double SumTQty = 0.0;
@@ -158,12 +156,12 @@ public class MTDDept extends javax.swing.JDialog {
             Double SumWAmt = 0.0;
             Double SumSQty = 0.0;
             Double SumSAmt = 0.0;
-            if (rec.getRow() == 0) {
-            } else {
-                TempGroup = rec.getString("s_dept");
-                do {
-                    Found = true;
-                    if (!TempGroup.equals(rec.getString("s_dept"))) {
+            
+            while(rs.next()){
+                TempGroup = rs.getString("s_dept");
+                
+                Found = true;
+                    if (!TempGroup.equals(rs.getString("s_dept"))) {
                         PluRec GroupRec = new PluRec();
                         GroupRec.MacNo1 = MacNo1;
                         GroupRec.MacNo2 = MacNo2;
@@ -203,7 +201,7 @@ public class MTDDept extends javax.swing.JDialog {
                             ArraySize = GArray.length;
                             GArray[ArraySize - 1] = GroupRec;
                         }
-                        TempGroup = rec.getString("s_dept");
+                        TempGroup = rs.getString("s_dept");
                         SumEQty = 0.0;
                         SumEAmt = 0.0;
                         SumTQty = 0.0;
@@ -218,25 +216,25 @@ public class MTDDept extends javax.swing.JDialog {
                         SumSAmt = 0.0;
                     }
 
-                    SumEQty = SumEQty + rec.getDouble("sum(e_qty)");
-                    SumEAmt = SumEAmt + rec.getDouble("sum(e_amt)") - rec.getDouble("sum(e_disc)");
+                    SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
+                    SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)") - rs.getDouble("sum(e_disc)");
 
-                    SumTQty = SumTQty + rec.getDouble("sum(t_qty)");
-                    SumTAmt = SumTAmt + rec.getDouble("sum(t_amt)")- rec.getDouble("sum(t_disc)");
+                    SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
+                    SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)")- rs.getDouble("sum(t_disc)");
 
-                    SumDQty = SumDQty + rec.getDouble("sum(d_qty)");
-                    SumDAmt = SumDAmt + rec.getDouble("sum(d_amt)")- rec.getDouble("sum(d_disc)");
+                    SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
+                    SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)")- rs.getDouble("sum(d_disc)");
 
-                    SumPQty = SumPQty + rec.getDouble("sum(p_qty)");
-                    SumPAmt = SumPAmt + rec.getDouble("sum(p_amt)")- rec.getDouble("sum(p_disc)");
+                    SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
+                    SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)")- rs.getDouble("sum(p_disc)");
 
-                    SumWQty = SumWQty + rec.getDouble("sum(w_qty)");
-                    SumWAmt = SumWAmt + rec.getDouble("sum(w_amt)")- rec.getDouble("sum(w_disc)");
+                    SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
+                    SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)")- rs.getDouble("sum(w_disc)");
 
-                    SumSQty = SumSQty + rec.getDouble("sum(s_qty)");
-                    SumSAmt = SumSAmt + rec.getDouble("sum(s_amt)")- rec.getDouble("sum(s_disc)");
-                } while (rec.next());
-                if (SumSQty > 0) {
+                    SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
+                    SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)")- rs.getDouble("sum(s_disc)");
+            }
+            if (SumSQty > 0) {
                     PluRec GroupRec = new PluRec();
                     GroupRec.MacNo1 = MacNo1;
                     GroupRec.MacNo2 = MacNo2;
@@ -278,9 +276,8 @@ public class MTDDept extends javax.swing.JDialog {
                     }
 
                 }
-            }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
@@ -289,7 +286,6 @@ public class MTDDept extends javax.swing.JDialog {
         }
 
         PrintGroup(GArray, Found);
-//        InitScreen();
     }
 
     public void PrintGroup(PluRec[] GArray, Boolean Found) {
@@ -586,9 +582,7 @@ public class MTDDept extends javax.swing.JDialog {
             String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') group by s_dept order by s_dept";
 
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            TempGroup = "";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             Double SumEQty = 0.0;
             Double SumEAmt = 0.0;
             Double SumTQty = 0.0;
@@ -601,12 +595,12 @@ public class MTDDept extends javax.swing.JDialog {
             Double SumWAmt = 0.0;
             Double SumSQty = 0.0;
             Double SumSAmt = 0.0;
-            if (rec.getRow() == 0) {
-            } else {
-                TempGroup = rec.getString("s_dept");
-                do {
-                    Found = true;
-                    if (!TempGroup.equals(rec.getString("s_dept"))) {
+            
+            while(rs.next()){
+                TempGroup = rs.getString("s_dept");
+                
+                Found = true;
+                    if (!TempGroup.equals(rs.getString("s_dept"))) {
                         PluRec GroupRec = new PluRec();
                         GroupRec.MacNo1 = MacNo1;
                         GroupRec.MacNo2 = MacNo2;
@@ -646,7 +640,7 @@ public class MTDDept extends javax.swing.JDialog {
                             ArraySize = GArray.length;
                             GArray[ArraySize - 1] = GroupRec;
                         }
-                        TempGroup = rec.getString("s_dept");
+                        TempGroup = rs.getString("s_dept");
                         SumEQty = 0.0;
                         SumEAmt = 0.0;
                         SumTQty = 0.0;
@@ -661,25 +655,25 @@ public class MTDDept extends javax.swing.JDialog {
                         SumSAmt = 0.0;
                     }
 
-                    SumEQty = SumEQty + rec.getDouble("sum(e_qty)");
-                    SumEAmt = SumEAmt + rec.getDouble("sum(e_amt)") - rec.getDouble("sum(e_disc)");
+                    SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
+                    SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)") - rs.getDouble("sum(e_disc)");
 
-                    SumTQty = SumTQty + rec.getDouble("sum(t_qty)");
-                    SumTAmt = SumTAmt + rec.getDouble("sum(t_amt)") - rec.getDouble("sum(t_disc)");
+                    SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
+                    SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)") - rs.getDouble("sum(t_disc)");
 
-                    SumDQty = SumDQty + rec.getDouble("sum(d_qty)");
-                    SumDAmt = SumDAmt + rec.getDouble("sum(d_amt)") - rec.getDouble("sum(d_disc)");
+                    SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
+                    SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)") - rs.getDouble("sum(d_disc)");
 
-                    SumPQty = SumPQty + rec.getDouble("sum(p_qty)");
-                    SumPAmt = SumPAmt + rec.getDouble("sum(p_amt)") - rec.getDouble("sum(p_disc)");
+                    SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
+                    SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)") - rs.getDouble("sum(p_disc)");
 
-                    SumWQty = SumWQty + rec.getDouble("sum(w_qty)");
-                    SumWAmt = SumWAmt + rec.getDouble("sum(w_amt)") - rec.getDouble("sum(w_disc)");
+                    SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
+                    SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)") - rs.getDouble("sum(w_disc)");
 
-                    SumSQty = SumSQty + rec.getDouble("sum(s_qty)");
-                    SumSAmt = SumSAmt + rec.getDouble("sum(s_amt)") - rec.getDouble("sum(s_disc)");
-                } while (rec.next());
-                if (SumSQty > 0) {
+                    SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
+                    SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)") - rs.getDouble("sum(s_disc)");
+            }
+            if (SumSQty > 0) {
                     PluRec GroupRec = new PluRec();
                     GroupRec.MacNo1 = MacNo1;
                     GroupRec.MacNo2 = MacNo2;
@@ -721,9 +715,8 @@ public class MTDDept extends javax.swing.JDialog {
                     }
 
                 }
-            }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());

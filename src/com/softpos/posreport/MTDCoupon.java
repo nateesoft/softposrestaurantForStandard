@@ -391,18 +391,14 @@ public class MTDCoupon extends javax.swing.JDialog {
                                 + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "'"
                                 + " group by s_cupon.cucode order by s_cupon.cucode";
                         Statement stmt = mysql.getConnection().createStatement();
-                        ResultSet rec = stmt.executeQuery(sql);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(rec.getString("cucode"), 3) + "  " + PUtility.DataFullR(rec.getString("cuname"), 30));
-                                prn.print("                    " + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(cuamt)")), 11));
-                                SumQty = SumQty + rec.getDouble("sum(cuquan)");
-                                SumAmt = SumAmt + rec.getDouble("sum(cuamt)");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while(rs.next()){
+                            prn.print(PUtility.DataFullR(rs.getString("cucode"), 3) + "  " + PUtility.DataFullR(rs.getString("cuname"), 30));
+                                prn.print("                    " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11));
+                                SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                                SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -470,18 +466,14 @@ public class MTDCoupon extends javax.swing.JDialog {
                     + "and refund<>'V' "
                     + " group by s_cupon.cucode order by s_cupon.cucode";
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rec = stmt.executeQuery(sql);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullR(rec.getString("cucode"), 3) + Space + PUtility.DataFullR(rec.getString("cuname"), 30)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(cuamt)")), 11)) + "_";
-                    SumQty = SumQty + rec.getDouble("sum(cuquan)");
-                    SumAmt = SumAmt + rec.getDouble("sum(cuamt)");
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullR(rs.getString("cucode"), 3) + Space + PUtility.DataFullR(rs.getString("cuname"), 30)) + "_";
+                    t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11)) + "_";
+                    SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                    SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

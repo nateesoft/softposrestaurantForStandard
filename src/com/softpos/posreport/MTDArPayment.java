@@ -367,18 +367,14 @@ public void InitScreen() {
                 int CntBill = 0;
                 try {
                     Statement stmt =  mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from s_billar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            CntBill++;
-                            SumCash = SumCash + rec.getDouble("cash");
-                            SumCupon = SumCupon + rec.getDouble("cupon");
-                        } while (rec.next());
+                    String SqlQuery = "select * from s_billar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        CntBill++;
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -387,17 +383,12 @@ public void InitScreen() {
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
                     Statement stmt =  mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from s_tcrar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"') group by crcode";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from s_tcrar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"') group by crcode";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -410,17 +401,12 @@ public void InitScreen() {
                 prn.print("----------------------------------------");
                 try {
                     Statement stmt =  mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from s_billar where (fat='V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            prn.print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from s_billar where (fat='V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='"+Datefmt.format(TDate2)+"')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());

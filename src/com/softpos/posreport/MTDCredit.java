@@ -1,23 +1,23 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
@@ -346,24 +346,19 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         try {
             Statement stmt = mysql.getConnection().createStatement();
             DateConvert dc = new DateConvert();
-//            String SqlQuery = "select crcode,DECODE(crid,'snpfood') as crid,crapp,cramt from s_tcrar where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (fat<>'V')";
             String SqlQuery = "select B_Refno,B_CrCode1 crcode, B_CardNo1 crid, B_AppCode1 crapp, B_CrAmt1 cramt "
                     + "from s_invoice "
                     + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText())
                     + "' and (B_CrAmt1<>'0' and (B_Void<>'V')) ";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TCrCode = rec.getString("crcode");
-                    String TCrId = rec.getString("crid");
-                    String TCrApp = rec.getString("crapp");
-                    Double TCrAmt = rec.getDouble("cramt");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String TCrCode = rs.getString("crcode");
+                    String TCrId = rs.getString("crid");
+                    String TCrApp = rs.getString("crapp");
+                    Double TCrAmt = rs.getDouble("cramt");
                     InsertTemp(TCrCode, TCrId, TCrApp, TCrAmt);
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -390,40 +385,35 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     prn.print("ประเภทบัตร    ชื่อบัตรเครดิต");
                     prn.print("ลำดับ  หมายเลขบัตร     รหัสอนุมัติ    จำนวนเงิน");
                     prn.print("----------------------------------------");
-                    int SumVoid = 0;
-                    String TempCr = "";
+                    String TempCr;
                     int SumCard = 0;
                     Double SumCardAmt = 0.0;
                     int SumTotal = 0;
                     Double SumTotalAmt = 0.0;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            prn.print(rec.getString("crcode") + "   " + PUtility.SeekCreditName(rec.getString("crcode")));
-                            TempCr = rec.getString("crcode");
-                            do {
-                                if (!rec.getString("crcode").equals(TempCr)) {
+                        String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
+                            TempCr = rs.getString("crcode");
+                            
+                            if (!rs.getString("crcode").equals(TempCr)) {
                                     prn.print("       Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + "    " + PUtility.DataFull(DecFmt.format(SumCardAmt), 11));
                                     prn.print("                 " + "-----------------------");
                                     SumCard = 0;
                                     SumCardAmt = 0.0;
-                                    prn.print(rec.getString("crcode") + "   " + PUtility.SeekCreditName(rec.getString("crcode")));
-                                    TempCr = rec.getString("crcode");
+                                    prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
+                                    TempCr = rs.getString("crcode");
                                 }
                                 SumCard++;
-                                SumCardAmt = SumCardAmt + rec.getDouble("cramt");
+                                SumCardAmt = SumCardAmt + rs.getDouble("cramt");
                                 SumTotal++;
-                                SumTotalAmt = SumTotalAmt + rec.getDouble("cramt");
-                                String TempCrid = PUtility.Addzero(rec.getString("crid"), 16);
-                                prn.print(PUtility.DataFull(IntFmt.format(SumCard), 5) + "  " + "XXXXXXXXXXXX" + TempCrid.substring(12, 16) + " " + PUtility.DataFullR(rec.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 10));
-
-                            } while (rec.next());
+                                SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
+                                String TempCrid = PUtility.Addzero(rs.getString("crid"), 16);
+                                prn.print(PUtility.DataFull(IntFmt.format(SumCard), 5) + "  " + "XXXXXXXXXXXX" + TempCrid.substring(12, 16) + " " + PUtility.DataFullR(rs.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 10));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -441,8 +431,6 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
                     prn.CutPaper();
                     prn.closePrint();
-                } else {
-//                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
                 }
             }
             InitScreen();
@@ -492,33 +480,27 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         Double SumTotalAmt = 0.0;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from tempcredit order by crcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                t += "colspan=3 align=left><font face=Angsana New size=1>" + (rec.getString("crcode") + Space + PUtility.SeekCreditName(rec.getString("crcode"))) + "_";
-                TempCr = rec.getString("crcode");
-                do {
-                    if (!rec.getString("crcode").equals(TempCr)) {
+            String SqlQuery = "select * from tempcredit order by crcode";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
+                TempCr = rs.getString("crcode");
+                
+                if (!rs.getString("crcode").equals(TempCr)) {
                         t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + ("Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + TAB + PUtility.DataFull(DecFmt.format(SumCardAmt), 11)) + "_";
                         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
                         SumCard = 0;
                         SumCardAmt = 0.0;
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (rec.getString("crcode") + Space + PUtility.SeekCreditName(rec.getString("crcode"))) + "_";
-                        TempCr = rec.getString("crcode");
+                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
                     }
                     SumCard++;
-                    SumCardAmt = SumCardAmt + rec.getDouble("cramt");
+                    SumCardAmt = SumCardAmt + rs.getDouble("cramt");
                     SumTotal++;
-                    SumTotalAmt = SumTotalAmt + rec.getDouble("cramt");
-                    String TempCrid = PUtility.Addzero(rec.getString("crid"), 16);
-//                    t += "colspan=3 align=center><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + Space + TempCrid.substring(12, 16) + " " + PUtility.DataFullR(rec.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 10)) + "_";
-                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + TAB + TempCrid.substring(12, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(rec.getString("crapp"), 6) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 9)) + "_";
-
-                } while (rec.next());
+                    SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
+                    String TempCrid = PUtility.Addzero(rs.getString("crid"), 16);
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + TAB + TempCrid.substring(12, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(rs.getString("crapp"), 6) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9)) + "_";
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

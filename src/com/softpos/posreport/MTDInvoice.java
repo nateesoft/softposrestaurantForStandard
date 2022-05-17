@@ -1,24 +1,24 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import util.DateChooseDialog;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
+import util.DateChooseDialog;
 import util.MSG;
 
 public class MTDInvoice extends javax.swing.JDialog {
@@ -314,36 +314,36 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     private void txtDate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDate1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        bntExitClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        bntOKClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        txtDate2.requestFocus();
-    }
+            bntExitClick();
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_F5) {
+            bntOKClick();
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtDate2.requestFocus();
+        }
     }//GEN-LAST:event_txtDate1KeyPressed
 
     private void txtDate1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDate1MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtDate1);
         }
     }//GEN-LAST:event_txtDate1MouseClicked
 
     private void txtDate2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDate2MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtDate2);
         }
     }//GEN-LAST:event_txtDate2MouseClicked
 
     private void txtMacNo1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMacNo1MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtMacNo1);
         }
     }//GEN-LAST:event_txtMacNo1MouseClicked
 
     private void txtMacNo2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMacNo2MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtMacNo2);
         }
     }//GEN-LAST:event_txtMacNo2MouseClicked
@@ -429,80 +429,76 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 String TempDate = "";
                 String TempMacNo = "";
                 /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+                 * * OPEN CONNECTION **
+                 */
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select b_etd,count(*) as billcnt,sum(b_cust),Sum(b_empdiscAmt),Sum(b_memdiscamt),sum(b_cupondiscamt),sum(b_prodiscamt),sum(b_nettotal) from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (b_void<>'V') Group by b_etd order by b_etd ";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        Double Sum0 = 0.0;
-                        Double Sum1 = 0.0;
-                        Double Sum2 = 0.0;
-                        Double Sum3 = 0.0;
-                        Double Sum4 = 0.0;
-                        Double Sum5 = 0.0;
-                        Double Sum6 = 0.0;
-                        do {
-                            TempMacNo = rec.getString("b_etd");
-                            String EtdName = "";
-                            if (TempMacNo.equals("E")) {
-                                EtdName = "EAT IN";
-                            }
-                            if (TempMacNo.equals("T")) {
-                                EtdName = "TAKE AWAY";
-                            }
-                            if (TempMacNo.equals("D")) {
-                                EtdName = "DELIVERY";
-                            }
-                            if (TempMacNo.equals("P")) {
-                                EtdName = "PINTO";
-                            }
-                            if (TempMacNo.equals("W")) {
-                                EtdName = "WHOLD SALE";
-                            }
-                            prn.print("*** : " + PUtility.DataFullR(EtdName, 10) + "  " + PUtility.DataFull(IntFmt.format(rec.getDouble("billcnt")), 8) + " / " + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(b_cust)")), 8));
-                            prn.print("    " + PUtility.DataFullR("ยอดขาย.................", 20) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_nettotal)")), 12));
-                            prn.print("    " + PUtility.DataFullR("ส่วนลดพนักงาน............", 20) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_empdiscamt)")), 12));
-                            prn.print("    " + PUtility.DataFullR("ส่วนลดสมาชิก.............", 20) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_memdiscamt)")), 12));
-                            prn.print("    " + PUtility.DataFullR("ส่วนลดโปรโมชั่น...........", 20) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_prodiscamt)")), 12));
-                            prn.print("    " + PUtility.DataFullR("ส่วนลดบัตรคูปอง...........", 20) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_cupondiscamt)")), 12));
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    Double Sum0 = 0.0;
+                    Double Sum1 = 0.0;
+                    Double Sum2 = 0.0;
+                    Double Sum3 = 0.0;
+                    Double Sum4 = 0.0;
+                    Double Sum5 = 0.0;
+                    Double Sum6 = 0.0;
+                    while (rs.next()) {
+                        TempMacNo = rs.getString("b_etd");
+                        String EtdName = "";
+                        if (TempMacNo.equals("E")) {
+                            EtdName = "EAT IN";
+                        }
+                        if (TempMacNo.equals("T")) {
+                            EtdName = "TAKE AWAY";
+                        }
+                        if (TempMacNo.equals("D")) {
+                            EtdName = "DELIVERY";
+                        }
+                        if (TempMacNo.equals("P")) {
+                            EtdName = "PINTO";
+                        }
+                        if (TempMacNo.equals("W")) {
+                            EtdName = "WHOLD SALE";
+                        }
+                        prn.print("*** : " + PUtility.DataFullR(EtdName, 10) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("billcnt")), 8) + " / " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(b_cust)")), 8));
+                        prn.print("    " + PUtility.DataFullR("ยอดขาย.................", 20) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(b_nettotal)")), 12));
+                        prn.print("    " + PUtility.DataFullR("ส่วนลดพนักงาน............", 20) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(b_empdiscamt)")), 12));
+                        prn.print("    " + PUtility.DataFullR("ส่วนลดสมาชิก.............", 20) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(b_memdiscamt)")), 12));
+                        prn.print("    " + PUtility.DataFullR("ส่วนลดโปรโมชั่น...........", 20) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(b_prodiscamt)")), 12));
+                        prn.print("    " + PUtility.DataFullR("ส่วนลดบัตรคูปอง...........", 20) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(b_cupondiscamt)")), 12));
 
-                            //prn.Print_Str(PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_empdiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_memdiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_Prodiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_cupondiscamt)")),9));
-                            prn.print(" ");
-                            Sum0 = Sum0 + rec.getDouble("sum(b_nettotal)");
-                            Sum1 = Sum1 + rec.getDouble("billcnt");
-                            Sum2 = Sum2 + rec.getDouble("sum(b_cust)");
-                            Sum3 = Sum3 + rec.getDouble("sum(b_empdiscamt)");
-                            Sum4 = Sum4 + rec.getDouble("sum(b_memdiscamt)");
-                            Sum5 = Sum5 + rec.getDouble("sum(b_prodiscamt)");
-                            Sum6 = Sum6 + rec.getDouble("sum(b_cupondiscamt)");
-                        } while (rec.next());
-                        prn.print("----------------------------------------");
-                        prn.print("*** : " + PUtility.DataFullR("TOTAL.........", 10) + "  " + PUtility.DataFull(IntFmt.format(Sum1), 8) + " / " + PUtility.DataFull(IntFmt.format(Sum2), 8));
-                        prn.print("    " + PUtility.DataFullR("ยอดขาย.................", 20) + " " + PUtility.DataFull(DecFmt.format(Sum0), 12));
-                        prn.print("    " + PUtility.DataFullR("ส่วนลดพนักงาน...........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum3), 12));
-                        prn.print("    " + PUtility.DataFullR("ส่วนลดสมาชิก............", 20) + " " + PUtility.DataFull(DecFmt.format(Sum4), 12));
-                        prn.print("    " + PUtility.DataFullR("ส่วนลดโปรโมชั่น..........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum5), 12));
-                        prn.print("    " + PUtility.DataFullR("ส่วนลดบัตรคูปอง..........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum6), 12));
-
+                        //prn.Print_Str(PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_empdiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_memdiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_Prodiscamt)")),9)+" "+PUtility.DataFull(DecFmt.format(rec.getDouble("sum(b_cupondiscamt)")),9));
+                        prn.print(" ");
+                        Sum0 = Sum0 + rs.getDouble("sum(b_nettotal)");
+                        Sum1 = Sum1 + rs.getDouble("billcnt");
+                        Sum2 = Sum2 + rs.getDouble("sum(b_cust)");
+                        Sum3 = Sum3 + rs.getDouble("sum(b_empdiscamt)");
+                        Sum4 = Sum4 + rs.getDouble("sum(b_memdiscamt)");
+                        Sum5 = Sum5 + rs.getDouble("sum(b_prodiscamt)");
+                        Sum6 = Sum6 + rs.getDouble("sum(b_cupondiscamt)");
                     }
-                    rec.close();
+
+                    prn.print("----------------------------------------");
+                    prn.print("*** : " + PUtility.DataFullR("TOTAL.........", 10) + "  " + PUtility.DataFull(IntFmt.format(Sum1), 8) + " / " + PUtility.DataFull(IntFmt.format(Sum2), 8));
+                    prn.print("    " + PUtility.DataFullR("ยอดขาย.................", 20) + " " + PUtility.DataFull(DecFmt.format(Sum0), 12));
+                    prn.print("    " + PUtility.DataFullR("ส่วนลดพนักงาน...........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum3), 12));
+                    prn.print("    " + PUtility.DataFullR("ส่วนลดสมาชิก............", 20) + " " + PUtility.DataFull(DecFmt.format(Sum4), 12));
+                    prn.print("    " + PUtility.DataFullR("ส่วนลดโปรโมชั่น..........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum5), 12));
+                    prn.print("    " + PUtility.DataFullR("ส่วนลดบัตรคูปอง..........", 20) + " " + PUtility.DataFull(DecFmt.format(Sum6), 12));
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                } finally{
+                } finally {
                     mysql.close();
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
                 prn.print(" ");
                 prn.print(" ");
-                
+
                 prn.CutPaper();
                 prn.closePrint();
             }
