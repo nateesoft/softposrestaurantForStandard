@@ -1,5 +1,16 @@
 package com.softpos.login;
 
+import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.floorplan.ShowTable;
+import com.softpos.main.program.GetPassword;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.Value;
+import database.ConfigFile;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -18,17 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import com.softpos.floorplan.FloorPlanDialog;
-import com.softpos.floorplan.ShowTable;
-import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.main.program.GetPassword;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
-import com.softpos.pos.core.controller.Value;
-import database.ConfigFile;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
 import util.MSG;
@@ -367,7 +367,7 @@ public class Login extends javax.swing.JDialog {
             }
         }
 
-        if(OSValidator.isWindows()){
+        if (OSValidator.isWindows()) {
             Font myfont = new Font("Norasi", Font.PLAIN, 14);
             UIManager.put("Label.font", myfont);
             UIManager.put("Button.font", myfont);
@@ -386,7 +386,7 @@ public class Login extends javax.swing.JDialog {
                 MSG.ERR(null, e.getMessage());
             }
         }
-        
+
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -428,13 +428,13 @@ public class Login extends javax.swing.JDialog {
         String MacNoOnAct;
         String loginname = txtUser.getText();
         String password = txtPass.getText();
-        
+
         PublicVar.printerStation = ConfigFile.getProperties("printerStation");
         PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
         PublicVar.defaultCustomerQty = ConfigFile.getProperties("defaultCustomerQty");
         PublicVar.PrintCheckBillFromPDA = ConfigFile.getProperties("PrintCheckBillFromPDA");
         PublicVar.PrintCopyAuto = ConfigFile.getProperties("PrintCopyAuto");
-        
+
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
@@ -448,11 +448,7 @@ public class Login extends javax.swing.JDialog {
                         + "and password='" + ThaiUtil.Unicode2ASCII(password) + "'";
                 Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
-                rs.first();
-                if (rs.getRow() == 0) {
-                    MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                    clearlogin();
-                } else {
+                if (rs.next()) {
                     PublicVar._RealUser = rs.getString("username");
                     PublicVar._Password = rs.getString("password");
                     PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
@@ -533,6 +529,9 @@ public class Login extends javax.swing.JDialog {
 
                     rs2.close();
                     stmt2.close();
+                } else {
+                    MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+                    clearlogin();
                 }
 
                 rs.close();
@@ -607,7 +606,7 @@ public class Login extends javax.swing.JDialog {
                 pbCheckUpdate.setStringPainted(true);
                 pbCheckUpdate.setMinimum(0);
                 pbCheckUpdate.setMaximum(100);
-                
+
                 for (int i = 1; i <= 100; i++) {
                     pbCheckUpdate.setValue(i);
                     pbCheckUpdate.setString("Check Update: (" + i + " %)");
@@ -629,7 +628,7 @@ public class Login extends javax.swing.JDialog {
             mysql.open();
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
             Statement stmt = mysql.getConnection().createStatement();
-            if(stmt.executeUpdate(sql)>0){
+            if (stmt.executeUpdate(sql) > 0) {
                 // reset load poshwsetup
                 PosControl.resetPosHwSetup();
             }

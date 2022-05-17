@@ -628,17 +628,17 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             }
                         }
                     } else {
-                        PUtility.ShowMsg("มีเครื่อง Cashier เครื่องอื่นเข้าระบบการขายอยู่...กรุณาปิด Cashier เครื่องอื่นออกจากระบบการขายทั้งหมด ก่อนทำการพิมพ์รายงานนี้ !!! ");
+                        MSG.WAR("มีเครื่อง Cashier เครื่องอื่นเข้าระบบการขายอยู่...กรุณาปิด Cashier เครื่องอื่นออกจากระบบการขายทั้งหมด ก่อนทำการพิมพ์รายงานนี้ !!! ");
                         chkTerminal.requestFocus();
                     }
 
                 } else {
-                    PUtility.ShowMsg("ยังมียอดขายค้างอยู่ยังไม่ได้ชำระเงิน...กรุณาชำระเงินให้เรียบร้อยก่อนพิมพ์รายงาน ");
+                    MSG.WAR("ยังมียอดขายค้างอยู่ยังไม่ได้ชำระเงิน...กรุณาชำระเงินให้เรียบร้อยก่อนพิมพ์รายงาน ");
                     chkTerminal.requestFocus();
                 }
             }
         } else {
-            PUtility.ShowMsg("ไม่พบข้อมูลการขายสินค้าในแฟ้มข้อมูล...");
+            MSG.WAR("ไม่พบข้อมูลการขายสินค้าในแฟ้มข้อมูล...");
             chkTerminal.requestFocus();
         }
 
@@ -715,7 +715,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     TempStr = TempStr + rs.getString("b_cashier") + " ";
 
                 } while (rs.next());
-                PUtility.ShowMsg("กรุณาปิดรอบ Cashier " + TempStr + " ก่อนทำการพิมพ์รายงานนี้...");
+                MSG.WAR("กรุณาปิดรอบ Cashier " + TempStr + " ก่อนทำการพิมพ์รายงานนี้...");
             }
             rs.close();
             stmt.close();

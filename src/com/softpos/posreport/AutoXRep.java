@@ -581,11 +581,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     prn.closePrint();
                 }
             } else {
-                PUtility.ShowMsg("ยังมียอดขายค้างอยู่ยังไม่ได้ชำระเงิน...กรุณาชำระเงินให้เรียบร้อยก่อนพิมพ์รายงาน ");
+                MSG.WAR("ยังมียอดขายค้างอยู่ยังไม่ได้ชำระเงิน...กรุณาชำระเงินให้เรียบร้อยก่อนพิมพ์รายงาน ");
                 chkTerminal.requestFocus();
             }
         } else {
-            PUtility.ShowMsg("ไม่พบข้อมูลการขายสินค้าในแฟ้มข้อมูล...");
+            MSG.WAR("ไม่พบข้อมูลการขายสินค้าในแฟ้มข้อมูล...");
             chkTerminal.requestFocus();
         }
     }

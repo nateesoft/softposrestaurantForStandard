@@ -249,18 +249,14 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select prtype,prcode,sum(pqty),sum(pramt),protab.prodesc from t_promotion left join protab on procode=prcode "
                                 + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by prcode order by prcode";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(rec.getString("prcode"), 3) + "  " + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rec.getString("prodesc")), 15)
-                                        + "" + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(pqty)")), 8) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(pramt)")), 11));
-                                SumQty = SumQty + rec.getDouble("sum(pqty)");
-                                SumAmt = SumAmt + rec.getDouble("sum(pramt)");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(PUtility.DataFullR(rs.getString("prcode"), 3) + "  " + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("prodesc")), 15)
+                                    + "" + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(pqty)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(pramt)")), 11));
+                            SumQty = SumQty + rs.getDouble("sum(pqty)");
+                            SumAmt = SumAmt + rs.getDouble("sum(pramt)");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -268,7 +264,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     } finally {
                         mysql.close();
                     }
-                    
+
                     prn.print("----------------------------------------");
                     prn.print("                    " + PUtility.DataFull(IntFmt.format(SumQty), 8) + PUtility.DataFull(DecFmt.format(SumAmt), 11));
                     prn.print("----------------------------------------");
@@ -339,7 +335,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         } finally {
             mysql.close();
         }
-        
+
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 

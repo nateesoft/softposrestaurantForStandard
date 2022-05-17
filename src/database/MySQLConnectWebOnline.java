@@ -1,27 +1,31 @@
 package database;
 
+import com.softpos.pos.core.controller.Value;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.softpos.pos.core.controller.Value;
 import util.MSG;
 
 public class MySQLConnectWebOnline {
 
     private Connection con = null;
-    private String HostName = null;
-    private String DbName = null;
-    private String UserName = null;
-    private String Password = null;
-    private String PortNumber = null;
-    private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
+    private static String HostName = null;
+    private static String DbName = null;
+    private static String UserName = null;
+    private static String Password = null;
+    private static String PortNumber = null;
+    private static String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
+    
+    static {
+        getDbVar();
+    }
 
     public String getHostName() {
         return HostName;
@@ -73,7 +77,6 @@ public class MySQLConnectWebOnline {
 
     public void open() {
         try {
-            getDbVar();
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
         } catch (ClassNotFoundException | SQLException e) {
@@ -96,7 +99,7 @@ public class MySQLConnectWebOnline {
         }
     }
 
-    public void getDbVar() {
+    public static void getDbVar() {
         if (HostName == null) {
             try {
                 FileInputStream fs = new FileInputStream(Value.FILE_CONFIGOnline);

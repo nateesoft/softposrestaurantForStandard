@@ -95,14 +95,14 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            PUtility.ShowMsg("Can not Open Port...1");
+                            MSG.WAR("Can not Open Port...1");
                         } catch (RuntimeException re) {
                             MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName());
                         }
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            PUtility.ShowMsg("Can not Open Port...2");
+                            MSG.WAR("Can not Open Port...2");
                         }
                         try {
                             try {
@@ -117,7 +117,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            PUtility.ShowMsg("Can not Open Port...3");
+                            MSG.WAR("Can not Open Port...3");
                         }
                     }
                 }
@@ -135,7 +135,7 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            PUtility.ShowMsg("Can not Open Port...1\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...1\n" + e.getMessage());
 
                         } catch (RuntimeException re) {
                             MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName() + "\n" + re.getMessage());
@@ -143,16 +143,14 @@ public class PPrint {
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            PUtility.ShowMsg("Can not Open Port...2\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...2\n" + e.getMessage());
 
                         }
                         try {
                             try {
-                                //PUtility.ShowMsg(serialPort.toString());
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                PUtility.ShowMsg("Can not Open Port...2\n" + ex.getMessage());
-                                ex.printStackTrace();
+                                MSG.ERR("Can not Open Port...2\n" + ex.getMessage());
                             }
                             serialPort.setSerialPortParams(9600, //boardrate
                                     SerialPort.DATABITS_8,
@@ -161,7 +159,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            PUtility.ShowMsg("Can not Open Port...3\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...3\n" + e.getMessage());
 
                         }
                     }
@@ -232,7 +230,6 @@ public class PPrint {
             LineCount = 0;
         } catch (IOException ex) {
             if (ex.getMessage().contains("nativeDrain")) {
-                //ex.printStackTrace();
                 //System.err.println(ex.getMessage());
             } else {
                 MSG.ERR(ex.getMessage());

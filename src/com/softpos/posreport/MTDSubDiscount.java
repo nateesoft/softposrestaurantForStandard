@@ -1,25 +1,25 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import util.DateChooseDialog;
-import database.MySQLConnect;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
+import util.DateChooseDialog;
 import util.MSG;
 
 public class MTDSubDiscount extends javax.swing.JDialog {
@@ -457,45 +457,43 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') order by s_date,b_macno,b_refno";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            if (!TempDate.equals(DatefmtShow.format(rec.getDate("s_date")))) {
-                                TempDate = DatefmtShow.format(rec.getDate("s_date"));
-                                TempMacNo = rec.getString("b_macno");
+                    String SqlQuery = "select *from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') "
+                            + "and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
+                            + "order by s_date,b_macno,b_refno";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
+                                TempDate = DatefmtShow.format(rs.getDate("s_date"));
+                                TempMacNo = rs.getString("b_macno");
                                 prn.print("***DATE : " + TempDate);
                                 prn.print("***MacNo : " + TempMacNo);
                             }
-                            if (!TempMacNo.equals(rec.getString("b_macno"))) {
-                                TempMacNo = rec.getString("b_macno");
+                            if (!TempMacNo.equals(rs.getString("b_macno"))) {
+                                TempMacNo = rs.getString("b_macno");
                                 prn.print("***MacNo : " + TempMacNo);
                             }
-                            if (rec.getString("b_void").equals("V")) {
-                                prn.print("***Void โดย :" + rec.getString("b_voiduser") + "  " + rec.getString("b_voidtime"));
+                            if (rs.getString("b_void").equals("V")) {
+                                prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
                             }
-                            prn.print(rec.getString("b_refno") + " " + rec.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rec.getDouble("b_vat")), 10));
-                            if (rec.getDouble("b_cash") != 0) {
-                                prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_cash")), 12));
+                            prn.print(rs.getString("b_refno") + " " + rs.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_vat")), 10));
+                            if (rs.getDouble("b_cash") != 0) {
+                                prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cash")), 12));
                             }
-                            if (rec.getDouble("b_giftvoucher") != 0) {
-                                prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_giftvoucher")), 12));
+                            if (rs.getDouble("b_giftvoucher") != 0) {
+                                prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_giftvoucher")), 12));
                             }
-                            if (rec.getDouble("b_earnest") != 0) {
-                                prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_earnest")), 12));
+                            if (rs.getDouble("b_earnest") != 0) {
+                                prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_earnest")), 12));
                             }
-                            if (rec.getDouble("b_cramt1") != 0) {
-                                prn.print("       " + "***" + PUtility.DataFullR(rec.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rec.getDouble("b_cramt1")), 12));
+                            if (rs.getDouble("b_cramt1") != 0) {
+                                prn.print("       " + "***" + PUtility.DataFullR(rs.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cramt1")), 12));
                             }
-                            if (rec.getDouble("b_accramt") != 0) {
-                                prn.print("       " + "AR-" + PUtility.DataFullR(rec.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rec.getDouble("b_accramt")), 12));
-                                prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rec.getString("b_accrcode")), 30));
+                            if (rs.getDouble("b_accramt") != 0) {
+                                prn.print("       " + "AR-" + PUtility.DataFullR(rs.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_accramt")), 12));
+                                prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rs.getString("b_accrcode")), 30));
                             }
-                        } while (rec.next());
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());

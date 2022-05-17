@@ -1988,7 +1988,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                         stmt3.close();
                                     } catch (SQLException e9) {
                                         MSG.ERR(e9.getMessage());
-                                        e9.printStackTrace();
                                     }
 
                                     Value.EMP_CODE = login.getLoginPWD();

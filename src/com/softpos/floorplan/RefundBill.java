@@ -438,7 +438,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     MemmaterController memControl = new MemmaterController();
                     memControl.updateScoreRefund(billBean.getB_MemCode(), billBean.getB_MemCurSum());
 
-                    PUtility.ShowMsg("การยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " เรียบร้อยแล้ว...");
+                    MSG.NOTICE("การยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " เรียบร้อยแล้ว...");
                 }
                 InitRefund();
             }

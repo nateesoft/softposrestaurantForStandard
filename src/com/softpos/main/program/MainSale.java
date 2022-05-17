@@ -2309,7 +2309,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
 
             } else {
-                PUtility.ShowMsg("รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...ไม่สามารถกำหนด Option เพิ่มเติมได้...");
+                MSG.WAR("รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...ไม่สามารถกำหนด Option เพิ่มเติมได้...");
                 txtPluCode.requestFocus();
             }
         }
@@ -2421,7 +2421,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     AppLogUtil.log(MainSale.class, "error", e.getMessage());
                 }
             } else {
-                PUtility.ShowMsg("จำนวนขายต้องมากกว่า 0...");
+                MSG.WAR("จำนวนขายต้องมากกว่า 0...");
                 txtPluCode.requestFocus();
             }
 
@@ -2517,9 +2517,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             String SqlQuery = "select *from menulist "
                                     + "where menuitem=('" + PluCode + "') and (menuactive='Y')";
                             ResultSet rs = stmt.executeQuery(SqlQuery);
-                            if(rs.next()){
+                            if (rs.next()) {
                                 PluCode = rs.getString("plucode");
-                            }else{
+                            } else {
                                 MSG.WAR("ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
                                 txtPluCode.setText("");
                                 rs.close();
@@ -2541,12 +2541,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String SqlQuery = "select *from product "
                             + "where pcode='" + PluCode + "' and pactive='Y'";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    if(rs.next()){
+                    if (rs.next()) {
                         found = true;
                         PublicVar.P_Code = PluCode;
                         PublicVar.P_Status = rs.getString("pstatus");
                         PublicVar.P_Qty = Qty;
-                    }else{
+                    } else {
                         TempStatus = "";
                         String TempCode2 = seekBarCode(PluCode);
                         if (TempCode2.equals("")) {
@@ -2573,7 +2573,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     AppLogUtil.log(MainSale.class, "error", e.getMessage());
                 }
             } else {
-                PUtility.ShowMsg("จำนวนขายต้องมากกว่า 0...");
+                MSG.WAR("จำนวนขายต้องมากกว่า 0...");
                 txtPluCode.requestFocus();
             }
         }
@@ -2594,7 +2594,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from product where pcode='" + PCode + "' and pactive='Y'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            if(rs.next()){
+            if (rs.next()) {
                 isValid = true;
             }
             rs.close();
@@ -2620,10 +2620,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from product where pbarcode='" + BarCode + "' and pactive='Y'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            if(rs.next()){
+            if (rs.next()) {
                 RetVal = rs.getString("pcode");
                 TempStatus = rs.getString("pstatus");
-            }else{
+            } else {
                 RetVal = "";
                 TempStatus = "";
             }
@@ -2665,15 +2665,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from product where pcode='" + PCode + "' and pactive='Y'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            rs.first();
-            if (rs.getRow() == 0) {
-                MSG.ERR("ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
-                txtPluCode.setText("");
-                rs.close();
-                stmt.close();
-                txtPluCode.selectAll();
-                txtPluCode.requestFocus();
-            } else {
+            if (rs.next()) {
                 if (!PUtility.CheckStockOK(PCode, R_Quan)) {
                     txtPluCode.setText("");
                     txtPluCode.selectAll();
@@ -2858,6 +2850,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     txtDiscount.setText("- " + Discount);
                     PublicVar.ErrorColect = true;
                 } //end of Load Data
+            } else {
+                MSG.ERR("ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
+                txtPluCode.setText("");
+                rs.close();
+                stmt.close();
+                txtPluCode.selectAll();
+                txtPluCode.requestFocus();
             }
             rs.close();
         } catch (SQLException e) {
@@ -3908,7 +3907,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         if (!PCode.equals("") && !PVoid.equals("V")) {
                             changTypeClick();
                         } else {
-                            PUtility.ShowMsg("รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
+                            MSG.WAR("รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
                         }
                     }
                 } else if (typeIndex.equals("ItemDiscount")) {

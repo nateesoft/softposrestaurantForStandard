@@ -1208,12 +1208,10 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     try {
                         Statement stmt2 = mysql.getConnection().createStatement();
-                        String SQLQuery2 = "Select *from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
+                        String SQLQuery2 = "Select * from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
                                 + "(b_macno='" + txtMacNo.getText() + "') and (b_void<>'V')";
                         ResultSet rec2 = stmt.executeQuery(SQLQuery2);
-                        rec2.first();
-                        if (rec2.getRow() == 0) {
-                        } else {
+                        if(rec2.next()){
                             NoEdit = true;
                             txtMacNo.setFocusable(false);
                             txtDocNoRef.setFocusable(false);

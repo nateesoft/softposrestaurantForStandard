@@ -591,12 +591,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public Boolean ChkValidDate() {
         Boolean RetVal = true;
         if (!PUtility.ChkDate(ardate1.getText())) {
-            PUtility.ShowMsg("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate1.requestFocus();
             RetVal = false;
         }
         if (!PUtility.ChkDate(ardate2.getText())) {
-            PUtility.ShowMsg("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate2.requestFocus();
             RetVal = false;
         }

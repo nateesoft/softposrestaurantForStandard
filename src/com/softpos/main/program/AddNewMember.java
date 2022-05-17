@@ -770,12 +770,12 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         if (M_Name.getText().length() == 0) {
-            PUtility.ShowMsg("กรุณาป้อนชื่อสมาชิก...");
+            MSG.WAR("กรุณาป้อนชื่อสมาชิก...");
             M_Name.requestFocus();
             RetVal = false;
         }
         if (M_HomeTel.getText().length() == 0 && M_OfficeTel.getText().length() == 0 && M_Mobile.getText().length() == 0) {
-            PUtility.ShowMsg("กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
+            MSG.WAR("กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
             M_HomeTel.requestFocus();
             RetVal = false;
         }
@@ -800,8 +800,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     RetVal = false;
                 }
             } else {
-                //PUtility.ShowMsg("รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
-                MSG.WAR_MSG(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
+                MSG.WAR(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
                 M_Barcode.requestFocus();
                 RetVal = false;
             }

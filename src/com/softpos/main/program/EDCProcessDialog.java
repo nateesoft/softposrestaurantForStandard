@@ -154,7 +154,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                     outputStream.write(writeStr.getBytes());
                     Thread.sleep(1000);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
                 }
                 chz = (byte) strRead.charAt(0);
                 timeOut++;
@@ -287,7 +286,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         try {
             outputStream.write(ack.getBytes());
         } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 

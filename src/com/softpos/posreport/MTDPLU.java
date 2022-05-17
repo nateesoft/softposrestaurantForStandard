@@ -1,18 +1,5 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import util.DateChooseDialog;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.main.program.Jdi_report_MTDSalePLU;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
@@ -20,8 +7,21 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PluRec;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.DateChooseDialog;
 import util.MSG;
 
 public class MTDPLU extends javax.swing.JDialog {
@@ -652,40 +652,36 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                                 + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
                                 + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
 
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
                         TempGroup = "";
+                        while(rs.next()){
+                            TempGroup = rs.getString("s_pcode");
+                            TempCode = rs.getString("s_pcode");
+                            
+                            prn.print(rs.getString("s_pcode") + "  " + PUtility.DataFullR(PUtility.SeekProductName(rs.getString("s_pcode")), 25));
+                                prn.print(PUtility.DataFull(IntFmt.format(rs.getDouble("sum(e_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(e_amt)")), 13) + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(t_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(t_amt)")), 13));
+                                prn.print(PUtility.DataFull(IntFmt.format(rs.getDouble("sum(d_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(d_amt)")), 13) + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(p_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(p_amt)")), 13));
+                                prn.print(PUtility.DataFull(IntFmt.format(rs.getDouble("sum(w_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(w_amt)")), 13) + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(s_qty)")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(s_amt)")), 13));
 
-                        if (rec.getRow() == 0) {
-                        } else {
-                            TempGroup = rec.getString("s_pcode");
-                            TempCode = rec.getString("s_pcode");
-                            do {
-                                prn.print(rec.getString("s_pcode") + "  " + PUtility.DataFullR(PUtility.SeekProductName(rec.getString("s_pcode")), 25));
-                                prn.print(PUtility.DataFull(IntFmt.format(rec.getDouble("sum(e_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(e_amt)")), 13) + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(t_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(t_amt)")), 13));
-                                prn.print(PUtility.DataFull(IntFmt.format(rec.getDouble("sum(d_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(d_amt)")), 13) + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(p_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(p_amt)")), 13));
-                                prn.print(PUtility.DataFull(IntFmt.format(rec.getDouble("sum(w_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(w_amt)")), 13) + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(s_qty)")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(s_amt)")), 13));
+                                SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
+                                SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)");
 
-                                SumEQty = SumEQty + rec.getDouble("sum(e_qty)");
-                                SumEAmt = SumEAmt + rec.getDouble("sum(e_amt)");
+                                SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
+                                SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)");
 
-                                SumTQty = SumTQty + rec.getDouble("sum(t_qty)");
-                                SumTAmt = SumTAmt + rec.getDouble("sum(t_amt)");
+                                SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
+                                SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)");
 
-                                SumDQty = SumDQty + rec.getDouble("sum(d_qty)");
-                                SumDAmt = SumDAmt + rec.getDouble("sum(d_amt)");
+                                SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
+                                SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)");
 
-                                SumPQty = SumPQty + rec.getDouble("sum(p_qty)");
-                                SumPAmt = SumPAmt + rec.getDouble("sum(p_amt)");
+                                SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
+                                SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)");
 
-                                SumWQty = SumWQty + rec.getDouble("sum(w_qty)");
-                                SumWAmt = SumWAmt + rec.getDouble("sum(w_amt)");
-
-                                SumSQty = SumSQty + rec.getDouble("sum(s_qty)");
-                                SumSAmt = SumSAmt + rec.getDouble("sum(s_amt)");
-                            } while (rec.next());
+                                SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
+                                SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -731,10 +727,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
                     + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
-
-//            System.out.println(SqlQuery);
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             TempGroup = "";
             TempPlu = "";
             TempName = "";
@@ -783,14 +776,14 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
 
             GArray[0] = GroupRec;
-            if (rec.getRow() == 0) {
-            } else {
-                TempGroup = rec.getString("s_dept");
-                TempPlu = rec.getString("s_pcode");
-                TempName = PUtility.SeekProductName(rec.getString("s_pcode"));
-                do {
-                    Found = true;
-                    if (!TempPlu.equals(rec.getString("s_pcode"))) {
+            
+            while(rs.next()){
+                TempGroup = rs.getString("s_dept");
+                TempPlu = rs.getString("s_pcode");
+                TempName = PUtility.SeekProductName(rs.getString("s_pcode"));
+                
+                Found = true;
+                    if (!TempPlu.equals(rs.getString("s_pcode"))) {
                         GroupRec = new PluRec();
                         GroupRec.MacNo1 = "";
                         GroupRec.MacNo2 = "";
@@ -830,9 +823,9 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                             ArraySize = GArray.length;
                             GArray[ArraySize - 1] = GroupRec;
                         }
-                        TempGroup = rec.getString("s_dept");
-                        TempPlu = rec.getString("s_pcode");
-                        TempName = PUtility.SeekProductName(rec.getString("s_pcode"));
+                        TempGroup = rs.getString("s_dept");
+                        TempPlu = rs.getString("s_pcode");
+                        TempName = PUtility.SeekProductName(rs.getString("s_pcode"));
                         SumEQty = 0.0;
                         SumEAmt = 0.0;
                         SumTQty = 0.0;
@@ -847,29 +840,29 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                         SumSAmt = 0.0;
                     }
                     //if (rec.getString("r_etd").equals("E")) {
-                    SumEQty = SumEQty + rec.getDouble("sum(e_qty)");
-                    SumEAmt = SumEAmt + rec.getDouble("sum(e_amt)");
+                    SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
+                    SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)");
                     //}
                     //if (rec.getString("r_etd").equals("T")) {
-                    SumTQty = SumTQty + rec.getDouble("sum(t_qty)");
-                    SumTAmt = SumTAmt + rec.getDouble("sum(t_amt)");
+                    SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
+                    SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)");
                     //}
                     //if (rec.getString("r_etd").equals("D")) {
-                    SumDQty = SumDQty + rec.getDouble("sum(d_qty)");
-                    SumDAmt = SumDAmt + rec.getDouble("sum(d_amt)");
+                    SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
+                    SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)");
                     //}
                     //if (rec.getString("r_etd").equals("P")) {
-                    SumPQty = SumPQty + rec.getDouble("sum(p_qty)");
-                    SumPAmt = SumPAmt + rec.getDouble("sum(p_amt)");
+                    SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
+                    SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)");
                     //}
                     //if (rec.getString("r_etd").equals("W")) {
-                    SumWQty = SumWQty + rec.getDouble("sum(w_qty)");
-                    SumWAmt = SumWAmt + rec.getDouble("sum(w_amt)");
+                    SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
+                    SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)");
                     //}
-                    SumSQty = SumSQty + rec.getDouble("sum(s_qty)");
-                    SumSAmt = SumSAmt + rec.getDouble("sum(s_amt)");
-                } while (rec.next());
-                if (SumSQty > 0) {
+                    SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
+                    SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)");
+            }
+            if (SumSQty > 0) {
                     GroupRec = new PluRec();
                     GroupRec.MacNo1 = "";
                     GroupRec.MacNo2 = "";
@@ -910,9 +903,8 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                         GArray[ArraySize - 1] = GroupRec;
                     }
                 }
-            }
 
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -995,40 +987,36 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
                     + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
 
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             TempGroup = "";
+            while(rs.next()){
+                TempGroup = rs.getString("s_pcode");
+                TempCode = rs.getString("s_pcode");
+                
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("s_pcode") + Space + PUtility.DataFullR(PUtility.SeekProductName(rs.getString("s_pcode")), 25)) + "_";
+                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rs.getDouble("sum(e_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(e_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(t_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(t_amt)")), 13)) + "_";
+                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rs.getDouble("sum(d_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(d_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(p_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(p_amt)")), 13)) + "_";
+                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rs.getDouble("sum(w_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(w_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(s_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(s_amt)")), 13)) + "_";
 
-            if (rec.getRow() == 0) {
-            } else {
-                TempGroup = rec.getString("s_pcode");
-                TempCode = rec.getString("s_pcode");
-                do {
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (rec.getString("s_pcode") + Space + PUtility.DataFullR(PUtility.SeekProductName(rec.getString("s_pcode")), 25)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rec.getDouble("sum(e_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(e_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(t_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(t_amt)")), 13)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rec.getDouble("sum(d_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(d_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(p_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(p_amt)")), 13)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(IntFmt.format(rec.getDouble("sum(w_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(w_amt)")), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rec.getDouble("sum(s_qty)")), 3) + TAB + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(s_amt)")), 13)) + "_";
+                    SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
+                    SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)");
 
-                    SumEQty = SumEQty + rec.getDouble("sum(e_qty)");
-                    SumEAmt = SumEAmt + rec.getDouble("sum(e_amt)");
+                    SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
+                    SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)");
 
-                    SumTQty = SumTQty + rec.getDouble("sum(t_qty)");
-                    SumTAmt = SumTAmt + rec.getDouble("sum(t_amt)");
+                    SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
+                    SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)");
 
-                    SumDQty = SumDQty + rec.getDouble("sum(d_qty)");
-                    SumDAmt = SumDAmt + rec.getDouble("sum(d_amt)");
+                    SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
+                    SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)");
 
-                    SumPQty = SumPQty + rec.getDouble("sum(p_qty)");
-                    SumPAmt = SumPAmt + rec.getDouble("sum(p_amt)");
+                    SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
+                    SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)");
 
-                    SumWQty = SumWQty + rec.getDouble("sum(w_qty)");
-                    SumWAmt = SumWAmt + rec.getDouble("sum(w_amt)");
-
-                    SumSQty = SumSQty + rec.getDouble("sum(s_qty)");
-                    SumSAmt = SumSAmt + rec.getDouble("sum(s_amt)");
-                } while (rec.next());
+                    SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
+                    SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

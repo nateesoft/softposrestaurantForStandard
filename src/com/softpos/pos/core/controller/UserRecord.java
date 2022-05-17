@@ -123,11 +123,7 @@ public class UserRecord {
             String sql = "select  * from posuser Where(username= '" + XUserCode + "')";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            rs.first();
-            if (rs.getRow() == 0) {
-                MSG.WAR("รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                return false;
-            } else {
+            if (rs.next()) {
                 UserCode = rs.getString("username");
                 UserName = rs.getString("name");
                 UserGroup = rs.getString("usergroup");
@@ -230,6 +226,9 @@ public class UserRecord {
                 Stock44 = rs.getString("Stock44");
                 Stock45 = rs.getString("Stock45");
                 return true;
+            } else {
+                MSG.WAR("รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+                return false;
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

@@ -2367,7 +2367,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     public void _CrAppNoExit() {
         if (!ESCKEY) {
             if (_CrAppNo.getText().equals("")) {
-                PUtility.ShowMsg("กรุณาป้อนรหัสอนุมัติ...");
+                MSG.WAR("กรุณาป้อนรหัสอนุมัติ...");
                 _CrAppNo.requestFocus();
             }
             if (!_CrAppNo.getText().equals("")) {

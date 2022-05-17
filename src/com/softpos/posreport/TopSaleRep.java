@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -42,11 +43,10 @@ public class TopSaleRep extends javax.swing.JDialog {
         super(parent, modal);
         try {
             javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
             }
         }
         initComponents();
@@ -507,17 +507,14 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String SqlQuery = "select r_group,groupName,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale inner join groupfile on t_sale.r_group = groupfile.groupcode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') and (r_refund<>'V') "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String[] data = new String[7];
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String[] data = new String[7];
+                    String TGroup = rs.getString("r_group");
+                    String TCode = rs.getString("r_plucode");
+                    String TName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+                    Double TQuan = rs.getDouble("sum(r_quan)");
+                    Double Tamount = rs.getDouble("sum(r_total)");
 
                     InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
                     data[0] = TGroup;
@@ -525,12 +522,12 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     data[2] = TName;
                     data[3] = TQuan + "";
                     data[4] = Tamount + "";
-                    data[5] = ThaiUtil.ASCII2Unicode(rec.getString("groupName"));
+                    data[5] = ThaiUtil.ASCII2Unicode(rs.getString("groupName"));
                     data[6] = "";
+                    
                     topsale.add(data);
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -576,21 +573,17 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            System.out.println(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = rec.getString("r_pname");
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String TGroup = rs.getString("r_group");
+                    String TCode = rs.getString("r_plucode");
+                    String TName = rs.getString("r_pname");
+                    Double TQuan = rs.getDouble("sum(r_quan)");
+                    Double Tamount = rs.getDouble("sum(r_total)");
+                    
                     InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -624,27 +617,23 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     //int CntOrder = 10 ;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                            TempGroup = rec.getString("r_group");
-                            do {
-                                if (!rec.getString("r_group").equals(TempGroup)) {
-                                    prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                                    TempGroup = rec.getString("r_group");
+                        String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                            TempGroup = rs.getString("r_group");
+                            
+                            if (!rs.getString("r_group").equals(TempGroup)) {
+                                    prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
                                     Cnt = 1;
                                 }
                                 if (Cnt <= CntOrder) {
-                                    prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rec.getString("r_pname"), 30));
-                                    prn.print("     " + PUtility.DataFullR(rec.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 13));
+                                    prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rs.getString("r_pname"), 30));
+                                    prn.print("     " + PUtility.DataFullR(rs.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13));
                                     Cnt++;
                                 }
-                            } while (rec.next());
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -695,20 +684,17 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = rec.getString("r_pname");
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String TGroup = rs.getString("r_group");
+                    String TCode = rs.getString("r_plucode");
+                    String TName = rs.getString("r_pname");
+                    Double TQuan = rs.getDouble("sum(r_quan)");
+                    Double Tamount = rs.getDouble("sum(r_total)");
+                    
                     InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -750,27 +736,23 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         //int CntOrder = 10 ;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                TempGroup = rec.getString("r_group");
-                do {
-                    if (!rec.getString("r_group").equals(TempGroup)) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                        TempGroup = rec.getString("r_group");
+            String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                TempGroup = rs.getString("r_group");
+                
+                if (!rs.getString("r_group").equals(TempGroup)) {
+                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
                         Cnt = 1;
                     }
                     if (Cnt <= CntOrder) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>"  + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rec.getString("r_pname")), 28)) + "_";
-                        t += "align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(rec.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(IntFmt.format(rec.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(rec.getDouble("r_total")), 13)) + "_";
+                        t += "colspan=3 align=left><font face=Angsana New size=1>"  + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 28)) + "_";
+                        t += "align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(rs.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(IntFmt.format(rs.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(rs.getDouble("r_total")), 13)) + "_";
                         Cnt++;
                     }
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());

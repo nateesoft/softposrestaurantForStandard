@@ -69,12 +69,11 @@ public class SendTerminalReportAuto {
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
-            rs.first();
-            if (rs.getRow() == 0) {
-            } else {
+            
+            if(rs.next()){
                 frec.StBill = rs.getString("b_refno");
-                do {
-                    frec.SpBill = rs.getString("b_refno");
+                
+                frec.SpBill = rs.getString("b_refno");
                     if (!rs.getString("b_void").equals("V")) {
                         frec.Dept_Sum = frec.Dept_Sum + rs.getDouble("b_total");
                         if (rs.getDouble("b_serviceamt") != 0.0) {
@@ -201,7 +200,6 @@ public class SendTerminalReportAuto {
                         frec.CntBillVoid++;
                         frec.CntBill++;
                     }
-                } while (rs.next());
             }
             rs.close();
             stmt.close();

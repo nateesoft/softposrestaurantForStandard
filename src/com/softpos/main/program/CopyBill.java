@@ -438,7 +438,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         }
 
         if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
-            PUtility.ShowMsg("บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
+            MSG.WAR("บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
             txtBillNo.requestFocus();
         } else {
             if (CopyPrn > CONFIG.getP_BillCopy()) {

@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
@@ -181,7 +180,7 @@ public class FindMember extends javax.swing.JDialog {
             }
 
         } else {
-            PUtility.ShowMsg("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
+            MSG.WAR("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
             TMemCode.setText("");
             TMemCode.requestFocus();
         }

@@ -1,26 +1,26 @@
 package com.softpos.posreport;
 
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import util.DateChooseDialog;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.DateChooseDialog;
 import util.MSG;
 
 public class MTDVoid extends javax.swing.JDialog {
@@ -462,30 +462,28 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from s_void left join product on s_void.pcode=product.pcode where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                if (!TempDate.equals(DatefmtShow.format(rec.getDate("s_date")))) {
-                                    TempDate = DatefmtShow.format(rec.getDate("s_date"));
+                        String SqlQuery = "select *from s_void left join product on s_void.pcode=product.pcode where (s_date>='" + Datefmt.format(TDate1) + "') "
+                                + "and (s_date<='" + Datefmt.format(TDate2) + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while(rs.next()){
+                            if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
+                                    TempDate = DatefmtShow.format(rs.getDate("s_date"));
                                     prn.print("***DATE : " + TempDate);
                                 }
-                                prn.print(rec.getString("macno") + " " + PUtility.DataFullR(rec.getString("cashier"), 6) + " " + PUtility.DataFullR(rec.getString("vtable"), 5) + " " + PUtility.DataFullR(rec.getString("time"), 6) + "  " + PUtility.DataFullR(rec.getString("voiduser"), 10) + " " + PUtility.DataFullR(rec.getString("voidtime"), 6));
-                                prn.print("     " + PUtility.DataFullR(rec.getString("pdesc"), 35));
-                                prn.print("     " + rec.getString("ref_no") + " " + PUtility.DataFull(rec.getString("pcode"), 13) + " " + PUtility.DataFull(IntFmt.format(rec.getDouble("qty")), 4) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("amt")), 8));
+                                prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("vtable"), 5) + " " + PUtility.DataFullR(rs.getString("time"), 6) + "  " + PUtility.DataFullR(rs.getString("voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("voidtime"), 6));
+                                prn.print("     " + PUtility.DataFullR(rs.getString("pdesc"), 35));
+                                prn.print("     " + rs.getString("ref_no") + " " + PUtility.DataFull(rs.getString("pcode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("qty")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("amt")), 8));
                                 SumVoid++;
-                                SumAmount = SumAmount + rec.getDouble("amt");
-                            } while (rec.next());
+                                SumAmount = SumAmount + rs.getDouble("amt");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         PUtility.showError(e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
-
-                    mysql.close();
+                    
                     prn.print("----------------------------------------");
                     prn.print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
                     prn.print("----------------------------------------");
@@ -544,30 +542,29 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from s_void left join product on s_void.pcode=product.pcode where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    if (!TempDate.equals(DatefmtShow.format(rec.getDate("s_date")))) {
-                        TempDate = DatefmtShow.format(rec.getDate("s_date"));
+            String SqlQuery = "select * from s_void left join product on s_void.pcode=product.pcode "
+                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
+                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()) {
+                if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
+                        TempDate = DatefmtShow.format(rs.getDate("s_date"));
                         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***DATE : " + Space + TempDate) + "_";
                     }
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (rec.getString("macno") + Space + PUtility.DataFull(rec.getString("cashier"), 6) + Space + PUtility.DataFull(rec.getString("vtable"), 5) + Space + PUtility.DataFull(rec.getString("time"), 6) + Space + PUtility.DataFull(rec.getString("voiduser"), 10) + Space + PUtility.DataFull(rec.getString("voidtime"), 6)) + "_";
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(ThaiUtil.ASCII2Unicode(rec.getString("pdesc")), 35)) + "_";
-                    t += "align=center><font face=Angsana New size=1>" + (rec.getString("ref_no") + Space + PUtility.DataFullSpace(rec.getString("pcode"), 13) + Space + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rec.getDouble("qty")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rec.getDouble("amt")), 8)) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("macno") + Space + PUtility.DataFull(rs.getString("cashier"), 6) + Space + PUtility.DataFull(rs.getString("vtable"), 5) + Space + PUtility.DataFull(rs.getString("time"), 6) + Space + PUtility.DataFull(rs.getString("voiduser"), 10) + Space + PUtility.DataFull(rs.getString("voidtime"), 6)) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")), 35)) + "_";
+                    t += "align=center><font face=Angsana New size=1>" + (rs.getString("ref_no") + Space + PUtility.DataFullSpace(rs.getString("pcode"), 13) + Space + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rs.getDouble("qty")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("amt")), 8)) + "_";
                     SumVoid++;
-                    SumAmount = SumAmount + rec.getDouble("amt");
-                } while (rec.next());
+                    SumAmount = SumAmount + rs.getDouble("amt");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
+        } finally {
+            mysql.close();
         }
 
-        mysql.close();
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------" + "_");
         t += "align=left><font face=Angsana New size=1>" + ("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "</td><td align=center><font face=Angsana New size=1>" + "จำนวนเงิน :" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(SumAmount), 11) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";

@@ -124,7 +124,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                     this.dispose();
                 }
             } else {
-                PUtility.ShowMsg("รายการนี้ได้ทำการยกเลิกไปแล้ว...");
+                MSG.WAR("รายการนี้ได้ทำการยกเลิกไปแล้ว...");
             }
         }
 
