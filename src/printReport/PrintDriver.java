@@ -174,7 +174,7 @@ public class PrintDriver {
                 }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(PrintDriver.class, "error", e.getMessage());
+                AppLogUtil.log(PrintDriver.class, "error", e);
             } finally {
                 mysql.close();
             }

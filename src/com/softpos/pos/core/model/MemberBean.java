@@ -217,7 +217,7 @@ public class MemberBean {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberBean.class, "error", e.getMessage());
+            AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
             mysql.close();
         }

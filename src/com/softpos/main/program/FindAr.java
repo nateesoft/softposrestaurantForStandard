@@ -197,7 +197,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(FindAr.class, "error", e.getMessage());
+            AppLogUtil.log(FindAr.class, "error", e);
         } finally {
             mysql.close();
         }

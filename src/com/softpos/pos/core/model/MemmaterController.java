@@ -43,7 +43,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemmaterController.class, "error", e.getMessage());
+            AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -168,7 +168,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemmaterController.class, "error", e.getMessage());
+            AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -49,7 +49,7 @@ public class MemberControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+            AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -123,7 +123,7 @@ public class MemberControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+            AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -206,7 +206,7 @@ public class MemberControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberControl.class, "error", e.getMessage());
+            AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.close();
         }

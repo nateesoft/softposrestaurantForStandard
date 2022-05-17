@@ -63,7 +63,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -105,7 +105,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -157,7 +157,7 @@ public class TableFileControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
             result = TABLE_NOT_SETUP;
         } finally {
             mysql.close();
@@ -234,7 +234,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -311,7 +311,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -341,7 +341,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -420,7 +420,7 @@ public class TableFileControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -455,7 +455,7 @@ public class TableFileControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -487,7 +487,7 @@ public class TableFileControl {
             serviceControl.updateService(table);
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -507,7 +507,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -533,7 +533,7 @@ public class TableFileControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -567,7 +567,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -608,7 +608,7 @@ public class TableFileControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -629,7 +629,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -650,7 +650,7 @@ public class TableFileControl {
             setDefaultTableFile(tableTemp);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -667,7 +667,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -684,7 +684,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -729,7 +729,7 @@ public class TableFileControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.close();
         }

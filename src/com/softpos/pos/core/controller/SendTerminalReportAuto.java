@@ -207,7 +207,7 @@ public class SendTerminalReportAuto {
             rsGetEntertain.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
         try {
@@ -222,7 +222,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
         try {
@@ -238,7 +238,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
         try {
@@ -254,7 +254,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
         try {
@@ -302,7 +302,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
         PrintTerminalEngFormDriver(frec, CrArray, "001", "999");
@@ -535,7 +535,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -717,7 +717,7 @@ public class SendTerminalReportAuto {
             listObj.add(new Object[]{countb_refnoD});
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -755,7 +755,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -795,7 +795,7 @@ public class SendTerminalReportAuto {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SendTerminalReportAuto.class, "error", e.getMessage());
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.close();
         }

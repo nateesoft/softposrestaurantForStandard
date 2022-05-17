@@ -203,7 +203,7 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(VoidPopupDialog.class, "error", e.getMessage());
+            AppLogUtil.log(VoidPopupDialog.class, "error", e);
         } finally {
             mysql.close();
         }

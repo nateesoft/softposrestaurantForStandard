@@ -142,7 +142,7 @@ public class ItemDisControl {
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(ItemDisControl.class, "error", e.getMessage());
+                AppLogUtil.log(ItemDisControl.class, "error", e);
             }
 
             //update tablefile

@@ -1,25 +1,25 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.discount.DiscountDialog;
+import com.softpos.pos.core.controller.BalanceControl;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.DiscountBean;
-import com.softpos.discount.DiscountDialog;
-import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.BillNoBean;
+import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -1584,7 +1584,7 @@ public class CheckBill extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+                AppLogUtil.log(CheckBill.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -2217,7 +2217,7 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+                    AppLogUtil.log(CheckBill.class, "error", e);
                 }
                 txtArAmount.setFocusable(true);
                 txtArAmount.setText(txtTotalAmount.getText());
@@ -2235,7 +2235,7 @@ public class CheckBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2278,7 +2278,7 @@ public class CheckBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException ex) {
             MSG.ERR(ex.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", ex.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", ex);
         } finally {
             mysql.close();
         }
@@ -2296,7 +2296,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2346,7 +2346,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2370,12 +2370,12 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+                    AppLogUtil.log(CheckBill.class, "error", e);
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2392,7 +2392,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2563,7 +2563,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
         }

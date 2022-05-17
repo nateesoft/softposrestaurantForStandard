@@ -1,10 +1,16 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -17,12 +23,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import database.MySQLConnect;
-import java.awt.GraphicsEnvironment;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -231,7 +231,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ShowTable.class, "error", e.getMessage());
+                AppLogUtil.log(ShowTable.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -356,7 +356,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ShowTable.class, "error", e.getMessage());
+            AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
             mysql.close();
         }

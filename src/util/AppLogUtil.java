@@ -17,11 +17,7 @@ public class AppLogUtil {
     static SimpleDateFormat logDateFmt = new SimpleDateFormat("yyyy-MM-dd");
     static FileHandler fh = null;
 
-    static int getLineNumber() {
-        return Thread.currentThread().getStackTrace()[2].getLineNumber();
-    }
-
-    public static void log(Class t, String type, String msg) {
+    public static void log(Class t, String type, Exception e) {
         Logger logger = Logger.getLogger(t.getName());
         if (fh == null) {
             try {
@@ -34,17 +30,20 @@ public class AppLogUtil {
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
+            
+            String msg = e.getMessage();
+            int lineNumber = e.getStackTrace()[0].getLineNumber();
 
             switch (type) {
                 case "error":
-                    logger.log(Level.SEVERE, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    logger.log(Level.SEVERE, "{0}:{1}:{2}", new Object[]{msg, t.getName(), lineNumber});
                     break;
                 case "warning":
-                    logger.log(Level.WARNING, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    logger.log(Level.WARNING, "{0}:{1}:{2}", new Object[]{msg, t.getName(), lineNumber});
                     logger.warning(msg);
                     break;
                 default:
-                    logger.log(Level.INFO, "{0}:{1}", new Object[]{msg, getLineNumber()});
+                    logger.log(Level.INFO, "{0}:{1}:{2}", new Object[]{msg, t.getName(), lineNumber});
                     logger.info(msg);
                     break;
             }

@@ -54,7 +54,7 @@ public final class ViewReport {
                 rs1.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
 
             String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
@@ -85,7 +85,7 @@ public final class ViewReport {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
 
             if (check > 0) {
@@ -100,7 +100,7 @@ public final class ViewReport {
                     }
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                    AppLogUtil.log(ViewReport.class, "error", e);
                 }
                 try {
                     Float cp = Float.parseFloat(cashPay);
@@ -283,7 +283,7 @@ public final class ViewReport {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
             
             try {
@@ -347,7 +347,7 @@ public final class ViewReport {
                 v.setTitle("Report...");
             } catch (HeadlessException | NumberFormatException | JRException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
         } else {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
@@ -373,7 +373,7 @@ public final class ViewReport {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
 
             try {
@@ -521,7 +521,7 @@ public final class ViewReport {
 
             JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
         } catch (JRException e) {
-            AppLogUtil.log(ViewReport.class, "error", e.getMessage());
+            AppLogUtil.log(ViewReport.class, "error", e);
         } finally {
             mysql.close();
         }

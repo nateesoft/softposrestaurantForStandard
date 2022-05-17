@@ -46,7 +46,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -85,7 +85,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -125,7 +125,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -147,7 +147,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         }
 
         try {
@@ -157,7 +157,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -196,7 +196,7 @@ public class TempCuponController {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e.getMessage());
+            AppLogUtil.log(TempCuponController.class, "error", e);
         } finally{
             mysql.close();
         }

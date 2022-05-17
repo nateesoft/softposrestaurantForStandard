@@ -1091,7 +1091,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(PrintInv1.class, "error", e.getMessage());
+                AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1220,7 +1220,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         stmt2.close();
                     } catch (SQLException e2) {
                         MSG.ERR(e2.getMessage());
-                        AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+                        AppLogUtil.log(PrintInv1.class, "error", e2);
                     }
 
                     txtDocNo.setFocusable(true);
@@ -1237,7 +1237,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PrintInv1.class, "error", e.getMessage());
+                AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1281,7 +1281,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PrintInv1.class, "error", e.getMessage());
+                AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1322,7 +1322,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PrintInv1.class, "error", e.getMessage());
+                AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1407,7 +1407,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e2) {
                 MSG.ERR(e2.getMessage());
-                AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+                AppLogUtil.log(PrintInv1.class, "error", e2);
             } finally {
                 mysql.close();
             }
@@ -1592,7 +1592,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1617,7 +1617,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1646,7 +1646,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         }
 
         try {
@@ -1703,7 +1703,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1726,7 +1726,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1800,7 +1800,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1868,7 +1868,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1890,7 +1890,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1914,7 +1914,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -1945,7 +1945,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         }
 
         int UpdateInvNo = TempInv + 1;
@@ -1956,7 +1956,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }
@@ -2001,7 +2001,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 stmt.close();
                             } catch (SQLException e2) {
                                 MSG.ERR(e2.getMessage());
-                                AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+                                AppLogUtil.log(PrintInv1.class, "error", e2);
                             } finally {
                                 mysql.close();
                             }
@@ -2080,7 +2080,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
-            AppLogUtil.log(PrintInv1.class, "error", e2.getMessage());
+            AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.close();
         }

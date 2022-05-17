@@ -142,7 +142,7 @@ public class DispInv1 extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(DispInv1.class, "error", e.getMessage());
+                AppLogUtil.log(DispInv1.class, "error", e);
             } finally {
                 mysql.close();
             }

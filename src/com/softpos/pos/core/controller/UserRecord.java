@@ -232,7 +232,7 @@ public class UserRecord {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(UserRecord.class, "error", e.getMessage());
+            AppLogUtil.log(UserRecord.class, "error", e);
             return false;
         } finally {
             mysql.close();

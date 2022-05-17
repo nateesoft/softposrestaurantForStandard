@@ -561,7 +561,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -664,7 +664,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -689,7 +689,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -721,7 +721,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -745,7 +745,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -897,7 +897,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -912,7 +912,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -927,7 +927,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -942,7 +942,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1016,7 +1016,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         //prn.Print_Str("    เลขที่เริ่มต้น  :" + frec.StBill + "   ถึง  : " + frec.SpBill);
@@ -1055,7 +1055,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print("----------------------------------------");
@@ -1078,7 +1078,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
@@ -1094,7 +1094,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -1114,7 +1114,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1148,7 +1148,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1301,7 +1301,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1318,7 +1318,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -1333,7 +1333,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -1348,7 +1348,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1449,7 +1449,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print("----------------------------------------");
@@ -1472,7 +1472,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
@@ -1488,7 +1488,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -1508,7 +1508,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.print("----------------------------------------");
@@ -1541,7 +1541,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+                AppLogUtil.log(AutoSumXRep.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1750,7 +1750,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2026,7 +2026,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2332,7 +2332,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2636,7 +2636,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2695,7 +2695,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2732,7 +2732,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         try {
@@ -2750,7 +2750,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
         prn.InitPrinter();
@@ -2799,7 +2799,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2843,7 +2843,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2887,7 +2887,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+            AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2967,7 +2967,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(AutoSumXRep.class, "error", e.getMessage());
+                    AppLogUtil.log(AutoSumXRep.class, "error", e);
                 } finally {
                     mysql.close();
                 }

@@ -58,11 +58,11 @@ public class PrintToKic extends javax.swing.JFrame {
             mysql.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e);
         } finally {
             mysql.close();
         }
-        
+
         printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
         lblProcessShow.setText("สถานะการพิมพ์");
         new Thread(new Runnable() {
@@ -288,7 +288,6 @@ public class PrintToKic extends javax.swing.JFrame {
                     MySQLConnect mysql = new MySQLConnect();
                     try {
                         String sql = "select "
-                                //                                                                                + "b.*,"
                                 + "r_table,"
                                 + "sum(b.r_quan) qty,"
                                 + "sum(b.r_total) total"
@@ -303,18 +302,22 @@ public class PrintToKic extends javax.swing.JFrame {
                                 + "order by r_etd,r_index;";
                         mysql.open();
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-                        if (rs.next() && !rs.wasNull() && kicPrintting == false) {
-                            kicPrintting = true;
-                            Thread.sleep(700);
-                            tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
-                            kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
-                            lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
+                        if (rs.next()) {
+                            if (kicPrintting == false) {
+                                kicPrintting = true;
+                                Thread.sleep(700);
+                                tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
+                                kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
+                                lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
+                            }
+                        } else {
+                            kicPrintting = false;
                         }
-                        kicPrintting = false;
+                        
                         rs.close();
                     } catch (InterruptedException | SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+                        AppLogUtil.log(PrintToKic.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -451,7 +454,7 @@ public class PrintToKic extends javax.swing.JFrame {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+                            AppLogUtil.log(PrintToKic.class, "error", e);
                         }
                     }
                 }
@@ -470,7 +473,7 @@ public class PrintToKic extends javax.swing.JFrame {
                     stmt.executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+                    AppLogUtil.log(PrintToKic.class, "error", e);
                 }
                 kicPrintting = false;
             } catch (SQLException e) {
@@ -480,7 +483,7 @@ public class PrintToKic extends javax.swing.JFrame {
             }
         } catch (HeadlessException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e);
         }
     }
 
@@ -498,7 +501,7 @@ public class PrintToKic extends javax.swing.JFrame {
                         mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+                        AppLogUtil.log(PrintToKic.class, "error", e);
                     } finally {
                         mysql2.close();
                     }
@@ -506,7 +509,7 @@ public class PrintToKic extends javax.swing.JFrame {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e.getMessage());
+            AppLogUtil.log(PrintToKic.class, "error", e);
         } finally {
             mysql.close();
         }

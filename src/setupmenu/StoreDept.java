@@ -24,7 +24,7 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
-            AppLogUtil.log(StoreDept.class, "error", e.getMessage());
+            AppLogUtil.log(StoreDept.class, "error", e);
             
             return false;
         } finally{
@@ -53,7 +53,7 @@ public class StoreDept {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
-            AppLogUtil.log(StoreDept.class, "error", e.getMessage());
+            AppLogUtil.log(StoreDept.class, "error", e);
             
             return false;
         } finally {

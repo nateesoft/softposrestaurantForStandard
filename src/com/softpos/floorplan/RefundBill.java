@@ -464,7 +464,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -476,7 +476,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -488,7 +488,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -500,7 +500,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -512,7 +512,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -522,7 +522,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         try {
@@ -532,7 +532,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         }
 
         if (!memcode.equals("")) {
@@ -547,7 +547,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e);
             }
 
             try {
@@ -557,7 +557,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e);
             }
 
             try {
@@ -567,7 +567,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+                AppLogUtil.log(RefundBill.class, "error", e);
             }
         }
         // Return Stock
@@ -587,7 +587,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -660,7 +660,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
             InitRefund();
         } finally {
             mysql.close();
@@ -749,7 +749,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -818,7 +818,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e.getMessage());
+            AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -94,7 +94,7 @@ public class ProductControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -174,7 +174,7 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -219,7 +219,7 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -268,7 +268,7 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -344,7 +344,7 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -365,7 +365,7 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -391,7 +391,7 @@ public class ProductControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -414,7 +414,7 @@ public class ProductControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ProductControl.class, "error", e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.close();
         }

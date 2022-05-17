@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
@@ -106,7 +106,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ChangTypeDialog.class, "error", e.getMessage());
+            AppLogUtil.log(ChangTypeDialog.class, "error", e);
         } finally {
             mysql.close();
         }

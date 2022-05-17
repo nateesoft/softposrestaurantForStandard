@@ -249,7 +249,7 @@ public class FindProduct extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(FindProduct.class, "error", e.getMessage());
+            AppLogUtil.log(FindProduct.class, "error", e);
         }finally{
             mysql.close();
         }

@@ -281,7 +281,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(InvRep.class, "error", e.getMessage());
+                        AppLogUtil.log(InvRep.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -375,7 +375,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(InvRep.class, "error", e.getMessage());
+            AppLogUtil.log(InvRep.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -25,7 +25,7 @@ public class StorePlu {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(StorePlu.class, "error", e.getMessage());
+            AppLogUtil.log(StorePlu.class, "error", e);
             
             return false;
         } finally {
@@ -53,7 +53,7 @@ public class StorePlu {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(StorePlu.class, "error", e.getMessage());
+            AppLogUtil.log(StorePlu.class, "error", e);
             
             return false;
         } finally {

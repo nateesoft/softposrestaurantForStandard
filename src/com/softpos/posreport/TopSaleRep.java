@@ -499,7 +499,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -531,7 +531,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -562,7 +562,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -587,7 +587,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         if (Value.printdriver) {
@@ -637,7 +637,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+                        AppLogUtil.log(TopSaleRep.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -673,7 +673,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -698,7 +698,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         if (POSHW.getHeading1().trim().length() >= 18) {
@@ -756,7 +756,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -791,7 +791,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TopSaleRep.class, "error", e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.close();
         }

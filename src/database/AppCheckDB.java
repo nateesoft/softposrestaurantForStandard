@@ -21,7 +21,7 @@ public class AppCheckDB {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AppCheckDB.class, "error", e.getMessage());
+            AppLogUtil.log(AppCheckDB.class, "error", e);
             try {
                 String sqlUpd = "alter table mgrbuttonsetup add check_extra char(1) default 'N'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -29,7 +29,7 @@ public class AppCheckDB {
                 }
             } catch (SQLException ex) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(AppCheckDB.class, "error", e.getMessage());
+                AppLogUtil.log(AppCheckDB.class, "error", e);
             }
         } finally{
             mysql.close();

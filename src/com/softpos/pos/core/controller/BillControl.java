@@ -80,7 +80,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -133,7 +133,7 @@ public class BillControl {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -218,14 +218,14 @@ public class BillControl {
                     mysql2.getConnection().createStatement().executeUpdate(sqlInsAccr);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql2.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -258,7 +258,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -385,7 +385,7 @@ public class BillControl {
             pre.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -608,7 +608,7 @@ public class BillControl {
                     }
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -978,7 +978,7 @@ public class BillControl {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                AppLogUtil.log(BillControl.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1022,13 +1022,13 @@ public class BillControl {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                            AppLogUtil.log(BillControl.class, "error", e);
                         }
                     }
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                AppLogUtil.log(BillControl.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1097,7 +1097,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1200,7 +1200,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1300,7 +1300,7 @@ public class BillControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1508,7 +1508,7 @@ public class BillControl {
             rs1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1627,7 +1627,7 @@ public class BillControl {
                     bean.setB_MemEnd(rs.getDate("B_MemEnd"));
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-                    AppLogUtil.log(BillControl.class, "error", e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
                 }
             }
 
@@ -1635,7 +1635,7 @@ public class BillControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.close();
         }

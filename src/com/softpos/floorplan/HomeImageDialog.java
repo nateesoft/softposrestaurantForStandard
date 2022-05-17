@@ -201,7 +201,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(HomeImageDialog.class, "error", e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -251,7 +251,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(HomeImageDialog.class, "error", e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
             mysql.close();
         }

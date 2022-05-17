@@ -105,7 +105,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -158,7 +158,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -199,7 +199,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+                        AppLogUtil.log(CancelArPayment.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -262,7 +262,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+                AppLogUtil.log(CancelArPayment.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -272,7 +272,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         } catch (Exception e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CancelArPayment.class, "error", e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e);
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1().trim()) + "_";

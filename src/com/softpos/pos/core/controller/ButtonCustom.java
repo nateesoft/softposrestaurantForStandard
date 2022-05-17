@@ -57,7 +57,7 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ButtonCustom.class, "error", e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -97,7 +97,7 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ButtonCustom.class, "error", e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysql.close();
         }

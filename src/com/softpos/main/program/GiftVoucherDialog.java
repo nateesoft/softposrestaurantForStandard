@@ -310,7 +310,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 }
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
+                AppLogUtil.log(GiftVoucherDialog.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -429,7 +429,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -510,7 +510,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(GiftVoucherDialog.class, "error", e.getMessage());
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
             mysql.close();
         }

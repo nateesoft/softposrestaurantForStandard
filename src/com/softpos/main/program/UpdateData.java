@@ -249,7 +249,7 @@ public class UpdateData extends javax.swing.JDialog {
                         }
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(UpdateData.class, "error", e.getMessage());
+                        AppLogUtil.log(UpdateData.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -292,7 +292,7 @@ public class UpdateData extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(UpdateData.class, "error", e.getMessage());
+            AppLogUtil.log(UpdateData.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -674,7 +674,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
+                            AppLogUtil.log(ArNotPay.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -756,7 +756,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
+            AppLogUtil.log(ArNotPay.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -829,7 +829,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ArNotPay.class, "error", e.getMessage());
+                AppLogUtil.log(ArNotPay.class, "error", e);
             } finally {
                 mysql.close();
             }

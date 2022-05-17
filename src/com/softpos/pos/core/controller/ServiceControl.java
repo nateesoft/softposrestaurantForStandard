@@ -50,7 +50,7 @@ public class ServiceControl {
                 BalanceBean balance = (BalanceBean) dataBalance.get(i);
 
                 //ตรวจสอบสินค้าที่ Void ไปแล้ว
-                if (balance.getR_Void().equals("V")) {
+                if ("V".equals(balance.getR_Void())) {
                     continue;
                 }
 //                if (POSConfigSetup.Bean().getP_Service().equals("0")) {
@@ -177,7 +177,7 @@ public class ServiceControl {
                 }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ServiceControl.class, "error", e.getMessage());
+            AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.close();
         }

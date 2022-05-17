@@ -1,10 +1,10 @@
 package com.softpos.floorplan;
 
 import com.softpos.pos.core.controller.ThaiUtil;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.sql.SQLException;
+import java.sql.Statement;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -124,7 +124,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ResonPaidoutFrm.class, "error", e.getMessage());
+            AppLogUtil.log(ResonPaidoutFrm.class, "error", e);
         } finally {
             mysql.close();
         }

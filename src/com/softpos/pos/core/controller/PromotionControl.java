@@ -34,7 +34,7 @@ public class PromotionControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -140,7 +140,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -243,7 +243,7 @@ public class PromotionControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -349,7 +349,7 @@ public class PromotionControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -963,7 +963,7 @@ public class PromotionControl {
 
                     } catch (NumberFormatException | SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+                        AppLogUtil.log(PromotionControl.class, "error", e);
                     }
                 }
             }
@@ -995,7 +995,7 @@ public class PromotionControl {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1018,7 +1018,7 @@ public class PromotionControl {
             stmtGetPro.close();
         } catch (SQLException e) {
             MSG.ERR(e.toString());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         }
         
         try {
@@ -1037,7 +1037,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1059,7 +1059,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1077,7 +1077,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1099,7 +1099,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1118,7 +1118,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1140,7 +1140,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1159,7 +1159,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1187,7 +1187,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1206,7 +1206,7 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1240,7 +1240,7 @@ public class PromotionControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.close();
         }

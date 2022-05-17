@@ -264,7 +264,7 @@ public class DiarySale extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(DiarySale.class, "error", e.getMessage());
+            AppLogUtil.log(DiarySale.class, "error", e);
         } finally {
             mysql.close();
         }

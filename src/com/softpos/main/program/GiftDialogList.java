@@ -153,7 +153,7 @@ public class GiftDialogList extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.WAR(e.getMessage());
-            AppLogUtil.log(GiftDialogList.class, "error", e.getMessage());
+            AppLogUtil.log(GiftDialogList.class, "error", e);
         } finally {
             mysql.close();
         }

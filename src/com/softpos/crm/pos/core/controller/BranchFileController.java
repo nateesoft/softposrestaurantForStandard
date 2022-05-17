@@ -29,7 +29,7 @@ public class BranchFileController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BranchFileController.class, "error", e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -58,7 +58,7 @@ public class BranchFileController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BranchFileController.class, "error", e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
             mysql.close();
         }

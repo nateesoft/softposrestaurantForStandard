@@ -208,7 +208,7 @@ public class CustomerName extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CustomerName.class, "error", e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -232,7 +232,7 @@ public class CustomerName extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CustomerName.class, "error", e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
             mysql.close();
         }

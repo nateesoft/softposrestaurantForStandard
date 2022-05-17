@@ -361,7 +361,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(VoidRep.class, "error", e.getMessage());
+                        AppLogUtil.log(VoidRep.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -452,7 +452,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(VoidRep.class, "error", e.getMessage());
+            AppLogUtil.log(VoidRep.class, "error", e);
         } finally {
             mysql.close();
         }

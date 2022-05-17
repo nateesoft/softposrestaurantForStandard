@@ -46,7 +46,7 @@ public class CopyBill extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -256,7 +256,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -369,7 +369,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e);
         }
 
         //Load Data From T_Sale
@@ -432,7 +432,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+            AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -459,7 +459,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(CopyBill.class, "error", e.getMessage());
+                AppLogUtil.log(CopyBill.class, "error", e);
             } finally {
                 mysql.close();
             }

@@ -336,7 +336,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SetupFloorPlanHeader.class, "error", e.getMessage());
+            AppLogUtil.log(SetupFloorPlanHeader.class, "error", e);
         } finally {
             mysql.close();
         }

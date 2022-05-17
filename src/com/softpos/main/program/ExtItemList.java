@@ -1,13 +1,13 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.model.CustomerBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.pos.core.model.CustomerBean;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -216,7 +216,7 @@ public class ExtItemList extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
+                AppLogUtil.log(ExtItemList.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -294,8 +294,8 @@ public class ExtItemList extends javax.swing.JDialog {
 
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
-            AppLogUtil.log(ExtItemList.class, "error", e.getMessage());
+            MSG.ERR(this, e.getMessage());AppLogUtil.log(ExtItemList.class, "error", e);
+            AppLogUtil.log(ExtItemList.class, "error", e);
         } finally {
             mysql.close();
         }

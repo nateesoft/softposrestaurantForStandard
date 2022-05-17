@@ -184,12 +184,12 @@ public class PUtility {
                         stmt3.close();
                     } catch (SQLException e) {
                         MSG.ERR(null, e.getMessage());
-                        AppLogUtil.log(PUtility.class, "error", e.getMessage());
+                        AppLogUtil.log(PUtility.class, "error", e);
                     }
                 }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(PUtility.class, "error", e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -213,7 +213,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -298,7 +298,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -383,7 +383,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -402,7 +402,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -481,7 +481,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -559,7 +559,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -637,7 +637,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -723,7 +723,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -755,7 +755,7 @@ public class PUtility {
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PUtility.class, "error", e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e);
             }
         }
 
@@ -780,7 +780,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1130,7 +1130,7 @@ public class PUtility {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1176,7 +1176,7 @@ public class PUtility {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PUtility.class, "error", e.getMessage());
+                AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1266,7 +1266,7 @@ public class PUtility {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
 
             ReturnVal = false;
         } finally {
@@ -1286,7 +1286,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1401,7 +1401,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1426,7 +1426,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1452,7 +1452,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1489,7 +1489,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1514,7 +1514,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1539,7 +1539,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1564,7 +1564,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1594,7 +1594,7 @@ public class PUtility {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1615,7 +1615,7 @@ public class PUtility {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e.getMessage());
+            AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.close();
         }

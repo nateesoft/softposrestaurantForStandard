@@ -1,13 +1,12 @@
 package com.softpos.webapp.service;
 
-import com.softpos.main.program.FindMember;
-import database.MySQLConnect;
-import java.sql.ResultSet;
-import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.model.BalanceBean;
+import database.MySQLConnect;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -116,7 +115,7 @@ public class ServiceControl {
             stmt2.executeUpdate(sqlUpd);
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ServiceControl.class, "error", e.getMessage());
+            AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.close();
         }

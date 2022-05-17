@@ -236,7 +236,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
             
             dispose();
         } finally {
@@ -292,7 +292,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -322,7 +322,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(SetupButtonTable.class, "error", e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
             mysql.close();
         }

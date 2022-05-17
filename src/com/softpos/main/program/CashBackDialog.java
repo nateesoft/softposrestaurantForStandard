@@ -1,8 +1,8 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -223,7 +223,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             PrintReturnMoney(refStr);
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CashBackDialog.class, "error", e.getMessage());
+            AppLogUtil.log(CashBackDialog.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -285,7 +285,7 @@ public class GetUserAction extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(GetUserAction.class, "error", e.getMessage());
+            AppLogUtil.log(GetUserAction.class, "error", e);
             clearlogin();
         }finally{
             mysql.close();

@@ -328,7 +328,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
+                AppLogUtil.log(OptionMenuSet.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -431,7 +431,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             txtOptionName.requestFocus();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
+            AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -471,7 +471,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(OptionMenuSet.class, "error", e.getMessage());
+            AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
             mysql.close();
         }

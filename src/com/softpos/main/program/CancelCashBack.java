@@ -191,7 +191,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CancelCashBack.class, "error", e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -220,7 +220,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CancelCashBack.class, "error", e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
             mysql.close();
         }

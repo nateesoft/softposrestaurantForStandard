@@ -252,7 +252,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             clearGrid();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+            AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -335,7 +335,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                     prm11.executeUpdate();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+                                    AppLogUtil.log(Giftvoucher.class, "error", e);
                                 } finally {
                                     mysql.close();
                                 }
@@ -364,7 +364,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                 prm11.executeUpdate();
                             } catch (SQLException e) {
                                 MSG.ERR(e.getMessage());
-                                AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+                                AppLogUtil.log(Giftvoucher.class, "error", e);
                             } finally {
                                 mysql.close();
                             }
@@ -399,7 +399,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             prm11.executeUpdate();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+                            AppLogUtil.log(Giftvoucher.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -428,7 +428,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         prm11.executeUpdate();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+                        AppLogUtil.log(Giftvoucher.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -460,7 +460,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+            AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -490,7 +490,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+            AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -541,7 +541,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e.getMessage());
+            AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.close();
         }

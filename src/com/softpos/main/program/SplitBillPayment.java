@@ -312,7 +312,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(SplitBillPayment.class, "error", e.getMessage());
+                        AppLogUtil.log(SplitBillPayment.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -388,7 +388,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(SplitBillPayment.class, "error", e.getMessage());
+                        AppLogUtil.log(SplitBillPayment.class, "error", e);
                     } finally {
                         mysql.close();
                     }

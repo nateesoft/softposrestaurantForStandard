@@ -1,21 +1,21 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
 import javax.swing.JFrame;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
 import printReport.PrintDriver;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
-import java.sql.SQLException;
-import java.sql.Statement;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -118,7 +118,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PaidoutFrm.class, "error", e.getMessage());
+            AppLogUtil.log(PaidoutFrm.class, "error", e);
         } finally {
             mysql.close();
         }

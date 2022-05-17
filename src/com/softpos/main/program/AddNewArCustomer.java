@@ -603,7 +603,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -643,7 +643,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -662,7 +662,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -729,7 +729,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+                AppLogUtil.log(AddNewArCustomer.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -754,7 +754,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AddNewArCustomer.class, "error", e.getMessage());
+            AppLogUtil.log(AddNewArCustomer.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -673,7 +673,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(ArHistory.class, "error", e.getMessage());
+                            AppLogUtil.log(ArHistory.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -772,7 +772,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ArHistory.class, "error", e.getMessage());
+                AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -858,7 +858,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ArHistory.class, "error", e.getMessage());
+                AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
                 mysql.close();
             }

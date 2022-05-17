@@ -260,7 +260,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PromotionRep.class, "error", e.getMessage());
+                        AppLogUtil.log(PromotionRep.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -322,7 +322,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("โปรโมชั่น" + TAB + "จำนวน" + TAB + "ส่วนลด ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-            if (rs.next() && !rs.wasNull()) {
+            if (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("PrCode") + Space + rs.getString("ProDesc") + "_";
                 t += "colspan=1 align=right><font face=Angsana New size=1>" + Space + rs.getString("PQty") + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + rs.getString("PrAmt") + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
@@ -331,7 +331,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionRep.class, "error", e.getMessage());
+            AppLogUtil.log(PromotionRep.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -321,7 +321,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e);
         }
 
         try {
@@ -338,7 +338,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e);
         }
         
         try {
@@ -355,7 +355,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e);
         }
         
         try {
@@ -370,7 +370,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e.getMessage());
+            AppLogUtil.log(TerminalRep.class, "error", e);
         } finally {
             mysql.close();
         }

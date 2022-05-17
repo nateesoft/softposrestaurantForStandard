@@ -195,7 +195,7 @@ public class EMPListDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(EMPListDialog.class, "error", e.getMessage());
+            AppLogUtil.log(EMPListDialog.class, "error", e);
         }finally{
             mysql.close();
         }

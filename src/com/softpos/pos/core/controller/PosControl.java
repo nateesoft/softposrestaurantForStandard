@@ -92,7 +92,7 @@ public class PosControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PosControl.class, "error", e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -176,7 +176,7 @@ public class PosControl {
 
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PosControl.class, "error", e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -253,7 +253,7 @@ public class PosControl {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PosControl.class, "error", e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.close();
         }

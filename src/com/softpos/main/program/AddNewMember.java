@@ -829,7 +829,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
+                    AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -881,7 +881,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                            AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
+                            AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -938,7 +938,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
+                        AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -1048,7 +1048,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
+                    AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally{
                     mysql.close();
                 }
@@ -1078,7 +1078,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(AddNewMember.class, "error", e.getMessage());
+            AppLogUtil.log(AddNewMember.class, "error", e);
         } finally{
             mysql.close();
         }

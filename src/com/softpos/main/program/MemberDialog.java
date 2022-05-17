@@ -395,7 +395,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -442,7 +442,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -498,7 +498,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -520,7 +520,7 @@ public class MemberDialog extends javax.swing.JDialog {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e);
         }
         
         try {
@@ -535,7 +535,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -565,7 +565,7 @@ AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }

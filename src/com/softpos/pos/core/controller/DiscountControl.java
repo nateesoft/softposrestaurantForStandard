@@ -29,7 +29,7 @@ public class DiscountControl {
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            if (rs.next() && !rs.wasNull()) {
+            if (rs.next()) {
                 String sqlUpd = "update tablefile set "
                         + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
                         + "where Tcode = '" + tableNo + "'";
@@ -41,7 +41,7 @@ public class DiscountControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(DiscountControl.class, "error", e.getMessage());
+            AppLogUtil.log(DiscountControl.class, "error", e);
         }
         
         //หามูลค่าบัตรลดคูปอง
@@ -54,7 +54,7 @@ public class DiscountControl {
                     + "and R_PrCuType = '-C'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next() && !rs.wasNull()) {
+            if (rs.next()) {
                 String sqlUpd;
                 if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
                     sqlUpd = "update tablefile set "

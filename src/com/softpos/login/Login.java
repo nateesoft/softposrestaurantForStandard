@@ -538,7 +538,7 @@ public class Login extends javax.swing.JDialog {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(Login.class, "error", e.getMessage());
+                AppLogUtil.log(Login.class, "error", e);
                 clearlogin();
             } finally {
                 mysql.close();
@@ -634,7 +634,7 @@ public class Login extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ShowTable.class, "error", e.getMessage());
+            AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
             mysql.close();
         }

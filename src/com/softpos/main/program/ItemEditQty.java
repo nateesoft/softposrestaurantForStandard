@@ -136,7 +136,7 @@ public class ItemEditQty extends javax.swing.JDialog {
                     stmt.executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(ItemEditQty.class, "error", e.getMessage());
+                    AppLogUtil.log(ItemEditQty.class, "error", e);
                 } finally {
                     mysql.close();
                 }

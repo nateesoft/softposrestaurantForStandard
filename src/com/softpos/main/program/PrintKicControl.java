@@ -216,7 +216,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintKicControl.class, "error", e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -238,7 +238,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             loadData();
         } catch (HeadlessException | SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintKicControl.class, "error", e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -65,7 +65,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(CuponControl.class, "error", e);
         } finally{
             mysql.close();
         }
@@ -125,7 +125,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(CuponControl.class, "error", e);
         } finally{
             mysql.close();
         }
@@ -182,7 +182,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(CuponControl.class, "error", e);
         } finally{
             mysql.close();
         }
@@ -225,7 +225,7 @@ public class CuponControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(CuponControl.class, "error", e);
         } finally{
             mysql.close();
         }
@@ -262,7 +262,7 @@ public class CuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(CuponControl.class, "error", e);
         } finally{
             mysql.close();
         }

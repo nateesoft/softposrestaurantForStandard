@@ -22,7 +22,7 @@ public class BranchControl {
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
+            AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -184,7 +184,7 @@ public class BranchControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
+            AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -222,7 +222,7 @@ public class BranchControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BranchControl.class, "error", e.getMessage());
+            AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.close();
         }

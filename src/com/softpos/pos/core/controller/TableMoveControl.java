@@ -41,7 +41,7 @@ public class TableMoveControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableMoveControl.class, "error", e.getMessage());
+            AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
             mysql.close();
         }

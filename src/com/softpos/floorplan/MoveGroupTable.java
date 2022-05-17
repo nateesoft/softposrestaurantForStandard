@@ -1,17 +1,17 @@
 package com.softpos.floorplan;
 
+import com.softpos.main.program.EMPListDialog;
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.TableMoveControl;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
-import javax.swing.JOptionPane;
-import printReport.PrintSimpleForm;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.main.program.EMPListDialog;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.TableMoveControl;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
+import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
 import util.MSG;
@@ -651,7 +651,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
+                    AppLogUtil.log(MoveGroupTable.class, "error", e);
                 }
 
                 // backup tmp
@@ -676,7 +676,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
+                    AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -894,7 +894,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
+                AppLogUtil.log(MoveGroupTable.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -964,7 +964,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
+            AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -987,7 +987,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MoveGroupTable.class, "error", e.getMessage());
+            AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
             mysql.close();
         }

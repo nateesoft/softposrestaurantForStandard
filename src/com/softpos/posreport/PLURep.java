@@ -690,7 +690,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PLURep.class, "error", e.getMessage());
+            AppLogUtil.log(PLURep.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1004,7 +1004,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PLURep.class, "error", e.getMessage());
+            AppLogUtil.log(PLURep.class, "error", e);
         } finally {
             mysql.close();
         }

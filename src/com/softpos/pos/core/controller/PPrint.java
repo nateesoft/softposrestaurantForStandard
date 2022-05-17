@@ -695,7 +695,7 @@ public class PPrint {
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         int Q = 0;
-                        if (rs.next() && !rs.wasNull()) {
+                        if (rs.next()) {
                             queue = rs.getInt("cbillno");
                             queue++;
                         }
@@ -704,7 +704,7 @@ public class PPrint {
 
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -911,7 +911,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -938,7 +938,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -1032,7 +1032,7 @@ public class PPrint {
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
-                        if (rs.next() && !rs.wasNull()) {
+                        if (rs.next()) {
                             queue = rs.getInt("cbillno");
                             queue++;
                         }
@@ -1042,7 +1042,7 @@ public class PPrint {
                         rs.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -1325,7 +1325,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -1350,7 +1350,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -1594,7 +1594,7 @@ public class PPrint {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -1615,7 +1615,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -1670,7 +1670,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -2499,7 +2499,7 @@ public class PPrint {
                                 }
                             } catch (SQLException e) {
                                 MSG.ERR(e.getMessage());
-                                AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                                AppLogUtil.log(PPrint.class, "error", e);
                             } finally {
                                 mysql.close();
                             }
@@ -2635,7 +2635,7 @@ public class PPrint {
                         }
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -2793,7 +2793,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -2919,7 +2919,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -3143,7 +3143,7 @@ public class PPrint {
 
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -3411,7 +3411,7 @@ public class PPrint {
                     }
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -3627,7 +3627,7 @@ public class PPrint {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.close();
                     }
@@ -4657,7 +4657,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -4698,7 +4698,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -4723,7 +4723,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -4980,7 +4980,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -5017,7 +5017,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -5042,7 +5042,7 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
-                    AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -5245,7 +5245,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -5289,7 +5289,7 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -5521,7 +5521,7 @@ public class PPrint {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                AppLogUtil.log(PPrint.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -5568,7 +5568,7 @@ public class PPrint {
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(PPrint.class, "error", e.getMessage());
+                AppLogUtil.log(PPrint.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -5671,7 +5671,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -5723,7 +5723,7 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -5806,7 +5806,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -5846,7 +5846,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6015,7 +6015,7 @@ public class PPrint {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6039,7 +6039,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6076,7 +6076,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6102,7 +6102,7 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6134,7 +6134,7 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6176,7 +6176,7 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -6274,7 +6274,7 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.close();
         }

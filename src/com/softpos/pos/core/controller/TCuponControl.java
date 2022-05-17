@@ -40,7 +40,7 @@ public class TCuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TCuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -78,7 +78,7 @@ public class TCuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TCuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -115,7 +115,7 @@ public class TCuponControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TCuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -161,7 +161,7 @@ public class TCuponControl {
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(TCuponControl.class, "error", e.getMessage());
+                AppLogUtil.log(TCuponControl.class, "error", e);
                 
                 isResult = false;
             } finally {
@@ -198,7 +198,7 @@ public class TCuponControl {
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TCuponControl.class, "error", e.getMessage());
+            AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.close();
         }

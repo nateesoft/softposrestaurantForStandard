@@ -93,12 +93,10 @@ public class MainSale extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-//        jMenuBar11.setVisible(false);
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
         txtDiscount.setVisible(true);
-//        jPanelMember.setVisible(false);
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
@@ -1280,7 +1278,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1633,7 +1631,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1653,7 +1651,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1762,7 +1760,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 printBillCheck();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -1978,7 +1976,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         }
 
         if (isPermit) {//มีสิทธิ์ Void
@@ -2002,7 +2000,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
 
                 if (!hasValue) {
@@ -2041,7 +2039,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     stmt.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                                    AppLogUtil.log(MainSale.class, "error", e);
                                 }
 
                                 if (!hasValue) {
@@ -2087,7 +2085,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     stmt.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                                    AppLogUtil.log(MainSale.class, "error", e);
                                 }
 
                                 if (!hasValue) {
@@ -2171,7 +2169,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
         } else {
             bean.setR_Void("V");
@@ -2225,7 +2223,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
         }
 
@@ -2248,7 +2246,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         }
         if ((bean.getR_Set().equals("Y")) && checkPSetSelect(bean.getR_PluCode())) {
             //Update  Balance File For Void
@@ -2267,7 +2265,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
         }
 
@@ -2378,7 +2376,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                 }
@@ -2418,7 +2416,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
             } else {
                 MSG.WAR("จำนวนขายต้องมากกว่า 0...");
@@ -2488,7 +2486,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
             return false;
         }
 
@@ -2533,7 +2531,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         }
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                        AppLogUtil.log(MainSale.class, "error", e);
                     }
                 }
                 try {
@@ -2570,7 +2568,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
             } else {
                 MSG.WAR("จำนวนขายต้องมากกว่า 0...");
@@ -2601,7 +2599,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2631,7 +2629,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2825,7 +2823,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         stmt1.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                        AppLogUtil.log(MainSale.class, "error", e);
                     }
 
                     //ตัดสต็อกสินค้าที่เป็นชุด SET (PSET)
@@ -2861,7 +2859,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
 
             txtPluCode.requestFocus();
         } finally {
@@ -3005,7 +3003,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             }
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                 }
@@ -3027,21 +3025,21 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     mysql.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
                 rsKic.close();
                 stmt1.close();
 
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
 
         } catch (HeadlessException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         }
     }
 
@@ -3149,7 +3147,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             }
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                 }
@@ -3170,7 +3168,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -3290,7 +3288,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
 
             TableOpenStatus = false;
             txtTable.setText("");
@@ -3323,7 +3321,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
             try {
@@ -3331,7 +3329,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.getConnection().createStatement().executeUpdate(sql);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
 
             kichenPrint();
@@ -3346,7 +3344,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -3365,7 +3363,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -3394,7 +3392,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -3422,7 +3420,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -3463,7 +3461,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             return true;
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
             return false;
         } finally {
             mysql.close();
@@ -3774,7 +3772,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     showMember();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
         } else {
@@ -4058,7 +4056,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             result = rs.next();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
 
             result = false;
         } finally {
@@ -4098,7 +4096,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4245,7 +4243,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                 }
@@ -4259,13 +4257,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
 
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4294,7 +4292,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4319,7 +4317,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4395,7 +4393,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         stmt1.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                        AppLogUtil.log(MainSale.class, "error", e);
                     }
 
                     //ตรวจสอบถ้าเป็น menu set ให้ลบข้อมูลภายใน Set ด้วย
@@ -4442,7 +4440,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     stmt4.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
-                                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                                    AppLogUtil.log(MainSale.class, "error", e);
                                 }
                             }
 
@@ -4450,7 +4448,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             stmt2.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                     // ################ END คืน Stock 
@@ -4458,7 +4456,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             }
         }
 
@@ -4485,7 +4483,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4509,7 +4507,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4667,7 +4665,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4697,7 +4695,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -4752,7 +4750,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 stmt2.close();
                             } catch (SQLException e) {
                                 MSG.ERR(e.getMessage());
-                                AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                                AppLogUtil.log(MainSale.class, "error", e);
                                 passBefore = false;
                             }
 
@@ -4791,7 +4789,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             stmt3.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                            AppLogUtil.log(MainSale.class, "error", e);
                         }
 
                         //end loop autoadd
@@ -4808,12 +4806,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt1.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e.getMessage());
+                    AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -4837,7 +4835,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
         }

@@ -36,7 +36,7 @@ public class CustomerConrol {
             mysql.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(CustomerConrol.class, "error", e.getMessage());
+            AppLogUtil.log(CustomerConrol.class, "error", e);
         } finally {
             mysql.close();
         }

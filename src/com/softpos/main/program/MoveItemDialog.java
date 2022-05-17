@@ -479,7 +479,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
+                            AppLogUtil.log(MoveItemDialog.class, "error", e);
                         } finally {
                             mysql.close();
                         }
@@ -510,7 +510,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     mysql.getConnection().createStatement().executeUpdate(sql);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
+                    AppLogUtil.log(MoveItemDialog.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -616,7 +616,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                                 stmt.close();
                             } catch (SQLException e) {
                                 MSG.ERR(this, e.getMessage());
-                                AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
+                                AppLogUtil.log(MoveItemDialog.class, "error", e);
                             } finally {
                                 mysql.close();
                             }
@@ -754,7 +754,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MoveItemDialog.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -779,7 +779,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MoveItemDialog.class, "error", e.getMessage());
+            AppLogUtil.log(MoveItemDialog.class, "error", e);
         } finally {
             mysql.close();
         }

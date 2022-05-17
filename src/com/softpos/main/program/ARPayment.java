@@ -1902,7 +1902,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR_MSG(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -1949,7 +1949,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prm.close();
                 } catch (SQLException e) {
                     MSG.ERR_MSG(this, e.getMessage());
-                    AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                    AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
                     mysql.close();
                 }
@@ -2002,7 +2002,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         }
         TempBill = TempBill + 1;
         String TempStr = IntFmt.format(TempBill);
@@ -2013,7 +2013,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2052,7 +2052,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                AppLogUtil.log(ARPayment.class, "error", e);
             }
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -2079,7 +2079,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                AppLogUtil.log(ARPayment.class, "error", e);
             }
 
             if ((_Cr_Amount1 > 0 && CreditCnt > 0)) {
@@ -2103,7 +2103,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                        AppLogUtil.log(ARPayment.class, "error", e);
                     }
                 }
             }
@@ -2127,7 +2127,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                AppLogUtil.log(ARPayment.class, "error", e);
             } finally {
                 mysql.close();
             }
@@ -2280,7 +2280,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     rsCustfile.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                    AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
                     mysql2.close();
                 }
@@ -2420,7 +2420,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2444,7 +2444,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2475,7 +2475,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2516,7 +2516,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2560,7 +2560,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2587,7 +2587,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2659,7 +2659,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                AppLogUtil.log(ARPayment.class, "error", e);
             }
         }
         try {
@@ -2674,7 +2674,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -2708,7 +2708,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+                AppLogUtil.log(ARPayment.class, "error", e);
             }
         }
         try {
@@ -2723,7 +2723,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e.getMessage());
+            AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.close();
         }

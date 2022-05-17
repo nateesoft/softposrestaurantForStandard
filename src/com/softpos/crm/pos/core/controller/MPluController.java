@@ -33,7 +33,7 @@ public class MPluController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MPluController.class, "error", e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -91,7 +91,7 @@ public class MPluController {
             resultCreate = prm.executeBatch();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MPluController.class, "error", e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -111,7 +111,7 @@ public class MPluController {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(MPluController.class, "error", e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
             mysql.close();
         }

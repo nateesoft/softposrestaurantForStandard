@@ -124,7 +124,7 @@ public class OptionMsg extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -218,7 +218,7 @@ public class OptionMsg extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
             mysql.close();
         }
@@ -255,7 +255,7 @@ public class OptionMsg extends javax.swing.JDialog {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(OptionMsg.class, "error", e.getMessage());
+                    AppLogUtil.log(OptionMsg.class, "error", e);
                 } finally {
                     mysql.close();
                 }
