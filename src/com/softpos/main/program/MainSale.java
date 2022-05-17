@@ -2889,7 +2889,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             try {
                 ResultSet rsGetSaveOrderConfig = mysql.getConnection().createStatement().executeQuery(sqlGetSaveOrder);
-                if (rsGetSaveOrderConfig.next() && !rsGetSaveOrderConfig.wasNull()) {
+                if (rsGetSaveOrderConfig.next()) {
                     String config = rsGetSaveOrderConfig.getString("SaveOrder");
                     if (!config.equals("N")) {
                         PublicVar.Branch_Saveorder = config;
@@ -2900,7 +2900,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
 
                 ResultSet rsKicSaveOrder = mysql.getConnection().createStatement().executeQuery(sqlShowKic);
-                if (rsKicSaveOrder.next() && !rsKicSaveOrder.wasNull()) {
+                if (rsKicSaveOrder.next()) {
                     if (!PublicVar.Branch_Saveorder.equals("N")) {
                         printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
                     }

@@ -1001,7 +1001,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                         + "order by r_index;";
                                 ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetFromT_sale);
 
-                                if (!rs2.wasNull()) {
+                                if (rs2.next()) {
                                     String updateBCust = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
                                     mysql.getConnection().createStatement().executeUpdate(updateBCust);
                                     while (rs2.next()) {

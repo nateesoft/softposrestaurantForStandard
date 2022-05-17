@@ -863,7 +863,7 @@ public class SendTerminalReportAuto {
             c.open();
             String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig; ";
             ResultSet rsConfig = c.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
-            if (rsConfig.next() && !rsConfig.wasNull()) {
+            if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
                 String TimeSend = rsConfig.getString("TimeSend1");
 //                if (TranEmailAuto.equals("Y") && timeNow.equals(TimeSend)) {
@@ -872,7 +872,7 @@ public class SendTerminalReportAuto {
                         c.open();
                         String sqlAddress = "select address from company";
                         ResultSet rsAddress = c.getConnection().createStatement().executeQuery(sqlAddress);
-                        if (rsAddress.next() && !rsAddress.wasNull()) {
+                        if (rsAddress.next()) {
                             String data[] = rsAddress.getString("Address").split("/");
                             String username = data[0];
                             String password = data[1];

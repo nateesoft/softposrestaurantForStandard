@@ -46,7 +46,7 @@ public class PrintToKic extends javax.swing.JFrame {
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rsGetSaveOrderConfig = stmt.executeQuery(sqlGetSaveOrder);
-            if (rsGetSaveOrderConfig.next() && !rsGetSaveOrderConfig.wasNull()) {
+            if (rsGetSaveOrderConfig.next()) {
                 String config = rsGetSaveOrderConfig.getString("SaveOrder");
                 if (!config.equals("N")) {
                     PublicVar.Branch_Saveorder = config;

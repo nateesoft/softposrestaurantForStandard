@@ -371,7 +371,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Ar-Code" + Space + "เลขที่ใบเสร็จรับเงิน/วันที่" + Space + "จำนวนเงิน ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
-            if (!rs.wasNull()) {
+            if (rs.next()) {
                 double total = 0.00;
                 double amount = 0.00;
                 double cash = 0.00;
