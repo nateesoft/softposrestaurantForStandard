@@ -1,11 +1,13 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -23,7 +25,8 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
     private String tableNo;
     private String table2;
-    DecimalFormat df = new DecimalFormat("###0.00");
+    private DecimalFormat df = new DecimalFormat("###0.00");
+    private ProductControl productControl = new ProductControl();
 
     public SplitBillPayment(java.awt.Dialog parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -35,6 +38,9 @@ public class SplitBillPayment extends javax.swing.JDialog {
         this.tableNo = tableNo;
         init();
         table2 = "";
+        
+        productControl.initLoadProductActive();
+        
         txtTable1.requestFocus();
     }
 
@@ -302,8 +308,10 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         while (rs.next()) {
                             isLoop = true;
                             String R_Index_In = rs.getString("R_Index");
+                            
                             // Move product
-                            if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode)) {
+                            ProductBean productBean = productControl.getProductCodeArray(PCode);
+                            if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode, productBean)) {
                                 balanceControl.deleteProduct(table, PCode, R_Index_In);
                             }
                         }
@@ -319,7 +327,8 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
                     if (!isLoop) {
                         // Move product
-                        if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index, PCode)) {
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index, PCode, productBean)) {
                             balanceControl.deleteProduct(table, PCode, R_Index);
                         }
                     }
@@ -378,8 +387,10 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         while (rs.next()) {
                             isLoop = true;
                             String R_Index_In = rs.getString("R_Index");
+                            
                             // Move product
-                            if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode)) {
+                            ProductBean productBean = productControl.getProductCodeArray(PCode);
+                            if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode, productBean)) {
                                 balanceControl.deleteProduct(table, PCode, R_Index_In);
                             }
                         }
@@ -394,8 +405,10 @@ public class SplitBillPayment extends javax.swing.JDialog {
                     }
 
                     if (!isLoop) {
+                        
                         // Move product
-                        if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index, PCode)) {
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index, PCode, productBean)) {
                             balanceControl.deleteProduct(newTable, PCode, R_Index);
                         }
                     }

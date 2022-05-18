@@ -81,6 +81,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
 
+    private ProductControl productControl = new ProductControl();
+
     public FloorPlanDialog() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -125,14 +127,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         MShowDailyEJ1.setVisible(false);
         jMenuItem38.setVisible(false);
 
-        //สำหรับเปลี่ยน icon java เป็น icon ที่เราคุ้นเคย
-//        try {
-//            Image im = ImageIO.read(getClass().getResource("/images/tb.png"));
-//            setIconImage(im);
-//        } catch (IOException ex) {
-//            MSG.ERR(null, ex.getMessage());
-//        }
         jButton1.setLocation(0, 1024);
+
+        // init product list data
+        productControl.initLoadProductActive();
     }
 
     @SuppressWarnings("unchecked")
@@ -811,12 +809,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         s.setVisible(true);
         if (!Value.TableSelected.equals("")) {
             setVisible(false);
-            MainSale ms = new MainSale(null, true, Value.TableSelected);
-            ms.setVisible(true);
+            MainSale mainSale = new MainSale(null, true, Value.TableSelected);
+            mainSale.setVisible(true);
 
-            setVisible(true);
+            dispose();
         }
-        setVisible(true);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
@@ -1145,10 +1142,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     }
 
                     balance.setR_Pause("P");
-                    balanceControl.saveBalance(balance);
+                    balanceControl.saveBalance(balance, productBean);
 
                     //update temptset
-                    updateTempTset(balance, r_etd, tableNo);
+                    updateTempTset(balance, r_etd, tableNo, productBean);
 
                     stmt.close();
 
@@ -1741,7 +1738,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     }
 
                     bBean.setR_Index(tableTemp + "/" + runningIndex);
-                    bControl.saveBalance(bBean);
+
+                    ProductBean productBean = productControl.getProductCodeArray(bBean.getR_PluCode());
+                    bControl.saveBalance(bBean, productBean);
                 }
 
                 rs.close();
@@ -1765,8 +1764,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                 BalanceControl.updateProSerTable(tableTemp, null);
                 Value.TableSelected = tableTemp;
-                MainSale ms = new MainSale(null, true, tableTemp);
-                ms.setVisible(true);
+                MainSale mainSale = new MainSale(null, true, tableTemp);
+                mainSale.setVisible(true);
 
                 stmt.close();
             } catch (SQLException e) {
@@ -1774,6 +1773,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             } finally {
                 mysql.close();
             }
+
+            // close this window
+            dispose();
         }
 
     }
@@ -1936,7 +1938,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         private void showPOS(String tableNo) {
-            MainSale ms = new MainSale(null, true, tableNo);
+            dispose();
+
             String sql = "delete from tempset where ptableno='" + tableNo + "';";
             MySQLConnect mysql = new MySQLConnect();
             try {
@@ -1948,7 +1951,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             } finally {
                 mysql.close();
             }
-            ms.setVisible(true);
+
+            MainSale mainSale = new MainSale(null, true, tableNo);
+            mainSale.setVisible(true);
         }
 
         @Override
@@ -2118,7 +2123,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         openWebpage(url.toURI());
     }
 
-    private void updateTempTset(BalanceBean bBean, String r_etd, String tableNo) {
+    private void updateTempTset(BalanceBean bBean, String r_etd, String tableNo, ProductBean productBean) {
         /**
          * * OPEN CONNECTION **
          */
@@ -2146,9 +2151,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         String[] data = Option.splitPrice(PCode);
                         double R_Quan = Double.parseDouble(data[0]);
                         PCode = data[1];
-
-                        ProductControl pCon = new ProductControl();
-                        ProductBean productBean = pCon.getData(PCode);
 
                         BalanceBean balance = new BalanceBean();
                         balance.setStkCode(StkCode);
@@ -2218,7 +2220,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_KicPrint("");
                         balance.setR_Pause("P");
 
-                        balanceControl.saveBalance(balance);
+                        balanceControl.saveBalance(balance, productBean);
                         updateBalanceOptionFromTemp(bBean.getR_Index(), balance.getR_Table(), PCode);
 
                         //Process stock out

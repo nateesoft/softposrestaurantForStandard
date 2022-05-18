@@ -376,13 +376,7 @@ public class Login extends javax.swing.JDialog {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
                         "Norasi", java.awt.Font.PLAIN, 14)));
-            } catch (ClassNotFoundException e) {
-                MSG.ERR(null, e.getMessage());
-            } catch (InstantiationException e) {
-                MSG.ERR(null, e.getMessage());
-            } catch (IllegalAccessException e) {
-                MSG.ERR(null, e.getMessage());
-            } catch (UnsupportedLookAndFeelException e) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 MSG.ERR(null, e.getMessage());
             }
         }

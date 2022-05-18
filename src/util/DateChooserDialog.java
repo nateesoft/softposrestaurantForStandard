@@ -9,13 +9,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -42,10 +40,6 @@ public final class DateChooserDialog extends javax.swing.JDialog {
     /** Creates new form DateChoseDialog */
     public DateChooserDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-        }
         initComponents();
         initTable(tblCalendar);
         spYear.setValue(2009);

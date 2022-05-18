@@ -11,8 +11,6 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -22,14 +20,6 @@ public class DeptRep extends javax.swing.JDialog {
 
     public DeptRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        try {
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            }
-        }
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");

@@ -1506,7 +1506,10 @@ public class PrintSimpleForm {
         ArrayList<BalanceBean> listW = new ArrayList<>();
 
         if (tBean.getTPause().equals("Y")) {
-            String sqlNovoid = "select  R_Void,R_Index, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+            String sqlNovoid = "select  R_Void,R_PluCode, R_PName,"
+                    + "sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
+                    + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "from balance b "
                     + "where r_table='" + ThaiUtil.Unicode2ASCII(tBean.getTcode()) + "' "
                     + "and R_PrintOK='Y' "
@@ -1514,8 +1517,8 @@ public class PrintSimpleForm {
                     + "and R_ETD='" + RETD + "' "
                     + "and R_Void<>'V' "
                     + "and R_Kic='" + R_Kic + "' "
-                    + "group by R_Void,R_Index, R_PluCode, R_PName, "
-                    + "R_Quan,R_Price, b.Macno,R_Date, R_Time,"
+                    + "group by R_Void,R_PluCode, R_PName, "
+                    + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                     + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic";
             //loop Novoid
@@ -1829,14 +1832,14 @@ public class PrintSimpleForm {
         ArrayList<BalanceBean> listVP = new ArrayList<>();
         ArrayList<BalanceBean> listVW = new ArrayList<>();
         if (!ATFromPrintToKic.equals("PDA")) {
-            String sqlvoid = "select  R_Void,R_Index, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+            String sqlvoid = "select  R_Void, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "from balance b "
                     + "where r_table='" + ThaiUtil.Unicode2ASCII(tBean.getTcode()) + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_ETD='" + RETD + "' "
                     + "and R_Void='V' "
-                    + "group by r_etd,r_kic,r_pname,r_Opt1,r_Opt2,r_Opt3,r_Opt4,r_Opt5,r_Opt6,r_Opt7,r_Opt8,r_Opt9 "
+                    + "group by R_Void, R_PluCode, R_PName, R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
             //loop Novoid
             MySQLConnect mysql = new MySQLConnect();

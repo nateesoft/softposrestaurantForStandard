@@ -17,14 +17,114 @@ public class ProductControl {
     public static final int PRODUCT_ACTIVE = 1;
     public static final int PRODUCT_NOT_ACTIVE = 2;
 
+    private List<ProductBean> listAll = null;
+
     public ProductControl() {
         dataProduct = new ArrayList<>();
     }
+    
+    public ProductBean getProductCodeArray(String pCode) {
+        if (listAll != null) {
+            for (int i = 0; i < listAll.size(); i++) {
+                ProductBean bean = listAll.get(i);
+                if (bean.getPCode().equals(pCode)) {
+                    return bean;
+                }
+            }
+        }
+        
+        return new ProductBean();
+    }
+    public ProductBean getProductBarCodeArray(String barCode) {
+        if (listAll != null) {
+            for (int i = 0; i < listAll.size(); i++) {
+                ProductBean bean = listAll.get(i);
+                if (bean.getPBarCode().equals(barCode)) {
+                    return bean;
+                }
+            }
+        }
+        
+        return new ProductBean();
+    }
+    public List<ProductBean> initLoadProductActive() {
+        if (listAll == null) {
+            listAll = new ArrayList<>();
+            MySQLConnect mysql = new MySQLConnect();
+            try {
+                mysql.open();
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from product where pactive='Y'");
+                while (rs.next()) {
+                    ProductBean bean = new ProductBean();
+                    bean.setPCode(rs.getString("PCode"));
+                    bean.setPFix(rs.getString("PFix"));
+                    bean.setPReferent(rs.getString("PReferent"));
+                    bean.setPAccNo(rs.getString("PAccNo"));
+                    bean.setPGroup(rs.getString("PGroup"));
+                    bean.setPVender(rs.getString("PVender"));
+                    bean.setPType(rs.getString("PType"));
+                    bean.setPNormal(rs.getString("PNormal"));
+                    bean.setPRemark(rs.getString("PRemark"));
+                    bean.setPDiscount(rs.getString("PDiscount"));
+                    bean.setPService(rs.getString("PService"));
+                    bean.setPStatus(rs.getString("PStatus"));
+                    bean.setPStock(rs.getString("PStock"));
+                    bean.setPSet(rs.getString("PSet"));
+                    bean.setPVat(rs.getString("PVat"));
+                    bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                    bean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                    bean.setPPack1(rs.getInt("PPack1"));
+                    bean.setPArea(rs.getString("PArea"));
+                    bean.setPKic(rs.getString("PKic"));
+                    bean.setPPrice11(rs.getFloat("PPrice11"));
+                    bean.setPPrice12(rs.getFloat("PPrice12"));
+                    bean.setPPrice13(rs.getFloat("PPrice13"));
+                    bean.setPPrice14(rs.getFloat("PPrice14"));
+                    bean.setPPrice15(rs.getFloat("PPrice15"));
+                    bean.setPPromotion1(rs.getString("PPromotion1"));
+                    bean.setPPromotion2(rs.getString("PPromotion2"));
+                    bean.setPPromotion3(rs.getString("PPromotion3"));
+                    bean.setPMax(rs.getFloat("PMax"));
+                    bean.setPMin(rs.getFloat("PMin"));
+                    bean.setPBUnit(rs.getString("PBUnit"));
+                    bean.setPBPack(rs.getFloat("PBPack"));
+                    bean.setPLCost(rs.getFloat("PLCost"));
+                    bean.setPSCost(rs.getFloat("PSCost"));
+                    bean.setPACost(rs.getFloat("PACost"));
+                    bean.setPLink1(rs.getString("PLink1"));
+                    bean.setPLink2(rs.getString("PLink2"));
+                    bean.setPLastTime(rs.getString("PLastTime"));
+                    bean.setPUserUpdate(rs.getString("PUserUpdate"));
+                    bean.setPBarCode(rs.getString("PBarCode"));
+                    bean.setPActive(rs.getString("PActive"));
+                    bean.setPSPVat(rs.getString("PSPVat"));
+                    bean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
+                    bean.setPOSStk(rs.getString("POSStk"));
+                    bean.setMSStk(rs.getString("MSStk"));
+                    bean.setPTimeCharge(rs.getFloat("PTimeCharge"));
+                    bean.setPOrder(rs.getString("POrder"));
+                    bean.setPFoodType(rs.getString("PFoodType"));
+                    bean.setPPackOld(rs.getInt("PPackOld"));
+                    bean.setPDesc2(rs.getString("PDesc2"));
+                    bean.setPselectItem(rs.getString("PselectItem"));
+                    bean.setPselectNum(rs.getFloat("PselectNum"));
+                    bean.setPShowOption(rs.getString("PShowOption"));
+                    bean.setPEDesc(rs.getString("PEDesc"));
+
+                    listAll.add(bean);
+                }
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
+            } finally {
+                mysql.close();
+            }
+        }
+
+        return listAll;
+    }
 
     public ProductBean getData(String PCode) {
-        String sql = "select * "
-                + "from product "
-                + "where PCode='" + PCode + "'";
+        String sql = "select * from product where PCode='" + PCode + "'";
         ProductBean productBean = new ProductBean();
         /**
          * * OPEN CONNECTION **
@@ -369,7 +469,7 @@ public class ProductControl {
         } finally {
             mysql.close();
         }
-        
+
         return isExist;
     }
 
@@ -407,7 +507,7 @@ public class ProductControl {
             String sql = "select pcode from soft_menusetup "
                     + "where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isProduct = true;
                 }

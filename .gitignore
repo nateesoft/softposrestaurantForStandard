@@ -7,3 +7,4 @@ connect.ini
 *.xml
 *.properties
 *.ini*
+*.htm*

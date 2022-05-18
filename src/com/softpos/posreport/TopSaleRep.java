@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -41,14 +39,6 @@ public class TopSaleRep extends javax.swing.JDialog {
 
     public TopSaleRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        try {
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            }
-        }
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");

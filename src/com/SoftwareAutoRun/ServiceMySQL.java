@@ -7,7 +7,6 @@ package com.SoftwareAutoRun;
 
 import database.MySQLConnect;
 import util.DateConvert;
-import util.MSG;
 
 /**
  *
@@ -110,7 +109,6 @@ public class ServiceMySQL extends javax.swing.JFrame {
         String text = "";
 
         try {
-//            for (int i = 0; i < 1; i++) {
             MySQLConnect mysql = new MySQLConnect();
             MySQLConnect.stopMysql();
             jLabel1.setText("Stop Service");
@@ -119,40 +117,15 @@ public class ServiceMySQL extends javax.swing.JFrame {
             jLabel1.setText("Start Service" + " : " + dc.GetCurrentTime());
             a++;
             text += "รอบที่ " + a;
-//                i = 0;
             jTextArea1.setText(text);
-//            }
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (InterruptedException e) {
         }
     }
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ServiceMySQL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ServiceMySQL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ServiceMySQL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ServiceMySQL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new ServiceMySQL().setVisible(true);
             }

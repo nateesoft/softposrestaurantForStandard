@@ -47,129 +47,121 @@ public class BalanceControl {
         return tempIndex;
     }
 
-    public boolean saveBalance(BalanceBean bb) {
-        try {
-            ProductControl pc = new ProductControl();
-            BalanceBean bean = new BalanceBean();
+    public boolean saveBalance(BalanceBean bb, ProductBean product) {
+        BalanceBean bean = new BalanceBean();
 
-            //### Save to balance ###
-            bean.setR_ETD(bb.getR_ETD());//set default E
-            bean.setR_Table(bb.getR_Table());
-            bean.setR_Emp(bb.getR_Emp());
-            bean.setR_PluCode(bb.getR_PluCode());
-            bean.setR_Quan(bb.getR_Quan());
-            bean.setR_PrQuan(0);
-            bean.setMacno(Value.MACNO);
+        //### Save to balance ###
+        bean.setR_ETD(bb.getR_ETD());//set default E
+        bean.setR_Table(bb.getR_Table());
+        bean.setR_Emp(bb.getR_Emp());
+        bean.setR_PluCode(bb.getR_PluCode());
+        bean.setR_Quan(bb.getR_Quan());
+        bean.setR_PrQuan(0);
+        bean.setMacno(Value.MACNO);
 
-            bean.setR_KicPrint(bb.getR_KicPrint());
-            bean.setR_Pause(bb.getR_Pause());
+        bean.setR_KicPrint(bb.getR_KicPrint());
+        bean.setR_Pause(bb.getR_Pause());
 
-            /*สำหรับคำนวณโปรโมชัน*/
-            bean.setR_PrType("");//set default ''
-            bean.setR_PrCode("");//set default ''
-            bean.setR_PrDisc(0);
-            bean.setR_PrBath(0);
-            bean.setR_PrAmt(0);
-            bean.setR_PrCuType("");//set default ''
-            bean.setR_PrCuCode("");
-            bean.setR_PrChkType("");
+        /*สำหรับคำนวณโปรโมชัน*/
+        bean.setR_PrType("");//set default ''
+        bean.setR_PrCode("");//set default ''
+        bean.setR_PrDisc(0);
+        bean.setR_PrBath(0);
+        bean.setR_PrAmt(0);
+        bean.setR_PrCuType("");//set default ''
+        bean.setR_PrCuCode("");
+        bean.setR_PrChkType("");
 
-            // สำหรับส่วนลดสมาชิก            
-            bean.setR_PrSubType(bb.getR_PrSubType());
-            bean.setR_PrSubCode(bb.getR_PrSubCode());
-            bean.setR_PrSubQuan(bb.getR_PrSubQuan());
-            bean.setR_PrSubDisc(bb.getR_PrSubDisc());
-            bean.setR_PrSubBath(bb.getR_PrSubBath());
-            bean.setR_PrSubAmt(bb.getR_PrSubAmt());
-            bean.setR_QuanCanDisc(bb.getR_QuanCanDisc());
+        // สำหรับส่วนลดสมาชิก            
+        bean.setR_PrSubType(bb.getR_PrSubType());
+        bean.setR_PrSubCode(bb.getR_PrSubCode());
+        bean.setR_PrSubQuan(bb.getR_PrSubQuan());
+        bean.setR_PrSubDisc(bb.getR_PrSubDisc());
+        bean.setR_PrSubBath(bb.getR_PrSubBath());
+        bean.setR_PrSubAmt(bb.getR_PrSubAmt());
+        bean.setR_QuanCanDisc(bb.getR_QuanCanDisc());
 
-            bean.setR_Void("");
-            bean.setR_Serve("");
-            bean.setR_PrintOK("Y");
-            bean.setPosStk("0");
-            bean.setR_Order("1");
-            bean.setR_MemSum("N");
-            bean.setR_MoveItem("N");
-            bean.setR_MovePrint("N");
-            //bill.setR_CardPay("N");
-            bean.setR_Pickup("P");
-            bean.setR_KicOK("");
+        bean.setR_Void("");
+        bean.setR_Serve("");
+        bean.setR_PrintOK("Y");
+        bean.setPosStk("0");
+        bean.setR_Order("1");
+        bean.setR_MemSum("N");
+        bean.setR_MoveItem("N");
+        bean.setR_MovePrint("N");
+        //bill.setR_CardPay("N");
+        bean.setR_Pickup("P");
+        bean.setR_KicOK("");
 
-            bean.setR_CallWait("");
-            bean.setR_VoidPause("");
+        bean.setR_CallWait("");
+        bean.setR_VoidPause("");
 
-            bean.setR_Opt1(bb.getR_Opt1());
-            bean.setR_Opt2(bb.getR_Opt2());
-            bean.setR_Opt3(bb.getR_Opt3());
-            bean.setR_Opt4(bb.getR_Opt4());
-            bean.setR_Opt5(bb.getR_Opt5());
-            bean.setR_Opt6(bb.getR_Opt6());
-            bean.setR_Opt7(bb.getR_Opt7());
-            bean.setR_Opt8(bb.getR_Opt8());
-            bean.setR_Opt9(bb.getR_Opt9());
+        bean.setR_Opt1(bb.getR_Opt1());
+        bean.setR_Opt2(bb.getR_Opt2());
+        bean.setR_Opt3(bb.getR_Opt3());
+        bean.setR_Opt4(bb.getR_Opt4());
+        bean.setR_Opt5(bb.getR_Opt5());
+        bean.setR_Opt6(bb.getR_Opt6());
+        bean.setR_Opt7(bb.getR_Opt7());
+        bean.setR_Opt8(bb.getR_Opt8());
+        bean.setR_Opt9(bb.getR_Opt9());
 
-            bean.setVoidMSG(bb.getVoidMSG());
+        bean.setVoidMSG(bb.getVoidMSG());
 
-            bean.setR_MoveFrom("");
-            bean.setR_MoveUser("");
+        bean.setR_MoveFrom("");
+        bean.setR_MoveUser("");
 
-            bean.setCashier(bb.getCashier());
+        bean.setCashier(bb.getCashier());
 
-            bean.setR_Status("Y");
-            bean.setR_Void("");
-            bean.setR_VoidUser("");
-            bean.setR_VoidTime("");
-            bean.setR_MoveFlag("0");
+        bean.setR_Status("Y");
+        bean.setR_Void("");
+        bean.setR_VoidUser("");
+        bean.setR_VoidTime("");
+        bean.setR_MoveFlag("0");
 
-            ProductBean product = pc.getData(bb.getR_PluCode());
-            bean.setR_Index(bb.getR_Index());//หมายเลขโต๊ะ/ลำดับที่รายการอาหาร
-            bean.setR_Table(bb.getR_Table());//หมายเลขโต๊ะ
-            //bean.setR_Date(Calendar.getInstance().getTime());
-            //bean.setR_Time("16:04:14");
+        bean.setR_Index(bb.getR_Index());//หมายเลขโต๊ะ/ลำดับที่รายการอาหาร
+        bean.setR_Table(bb.getR_Table());//หมายเลขโต๊ะ
+        //bean.setR_Date(Calendar.getInstance().getTime());
+        //bean.setR_Time("16:04:14");
 //            bean.setMacno(bb.getMacno());//หมายเลขเครื่อง
-            bean.setCashier(bb.getCashier());//รหัส login
-            bean.setR_Emp(bb.getR_Emp());//รหัสบริกร
-            bean.setR_PluCode(product.getPCode());//รหัสสินค้า
-            bean.setR_PName(product.getPDesc());//ชื่อสินค้า
-            bean.setR_PEName(product.getPEDesc());//ชื่อสินค้าENG
-            bean.setR_Unit(ThaiUtil.Unicode2ASCII(product.getPUnit1()));//หน่วยนับ
-            bean.setR_Group(product.getPGroup());//กลุ่มสินค้า
-            bean.setR_Status(product.getPStatus());//การคิดราคาขาย (P=อัตโนมัติ(Plu), D=กำหนดเองตามป้าย(SDP), T=คำนวณตามเวลา(Time))
-            bean.setR_Normal(product.getPNormal());//สถานะสินค้า (N=Normal, C=Consign, S=Special)
-            bean.setR_Discount(product.getPDiscount());//สามารถให้ส่วนลดได้
-            bean.setR_Service(product.getPService());//คิดค่าบริการ
-            bean.setR_Stock(product.getPStock());//จัดทำสต็อกหรือไม่
-            bean.setR_Set(product.getPSet());//เป็นสินค้าชุดหรือไม่
-            bean.setR_Vat(product.getPVat());//คิดภาษีหรือไม่
-            bean.setR_Type(product.getPType());//ประเภทสินค้า
-            bean.setR_Quan(bb.getR_Quan());//จำนวนที่สั่ง
-            bean.setR_Price(bb.getR_Price());//ราคาสินค้า
-            bean.setR_Total(bb.getR_Quan() * bb.getR_Price());//ราคารวม            
-            bean.setR_Kic(product.getPKic());
+        bean.setCashier(bb.getCashier());//รหัส login
+        bean.setR_Emp(bb.getR_Emp());//รหัสบริกร
+        bean.setR_PluCode(product.getPCode());//รหัสสินค้า
+        bean.setR_PName(product.getPDesc());//ชื่อสินค้า
+        bean.setR_PEName(product.getPEDesc());//ชื่อสินค้าENG
+        bean.setR_Unit(ThaiUtil.Unicode2ASCII(product.getPUnit1()));//หน่วยนับ
+        bean.setR_Group(product.getPGroup());//กลุ่มสินค้า
+        bean.setR_Status(product.getPStatus());//การคิดราคาขาย (P=อัตโนมัติ(Plu), D=กำหนดเองตามป้าย(SDP), T=คำนวณตามเวลา(Time))
+        bean.setR_Normal(product.getPNormal());//สถานะสินค้า (N=Normal, C=Consign, S=Special)
+        bean.setR_Discount(product.getPDiscount());//สามารถให้ส่วนลดได้
+        bean.setR_Service(product.getPService());//คิดค่าบริการ
+        bean.setR_Stock(product.getPStock());//จัดทำสต็อกหรือไม่
+        bean.setR_Set(product.getPSet());//เป็นสินค้าชุดหรือไม่
+        bean.setR_Vat(product.getPVat());//คิดภาษีหรือไม่
+        bean.setR_Type(product.getPType());//ประเภทสินค้า
+        bean.setR_Quan(bb.getR_Quan());//จำนวนที่สั่ง
+        bean.setR_Price(bb.getR_Price());//ราคาสินค้า
+        bean.setR_Total(bb.getR_Quan() * bb.getR_Price());//ราคารวม            
+        bean.setR_Kic(product.getPKic());
 
-            //Add new Field
+        //Add new Field
 //            bean.setStkCode(product.getMSStk());
-            bean.setStkCode(bb.getStkCode());
-            bean.setPosStk(product.getPOSStk());
+        bean.setStkCode(bb.getStkCode());
+        bean.setPosStk(product.getPOSStk());
 
-            if (bb.getR_LinkIndex() == null) {
-                bean.setR_LinkIndex("");
-            } else {
-                bean.setR_LinkIndex(bb.getR_LinkIndex());
-            }
-
-            bean.setR_Date(bb.getR_Date());
-            bean.setR_Time(bb.getR_Time());
-
-            //copy balance bean
-            balanceCurrent = bean;
-
-            return saveBillNoSQL(bean);
-
-        } catch (Exception e) {
-            MSG.ERR("BalanceControl:saveBalance:" + e.getMessage());
-            return false;
+        if (bb.getR_LinkIndex() == null) {
+            bean.setR_LinkIndex("");
+        } else {
+            bean.setR_LinkIndex(bb.getR_LinkIndex());
         }
+
+        bean.setR_Date(bb.getR_Date());
+        bean.setR_Time(bb.getR_Time());
+
+        //copy balance bean
+        balanceCurrent = bean;
+
+        return saveBillNoSQL(bean);
     }
 
     public boolean moveBalanceAll(String table, BalanceBean bean) {
@@ -1665,7 +1657,7 @@ public class BalanceControl {
         return false;
     }
 
-    public boolean copyProductTo(String table1, String table2, String R_Index, String PCode) {
+    public boolean copyProductTo(String table1, String table2, String R_Index, String PCode, ProductBean product) {
         BalanceControl balanceControl = new BalanceControl();
         BalanceBean bean = balanceControl.getBalanceIndex(table1, R_Index);
         if (bean == null) {
@@ -1677,7 +1669,8 @@ public class BalanceControl {
             String getIndex = bean.getR_LinkIndex().split("/")[1];
             bean.setR_LinkIndex(table2 + "/" + getIndex);
         }
-        return saveBalance(bean);
+        
+        return saveBalance(bean, product);
     }
 
     public static void updateProSerTable(String table, MemberBean memberBean) {

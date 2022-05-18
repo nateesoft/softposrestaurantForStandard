@@ -5,8 +5,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -18,14 +16,6 @@ public class Jdi_dailyReport_Hourly_Plu extends javax.swing.JDialog {
     DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     public Jdi_dailyReport_Hourly_Plu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-          try{         
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        }catch(ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e){
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            }
-        }
         initComponents();
         model = (DefaultTableModel) tblDept.getModel();
         tblDept.setShowGrid(true);        
