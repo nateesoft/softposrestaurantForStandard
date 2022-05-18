@@ -30,7 +30,6 @@ import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -52,8 +51,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -81,16 +78,20 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
 
-    private ProductControl productControl = new ProductControl();
+    private int floorplanTabSelected = 0;
+
+    private final ProductControl productControl = new ProductControl();
 
     public FloorPlanDialog() {
+        setUndecorated(true);
+        initComponents();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setUndecorated(true);
+
         POSHW = POSHWSetup.Bean(Value.getMacno());
         CONFIG = POSConfigSetup.Bean();
 
-        initComponents();
         refresh = PosControl.getRefreshTime();
 
         jLabel1.setVisible(false);
@@ -104,17 +105,22 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 showTime();
             }
         }).start();
+
+        //load header for tab
+        loadHeaderTab();
+
         new Thread(() -> {
             for (int i = 0; i < 10; i++) {
                 addButton();
-                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+                    PrintCheckBillFromPDA();
+                }
                 if (i == 9) {
                     i = 0;
                 }
                 try {
                     Thread.sleep(refresh * 1000);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(FloorPlanDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }).start();
@@ -247,6 +253,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jTabbedPane1.setForeground(new java.awt.Color(0, 0, 204));
         jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
         jTabbedPane1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTabbedPane1KeyPressed(evt);
@@ -560,11 +571,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jMenuItem21.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem21.setText("ติดตั้งปลั๊กอิน (Plug-In)");
-        jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem21ActionPerformed(evt);
-            }
-        });
         jMenu3.add(jMenuItem21);
 
         jMenuItem16.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -578,11 +584,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jMenuItem18.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem18.setText("การอัพเดตโปรแกรมอัตโนมัติ");
-        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem18ActionPerformed(evt);
-            }
-        });
         jMenu3.add(jMenuItem18);
 
         jMenuItem20.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -703,7 +704,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jMenu9.setBackground(new java.awt.Color(255, 153, 51));
         jMenu9.setForeground(new java.awt.Color(0, 0, 255));
-        jMenu9.setText("jMenu9");
+        jMenu9.setText("Show Time");
         jMenu9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jMenuBar1.add(jMenu9);
 
@@ -745,16 +746,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
-        //MSG.ERR(this, "Comming soon...");
-    }//GEN-LAST:event_jMenuItem21ActionPerformed
-
     private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
         try {
             openWebpage(new URL("http://www.softpos.co.th"));
-        } catch (MalformedURLException ex) {
-            MSG.ERR(this, ex.getMessage());
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             MSG.ERR(this, ex.getMessage());
         }
     }//GEN-LAST:event_jMenuItem17ActionPerformed
@@ -836,12 +831,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem28ActionPerformed
 
     private void MShowDailyEJ1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MShowDailyEJ1ActionPerformed
-//        GetPassword frm = new GetPassword(null, true);
-//        frm.setVisible(true);
-//        if (frm.ValidPassword) {
         DisplayEJ frm2 = new DisplayEJ(null, true);
         frm2.setVisible(true);
-//        }
     }//GEN-LAST:event_MShowDailyEJ1ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -864,7 +855,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-
         jMenuItem6.setVisible(false);
         MShowDailyEJ1.setVisible(false);
         jMenu3.setVisible(false);
@@ -889,7 +879,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == KeyEvent.VK_F10) {
             jMenuBar1.setVisible(true);
         }
-        ;
     }//GEN-LAST:event_jTabbedPane1KeyPressed
 
     private void jMenuBar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuBar1MouseClicked
@@ -929,10 +918,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         DiarySale d = new DiarySale(null, true);
         d.setVisible(true);
     }//GEN-LAST:event_jMenuItem19ActionPerformed
-
-    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem18ActionPerformed
 
     private void jMenuItem35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem35ActionPerformed
         PrintKicControl Kic = new PrintKicControl(null, true);
@@ -1010,6 +995,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             // Saving code here
         }
     }//GEN-LAST:event_jMenuItem38ActionPerformed
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        this.floorplanTabSelected = jTabbedPane1.getSelectedIndex();
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
     private void saveToBalance(String tableNo, String pcode, String r_etd, double r_quan) {
         String PCode = pcode;
 
@@ -1260,28 +1250,26 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JPanel pnZone7;
     // End of variables declaration//GEN-END:variables
 
+    private void addButton1() {
+//        jTabbedPane1.setComponentAt(floorplanTabSelected, fPlanPanel.loadData(floorplanTabSelected));
+    }
+
     private void addButton() {
         int count;
         String strCount;
         int c = 0;
-        pnZone1.removeAll();
-        pnZone2.removeAll();
-        pnZone3.removeAll();
-        pnZone4.removeAll();
-        pnZone5.removeAll();
-        pnZone6.removeAll();
-        pnZone7.removeAll();
 
-        pnZone1.setBackground(Color.GRAY);
+        JPanel[] panelMain = new JPanel[]{pnZone1, pnZone2, pnZone3, pnZone4, pnZone5, pnZone6, pnZone7};
+        for (int i = 0; i < panelMain.length; i++) {
+            if (i == jTabbedPane1.getSelectedIndex()) {
+                panelMain[i].removeAll();
+            }
+        }
 
-        //load header for tab
-        loadHeaderTab();
-
+        String[] listTableHeader = new String[]{"T", "A", "B", "C", "D", "E", "F"};
         for (int i = 1; i <= 11; i++) {
             count = i;
-
             for (int j = 0; j < 10; j++) {//โต๊ะแนวนอน
-
                 if (count < 10) {
                     strCount = "00" + count;
                 } else if (count < 100) {
@@ -1289,98 +1277,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 } else {
                     strCount = "" + count;
                 }
-
-                JButton button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("T" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone1.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("A" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone2.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("B" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone3.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("C" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone4.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("D" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone5.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("E" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone6.add(button);
-
-                button = new JButton("");
-                button.setPreferredSize(new Dimension(50, 50));
-                button.setFocusPainted(false);
-                button.setMargin(new Insets(0, 0, 0, 0));
-                button.setContentAreaFilled(false);
-                button.setBorderPainted(false);
-                button.setOpaque(false);
-                button.setName("F" + strCount);
-                button.setFont(fontA);
-                button.addMouseListener(new MouseClickAction(button, c));
-                button.addActionListener(new MouseFocusAction(button, c));
-                pnZone7.add(button);
-
+                for (int x = 0; x < listTableHeader.length; x++) {
+                    String listTableHeader1 = listTableHeader[x];
+                    JButton button = initButtonTable(listTableHeader1 + strCount, c);
+                    if (x == jTabbedPane1.getSelectedIndex()) {
+                        panelMain[x].add(button);
+                    }
+                }
                 count += 10;
                 c++;
             }
@@ -1414,27 +1317,21 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 //find zone, index
                 bean.setZone(codeId.substring(0, 1));
                 try {
-                    JButton btn = new JButton();
+                    JButton btn = null;
                     bean.setIndex(Integer.parseInt(codeId.substring(1, codeId.length())));
                     if (bean.getZone().equals("T")) {
                         btn = findButton(pnZone1, codeId);
-                    }
-                    if (bean.getZone().equals("A")) {
+                    } else if (bean.getZone().equals("A")) {
                         btn = findButton(pnZone2, codeId);
-                    }
-                    if (bean.getZone().equals("B")) {
+                    } else if (bean.getZone().equals("B")) {
                         btn = findButton(pnZone3, codeId);
-                    }
-                    if (bean.getZone().equals("C")) {
+                    } else if (bean.getZone().equals("C")) {
                         btn = findButton(pnZone4, codeId);
-                    }
-                    if (bean.getZone().equals("D")) {
+                    } else if (bean.getZone().equals("D")) {
                         btn = findButton(pnZone5, codeId);
-                    }
-                    if (bean.getZone().equals("E")) {
+                    } else if (bean.getZone().equals("E")) {
                         btn = findButton(pnZone6, codeId);
-                    }
-                    if (bean.getZone().equals("F")) {
+                    } else if (bean.getZone().equals("F")) {
                         btn = findButton(pnZone7, codeId);
                     }
 
@@ -1454,33 +1351,26 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             if (rsTime1.next()) {
                                 r_time = rsTime1.getString("r_time").substring(0, 5);
                             }
-
                             rsTime1.close();
                             stmt1.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
                             AppLogUtil.log(FloorPlanDialog.class, "error", e);
                         }
-
-//                        btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")" + r_time);
                         btn.setText(bean.getTableNo() + "(" + r_time + ")");
-//                        MSG.NOTICE((bean.getTableNo() + "(" + r_time + ")"));
                         if (bean.getCustomer() == 0 && item > 0) {
                             btn.setText(bean.getTableNo() + "(" + r_time + ")");
                         }
                         if (bean.isIsActive()) {
                             btn.setOpaque(false);
                             setButtonShowTableFloorPlan(btn, Color.RED, bean.getTableNo());
-
                         } else {
                             if (bean.getPrintChkBill().equals("N") && bean.getCustomer() > 0) {
-                                //btn.setOpaque(true);
                                 btn.setFont(fontB);
                                 btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Teble2.png")));
                                 btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                                 btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                                 btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                                //setButtonShowTableFloorPlan(btn, Color.orange, bean.getTableNo());
                             } else if (bean.getPrintChkBill().equals("Y")) {
                                 btn.setOpaque(true);
                                 btn.setFont(fontB);
@@ -1489,7 +1379,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                                 btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                                 btn.setBackground(Color.PINK);
-//                                setButtonShowTableFloorPlan(btn, Color.PINK, bean.getTableNo());
                             } else {
                                 btn.setOpaque(true);
                                 btn.setFont(fontB);
@@ -1501,9 +1390,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         }
                     } else {
                         setButtonShowTableFloorPlan(btn, new Color(153, 255, 153), bean.getTableNo());
-
                     }
-
                 } catch (NumberFormatException e) {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(FloorPlanDialog.class, "error", e);
@@ -1527,7 +1414,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 return btn;
             }
         }
-
         return null;
     }
 
@@ -1542,7 +1428,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()),
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7())
         };
+        FPlanPanel[] fPlanPanel = new FPlanPanel[7];
         for (int i = 0; i < floorTab.length; i++) {
+//            fPlanPanel[i] = new FPlanPanel();
+//            jTabbedPane1.add(fPlanPanel[i]);
+
             JLabel lab = new JLabel(ThaiUtil.ASCII2Unicode(floorTab[i]));
             add(lab);
             lab.setFont(fontC);
@@ -1550,12 +1440,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 lab.setHorizontalAlignment(SwingConstants.CENTER);
             }
             jTabbedPane1.setTabComponentAt(i, lab);
+//            jTabbedPane1.setComponentAt(i, fPlanPanel[i].loadData(i));
             jTabbedPane1.setIconAt(i, null);
         }
-        if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-            PrintCheckBillFromPDA();
-        }
-
     }
 
     public void PrintCheckBillFromPDA() {
@@ -1565,12 +1452,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
-                String sql = "select * from "
-                        + "balance "
-                        + "where PDAPrintCheck='Y' "
-                        + "group by r_table "
-                        + "order by r_time;";
-                //อัพเดท = N หลังจากพิมพ์แล้วเพื่อให้ PDA สามารถสั่งพิมพ์ซ้ำๆ ได้
+                String sql = "select * from balance where PDAPrintCheck='Y' "
+                        + "group by r_table order by r_time;";
+                // อัพเดท = N หลังจากพิมพ์แล้วเพื่อให้ PDA สามารถสั่งพิมพ์ซ้ำๆ ได้
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 while (rs.next()) {
                     String table = rs.getString("r_table");
@@ -1652,7 +1536,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String SQLQuery = "update posuser set onact='N',macno='' where username='" + UserCode + "'";
                 stmt.executeUpdate(SQLQuery);
             }
@@ -1677,7 +1561,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         mysql.open();
         try {
             String sql = "select * from sp_temp_refund;";
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     //create temp table
@@ -1786,7 +1670,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "from posuser "
                     + "where username='" + Value.USERCODE + "' "
                     + "and Sale2='Y'";
-            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isPermit = true;
                 }
@@ -1821,6 +1705,22 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
             }
         }
+    }
+
+    private JButton initButtonTable(String buttonName, int c) {
+        JButton button = new JButton("");
+        button.setPreferredSize(new Dimension(50, 50));
+        button.setFocusPainted(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setName(buttonName);
+        button.setFont(fontA);
+        button.addMouseListener(new MouseClickAction(button, c));
+        button.addActionListener(new MouseFocusAction(button, c));
+
+        return button;
     }
 
     class TableSetup {
@@ -2285,7 +2185,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         + "where R_Table='" + TableNo + "' "
                         + "and R_PluCode='" + PCode + "' "
                         + "and R_LinkIndex=''";
-                try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                try (Statement stmt1 = mysql.getConnection().createStatement()) {
                     stmt1.executeUpdate(sql1);
                 }
             }
@@ -2301,11 +2201,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     }
 
+    DateConvert dateConvertTimeShow = new DateConvert();
+
     public void showTime() {
-        DateConvert dc = new DateConvert();
-        jMenu9.setText(dc.dateGetToShow(dc.GetCurrentDate()).replace(" ", "") + " " + dc.GetCurrentTime() + " USER " + Value.CASHIER);
+        jMenu9.setText(dateConvertTimeShow.dateGetToShow(dateConvertTimeShow.GetCurrentDate()).replace(" ", "") + " " + dateConvertTimeShow.GetCurrentTime() + " USER " + Value.CASHIER);
         try {
-            Thread.sleep(900);
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
         }
     }

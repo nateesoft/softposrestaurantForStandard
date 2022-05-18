@@ -885,8 +885,6 @@ public class PrintSimpleForm {
                     + "and r_opt1='' and r_void<>'V' "
                     + "group by R_PluCode, R_LinkIndex, R_ETD "
                     + "order by R_ETD, R_Index";
-
-//            String ETD;
             boolean printHeader = false;
             boolean printTable = false;
             String tempHeader = "";
@@ -1840,14 +1838,16 @@ public class PrintSimpleForm {
         ArrayList<BalanceBean> listVP = new ArrayList<>();
         ArrayList<BalanceBean> listVW = new ArrayList<>();
         if (!ATFromPrintToKic.equals("PDA")) {
-            String sqlvoid = "select  R_Void, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+            String sqlvoid = "select R_EMP, R_Void, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "from balance b "
                     + "where r_table='" + ThaiUtil.Unicode2ASCII(tBean.getTcode()) + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_ETD='" + RETD + "' "
                     + "and R_Void='V' "
-                    + "group by R_Void, R_PluCode, R_PName, R_Price, b.Macno,R_Date, R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+                    + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price, b.Macno,R_Date, R_Time,"
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
             //loop Novoid
             MySQLConnect mysql = new MySQLConnect();
@@ -1860,6 +1860,7 @@ public class PrintSimpleForm {
                     bean.setR_ETD(rs.getString("R_ETD"));
                     bean.setR_PluCode(rs.getString("R_Plucode"));
                     bean.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                    bean.setR_Emp(rs.getString("R_EMP"));
                     bean.setR_Quan(rs.getDouble("R_Quan"));
                     bean.setR_Price(rs.getDouble("R_Price"));
                     bean.setMacno(rs.getString("Macno"));

@@ -97,7 +97,6 @@ public class PosControl {
             mysql.close();
         }
         
-        PublicVar.companyBean = companyBean;
         return companyBean;
     }
 
@@ -181,7 +180,6 @@ public class PosControl {
             mysql.close();
         }
         
-        PublicVar.posConfigSetup = posConfigSetup;
         return posConfigSetup;
     }
 
@@ -258,7 +256,6 @@ public class PosControl {
             mysql.close();
         }
         
-        PublicVar.poshwsetup = poshwsetup;
         return poshwsetup;
     }
 

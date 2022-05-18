@@ -1,7 +1,5 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.model.BranchBean;
-import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
 
@@ -549,8 +547,4 @@ public class PublicVar {
     public static String PrintCheckBillFromPDA = "";
     public static String PrintCopyAuto = "";
     
-    
-    public static CompanyBean companyBean = null;
-    public static POSConfigSetup posConfigSetup = null;
-    public static POSHWSetup poshwsetup = null;
 }

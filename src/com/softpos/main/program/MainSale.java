@@ -95,7 +95,6 @@ public class MainSale extends javax.swing.JDialog {
     private ProductControl productControl = new ProductControl();
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
-
         super(parent, modal);
         initComponents();
 
@@ -195,18 +194,18 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void initScreen() {
-        model = (DefaultTableModel) tblShowBalance.getModel();
+        model = (DefaultTableModel) tbShowBalance.getModel();
 
-        tblShowBalance.setShowGrid(true);
-        tblShowBalance.setGridColor(Color.gray);
-        tblShowBalance.setRowHeight(45);
+        tbShowBalance.setShowGrid(true);
+        tbShowBalance.setGridColor(Color.gray);
+        tbShowBalance.setRowHeight(45);
 
-        JTableHeader header = tblShowBalance.getTableHeader();
+        JTableHeader header = tbShowBalance.getTableHeader();
         header.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 12));
 
-        alignColumn(tblShowBalance, 2, "right");
-        alignColumn(tblShowBalance, 3, "right");
-        alignColumn(tblShowBalance, 4, "right");
+        alignColumn(tbShowBalance, 2, "right");
+        alignColumn(tbShowBalance, 3, "right");
+        alignColumn(tbShowBalance, 4, "right");
 
         PublicVar.CheckStockOnLine = PUtility.GetStockOnLine();
 
@@ -333,7 +332,7 @@ public class MainSale extends javax.swing.JDialog {
         btnLangEN = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblShowBalance = new javax.swing.JTable();
+        tbShowBalance = new javax.swing.JTable();
         jMenuBar11 = new javax.swing.JMenuBar();
         MMainMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -894,8 +893,8 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
-        tblShowBalance.setFont(new java.awt.Font("Angsana New", 0, 20)); // NOI18N
-        tblShowBalance.setModel(new javax.swing.table.DefaultTableModel(
+        tbShowBalance.setFont(new java.awt.Font("Angsana New", 0, 20)); // NOI18N
+        tbShowBalance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -918,30 +917,29 @@ public class MainSale extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tblShowBalance.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tblShowBalance.setFocusable(false);
-        tblShowBalance.setRequestFocusEnabled(false);
-        tblShowBalance.setRowHeight(25);
-        tblShowBalance.setSelectionBackground(new java.awt.Color(102, 153, 255));
-        tblShowBalance.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tblShowBalance.setShowVerticalLines(false);
-        tblShowBalance.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbShowBalance.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbShowBalance.setFocusable(false);
+        tbShowBalance.setRequestFocusEnabled(false);
+        tbShowBalance.setRowHeight(25);
+        tbShowBalance.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        tbShowBalance.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tbShowBalance.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblShowBalanceMouseClicked(evt);
+                tbShowBalanceMouseClicked(evt);
             }
         });
-        tblShowBalance.addKeyListener(new java.awt.event.KeyAdapter() {
+        tbShowBalance.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblShowBalanceKeyPressed(evt);
+                tbShowBalanceKeyPressed(evt);
             }
         });
-        jScrollPane1.setViewportView(tblShowBalance);
-        if (tblShowBalance.getColumnModel().getColumnCount() > 0) {
-            tblShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
-            tblShowBalance.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tblShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
-            tblShowBalance.getColumnModel().getColumn(1).setPreferredWidth(390);
-            tblShowBalance.getColumnModel().getColumn(2).setPreferredWidth(45);
+        jScrollPane1.setViewportView(tbShowBalance);
+        if (tbShowBalance.getColumnModel().getColumnCount() > 0) {
+            tbShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
+            tbShowBalance.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tbShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
+            tbShowBalance.getColumnModel().getColumn(1).setPreferredWidth(390);
+            tbShowBalance.getColumnModel().getColumn(2).setPreferredWidth(45);
         }
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
@@ -1402,12 +1400,12 @@ private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
 }//GEN-LAST:event_txtPluCodeKeyPressed
 
-private void tblShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowBalanceKeyPressed
+private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         txtPluCode.requestFocus();
     } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        int row = tblShowBalance.getSelectedRow();
+        int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
             Object r_index = model.getValueAt(row, 10);
             Object voidMsg = model.getValueAt(row, 5);
@@ -1425,7 +1423,7 @@ private void tblShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         }
     }
 
-}//GEN-LAST:event_tblShowBalanceKeyPressed
+}//GEN-LAST:event_tbShowBalanceKeyPressed
 
 private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
@@ -1548,7 +1546,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void clearTable() {
-        tblShowBalance.setBackground(null);
+        tbShowBalance.setBackground(null);
         txtTableOnEnter();
         changeSaleType("E");
         txtTable.setText("");
@@ -1618,11 +1616,11 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }//GEN-LAST:event_txtShowETDMouseClicked
 
-    private void tblShowBalanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblShowBalanceMouseClicked
+    private void tbShowBalanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbShowBalanceMouseClicked
         if (evt.getClickCount() == 2) {
             selectedOptionBill();
         }
-    }//GEN-LAST:event_tblShowBalanceMouseClicked
+    }//GEN-LAST:event_tbShowBalanceMouseClicked
 
     private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
         showHoldTable();
@@ -1942,7 +1940,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         PublicVar.SubTotalOK = false;
 
         //visible MainSale
-        setVisible(false);
+        setVisible(false);showFloorPlan();
         CheckBill frm = new CheckBill(null, true, txtTable.getText(), memberBean, "", "");
         frm.setVisible(true);
         if (PublicVar.SubTotalOK) {
@@ -2290,20 +2288,20 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void showCell(int row, int column) {
-        int sizeTable = tblShowBalance.getRowCount();
+        int sizeTable = tbShowBalance.getRowCount();
         if (row > 0) {
             if (row > sizeTable - 1) {
                 row = sizeTable - 1;
             }
-            Rectangle rect = tblShowBalance.getCellRect(row, column, true);
-            tblShowBalance.scrollRectToVisible(rect);
-            tblShowBalance.clearSelection();
-            tblShowBalance.setRowSelectionInterval(row, row);
+            Rectangle rect = tbShowBalance.getCellRect(row, column, true);
+            tbShowBalance.scrollRectToVisible(rect);
+            tbShowBalance.clearSelection();
+            tbShowBalance.setRowSelectionInterval(row, row);
         }
     }
 
     private void bntoptionClick() {
-        int row = tblShowBalance.getSelectedRow();
+        int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
             String RKicPrint = model.getValueAt(row, 8).toString();
             String RVoid = model.getValueAt(row, 5).toString();
@@ -2324,7 +2322,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private int getSelectedRowIndex() {
-        int row = tblShowBalance.getSelectedRow();
+        int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
             return row;
         } else {
@@ -2441,7 +2439,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void changTypeClick() {
         boolean ChangOk = false;
-        int row = tblShowBalance.getSelectedRow();
+        int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
             if (!txtTable.getText().trim().equals("")) {
                 PublicVar.ChangTypeOK = false;
@@ -2596,7 +2594,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void saveToBalance() {
         String PCode = txtPluCode.getText();
-
         String StkCode = PUtility.GetStkCode();
         String emp = Value.EMP_CODE;
         String etd = txtShowETD.getText();
@@ -3245,7 +3242,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
-        if (txtTable.getText().length() > 0 && tblShowBalance.getRowCount() > 0) {
+        if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' "
                         + "where r_kicprint<>'P' and r_table='" + tableNo + "';";
@@ -3651,7 +3648,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JPanel pSubMenu1;
     private javax.swing.JPanel pSubMenu2;
     private javax.swing.JPanel pSubMenu3;
-    private javax.swing.JTable tblShowBalance;
+    private javax.swing.JTable tbShowBalance;
     private javax.swing.JTabbedPane tbpMain;
     private javax.swing.JTextField txtCust;
     private javax.swing.JTextField txtDiscount;
@@ -3793,23 +3790,23 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void selectedTableBalance() {
-        if (tblShowBalance.getRowCount() > 0) {
-            tblShowBalance.requestFocus();
-            Rectangle rect = tblShowBalance.getCellRect(0, 0, true);
-            tblShowBalance.scrollRectToVisible(rect);
-            tblShowBalance.clearSelection();
-            tblShowBalance.setRowSelectionInterval(0, 0);
+        if (tbShowBalance.getRowCount() > 0) {
+            tbShowBalance.requestFocus();
+            Rectangle rect = tbShowBalance.getCellRect(0, 0, true);
+            tbShowBalance.scrollRectToVisible(rect);
+            tbShowBalance.clearSelection();
+            tbShowBalance.setRowSelectionInterval(0, 0);
         }
     }
 
     private void selectedOptionBill() {
-        int row = tblShowBalance.getSelectedRow();
-        String chkPCode = "" + tblShowBalance.getValueAt(row, 0);
+        int row = tbShowBalance.getSelectedRow();
+        String chkPCode = "" + tbShowBalance.getValueAt(row, 0);
         if (chkPCode.equals("")) {
             return;
         }
 
-        String chkRIndex = "" + tblShowBalance.getValueAt(row, 10);
+        String chkRIndex = "" + tbShowBalance.getValueAt(row, 10);
         //find data set
         if (!checkRIndex(chkRIndex) && chkRIndex != null) {
             return;
@@ -4255,7 +4252,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void cancelItemBeforeHold() {
         BalanceControl bc = new BalanceControl();
-        int[] rows = tblShowBalance.getSelectedRows();
+        int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
         String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
@@ -4263,7 +4260,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         for (int i = 0; i < rows.length; i++) {
-            String r_index = "" + tblShowBalance.getValueAt(rows[i], 10);
+            String r_index = "" + tbShowBalance.getValueAt(rows[i], 10);
             try {
                 BalanceBean bean = bc.getBalanceIndex(txtTable.getText(), r_index);
                 if (bean == null) {
@@ -4459,9 +4456,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     String getNewPNameWrap(String PName) {
         String[] names = new String[2];
-        if (PName.length() > 30) {
-            names[0] = PName.substring(0, 30);
-            names[1] = PName.substring(30, PName.length());
+        if (PName.length() > 50) {
+            names[0] = PName.substring(0, 50);
+            names[1] = PName.substring(50, PName.length());
         } else {
             return PName;
         }

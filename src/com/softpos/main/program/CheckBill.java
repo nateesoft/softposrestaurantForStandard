@@ -1,6 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.discount.DiscountDialog;
+import com.softpos.floorplan.FloorPlanDialog;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.controller.BillControl;
@@ -1889,7 +1890,7 @@ public class CheckBill extends javax.swing.JDialog {
             List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
-                if (!bean.getR_Void().equals("V")) {
+                if (!"V".equals(bean.getR_Void())) {
                     model.addRow(new Object[]{
                         bean.getR_PluCode(), bean.getR_PName(),
                         dec.format(bean.getR_Quan()), dec.format(bean.getR_Price()), dec.format(bean.getR_Total())
@@ -2324,6 +2325,9 @@ public class CheckBill extends javax.swing.JDialog {
         }
         if (PublicVar.SubTotalOK) {
             dispose();
+            
+            // show floorplan
+            showFloorPlan();
             jPanel6.setVisible(false);
             return;
         }
@@ -2331,6 +2335,11 @@ public class CheckBill extends javax.swing.JDialog {
         new Thread(() -> {
             checkBillPayment();
         }).start();
+    }
+    
+    private void showFloorPlan() {
+        FloorPlanDialog floorPlan = new FloorPlanDialog();
+        floorPlan.setVisible(true);
     }
 
     private void backupTempBalnace() {

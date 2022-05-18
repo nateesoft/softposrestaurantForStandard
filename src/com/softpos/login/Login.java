@@ -36,9 +36,9 @@ import util.OSValidator;
 
 public class Login extends javax.swing.JDialog {
 
-    Timer timer;
-    SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    DecimalFormat IntFmt = new DecimalFormat("#,##0");
+    private Timer timer;
+    private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private DecimalFormat IntFmt = new DecimalFormat("#,##0");
 
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -327,15 +327,11 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMouseClicked
-        //if (evt.getClickCount() == 2) {
         new KeyBoardDialog(null, true, 4).get(txtUser, 4);
-        //}
     }//GEN-LAST:event_txtUserMouseClicked
 
     private void txtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPassMouseClicked
-        //if (evt.getClickCount() == 2) {
         new KeyBoardDialog(null, true, 4).get(txtPass, 4);
-        //}
     }//GEN-LAST:event_txtPassMouseClicked
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -348,13 +344,11 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        //create file to check program is exist
         File f = new File("softrestaurant.running");
         if (f.exists()) {
             int confirm = JOptionPane.showConfirmDialog(null, "โปรแกรมมีการเปิดใช้งานอยู่ ท่านต้องการเปิดซ้ำใช่หรือไม่ ?",
                     "ตรวจสอบการทำงานโปรแกรม", JOptionPane.OK_CANCEL_OPTION);
             if (confirm == JOptionPane.OK_OPTION) {
-                //running program continue;
                 new File("softrestaurant.running").delete();
             } else {
                 System.exit(0);
@@ -380,7 +374,6 @@ public class Login extends javax.swing.JDialog {
                 MSG.ERR(null, e.getMessage());
             }
         }
-
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -432,33 +425,70 @@ public class Login extends javax.swing.JDialog {
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
-        } else {
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            return;
+        }
 
-            try {
-                String sql = "select * from posuser "
-                        + "where username= '" + ThaiUtil.Unicode2ASCII(loginname) + "' "
-                        + "and password='" + ThaiUtil.Unicode2ASCII(password) + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-                if (rs.next()) {
-                    PublicVar._RealUser = rs.getString("username");
-                    PublicVar._Password = rs.getString("password");
-                    PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
-                    OnAct = rs.getString("onact");
-                    MacNoOnAct = rs.getString("macno");
-                    rs.close();
-                    SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                    String St = tf.format(new Date());
-                    txtShowDate.setText(St);
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            String sql = "select * from posuser "
+                    + "where username= '" + ThaiUtil.Unicode2ASCII(loginname) + "' "
+                    + "and password='" + ThaiUtil.Unicode2ASCII(password) + "'";
+            Statement stmt = mysql.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                PublicVar._RealUser = rs.getString("username");
+                PublicVar._Password = rs.getString("password");
+                PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
+                OnAct = rs.getString("onact");
+                MacNoOnAct = rs.getString("macno");
+                rs.close();
+                SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                String St = tf.format(new Date());
+                txtShowDate.setText(St);
 
-                    String sqlCheckBillno = "select b_ondate b_ondate from billno where b_ondate<>'" + St + "'";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    ResultSet rs2 = stmt2.executeQuery(sqlCheckBillno);
-                    if (!rs2.next()) {
+                String sqlCheckBillno = "select b_ondate b_ondate from billno where b_ondate<>'" + St + "'";
+                Statement stmt2 = mysql.getConnection().createStatement();
+                ResultSet rs2 = stmt2.executeQuery(sqlCheckBillno);
+                if (!rs2.next()) {
+                    if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                        MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                        clearlogin();
+                    } else {
+                        UserRecord TUserRec = new UserRecord();
+                        if (TUserRec.GetUserAction(loginname)) {
+                            if (TUserRec.Sale1.equals("Y")) {
+                                PublicVar.TUserRec = TUserRec;
+                                UpdateLogin(loginname);
+                                PosHwSetupOnAct("Y");
+                                Value.USERCODE = txtUser.getText();
+                                PublicVar.Branch_Code = BranchControl.getData().getCode();
+                                dispose();
+
+                                FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                                floorPlanDialog.setVisible(true);
+                            } else {
+                                MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                clearlogin();
+                            }
+                        } else {
+                            MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                            clearlogin();
+                        }
+                    }
+                } else {
+                    POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+                    String POSOnActCheck = poshwSetup.getOnAct();
+                    if (POSOnActCheck.equals("Y")) {
+                        JOptionPane.showMessageDialog(this, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+                        System.exit(0);
+                    }
+                    MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
+                    GetPassword frm = new GetPassword(null, true);
+                    frm.setVisible(true);
+                    if (frm.ValidPassword) {
                         if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                            MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                            MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                             clearlogin();
                         } else {
                             UserRecord TUserRec = new UserRecord();
@@ -470,73 +500,38 @@ public class Login extends javax.swing.JDialog {
                                     Value.USERCODE = txtUser.getText();
                                     PublicVar.Branch_Code = BranchControl.getData().getCode();
                                     dispose();
-                                    FloorPlanDialog floorPlan = new FloorPlanDialog();
-                                    floorPlan.setVisible(true);
+
+                                    FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                                    floorPlanDialog.setVisible(true);
                                 } else {
-                                    MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
                                     clearlogin();
                                 }
                             } else {
-                                MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                                 clearlogin();
                             }
                         }
                     } else {
-                        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
-                        String POSOnActCheck = poshwSetup.getOnAct();
-                        if (POSOnActCheck.equals("Y")) {
-                            JOptionPane.showMessageDialog(this, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
-                            System.exit(0);
-                        }
-                        MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
-                        GetPassword frm = new GetPassword(null, true);
-                        frm.setVisible(true);
-                        if (frm.ValidPassword) {
-                            if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                                MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
-                                clearlogin();
-                            } else {
-                                UserRecord TUserRec = new UserRecord();
-                                if (TUserRec.GetUserAction(loginname)) {
-                                    if (TUserRec.Sale1.equals("Y")) {
-                                        PublicVar.TUserRec = TUserRec;
-                                        UpdateLogin(loginname);
-                                        PosHwSetupOnAct("Y");
-                                        Value.USERCODE = txtUser.getText();
-                                        PublicVar.Branch_Code = BranchControl.getData().getCode();
-                                        dispose();
-                                        FloorPlanDialog floorPlan = new FloorPlanDialog();
-                                        floorPlan.setVisible(true);
-                                    } else {
-                                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
-                                        clearlogin();
-                                    }
-                                } else {
-                                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-                                    clearlogin();
-                                }
-                            }
-                        } else {
-                            System.exit(WIDTH);
-                        }
+                        System.exit(0);
                     }
-
-                    rs2.close();
-                    stmt2.close();
-                } else {
-                    MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                    clearlogin();
                 }
 
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(Login.class, "error", e);
+                rs2.close();
+                stmt2.close();
+            } else {
+                MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                 clearlogin();
-            } finally {
-                mysql.close();
             }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(Login.class, "error", e);
+            clearlogin();
+        } finally {
+            mysql.close();
         }
     }
 

@@ -379,29 +379,113 @@ public class BalanceControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select r_plucode,r_etd,r_Pname, "
+            String sql = "select "
                     + "sum(b.r_quan) sum_R_Quan, "
                     + "sum(b.r_total) sum_R_Total, "
                     + "sum(r_discbath) sum_R_DiscBath,"
                     + "sum(r_pramt) sum_R_PrAmt,"
                     + "sum(r_prsubAmt) sum_R_PrsubAmt,"
                     + "sum(r_prcuamt) sum_R_PrCuAmt, "
-                    + "sum(R_ServiceAmt) sum_R_ServiceAmt "
+                    + "sum(R_ServiceAmt) sum_R_ServiceAmt, "
+                    + "b.* "
                     + "from balance b "
                     + "where r_table='" + table + "' "
                     + "and r_plucode<>'8899' "
-                    + "group by r_plucode,r_etd,r_Pname ";
+                    + "group by r_plucode,r_etd,r_Pname "
+                    + "order by r_time, r_index";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
+                balanceBean.setR_Index(rs.getString("R_Index"));
+                balanceBean.setR_Table(rs.getString("R_Table"));
+                balanceBean.setR_Time(rs.getString("R_Time"));
+                balanceBean.setMacno(rs.getString("Macno"));
+                balanceBean.setCashier(rs.getString("Cashier"));
+                balanceBean.setR_Emp(rs.getString("R_Emp"));
+                balanceBean.setR_PluCode(rs.getString("R_PluCode"));
+                balanceBean.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                balanceBean.setR_Unit(rs.getString("R_Unit"));
+                balanceBean.setR_Group(rs.getString("R_Group"));
+                balanceBean.setR_Status(rs.getString("R_Status"));
+                balanceBean.setR_Normal(rs.getString("R_Normal"));
+                balanceBean.setR_Discount(rs.getString("R_Discount"));
+                balanceBean.setR_Service(rs.getString("R_Service"));
+                balanceBean.setR_Stock(rs.getString("R_Stock"));
+                balanceBean.setR_Set(rs.getString("R_Set"));
+                balanceBean.setR_Vat(rs.getString("R_Vat"));
+                balanceBean.setR_Type(rs.getString("R_Type"));
+                balanceBean.setR_ETD(rs.getString("R_ETD"));
                 balanceBean.setR_Quan(rs.getFloat("sum_R_Quan"));
+                balanceBean.setR_Price(rs.getFloat("R_Price"));
                 balanceBean.setR_Total(rs.getFloat("sum_R_Total"));
-                balanceBean.setR_DiscBath(rs.getFloat("sum_R_DiscBath"));
+                String R_PrType = rs.getString("R_PrType");
+                if (R_PrType == null) {
+                    R_PrType = "";
+                }
+                balanceBean.setR_PrType(R_PrType);
+
+                balanceBean.setR_PrCode(rs.getString("R_PrCode"));
+                balanceBean.setR_PrDisc(rs.getFloat("R_PrDisc"));
+                balanceBean.setR_PrBath(rs.getFloat("R_PrBath"));
                 balanceBean.setR_PrAmt(rs.getFloat("sum_R_PrAmt"));
+                balanceBean.setR_DiscBath(rs.getFloat("R_DiscBath"));
+                balanceBean.setR_PrCuType(rs.getString("R_PrCuType"));
+                balanceBean.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
+                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
+                balanceBean.setR_Redule(rs.getFloat("R_Redule"));
+                balanceBean.setR_Kic(rs.getString("R_Kic"));
+                balanceBean.setR_KicPrint(rs.getString("R_KicPrint"));
+                balanceBean.setR_Void(rs.getString("R_Void"));
+                balanceBean.setR_VoidUser(rs.getString("R_VoidUser"));
+                balanceBean.setR_VoidTime(rs.getString("R_VoidTime"));
+                balanceBean.setR_Opt1(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt1")));
+                balanceBean.setR_Opt2(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt2")));
+                balanceBean.setR_Opt3(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt3")));
+                balanceBean.setR_Opt4(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt4")));
+                balanceBean.setR_Opt5(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt5")));
+                balanceBean.setR_Opt6(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt6")));
+                balanceBean.setR_Opt7(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt7")));
+                balanceBean.setR_Opt8(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt8")));
+                balanceBean.setR_Opt9(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt9")));
+                balanceBean.setVoidMSG(ThaiUtil.ASCII2Unicode(rs.getString("VoidMSG")));
+                balanceBean.setR_PrCuCode(rs.getString("R_PrCuCode"));
+                balanceBean.setR_Serve(rs.getString("R_Serve"));
+                balanceBean.setR_PrintOK(rs.getString("R_PrintOK"));
+                balanceBean.setR_KicOK(rs.getString("R_KicOK"));
+                balanceBean.setStkCode(rs.getString("StkCode"));
+                balanceBean.setPosStk(rs.getString("PosStk"));
+                balanceBean.setR_PrChkType(rs.getString("R_PrChkType"));
+                balanceBean.setR_PrQuan(rs.getFloat("R_PrQuan"));
+                balanceBean.setR_PrSubType(rs.getString("R_PrSubType"));
+                balanceBean.setR_PrSubCode(rs.getString("R_PrSubCode"));
+                balanceBean.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
+                balanceBean.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
+                balanceBean.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
                 balanceBean.setR_PrSubAmt(rs.getFloat("sum_R_PrsubAmt"));
-                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
-                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
+                balanceBean.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
+                balanceBean.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
+                balanceBean.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
+                balanceBean.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
+                balanceBean.setR_QuanCanDisc(rs.getFloat("R_QuanCanDisc"));
+                balanceBean.setR_Order(rs.getString("R_Order"));
+                balanceBean.setR_PItemNo(rs.getInt("R_PItemNo"));
+                balanceBean.setR_PKicQue(rs.getInt("R_PKicQue"));
+                balanceBean.setR_MemSum(rs.getString("R_MemSum"));
+                balanceBean.setR_MoveItem(rs.getString("R_MoveItem"));
+                balanceBean.setR_MoveFrom(rs.getString("R_MoveFrom"));
+                balanceBean.setR_MoveUser(rs.getString("R_MoveUser"));
+                balanceBean.setR_MoveFlag(rs.getString("R_MoveFlag"));
+                balanceBean.setR_MovePrint(rs.getString("R_MovePrint"));
+                balanceBean.setR_Pause(rs.getString("R_Pause"));
+                balanceBean.setR_LinkIndex(rs.getString("R_LinkIndex"));
+                balanceBean.setR_DiscBath(rs.getFloat("sum_R_DiscBath"));
                 balanceBean.setR_ServiceAmt(rs.getFloat("sum_R_ServiceAmt"));
+
+                try {
+                    balanceBean.setR_Date(rs.getDate("R_Date"));
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                }
 
                 beanData.add(balanceBean);
             }

@@ -364,9 +364,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xe15;&#xe34;&#xe14;&#xe15;&#xe31;&#xe49;&#xe07;&#xe1b;&#xe25;&#xe31;&#xe4a;&#xe01;&#xe2d;&#xe34;&#xe19; (Plug-In)"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem21ActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem16">
               <Properties>
@@ -386,9 +383,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xe01;&#xe32;&#xe23;&#xe2d;&#xe31;&#xe1e;&#xe40;&#xe14;&#xe15;&#xe42;&#xe1b;&#xe23;&#xe41;&#xe01;&#xe23;&#xe21;&#xe2d;&#xe31;&#xe15;&#xe42;&#xe19;&#xe21;&#xe31;&#xe15;&#xe34;"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem18ActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem20">
               <Properties>
@@ -571,7 +565,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="jMenu9"/>
+            <Property name="text" type="java.lang.String" value="Show Time"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
@@ -692,6 +686,7 @@
             </Property>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTabbedPane1MouseClicked"/>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTabbedPane1KeyPressed"/>
           </Events>
 
