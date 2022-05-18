@@ -1,11 +1,13 @@
 package printReport;
 
 import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.EmployeeBean;
 import com.softpos.pos.core.model.TableFileBean;
 import database.ConfigFile;
 import database.MySQLConnect;
@@ -41,6 +43,12 @@ public class PrintSimpleForm {
     private String TAB2 = TAB + TAB;
     private String ETD = "";
     private String CustomerIn = "";
+
+    private EmployeeControl empControl = new EmployeeControl();
+
+    public PrintSimpleForm() {
+        empControl.initLoadEmployeeList();
+    }
 
     public String DataFullR(String Str, int Len) {
         String ReturnStr;
@@ -243,7 +251,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -256,7 +264,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -429,7 +437,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -595,7 +603,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -807,7 +815,7 @@ public class PrintSimpleForm {
                                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
                                             stmt1.executeUpdate(sqlK);
                                         }
                                     }
@@ -1021,7 +1029,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -1434,7 +1442,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -2741,7 +2749,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -2754,7 +2762,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(sqlK);
                         }
                     }
@@ -2768,7 +2776,7 @@ public class PrintSimpleForm {
                         + "where r_table='" + tableNo + "' "
                         + "and r_index='" + R_Index + "' "
                         + "and r_plucode='" + R_Plucode + "'";
-                try ( Statement stmtUpdate = mysql.getConnection().createStatement()) {
+                try (Statement stmtUpdate = mysql.getConnection().createStatement()) {
                     stmtUpdate.executeUpdate(sqlUPdate);
                 }
             } catch (SQLException e) {
@@ -2956,7 +2964,7 @@ public class PrintSimpleForm {
                                     + "and pcode='" + rs.getString("R_PluCode") + "' "
                                     + "and pkic='" + rs.getString("R_Kic") + "' "
                                     + "and pflage='N'";
-                            try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
                                 stmt1.executeUpdate(SQLQuery2);
                             }
                         } else {
@@ -2969,7 +2977,7 @@ public class PrintSimpleForm {
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                     + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
                                 stmt1.executeUpdate(sqlK);
                             }
                         }
@@ -3155,7 +3163,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -3168,7 +3176,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                         }
                     }
@@ -3339,7 +3347,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                         }
                     } else {
@@ -3352,7 +3360,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try ( Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                         }
                     }
@@ -3411,7 +3419,7 @@ public class PrintSimpleForm {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String SQLQuery = "update branch set kicitemno =" + branchBean.getKicItemNo();
                 stmt.executeUpdate(SQLQuery);
             }
@@ -3486,26 +3494,8 @@ public class PrintSimpleForm {
     }
 
     public String getEmpName(String Code) {
-        String empName = "";
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select Name from employ where code='" + Code + "';";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                empName = ThaiUtil.ASCII2Unicode(rs.getString("Name"));
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        return empName;
+        EmployeeBean empBean = empControl.getEmployeeArray(Code);
+        return empBean.getName();
     }
 
     public String getEmpBalance(String Code, String r_index, String table) {

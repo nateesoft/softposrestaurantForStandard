@@ -379,31 +379,32 @@ public class BalanceControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-//            String sql = "select sum(b.r_quan) sum_R_Quan, "
-//                    + "sum(b.r_total) sum_R_Total, "
-//                    + "sum(r_discbath) sum_R_DiscBath,"
-//                    + "sum(r_pramt) sum_R_PrAmt,"
-//                    + "sum(r_prsubAmt) sum_R_PrsubAmt,"
-//                    + "sum(r_prcuamt) sum_R_PrCuAmt, "
-//                    + "sum(R_ServiceAmt) sum_R_ServiceAmt "
-//                    + "from balance b "
-//                    + "where r_table='" + table + "' "
-//                    + "and r_plucode<>'8899' "
-//                    + "group by r_plucode,r_etd,r_Pname ";
-//            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-//            while (rs.next()) {
-//                BalanceBean balanceBean = new BalanceBean();
-//                balanceBean.setR_Quan(rs.getFloat("sum_R_Quan"));
-//                balanceBean.setR_Total(rs.getFloat("sum_R_Total"));
-//                balanceBean.setR_DiscBath(rs.getFloat("sum_R_DiscBath"));
-//                balanceBean.setR_PrAmt(rs.getFloat("sum_R_PrAmt"));
-//                balanceBean.setR_PrSubAmt(rs.getFloat("sum_R_PrsubAmt"));
-//                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
-//                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
-//                balanceBean.setR_ServiceAmt(rs.getFloat("sum_R_ServiceAmt"));
-//
-//                beanData.add(balanceBean);
-//            }
+            String sql = "select r_plucode,r_etd,r_Pname, "
+                    + "sum(b.r_quan) sum_R_Quan, "
+                    + "sum(b.r_total) sum_R_Total, "
+                    + "sum(r_discbath) sum_R_DiscBath,"
+                    + "sum(r_pramt) sum_R_PrAmt,"
+                    + "sum(r_prsubAmt) sum_R_PrsubAmt,"
+                    + "sum(r_prcuamt) sum_R_PrCuAmt, "
+                    + "sum(R_ServiceAmt) sum_R_ServiceAmt "
+                    + "from balance b "
+                    + "where r_table='" + table + "' "
+                    + "and r_plucode<>'8899' "
+                    + "group by r_plucode,r_etd,r_Pname ";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            while (rs.next()) {
+                BalanceBean balanceBean = new BalanceBean();
+                balanceBean.setR_Quan(rs.getFloat("sum_R_Quan"));
+                balanceBean.setR_Total(rs.getFloat("sum_R_Total"));
+                balanceBean.setR_DiscBath(rs.getFloat("sum_R_DiscBath"));
+                balanceBean.setR_PrAmt(rs.getFloat("sum_R_PrAmt"));
+                balanceBean.setR_PrSubAmt(rs.getFloat("sum_R_PrsubAmt"));
+                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
+                balanceBean.setR_PrCuAmt(rs.getFloat("sum_R_PrCuAmt"));
+                balanceBean.setR_ServiceAmt(rs.getFloat("sum_R_ServiceAmt"));
+
+                beanData.add(balanceBean);
+            }
 
             String sql1 = "select * from balance "
                     + "where r_table='" + table + "' "

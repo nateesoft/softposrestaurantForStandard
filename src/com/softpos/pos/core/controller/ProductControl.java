@@ -22,31 +22,39 @@ public class ProductControl {
     public ProductControl() {
         dataProduct = new ArrayList<>();
     }
-    
+
     public ProductBean getProductCodeArray(String pCode) {
+        if (pCode == null) {
+            return new ProductBean();
+        }
         if (listAll != null) {
             for (int i = 0; i < listAll.size(); i++) {
                 ProductBean bean = listAll.get(i);
-                if (bean.getPCode().equals(pCode)) {
+                if (pCode.trim().equals(bean.getPCode())) {
                     return bean;
                 }
             }
         }
-        
+
         return new ProductBean();
     }
+
     public ProductBean getProductBarCodeArray(String barCode) {
+        if (barCode == null) {
+            return new ProductBean();
+        }
         if (listAll != null) {
             for (int i = 0; i < listAll.size(); i++) {
                 ProductBean bean = listAll.get(i);
-                if (bean.getPBarCode().equals(barCode)) {
+                if (barCode.trim().equals(bean.getPBarCode())) {
                     return bean;
                 }
             }
         }
-        
+
         return new ProductBean();
     }
+
     public List<ProductBean> initLoadProductActive() {
         if (listAll == null) {
             listAll = new ArrayList<>();
@@ -507,7 +515,7 @@ public class ProductControl {
             String sql = "select pcode from soft_menusetup "
                     + "where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
-            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isProduct = true;
                 }

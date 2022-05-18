@@ -1231,7 +1231,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 } else if (r_index.equals(r_linkindex)) {
                     PName = "<html><b><font color=blue>" + newName + "</font></b></html>";
                 } else {
-                    PName = newName;
+                    PName = "<html>" + newName + "</html>";
                 }
 
                 Object[] input = {

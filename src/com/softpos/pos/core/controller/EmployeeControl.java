@@ -26,7 +26,7 @@ public class EmployeeControl {
                 while (rs.next()) {
                     EmployeeBean bean = new EmployeeBean();
                     bean.setCode(rs.getString("code"));
-                    bean.setName(rs.getString("name"));
+                    bean.setName(ThaiUtil.ASCII2Unicode(rs.getString("name")));
                     bean.setSalary(rs.getFloat("salary"));
                     bean.setPosition(rs.getString("position"));
 
@@ -46,7 +46,7 @@ public class EmployeeControl {
         if (listAll != null) {
             for (int i = 0; i < listAll.size(); i++) {
                 EmployeeBean bean = listAll.get(i);
-                if (bean.getCode().equals(code)) {
+                if (code.equals(bean.getCode())) {
                     return bean;
                 }
             }

@@ -754,8 +754,6 @@ public class ModalPopup extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql.close();
         }
 
         if (!show) {
@@ -789,7 +787,6 @@ public class ModalPopup extends javax.swing.JDialog {
         button[23] = jButton24;
         button[24] = jButton25;
 
-        mysql.open();
         try {
             String menuSub = MenuCode;
             if (MenuCode.length() > 5) {
