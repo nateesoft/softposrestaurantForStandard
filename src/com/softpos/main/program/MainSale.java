@@ -1932,7 +1932,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
     }
 
-    private void bntPaymentClick() {
+    private void btnPaymentClick() {
         if (!chkEJPath()) {
             return;
         }
@@ -1940,7 +1940,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         PublicVar.SubTotalOK = false;
 
         //visible MainSale
-        setVisible(false);showFloorPlan();
+        setVisible(false);
         CheckBill frm = new CheckBill(null, true, txtTable.getText(), memberBean, "", "");
         frm.setVisible(true);
         if (PublicVar.SubTotalOK) {
@@ -1949,6 +1949,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             txtTable.setText("");
             tbpMain.setSelectedIndex(0);
             Value.TableSelected = "";
+            showFloorPlan();
         } else {
             loadTableBalance(txtTable.getText());
             showSum();
@@ -3777,7 +3778,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void showCheckBill() {
         if (model.getRowCount() > 0) {
             kichenPrint();
-            bntPaymentClick();
+            btnPaymentClick();
             showSum();
         }
     }

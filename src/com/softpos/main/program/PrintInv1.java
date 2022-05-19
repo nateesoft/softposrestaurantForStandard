@@ -157,7 +157,6 @@ public class PrintInv1 extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("โปรแกรมพิมพ์ใบกำกับภาษี/ใบเสร็จรับเงิน");
         setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(247, 242, 188));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -862,7 +861,7 @@ public class PrintInv1 extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(1008, 548));
+        setSize(new java.awt.Dimension(1024, 587));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
