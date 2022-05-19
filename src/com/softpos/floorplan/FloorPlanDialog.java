@@ -78,6 +78,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
 
+    private int floorplanTabSelected = 0;
+
     private final ProductControl productControl = new ProductControl();
 
     public FloorPlanDialog() {
