@@ -79,6 +79,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private MemberBean memberBean;
 
     private int floorplanTabSelected = 0;
+    private int buttonStyle = 0;
 
     private final ProductControl productControl = new ProductControl();
 
@@ -244,7 +245,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         pnZone1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone1.setOpaque(false);
-        pnZone1.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone1.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone1", pnZone1);
 
         pnZone2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
@@ -1636,17 +1637,25 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private JButton initButtonTable(String buttonName, int c) {
         JButton button = new JButton("");
-        button.setPreferredSize(new Dimension(50, 50));
-        button.setFocusPainted(false);
-        button.setMargin(new Insets(0, 0, 0, 0));
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setOpaque(false);
-        button.setName(buttonName);
-        button.setFont(fontA);
-        button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        button.addMouseListener(new MouseClickAction(button, c));
-        button.addActionListener(new MouseFocusAction(button, c));
+        if (buttonStyle == 1) {
+            button.setName(buttonName);
+            button.setFont(fontA);
+            button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            button.addMouseListener(new MouseClickAction(button, c));
+            button.addActionListener(new MouseFocusAction(button, c));
+        } else {
+            button.setPreferredSize(new Dimension(50, 50));
+            button.setFocusPainted(false);
+            button.setMargin(new Insets(0, 0, 0, 0));
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.setOpaque(false);
+            button.setName(buttonName);
+            button.setFont(fontA);
+            button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            button.addMouseListener(new MouseClickAction(button, c));
+            button.addActionListener(new MouseFocusAction(button, c));
+        }
 
         return button;
     }

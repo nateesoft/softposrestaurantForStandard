@@ -118,8 +118,8 @@ public class OptionMsg extends javax.swing.JDialog {
             while(rs.next()){
                 Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
                     model1.addRow(input);
+                    showCell1(0, 0);
             }
-            showCell1(0, 0);
             rs.close();
             stmt.close();
         } catch (SQLException e) {
@@ -158,20 +158,6 @@ public class OptionMsg extends javax.swing.JDialog {
     }
 
     public void InputMsgToSelectedTable(String dataOpt) {
-//        boolean inputData = false;
-//        for (int i = 0; i < 8; i++) {
-//            if (!inputData) {
-//                if (!OptionArray[i].equals(dataOpt)) {
-//                    if (OptionArray[i].equals("")) {
-//                        OptionArray[i] = dataOpt;
-//                        inputData = true;
-//                    }
-//                } else {
-//                    inputData = true;
-//                }
-//            }
-//        }
-
         LoadOptionArray();
     }
 
