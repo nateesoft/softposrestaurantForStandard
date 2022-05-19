@@ -102,8 +102,7 @@ public class MemberBean {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "where member_code='" + MemberCode + "'";
+            String sql = "select * from " + Value.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

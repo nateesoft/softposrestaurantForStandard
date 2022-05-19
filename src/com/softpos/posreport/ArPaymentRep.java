@@ -340,8 +340,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select * from billar order by Ref_No,fat;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -372,6 +371,8 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Ar-Code" + Space + "เลขที่ใบเสร็จรับเงิน/วันที่" + Space + "จำนวนเงิน ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
+            String sql = "select * from billar order by Ref_No,fat limit 1;";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 double total = 0.00;
                 double amount = 0.00;

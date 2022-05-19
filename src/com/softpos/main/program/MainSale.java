@@ -1282,7 +1282,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
             showCell(rowCount - 1, 0);
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -1339,7 +1339,7 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         try {
             int customerInTable = Integer.parseInt(txtCust.getText());
             if (customerInTable > 999) {
-                MSG.ERR("จำนวนลูกค้าป้อนได้ไม่เกิน 999 คน...");
+                MSG.ERR(this, "จำนวนลูกค้าป้อนได้ไม่เกิน 999 คน...");
                 txtCust.requestFocus();
                 return;
             }
@@ -1352,7 +1352,7 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             txtPluCode.setEditable(true);
             txtPluCode.requestFocus();
         } catch (NumberFormatException e) {
-            MSG.ERR("กรุณาป้อนจำนวนลูกค้า เป็นตัวเลขเท่านั้น...");
+            MSG.ERR(this, "กรุณาป้อนจำนวนลูกค้า เป็นตัวเลขเท่านั้น...");
             PublicVar.TableRec_TCustomer = 1;
             txtCust.requestFocus();
         }
@@ -1635,7 +1635,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 mysql.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
@@ -1655,7 +1655,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 mysql.getConnection().createStatement().executeUpdate(sql);
                 mysql.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
@@ -1764,7 +1764,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 kichenPrintAfterPrintCheck();
                 printBillCheck();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
@@ -1970,10 +1970,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select Username, Sale3,Name "
-                    + "from posuser "
-                    + "where username='" + Value.USERCODE + "' "
-                    + "and Sale3='Y'";
+            String sql = "select Username from posuser where username='" + Value.USERCODE + "' "
+                    + "and Sale3='Y' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -1983,7 +1981,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         }
 
@@ -2007,7 +2005,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
 
@@ -2046,7 +2044,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     rs.close();
                                     stmt.close();
                                 } catch (SQLException e) {
-                                    MSG.ERR(e.getMessage());
+                                    MSG.ERR(this, e.getMessage());
                                     AppLogUtil.log(MainSale.class, "error", e);
                                 }
 
@@ -2092,7 +2090,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     rs.close();
                                     stmt.close();
                                 } catch (SQLException e) {
-                                    MSG.ERR(e.getMessage());
+                                    MSG.ERR(this, e.getMessage());
                                     AppLogUtil.log(MainSale.class, "error", e);
                                 }
 
@@ -2176,7 +2174,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 rs.close();
                 stmt1.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             }
         } else {
@@ -2230,7 +2228,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             }
         }
@@ -2345,7 +2343,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 StrQty = TempCode.substring(0, index);
                 PluCode = TempCode.substring(index + 1);
                 if (!PUtility.ChkNumValue(StrQty)) {
-                    MSG.ERR("ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
+                    MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
                     txtPluCode.setText("");
                     txtPluCode.requestFocus();
                 }
@@ -2364,14 +2362,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (PluCode.length() <= 3) {
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String SqlQuery = "select * from menulist "
-                                    + "where menuitem=('" + PluCode + "') "
-                                    + "and (menuactive='Y')";
+                            String SqlQuery = "select plucode from menulist where menuitem=('" + PluCode + "') "
+                                    + "and (menuactive='Y') limit 1";
                             ResultSet rs = stmt.executeQuery(SqlQuery);
                             if (rs.next()) {
                                 PluCode = rs.getString("plucode");
                             } else {
-                                MSG.ERR("ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
+                                MSG.ERR(this, "ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
                                 txtPluCode.setText("");
                                 rs.close();
                                 stmt.close();
@@ -2383,17 +2380,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             stmt.close();
 
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
                 }
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String sql = "select * "
-                            + "from product "
-                            + "where pcode='" + PluCode + "' "
-                            + "and pactive='Y'";
+                    String sql = "select pstatus from product where pcode='" + PluCode + "' and pactive='Y' limit 1";
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
                         found = true;
@@ -2404,7 +2398,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         TempStatus = "";
                         String TempCode2 = seekBarCode(PluCode);
                         if (TempCode2.equals("")) {
-                            MSG.ERR("ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
+                            MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
                             txtPluCode.setText("");
                         } else {
                             PluCode = TempCode2;
@@ -2423,7 +2417,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
 
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
             } else {
@@ -2480,7 +2474,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         //check outofstock
         try {
-            String sql = "select * from outstocklist where pcode='" + TempCode + "'";
+            String sql = "select pcode from outstocklist where pcode='" + TempCode + "' limit 1";
             try ( Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
@@ -2503,7 +2497,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 StrQty = TempCode.substring(0, index);
                 PluCode = TempCode.substring(index + 1);
                 if (!PUtility.ChkNumValue(StrQty)) {
-                    MSG.ERR("ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
+                    MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
                     txtPluCode.setText("");
                     txtPluCode.requestFocus();
                 }
@@ -2519,8 +2513,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     try {
                         if (POSHW.getMenuItemList().equals("Y")) {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String SqlQuery = "select * from menulist "
-                                    + "where menuitem=('" + PluCode + "') and (menuactive='Y')";
+                            String SqlQuery = "select plucode from menulist "
+                                    + "where menuitem=('" + PluCode + "') and (menuactive='Y') limit 1";
                             ResultSet rs = stmt.executeQuery(SqlQuery);
                             if (rs.next()) {
                                 PluCode = rs.getString("plucode");
@@ -2537,7 +2531,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             stmt.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(MainSale.class, "error", e);
                     }
                 }
@@ -2552,7 +2546,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     TempStatus = "";
                     String TempCode2 = seekBarCode(PluCode);
                     if (TempCode2.equals("")) {
-                        MSG.ERR("ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
+                        MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
                         txtPluCode.setText("");
                     } else {
                         PluCode = TempCode2;
@@ -2776,7 +2770,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         }
 
@@ -2794,7 +2788,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(e.toString());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.close();
         }
@@ -2961,14 +2955,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
 
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
 
         } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         }
     }
@@ -3097,13 +3091,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.executeUpdate(sql);
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
             }
         } catch (HeadlessException e) {
-            MSG.ERR(null, "HeadlessException:" + e.getMessage());
+            MSG.ERR(this, "HeadlessException:" + e.getMessage());
         }
     }
 
@@ -3157,9 +3151,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select * from tablefile where tcode='" + txtTable.getText().trim() + "'";
+            String sql = "select TAmount, TCustomer, tonact from tablefile where tcode='" + txtTable.getText().trim() + "' limit 1";
             ResultSet rs = stmt.executeQuery(sql);
-
             if (rs.next()) {
                 if (rs.getString("tonact").equals("Y") && rs.getDouble("TAmount") > 0) {
                     MSG.WAR("มีพนักงานกำลังป้อนรายการโต๊ะนี้อยู่...");
@@ -3216,7 +3209,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
 
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
 
             TableOpenStatus = false;
@@ -3249,7 +3242,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 try {
                     mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
@@ -3257,7 +3250,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
                 mysql.getConnection().createStatement().executeUpdate(sql);
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             }
 
@@ -3272,7 +3265,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "where tcode='" + txtTable.getText() + "';";
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -3304,7 +3297,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         BalanceBean balanceBean = new BalanceBean();
         mysql.open();
         try {
-            String getLogIntimeBalance = "select r_time,r_date from balance where r_table ='" + txtTable.getText() + "'";
+            String getLogIntimeBalance = "select r_time,r_date from balance where r_table ='" + txtTable.getText() + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(getLogIntimeBalance);
             if (rs.next()) {
                 balanceBean.setLoginTime(rs.getString("r_time"));
@@ -3320,7 +3313,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.executeUpdate(UpdateTableFile);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -3348,7 +3341,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 } finally {
                     mysql.close();
@@ -3695,7 +3688,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     showMember();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
@@ -3976,14 +3969,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select R_QuanCanDisc from balance "
-                    + "where R_Index='" + RIndex + "' "
-                    + "and R_QuanCanDisc>0";
+            String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
+                    + "and R_QuanCanDisc>0 limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             result = rs.next();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
 
             result = false;
@@ -4023,7 +4015,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4167,7 +4159,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 }
                             }
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
@@ -4181,13 +4173,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt2.executeUpdate(sqlClear);
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             }
 
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4198,9 +4190,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from tempset "
-                    + "where PIndex='" + R_Index + "' "
-                    + "and PCode='" + PCode + "'";
+            String sql = "select POption from tempset where PIndex='" + R_Index + "' "
+                    + "and PCode='" + PCode + "' limit 1";
             try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     String opt = ThaiUtil.Unicode2ASCII(rs.getString("POption"));
@@ -4216,7 +4207,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4230,7 +4221,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         try {
             String sql = "select r_linkindex from balance "
                     + "where r_index='" + chkRIndex + "' "
-                    + "and r_linkindex<>''";
+                    + "and r_linkindex<>'' limit 1";
             try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isCheck = false;
@@ -4241,7 +4232,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4317,7 +4308,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         rs.close();
                         stmt1.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(MainSale.class, "error", e);
                     }
 
@@ -4364,7 +4355,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     rs2.close();
                                     stmt4.close();
                                 } catch (SQLException e) {
-                                    MSG.ERR(e.getMessage());
+                                    MSG.ERR(this, e.getMessage());
                                     AppLogUtil.log(MainSale.class, "error", e);
                                 }
                             }
@@ -4372,7 +4363,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             rs.close();
                             stmt2.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(MainSale.class, "error", e);
                         }
                     }
@@ -4380,7 +4371,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
 
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             }
         }
@@ -4407,7 +4398,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4419,9 +4410,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             String sql = "select r_kicprint "
-                    + "from balance where r_table='" + tableNo + "'"
-                    + " and r_kicprint <> 'P' "
-                    + " and R_PName <> ''";
+                    + "from balance where r_table='" + tableNo + "' "
+                    + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
             try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
@@ -4431,7 +4421,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4602,7 +4592,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM company limit 1");
+            ResultSet rs = stmt.executeQuery("SELECT head1, head2, head3, head4 FROM company limit 1");
             if (rs.next()) {
                 for (int i = 0; i < 9; i++) {
                     String h = ThaiUtil.ASCII2Unicode(rs.getString("head" + (i + 1)));
@@ -4635,7 +4625,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
-                String sql = "select * from balance where r_table='" + tableNo + "' and r_void='V'";
+                String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
                 try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                     if (rs.next()) {
                         PPrint print = new PPrint();
@@ -4643,7 +4633,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MainSale.class, "error", e);
             } finally {
                 mysql.close();
@@ -4658,7 +4648,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             boolean showModalPopup = false;
             String pcode = "", pname = "", main = "";
             String sql = "select n.PCode,n.MenuShowText from optionset o,soft_menusetup n "
-                    + "where o.pcode = n.pcode and n.menucode='" + MenuCode + "'";
+                    + "where o.pcode = n.pcode and n.menucode='" + MenuCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -4677,7 +4667,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             } else {
                 try {
                     String sqll = "select o.PCode,o.PDesc, o.check_before from mgrbuttonsetup o,soft_menusetup n "
-                            + "where o.pcode = n.pcode and n.menucode='" + MenuCode + "'";
+                            + "where o.pcode = n.pcode and n.menucode='" + MenuCode + "' limit 1";
                     Statement stmt1 = mysql.getConnection().createStatement();
                     ResultSet rss = stmt1.executeQuery(sqll);
                     if (rss.next()) {
@@ -4688,8 +4678,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         boolean passBefore = false;
                         if (checkBefore) {
                             try {
-                                String sqlChkTable = "select * from balance "
-                                        + "where r_table='" + txtTable.getText() + "'";
+                                String sqlChkTable = "select r_table from balance where r_table='" + txtTable.getText() + "' limit 1";
                                 Statement stmt2 = mysql.getConnection().createStatement();
                                 ResultSet rsTb = stmt2.executeQuery(sqlChkTable);
                                 if (rsTb.next()) {
@@ -4698,7 +4687,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 rsTb.close();
                                 stmt2.close();
                             } catch (SQLException e) {
-                                MSG.ERR(e.getMessage());
+                                MSG.ERR(this, e.getMessage());
                                 AppLogUtil.log(MainSale.class, "error", e);
                                 passBefore = false;
                             }
@@ -4737,7 +4726,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             rsA1.close();
                             stmt3.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(MainSale.class, "error", e);
                         }
 
@@ -4754,12 +4743,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     rss.close();
                     stmt1.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MainSale.class, "error", e);
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();
@@ -4783,7 +4772,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MainSale.class, "error", e);
         } finally {
             mysql.close();

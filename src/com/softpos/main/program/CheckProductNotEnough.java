@@ -285,9 +285,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select pcode,pdesc "
-                    + "from product "
-                    + "where pcode='" + txtPCode.getText() + "'";
+            String sql = "select pcode, pdesc from product where pcode='" + txtPCode.getText() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -317,9 +315,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select pcode,pdesc "
-                    + "from product "
-                    + "where pcode='" + txtPCode.getText() + "'";
+            String sql = "select pcode,pdesc from product where pcode='" + txtPCode.getText() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

@@ -1205,7 +1205,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         try {
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y'");
+            ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
             if (rs.next()) {
                 txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
             }

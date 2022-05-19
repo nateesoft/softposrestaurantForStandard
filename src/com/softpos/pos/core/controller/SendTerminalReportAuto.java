@@ -54,7 +54,7 @@ public class SendTerminalReportAuto {
                     + "where (s_date>='" + dc.GetCurrentDate() + "') "
                     + "and (s_date<='" + dc.GetCurrentDate() + "') "
                     + "and (b_macno>='001') "
-                    + "and (b_macno<='999')";
+                    + "and (b_macno<='999') limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + dc.GetCurrentDate() + "' and '" + dc.GetCurrentDate() + "';";
@@ -859,7 +859,7 @@ public class SendTerminalReportAuto {
         try {
             DateConvert dc1 = new DateConvert();
             mysql.open();
-            String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig; ";
+            String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig limit 1; ";
             ResultSet rsConfig = mysql.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
             if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
@@ -867,7 +867,7 @@ public class SendTerminalReportAuto {
 //                if (TranEmailAuto.equals("Y") && timeNow.equals(TimeSend)) {
                     Thread.sleep(3600 * 3);
                     try {
-                        String sqlAddress = "select address from company";
+                        String sqlAddress = "select address from company limit 1";
                         ResultSet rsAddress = mysql.getConnection().createStatement().executeQuery(sqlAddress);
                         if (rsAddress.next()) {
                             String data[] = rsAddress.getString("Address").split("/");

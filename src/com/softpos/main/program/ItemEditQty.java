@@ -453,20 +453,12 @@ public class ItemEditQty extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPAmountEditActionPerformed
     public boolean checkStringOrNumberlic(String text) {
         boolean numeric = true;
-
         try {
-            Double num = Double.parseDouble(text);
+            Double.parseDouble(text);
         } catch (NumberFormatException e) {
             numeric = false;
         }
 
-        if (numeric) {
-            System.out.println(text + " is a number");
-            numeric = true;
-        } else {
-            numeric = false;
-            System.out.println(text + " is not a number");
-        }
         return numeric;
     }
     private void txtNewPDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewPDescActionPerformed

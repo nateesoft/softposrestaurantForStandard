@@ -94,8 +94,7 @@ public class TCuponControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from t_cupon "
-                    + "where R_Index='" + R_Index + "'";
+            String sql = "select * from t_cupon where R_Index='" + R_Index + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -143,7 +142,7 @@ public class TCuponControl {
                         + "'" + bean.getCuCode() + "','" + bean.getCuQuan() + "','" + bean.getCuAmt() + "',"
                         + "'" + bean.getRefund() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
 
-                String sqlChk = "select * from t_cupon where R_Index='" + bean.getR_Index() + "'";
+                String sqlChk = "select R_Index from t_cupon where R_Index='" + bean.getR_Index() + "' limit 1";
 
                 Statement stmt1 = mysql.getConnection().createStatement();
                 ResultSet rs = stmt1.executeQuery(sqlChk);

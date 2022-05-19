@@ -22,7 +22,7 @@ public class MTranController {
 
         try {
             mysql.open();
-            String sql = "select * from " + Value.db_member + ".mtran where Branch_Code='" + branchCode + "'";
+            String sql = "select * from " + Value.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
@@ -44,7 +44,7 @@ public class MTranController {
         try {
             mysql.open();
             String sql = "select Receipt_No from " + Value.db_member + ".mtran "
-                    + "where Receipt_No='" + receiptNo + "'";
+                    + "where Receipt_No='" + receiptNo + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isNoExist = false;

@@ -241,9 +241,8 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from billno "
-                    + "where (b_macno='" + Value.MACNO + "') "
-                    + "and (b_refno='" + BillNo + "')";
+            String SqlQuery = "select b_refno from billno where (b_macno='" + Value.MACNO + "') "
+                    + "and (b_refno='" + BillNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
                 processCopyBill();
@@ -278,9 +277,8 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from billno "
-                    + "where (b_macno='" + Value.MACNO + "') "
-                    + "and (b_refno='" + BillNo + "')";
+            String SqlQuery = "select * from billno where (b_macno='" + Value.MACNO + "') "
+                    + "and (b_refno='" + BillNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
                 PublicVar.TableRec_RefNo = rs.getString("b_refno");

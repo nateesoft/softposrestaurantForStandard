@@ -221,7 +221,7 @@ public class CustomerName extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "'";
+            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

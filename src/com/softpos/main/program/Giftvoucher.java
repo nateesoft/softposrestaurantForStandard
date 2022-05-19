@@ -447,7 +447,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select *from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') ";
+            String sql = "select gcode from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 isValid = true;
@@ -477,7 +477,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from giftprice where (pricecode='" + GiftPrice + "')");
+            ResultSet rs = stmt.executeQuery("select priceamt from giftprice where (pricecode='" + GiftPrice + "') limit 1");
             if (rs.next()) {
                 giftAmt = rs.getDouble("priceamt");
                 isValid = true;
@@ -519,7 +519,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "'";
+            String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "' limit 1";
             ResultSet rs = stmt.executeQuery(LoadTempGift);
             if (rs.next()) {
                 Object[] input = {

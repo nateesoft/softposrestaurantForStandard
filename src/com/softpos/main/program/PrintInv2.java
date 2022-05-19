@@ -1082,7 +1082,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from invcashdoc where invno='" + TempInvNo + "'";
+                String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if(rs.next()){
                     InvDate.setText(DateFmt.format(rs.getDate("invdate")));
@@ -1139,7 +1139,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     try {
                         Statement stmt2 = mysql.getConnection().createStatement();
-                        String SQLQuery2 = "Select *from billno where (b_refno='" + RefNo.getText() + "') and "
+                        String SQLQuery2 = "Select b_refno from billno where (b_refno='" + RefNo.getText() + "') and "
                                 + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
                         ResultSet rec2 = stmt.executeQuery(SQLQuery2);
                         if(rec2.next()){
@@ -1194,7 +1194,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile where sp_code='" + CustCode.getText() + "'";
+                String SQLQuery = "Select * from custfile where sp_code='" + CustCode.getText() + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if(rs.next()){
                     CustCode.setText(rs.getString("sp_code"));
@@ -1236,7 +1236,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile where sp_desc='" + CustName.getText() + "'";
+                String SQLQuery = "Select * from custfile where sp_desc='" + CustName.getText() + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if(rs.next()){
                     CustCode.setText(rs.getString("sp_code"));
@@ -1271,7 +1271,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from billno where (b_refno='" + RefNo.getText() + "') and "
-                        + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
+                        + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V') limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if(rs.next()){
                     TempInv = rs.getString("b_invno");
@@ -1813,7 +1813,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from invcashdoc where invno='" + InvNo + "'";
+            String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
             rs.close();
@@ -1837,7 +1837,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "Select * from custfile where sp_code='" + CustCode + "'";
+            String sql = "Select sp_code from custfile where sp_code='" + CustCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             RetVal = rs.next();
             rs.close();
@@ -1862,7 +1862,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from branch";
+            String SQLQuery = "Select invno from branch limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if(rs.next()){
                 TempInv = rs.getInt("invno");

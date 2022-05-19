@@ -2015,7 +2015,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select P_MemDiscGet,P_FastDiscGet,P_EmpDiscGet,P_TrainDiscGet,P_SubDiscGet,P_DiscBathChk from posconfigsetup;";
+            String sql = "select P_MemDiscGet,P_FastDiscGet,P_EmpDiscGet,P_TrainDiscGet,P_SubDiscGet,P_DiscBathChk from posconfigsetup limit 1;";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 String MemDiscGet = rs.getString("P_MemDiscGet");
@@ -2085,7 +2085,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from tablefile where Tcode = '" + tableNo + "'";
+            String sql = "select * from tablefile where Tcode = '" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -2196,8 +2196,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         }
 
         try {
-            String sql = "select * from temp_balance "
-                    + "where r_table='" + tableNo + "'";
+            String sql = "select * from temp_balance where r_table='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

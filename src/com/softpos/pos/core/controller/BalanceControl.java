@@ -27,8 +27,7 @@ public class BalanceControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select max(R_Index) R_Index "
-                    + "from balance "
+            String sql = "select max(R_Index) R_Index from balance "
                     + "where r_table='" + tableNo + "';";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
@@ -1432,9 +1431,8 @@ public class BalanceControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select * from balance "
-                    + "where R_Table='" + Table + "' "
-                    + "and R_Index='" + R_Index + "'";
+            String sql = "select * from balance where R_Table='" + Table + "' "
+                    + "and R_Index='" + R_Index + "' limit 1";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     balanceBean = new BalanceBean();

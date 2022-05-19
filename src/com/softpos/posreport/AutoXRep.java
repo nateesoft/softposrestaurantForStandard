@@ -599,7 +599,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from billno");
+            ResultSet rs = stmt.executeQuery("select b_refno from billno limit 1");
             ReturnVal = rs.next();
             rs.close();
             stmt.close();
@@ -622,7 +622,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from balance");
+            ResultSet rs = stmt.executeQuery("select r_refno from balance limit 1");
             ReturnVal = rs.next();
             rs.close();
             stmt.close();

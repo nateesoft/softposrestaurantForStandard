@@ -295,7 +295,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
-                String sqlCheckTempGiftf = "select * from tempgift where giftno='" + GNo + "'";
+                String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlCheckTempGiftf);
                 if (netTotalAmount > 0) {
                     if (!rs.next()) {
@@ -461,22 +461,9 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             return;
         }
 
-//        try {
-//            String sql = "select * from gifttype where gtcode='" + GNo + "'";
-//            ResultSet rs = MySQLConnect.getResultSet(sql);
-//            if (rs.next()) {
         removeAtRow(txtGiftCode.getText());
         model.addRow(new Object[]{txtGiftCode.getText(), txtGiftMoney.getText()});
         clearText();
-//            } else {
-//                MSG.ERR("ไม่พบรหัสบัตรกำนัลในระบบ");
-//                clearText();
-//                rs.close();
-//                return;
-//            }
-//        } catch (Exception e) {
-//            
-//        }
     }
 
     private void removeAtRow(String GNoInput) {

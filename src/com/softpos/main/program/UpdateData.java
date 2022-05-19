@@ -278,7 +278,7 @@ public class UpdateData extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sqlGetBType = "Select btype btype from tranconfig";
+            String sqlGetBType = "Select btype btype from tranconfig limit 1";
             ResultSet rsGetBtype = mysql.getConnection().createStatement().executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {
                 BType = rsGetBtype.getString("btype");
@@ -304,7 +304,7 @@ public class UpdateData extends javax.swing.JDialog {
     public void SVStatusCheck() {
         try {
             SQLServerConnect SV = new SQLServerConnect();
-            String sql = "select * from company";
+            String sql = "select code from company limit 1";
             ResultSet rs = SV.getResultSet(sql);
             if (rs.next()) {
                 lblStatus.setText("Online");

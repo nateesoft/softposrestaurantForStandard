@@ -15,9 +15,6 @@ import util.MSG;
 
 public class ItemDisControl {
 
-    public ItemDisControl() {
-    }
-
     public void saveBalanceItemDiscount(String PCode, String Table, String Index, double prDisc, double prBaht, MemberBean memberBean) {
         BalanceControl bCon = new BalanceControl();
         BalanceBean bean = bCon.getProduct(PCode, Index);

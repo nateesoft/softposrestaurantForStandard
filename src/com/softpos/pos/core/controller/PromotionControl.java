@@ -155,7 +155,7 @@ public class PromotionControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from protab where ProCode='" + proCode + "'";
+            String sql = "select * from protab where ProCode='" + proCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -1008,7 +1008,7 @@ public class PromotionControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sqlGetProtype = "select ptype from protab where procode='" + bean.getPrCode() + "';";
+            String sqlGetProtype = "select ptype from protab where procode='" + bean.getPrCode() + "' limit 1;";
             Statement stmtGetPro = mysql.getConnection().createStatement();
             ResultSet rs = stmtGetPro.executeQuery(sqlGetProtype);
             if (rs.next()) {
@@ -1027,11 +1027,6 @@ public class PromotionControl {
                     + "values('" + bean.getR_Index() + "','" + bean.getR_RefNo() + "','" + bean.getTerminal() + "','" + bean.getCashier()
                     + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','" + bean.getPCode() + "','" + bean.getPDisc() + "','" + bean.getPDiscBath()
                     + "','" + bean.getPPrice() + "','" + bean.getPQty() + "','" + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "','" + bean.getFlage() + "')";
-//            String sql = "insert into t_promotion "
-//                    + "(R_Index,R_RefNo,Terminal,Cashier,PrCode,PrType,PCode,PDisc,PDiscBath,PPrice,PQty,PrTotalAmt,PrAmt,Flage) "
-//                    + "values('" + bean.getR_Index() + "','" + bean.getR_RefNo() + "','" + bean.getTerminal() + "','" + bean.getCashier()
-//                    + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','" + bean.getPCode() + "','" + bean.getPDisc() + "','" + bean.getPDiscBath()
-//                    + "','" + bean.getPPrice() + "','" + bean.getPQty() + "','" + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "','" + bean.getFlage() + "')";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
@@ -1230,7 +1225,7 @@ public class PromotionControl {
                     + "from product p "
                     + "left join protab pt "
                     + "on p.ppromotion1 = pt.procode "
-                    + "where pcode='" + pcode + "'";
+                    + "where pcode='" + pcode + "' limit 1";
             mysql.open();
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {

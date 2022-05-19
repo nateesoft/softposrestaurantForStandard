@@ -1,7 +1,6 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ThaiUtil;
-import database.AppCheckDB;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
@@ -31,10 +30,6 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
 
-        //ตรวจสอบในกรณีที่ยังไม่มี column check_extra ในระบบ
-        AppCheckDB.checkExtra();
-        //จบการตรวจสอบ
-
         /**
          * * OPEN CONNECTION **
          */
@@ -45,7 +40,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     + "from soft_menusetup m, product p "
                     + "where m.pcode=p.pcode "
                     + "and menucode='" + menuCode + "' "
-                    + "and m.pcode<>''";
+                    + "and m.pcode<>'' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

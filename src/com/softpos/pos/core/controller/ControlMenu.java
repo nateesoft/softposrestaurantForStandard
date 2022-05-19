@@ -169,7 +169,7 @@ public class ControlMenu {
     public List<MenuSetup> menuItemAt(String Code_ID) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        String sql = "select * from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID";
+        String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -390,7 +390,7 @@ public class ControlMenu {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y'";
+            String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

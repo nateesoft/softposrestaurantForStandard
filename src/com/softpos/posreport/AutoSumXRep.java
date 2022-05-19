@@ -657,7 +657,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from billno";
+            String SqlQuery = "select b_refno from billno limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             ReturnVal = rs.next();
             rs.close();
@@ -681,8 +681,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from posuser "
-                    + "where OnAct='Y' and macno<>'" + Value.MACNO + "'";
+            String SqlQuery = "select macno from posuser where OnAct='Y' and macno<>'" + Value.MACNO + "' limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             ReturnVal = rs.next();
             rs.close();
@@ -706,7 +705,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from billno where b_roundclose='N' group by b_cashier";
+            String SqlQuery = "select b_cashier from billno where b_roundclose='N' group by b_cashier";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
                 ReturnVal = false;
@@ -738,7 +737,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select * from balance";
+            String SqlQuery = "select r_index from balance limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             ReturnVal = rs.next();
             rs.close();

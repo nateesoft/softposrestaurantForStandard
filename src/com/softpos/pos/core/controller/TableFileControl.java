@@ -116,9 +116,7 @@ public class TableFileControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * "
-                    + "from tablefile "
-                    + "where TCode='" + tableNo + "'";
+            String sql = "select TItem,TOnAct,TUser from tablefile where TCode='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             String TActive;
@@ -354,9 +352,7 @@ public class TableFileControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select * "
-                    + "from tablefile "
-                    + "where Tcode='" + table + "' limit 1";
+            String sql = "select * from tablefile where Tcode='" + table + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean.setTcode(rs.getString("Tcode"));
@@ -517,9 +513,10 @@ public class TableFileControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String chk = "select * from tablefile where tcode='" + newTable + "'";
+            String chk = "select tcode from tablefile where tcode='" + newTable + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
-            if (stmt.executeQuery(chk).next()) {
+            ResultSet rs = stmt.executeQuery(chk);
+            if (rs.next()) {
                 // มีตารางในระบบแล้ว
                 System.out.println("มีตาราง " + newTable + " ในระบบแล้ว");
             } else {
@@ -543,7 +540,7 @@ public class TableFileControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select * from tablefile where Tcode='" + tableNo + "'";
+            String sql = "select Tcode from tablefile where Tcode='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -618,9 +615,7 @@ public class TableFileControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select Cashier from tablefile "
-                    + "where TOnact='Y' "
-                    + "and tcode='" + tableNo + "';";
+            String sql = "select Cashier from tablefile where TOnact='Y' and tcode='" + tableNo + "';";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     return true;

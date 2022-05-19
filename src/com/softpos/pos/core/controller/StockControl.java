@@ -26,7 +26,7 @@ public class StockControl {
         boolean isActive = false;
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        String sql = "select * from stockfile where StkCode='" + stock + "' and flage='Y'";
+        String sql = "select StkCode from stockfile where StkCode='" + stock + "' and flage='Y' limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -50,7 +50,7 @@ public class StockControl {
         mysql.open();
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
-            String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "'";
+            String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "' limit 1";
             try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     qty = rs.getDouble(1);

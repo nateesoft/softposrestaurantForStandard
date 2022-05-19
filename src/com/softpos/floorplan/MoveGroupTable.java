@@ -618,9 +618,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 mysql.open();
                 try {
                     int ct1 = 0, ct2 = 0, c = 0;
-                    String sqlPlusTCust1 = "select tcustomer tcustFrom1 "
-                            + "from tablefile "
-                            + "where tcode='" + txtTable1.getText() + "'";
+                    String sqlPlusTCust1 = "select tcustomer tcustFrom1 from tablefile "
+                            + "where tcode='" + txtTable1.getText() + "' limit 1";
                     Statement stmt1 = mysql.getConnection().createStatement();
                     ResultSet rs1 = stmt1.executeQuery(sqlPlusTCust1);
                     if (rs1.next()) {
@@ -631,8 +630,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     stmt1.close();
 
                     String sqlPlusTCust2 = "select tcustomer tcustFrom2 "
-                            + "from tablefile "
-                            + "where tcode='" + txtTable2.getText() + "'";
+                            + "from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
                     Statement stmt2 = mysql.getConnection().createStatement();
                     ResultSet rs2 = stmt2.executeQuery(sqlPlusTCust2);
                     if (rs2.next()) {
@@ -880,7 +878,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
-                String sql = "select code from employ where code='" + txtUser.getText() + "'";
+                String sql = "select code from employ where code='" + txtUser.getText() + "' limit 1";
                 Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {

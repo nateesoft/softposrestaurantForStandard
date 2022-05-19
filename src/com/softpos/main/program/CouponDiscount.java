@@ -528,9 +528,8 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from tempcupon "
-                    + "where (r_table='" + tableNo + "') "
-                    + "and (cucode='" + CuCode + "')";
+            String LoadTableFile = "select cuquan from tempcupon where (r_table='" + tableNo + "') "
+                    + "and (cucode='" + CuCode + "') limit 1";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             if(rs.next()){
                 RetValue = rs.getInt("cuquan");
@@ -556,9 +555,8 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from tempcupon "
-                    + "where (r_table='" + tableNo + "') "
-                    + "and (cucode='" + CuCode + "')";
+            String LoadTableFile = "select sms_code from tempcupon "
+                    + "where (r_table='" + tableNo + "') and (cucode='" + CuCode + "') limit 1";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             if(rs.next()){
                 RetValue = rs.getString("sms_code");
@@ -586,9 +584,8 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from tempcupon "
-                    + "where (r_table='" + tableNo + "') "
-                    + "and (cucode='" + CuCode + "')";
+            String LoadTableFile = "select m_code from tempcupon where (r_table='" + tableNo + "') "
+                    + "and (cucode='" + CuCode + "') limit 1";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             if(rs.next()){
                 RetValue = rs.getString("m_code");
@@ -678,15 +675,12 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "where r_table='" + tableNo + "' "
                     + "and R_PRAmt='0' "
                     + "and R_Discount ='Y' "
-                    //                    + "and r_quancandisc>0 "
                     + "and r_void<>'V'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);//เช็คว่าสินค้าไหนใช้คูปองได้บ้าง
             int itemForDisc = 0;
-            int tempitemForDisc = 0;
             if (rs.next()) {
                 itemForDisc = rs.getInt("itemCount");//จำนวนสินค้าที่ให้คูปองได้
-                tempitemForDisc = itemForDisc;
             }
 
             if (itemForDisc < cuponQty) {
@@ -1113,10 +1107,8 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select sum(r_prcuquan) qty "
-                    + "from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and r_prcucode='" + cuCode + "'";
+            String sql = "select sum(r_prcuquan) qty from balance "
+                    + "where r_table='" + tableNo + "' and r_prcucode='" + cuCode + "'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

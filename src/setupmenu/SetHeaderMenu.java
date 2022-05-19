@@ -511,7 +511,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
-        String sql = "SELECT * FROM company";
+        String sql = "SELECT * FROM company limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);

@@ -804,16 +804,13 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         boolean isPermit = false;
         try {
-            String sql = "select Username, Sale3 "
-                    + "from posuser "
-                    + "where username='" + Value.USERCODE + "' "
-                    + "and Sale2='Y'";
+            String sql = "select Username, Sale3 from posuser where username='" + Value.USERCODE + "' "
+                    + "and Sale2='Y' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 isPermit = true;
             }
-
             rs.close();
             stmt.close();
         } catch (SQLException e) {

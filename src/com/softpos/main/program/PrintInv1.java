@@ -1070,7 +1070,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             try {
-                String sql = "select * from customer where sp_code='" + ExtItemList.data + "'";
+                String sql = "select * from customer where sp_code='" + ExtItemList.data + "' limit 1";
                 Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
@@ -1154,7 +1154,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "'";
+                String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     txtDate.setText(DateFmt.format(rs.getDate("invdate")));
@@ -1208,8 +1208,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
                     try {
                         Statement stmt2 = mysql.getConnection().createStatement();
-                        String SQLQuery2 = "Select * from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
-                                + "(b_macno='" + txtMacNo.getText() + "') and (b_void<>'V')";
+                        String SQLQuery2 = "Select b_refno from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
+                                + "(b_macno='" + txtMacNo.getText() + "') and (b_void<>'V') limit 1";
                         ResultSet rec2 = stmt.executeQuery(SQLQuery2);
                         if(rec2.next()){
                             NoEdit = true;
@@ -1263,7 +1263,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select * from customer where sp_code='" + txtCode.getText() + "'";
+                String SQLQuery = "Select * from customer where sp_code='" + txtCode.getText() + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     txtCode.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_code")));
@@ -1305,7 +1305,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from customer where sp_desc='" + ThaiUtil.Unicode2ASCII(txtName.getText()) + "'";
+                String SQLQuery = "Select * from customer where sp_desc='" + ThaiUtil.Unicode2ASCII(txtName.getText()) + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     txtCode.setText(rs.getString("sp_code"));
@@ -1340,8 +1340,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
-                        + "(b_macno='" + txtMacNo.getText() + "') and (b_void<>'V')";
+                String SQLQuery = "Select * from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
+                        + "(b_macno='" + txtMacNo.getText() + "') and (b_void<>'V') limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     TempInv = rs.getString("b_invno");
@@ -1883,7 +1883,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from invcashdoc where invno='" + InvNo + "'";
+            String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
             rs.close();
@@ -1907,7 +1907,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from customer where sp_code='" + CustCode + "'";
+            String SQLQuery = "Select sp_code from customer where sp_code='" + CustCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
             rs.close();
@@ -1932,7 +1932,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from branch";
+            String SQLQuery = "Select invcashno from branch limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if(rs.next()){
                 TempInv = rs.getInt("invcashno");

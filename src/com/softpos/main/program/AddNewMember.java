@@ -993,7 +993,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         M_Code.setText(TempCode);
                     }
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
+                    String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "' limit 1";
                     ResultSet rs = stmt.executeQuery(SQLQuery);
                     if (rs.next()) {
                         Calendar cal = Calendar.getInstance();
@@ -1071,7 +1071,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
+            String SQLQuery = "Select m_code from " + Value.db_member + ".memmaster where m_code='" + TempCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
             rs.close();

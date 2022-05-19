@@ -80,12 +80,10 @@ public class CuponListControl {
         
         CuponlistBean bean = new CuponlistBean();
         try {
-            String sql = "select * from cuponlist "
-                    + "where CuCode='" + CuCode + "'";
+            String sql = "select * from cuponlist where CuCode='" + CuCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-
                 bean.setCuCode(rs.getString("CuCode"));
                 bean.setPCode(rs.getString("PCode"));
             }
@@ -109,8 +107,7 @@ public class CuponListControl {
         try {
             String sql = "insert into cuponlist (CuCode,PCode)  "
                     + "values('" + bean.getCuCode() + "','" + bean.getPCode() + "')";
-            String sqlChk = "select * from cuponlist "
-                    + "where CuCode='" + bean.getCuCode() + "'";
+            String sqlChk = "select cucode from cuponlist where CuCode='" + bean.getCuCode() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlChk);
             if (rs.next()) {

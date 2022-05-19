@@ -132,7 +132,7 @@ public class ProductControl {
     }
 
     public ProductBean getData(String PCode) {
-        String sql = "select * from product where PCode='" + PCode + "'";
+        String sql = "select * from product where PCode='" + PCode + "' limit 1";
         ProductBean productBean = new ProductBean();
         /**
          * * OPEN CONNECTION **
@@ -140,7 +140,6 @@ public class ProductControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 productBean.setPCode(rs.getString("PCode"));
@@ -465,7 +464,7 @@ public class ProductControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select PCode from product where PCode='" + PCode + "'";
+            String sql = "select PCode from product where PCode='" + PCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
@@ -489,14 +488,12 @@ public class ProductControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select PCode from outstocklist where PCode='" + PCode + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
+            String sql = "select PCode from outstocklist where PCode='" + PCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
@@ -512,8 +509,7 @@ public class ProductControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select pcode from soft_menusetup "
-                    + "where menucode='" + menuCode + "' "
+            String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {

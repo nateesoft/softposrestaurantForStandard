@@ -274,7 +274,7 @@ public class GetUserAction extends javax.swing.JDialog {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select * from posuser Where(username= '" + loginname + "') and (password='" + password + "')";
+            String SQLQuery = "select username from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if(rs.next()){
                 PublicVar.ReturnString = loginname;

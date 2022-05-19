@@ -185,7 +185,7 @@ public class PrintDriver {
                 editor.print(null, null, false, printService, attr, false);
             }
         } catch (PrinterException ex) {
-            MSG.ERR(ex.getMessage());
+            MSG.ERR("printHTML=>PrinterException: " + ex.getMessage());
         }
         close();
     }
@@ -201,9 +201,6 @@ public class PrintDriver {
             SendTerminalReportAuto tm = new SendTerminalReportAuto();
             String filename = dc.dateGetToShow(dc.GetCurrentDate()).replace("/", "").replace(" ", "");
             String path = "D:/DailySales/" + filename + "MTD.html";
-
-//            tm.filePath = path;
-//            tm.fileName = path;
             PublicVar.filePath = path;
             File file = new File(path);
             output = new BufferedWriter(new FileWriter(file));
@@ -216,11 +213,9 @@ public class PrintDriver {
                 try {
                     output.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(PrintDriver.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-
     }
 
     public void printHTMLKitChen() {
@@ -241,7 +236,7 @@ public class PrintDriver {
                 AppLogUtil.htmlFile(text);
             }
         } catch (PrinterException ex) {
-            MSG.ERR("printHTMLKitChen:" + ex.getMessage());
+            MSG.ERR("printHTMLKitChen=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -264,7 +259,7 @@ public class PrintDriver {
                 AppLogUtil.htmlFile(text);
             }
         } catch (PrinterException ex) {
-            MSG.ERR(ex.getMessage());
+             MSG.ERR("printHTMLOrder=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -282,7 +277,7 @@ public class PrintDriver {
                 textArea.print(null, null, false, printService, attr, false);
             }
         } catch (PrinterException ex) {
-            MSG.ERR(ex.getMessage());
+            MSG.ERR("printNormal=>PrinterException:" + ex.getMessage());
         }
 
         close();
@@ -300,7 +295,7 @@ public class PrintDriver {
                 textArea.print(null, null, false, printService, attr, false);
             }
         } catch (PrinterException ex) {
-            MSG.ERR(ex.getMessage());
+            MSG.ERR("printKichen=>PrinterException:" + ex.getMessage());
         }
 
         close();

@@ -403,9 +403,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sqll = "select sd_pcode, sd_pdesc "
-                                    + "from mgrbuttonsetup "
-                                    + "where pcode = '" + PCode + "'";
+                            String sqll = "select sd_pcode, sd_pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
                             Statement stmt1 = mysql.getConnection().createStatement();
                             ResultSet rs = stmt1.executeQuery(sqll);
                             if (rs.next()) {
@@ -535,8 +533,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sql = "select PCode from tempset "
-                                    + "where PTableNo='" + TableNo + "' and PProTry='main'";
+                            String sql = "select PCode from tempset where PTableNo='" + TableNo + "' and PProTry='main' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -685,7 +682,7 @@ public class ModalPopup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from optionset where pcode ='" + pCodeItem + "'";
+            String sql = "select pcode from optionset where pcode ='" + pCodeItem + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
@@ -709,7 +706,7 @@ public class ModalPopup extends javax.swing.JDialog {
         mysql.open();
         try {
             String sql = "select ex_pcode , ex_pdesc from mgrbuttonsetup "
-                    + "where ex_pdesc = '" + ThaiUtil.Unicode2ASCII(PName) + "'";
+                    + "where ex_pdesc = '" + ThaiUtil.Unicode2ASCII(PName) + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -741,9 +738,7 @@ public class ModalPopup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select qty from mgrbuttonsetup "
-                    + "where pcode='" + PCode + "' "
-                    + "and check_qty='Y'";
+            String sql = "select qty from mgrbuttonsetup where pcode='" + PCode + "' and check_qty='Y' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
@@ -817,8 +812,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sqll = "select pcode, pdesc from mgrbuttonsetup "
-                                    + "where pcode = '" + PCode + "'";
+                            String sqll = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "'";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rss = stmt.executeQuery(sqll);
                             if (rss.next()) {

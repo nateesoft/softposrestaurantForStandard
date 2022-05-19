@@ -13,20 +13,12 @@ public class CheckStringOrNumberlic {
 
     public boolean CheckStringOrNumberlic(String text) {
         boolean numeric = true;
-
         try {
-            Double num = Double.parseDouble(text);
+            Double.parseDouble(text);
         } catch (NumberFormatException e) {
             numeric = false;
         }
 
-        if (numeric) {
-            System.out.println(text + " is a number");
-            numeric = true;
-        } else {
-            numeric = false;
-            System.out.println(text + " is not a number");
-        }
         return numeric;
     }
 }

@@ -5,7 +5,7 @@
             <url>src/com/softpos/main/program/GiftDialogList.java</url>
             <bookmark id="1">
                 <name/>
-                <line>108</line>
+                <line>109</line>
                 <key/>
             </bookmark>
         </file>
@@ -21,8 +21,6 @@
         <group name="ProjectCAT"/>
         <group name="CBMart"/>
         <group name="Jeffer_Group"/>
-        <group>
-            <file>file:/D:/OutsourceProject/softpos/pos_project/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/MainSale.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

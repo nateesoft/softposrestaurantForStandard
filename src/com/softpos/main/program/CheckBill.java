@@ -1572,11 +1572,11 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
         new Thread(() -> {
-            String sql = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
+            String sql = "select r_index from balance where r_table='" + tableNo + "' and r_type='1' limit 1";
             MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open();
-                final ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 boolean isTakeOrder = isTakeOrder();
                 if (rs.next() && isTakeOrder == true) {
                     MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
@@ -1584,7 +1584,7 @@ public class CheckBill extends javax.swing.JDialog {
                     checkBillOK();
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CheckBill.class, "error", e);
             } finally {
                 mysql.close();
@@ -1641,7 +1641,7 @@ public class CheckBill extends javax.swing.JDialog {
                 txtMember2.setText("แต้มสะสม : " + "0.00" + " แต้ม");
             }
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
         loadTableBill();
         LoadDisc();
@@ -2192,9 +2192,8 @@ public class CheckBill extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select sp_desc,sp_cr,sp_cramt "
-                    + "from custfile "
-                    + "where sp_code='" + txtArCode.getText() + "'";
+            String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
+                    + "where sp_code='" + txtArCode.getText() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -2217,7 +2216,7 @@ public class CheckBill extends javax.swing.JDialog {
                     rs2.close();
                     stmt2.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(CheckBill.class, "error", e);
                 }
                 txtArAmount.setFocusable(true);
@@ -2235,7 +2234,7 @@ public class CheckBill extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
@@ -2278,7 +2277,7 @@ public class CheckBill extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+            MSG.ERR(this, ex.getMessage());
             AppLogUtil.log(CheckBill.class, "error", ex);
         } finally {
             mysql.close();
@@ -2296,7 +2295,7 @@ public class CheckBill extends javax.swing.JDialog {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
@@ -2325,9 +2324,6 @@ public class CheckBill extends javax.swing.JDialog {
         }
         if (PublicVar.SubTotalOK) {
             dispose();
-            
-            // show floorplan
-            showFloorPlan();
             jPanel6.setVisible(false);
             return;
         }
@@ -2335,11 +2331,6 @@ public class CheckBill extends javax.swing.JDialog {
         new Thread(() -> {
             checkBillPayment();
         }).start();
-    }
-    
-    private void showFloorPlan() {
-        FloorPlanDialog floorPlan = new FloorPlanDialog();
-        floorPlan.setVisible(true);
     }
 
     private void backupTempBalnace() {
@@ -2354,7 +2345,7 @@ public class CheckBill extends javax.swing.JDialog {
                 stmt.executeUpdate(sql2);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
@@ -2366,7 +2357,7 @@ public class CheckBill extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from temp_balance where r_table ='" + tableNo + "'";
+            String sql = "select r_table from temp_balance where r_table ='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -2378,12 +2369,14 @@ public class CheckBill extends javax.swing.JDialog {
                     stmt2.executeUpdate(sql2);
                     stmt2.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(CheckBill.class, "error", e);
                 }
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
@@ -2400,7 +2393,7 @@ public class CheckBill extends javax.swing.JDialog {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();
@@ -2539,12 +2532,13 @@ public class CheckBill extends javax.swing.JDialog {
                 stmt.executeUpdate(sql);
 
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                MSG.ERR(this, e.getMessage());
+                AppLogUtil.log(CheckBill.class, "error", e);
             } finally {
                 mysql.close();
             }
         } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
     }
 
@@ -2571,7 +2565,7 @@ public class CheckBill extends javax.swing.JDialog {
                     break;
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckBill.class, "error", e);
         } finally {
             mysql.close();

@@ -95,7 +95,7 @@ public class PUtility {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SqlQuery = "select * from product where pcode='" + TempCode + "'";
+                String SqlQuery = "select pdesc,pstock,pset from product where pcode='" + TempCode + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 if (rs.next()) {
                     PName = rs.getString("pdesc");
@@ -115,7 +115,7 @@ public class PUtility {
 
                 if (StkProc) {
                     Statement stmt2 = mysql.getConnection().createStatement();
-                    String LoadTableFile = "select * from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
+                    String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
                     ResultSet rec2 = stmt2.executeQuery(LoadTableFile);
                     if (rec2.next()) {
                         double OnHand = rec2.getDouble(T_Mon);
@@ -206,7 +206,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select * from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') ";
+            String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             RetVal = rs.next();
             rs.close();
@@ -395,7 +395,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select * from product where pcode='" + PublicVar.P_Code + "' and pactive='Y'";
+            String sql = "select pcode from product where pcode='" + PublicVar.P_Code + "' and pactive='Y' limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             RetValue = rs.next();
             rs.close();
@@ -428,7 +428,8 @@ public class PUtility {
                 String T_Rem = StkRemark;
                 Boolean StkProc = false;
                 Statement stmt3 = mysql.getConnection().createStatement();
-                String LoadTableFile = "select *from product where pcode='" + TempCode + "'";
+                
+                String LoadTableFile = "select pstock,pprice11 from product where pcode='" + TempCode + "' limit 1";
                 ResultSet rec3 = stmt3.executeQuery(LoadTableFile);
                 if (rec3.next()) {
                     StkProc = rec3.getString("pstock").equals("Y");
@@ -507,8 +508,7 @@ public class PUtility {
                 String T_Rem = StkRemark;
                 Boolean StkProc = false;
                 Statement stmt3 = mysql.getConnection().createStatement();
-                String LoadTableFile = "select * from product "
-                        + "where pcode='" + TempCode + "'";
+                String LoadTableFile = "select pcode, pstock, pprice11 from product where pcode='" + TempCode + "' limit 1";
                 ResultSet rec3 = stmt3.executeQuery(LoadTableFile);
                 if (rec3.next()) {
                     StkProc = rec3.getString("pstock").equals("Y");
@@ -584,7 +584,7 @@ public class PUtility {
                 String T_Rem = StkRemark;
                 Boolean StkProc = false;
                 Statement stmt3 = mysql.getConnection().createStatement();
-                String LoadTableFile = "select *from product where pcode='" + TempCode + "'";
+                String LoadTableFile = "select pstock,pprice11 from product where pcode='" + TempCode + "' limit 1";
                 ResultSet rec3 = stmt3.executeQuery(LoadTableFile);
                 if (rec3.next()) {
                     StkProc = rec3.getString("pstock").equals("Y");
@@ -714,7 +714,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select * from cupon where cucode=" + "'" + XCode2 + "'";
+            String SQLQuery = "select reduleDiscount from cupon where cucode=" + "'" + XCode2 + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 ReturnVal = rs.getString("reduleDiscount").equals("Y");
@@ -741,7 +741,7 @@ public class PUtility {
             TempUser = XUser + "-" + i;
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select * from billno where b_cashier=" + "'" + TempUser + "'";
+                String SQLQuery = "select b_roundclose from billno where b_cashier=" + "'" + TempUser + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     if (rs.getString("b_roundclose").equals("Y")) {
@@ -771,7 +771,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select * from billno where b_cashier=" + "'" + XUser + "'";
+            String SQLQuery = "select b_roundclose from billno where b_cashier=" + "'" + XUser + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 ReturnVal = rs.getString("b_roundclose").equals("Y");
@@ -1119,7 +1119,7 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From PosConfigSetup ;
-            String SQLQuery = "select * from branch ";
+            String SQLQuery = "select Chargeno1 from branch limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 int Refbillno = rs.getInt("Chargeno1");
@@ -1154,7 +1154,7 @@ public class PUtility {
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from mpointtype where ptcode= '" + ProCode + "'";
+                String SQLQuery = "select * from mpointtype where ptcode= '" + ProCode + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
                     PublicVar.Procode = rs.getString("ptcode");
@@ -1211,7 +1211,7 @@ public class PUtility {
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From Promotion ;
-            String SQLQuery = "select * from protab where procode=" + "'" + XPro1 + "'";
+            String SQLQuery = "select * from protab where procode=" + "'" + XPro1 + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 String fixbranch = "";
@@ -1390,7 +1390,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from groupfile where groupcode='" + TCode + "'";
+            String UserGroupFile = "select groupname from groupfile where groupcode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("groupname"));
@@ -1415,7 +1415,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
+            String UserGroupFile = "select pdesc from product where pcode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
@@ -1441,7 +1441,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
+            String UserGroupFile = "select punit1 from product where pcode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("punit1"));
@@ -1466,7 +1466,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from product where pcode='" + TCode + "'";
+            String UserGroupFile = "select pprice11,pprice12,pprice13,pprice14,pprice15 from product where pcode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 if (Etd.equals("E")) {
@@ -1503,7 +1503,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from creditfile where crcode='" + TCode + "'";
+            String UserGroupFile = "select crname from creditfile where crcode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("crname"));
@@ -1528,7 +1528,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from cupon where cucode='" + TCode + "'";
+            String UserGroupFile = "select cuname from cupon where cucode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
@@ -1553,7 +1553,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from custfile where sp_code='" + TCode + "'";
+            String UserGroupFile = "select sp_desc from custfile where sp_code='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("sp_desc"));
@@ -1583,7 +1583,7 @@ public class PUtility {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select * from protab where procode='" + TCode + "'";
+            String UserGroupFile = "select prodesc from protab where procode='" + TCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("prodesc"));
@@ -1608,7 +1608,7 @@ public class PUtility {
         mysql.open();
         try {
             try ( Statement stmt = mysql.getConnection().createStatement()) {
-                String SeekPromotion2 = "select * from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "')";
+                String SeekPromotion2 = "select pcode from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "') limit 1";
                 try ( ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
                     foundData = rs.next();
                 }

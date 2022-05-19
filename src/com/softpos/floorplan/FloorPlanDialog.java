@@ -907,7 +907,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        MSG.NOTICE("SoftPOS Update:V8.2 22/04/2022 12:42");
+        MSG.NOTICE(this, "SoftPOS Update:V8.2 22/04/2022 12:42");
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -952,21 +952,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         String tableNo = ThaiUtil.Unicode2ASCII(rs.getString("b_table"));
                         String b_refno = rs.getString("b_refno");
                         String b_cust = rs.getString("b_cust");
-                        String checkTablefile = "select titem "
-                                + "from tablefile "
-                                + "where tcode = '" + tableNo + "' "
-                                + "and titem>'0' ";
+                        String checkTablefile = "select titem from tablefile "
+                                + "where tcode = '" + tableNo + "' and titem>'0' limit 1 ";
                         ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(checkTablefile);
                         if (rs1.next()) {
                             if (rs1.getInt("titem") > 0) {
-                                MSG.NOTICE("ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
+                                MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
                             } else {
-                                String sqlGetFromT_sale = "select * from "
-                                        + "t_sale "
-                                        + "where r_refno='" + b_refno + "' "
-                                        + "order by r_index;";
+                                String sqlGetFromT_sale = "select * from t_sale "
+                                        + "where r_refno='" + b_refno + "' order by r_index limit 1;";
                                 ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetFromT_sale);
-
                                 if (rs2.next()) {
                                     String updateBCust = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
                                     mysql.getConnection().createStatement().executeUpdate(updateBCust);
@@ -1024,7 +1019,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select * from product where pcode='" + PCode + "' and pactive='Y'";
+            String sql = "select pcode from product where pcode='" + PCode + "' and pactive='Y' limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             boolean checkFoundProduct = rs.next();
             if (!checkFoundProduct) {
@@ -1343,9 +1338,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     if (bean.getLoginTime() != null) {
                         String r_time = "";
                         try {
-                            String sqlGettime = "select r_time from balance "
-                                    + "where r_table ='" + bean.getTableNo() + "' "
-                                    + "order by r_date,r_time";
+                            String sqlGettime = "select r_time from balance where r_table ='" + bean.getTableNo() + "' "
+                                    + "order by r_date,r_time limit 1";
                             Statement stmt1 = mysql.getConnection().createStatement();
                             ResultSet rsTime1 = stmt1.executeQuery(sqlGettime);
                             if (rsTime1.next()) {
@@ -1560,7 +1554,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from sp_temp_refund;";
+            String sql = "select r_plucode from sp_temp_refund limit 1;";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
@@ -1666,15 +1660,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         mysql.open();
         boolean isPermit = false;
         try {
-            String sql = "select Username, Sale3 "
-                    + "from posuser "
-                    + "where username='" + Value.USERCODE + "' "
-                    + "and Sale2='Y'";
+            String sql = "select Username, Sale3 from posuser where username='" + Value.USERCODE + "' and Sale2='Y' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isPermit = true;
                 }
-
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1855,8 +1845,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         login.setVisible(true);
 
                         if (!login.getLoginPWD().equals("")) {
-                            String sql2 = "select code,name from employ "
-                                    + "where Code='" + login.getLoginPWD() + "';";
+                            String sql2 = "select code,name from employ where Code='" + login.getLoginPWD() + "' limit 1;";
                             MySQLConnect mysql = new MySQLConnect();
                             mysql.open();
                             try {
@@ -2172,9 +2161,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from tempset "
-                    + "where PIndex='" + R_Index + "' "
-                    + "and PCode='" + PCode + "'";
+            String sql = "select POption from tempset where PIndex='" + R_Index + "' and PCode='" + PCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -2193,7 +2180,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.close();

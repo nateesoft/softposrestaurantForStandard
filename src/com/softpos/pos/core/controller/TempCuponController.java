@@ -101,8 +101,7 @@ public class TempCuponController {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from tempcupon "
-                    + "where R_Index='" + R_Index + "'";
+            String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -178,7 +177,8 @@ public class TempCuponController {
                     + "'" + bean.getCashier() + "','" + simp.format(new Date()) + "','" + bean.getCuCode() + "','" + bean.getCuQuan() + "',"
                     + "'" + bean.getCuAmt() + "','" + bean.getCuTotal() + "','" + bean.getCuDisc() + "','" + bean.getCuRedule() + "',"
                     + "'" + bean.getCuPayment() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
-            String sql1 = "select * from tempcupon where r_index='" + bean.getR_Index() + "' ";
+            
+            String sql1 = "select r_index from tempcupon where r_index='" + bean.getR_Index() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql1);
             if (rs.next()) {

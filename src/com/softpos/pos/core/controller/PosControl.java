@@ -37,7 +37,7 @@ public class PosControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from company";
+            String sql = "select * from company limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     companyBean = new CompanyBean();
@@ -107,7 +107,7 @@ public class PosControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from posconfigsetup";
+            String sql = "select * from posconfigsetup limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     posConfigSetup = new POSConfigSetup();
@@ -190,7 +190,7 @@ public class PosControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from poshwsetup where terminal='" + macno + "'";
+            String sql = "select * from poshwsetup where terminal='" + macno + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     poshwsetup = new POSHWSetup();

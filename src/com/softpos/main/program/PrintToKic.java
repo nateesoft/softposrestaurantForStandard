@@ -37,30 +37,11 @@ public class PrintToKic extends javax.swing.JFrame {
      * Creates new form PrintToKic
      */
     public PrintToKic(java.awt.Frame parent, boolean modal) {
-////        super(parent, modal);
         initComponents();
-        MySQLConnect mysql = new MySQLConnect();
-        BranchBean BranchBean = BranchControl.getData();
-        try {
-            String sqlGetSaveOrder = "select SaveOrder from branch";
-            mysql.open();
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rsGetSaveOrderConfig = stmt.executeQuery(sqlGetSaveOrder);
-            if (rsGetSaveOrderConfig.next()) {
-                String config = rsGetSaveOrderConfig.getString("SaveOrder");
-                if (!config.equals("N")) {
-                    PublicVar.Branch_Saveorder = config;
-                }
-            }
-
-            rsGetSaveOrderConfig.close();
-            stmt.close();
-            mysql.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e);
-        } finally {
-            mysql.close();
+        BranchBean branchBean = BranchControl.getData();
+        String config = branchBean.getSaveOrder();
+        if (!config.equals("N")) {
+            PublicVar.Branch_Saveorder = config;
         }
 
         printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
@@ -70,7 +51,6 @@ public class PrintToKic extends javax.swing.JFrame {
             public void run() {
                 setState(JFrame.ICONIFIED);
                 for (int i = 0; i < 10; i++) {
-                    //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     if (i == 9) {
                         i = 0;
@@ -80,14 +60,9 @@ public class PrintToKic extends javax.swing.JFrame {
                         kicPrintFromPDA();
                         try {
                             Thread.sleep(refresh * 700);
-//                        Thread.sleep(refresh);
                         } catch (InterruptedException ex) {
-                            MSG.ERR(ex.toString());
                         }
                     }
-//                    if (ConfigFile.getProperties("printerStation").equals("true")) {
-//
-//                    }
                 }
             }
         }).start();
@@ -110,7 +85,6 @@ public class PrintToKic extends javax.swing.JFrame {
                         try {
                             Thread.sleep(25);
                         } catch (InterruptedException e) {
-                            MSG.ERR(e.toString());
                         }
                     }
 
@@ -122,11 +96,9 @@ public class PrintToKic extends javax.swing.JFrame {
                         try {
                             Thread.sleep(25);
                         } catch (InterruptedException e) {
-                            MSG.ERR(e.toString());
                         }
                     }
-                } catch (Exception e) {
-                    MSG.ERR(e.toString());
+                } catch (InterruptedException e) {
                 }
             }
         }).start();
@@ -490,9 +462,8 @@ public class PrintToKic extends javax.swing.JFrame {
     public void printCheckBillStation() {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            String sql = "select * form balance "
-                    + "wehre r_table='" + tableNo + "' "
-                    + "and PDAPrintCheckStation <>'N' ";
+            String sql = "select r_index form balance where r_table='" + tableNo + "' "
+                    + "and PDAPrintCheckStation <>'N' limit 1";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     MySQLConnect mysql2 = new MySQLConnect();

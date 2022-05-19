@@ -460,7 +460,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "'";
+                            String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -597,7 +597,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             MySQLConnect mysql = new MySQLConnect();
                             mysql.open();
                             try {
-                                String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "'";
+                                String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
                                 Statement stmt = mysql.getConnection().createStatement();
                                 ResultSet rs = stmt.executeQuery(sql);
                                 if (rs.next()) {

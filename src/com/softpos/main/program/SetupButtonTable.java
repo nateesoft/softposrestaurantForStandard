@@ -252,12 +252,12 @@ public class SetupButtonTable extends javax.swing.JDialog {
         mysql.open();
         try {
             String tableNo = txtTable.getText();
-            String ch = "select * from tablefile where tcode='" + tableNo + "'";
+            String ch = "select tcode from tablefile where tcode='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             try (ResultSet rChk = stmt.executeQuery(ch)) {
                 if (rChk.next()) {
                     String sql = "insert into tablesetup(code_id,tcode) values('" + codeId + "','" + tableNo + "')";
-                    String sqlChk = "select * from tablesetup where code_id='" + tableNo + "'";
+                    String sqlChk = "select code_id from tablesetup where code_id='" + tableNo + "' limit 1";
                     Statement stmt1 = mysql.getConnection().createStatement();
                     ResultSet rs = stmt1.executeQuery(sqlChk);
                     if (rs.next()) {

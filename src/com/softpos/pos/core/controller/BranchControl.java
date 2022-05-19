@@ -35,7 +35,7 @@ public class BranchControl {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select * from branch";
+            String sql = "select * from branch limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 branchBean = new BranchBean();
@@ -212,7 +212,7 @@ public class BranchControl {
 
         try {
             mysql.open();
-            String sql = "select KICCopy" + kicNo + " from branch";
+            String sql = "select KICCopy" + kicNo + " from branch limit 1";
 //            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {

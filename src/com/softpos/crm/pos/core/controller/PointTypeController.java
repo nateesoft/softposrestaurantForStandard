@@ -24,7 +24,7 @@ public class PointTypeController {
             mysql.open();
             String sql = "select * "
                     + "from " + Value.db_member + ".pointtype "
-                    + "where Point_TypeCode='" + pointTypeCode + "'";
+                    + "where Point_TypeCode='" + pointTypeCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
@@ -47,11 +47,10 @@ public class PointTypeController {
         try {
             mysql.open();
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
-            String sql = "SELECT * FROM " + Value.db_member + ".pointtype "
-                        + "WHERE 1=1 "
+            String sql = "SELECT * FROM " + Value.db_member + ".pointtype WHERE 1=1 "
                         + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
                         + "AND (point1>0 or point2>0 or point3>0) "
-                        + "AND Point_TypeDateService like '%" + EEE + "%'";
+                        + "AND Point_TypeDateService like '%" + EEE + "%' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);

@@ -927,7 +927,7 @@ public class PPrint {
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
-                    String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -1340,7 +1340,7 @@ public class PPrint {
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
-                    String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -1580,12 +1580,12 @@ public class PPrint {
                     }
                     if (bBean.getB_GiftVoucher() > 0) {
                         print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
-                        String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "';";
-                        String giffno;
-
+                        
                         MySQLConnect mysql = new MySQLConnect();
                         try {
                             mysql.open();
+                            String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
+                            String giffno;
                             ResultSet rsGetGiftno = mysql.getConnection().createStatement().executeQuery(sqlGetGiffNo);
                             if (rsGetGiftno.next()) {
                                 giffno = rsGetGiftno.getString("giftno");
@@ -1660,7 +1660,7 @@ public class PPrint {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                            String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -2487,7 +2487,7 @@ public class PPrint {
                             } else {
                                 print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                             }
-                            String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
+                            String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
                             String NameVoid = "";
 
                             MySQLConnect mysql = new MySQLConnect();
@@ -2623,7 +2623,7 @@ public class PPrint {
                     } else {
                         t += ("align=left><font face=Angsana New size=1>" + PUtility.DataFullR(bean.getR_PName(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
                     }
-                    String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
+                    String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
                     String NameVoid = "";
 
                     MySQLConnect mysql = new MySQLConnect();
@@ -4712,7 +4712,7 @@ public class PPrint {
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
-                            String sql = "select * from creditfile where crcode='" + tBean.getB_CrCode1() + "'";
+                            String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -5031,7 +5031,7 @@ public class PPrint {
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open();
                 try {
-                    String sql = "select * from creditfile where crcode='" + tBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -5746,7 +5746,7 @@ public class PPrint {
             while (rs.next()) {
                 String[] CreName = new String[]{"", "", ""};
                 String name = rs.getString("B_CrCode1");
-                String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "'";
+                String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "' limit 1";
                 ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
                 String creditName;
                 if (rs2.next()) {
@@ -6028,7 +6028,7 @@ public class PPrint {
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String billnoT = "select macno from poshwsetup";
+            String billnoT = "select macno from poshwsetup limit 1";
             ResultSet rs = stmt.executeQuery(billnoT);
             if (rs.next()) {
                 String regid = rs.getString("macno");
@@ -6115,10 +6115,8 @@ public class PPrint {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select r_emp "
-                    + "from t_sale "
-                    + "where r_table='" + tableNo + "' "
-                    + "and r_refno='" + refno + "'";
+            String sql = "select r_emp from t_sale "
+                    + "where r_table='" + tableNo + "' and r_refno='" + refno + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -6161,12 +6159,10 @@ public class PPrint {
         double total;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total"
-                    + " from t_cupon "
-                    + "inner join cupon "
+            String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total "
+                    + "from t_cupon inner join cupon "
                     + "on t_cupon.cucode = cupon.cucode "
-                    + "where r_refno='" + r_refno + "' "
-                    + "group by r_refno";
+                    + "where r_refno='" + r_refno + "' group by r_refno";
             mysql.open();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
@@ -6267,7 +6263,7 @@ public class PPrint {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select cuname from cupon where cucode='" + cuCode + "'";
+            String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 cuName = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));

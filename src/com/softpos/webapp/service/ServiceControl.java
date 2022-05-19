@@ -89,7 +89,7 @@ public class ServiceControl {
              */
             
             mysql.open();
-            String sql = "select * from tablefile where Tcode='" + table + "'";
+            String sql = "select TAmount,ProDiscAmt,ItemDiscAmt from tablefile where Tcode='" + table + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

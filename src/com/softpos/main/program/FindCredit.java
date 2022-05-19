@@ -236,7 +236,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from branch ";
+            String UserGroupFile = "select creditact from branch limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
                 ReturnValues = rs.getString("creditact");

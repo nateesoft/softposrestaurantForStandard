@@ -286,13 +286,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
-            String sql = "select "
-                    + "tp.PrCode PrCode,pt.ProDesc ProDesc,sum(tp.PQty) PQty, sum(tp.PrAmt) PrAmt "
-                    + "from t_promotion tp "
-                    + "left join protab pt on tp.prcode = pt.ProCode "
-                    + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
-                    + "group by tp.prcode";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -322,6 +316,14 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("โปรโมชั่น" + TAB + "จำนวน" + TAB + "ส่วนลด ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
+            
+            String sql = "select "
+                    + "tp.PrCode PrCode,pt.ProDesc ProDesc,sum(tp.PQty) PQty, sum(tp.PrAmt) PrAmt "
+                    + "from t_promotion tp "
+                    + "left join protab pt on tp.prcode = pt.ProCode "
+                    + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
+                    + "group by tp.prcode";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("PrCode") + Space + rs.getString("ProDesc") + "_";
                 t += "colspan=1 align=right><font face=Angsana New size=1>" + Space + rs.getString("PQty") + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + rs.getString("PrAmt") + "_";

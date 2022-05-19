@@ -1993,7 +1993,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         try {
             mysql.open();
             try ( Statement stmt = mysql.getConnection().createStatement()) {
-                String SqlQuery = "select * from branch ";
+                String SqlQuery = "select arbillno from branch limit 1";
                 try ( ResultSet rs = stmt.executeQuery(SqlQuery)) {
                     if (rs.next()) {
                         TempBill = rs.getInt("arbillno");
@@ -2270,7 +2270,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("arno") + TAB + DatefmtShow.format(rs.getDate("ardate")) + TAB + PUtility.DataFullR(DecFmt.format(rs.getDouble("arnet")), 11) + "_";
                 MySQLConnect mysql2 = new MySQLConnect();
                 try {
-                    String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "'";
+                    String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "' limit 1";
                     mysql2.open();
                     ResultSet rsCustfile = mysql2.getConnection().createStatement().executeQuery(sqlGetCustFile);
                     if (rsCustfile.next()) {
@@ -2403,7 +2403,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         try {
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            String SeekCuList = "select *from creditfile where crcode='" + CrCode + "'";
+            String SeekCuList = "select * from creditfile where crcode='" + CrCode + "' limit 1";
 
             ResultSet rs = stmt.executeQuery(SeekCuList);
             if (rs.next()) {
@@ -2434,7 +2434,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         try {
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from custfile where sp_code='" + ArCode + "'");
+            ResultSet rs = stmt.executeQuery("select sp_desc, sp_cramt from custfile where sp_code='" + ArCode + "' limit 1");
             if (rs.next()) {
                 RetVal = true;
                 txtArName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
@@ -2458,9 +2458,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         try {
             mysql.open();
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select sum(arnet),count(arno) from accr "
-                    + "where (arcode='" + ArCode + "') and (arflage<>'Y')";
-
+            String SqlQuery = "select sum(arnet),count(arno) from accr where (arcode='" + ArCode + "') and (arflage<>'Y')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
                 if (rs.getDouble("count(arno)") == 0) {

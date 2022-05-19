@@ -21,7 +21,7 @@ public class BranchFileController {
         try {
             mysql.open();
             String sql = "select * from " + Value.db_member + ".branfile "
-                    + "where Branch_Code='" + branchCode + "'";
+                    + "where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
@@ -50,7 +50,7 @@ public class BranchFileController {
                     + "or PointCode_Type2 <> '' "
                     + "or PointCode_Type3 <> '' "
                     + "or PointCode_Type4 <> '' "
-                    + "or PointCode_Type5 <> '')";
+                    + "or PointCode_Type5 <> '') limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);

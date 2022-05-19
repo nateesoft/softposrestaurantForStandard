@@ -2169,9 +2169,7 @@ public class PrintSimpleForm {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select R_Index, R_LinkIndex,R_Void "
-                    + "from balance "
-                    + "where R_Index='" + R_Index + "'";
+            String sql = "select R_Index, R_LinkIndex,R_Void from balance where R_Index='" + R_Index + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -3504,11 +3502,9 @@ public class PrintSimpleForm {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select r_emp "
-                    + "from balance "
-                    + "where r_table='" + table + "' "
-                    + "and r_index='" + r_index + "' "
-                    + "and r_plucode='" + Code + "';";
+            String sql = "select r_emp from balance "
+                    + "where r_table='" + table + "' and r_index='" + r_index + "' "
+                    + "and r_plucode='" + Code + "' limit 1;";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

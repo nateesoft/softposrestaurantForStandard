@@ -710,8 +710,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile "
-                        + "where sp_code='" + TempCode + "'";
+                String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if(rs.next()){
                     sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
@@ -747,7 +746,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select * from custfile where sp_code='" + TempCode + "'";
+            String SQLQuery = "select * from custfile where sp_code='" + TempCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
             rs.close();

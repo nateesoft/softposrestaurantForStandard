@@ -177,7 +177,7 @@ public class CashBackDialog extends javax.swing.JDialog {
         try {
             //select returnbillno from branch
             //0000002
-            String sql = "select returnbillno from branch";
+            String sql = "select returnbillno from branch limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             int refNo = 0;

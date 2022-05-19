@@ -120,7 +120,7 @@ public class UserRecord {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select  * from posuser Where(username= '" + XUserCode + "')";
+            String sql = "select  * from posuser Where(username= '" + XUserCode + "') limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {

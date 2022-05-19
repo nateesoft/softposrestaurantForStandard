@@ -357,7 +357,6 @@ public class Login extends javax.swing.JDialog {
             try {
                 f.createNewFile();
             } catch (IOException ex) {
-                MSG.ERR(null, ex.getMessage());
             }
         }
 
@@ -431,9 +430,9 @@ public class Login extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from posuser "
+            String sql = "select username,password,name,onact,macno from posuser "
                     + "where username= '" + ThaiUtil.Unicode2ASCII(loginname) + "' "
-                    + "and password='" + ThaiUtil.Unicode2ASCII(password) + "'";
+                    + "and password='" + ThaiUtil.Unicode2ASCII(password) + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -442,15 +441,16 @@ public class Login extends javax.swing.JDialog {
                 PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
                 OnAct = rs.getString("onact");
                 MacNoOnAct = rs.getString("macno");
-                rs.close();
+                
                 SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 String St = tf.format(new Date());
                 txtShowDate.setText(St);
 
-                String sqlCheckBillno = "select b_ondate b_ondate from billno where b_ondate<>'" + St + "'";
+                String sqlCheckBillno = "select b_ondate b_ondate from billno where b_ondate<>'" + St + "' limit 1";
                 Statement stmt2 = mysql.getConnection().createStatement();
                 ResultSet rs2 = stmt2.executeQuery(sqlCheckBillno);
-                if (!rs2.next()) {
+                boolean checkOndate = rs2.next();
+                if (!checkOndate) {
                     if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
                         MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                         clearlogin();
@@ -606,7 +606,6 @@ public class Login extends javax.swing.JDialog {
                 }
                 pbCheckUpdate.setString("SoftPOS Update:V8.2 12/08/2020 00:35");
             } catch (Exception e) {
-                MSG.ERR(e.getMessage());
             }
         }).start();
     }
@@ -622,7 +621,7 @@ public class Login extends javax.swing.JDialog {
                 PosControl.resetPosHwSetup();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
             mysql.close();

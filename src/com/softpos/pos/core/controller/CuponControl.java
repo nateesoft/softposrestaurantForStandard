@@ -140,7 +140,7 @@ public class CuponControl {
         
         CuponBean bean = new CuponBean();
         try {
-            String sql = "select * from cupon where CuCode='" + CuCode + "'";
+            String sql = "select * from cupon where CuCode='" + CuCode + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -212,7 +212,7 @@ public class CuponControl {
                     + "'" + bean.getCuDiscBath3() + "','" + bean.getCuDisc1() + "',"
                     + "'" + bean.getCuDiscBath1() + "','" + bean.getCuSelectDisc() + "',"
                     + "'" + bean.getCuEDiscount() + "','" + bean.getCuEPayment() + "')";
-            String sqlChk = "select * from cupon where CuCode='" + bean.getCuCode() + "'";
+            String sqlChk = "select CuCode from cupon where CuCode='" + bean.getCuCode() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlChk);
             if (rs.next()) {

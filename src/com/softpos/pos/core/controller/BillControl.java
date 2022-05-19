@@ -46,9 +46,7 @@ public class BillControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select ReceNo1 "
-                    + "from poshwsetup "
-                    + "where Terminal='" + getLocalMacNO() + "'";
+            String sql = "select ReceNo1 from poshwsetup where Terminal='" + getLocalMacNO() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -149,10 +147,10 @@ public class BillControl {
         try {
             String sqlGetLoginTime = "select r_time from balance "
                     + "where r_table='" + bean.getB_Table() + "' "
-                    + "order by r_index;";
-            ResultSet rsLGT = mysql.getConnection().createStatement().executeQuery(sqlGetLoginTime);
-            if (rsLGT.next()) {
-                blBean.setLoginTime(rsLGT.getString("r_time"));
+                    + "order by r_index limit 1;";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetLoginTime);
+            if (rs.next()) {
+                blBean.setLoginTime(rs.getString("r_time"));
             }
             String sql = "insert into billno "
                     + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,"
@@ -957,7 +955,7 @@ public class BillControl {
             double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
 
             try {
-                String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time;";
+                String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time limit 1;";
                 Statement stmt = mysql.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sqlUpdate);
                 if (rs.next()) {
@@ -1510,7 +1508,7 @@ public class BillControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "select * from billno where B_Refno='" + billNo + "'";
+            String sql = "select * from billno where B_Refno='" + billNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -1518,7 +1516,7 @@ public class BillControl {
                         + "from t_sale t "
                         + "inner join cupon c "
                         + "on t.r_prcucode = c.cucode "
-                        + "where r_refno='" + billNo + "'";
+                        + "where r_refno='" + billNo + "' limit 1";
                 Statement stmt2 = mysql.getConnection().createStatement();
                 ResultSet rs1 = stmt2.executeQuery(sql1);
                 if (rs1.next()) {
