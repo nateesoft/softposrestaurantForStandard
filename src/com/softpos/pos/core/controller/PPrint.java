@@ -59,11 +59,9 @@ public class PPrint {
     private SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    private DecimalFormat DecFmt1 = new DecimalFormat("###,##0.00");
     private DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     private DecimalFormat IntFmt1 = new DecimalFormat("#,##0");
     private DecimalFormat df = new DecimalFormat("#,##0.00");
-    private DecimalFormat Name = new DecimalFormat("");
     private int LineCount = 0;
     private boolean EJPrint = false;
     private POSHWSetup POSHW;
@@ -72,7 +70,6 @@ public class PPrint {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
-    private String SPLIT = "=";
 
     public void PPrint() {
         POSHW = POSHWSetup.Bean(Value.getMacno());
