@@ -40,7 +40,7 @@ public class FindCredit extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {50, 100, 250, 50, 50, 50};
         for (int i = 0; i < 6; i++) {
@@ -77,7 +77,7 @@ public class FindCredit extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

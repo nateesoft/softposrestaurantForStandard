@@ -42,7 +42,7 @@ public class FindMember extends javax.swing.JDialog {
 
         JTableHeader header = tblShowMember.getTableHeader();
         header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {80, 120, 250, 100, 100, 120, 100, 100};
         for (int i = 0; i < 8; i++) {
@@ -459,7 +459,7 @@ public class FindMember extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        tblShowMember.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShowMember.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShowMember.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

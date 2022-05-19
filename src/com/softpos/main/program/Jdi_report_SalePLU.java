@@ -54,44 +54,45 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblShow = new javax.swing.JTable();
-        txtSumAmt = new javax.swing.JTextField();
-        txtSumQty = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
+        txtSumQty = new javax.swing.JTextField();
+        txtSumAmt = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการขายตามรหัสสินค้า (PLU Code)");
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("เลขเครื่อง (Terminal)");
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("รหัสพนักงานขาย (Cashier)");
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("รหัสกลุ่มสินค้า (Dept)");
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("รหัสสินค้า (PLU-Code)");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txt1.setEditable(false);
         txt1.setBackground(new java.awt.Color(254, 254, 254));
-        txt1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt1.setFocusable(false);
         txt1.setRequestFocusEnabled(false);
 
         txt2.setEditable(false);
         txt2.setBackground(new java.awt.Color(254, 254, 254));
-        txt2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt2.setFocusable(false);
         txt2.setRequestFocusEnabled(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("ถึง");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -119,17 +120,17 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
 
         txt3.setEditable(false);
         txt3.setBackground(new java.awt.Color(254, 254, 254));
-        txt3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt3.setFocusable(false);
         txt3.setRequestFocusEnabled(false);
 
         txt4.setEditable(false);
         txt4.setBackground(new java.awt.Color(254, 254, 254));
-        txt4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt4.setFocusable(false);
         txt4.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("ถึง");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -158,17 +159,17 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
 
         txt5.setEditable(false);
         txt5.setBackground(new java.awt.Color(254, 254, 254));
-        txt5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt5.setFocusable(false);
         txt5.setRequestFocusEnabled(false);
 
         txt6.setEditable(false);
         txt6.setBackground(new java.awt.Color(254, 254, 254));
-        txt6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt6.setFocusable(false);
         txt6.setRequestFocusEnabled(false);
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("ถึง");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -197,17 +198,17 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
 
         txt7.setEditable(false);
         txt7.setBackground(new java.awt.Color(254, 254, 254));
-        txt7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt7.setFocusable(false);
         txt7.setRequestFocusEnabled(false);
 
         txt8.setEditable(false);
         txt8.setBackground(new java.awt.Color(254, 254, 254));
-        txt8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt8.setFocusable(false);
         txt8.setRequestFocusEnabled(false);
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("ถึง");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -232,7 +233,7 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
                     .addComponent(jLabel8)))
         );
 
-        jButton1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("ออก (Exit)");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,7 +269,7 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4))
                 .addContainerGap())
@@ -315,34 +316,42 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblShow);
 
-        txtSumAmt.setBackground(new java.awt.Color(249, 231, 160));
-        txtSumAmt.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
-        txtSumAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSumAmt.setFocusable(false);
-        txtSumAmt.setRequestFocusEnabled(false);
-
         txtSumQty.setBackground(new java.awt.Color(249, 231, 160));
-        txtSumQty.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtSumQty.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSumQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSumQty.setFocusable(false);
         txtSumQty.setRequestFocusEnabled(false);
+
+        txtSumAmt.setBackground(new java.awt.Color(249, 231, 160));
+        txtSumAmt.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtSumAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtSumAmt.setFocusable(false);
+        txtSumAmt.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 15, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(txtSumQty, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtSumQty, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 657, Short.MAX_VALUE)
+            .addGap(0, 364, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,11 +369,7 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSumQty, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(318, 318, 318)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -377,8 +382,6 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtSumQty, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34))
@@ -488,8 +491,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         tblShow.setBackground(Color.WHITE);
         tblShow.setGridColor(Color.LIGHT_GRAY);
         JTableHeader header = tblShow.getTableHeader();
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
-        tblShow.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
+        tblShow.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
         tblShow.setRowHeight(25);
         //Setting column size
         TableColumn column = null;

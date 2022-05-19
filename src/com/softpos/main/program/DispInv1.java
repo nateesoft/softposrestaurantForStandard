@@ -53,7 +53,7 @@ public class DispInv1 extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {50, 100, 80, 50, 80, 100, 250, 100, 100, 100, 200, 100, 100};
         for (int i = 0; i < 13; i++) {
@@ -238,6 +238,7 @@ public class DispInv1 extends javax.swing.JDialog {
         TotalAmt1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.lightGray, 2));
@@ -407,7 +408,7 @@ public class DispInv1 extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -432,7 +433,6 @@ public class DispInv1 extends javax.swing.JDialog {
             }
         });
         tblShow.setFocusTraversalPolicyProvider(true);
-        tblShow.setRowHeight(20);
         tblShow.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tblShowKeyPressed(evt);
@@ -440,35 +440,35 @@ public class DispInv1 extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblShow);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("จำนวนรายการทั้งสิ้น");
 
-        TotalCnt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalCnt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalCnt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalCnt.setFocusable(false);
         TotalCnt.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("จำนวนเงินรวม");
 
-        TotalAmt3.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt3.setFocusable(false);
         TotalAmt3.setRequestFocusEnabled(false);
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("ภาษีมูลค่าเพิ่ม");
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("มูลค่าสินค้า");
 
-        TotalAmt2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt2.setFocusable(false);
         TotalAmt2.setRequestFocusEnabled(false);
 
-        TotalAmt1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt1.setFocusable(false);
         TotalAmt1.setRequestFocusEnabled(false);

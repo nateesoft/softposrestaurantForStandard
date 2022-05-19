@@ -87,14 +87,14 @@ public class MTDCoupon extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("หมายเลขเครื่อง");
 
-        txtMacNo1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtMacNo1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtMacNo1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtMacNo1KeyPressed(evt);
             }
         });
 
-        txtMacNo2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtMacNo2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtMacNo2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtMacNo2KeyPressed(evt);

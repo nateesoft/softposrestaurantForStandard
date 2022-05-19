@@ -94,10 +94,10 @@ public class AddNewMember extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ปรับรุงรายการข้อมูลสมาชิก");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
-        jToolBar1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jToolBar1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         bntCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntCancel.setText("  ยกเลิก  ");
@@ -202,7 +202,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Name.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Name.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Name.setMinimumSize(new java.awt.Dimension(10, 25));
         M_Name.setPreferredSize(new java.awt.Dimension(76, 30));
         M_Name.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -211,7 +211,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_HomeTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_HomeTel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_HomeTel.setPreferredSize(new java.awt.Dimension(10, 30));
         M_HomeTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -219,7 +219,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_OfficeTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_OfficeTel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_OfficeTel.setPreferredSize(new java.awt.Dimension(10, 30));
         M_OfficeTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -227,7 +227,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Mobile.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Mobile.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Mobile.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Mobile.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -235,7 +235,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Reamrk1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Reamrk1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Reamrk1.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Reamrk1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -243,7 +243,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Remark2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Remark2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Remark2.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Remark2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -258,7 +258,7 @@ public class AddNewMember extends javax.swing.JDialog {
         jLabel13.setText("วันหมดอายุ");
 
         M_Brithday.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        M_Brithday.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Brithday.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Brithday.setMinimumSize(new java.awt.Dimension(10, 25));
         M_Brithday.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Brithday.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -268,16 +268,16 @@ public class AddNewMember extends javax.swing.JDialog {
         });
 
         M_Begin.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        M_Begin.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Begin.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Begin.setPreferredSize(new java.awt.Dimension(10, 30));
-        M_Begin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                M_BeginFocusLost(evt);
-            }
-        });
         M_Begin.addHierarchyListener(new java.awt.event.HierarchyListener() {
             public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
                 M_BeginHierarchyChanged(evt);
+            }
+        });
+        M_Begin.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                M_BeginFocusLost(evt);
             }
         });
         M_Begin.addInputMethodListener(new java.awt.event.InputMethodListener() {
@@ -295,7 +295,7 @@ public class AddNewMember extends javax.swing.JDialog {
 
         M_End.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         M_End.setEnabled(false);
-        M_End.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_End.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_End.setPreferredSize(new java.awt.Dimension(10, 30));
         M_End.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -431,9 +431,9 @@ public class AddNewMember extends javax.swing.JDialog {
                             .addComponent(M_Begin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmdDateChoose2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(M_HomeTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(M_HomeTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)

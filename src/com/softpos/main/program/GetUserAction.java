@@ -42,7 +42,7 @@ public class GetUserAction extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กรุณาป้อนรหัสผู้ใช้งาน/รหัสผ่าน");
-        setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));

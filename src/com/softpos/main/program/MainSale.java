@@ -382,6 +382,7 @@ public class MainSale extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("โปรแกรมร้านอาหาร");
         setBackground(new java.awt.Color(255, 204, 204));
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -580,7 +581,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(204, 51, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtTable.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtTable.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtTable.setForeground(new java.awt.Color(255, 0, 0));
         txtTable.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -624,7 +625,7 @@ public class MainSale extends javax.swing.JDialog {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("โต๊ะ");
 
-        txtCust.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtCust.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtCust.setForeground(new java.awt.Color(255, 0, 0));
         txtCust.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCust.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -893,7 +894,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
-        tbShowBalance.setFont(new java.awt.Font("Angsana New", 0, 20)); // NOI18N
+        tbShowBalance.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         tbShowBalance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -3527,7 +3528,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Norasi", java.awt.Font.PLAIN, 14)));
+                        "Tahoma", java.awt.Font.PLAIN, 14)));
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 MSG.ERR(null, e.getMessage());
             }

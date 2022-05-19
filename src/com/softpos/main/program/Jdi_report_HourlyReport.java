@@ -39,6 +39,7 @@ public class Jdi_report_HourlyReport extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการขายตามช่วงเวลา");
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
 
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
@@ -68,17 +69,17 @@ public class Jdi_report_HourlyReport extends javax.swing.JDialog {
 
         txt7.setEditable(false);
         txt7.setBackground(new java.awt.Color(254, 254, 254));
-        txt7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt7.setFocusable(false);
         txt7.setRequestFocusEnabled(false);
 
         txt8.setEditable(false);
         txt8.setBackground(new java.awt.Color(254, 254, 254));
-        txt8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt8.setFocusable(false);
         txt8.setRequestFocusEnabled(false);
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("ถึง");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -102,7 +103,7 @@ public class Jdi_report_HourlyReport extends javax.swing.JDialog {
                     .addComponent(jLabel8)))
         );
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("เลขเครื่อง (Terminal)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -185,8 +186,8 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         tblShow.setBackground(Color.WHITE);
         tblShow.setGridColor(Color.LIGHT_GRAY);
         JTableHeader header = tblShow.getTableHeader();
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
-        tblShow.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
+        tblShow.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
         tblShow.setRowHeight(25);
         //Setting column size
         TableColumn column = null;

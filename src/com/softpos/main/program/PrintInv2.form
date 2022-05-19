@@ -93,7 +93,7 @@
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="&#xe42;&#xe1b;&#xe23;&#xe41;&#xe01;&#xe23;&#xe21;&#xe1e;&#xe34;&#xe21;&#xe1e;&#xe4c;&#xe43;&#xe1a;&#xe01;&#xe33;&#xe01;&#xe31;&#xe1a;&#xe20;&#xe32;&#xe29;&#xe35;/&#xe43;&#xe1a;&#xe41;&#xe08;&#xe49;&#xe07;&#xe2b;&#xe19;&#xe35;&#xe49;"/>
     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-      <Font name="Norasi" size="14" style="0"/>
+      <Font name="Tahoma" size="14" style="0"/>
     </Property>
     <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
@@ -350,7 +350,7 @@
         <Component class="javax.swing.JTextField" name="InvNo">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="16" style="1"/>
+              <Font name="Tahoma" size="16" style="1"/>
             </Property>
           </Properties>
           <Events>
@@ -365,14 +365,14 @@
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="16" style="1"/>
+              <Font name="Tahoma" size="16" style="1"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="Contack">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="16" style="1"/>
             </Property>
             <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="PONo"/>
@@ -385,7 +385,7 @@
         <Component class="javax.swing.JTextField" name="PONo">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="16" style="1"/>
             </Property>
             <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="MacNo"/>
@@ -412,7 +412,7 @@
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
@@ -433,7 +433,7 @@
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
         </Component>
@@ -449,7 +449,7 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="1"/>
+              <Font name="Tahoma" size="14" style="1"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
@@ -573,7 +573,7 @@
             <Component class="javax.swing.JTextField" name="CustTel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustFax"/>
@@ -594,7 +594,7 @@
             <Component class="javax.swing.JTextField" name="CustAddr2">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustTel"/>
@@ -623,19 +623,19 @@
             <Component class="javax.swing.JTextField" name="CustCode">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="16" style="1"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CustCodeActionPerformed"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="CustCodeFocusLost"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CustCodeActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="CustCodeKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="CustAddr1">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustAddr2"/>
@@ -649,22 +649,22 @@
             <Component class="javax.swing.JTextField" name="CustName">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustAddr1"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CustNameActionPerformed"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="CustNameFocusLost"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CustNameActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="CustNameKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="CustFax">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustRemark"/>
@@ -686,7 +686,7 @@
             <Component class="javax.swing.JTextField" name="CustRemark">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="CustRemark2"/>
@@ -723,7 +723,7 @@
             <Component class="javax.swing.JTextField" name="CustRemark2">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="0"/>
+                  <Font name="Tahoma" size="16" style="1"/>
                 </Property>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="Contack"/>

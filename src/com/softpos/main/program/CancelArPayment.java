@@ -57,7 +57,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         tblShow.setGridColor(Color.gray);
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         //this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
         int[] ColSize = {175, 150, 150, 150, 150, 250, 100, 100, 100};
@@ -341,7 +341,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         setLocationByPlatform(true);
         setUndecorated(true);
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

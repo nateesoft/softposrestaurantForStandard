@@ -288,7 +288,7 @@ public class ExtItemList extends javax.swing.JDialog {
                 });
 
                 tbCustomer.setRowHeight(30);
-                tbCustomer.setFont(new Font("Norasi", Font.PLAIN, 14));
+                tbCustomer.setFont(new Font("Tahoma", Font.PLAIN, 14));
             }
 
             rs.close();

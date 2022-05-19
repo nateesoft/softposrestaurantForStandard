@@ -137,7 +137,7 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("โปรแกรมพิมพ์ใบกำกับภาษี/ใบแจ้งหนี้");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(243, 187, 225));
@@ -176,7 +176,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setText("PO Number");
 
-        InvNo.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        InvNo.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         InvNo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 InvNoFocusLost(evt);
@@ -190,9 +190,9 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         InvDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         InvDate.setFocusable(false);
-        InvDate.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        InvDate.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
 
-        Contack.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        Contack.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         Contack.setNextFocusableComponent(PONo);
         Contack.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -200,7 +200,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        PONo.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        PONo.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         PONo.setNextFocusableComponent(MacNo);
         PONo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -215,7 +215,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         CustCr.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
         CustCr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         CustCr.setFocusable(false);
-        CustCr.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustCr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         CustCr.setRequestFocusEnabled(false);
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -224,13 +224,13 @@ public class PrintInv2 extends javax.swing.JDialog {
         DueDate.setEditable(false);
         DueDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         DueDate.setFocusable(false);
-        DueDate.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        DueDate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel23.setText("รหัสลูกหนี้");
 
         ArCode.setEditable(false);
-        ArCode.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ArCode.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ArCode.setFocusable(false);
 
         TPrintOK.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -244,7 +244,7 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         jPanel4.setBackground(new java.awt.Color(255, 204, 255));
 
-        CustTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustTel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustTel.setNextFocusableComponent(CustFax);
         CustTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -255,7 +255,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("รหัสลูกค้า (Code)");
 
-        CustAddr2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustAddr2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustAddr2.setNextFocusableComponent(CustTel);
         CustAddr2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -269,15 +269,15 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("...");
 
-        CustCode.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
-        CustCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CustCodeActionPerformed(evt);
-            }
-        });
+        CustCode.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustCode.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 CustCodeFocusLost(evt);
+            }
+        });
+        CustCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CustCodeActionPerformed(evt);
             }
         });
         CustCode.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -286,7 +286,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustAddr1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustAddr1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustAddr1.setNextFocusableComponent(CustAddr2);
         CustAddr1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,16 +299,16 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustName.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustName.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustName.setNextFocusableComponent(CustAddr1);
-        CustName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CustNameActionPerformed(evt);
-            }
-        });
         CustName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 CustNameFocusLost(evt);
+            }
+        });
+        CustName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CustNameActionPerformed(evt);
             }
         });
         CustName.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -317,7 +317,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustFax.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustFax.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustFax.setNextFocusableComponent(CustRemark);
         CustFax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -333,7 +333,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("หมายเหตุ");
 
-        CustRemark.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustRemark.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustRemark.setNextFocusableComponent(CustRemark2);
         CustRemark.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -350,7 +350,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("โทรสาร");
 
-        CustRemark2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustRemark2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustRemark2.setNextFocusableComponent(Contack);
         CustRemark2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {

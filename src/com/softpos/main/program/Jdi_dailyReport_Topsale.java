@@ -45,8 +45,8 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
         tcm.getColumn(6).setCellRenderer(d);
         
         
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));        
-        tblDept.setFont(new java.awt.Font("Norasi" , java.awt.Font.PLAIN ,14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));        
+        tblDept.setFont(new java.awt.Font("Tahoma" , java.awt.Font.PLAIN ,14));
         tblDept.setRowHeight(25);
         
     }
@@ -104,18 +104,19 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานอันดับสินค้าขายดี (Top Sale)");
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(252, 192, 239));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("หมายเลขเครื่อง (Terminal)");
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("รหัสพนักงานขาย (Cashier)");
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("รหัสกลุ่มสินค้า (Dept/Group)");
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -126,7 +127,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
         txt2.setFocusable(false);
         txt2.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("ถึง");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -161,7 +162,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
         txt4.setFocusable(false);
         txt4.setRequestFocusEnabled(false);
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("ถึง");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -196,7 +197,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
         txt6.setFocusable(false);
         txt6.setRequestFocusEnabled(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("ถึง");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -223,7 +224,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton2.setText("ออก(Exit)");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -236,7 +237,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("จำนวนอันดับที่ต้องการ");
 
         txtTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -265,7 +266,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -290,7 +291,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
         );
 
         tblDept.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblDept.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblDept.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblDept.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -336,7 +337,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 996, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -346,7 +347,7 @@ public class Jdi_dailyReport_Topsale extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(1008, 729));

@@ -87,7 +87,7 @@ public final class DateChooseDialog extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setToolTipText("");
 
-        cbMonth.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        cbMonth.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         cbMonth.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฏาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" }));
         cbMonth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,8 +100,8 @@ public final class DateChooseDialog extends javax.swing.JDialog {
             }
         });
 
-        spYear.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
-        spYear.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2009), null, null, Integer.valueOf(1)));
+        spYear.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        spYear.setModel(new javax.swing.SpinnerNumberModel(2009, null, null, 1));
         spYear.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spYearStateChanged(evt);
@@ -179,7 +179,7 @@ public final class DateChooseDialog extends javax.swing.JDialog {
             }
         });
 
-        lbToday.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        lbToday.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lbToday.setForeground(new java.awt.Color(102, 0, 0));
         lbToday.setText("วันนี้ :");
 
@@ -343,8 +343,8 @@ private void tblCalendarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         table.setGridColor(Color.LIGHT_GRAY);
 
         JTableHeader header = table.getTableHeader();
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 13));
-        table.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 12));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 13));
+        table.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 12));
         table.setRowHeight(17);
 
         table.setCellSelectionEnabled(true);

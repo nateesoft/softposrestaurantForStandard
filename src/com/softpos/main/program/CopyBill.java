@@ -87,7 +87,7 @@ public class CopyBill extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("เลขที่บิล (Receipt No)");
 
-        txtBillNo.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtBillNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtBillNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBillNoActionPerformed(evt);
@@ -104,7 +104,7 @@ public class CopyBill extends javax.swing.JDialog {
 
         txtCopy.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtCopy.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtCopy.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtCopy.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtCopy.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCopyKeyPressed(evt);

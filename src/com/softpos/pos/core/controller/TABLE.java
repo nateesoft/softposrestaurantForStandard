@@ -10,9 +10,9 @@ public class TABLE {
     
     public static JTable getDefaultTableFont(JTable table){
         JTableHeader tHead = table.getTableHeader();
-        tHead.setFont(new Font("Norasi", Font.PLAIN, 14));
+        tHead.setFont(new Font("Tahoma", Font.PLAIN, 14));
         table.setRowHeight(25);
-        table.setFont(new Font("Norasi", Font.PLAIN, 14));
+        table.setFont(new Font("Tahoma", Font.PLAIN, 14));
         table.setShowGrid(true);
         
         return table;

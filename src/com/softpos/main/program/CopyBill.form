@@ -141,7 +141,7 @@
             <Component class="javax.swing.JTextField" name="txtBillNo">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="1"/>
+                  <Font name="Tahoma" size="14" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -164,7 +164,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Norasi" size="14" style="1"/>
+                  <Font name="Tahoma" size="14" style="1"/>
                 </Property>
               </Properties>
               <Events>

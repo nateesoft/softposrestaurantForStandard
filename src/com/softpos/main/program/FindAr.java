@@ -38,7 +38,7 @@ public class FindAr extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {200, 350};
         for (int i = 0; i < 2; i++) {
@@ -67,7 +67,7 @@ public class FindAr extends javax.swing.JDialog {
         setTitle("รายการค้นหาลูกหนี้การค้า");
         setUndecorated(true);
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},

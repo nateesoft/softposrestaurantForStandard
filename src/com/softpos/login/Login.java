@@ -72,7 +72,6 @@ public class Login extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        lbVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Login Sale System www.softpos.co.th tel.02-116-6615 Hotline: 086-320-3877");
@@ -203,7 +202,7 @@ public class Login extends javax.swing.JDialog {
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 1020, 110));
 
         txtMacNo.setBackground(new java.awt.Color(153, 255, 153));
-        txtMacNo.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtMacNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtMacNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMacNo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         txtMacNo.setFocusable(false);
@@ -217,7 +216,7 @@ public class Login extends javax.swing.JDialog {
         jPanel1.add(txtMacNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 490, 223, 30));
 
         txtShowDate.setBackground(new java.awt.Color(153, 255, 153));
-        txtShowDate.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtShowDate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtShowDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtShowDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         txtShowDate.setFocusable(false);
@@ -234,7 +233,7 @@ public class Login extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel2.setForeground(java.awt.Color.white);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Software Restaurant SOFTPOS©2016 V.8.2");
@@ -257,11 +256,7 @@ public class Login extends javax.swing.JDialog {
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/BackGround.jpg"))); // NOI18N
         jLabel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 770));
-
-        lbVersion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbVersion.setText("Update: 17/05/2022");
-        jPanel1.add(lbVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 680));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -273,9 +268,7 @@ public class Login extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 743, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -361,14 +354,14 @@ public class Login extends javax.swing.JDialog {
         }
 
         if (OSValidator.isWindows()) {
-            Font myfont = new Font("Norasi", Font.PLAIN, 14);
+            Font myfont = new Font("Tahoma", Font.PLAIN, 14);
             UIManager.put("Label.font", myfont);
             UIManager.put("Button.font", myfont);
 
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Norasi", java.awt.Font.PLAIN, 14)));
+                        "Tahoma", java.awt.Font.PLAIN, 14)));
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 MSG.ERR(null, e.getMessage());
             }
@@ -401,7 +394,6 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbPass;
     private javax.swing.JLabel lbUser;
-    private javax.swing.JLabel lbVersion;
     private javax.swing.JProgressBar pbCheckUpdate;
     private javax.swing.JTextField txtMacNo;
     private javax.swing.JPasswordField txtPass;
@@ -604,7 +596,7 @@ public class Login extends javax.swing.JDialog {
                     } catch (InterruptedException e) {
                     }
                 }
-                pbCheckUpdate.setString("SoftPOS Update:V8.2 12/08/2020 00:35");
+                pbCheckUpdate.setString("SoftPOS Updated 19/05/2022");
             } catch (Exception e) {
             }
         }).start();

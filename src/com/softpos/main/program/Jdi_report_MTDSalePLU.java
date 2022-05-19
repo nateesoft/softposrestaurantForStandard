@@ -65,30 +65,30 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("วันที่ (Date)");
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("รหัสกลุ่มสินค้า (Dept)");
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("รหัสสินค้า (PLU-Code)");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txt3.setEditable(false);
         txt3.setBackground(new java.awt.Color(254, 254, 254));
-        txt3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt3.setFocusable(false);
         txt3.setRequestFocusEnabled(false);
 
         txt4.setEditable(false);
         txt4.setBackground(new java.awt.Color(254, 254, 254));
-        txt4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt4.setFocusable(false);
         txt4.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("ถึง");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -117,17 +117,17 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
 
         txt5.setEditable(false);
         txt5.setBackground(new java.awt.Color(254, 254, 254));
-        txt5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt5.setFocusable(false);
         txt5.setRequestFocusEnabled(false);
 
         txt6.setEditable(false);
         txt6.setBackground(new java.awt.Color(254, 254, 254));
-        txt6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt6.setFocusable(false);
         txt6.setRequestFocusEnabled(false);
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("ถึง");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -156,17 +156,17 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
 
         txt7.setEditable(false);
         txt7.setBackground(new java.awt.Color(254, 254, 254));
-        txt7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt7.setFocusable(false);
         txt7.setRequestFocusEnabled(false);
 
         txt8.setEditable(false);
         txt8.setBackground(new java.awt.Color(254, 254, 254));
-        txt8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txt8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt8.setFocusable(false);
         txt8.setRequestFocusEnabled(false);
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("ถึง");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -191,7 +191,7 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
                     .addComponent(jLabel8)))
         );
 
-        jButton1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setText("ออก (Exit)");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -221,7 +221,7 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4))
                 .addContainerGap())
@@ -267,13 +267,13 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tblShow);
 
         txtSumAmt.setBackground(new java.awt.Color(249, 231, 160));
-        txtSumAmt.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtSumAmt.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSumAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSumAmt.setFocusable(false);
         txtSumAmt.setRequestFocusEnabled(false);
 
         txtSumQty.setBackground(new java.awt.Color(249, 231, 160));
-        txtSumQty.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtSumQty.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSumQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSumQty.setFocusable(false);
         txtSumQty.setRequestFocusEnabled(false);
@@ -282,7 +282,7 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 15, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,7 +293,7 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 657, Short.MAX_VALUE)
+            .addGap(0, 358, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,12 +311,12 @@ public class Jdi_report_MTDSalePLU extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(318, 318, 318)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSumQty, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(txtSumAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -432,8 +432,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         tblShow.setBackground(Color.WHITE);
         tblShow.setGridColor(Color.LIGHT_GRAY);
         JTableHeader header = tblShow.getTableHeader();
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
-        tblShow.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
+        tblShow.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
         tblShow.setRowHeight(25);
         //Setting column size
         TableColumn column = null;

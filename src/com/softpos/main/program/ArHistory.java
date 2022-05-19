@@ -65,7 +65,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {100, 200, 100, 150, 150, 100, 80, 100, 100, 150};
         for (int i = 0; i < 10; i++) {
@@ -118,7 +118,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ประวัติการซื้อของลูกหนี้ภายนอก");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -126,7 +126,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -163,21 +163,19 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel4.setFocusable(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("จำนวนรายการทั้งสิ้น");
 
-        TotalCnt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalCnt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalCnt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        TotalCnt.setText("jTextField1");
         TotalCnt.setFocusable(false);
         TotalCnt.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("จำนวนเงินรวม");
 
-        TotalAmt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        TotalAmt.setText("jTextField2");
         TotalAmt.setFocusable(false);
         TotalAmt.setRequestFocusEnabled(false);
 
@@ -211,7 +209,7 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFocusable(false);
 
-        arcode1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode1.setNextFocusableComponent(arcode2);
         arcode1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -219,10 +217,10 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("ถึง");
 
-        arcode2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode2.setNextFocusableComponent(ardate1);
         arcode2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -230,7 +228,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("รหัสลูกหนี้");
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/magnifying glass.jpg"))); // NOI18N
@@ -286,11 +284,11 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setFocusable(false);
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("ช่วงวันที่");
 
         ardate1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate1.setNextFocusableComponent(ardate2);
         ardate1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -298,11 +296,11 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("ถึง");
 
         ardate2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate2.setNextFocusableComponent(tblShow);
         ardate2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -361,7 +359,7 @@ public class ArHistory extends javax.swing.JDialog {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        bntOk.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntOk.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntOk.setText("F5 ประมวลผล");
         bntOk.setBorderPainted(false);
         bntOk.setFocusable(false);
@@ -376,7 +374,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        bntPrint.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntPrint.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntPrint.setText("F10 พิมพ์");
         bntPrint.setBorderPainted(false);
         bntPrint.setFocusable(false);
@@ -392,7 +390,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntExit.setText("ออก(Exit)");
         bntExit.setBorderPainted(false);
         bntExit.setFocusable(false);
@@ -410,10 +408,10 @@ public class ArHistory extends javax.swing.JDialog {
 
         jMenu1.setText("Function");
         jMenu1.setFocusable(false);
-        jMenu1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jMenu1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        jMenuItem1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem1.setText("ประมาลผล ");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -423,7 +421,7 @@ public class ArHistory extends javax.swing.JDialog {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F10, 0));
-        jMenuItem2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem2.setText("พิมพ์");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -434,7 +432,7 @@ public class ArHistory extends javax.swing.JDialog {
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
-        jMenuItem3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem3.setText("ออก (Exit)");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

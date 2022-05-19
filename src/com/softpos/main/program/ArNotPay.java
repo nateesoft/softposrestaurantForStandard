@@ -64,7 +64,7 @@ public class ArNotPay extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {100, 300, 100, 150, 150, 100};
         for (int i = 0; i < 6; i++) {
@@ -117,7 +117,7 @@ public class ArNotPay extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการลูกหนี้ค้างชำระ");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -125,7 +125,7 @@ public class ArNotPay extends javax.swing.JDialog {
             }
         });
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -256,7 +256,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFocusable(false);
 
-        arcode1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode1.setNextFocusableComponent(arcode2);
         arcode1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -267,7 +267,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("ถึง");
 
-        arcode2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode2.setNextFocusableComponent(ardate1);
         arcode2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -332,7 +332,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jPanel3.setFocusable(false);
 
         ardate1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate1.setNextFocusableComponent(ardate2);
         ardate1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -347,7 +347,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jLabel4.setText("ถึง");
 
         ardate2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate2.setNextFocusableComponent(tblShow);
         ardate2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -453,7 +453,7 @@ public class ArNotPay extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

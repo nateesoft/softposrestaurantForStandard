@@ -166,7 +166,7 @@ public class EMPListDialog extends javax.swing.JDialog {
 
     private void loadEmpList() {
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        tb.setFont(new Font("Norasi", Font.PLAIN, 14));
+        tb.setFont(new Font("Tahoma", Font.PLAIN, 14));
         tb.setRowHeight(25);
         tb.setShowGrid(true);
 

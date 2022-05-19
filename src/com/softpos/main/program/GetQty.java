@@ -82,7 +82,7 @@ public class GetQty extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ป้อนจำนวนสินค้า");
         setAlwaysOnTop(true);
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -93,7 +93,7 @@ public class GetQty extends javax.swing.JDialog {
         StrAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#####0"))));
         StrAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         StrAmount.setText("1");
-        StrAmount.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        StrAmount.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         StrAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 StrAmountKeyPressed(evt);
@@ -388,7 +388,7 @@ public class GetQty extends javax.swing.JDialog {
         });
         calc.add(c_bntsal);
 
-        tblOptionMsg.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        tblOptionMsg.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         tblOptionMsg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -777,10 +777,10 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         mysql.open();
         try {
             model1 = (DefaultTableModel) tblOptionMsg.getModel();
-            tblOptionMsg.setFont(new Font("Norasi", Font.PLAIN, 14));
+            tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
             tblOptionMsg.setRowHeight(30);
             JTableHeader tHeader = tblOptionMsg.getTableHeader();
-            tHeader.setFont(new Font("Norasi", Font.BOLD, 14));
+            tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select o.* "

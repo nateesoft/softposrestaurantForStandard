@@ -89,7 +89,7 @@ public class ItemDiscount extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Item Discount (ส่วนลดตามรายการสินค้า)");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));

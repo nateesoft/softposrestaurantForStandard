@@ -49,7 +49,7 @@ public class TerminalRep extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel1.setText("หมายเลขเครื่อง");
 
-        txtMacNo.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtMacNo.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtMacNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMacNo.setText("001");
         txtMacNo.setFocusable(false);

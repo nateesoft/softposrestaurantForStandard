@@ -156,7 +156,7 @@ public class PrintInv1 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("โปรแกรมพิมพ์ใบกำกับภาษี/ใบเสร็จรับเงิน");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jPanel1.setBackground(new java.awt.Color(247, 242, 188));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -569,7 +569,7 @@ public class PrintInv1 extends javax.swing.JDialog {
             }
         });
 
-        txtDocNoRef.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtDocNoRef.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtDocNoRef.setNextFocusableComponent(txtCode);
         txtDocNoRef.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -589,28 +589,28 @@ public class PrintInv1 extends javax.swing.JDialog {
 
         txtDateRef.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         txtDateRef.setFocusable(false);
-        txtDateRef.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtDateRef.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
-        txtTime.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtTime.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtTime.setFocusable(false);
 
-        txtCashier.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtCashier.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtCashier.setFocusable(false);
 
         txtPrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtPrice.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPrice.setFocusable(false);
-        txtPrice.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtPrice.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         txtVat.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtVat.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtVat.setFocusable(false);
-        txtVat.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtVat.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         txtAmountTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         txtAmountTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtAmountTotal.setFocusable(false);
-        txtAmountTotal.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtAmountTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

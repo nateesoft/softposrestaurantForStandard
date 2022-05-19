@@ -119,7 +119,7 @@ public class MTDInvoice extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bntOK.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         bntOK.setText("F5- พิมพ์");
         bntOK.setFocusable(false);
         bntOK.addActionListener(new java.awt.event.ActionListener() {
@@ -128,7 +128,7 @@ public class MTDInvoice extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        bntExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         bntExit.setText("ESC- ออก");
         bntExit.setFocusable(false);
         bntExit.addActionListener(new java.awt.event.ActionListener() {

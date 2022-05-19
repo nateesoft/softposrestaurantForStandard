@@ -28,8 +28,8 @@ public class JTableUtility {
             table.setGridColor(Color.LIGHT_GRAY);
 
             JTableHeader header = table.getTableHeader();
-            header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
-            table.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 14));
+            header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
+            table.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
             table.setRowHeight(25);
 
         } catch (Exception e) {

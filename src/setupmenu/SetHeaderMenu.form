@@ -182,7 +182,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 1 :"/>
           </Properties>
@@ -190,7 +190,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 2 :"/>
           </Properties>
@@ -198,7 +198,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 3 :"/>
           </Properties>
@@ -206,7 +206,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 4 :"/>
           </Properties>
@@ -214,7 +214,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader1">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -225,7 +225,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader2">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -236,7 +236,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader3">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -247,7 +247,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader4">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -258,7 +258,7 @@
         <Component class="javax.swing.JButton" name="cmdCancel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="&#xe22;&#xe01;&#xe40;&#xe25;&#xe34;&#xe01;"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -271,7 +271,7 @@
         <Component class="javax.swing.JButton" name="cmdOk">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="&#xe1a;&#xe31;&#xe19;&#xe17;&#xe36;&#xe01;&#xe02;&#xe49;&#xe2d;&#xe21;&#xe39;&#xe25;"/>
           </Properties>
@@ -282,7 +282,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 5 :"/>
           </Properties>
@@ -290,7 +290,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader5">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -301,7 +301,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader6">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -312,7 +312,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 6 :"/>
           </Properties>
@@ -320,7 +320,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader9">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -331,7 +331,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 9 :"/>
           </Properties>
@@ -339,7 +339,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader8">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -350,7 +350,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 8 :"/>
           </Properties>
@@ -358,7 +358,7 @@
         <Component class="javax.swing.JTextField" name="txtHeader7">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="14" style="0"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -369,7 +369,7 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Norasi" size="15" style="1"/>
+              <Font name="Tahoma" size="15" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Head 7 :"/>
           </Properties>

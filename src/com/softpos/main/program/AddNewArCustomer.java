@@ -75,7 +75,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ปรับรุงรายการลูกหนี้การค้า");
-        setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         setUndecorated(true);
         setResizable(false);
 

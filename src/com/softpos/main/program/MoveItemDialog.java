@@ -669,7 +669,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         List<BalanceBean> listBalance = bc.getAllBalance(txtTable1.getText());
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         table1.setRowHeight(35);
-        table1.setFont(new Font("Norasi", Font.PLAIN, 14));
+        table1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
         int size = model.getRowCount();
         for (int i = 0; i < size; i++) {
@@ -700,7 +700,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         List<BalanceBean> listBalance = bc.getAllBalance(txtTable2.getText());
         DefaultTableModel model = (DefaultTableModel) table2.getModel();
         table2.setRowHeight(35);
-        table2.setFont(new Font("Norasi", Font.PLAIN, 14));
+        table2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
         int size = model.getRowCount();
         for (int i = 0; i < size; i++) {

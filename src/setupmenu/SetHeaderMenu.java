@@ -52,19 +52,19 @@ public class SetHeaderMenu extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel1.setText("Head 1 :");
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel2.setText("Head 2 :");
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel3.setText("Head 3 :");
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Head 4 :");
 
-        txtHeader1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader1MouseClicked(evt);
@@ -76,7 +76,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        txtHeader2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader2MouseClicked(evt);
@@ -88,7 +88,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        txtHeader3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader3MouseClicked(evt);
@@ -100,7 +100,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        txtHeader4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader4MouseClicked(evt);
@@ -112,7 +112,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        cmdCancel.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        cmdCancel.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         cmdCancel.setText("ยกเลิก");
         cmdCancel.setFocusable(false);
         cmdCancel.setRequestFocusEnabled(false);
@@ -122,7 +122,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        cmdOk.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        cmdOk.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         cmdOk.setText("บันทึกข้อมูล");
         cmdOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,10 +130,10 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel5.setText("Head 5 :");
 
-        txtHeader5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader5MouseClicked(evt);
@@ -145,7 +145,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        txtHeader6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader6MouseClicked(evt);
@@ -157,10 +157,10 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel6.setText("Head 6 :");
 
-        txtHeader9.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader9MouseClicked(evt);
@@ -172,10 +172,10 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel7.setText("Head 9 :");
 
-        txtHeader8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader8MouseClicked(evt);
@@ -187,10 +187,10 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel8.setText("Head 8 :");
 
-        txtHeader7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtHeader7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtHeader7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHeader7MouseClicked(evt);
@@ -202,7 +202,7 @@ public class SetHeaderMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("Norasi", 1, 15)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel9.setText("Head 7 :");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
