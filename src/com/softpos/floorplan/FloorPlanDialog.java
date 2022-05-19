@@ -1199,7 +1199,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         String[] listTableHeader = new String[]{"T", "A", "B", "C", "D", "E", "F"};
-        for (int i = 0; i <= 11; i++) {
+        for (int i = 1; i <= 10; i++) {
             count = i;
             for (int j = 0; j < 10; j++) {//โต๊ะแนวนอน
                 if (count < 10) {
