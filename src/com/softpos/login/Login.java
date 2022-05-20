@@ -596,7 +596,7 @@ public class Login extends javax.swing.JDialog {
                     } catch (InterruptedException e) {
                     }
                 }
-                pbCheckUpdate.setString("SoftPOS Updated 19/05/2022");
+                pbCheckUpdate.setString("SoftPOS Updated 20/05/2022 08:19:00");
             } catch (Exception e) {
             }
         }).start();
