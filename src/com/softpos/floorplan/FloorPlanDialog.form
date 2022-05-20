@@ -679,8 +679,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
             <Property name="rows" type="int" value="12"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="pnZone3">
@@ -703,8 +705,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
-            <Property name="rows" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
+            <Property name="rows" type="int" value="10"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="pnZone4">
@@ -727,8 +731,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
-            <Property name="rows" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
+            <Property name="rows" type="int" value="10"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="pnZone5">
@@ -751,8 +757,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
-            <Property name="rows" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
+            <Property name="rows" type="int" value="10"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="pnZone6">
@@ -775,8 +783,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
-            <Property name="rows" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
+            <Property name="rows" type="int" value="10"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
         <Container class="javax.swing.JPanel" name="pnZone7">
@@ -799,8 +809,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="12"/>
-            <Property name="rows" type="int" value="12"/>
+            <Property name="columns" type="int" value="10"/>
+            <Property name="horizontalGap" type="int" value="2"/>
+            <Property name="rows" type="int" value="10"/>
+            <Property name="verticalGap" type="int" value="2"/>
           </Layout>
         </Container>
       </SubComponents>

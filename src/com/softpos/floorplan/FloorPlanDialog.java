@@ -250,32 +250,32 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         pnZone2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone2.setOpaque(false);
-        pnZone2.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone2.setLayout(new java.awt.GridLayout(12, 10, 2, 2));
         jTabbedPane1.addTab("Zone2", pnZone2);
 
         pnZone3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone3.setOpaque(false);
-        pnZone3.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone3.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone3", pnZone3);
 
         pnZone4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone4.setOpaque(false);
-        pnZone4.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone4.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone4", pnZone4);
 
         pnZone5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone5.setOpaque(false);
-        pnZone5.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone5.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone5", pnZone5);
 
         pnZone6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone6.setOpaque(false);
-        pnZone6.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone6.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone6", pnZone6);
 
         pnZone7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone7.setOpaque(false);
-        pnZone7.setLayout(new java.awt.GridLayout(12, 12));
+        pnZone7.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone7", pnZone7);
 
         jMenuBar1.setBackground(new java.awt.Color(255, 102, 102));
