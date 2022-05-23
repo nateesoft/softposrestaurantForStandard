@@ -894,7 +894,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
 
-        tbShowBalance.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tbShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tbShowBalance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -939,7 +939,7 @@ public class MainSale extends javax.swing.JDialog {
             tbShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
             tbShowBalance.getColumnModel().getColumn(0).setPreferredWidth(0);
             tbShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
-            tbShowBalance.getColumnModel().getColumn(1).setPreferredWidth(390);
+            tbShowBalance.getColumnModel().getColumn(1).setPreferredWidth(290);
             tbShowBalance.getColumnModel().getColumn(2).setPreferredWidth(45);
         }
 

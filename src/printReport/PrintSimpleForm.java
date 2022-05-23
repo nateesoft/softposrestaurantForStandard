@@ -1859,7 +1859,7 @@ public class PrintSimpleForm {
                     bean = new BalanceBean();
                     bean.setR_ETD(rs.getString("R_ETD"));
                     bean.setR_PluCode(rs.getString("R_Plucode"));
-                    bean.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                    bean.setR_PName(SubString(ThaiUtil.ASCII2Unicode(rs.getString("R_PName"))));
                     bean.setR_Emp(rs.getString("R_EMP"));
                     bean.setR_Quan(rs.getDouble("R_Quan"));
                     bean.setR_Price(rs.getDouble("R_Price"));
