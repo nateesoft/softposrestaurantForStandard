@@ -50,12 +50,12 @@ public class PrintDriver {
     private float height = 72;
 
     public PrintDriver() {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-            }
-        }
+//        if (OSValidator.isWindows()) {
+//            try {
+//                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+//            }
+//        }
     }
 
     public void setResolution(float w, float h) {
@@ -334,15 +334,15 @@ public class PrintDriver {
     }
 
     public void close() {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Tahoma", java.awt.Font.PLAIN, 14)));
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                MSG.ERR(null, e.getMessage());
-            }
-        }
+//        if (OSValidator.isWindows()) {
+//            try {
+//                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+//                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
+//                        "Tahoma", java.awt.Font.PLAIN, 14)));
+//            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+//                MSG.ERR(null, e.getMessage());
+//            }
+//        }
     }
 
     public Image addTextToImage(BufferedImage bufferImage, String[] text) {

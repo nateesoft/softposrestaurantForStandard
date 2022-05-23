@@ -4,7 +4,6 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="0"/>
     <Property name="title" type="java.lang.String" value="&#xe23;&#xe32;&#xe22;&#xe25;&#xe30;&#xe40;&#xe2d;&#xe35;&#xe22;&#xe14;&#xe01;&#xe32;&#xe23; Void"/>
-    <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="undecorated" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>

@@ -273,7 +273,6 @@ public class FindCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ค้นหาข้อมูลลูกค้า (Find Customer)");
-        setAlwaysOnTop(true);
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {

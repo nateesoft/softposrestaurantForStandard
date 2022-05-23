@@ -242,7 +242,6 @@ public class ChangTypeDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("เปลี่ยนประเภทการขาย");
-        setAlwaysOnTop(true);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusTraversalPolicyProvider(true);
         setUndecorated(true);

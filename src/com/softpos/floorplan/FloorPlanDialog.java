@@ -151,6 +151,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         pnZone5 = new javax.swing.JPanel();
         pnZone6 = new javax.swing.JPanel();
         pnZone7 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -202,7 +203,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenuItem34 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         jMenuItem32 = new javax.swing.JMenuItem();
-        jMenuItem37 = new javax.swing.JMenuItem();
         jMenu9 = new javax.swing.JMenu();
 
         jPopupMenu1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -277,6 +277,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         pnZone7.setOpaque(false);
         pnZone7.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone7", pnZone7);
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 0, 51));
+        jButton1.setMnemonic('\u0e22');
+        jButton1.setText("-");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jMenuBar1.setBackground(new java.awt.Color(255, 102, 102));
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -637,15 +647,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
         jMenu8.add(jMenuItem32);
 
-        jMenuItem37.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jMenuItem37.setText("บังคับปิดโปรแกรม (ForceExit)");
-        jMenuItem37.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem37ActionPerformed(evt);
-            }
-        });
-        jMenu8.add(jMenuItem37);
-
         jMenuBar1.add(jMenu8);
 
         jMenu9.setBackground(new java.awt.Color(255, 153, 51));
@@ -660,11 +661,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1024, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 951, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -816,7 +822,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private void jMenuItem32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem32ActionPerformed
         logout();
-        System.exit(0);
     }//GEN-LAST:event_jMenuItem32ActionPerformed
 
     private void jTabbedPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTabbedPane1KeyPressed
@@ -865,12 +870,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         PrintKicControl Kic = new PrintKicControl(null, true);
         Kic.setVisible(true);
     }//GEN-LAST:event_jMenuItem35ActionPerformed
-
-    private void jMenuItem37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem37ActionPerformed
-        logout();
-        clearTemp();
-        System.exit(0);
-    }//GEN-LAST:event_jMenuItem37ActionPerformed
 
     private void jMenuItem36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem36ActionPerformed
         UpdateData UP = new UpdateData(null, true);
@@ -940,6 +939,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
         addButton();
     }//GEN-LAST:event_jTabbedPane1StateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        setState(JFrame.ICONIFIED);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void saveToBalance(String tableNo, String pcode, String r_etd, double r_quan) {
         String PCode = pcode;
@@ -1123,6 +1126,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MShowDailyEJ1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -1162,7 +1166,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem34;
     private javax.swing.JMenuItem jMenuItem35;
     private javax.swing.JMenuItem jMenuItem36;
-    private javax.swing.JMenuItem jMenuItem37;
     private javax.swing.JMenuItem jMenuItem38;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

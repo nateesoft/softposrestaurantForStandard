@@ -354,14 +354,8 @@ public class Login extends javax.swing.JDialog {
         }
 
         if (OSValidator.isWindows()) {
-            Font myfont = new Font("Tahoma", Font.PLAIN, 14);
-            UIManager.put("Label.font", myfont);
-            UIManager.put("Button.font", myfont);
-
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Tahoma", java.awt.Font.PLAIN, 14)));
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 MSG.ERR(null, e.getMessage());
             }
@@ -433,7 +427,7 @@ public class Login extends javax.swing.JDialog {
                 PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
                 OnAct = rs.getString("onact");
                 MacNoOnAct = rs.getString("macno");
-                
+
                 SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 String St = tf.format(new Date());
                 txtShowDate.setText(St);
@@ -596,7 +590,7 @@ public class Login extends javax.swing.JDialog {
                     } catch (InterruptedException e) {
                     }
                 }
-                pbCheckUpdate.setString("SoftPOS Updated 20/05/2022 08:19:00");
+                pbCheckUpdate.setString("SoftPOS Updated 23/05/2022 14:02:00");
             } catch (Exception e) {
             }
         }).start();

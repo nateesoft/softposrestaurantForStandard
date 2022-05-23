@@ -155,7 +155,6 @@ public class PaidinFrm extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("บันทึกเงินสำรองทอน");
-        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

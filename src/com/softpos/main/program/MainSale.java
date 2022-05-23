@@ -3524,16 +3524,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public static void main(String args[]) {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Tahoma", java.awt.Font.PLAIN, 14)));
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                MSG.ERR(null, e.getMessage());
-            }
-        }
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

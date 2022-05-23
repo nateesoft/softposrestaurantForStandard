@@ -4,7 +4,6 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="&#xe04;&#xe49;&#xe19;&#xe2b;&#xe32;&#xe02;&#xe49;&#xe2d;&#xe21;&#xe39;&#xe25;&#xe25;&#xe39;&#xe01;&#xe04;&#xe49;&#xe32; (Find Customer)"/>
-    <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>

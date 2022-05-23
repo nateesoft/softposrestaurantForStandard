@@ -102,7 +102,6 @@ public class MGRButtonMenu extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กำหนดคุณสมบัติปุ่มเมนูใช้งานลัด");
-        setAlwaysOnTop(true);
         setUndecorated(true);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
@@ -290,7 +289,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDelImg)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFindIMG, javax.swing.GroupLayout.PREFERRED_SIZE, 71, Short.MAX_VALUE)
+                        .addComponent(btnFindIMG, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                         .addGap(14, 14, 14))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(chkSaveTemplateAll)

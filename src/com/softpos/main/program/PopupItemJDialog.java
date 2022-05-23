@@ -41,7 +41,6 @@ public class PopupItemJDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ตัวเลือกรายการสินค้า");
-        setAlwaysOnTop(true);
         setUndecorated(true);
         setResizable(false);
 

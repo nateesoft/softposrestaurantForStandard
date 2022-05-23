@@ -121,7 +121,6 @@ public class MGRButtonSetup extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กำหนดคุณสมบัติปุ่มเมนูใช้งานลัด");
-        setAlwaysOnTop(true);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));

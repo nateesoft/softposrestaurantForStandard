@@ -338,7 +338,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
         setBackground(java.awt.Color.white);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);

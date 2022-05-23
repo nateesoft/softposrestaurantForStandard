@@ -43,7 +43,6 @@ public class DlgBrowseProduct extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("แสดงรายการรหัสสินค้า (PLU List)");
-        setAlwaysOnTop(true);
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
