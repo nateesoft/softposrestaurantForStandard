@@ -19,7 +19,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.UserRecord;

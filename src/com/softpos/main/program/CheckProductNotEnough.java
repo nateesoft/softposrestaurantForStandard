@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.TABLE;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.GraphicsEnvironment;
@@ -11,6 +10,7 @@ import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
+import util.JTableUtility;
 import util.MSG;
 
 public class CheckProductNotEnough extends javax.swing.JDialog {
@@ -347,7 +347,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         mysql.open();
         try {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
-            table = TABLE.getDefaultTableFont(table);
+            table = JTableUtility.getDefaultTableFont(table);
 
             int size = model.getRowCount();
             for (int i = 0; i < size; i++) {

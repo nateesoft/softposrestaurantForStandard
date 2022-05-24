@@ -1,5 +1,7 @@
-package com.softpos.pos.core.controller;
+package com.softpos.crm.pos.core.modal;
 
+import com.softpos.pos.core.controller.SmpCoupon;
+import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
 

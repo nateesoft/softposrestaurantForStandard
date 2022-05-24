@@ -1,4 +1,4 @@
-package setupmenu;
+package com.softpos.pos.core.controller;
 
 import java.util.List;
 import java.util.Map;

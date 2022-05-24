@@ -1,12 +1,12 @@
 package com.softpos.posreport;
 
-import com.softpos.pos.core.controller.CreditRec;
-import com.softpos.pos.core.controller.FinalcialRec;
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.FinalcialRec;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
 import database.ConfigFile;
 import database.MySQLConnect;

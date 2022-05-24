@@ -1,18 +1,17 @@
 package com.softpos.main.program;
 
 import com.softpos.discount.DiscountDialog;
-import com.softpos.floorplan.FloorPlanDialog;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
@@ -36,10 +35,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
-import soft.virtual.JTableControl;
 import util.AppLogUtil;
+import util.JTableUtility;
 import util.MSG;
 import util.NumberFormat;
+import util.NumberUtil;
 
 public class CheckBill extends javax.swing.JDialog {
 
@@ -1469,7 +1469,7 @@ public class CheckBill extends javax.swing.JDialog {
                         amount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
                         amount = amount + (amount * (CreditCharge) / 100);
                         if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                            txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(amount)));
+                            txtTotalAmount.setText(dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(amount)));
                         } else {
                             txtTotalAmount.setText(dec.format((amount)));
                         }
@@ -1631,7 +1631,7 @@ public class CheckBill extends javax.swing.JDialog {
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
         try {
-            this.memberBean = MemberBean.getMember(MBD.getMemCode());
+            this.memberBean = MemmaterController.getMember(MBD.getMemCode());
             updateProSerTable(tableNo, memberBean);
             if (memberBean != null) {
                 txtMember1.setText(memberBean.getMember_NameThai());
@@ -1831,9 +1831,9 @@ public class CheckBill extends javax.swing.JDialog {
         tblShowBalance.setGridColor(Color.gray);
         tblShowBalance.setRowHeight(35);
 
-        JTableControl.alignColumn(tblShowBalance, 2, "right");
-        JTableControl.alignColumn(tblShowBalance, 3, "right");
-        JTableControl.alignColumn(tblShowBalance, 4, "right");
+        JTableUtility.alignColumn(tblShowBalance, 2, "right");
+        JTableUtility.alignColumn(tblShowBalance, 3, "right");
+        JTableUtility.alignColumn(tblShowBalance, 4, "right");
 
         JTableHeader header = tblShowBalance.getTableHeader();
         header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
@@ -1861,13 +1861,13 @@ public class CheckBill extends javax.swing.JDialog {
         BalanceControl bc = new BalanceControl();
         double NetTotalUpDown = 0;
         if (!config.getP_PayBahtRound().equals("O")) {
-            NetTotalUpDown = NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal() - totalDiscount);
+            NetTotalUpDown = NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal() - totalDiscount);
         } else {
             NetTotalUpDown = tBean.getNetTotal() - totalDiscount;
         }
         if (config.getP_VatType().equals("I")) {
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal())));
+                txtTotalAmount.setText(dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal())));
             } else {
                 txtTotalAmount.setText(dec.format((tBean.getNetTotal())));
             }
@@ -1877,7 +1877,7 @@ public class CheckBill extends javax.swing.JDialog {
             double vat = 0;
             vat = (NetTotalUpDown * 7 / 100);
             NetTotalUpDown = NetTotalUpDown + vat;
-            txtTotalAmount.setText((dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(NetTotalUpDown))));
+            txtTotalAmount.setText((dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(NetTotalUpDown))));
         }
 
         int size = model.getRowCount();
@@ -1948,7 +1948,7 @@ public class CheckBill extends javax.swing.JDialog {
         }
         tmpNetTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         if (!config.getP_PayBahtRound().equals("O")) {
-            netTotal = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal);
+            netTotal = NumberUtil.UP_DOWN_NATURAL_BAHT(netTotal);
         } else {
             netTotal = (netTotal);
         }
@@ -1976,7 +1976,7 @@ public class CheckBill extends javax.swing.JDialog {
             double ton;
 
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                ton = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
+                ton = NumberUtil.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
             } else {
                 ton = netTotal - totalPayment;
             }

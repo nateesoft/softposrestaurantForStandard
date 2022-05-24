@@ -12,6 +12,7 @@ import java.util.List;
 import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
+import util.NumberUtil;
 
 public class ServiceControl {
 
@@ -148,57 +149,57 @@ public class ServiceControl {
             switch (type) {
                 case "SERVICE":
                     if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
-                        db = NumberControl.UP_BAHT(db);
+                        db = NumberUtil.UP_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("D")) {
-                        db = NumberControl.DOWN_BAHT(db);
+                        db = NumberUtil.DOWN_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("O")) {
                         return db;
                     }
                     if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("N")) {
-                        db = NumberControl.UP_DOWN_NATURAL_BAHT(db);
+                        db = NumberUtil.UP_DOWN_NATURAL_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("F")) {
-                        db = NumberControl.UP_DOWN_25NewTotal(db);
+                        db = NumberUtil.UP_DOWN_25NewTotal(db);
                     } else {
                         return db;
                     }
                     break;
                 case "DISCOUNT":
                     if (POSConfigSetup.Bean().getP_DiscRound().equalsIgnoreCase("U")) {
-                        db = NumberControl.UP_BAHT(db);
+                        db = NumberUtil.UP_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_DiscRound().equalsIgnoreCase("D")) {
-                        db = NumberControl.DOWN_BAHT(db);
+                        db = NumberUtil.DOWN_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_DiscRound().equalsIgnoreCase("O")) {
                         return db;
                     }
                     if (POSConfigSetup.Bean().getP_DiscRound().equalsIgnoreCase("N")) {
-                        db = NumberControl.UP_DOWN_NATURAL_BAHT(db);
+                        db = NumberUtil.UP_DOWN_NATURAL_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_DiscRound().equalsIgnoreCase("F")) {
-                        db = NumberControl.UP_DOWN_25(db);
+                        db = NumberUtil.UP_DOWN_25(db);
                     } else {
                         return db;
                     }
                     break;
                 case "PAYMENT":
                     if (POSConfigSetup.Bean().getP_PayBahtRound().equalsIgnoreCase("U")) {
-                        db = NumberControl.UP_BAHT(db);
+                        db = NumberUtil.UP_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_PayBahtRound().equalsIgnoreCase("D")) {
-                        db = NumberControl.DOWN_BAHT(db);
+                        db = NumberUtil.DOWN_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_PayBahtRound().equalsIgnoreCase("O")) {
                         return db;
                     }
                     if (POSConfigSetup.Bean().getP_PayBahtRound().equalsIgnoreCase("N")) {
-                        db = NumberControl.UP_DOWN_NATURAL_BAHT(db);
+                        db = NumberUtil.UP_DOWN_NATURAL_BAHT(db);
                     }
                     if (POSConfigSetup.Bean().getP_PayBahtRound().equalsIgnoreCase("F")) {
-                        db = NumberControl.UP_DOWN_25(db);
+                        db = NumberUtil.UP_DOWN_25(db);
                     } else {
                         return db;
                     }

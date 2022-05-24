@@ -1,4 +1,4 @@
-package setupmenu;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.ListButtonBean;

@@ -1,10 +1,10 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.MemberBean;
-import com.softpos.pos.core.model.MemmaterController;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.TCuponBean;
 import com.softpos.pos.core.model.TPromotionBean;
@@ -438,7 +438,7 @@ public class BillControl {
             //for Billno
             TableFileControl tableControl = new TableFileControl();
             TableFileBean tableFile = tableControl.getData(table);
-            this.memberBean = MemberBean.getMember(tableFile.getMemCode());
+            this.memberBean = MemmaterController.getMember(tableFile.getMemCode());
 
             BillNoBean billNo = new BillNoBean();
             double cashPay = billBean.getB_Cash();
@@ -493,9 +493,9 @@ public class BillControl {
             billNo.setB_MemEnd(new Date());
             billNo.setB_Ton(B_Ton);
 
-            billNo.setB_ChkBillTime(DateControl.T1.format(new Date()));
-            billNo.setB_CashTime(DateControl.T1.format(new Date()));
-            billNo.setB_Ontime(DateControl.T1.format(new Date()));
+            billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
+            billNo.setB_CashTime(DateUtil.T1.format(new Date()));
+            billNo.setB_Ontime(DateUtil.T1.format(new Date()));
 
             billNo.setB_Table(table);
             billNo.setB_Refno(BillNo);
@@ -553,7 +553,7 @@ public class BillControl {
             billNo.setB_RecTime("");
 
             //forMember
-            memberBean = MemberBean.getMember(tableFile.getMemCode());
+            memberBean = MemmaterController.getMember(tableFile.getMemCode());
             if (memberBean == null) {
                 billNo.setMScore("");
             } else {
@@ -871,9 +871,9 @@ public class BillControl {
             billNo.setB_MemEnd(new Date());
             billNo.setB_Ton(B_Ton);
 
-            billNo.setB_ChkBillTime(DateControl.T1.format(new Date()));
-            billNo.setB_CashTime(DateControl.T1.format(new Date()));
-            billNo.setB_Ontime(DateControl.T1.format(new Date()));
+            billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
+            billNo.setB_CashTime(DateUtil.T1.format(new Date()));
+            billNo.setB_Ontime(DateUtil.T1.format(new Date()));
 
             billNo.setB_Table(table);
             billNo.setB_Refno(BillNo);
@@ -933,7 +933,7 @@ public class BillControl {
             billNo.setB_RecTime("");
 
             //forMember
-            memberBean = MemberBean.getMember(tableFile.getMemCode());
+            memberBean = MemmaterController.getMember(tableFile.getMemCode());
             if (memberBean == null) {
                 billNo.setMScore("");
             } else {
@@ -1520,9 +1520,9 @@ public class BillControl {
                 Statement stmt2 = mysql.getConnection().createStatement();
                 ResultSet rs1 = stmt2.executeQuery(sql1);
                 if (rs1.next()) {
-                    bean.set_B_CuponName(rs1.getString(ThaiUtil.ASCII2Unicode("CuName")));
+                    bean.setB_CuponName(rs1.getString(ThaiUtil.ASCII2Unicode("CuName")));
                 } else {
-                    bean.set_B_CuponName("");
+                    bean.setB_CuponName("");
                 }
                 bean.setB_Refno(rs.getString("B_Refno"));
                 bean.setB_CuponDiscAmt(rs.getFloat("B_CuponDiscAmt"));

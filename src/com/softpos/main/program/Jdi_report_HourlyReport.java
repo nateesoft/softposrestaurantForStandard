@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.HourlyRec;
+import com.softpos.crm.pos.core.modal.HourlyRec;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;

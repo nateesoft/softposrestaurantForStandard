@@ -14,7 +14,7 @@ import com.softpos.posreport.PLURep;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.posreport.PromotionRep;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.posreport.TerminalRep;
 import com.softpos.posreport.TopSaleRep;
 import com.softpos.pos.core.controller.UserRecord;

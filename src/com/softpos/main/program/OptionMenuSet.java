@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import setupmenu.DlgBrowseProduct;
 import util.AppLogUtil;
 import util.MSG;
 

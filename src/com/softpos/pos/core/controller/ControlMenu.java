@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.MenuSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;

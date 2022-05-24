@@ -1,5 +1,7 @@
-package setupmenu;
+package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.DbGroupfile;
+import com.softpos.pos.core.controller.DbProduct;
 import com.softpos.pos.core.controller.ThaiUtil;
 import java.awt.Color;
 import java.awt.Cursor;

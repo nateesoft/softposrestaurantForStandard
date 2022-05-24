@@ -11,7 +11,7 @@ import com.softpos.posreport.MTDSubDiscount;
 import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.posreport.MTDCoupon;
 import com.softpos.posreport.MTDGiftVoucher;

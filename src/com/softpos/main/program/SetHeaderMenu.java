@@ -1,4 +1,4 @@
-package setupmenu;
+package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ThaiUtil;

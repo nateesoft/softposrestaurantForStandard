@@ -1,5 +1,11 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.HourlyRec;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.crm.pos.core.modal.FinalcialRec;
+import com.softpos.crm.pos.core.modal.CreditPaymentRec;
+import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -879,7 +885,7 @@ public class PPrint {
                     t += ("colspan =2 align=left><font face=Angsana New size=2> " + Space + "Net-Amount " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_NetTotal() - discountBath - bBean.getB_ServiceAmt() - bBean.getB_Vat())) + "_";
                 }
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat())))) + "_";
+                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat())))) + "_";
                 } else {
                     t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat()))) + "_";
                 }
@@ -957,8 +963,7 @@ public class PPrint {
             }
             if (!bBean.getB_MemCode().equals("")) {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(bBean.getB_MemCode());
+                MemberBean MemBean = MemmaterController.getMember(bBean.getB_MemCode());
                 t += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -1273,7 +1278,7 @@ public class PPrint {
                     t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + "ค่าบริการ : " + IntFmt.format(CONFIG.getP_Service()) + "% : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ServiceAmt())) + " +_";
                 }
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetTotal())))) + "_";
+                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetTotal())))) + "_";
                     if (CONFIG.getP_VatPrn().equals("Y")) {
                         t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + "Vat..." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_Vat())) + "_";
                     }
@@ -1598,7 +1603,7 @@ public class PPrint {
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
                         print("     " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
-                        print("     " + PUtility.DataFullR(bBean.get_B_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
+                        print("     " + PUtility.DataFullR(bBean.getB_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
                         MySQLConnect mysql = new MySQLConnect();
                         mysql.open();
                         try {
@@ -1900,9 +1905,9 @@ public class PPrint {
             t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(vatPrint) + "_";
             if (CONFIG.getP_VatType().equals("I")) {
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()))) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()))) + "_";
                     double round;
-                    round = tBean.getNetTotal() - NumberControl.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()));
+                    round = tBean.getNetTotal() - NumberUtil.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()));
                     if (round != 0.00) {
                         t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "Round...." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(round) + "_";
                     }
@@ -1930,8 +1935,7 @@ public class PPrint {
             t += "align=center colspan=3>_";
             String t2 = "";
             if (!tBean.getMemCode().equals("")) {
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(tBean.getMemCode());
+                MemberBean MemBean = MemmaterController.getMember(tBean.getMemCode());
                 t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -2120,7 +2124,7 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(tBean.getTAmount() - totalDiscount + tBean.getServiceAmt()) + "_";
                 t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(vatPrint) + "_";
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
                     t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "Round...." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint) - (tBean.getTAmount() + tBean.getServiceAmt() + vatPrint)) + "_";
                 } else {
                     t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint)) + "_";
@@ -2148,8 +2152,7 @@ public class PPrint {
             }
             String t2 = "";
             if (!tBean.getMemCode().equals("")) {
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(tBean.getMemCode());
+                MemberBean MemBean = MemmaterController.getMember(tBean.getMemCode());
                 t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -4993,7 +4996,7 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-TOTAL " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(tBean.getB_NetTotal()) + "_");
             } else {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format((tBean.getB_NetVat() + tBean.getB_NetNonVat())) + "_");
-                t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getB_NetTotal())) + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getB_NetTotal())) + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Round..." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_NetDiff()) + "_");
 
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "VAT INCLUDED" + "_");
@@ -6094,7 +6097,7 @@ public class PPrint {
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     R_EMP = ThaiUtil.ASCII2Unicode(rs.getString("R_EmpName").replace(">", "").replace("<", "").replace("_", ""));
-                    b.set_Employ(R_EMP);
+                    b.setEmploy(R_EMP);
                 }
             }
         } catch (SQLException e) {

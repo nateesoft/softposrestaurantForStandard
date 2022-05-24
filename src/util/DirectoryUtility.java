@@ -8,8 +8,7 @@ import java.util.StringTokenizer;
 
 public class DirectoryUtility {
 
-    DirectoryUtility(){
-        throw new AssertionError();
+    public DirectoryUtility(){
     }
     
     public static boolean createDir(File file) throws IOException {

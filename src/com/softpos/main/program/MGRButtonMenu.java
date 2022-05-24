@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ButtonCustom;
-import com.softpos.pos.core.controller.MenuMGR;
+import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -18,7 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import setupmenu.DlgBrowseProduct;
 import util.AppLogUtil;
 import util.MSG;
 

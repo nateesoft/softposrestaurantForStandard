@@ -1,7 +1,6 @@
 package com.softpos.webapp.service;
 
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.BalanceBean;
@@ -12,6 +11,7 @@ import java.sql.Statement;
 import java.util.List;
 import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class ServiceControl {
 
@@ -123,19 +123,19 @@ public class ServiceControl {
 
     public static double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
-            db = NumberControl.UP_BAHT(db);
+            db = NumberUtil.UP_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("D")) {
-            db = NumberControl.DOWN_BAHT(db);
+            db = NumberUtil.DOWN_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("O")) {
             return db;
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("N")) {
-            db = NumberControl.UP_DOWN_NATURAL_BAHT(db);
+            db = NumberUtil.UP_DOWN_NATURAL_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("F")) {
-            db = NumberControl.UP_DOWN_25(db);
+            db = NumberUtil.UP_DOWN_25(db);
         } else {
             return db;
         }

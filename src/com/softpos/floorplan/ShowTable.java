@@ -1,6 +1,6 @@
 package com.softpos.floorplan;
 
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
