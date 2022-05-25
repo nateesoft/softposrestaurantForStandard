@@ -6,12 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class DiscountControl {
 
     public static double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
-            return NumberControl.UP_DOWN_25(db);
+            return NumberUtil.UP_DOWN_25(db);
         } else {
             return db;
         }
@@ -58,7 +59,7 @@ public class DiscountControl {
                 String sqlUpd;
                 if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
                     sqlUpd = "update tablefile set "
-                            + "CuponDiscAmt='" + NumberControl.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
+                            + "CuponDiscAmt='" + NumberUtil.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
                             + "where Tcode = '" + tableNo + "'";
                 } else {
                     sqlUpd = "update tablefile set "

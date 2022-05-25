@@ -1,23 +1,23 @@
-package setupmenu;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.model.ListButtonBean;
+import com.softpos.pos.core.model.PluButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
 import util.AppLogUtil;
 import util.MSG;
 
-public class StoreList {
+public class StorePlu {
 
-    public boolean store(ListButtonBean bean) {
+    public boolean store(PluButtonBean bean) {
         String sql = "";
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
             sql = "INSERT INTO menusetup (code_id,code_type,pcode,shortname,ppathname,pcolor)"
                     + " VALUES ('" + bean.getButtonName() + "','" + bean.getButtonType().toCharArray()[0] + "',"
-                    + "'','" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "','" + bean.getPicture() + "','" + bean.getPcolor() + "')";
+                    + "'" + bean.getPcode() + "','" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "','" + bean.getPicture() + "','" + bean.getPcolor() + "')";
             int i;
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 i = stmt.executeUpdate(sql);
@@ -25,41 +25,38 @@ public class StoreList {
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(StoreList.class, "error", e);
+            AppLogUtil.log(StorePlu.class, "error", e);
             
             return false;
-        } finally{
+        } finally {
             mysql.close();
         }
     }
 
-    public boolean storeUpdate(ListButtonBean bean) {
-        String sql = "";
+    public boolean storeUpdate(PluButtonBean bean) {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            sql = "UPDATE menusetup SET "
+            String sql = "UPDATE menusetup SET "
                     + "code_type = '" + bean.getButtonType().toCharArray()[0] + "',"
-                    + "pcode = '',"
+                    + "pcode = '" + bean.getPcode() + "',"
                     + "shortname = '" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "',"
                     + "ppathname = '" + bean.getPicture() + "',"
                     + "pcolor='" + bean.getPcolor() + "' "
                     + "WHERE code_id = '" + bean.getButtonName() + "'";
-            int i;
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                i = stmt.executeUpdate(sql);
-            }
-            
+            Statement stmt = mysql.getConnection().createStatement();
+            int i = stmt.executeUpdate(sql);
+            stmt.close();
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(StoreList.class, "error", e);
+            AppLogUtil.log(StorePlu.class, "error", e);
             
             return false;
-        } finally{
+        } finally {
             mysql.close();
         }
     }

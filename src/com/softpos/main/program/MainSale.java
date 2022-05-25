@@ -12,15 +12,15 @@ import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMe
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.ButtonCustom;
 import com.softpos.pos.core.controller.EmployeeControl;
-import com.softpos.pos.core.controller.MenuMGR;
-import com.softpos.pos.core.controller.NumberControl;
+import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.UserRecord;
@@ -53,18 +53,15 @@ import java.util.List;
 import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
-import setupmenu.SetHeaderMenu;
-import static soft.virtual.JTableControl.alignColumn;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
+import util.JTableUtility;
 import util.MSG;
-import util.OSValidator;
+import util.NumberUtil;
 import util.Option;
 import util.ValidateValue;
 
@@ -118,7 +115,7 @@ public class MainSale extends javax.swing.JDialog {
         }
         TableFileControl tbControl = new TableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
-        this.memberBean = MemberBean.getMember(tbBean.getMemCode());
+        this.memberBean = MemmaterController.getMember(tbBean.getMemCode());
         if (memberBean == null) {
             BalanceControl.updateProSerTable(tableNo, memberBean);
         } else {
@@ -203,9 +200,9 @@ public class MainSale extends javax.swing.JDialog {
         JTableHeader header = tbShowBalance.getTableHeader();
         header.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 12));
 
-        alignColumn(tbShowBalance, 2, "right");
-        alignColumn(tbShowBalance, 3, "right");
-        alignColumn(tbShowBalance, 4, "right");
+        JTableUtility.alignColumn(tbShowBalance, 2, "right");
+        JTableUtility.alignColumn(tbShowBalance, 3, "right");
+        JTableUtility.alignColumn(tbShowBalance, 4, "right");
 
         PublicVar.CheckStockOnLine = PUtility.GetStockOnLine();
 
@@ -1302,7 +1299,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 + tfBean.getSubDiscAmt() + tfBean.getDiscBath() + tfBean.getItemDiscAmt();
         if (CONFIG.getP_VatType().equals("I")) {
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                lbTotalAmount.setText("" + dc1.format(NumberControl.UP_DOWN_NATURAL_BAHT((tfBean.getNetTotal()))));
+                lbTotalAmount.setText("" + dc1.format(NumberUtil.UP_DOWN_NATURAL_BAHT((tfBean.getNetTotal()))));
             } else {
                 lbTotalAmount.setText("" + dc1.format((tfBean.getNetTotal())));
             }
@@ -1321,7 +1318,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         String MemberCode = tfBean.getMemCode();
         if (ValidateValue.isNotEmpty(MemberCode)) {
             Value.MemberAlready = true;
-            memberBean = MemberBean.getMember(MemberCode);
+            memberBean = MemmaterController.getMember(MemberCode);
             txtMember1.setText(memberBean.getMember_NameThai());
             txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
         }
@@ -1793,7 +1790,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
 
-        this.memberBean = MemberBean.getMember(MBD.getMemCode());
+        this.memberBean = MemmaterController.getMember(MBD.getMemCode());
 
         updateProSerTable(tableNo, memberBean);
         try {
@@ -3690,7 +3687,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             if (frm.getMemCode() != null) {
                 Value.MemberAlready = true;
-                memberBean = MemberBean.getMember(frm.getMemCode());
+                memberBean = MemmaterController.getMember(frm.getMemCode());
                 // update member in tablefile
                 SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 try {

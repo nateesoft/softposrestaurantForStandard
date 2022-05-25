@@ -1,12 +1,11 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.CouponRec;
+import com.softpos.crm.pos.core.modal.CouponRec;
 import com.softpos.pos.core.controller.CuponControl;
 import com.softpos.pos.core.controller.CuponListControl;
-import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TempCuponController;
 import com.softpos.pos.core.controller.ThaiUtil;
@@ -35,6 +34,7 @@ import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class CouponDiscount extends javax.swing.JDialog {
 
@@ -1074,7 +1074,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 total = 0;
             } else {
                 if (!CONFIG.getP_DiscRound().equals("N")) {
-                    total = NumberControl.UP_DOWN_NATURAL_BAHT(bath / rTotal * 100);
+                    total = NumberUtil.UP_DOWN_NATURAL_BAHT(bath / rTotal * 100);
                 } else {
                     total = (bath / rTotal * 100);
                 }

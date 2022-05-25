@@ -1,5 +1,9 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.TPromotion3;
+import com.softpos.pos.core.model.TPromotion5;
+import com.softpos.pos.core.model.TPromotion4;
+import com.softpos.pos.core.model.TPromotion2;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.ProtabBean;
@@ -11,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import util.AppLogUtil;
+import util.DateUtil;
 import util.MSG;
 
 public class PromotionControl {
@@ -393,7 +398,7 @@ public class PromotionControl {
 
             if (posControl.getETDPW_Active(temp_R_ETD, temp_P_ProChkBySaleType)) {
 //            if (posControl.getETDPW_Active(temp_R_ETD, temp_P_SerChkBySaleType)) {
-                String E_Format_Date = DateControl.GET_CURRENT_NAME_DAY();
+                String E_Format_Date = DateUtil.GET_CURRENT_NAME_DAY();
                 String sql = "select * from protab "
                         + "where ProCode='" + product.getPPromotion1() + "' "
                         + "and (PDate1<=curdate() and PDate2>=curdate()) "

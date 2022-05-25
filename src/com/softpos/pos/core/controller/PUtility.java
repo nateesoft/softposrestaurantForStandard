@@ -1,5 +1,12 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.HourlyRec;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.crm.pos.core.modal.CouponRec;
+import com.softpos.crm.pos.core.modal.CouponDetailRec;
+import com.softpos.crm.pos.core.modal.CreditPaymentRec;
+import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.TranRecord;
 import database.MySQLConnect;

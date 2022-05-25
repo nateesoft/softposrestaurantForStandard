@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.TABLE;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -9,6 +8,7 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.AppLogUtil;
+import util.JTableUtility;
 import util.MSG;
 
 public class CancelCashBack extends javax.swing.JDialog {
@@ -161,7 +161,7 @@ public class CancelCashBack extends javax.swing.JDialog {
 
     private void loadData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        table = TABLE.getDefaultTableFont(table);
+        table = JTableUtility.getDefaultTableFont(table);
 
         int size = model.getRowCount();
         for (int i = 0; i < size; i++) {

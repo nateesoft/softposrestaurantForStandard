@@ -1,5 +1,8 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.crm.pos.core.modal.FinalcialRec;
 import database.ConfigFile;
 import database.MySQLConnect;
 import java.io.FileNotFoundException;

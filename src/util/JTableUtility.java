@@ -1,25 +1,40 @@
 package util;
 
 import java.awt.Color;
+import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class JTableUtility {
 
-    public JTableUtility() {
+    public static JTable getDefaultTableFont(JTable table) {
+        JTableHeader tHead = table.getTableHeader();
+        tHead.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        table.setRowHeight(25);
+        table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        table.setShowGrid(true);
 
+        return table;
+    }
+
+    public static JTable center(JTable table, int row, int col) {
+        TableColumnModel tcm = table.getColumnModel();
+        TableCellRenderer r = table.getCellRenderer(row, col);
+        tcm.getColumn(6).setCellRenderer(r);
+
+        return table;
     }
 
     public static void initDefaultTable(JTable table) {
         try {
-
             //Setting column size
             table.setShowGrid(true);
             table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -57,7 +72,6 @@ public class JTableUtility {
 
     public static void initColumnSizeTable(JTable table, int[] colSize, int resizeMode) {
         try {
-
             table.setAutoResizeMode(resizeMode);
 
             //Setting column size
@@ -74,11 +88,8 @@ public class JTableUtility {
 
     public static void initHorizontalAlignmentTable(JTable table, int[] leading, int[] center, int[] right) {
         try {
-
             TableColumnModel tcm = table.getColumnModel();
-
             DefaultTableCellRenderer d;
-
             int ncolumn = table.getColumnCount();
             d = new DefaultTableCellRenderer();
             d.setHorizontalAlignment(SwingConstants.LEADING);
@@ -138,5 +149,24 @@ public class JTableUtility {
         }
 
         return success;
+    }
+
+    public static void alignColumn(JTable tblShowBalance, int col, String align) {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        switch (align) {
+            case "right":
+                rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+                break;
+            case "left":
+                rightRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+                break;
+            case "center":
+                rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+                break;
+            default:
+                break;
+        }
+
+        tblShowBalance.getColumnModel().getColumn(col).setCellRenderer(rightRenderer);
     }
 }

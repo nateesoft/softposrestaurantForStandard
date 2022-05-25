@@ -3,7 +3,7 @@ package com.softpos.posreport;
 import com.softpos.main.program.Jdi_depReport;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PluRec;
+import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Frame;

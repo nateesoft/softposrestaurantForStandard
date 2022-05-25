@@ -19,7 +19,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.UserRecord;
@@ -250,7 +250,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         pnZone2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));
         pnZone2.setOpaque(false);
-        pnZone2.setLayout(new java.awt.GridLayout(12, 10, 2, 2));
+        pnZone2.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
         jTabbedPane1.addTab("Zone2", pnZone2);
 
         pnZone3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 2));

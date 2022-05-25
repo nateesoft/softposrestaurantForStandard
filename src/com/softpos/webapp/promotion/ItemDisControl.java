@@ -1,7 +1,6 @@
 package com.softpos.webapp.promotion;
 
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -12,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class ItemDisControl {
 
@@ -82,15 +82,15 @@ public class ItemDisControl {
                 addServiceAmt = Service / 100 * R_Total;
 
                 if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
-                    addServiceAmt = NumberControl.UP_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("D")) {
-                    addServiceAmt = NumberControl.DOWN_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.DOWN_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("O")) {
                     //ไม่มีการปัด
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("N")) {
-                    addServiceAmt = NumberControl.UP_DOWN_NATURAL_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_DOWN_NATURAL_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("F")) {
-                    addServiceAmt = NumberControl.UP_DOWN_25(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_DOWN_25(addServiceAmt);
                 }
 
                 R_Total = bean.getR_Total() + addServiceAmt;

@@ -3,7 +3,6 @@ package com.softpos.discount;
 import com.softpos.main.program.CouponDiscount;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
-import com.softpos.pos.core.controller.NumberControl;
 import com.softpos.pos.core.controller.POSConfigSetup;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
@@ -22,6 +21,7 @@ import javax.swing.JOptionPane;
 import util.AppLogUtil;
 import util.MSG;
 import util.NumberFormat;
+import util.NumberUtil;
 
 public class DiscountDialog extends javax.swing.JDialog {
 
@@ -1588,7 +1588,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         int DiscBathMax = posConfig.getP_DiscBathMax();
 
         double discAllow = (input * DiscBathMax) / 100;
-        discAllow = NumberControl.UP_DOWN_NATURAL_BAHT(discAllow);
+        discAllow = NumberUtil.UP_DOWN_NATURAL_BAHT(discAllow);
         if (input > discAllow) {
             // warning
             JOptionPane.showMessageDialog(this, "ยอดส่วนลดมากกว่า % ที่สามารถให้ส่วนลดได้ !");

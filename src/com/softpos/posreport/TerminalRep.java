@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
-import com.softpos.pos.core.controller.CreditRec;
-import com.softpos.pos.core.controller.FinalcialRec;
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.FinalcialRec;
 import com.softpos.pos.core.controller.PPrint;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;

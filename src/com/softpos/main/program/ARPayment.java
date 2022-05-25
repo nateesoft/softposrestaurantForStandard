@@ -1,11 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.CreditPaymentRec;
-import com.softpos.pos.core.controller.CreditRec;
+import com.softpos.crm.pos.core.modal.CreditPaymentRec;
+import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.SmpCoupon;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;

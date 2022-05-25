@@ -6,7 +6,7 @@ import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
@@ -590,7 +590,7 @@ public class Login extends javax.swing.JDialog {
                     } catch (InterruptedException e) {
                     }
                 }
-                pbCheckUpdate.setString("SoftPOS Updated 23/05/2022 14:02:00");
+                pbCheckUpdate.setString("SoftPOS Updated 25/05/2022 00:00:00");
             } catch (Exception e) {
             }
         }).start();
