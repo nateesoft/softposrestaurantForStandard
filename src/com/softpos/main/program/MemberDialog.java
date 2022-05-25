@@ -76,6 +76,11 @@ public class MemberDialog extends javax.swing.JDialog {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txtCode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodeActionPerformed(evt);
+            }
+        });
         txtCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCodeKeyPressed(evt);
@@ -173,11 +178,11 @@ public class MemberDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "รหัส (Code)", "ชื่อสมาชิก (Member Name)", "เบอร์บ้าน", "เบอร์ที่ทำงาน", "เบอร์มือถือ", "วันหมดอายุบัตร"
+                "รหัส (Code)", "ชื่อสมาชิก (Member Name)", "เบอร์บ้าน", "เบอร์ที่ทำงาน", "เบอร์มือถือ", "วันหมดอายุบัตร", "แฟกซ์"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -323,6 +328,10 @@ public class MemberDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_btnCancelMemberActionPerformed
 
+    private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCodeActionPerformed
+
     void selectMember() {
         int row = tbMember.getSelectedRow();
         if (row != -1) {
@@ -386,8 +395,8 @@ public class MemberDialog extends javax.swing.JDialog {
                     rs.getString("Member_HomeTel"),
                     "",
                     rs.getString("Member_Mobile"),
-                    rs.getString("Member_ExpiredDate")
-
+                    rs.getString("Member_ExpiredDate"),
+                    rs.getString("Member_Fax")
                 });
             }
 
@@ -522,7 +531,7 @@ public class MemberDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         }
-        
+
         try {
             String sqlUpdate = "update balance "
                     + "set "
@@ -535,7 +544,7 @@ public class MemberDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-AppLogUtil.log(MemberDialog.class, "error", e);
+            AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
             mysql.close();
         }
