@@ -3628,8 +3628,6 @@ public class PPrint {
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
-                    } finally {
-                        mysql.close();
                     }
 
                     print("----------------------------------------");
@@ -3715,6 +3713,8 @@ public class PPrint {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql.close();
                     }
                     print("----------------------------------------");
                     print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
