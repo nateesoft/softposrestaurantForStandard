@@ -1,24 +1,13 @@
-package com.softpos.pos.core.controller;
+package com.softpos.pos.core.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class TableSetup {
-
     private String Code_ID;
     private String TCode;
-
-    public String getCode_ID() {
-        return Code_ID;
-    }
-
-    public void setCode_ID(String Code_ID) {
-        this.Code_ID = Code_ID;
-    }
-
-    public String getTCode() {
-        return TCode;
-    }
-
-    public void setTCode(String TCode) {
-        this.TCode = TCode;
-    }
-
 }

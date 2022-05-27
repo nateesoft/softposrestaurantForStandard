@@ -21,6 +21,7 @@ public class MySQLConnect {
     public static String UserName = null;
     public static String Password = null;
     public static String PortNumber = null;
+    public static String CharSet = "utf-8";
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
 
     static {
@@ -80,6 +81,8 @@ public class MySQLConnect {
                     Password = data[1];
                 } else if (data[0].equalsIgnoreCase("port")) {
                     PortNumber = data[1];
+                } else if (data[0].equalsIgnoreCase("charset")) {
+                    CharSet = data[1];
                 } else if (data[0].equalsIgnoreCase("macno")) {
                     Value.MACNO = data[1];
                 } else if (data[0].equalsIgnoreCase("language")) {

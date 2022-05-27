@@ -1,4 +1,4 @@
-package com.softpos.pos.core.controller;
+package com.softpos.pos.core.model;
 
 public class Promotion {
 

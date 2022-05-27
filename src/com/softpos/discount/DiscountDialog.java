@@ -824,7 +824,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                         String sqlgetBL = "select count(r_index) r_index from balance where r_table='" + tableNo + "' and r_void<>'V'";
                         ResultSet rsBL = mysql.getConnection().createStatement().executeQuery(sqlgetBL);
                         if (rsBL.next()) {
-                            String sqlUpdate = "update balance set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "'";
+                            String sqlUpdate = "update balance set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "' where r_table='" + tableNo + "'";
                             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
                         }
                         rsBL.close();
@@ -864,7 +864,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                     discForC = data[1];
                     discForS = data[2];
                 }
-                
+
                 MySQLConnect mysql = new MySQLConnect();
                 try {
                     //เช็คประเภทสินค้า
@@ -1430,7 +1430,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                         TOTAL_DD = total;
                     }
                 }
-                
+
                 rs.close();
             }
         } catch (SQLException e) {
@@ -2217,7 +2217,7 @@ public class DiscountDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(DiscountDialog.class, "error", e);
         }
-        
+
         try {
             String sqlUpdateBalance = "update balance set r_prcuamt='0',r_discbath='0' where r_table='" + tableNo + "'";
             mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
@@ -2245,7 +2245,7 @@ public class DiscountDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(DiscountDialog.class, "error", e);
         }
-        
+
         try {
             String sqlUpdate = "update balance "
                     + "set "

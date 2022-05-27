@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.Promotion;
 import com.softpos.pos.core.model.TPromotion3;
 import com.softpos.pos.core.model.TPromotion5;
 import com.softpos.pos.core.model.TPromotion4;

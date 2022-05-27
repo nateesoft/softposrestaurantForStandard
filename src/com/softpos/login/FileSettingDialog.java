@@ -489,7 +489,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
         txtUser.setText(MySQLConnect.UserName);
         txtPass.setText(MySQLConnect.Password);
         txtPort.setText(MySQLConnect.PortNumber);
-        txtCharSet.setText("");
+        txtCharSet.setText(MySQLConnect.CharSet);
         txtLang.setText(Value.LANG);
         txtMacno.setText(Value.MACNO);
         cbPrint.setSelectedItem(""+Value.useprint);
