@@ -31,6 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
+import util.CheckApplication;
 import util.MSG;
 import util.OSValidator;
 
@@ -77,11 +78,6 @@ public class Login extends javax.swing.JDialog {
         setTitle("Login Sale System www.softpos.co.th tel.02-116-6615 Hotline: 086-320-3877");
         setUndecorated(true);
         setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -327,20 +323,20 @@ public class Login extends javax.swing.JDialog {
         new KeyBoardDialog(null, true, 4).get(txtPass, 4);
     }//GEN-LAST:event_txtPassMouseClicked
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        System.out.println("Close Login Form");
-    }//GEN-LAST:event_formWindowClosed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         PosHwSetupOnAct("N");
         JOptionPane.showMessageDialog(this, "ปลดล้อกโปรแกรมเรียบร้อยกรุณากรอก Username : Password");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
+        if (CheckApplication.isRunning()) {
+            JOptionPane.showMessageDialog(null, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+            System.exit(0);
+        }
         File f = new File("softrestaurant.running");
         if (f.exists()) {
-            int confirm = JOptionPane.showConfirmDialog(null, "โปรแกรมมีการเปิดใช้งานอยู่ ท่านต้องการเปิดซ้ำใช่หรือไม่ ?",
-                    "ตรวจสอบการทำงานโปรแกรม", JOptionPane.OK_CANCEL_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(null, "โปรแกรมถูกปิดไม่สมบูรณ์ ท่านต้องการเปิดใช้งานต่อหรือไม่ ?",
+                    "เปิดใช้งานโปรแกรม", JOptionPane.OK_CANCEL_OPTION);
             if (confirm == JOptionPane.OK_OPTION) {
                 new File("softrestaurant.running").delete();
             } else {
@@ -466,7 +462,9 @@ public class Login extends javax.swing.JDialog {
                     POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
                     String POSOnActCheck = poshwSetup.getOnAct();
                     if (POSOnActCheck.equals("Y")) {
-                        JOptionPane.showMessageDialog(this, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                                + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
+                                + "กรุณาตรวจสอบฐานข้อมูล", "สถานะเครื่อง POS", JOptionPane.WARNING_MESSAGE);
                         System.exit(0);
                     }
                     MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");

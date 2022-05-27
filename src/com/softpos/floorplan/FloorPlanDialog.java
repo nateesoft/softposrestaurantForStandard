@@ -71,7 +71,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
     private ImageIcon image;
-    private int refresh = 1;
+    private int refresh = 10;
     private Font fontA = new Font("Tahoma", Font.PLAIN, 14);
     private Font fontB = new Font("Tahoma", Font.BOLD, 11);
     private Font fontC = new Font("Tahoma", Font.BOLD, 16);
@@ -89,11 +89,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
         POSHW = POSHWSetup.Bean(Value.getMacno());
         CONFIG = POSConfigSetup.Bean();
 
         refresh = PosControl.getRefreshTime();
+        if (refresh < 1) {
+            refresh = 1;
+        }
 
         Value.TableSelected = "";
 
