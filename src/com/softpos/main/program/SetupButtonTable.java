@@ -16,7 +16,7 @@ import util.MSG;
 
 public class SetupButtonTable extends javax.swing.JDialog {
 
-    private String codeId;
+    private final String codeId;
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
 
@@ -186,7 +186,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
-        deleteItem();
+        deleteItem(codeId);
     }//GEN-LAST:event_btnDelActionPerformed
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
@@ -223,21 +223,21 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private javax.swing.JTextField txtTable;
     // End of variables declaration//GEN-END:variables
 
-    private void deleteItem() {
+    private void deleteItem(String codeId) {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open();
         try {
-            String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "'";
+            String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
-            
+
             dispose();
         } finally {
             mysql.close();

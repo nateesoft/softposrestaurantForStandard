@@ -1737,6 +1737,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final TableSetupControl tableFileControl = new TableSetupControl();
 
     private void addButton() {
+        resetButton();
+        
         List<FloorPlanBean> listFloorPlan = tableFileControl.getTableSetup(zoneSelected);
         for (FloorPlanBean bean : listFloorPlan) {
             String codeId = bean.getCodeId();
@@ -2101,122 +2103,137 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private void initLoadButtons() {
         buttons[0] = btn1;
-        buttons[1] = btn2;
-        buttons[2] = btn3;
-        buttons[3] = btn4;
-        buttons[4] = btn5;
-        buttons[5] = btn6;
-        buttons[6] = btn7;
-        buttons[7] = btn8;
-        buttons[8] = btn9;
-        buttons[9] = btn10;
+        buttons[1] = btn11;
+        buttons[2] = btn21;
+        buttons[3] = btn31;
+        buttons[4] = btn41;
+        buttons[5] = btn51;
+        buttons[6] = btn61;
+        buttons[7] = btn71;
+        buttons[8] = btn81;
+        buttons[9] = btn91;
 
-        buttons[10] = btn11;
+        buttons[10] = btn2;
         buttons[11] = btn12;
-        buttons[12] = btn13;
-        buttons[13] = btn14;
-        buttons[14] = btn15;
-        buttons[15] = btn16;
-        buttons[16] = btn17;
-        buttons[17] = btn18;
-        buttons[18] = btn19;
-        buttons[19] = btn20;
+        buttons[12] = btn22;
+        buttons[13] = btn32;
+        buttons[14] = btn42;
+        buttons[15] = btn52;
+        buttons[16] = btn62;
+        buttons[17] = btn72;
+        buttons[18] = btn82;
+        buttons[19] = btn92;
 
-        buttons[20] = btn21;
-        buttons[21] = btn22;
+        buttons[20] = btn3;
+        buttons[21] = btn13;
         buttons[22] = btn23;
-        buttons[23] = btn24;
-        buttons[24] = btn25;
-        buttons[25] = btn26;
-        buttons[26] = btn27;
-        buttons[27] = btn28;
-        buttons[28] = btn29;
-        buttons[29] = btn30;
+        buttons[23] = btn33;
+        buttons[24] = btn43;
+        buttons[25] = btn53;
+        buttons[26] = btn63;
+        buttons[27] = btn73;
+        buttons[28] = btn83;
+        buttons[29] = btn93;
 
-        buttons[30] = btn31;
-        buttons[31] = btn32;
-        buttons[32] = btn33;
+        buttons[30] = btn4;
+        buttons[31] = btn14;
+        buttons[32] = btn24;
         buttons[33] = btn34;
-        buttons[34] = btn35;
-        buttons[35] = btn36;
-        buttons[36] = btn37;
-        buttons[37] = btn38;
-        buttons[38] = btn39;
-        buttons[39] = btn40;
+        buttons[34] = btn44;
+        buttons[35] = btn54;
+        buttons[36] = btn64;
+        buttons[37] = btn74;
+        buttons[38] = btn84;
+        buttons[39] = btn94;
 
-        buttons[40] = btn41;
-        buttons[41] = btn42;
-        buttons[42] = btn43;
-        buttons[43] = btn44;
+        buttons[40] = btn5;
+        buttons[41] = btn15;
+        buttons[42] = btn25;
+        buttons[43] = btn35;
         buttons[44] = btn45;
-        buttons[45] = btn46;
-        buttons[46] = btn47;
-        buttons[47] = btn48;
-        buttons[48] = btn49;
-        buttons[49] = btn50;
+        buttons[45] = btn55;
+        buttons[46] = btn65;
+        buttons[47] = btn75;
+        buttons[48] = btn85;
+        buttons[49] = btn95;
 
-        buttons[50] = btn51;
-        buttons[51] = btn52;
-        buttons[52] = btn53;
-        buttons[53] = btn54;
-        buttons[54] = btn55;
+        buttons[50] = btn6;
+        buttons[51] = btn16;
+        buttons[52] = btn26;
+        buttons[53] = btn36;
+        buttons[54] = btn46;
         buttons[55] = btn56;
-        buttons[56] = btn57;
-        buttons[57] = btn58;
-        buttons[58] = btn59;
-        buttons[59] = btn60;
+        buttons[56] = btn66;
+        buttons[57] = btn76;
+        buttons[58] = btn86;
+        buttons[59] = btn96;
 
-        buttons[60] = btn61;
-        buttons[61] = btn62;
-        buttons[62] = btn63;
-        buttons[63] = btn64;
-        buttons[64] = btn65;
-        buttons[65] = btn66;
+        buttons[60] = btn7;
+        buttons[61] = btn17;
+        buttons[62] = btn27;
+        buttons[63] = btn37;
+        buttons[64] = btn47;
+        buttons[65] = btn57;
         buttons[66] = btn67;
-        buttons[67] = btn68;
-        buttons[68] = btn69;
-        buttons[69] = btn70;
+        buttons[67] = btn77;
+        buttons[68] = btn87;
+        buttons[69] = btn97;
 
-        buttons[70] = btn71;
-        buttons[71] = btn72;
-        buttons[72] = btn73;
-        buttons[73] = btn74;
-        buttons[74] = btn75;
-        buttons[75] = btn76;
-        buttons[76] = btn77;
+        buttons[70] = btn8;
+        buttons[71] = btn18;
+        buttons[72] = btn28;
+        buttons[73] = btn38;
+        buttons[74] = btn48;
+        buttons[75] = btn58;
+        buttons[76] = btn68;
         buttons[77] = btn78;
-        buttons[78] = btn79;
-        buttons[79] = btn80;
+        buttons[78] = btn88;
+        buttons[79] = btn98;
 
-        buttons[80] = btn81;
-        buttons[81] = btn82;
-        buttons[82] = btn83;
-        buttons[83] = btn84;
-        buttons[84] = btn85;
-        buttons[85] = btn86;
-        buttons[86] = btn87;
-        buttons[87] = btn88;
+        buttons[80] = btn9;
+        buttons[81] = btn19;
+        buttons[82] = btn29;
+        buttons[83] = btn39;
+        buttons[84] = btn49;
+        buttons[85] = btn59;
+        buttons[86] = btn69;
+        buttons[87] = btn79;
         buttons[88] = btn89;
-        buttons[89] = btn90;
+        buttons[89] = btn99;
 
-        buttons[90] = btn91;
-        buttons[91] = btn92;
-        buttons[92] = btn93;
-        buttons[93] = btn94;
-        buttons[94] = btn95;
-        buttons[95] = btn96;
-        buttons[96] = btn97;
-        buttons[97] = btn98;
-        buttons[98] = btn99;
+        buttons[90] = btn10;
+        buttons[91] = btn20;
+        buttons[92] = btn30;
+        buttons[93] = btn40;
+        buttons[94] = btn50;
+        buttons[95] = btn60;
+        buttons[96] = btn70;
+        buttons[97] = btn80;
+        buttons[98] = btn90;
         buttons[99] = btn100;
 
+        resetButton();
+    }
+
+    private void resetButton() {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = initButtonTable(buttons[i], i);
+            
+//            for(ActionListener listener: buttons[i].getActionListeners()){
+//                buttons[i].removeActionListener(listener);
+//            }
         }
     }
 
     private JButton initButtonTable(JButton button, int c) {
         button.setText("");
+        button.setIcon(null);
+        button.setBackground(null);
+        button.setForeground(Color.BLACK);
+        
+        for(ActionListener listener: button.getActionListeners()){
+            button.removeActionListener(listener);
+        }
 
         if (buttonStyle == 1) {
             button.setFont(fontA);
