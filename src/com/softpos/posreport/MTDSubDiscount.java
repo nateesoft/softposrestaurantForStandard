@@ -48,7 +48,7 @@ public class MTDSubDiscount extends javax.swing.JDialog {
         txtMacNo1.setText("0000");
         txtMacNo2.setText("9999");
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

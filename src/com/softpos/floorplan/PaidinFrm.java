@@ -31,7 +31,7 @@ public class PaidinFrm extends javax.swing.JDialog {
     public PaidinFrm(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     public void inputfrombnt(String str) {

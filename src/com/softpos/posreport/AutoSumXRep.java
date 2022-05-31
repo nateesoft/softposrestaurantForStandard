@@ -40,7 +40,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
     public AutoSumXRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
     }
 

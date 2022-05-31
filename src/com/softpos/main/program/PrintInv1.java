@@ -68,7 +68,7 @@ public class PrintInv1 extends javax.swing.JDialog {
      */
     public PrintInv1(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         initComponents();
         ClearVariable();

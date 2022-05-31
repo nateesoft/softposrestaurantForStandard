@@ -30,7 +30,7 @@ public class CashBackDialog extends javax.swing.JDialog {
     public CashBackDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         txtCash.requestFocus();
     }
 

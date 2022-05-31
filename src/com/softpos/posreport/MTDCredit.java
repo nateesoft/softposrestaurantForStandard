@@ -48,7 +48,7 @@ public class MTDCredit extends javax.swing.JDialog {
         txtDate2.setText(DatefmtShow.format(date));
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

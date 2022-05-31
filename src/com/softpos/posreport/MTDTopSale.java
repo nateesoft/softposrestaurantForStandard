@@ -49,7 +49,7 @@ public class MTDTopSale extends javax.swing.JDialog {
         txtMacNo2.setText("9999");
 //        txtCntOrder.setValue(0);
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

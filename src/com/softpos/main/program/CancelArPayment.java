@@ -48,7 +48,7 @@ public class CancelArPayment extends javax.swing.JDialog {
 
         initComponents();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
         tblShow.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

@@ -45,7 +45,7 @@ public class MTDInvoice extends javax.swing.JDialog {
         txtMacNo2.setText("");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

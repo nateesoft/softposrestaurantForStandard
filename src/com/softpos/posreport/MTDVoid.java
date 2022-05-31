@@ -48,7 +48,7 @@ public class MTDVoid extends javax.swing.JDialog {
         txtMacNo1.setText("000");
         txtMacNo2.setText("999");
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
     }
 

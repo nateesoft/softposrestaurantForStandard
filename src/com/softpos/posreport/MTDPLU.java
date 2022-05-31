@@ -52,7 +52,7 @@ public class MTDPLU extends javax.swing.JDialog {
         txtPlu2.setText("9999");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

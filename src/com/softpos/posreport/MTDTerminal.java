@@ -55,7 +55,7 @@ public class MTDTerminal extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

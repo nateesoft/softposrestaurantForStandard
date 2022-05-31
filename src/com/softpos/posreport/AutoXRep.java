@@ -40,7 +40,7 @@ public class AutoXRep extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         TMacNo.setText("Mac " + Value.MACNO);
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

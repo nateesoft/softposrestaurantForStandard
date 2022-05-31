@@ -88,7 +88,7 @@ public class ARPayment extends javax.swing.JDialog {
     public ARPayment(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         model1 = (DefaultTableModel) tblAr.getModel();
         tblAr.setShowGrid(true);
         tblAr.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

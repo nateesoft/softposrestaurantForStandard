@@ -51,7 +51,7 @@ public class MTDInvRep extends javax.swing.JDialog {
         txtDate2.setText(DatefmtShow.format(date));
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
     }
 

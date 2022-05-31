@@ -56,7 +56,7 @@ public class MTDDept extends javax.swing.JDialog {
         txtMacNo2.setText("9999");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     public void InitScreen() {

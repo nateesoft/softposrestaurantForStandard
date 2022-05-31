@@ -131,7 +131,7 @@ public class MainSale extends javax.swing.JDialog {
         loadButtonProductMenu("A");
         Value.MemberAlready = false;
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
 
         initScreen();

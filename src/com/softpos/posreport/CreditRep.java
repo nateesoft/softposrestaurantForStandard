@@ -40,7 +40,7 @@ public class CreditRep extends javax.swing.JDialog {
         txtCashNo1.setText("0000");
         txtCashNo2.setText("9999");
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

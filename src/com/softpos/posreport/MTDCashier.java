@@ -50,7 +50,7 @@ public class MTDCashier extends javax.swing.JDialog {
         txtMacNo2.setText("zzzz");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

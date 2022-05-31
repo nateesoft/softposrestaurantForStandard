@@ -92,7 +92,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
 
         refresh = PosControl.getRefreshTime();
@@ -406,6 +406,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
         jPanel1.add(btnZone7);
 
+        panelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 51), 3));
         panelMain.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
 
         btn1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
@@ -1100,7 +1101,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelMain, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(panelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();

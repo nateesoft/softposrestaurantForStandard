@@ -47,7 +47,7 @@ public class TopSaleRep extends javax.swing.JDialog {
         txtGroup1.setText("0000");
         txtGroup2.setText("9999");
         txtCntOrder.setValue(10);
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

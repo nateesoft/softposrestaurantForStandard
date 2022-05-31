@@ -31,7 +31,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
     public PaidoutFrm(java.awt.Frame parent, boolean modal, String reson) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         this.reson = reson;
     }
 

@@ -618,8 +618,9 @@
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   <Component id="jButton1" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelMain" min="-2" pref="705" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelMain" pref="694" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -724,6 +725,15 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="panelMain">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+            <LineBorder thickness="3">
+              <Color PropertyName="color" blue="33" green="0" red="ff" type="rgb"/>
+            </LineBorder>
+          </Border>
+        </Property>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
         <Property name="columns" type="int" value="10"/>

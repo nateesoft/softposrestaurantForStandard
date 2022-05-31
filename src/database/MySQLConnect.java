@@ -25,44 +25,6 @@ public class MySQLConnect {
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
 
     static {
-        getDbVar();
-    }
-
-    public String getMsgError() {
-        return msgError;
-    }
-
-    public void setMsgError(String msgError) {
-        this.msgError = msgError;
-    }
-
-    public void open() {
-        if (con == null) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-            } catch (ClassNotFoundException | SQLException e) {
-                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-                System.exit(0);
-            }
-        }
-    }
-
-    public Connection getConnection() {
-        return con;
-    }
-
-    public void close() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public static void getDbVar() {
         try {
             FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
             DataInputStream ds = new DataInputStream(fs);
@@ -126,6 +88,40 @@ public class MySQLConnect {
             fs.close();
         } catch (IOException e) {
             MSG.ERR(e.getMessage());
+        }
+    }
+
+    public String getMsgError() {
+        return msgError;
+    }
+
+    public void setMsgError(String msgError) {
+        this.msgError = msgError;
+    }
+
+    public void open() {
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+            } catch (ClassNotFoundException | SQLException e) {
+                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                System.exit(0);
+            }
+        }
+    }
+
+    public Connection getConnection() {
+        return con;
+    }
+
+    public void close() {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

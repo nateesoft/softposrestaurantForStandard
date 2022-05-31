@@ -42,7 +42,7 @@ public class ArPaymentRep extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("001");
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**

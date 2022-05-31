@@ -328,6 +328,7 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
+        new MySQLConnect();
         if (CheckApplication.isRunning()) {
             JOptionPane.showMessageDialog(null, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
             System.exit(0);

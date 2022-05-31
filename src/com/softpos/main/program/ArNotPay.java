@@ -53,7 +53,7 @@ public class ArNotPay extends javax.swing.JDialog {
         super(parent, modal);
 
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);

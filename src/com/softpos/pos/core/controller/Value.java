@@ -57,41 +57,6 @@ public class Value {
     }
 
     public static String getComPort() {
-        return POSHWSetup.Bean(getMacno()).getPRNPort();
+        return POSHWSetup.Bean(Value.MACNO).getPRNPort();
     }
-
-    public static String getMacno() {
-        String macno;
-        try {
-            try (FileInputStream fs = new FileInputStream(FILE_CONFIG)) {
-                DataInputStream ds = new DataInputStream(fs);
-                BufferedReader br = new BufferedReader(new InputStreamReader(ds));
-                macno = "";
-                String tmp;
-                while ((tmp = br.readLine()) != null) {
-                    String[] data = tmp.split(",", tmp.length());
-                    if (data[0].equalsIgnoreCase("macno")) {
-                        Value.MACNO = data[1];
-                        macno = data[1];
-                        break;
-                    }
-                }
-                br.close();
-                ds.close();
-            }
-        } catch (IOException e) {
-            MSG.ERR(e.getMessage());
-            macno = "";
-        }
-
-        if (!macno.equals("")) {
-            POSHWSetup poshwSetup = PosControl.getData(macno);
-            if(poshwSetup.getOnAct().equals("N")){
-                macno = poshwSetup.getTerminal();
-            }
-        }
-
-        return macno;
-    }
-
 }

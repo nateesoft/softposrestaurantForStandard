@@ -78,7 +78,7 @@ public class PPrint {
     private String TAB2 = TAB + TAB;
 
     public void PPrint() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
 
@@ -87,7 +87,7 @@ public class PPrint {
         if (OpenStatus) {
             return OpenStatus;
         }
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getPRNTYPE().equals("6")) {
             OpenStatus = false;
             portList = CommPortIdentifier.getPortIdentifiers();
@@ -174,7 +174,7 @@ public class PPrint {
     }
 
     public void OpenDrawer() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!POSHW.getDRPort().equals("NONE") && POSHW.getDRType().equals("1")) {
             String TempRate = POSHW.getDRCOM().trim();
             byte Rate = 49;
@@ -412,7 +412,7 @@ public class PPrint {
     }
 
     public void Print_Head_EJ() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         String TempFile = POSHW.getEJDailyPath() + "/tempbill.txt";
         File fObject = new File(TempFile);
         if (fObject.canRead()) {
@@ -583,7 +583,7 @@ public class PPrint {
 
     public void printLogin(String user) {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
             if (Value.printdriver) {
@@ -617,7 +617,7 @@ public class PPrint {
 
     public void printLogout() {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
             if (Value.printdriver) {
@@ -667,7 +667,7 @@ public class PPrint {
     public void PrintSubTotalBillDriver(String _RefNo, String tableNo) {
         String t = "";
         String t1 = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         double totalDiscount = 0.00;
         BillControl billC = new BillControl();
@@ -1741,7 +1741,7 @@ public class PPrint {
         PrintDriver pd = new PrintDriver();
         String t = "";
         String t1 = "";//Header1
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         BalanceControl bc = new BalanceControl();
         double totalDiscount;
@@ -2193,7 +2193,7 @@ public class PPrint {
     public void printCheckBillDriverPDA(String tableNo, String emp) {
         PrintDriver pd = new PrintDriver();
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         t += "colspan=3 align=center><font face=Angsana New size=5>" + "-----------------------------------------_";
         t += "colspan=3 align=left><font face=Angsana New size=5>" + "***โต๊ะ " + tableNo + " สั่งเช็คบิล***_";
@@ -3264,7 +3264,7 @@ public class PPrint {
 
     private void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         Date dateP = new Date();
         if (!Value.getComPort().equals("NONE")) {
@@ -3845,7 +3845,7 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
 
@@ -4168,7 +4168,7 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
         if (POSHW.getHeading1().trim().length() >= 18) {
@@ -4528,7 +4528,7 @@ public class PPrint {
                         }
                     }
                     CONFIG = POSConfigSetup.Bean();
-                    POSHW = POSHWSetup.Bean(Value.getMacno());
+                    POSHW = POSHWSetup.Bean(Value.MACNO);
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
@@ -4788,7 +4788,7 @@ public class PPrint {
         BillControl billControl = new BillControl();
         BillNoBean tBean = billControl.getData(RefNo);
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!Value.getComPort().equals("NONE")) {
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -5102,7 +5102,7 @@ public class PPrint {
             BillControl bill = new BillControl();
             BillNoBean bBean = bill.getData(_RefNo);
 
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             CONFIG = POSConfigSetup.Bean();
 
             if (!Value.getComPort().equals("NONE")) {
@@ -5355,7 +5355,7 @@ public class PPrint {
         BillControl bill = new BillControl();
         BillNoBean bBean = bill.getData(_RefNo);
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -5615,7 +5615,7 @@ public class PPrint {
     }
 
     private void PrintTableActionDriver() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {

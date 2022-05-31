@@ -51,7 +51,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         initComponents();
         txtDate1.setText(DatefmtShow.format(date));
         txtDate2.setText(DatefmtShow.format(date));
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     public ArrayList<Object[]> LoadData() {

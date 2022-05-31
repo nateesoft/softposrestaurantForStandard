@@ -40,7 +40,7 @@ public class CouponRep extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**
