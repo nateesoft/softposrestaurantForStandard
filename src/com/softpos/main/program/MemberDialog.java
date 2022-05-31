@@ -498,7 +498,8 @@ public class MemberDialog extends javax.swing.JDialog {
                     rs.getString("Member_HomeTel"),
                     "",
                     rs.getString("Member_Mobile"),
-                    rs.getString("Member_ExpiredDate")
+                    rs.getString("Member_ExpiredDate"),
+                    rs.getString("member_fax")
 
                 });
             }
