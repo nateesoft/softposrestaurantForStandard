@@ -94,7 +94,6 @@ public class MainSale extends javax.swing.JDialog {
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
-
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
