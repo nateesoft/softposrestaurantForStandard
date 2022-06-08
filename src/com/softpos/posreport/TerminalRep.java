@@ -3,6 +3,7 @@ package com.softpos.posreport;
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.crm.pos.core.modal.FinalcialRec;
 import com.softpos.pos.core.controller.PPrint;
+import database.ConfigFile;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ public class TerminalRep extends javax.swing.JDialog {
     public TerminalRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        txtMacNo.setText(txtMacNo.getText());
+        txtMacNo.setText(ConfigFile.getProperties("macno"));
     }
 
     @SuppressWarnings("unchecked")

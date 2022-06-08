@@ -907,7 +907,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
-                    while(rs.next()){
+                    while (rs.next()) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
                     rs.close();
@@ -1195,7 +1195,7 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
                 }
                 if (POSHW.getHeading4().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
@@ -1203,7 +1203,7 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
                 }
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
@@ -1320,7 +1320,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
-                    while(rs.next()){
+                    while (rs.next()) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
                     rs.close();
@@ -1582,7 +1582,7 @@ public class PPrint {
                     }
                     if (bBean.getB_GiftVoucher() > 0) {
                         print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
-                        
+
                         MySQLConnect mysql = new MySQLConnect();
                         try {
                             mysql.open();
@@ -1610,7 +1610,7 @@ public class PPrint {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
-                            while(rs.next()){
+                            while (rs.next()) {
                                 print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
@@ -1807,9 +1807,9 @@ public class PPrint {
             Date dateP = new Date();
             t1 += "colspan=2 align=left><font face=Angsana New size=2> "
                     + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
-            t1 += "colspan=3 align=left><font face=Angsana New size=2> "
+            t1 += "colspan=3 align=left><font face=Angsana New size=5> "
                     + "TABLE :" + Space + tableNo + "_";
-            t1 += "colspan=2 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(tBean.getTCustomer())
+            t1 += "colspan=2 align=left><font face=Angsana New size=5> " + "CC : " + IntFmt.format(tBean.getTCustomer())
                     + " Seat :" + "</td><td align=right><font face=Angsana New size=2>"
                     + "NAME: " + Space
                     + getLastEmployee(tableNo) + "_";
@@ -2054,7 +2054,7 @@ public class PPrint {
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "></td><td align=left colspan=2>"
                                         + "<font face=Angsana New size=1>"
-                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()),20) + "_";
+                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 20) + "_";
                             }
                         }
                     } else {
@@ -2782,12 +2782,12 @@ public class PPrint {
                             + "where (r_void<>'V') or (r_void is null) "
                             + "group by r_table";
                     ResultSet rs = stmt.executeQuery(ChkTable);
-                    while(rs.next()){
+                    while (rs.next()) {
                         print(PUtility.DataFull(rs.getString("r_table"), 6)
-                                    + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
-                                    + PUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
-                                    + PUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
-                            SumTotal = SumTotal + rs.getDouble("sum(r_total)");
+                                + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
+                                + PUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
+                                + PUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
+                        SumTotal = SumTotal + rs.getDouble("sum(r_total)");
                     }
                     rs.close();
                     stmt.close();
@@ -2911,9 +2911,9 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rs.getDouble("amount");
+                        SumAmt = SumAmt + rs.getDouble("amount");
                     }
                     rs.close();
                     stmt.close();
@@ -2935,10 +2935,10 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         CntBill++;
-                            SumCash = SumCash + rs.getDouble("cash");
-                            SumCupon = SumCupon + rs.getDouble("cupon");
+                        SumCash = SumCash + rs.getDouble("cash");
+                        SumCupon = SumCupon + rs.getDouble("cupon");
                     }
                     rs.close();
                     stmt.close();
@@ -2951,7 +2951,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
                     rs.close();
@@ -2969,7 +2969,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
                     rs.close();
@@ -3166,7 +3166,7 @@ public class PPrint {
                         print(PUtility.DataFullR("Entertain                       ", 20) + PUtility.DataFull(IntFmt.format(frec.BillEntertain), 6) + PUtility.DataFull(DecFmt.format(frec.Entertain), 13));
                     }
                     print(PUtility.DataFullR("CASH                   ", 20) + PUtility.DataFull(IntFmt.format(frec.CashCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Cash), 13));
-                    String[] credit = credit();
+                    String[] credit = credit(macNo);
                     if (!credit.equals("")) {
                         String cd = credit[0];
                         String am = credit[1];
@@ -3440,7 +3440,7 @@ public class PPrint {
 //            พิมพ์ Credit แบบ Detail 
 //            ตัวอย่าง VISA   xxx1234  1000
 //            MASTER xxx3346  1500
-            String[] credit = credit();
+            String[] credit = credit(macNo);
             if (!credit.equals("")) {
                 String cd = credit[0];
                 String am = credit[1];
@@ -3619,9 +3619,9 @@ public class PPrint {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rs.getDouble("amount");
+                            SumAmt = SumAmt + rs.getDouble("amount");
                         }
                         rs.close();
                         stmt.close();
@@ -3641,10 +3641,10 @@ public class PPrint {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             CntBill++;
-                                SumCash = SumCash + rs.getDouble("cash");
-                                SumCupon = SumCupon + rs.getDouble("cupon");
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                         }
                         rs.close();
                         stmt.close();
@@ -3657,7 +3657,7 @@ public class PPrint {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
                         rs.close();
@@ -3675,7 +3675,7 @@ public class PPrint {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
                         rs.close();
@@ -3702,12 +3702,12 @@ public class PPrint {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
-                                print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
-                                print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
-                                SumVoid++;
-                                SumAmount = SumAmount + rs.getDouble("r_total");
+                            print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
+                            print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
+                            SumVoid++;
+                            SumAmount = SumAmount + rs.getDouble("r_total");
                         }
                         rs.close();
                         stmt.close();
@@ -4646,12 +4646,12 @@ public class PPrint {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
-                            while(rs.next()){
+                            while (rs.next()) {
                                 print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rs.getString("sms_code");
-                                    if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
-                                        print("     " + "SMS CODE " + SMS_Code);
-                                    }
+                                String SMS_Code = rs.getString("sms_code");
+                                if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
+                                    print("     " + "SMS CODE " + SMS_Code);
+                                }
                             }
                             rs.close();
                             stmt.close();
@@ -4691,7 +4691,7 @@ public class PPrint {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
-                            while(rs.next()){
+                            while (rs.next()) {
                                 print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
@@ -4973,7 +4973,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
                     ResultSet rs = stmt.executeQuery(CheckCoupon);
-                    while(rs.next()){
+                    while (rs.next()) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                     }
                     rs.close();
@@ -5010,7 +5010,7 @@ public class PPrint {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select * from t_gift where (refno='" + RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
-                    while(rs.next()){
+                    while (rs.next()) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rs.getString("giftbarcode") + rs.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength) + "_");
                     }
                     rs.close();
@@ -5046,7 +5046,7 @@ public class PPrint {
                 } finally {
                     mysql.close();
                 }
-                
+
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + tBean.getB_CrCode1() + Space + crName + "_");
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + "XXXXXXXXXXX" + PUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + TAB + tBean.getB_AppCode1() + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength) + "_");
@@ -5234,12 +5234,12 @@ public class PPrint {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
-                            while(rs.next()){
+                            while (rs.next()) {
                                 print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rs.getString("sms_code");
-                                    if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
-                                        print("     " + "SMS CODE " + SMS_Code);
-                                    }
+                                String SMS_Code = rs.getString("sms_code");
+                                if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
+                                    print("     " + "SMS CODE " + SMS_Code);
+                                }
                             }
                             rs.close();
                             stmt.close();
@@ -5282,7 +5282,7 @@ public class PPrint {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
-                            while(rs.next()){
+                            while (rs.next()) {
                                 print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
@@ -5514,7 +5514,7 @@ public class PPrint {
                 Statement stmt = mysql.getConnection().createStatement();
                 String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
                 ResultSet rs = stmt.executeQuery(CheckCoupon);
-                while(rs.next()){
+                while (rs.next()) {
                     t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                 }
                 rs.close();
@@ -5561,7 +5561,7 @@ public class PPrint {
                 Statement stmt = mysql.getConnection().createStatement();
                 String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                 ResultSet rs = stmt.executeQuery(CheckGift);
-                while(rs.next()){
+                while (rs.next()) {
                     t += ("colspan=3 align=center><font face=Angsana New size=2>" + TAB + rs.getString("giftbarcode") + "@" + DecFmt.format(rs.getDouble("giftamt")) + "_");
                 }
                 rs.close();
@@ -5659,13 +5659,13 @@ public class PPrint {
                     + "where (r_void<>'V') or (r_void is null) "
                     + "group by r_table";
             ResultSet rs = stmt.executeQuery(ChkTable);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(rs.getString("r_table"), 6)
-                            + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
-                            + "</td><td align=right><fonjt face=Angsana New size=1>"
-                            + PUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
-                            + PUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
-                    SumTotal = SumTotal + rs.getDouble("sum(r_total)");
+                        + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
+                        + "</td><td align=right><fonjt face=Angsana New size=1>"
+                        + PUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
+                        + PUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
+                SumTotal = SumTotal + rs.getDouble("sum(r_total)");
             }
             rs.close();
             stmt.close();
@@ -5814,7 +5814,7 @@ public class PPrint {
         return list;
     }
 
-    private String[] credit() {
+    private String[] credit(String Macno) {
         CONFIG = POSConfigSetup.Bean();
         String[] credit = new String[]{"", ""};
 
@@ -5826,6 +5826,7 @@ public class PPrint {
                     + "from billno"
                     + " where b_void<>'V' "
                     + "and b_cramt1>'0' "
+                    + "and B_MacNo='" + Macno + "'"
                     + "group by b_crcode1 "
                     + "order by b_crcode1 ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -6176,7 +6177,7 @@ public class PPrint {
         } finally {
             mysql.close();
         }
-        
+
         return listObj;
     }
 
@@ -6274,7 +6275,7 @@ public class PPrint {
         } finally {
             mysql.close();
         }
-        
+
         return cuName;
     }
 }
