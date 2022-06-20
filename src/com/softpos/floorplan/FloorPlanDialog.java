@@ -67,7 +67,7 @@ import util.MSG;
 import util.Option;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
-
+    
     private POSHWSetup POSHW;
     private POSConfigSetup CONFIG;
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
@@ -79,29 +79,29 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private Font fontC = new Font("Tahoma", Font.BOLD, 16);
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private MemberBean memberBean;
-
+    
     private String zoneSelected = "T";
     private int buttonStyle = 0;
-
+    
     private final ProductControl productControl = new ProductControl();
     private JButton[] buttons = new JButton[100];
-
+    
     public FloorPlanDialog() {
         setUndecorated(true);
         initComponents();
-
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
-
+        
         refresh = PosControl.getRefreshTime();
         if (refresh < 1) {
             refresh = 1;
         }
-
+        
         Value.TableSelected = "";
-
+        
         new Thread(() -> {
             for (int a = 0; a < 10; a++) {
                 if (a == 9) {
@@ -113,7 +113,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         //load header for tab
         loadHeaderTab();
-
+        
         new Thread(() -> {
             for (int i = 0; i < 10; i++) {
                 addButton();
@@ -129,7 +129,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
             }
         }).start();
-
+        
         jMenu1.setVisible(true);
         jMenu2.setVisible(false);
         jMenu3.setVisible(true);
@@ -141,7 +141,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         // init product list data
         productControl.initLoadProductActive();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1112,7 +1112,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         SetupFloorPlanHeader setup = new SetupFloorPlanHeader(null, true);
         setup.setVisible(true);
-
+        
         loadHeaderTab();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
@@ -1174,7 +1174,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             setVisible(false);
             MainSale mainSale = new MainSale(null, true, Value.TableSelected);
             mainSale.setVisible(true);
-
             dispose();
         }
     }//GEN-LAST:event_jMenuItem11ActionPerformed
@@ -1248,7 +1247,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         SetupButtonTable setup = new SetupButtonTable(null, true, Value.BTN_FLOORPLAN);
         setup.setVisible(true);
-
+        
         addButton();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -1309,6 +1308,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         if (dialogResult == JOptionPane.YES_OPTION) {
             if (dialogResult == 0) {
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 try {
                     String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
                     mysql.open();
@@ -1387,28 +1387,29 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void btnZone7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZone7ActionPerformed
         loadZone("F");
     }//GEN-LAST:event_btnZone7ActionPerformed
-
+    
     private void saveToBalance(String tableNo, String pcode, String r_etd, double r_quan) {
         String PCode = pcode;
-
+        
         String StkCode = PUtility.GetStkCode();
         String emp = Value.EMP_CODE;
         String etd = r_etd;
         String[] data = Option.splitPrice(PCode);
         double R_Quan = r_quan;
         PCode = data[1];
-
+        
         ProductControl pCon = new ProductControl();
         ProductBean productBean = pCon.getData(PCode);
         BalanceBean balance = new BalanceBean();
         balance.setStkCode(StkCode);
-
+        
         double Price = 0.00;
 
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1429,7 +1430,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     balance.setR_Opt7(GetQty.OPTION_TEXT[6]);
                     balance.setR_Opt8(GetQty.OPTION_TEXT[7]);
                     balance.setR_Opt9(GetQty.OPTION_TEXT[8]);
-
+                    
                     GetQty.clear();//clear temp option
                     balance.setR_PrintOK("Y");
                     balance.setMacno(Value.MACNO);
@@ -1438,11 +1439,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     balance.setR_Quan(R_Quan);
                     balance.setR_Table(tableNo);
                     balance.setR_Emp(emp);
-
+                    
                     balance.setR_PrCuType("");
                     balance.setR_PrCuQuan(0.00);
                     balance.setR_PrCuAmt(0.00);
-
+                    
                     balance.setR_PluCode(productBean.getPCode());
                     balance.setR_Group(productBean.getPGroup());
                     balance.setR_Status(productBean.getPStatus());
@@ -1455,7 +1456,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     balance.setR_PName(productBean.getPDesc());
                     balance.setR_Unit(productBean.getPUnit1());
                     balance.setR_Set(productBean.getPSet());
-
+                    
                     if (balance.getR_Status().equals("P")) {
                         switch (etd) {
                             case "E":
@@ -1479,10 +1480,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     } else {
                         balance.setR_Price(Price);
                     }
-
+                    
                     balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
                     balance.setR_PrChkType("");
-
+                    
                     BalanceControl balanceControl = new BalanceControl();
                     String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
                     balance.setR_Index(R_Index);
@@ -1502,13 +1503,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_PrSubAmt(0);
                         balance.setR_QuanCanDisc(balance.getR_Quan());
                     }
-
+                    
                     balance.setR_Pause("P");
                     balanceControl.saveBalance(balance, productBean);
 
                     //update temptset
                     updateTempTset(balance, r_etd, tableNo, productBean);
-
+                    
                     stmt.close();
 
                     //Process Stock Out
@@ -1517,7 +1518,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
                         PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                 balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
-
+                        
                     }
 
                     //ตัดสต็อกสินค้าที่มี Ingredent
@@ -1541,9 +1542,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
                                         balance.getCashier(), "Y", "", "", "");
                             }
-
+                            
                         }
-
+                        
                         rs1.close();
                         stmt1.close();
                     } catch (SQLException e) {
@@ -1737,79 +1738,85 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private final TableSetupControl tableFileControl = new TableSetupControl();
-
+    
     private void addButton() {
-        resetButton();
-        
-        List<FloorPlanBean> listFloorPlan = tableFileControl.getTableSetup(zoneSelected);
-        for (FloorPlanBean bean : listFloorPlan) {
-            String codeId = bean.getCodeId();
-            JButton btn = findButton(panelMain, codeId);
-            if (btn == null) {
-                continue;
-            }
-            if (bean.getLoginTime() != null) {
-                String r_time = bean.getRTime();
-                if (r_time == null) {
-                    r_time = "";
-                } else {
-                    r_time = "(" + r_time + ")";
+        try {
+            resetButton();
+            
+            List<FloorPlanBean> listFloorPlan = tableFileControl.getTableSetup(zoneSelected);
+            for (FloorPlanBean bean : listFloorPlan) {
+                String codeId = bean.getCodeId();
+                JButton btn = findButton(panelMain, codeId);
+                if (btn == null) {
+                    continue;
                 }
-
-                btn.setText(bean.getTableNo() + r_time);
-                if (bean.getCustomer() == 0 && bean.getItem() > 0) {
-                    btn.setText(bean.getTableNo() + r_time);
-                }
-                if (bean.isIsActive()) {
-                    btn.setOpaque(false);
-                    btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
-                    btn.setForeground(Color.RED);
-                    btn.setFont(fontB);
-                    btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
-                    btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                    btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
-                    btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                } else {
-                    if (bean.getPrintChkBill().equals("N") && bean.getCustomer() > 0) {
-                        btn.setFont(fontB);
-                        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Teble2.png")));
-                        btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                        btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
-                        btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                    } else if (bean.getPrintChkBill().equals("Y")) {
-                        btn.setOpaque(true);
-                        btn.setFont(fontB);
-                        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkbill.png")));
-                        btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                        btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
-                        btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                        btn.setBackground(Color.PINK);
+                if (bean.getLoginTime() != null) {
+                    String r_time = bean.getRTime();
+                    if (r_time == null) {
+                        r_time = "";
                     } else {
-                        btn.setOpaque(true);
+                        r_time = "(" + r_time + ")";
+                    }
+                    
+                    btn.setText(bean.getTableNo() + r_time);
+                    if (bean.getCustomer() == 0 && bean.getItem() > 0) {
+                        btn.setText(bean.getTableNo() + r_time);
+                    }
+                    if (bean.isIsActive()) {
+                        btn.setOpaque(false);
+                        btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
+                        btn.setForeground(Color.RED);
                         btn.setFont(fontB);
                         btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
                         btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                    } else {
+                        if (bean.getPrintChkBill().equals("N") && bean.getCustomer() > 0) {
+                            btn.setFont(fontB);
+                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Teble2.png")));
+                            btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                        } else if (bean.getPrintChkBill().equals("Y")) {
+                            btn.setOpaque(true);
+                            btn.setFont(fontB);
+                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkbill.png")));
+                            btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                            btn.setBackground(Color.PINK);
+                        } else {
+                            btn.setOpaque(true);
+                            btn.setFont(fontB);
+                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
+                            btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                            btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                        }
                     }
+                } else {
+                    btn.setOpaque(false);
+                    btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
+                    btn.setBackground(null);
+                    btn.setFont(fontB);
+                    btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
+                    btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                    btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                    btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                 }
-            } else {
-                btn.setOpaque(false);
-                btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
-                btn.setBackground(null);
-                btn.setFont(fontB);
-                btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
-                btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
-                btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                
             }
-
+        } catch (Exception e) {
+            MSG.NOTICE(e.toString());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
+        
     }
-
+    
     private void loadHeaderTab() {
         btnZone1.setBackground(Color.green);
-
+        
         CompanyBean companyBean = PosControl.getDataCompany();
         String[] floorTab = new String[]{
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()),
@@ -1820,25 +1827,25 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()),
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7())
         };
-
+        
         btnZone1.setText(floorTab[0]);
         btnZone1.setVisible(!floorTab[0].trim().equals(""));
-
+        
         btnZone2.setText(floorTab[1]);
         btnZone2.setVisible(!floorTab[1].trim().equals(""));
-
+        
         btnZone3.setText(floorTab[2]);
         btnZone3.setVisible(!floorTab[2].trim().equals(""));
-
+        
         btnZone4.setText(floorTab[3]);
         btnZone4.setVisible(!floorTab[3].trim().equals(""));
-
+        
         btnZone5.setText(floorTab[4]);
         btnZone5.setVisible(!floorTab[4].trim().equals(""));
-
+        
         btnZone6.setText(floorTab[5]);
         btnZone6.setVisible(!floorTab[5].trim().equals(""));
-
+        
         btnZone7.setText(floorTab[6]);
         btnZone7.setVisible(!floorTab[6].trim().equals(""));
 
@@ -1846,7 +1853,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         initLoadButtons();
         loadZone(zoneSelected);
     }
-
+    
     private JButton findButton(JPanel pnZone, String codeId) {
         for (int i = 0; i < pnZone.getComponentCount(); i++) {
             Component comp = pnZone.getComponent(i);
@@ -1859,53 +1866,60 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
     public void PrintCheckBillFromPDA() {
-        //ฟังก์ชั่นสั่งเช็คบิลสำหรับ PDA
-        System.out.println("PrintCheckBillFromPDA= loop");
-        if (!POSHW.getTakeOrderChk().equals("Y")) {
-            MySQLConnect mysql = new MySQLConnect();
-            try {
-                mysql.open();
-                String sql = "select * from balance where PDAPrintCheck='Y' "
-                        + "group by r_table order by r_time;";
-                // อัพเดท = N หลังจากพิมพ์แล้วเพื่อให้ PDA สามารถสั่งพิมพ์ซ้ำๆ ได้
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-                while (rs.next()) {
-                    String table = rs.getString("r_table");
-                    String emp = ThaiUtil.ASCII2Unicode(rs.getString("PDAEMP"));
-                    if (Value.useprint) {
-                        PPrint print = new PPrint();
-                        print.printCheckBillDriverPDA(table, emp);
-                    }
-                    String sqlUpdate = "update balance set PDAPrintCheck='N' where r_table='" + table + "';";
-                    mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
-                }
-                rs.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                AppLogUtil.log(FloorPlanDialog.class, "error", e);
-            } finally {
+        try {
+            //ฟังก์ชั่นสั่งเช็คบิลสำหรับ PDA
+            System.out.println("PrintCheckBillFromPDA= loop");
+            if (!POSHW.getTakeOrderChk().equals("Y")) {
+                MySQLConnect mysql = new MySQLConnect();
                 mysql.close();
+                try {
+                    mysql.open();
+                    String sql = "select * from balance where PDAPrintCheck='Y' "
+                            + "group by r_table order by r_time;";
+                    // อัพเดท = N หลังจากพิมพ์แล้วเพื่อให้ PDA สามารถสั่งพิมพ์ซ้ำๆ ได้
+                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                    while (rs.next()) {
+                        String table = rs.getString("r_table");
+                        String emp = ThaiUtil.ASCII2Unicode(rs.getString("PDAEMP"));
+                        if (Value.useprint) {
+                            PPrint print = new PPrint();
+                            print.printCheckBillDriverPDA(table, emp);
+                        }
+                        String sqlUpdate = "update balance set PDAPrintCheck='N' where r_table='" + table + "';";
+                        mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
+                    }
+                    rs.close();
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                    AppLogUtil.log(FloorPlanDialog.class, "error", e);
+                } finally {
+                    mysql.close();
+                }
             }
+        } catch (Exception e) {
+            AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
+        
     }
-
+    
     private void logout() {
         if (MSG.CONF(this, "ยืนยันการออกจากระบบการขาย (Logoff User) ? ")) {
             PublicVar.P_LineCount = 1;
             PublicVar.P_LogoffOK = false;
-
+            
             if (UpdateLogout(PublicVar._RealUser)) {
                 clearTemp();
-
+                
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._User + "')";
                     stmt.executeUpdate(sql1);
-
+                    
                     String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
                     if (stmt.executeUpdate(sql2) > 0) {
                         // reset load poshwsetup
@@ -1923,6 +1937,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         } else {
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             try {
                 mysql.open();
                 String sql1 = "update poshwsetup set onact='N' where terminal='" + Value.MACNO + "'";
@@ -1942,13 +1957,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void clearTemp() {
         new File("softrestaurant.running").delete();
     }
-
+    
     boolean UpdateLogout(String UserCode) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1956,7 +1972,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 stmt.executeUpdate(SQLQuery);
             }
             Value.CASHIER = "";
-
+            
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1965,14 +1981,15 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } finally {
             mysql.close();
         }
-
+        
     }
-
+    
     private void returnBill() {
         String tableTemp = Value.TEMP_TABLE_REFUND;
         boolean checkExistTempRefund = false;
-
+        
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select r_plucode from sp_temp_refund limit 1;";
@@ -1983,7 +2000,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     TableFileControl tfControl = new TableFileControl();
                     tfControl.createNewTable(tableTemp);
                 }
-
+                
                 BalanceControl bControl = new BalanceControl();
                 int count = 0;
                 rs = stmt.executeQuery(sql);
@@ -2004,11 +2021,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     bBean.setR_Opt7("");
                     bBean.setR_Opt8("");
                     bBean.setR_Opt9("");
-
+                    
                     bBean.setR_Table(tableTemp);
                     bBean.setR_Emp("");
                     bBean.setCashier("");
-
+                    
                     String runningIndex;
                     if (count < 10) {
                         runningIndex = "00" + count;
@@ -2017,13 +2034,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     } else {
                         runningIndex = "" + count;
                     }
-
+                    
                     bBean.setR_Index(tableTemp + "/" + runningIndex);
-
+                    
                     ProductBean productBean = productControl.getProductCodeArray(bBean.getR_PluCode());
                     bControl.saveBalance(bBean, productBean);
                 }
-
+                
                 rs.close();
                 stmt.close();
             }
@@ -2033,7 +2050,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } finally {
             mysql.close();
         }
-
+        
         if (!checkExistTempRefund) {
             JOptionPane.showMessageDialog(this, "ไม่พบบิลรายการขายสินค้า ที่ยกเลิกก่อนหน้านี้ !");
         } else {
@@ -2042,12 +2059,17 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 Statement stmt = mysql.getConnection().createStatement();
                 //clear temp table
                 stmt.executeUpdate("delete from sp_temp_refund");
-
+                
                 BalanceControl.updateProSerTable(tableTemp, null);
                 Value.TableSelected = tableTemp;
-                MainSale mainSale = new MainSale(null, true, tableTemp);
-                mainSale.setVisible(true);
-
+                try {
+                    MainSale mainSale = new MainSale(null, true, tableTemp);
+                    mainSale.setVisible(true);
+                } catch (Exception e) {
+                    MSG.NOTICE(e.toString());
+                    AppLogUtil.log(FloorPlanDialog.class, "error", e);
+                }
+                
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -2058,51 +2080,60 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             // close this window
             dispose();
         }
-
+        
     }
-
+    
     private void refund() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        boolean isPermit = false;
         try {
-            String sql = "select Username, Sale3 from posuser where username='" + Value.USERCODE + "' and Sale2='Y' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                if (rs.next()) {
-                    isPermit = true;
-                }
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(FloorPlanDialog.class, "error", e);
-        } finally {
+            MySQLConnect mysql = new MySQLConnect();
             mysql.close();
-        }
+            mysql.open();
 
-        if (isPermit) {
-            RefundBill refund = new RefundBill(null, true);
-            refund.setVisible(true);
-        } else {
-            GetUserAction getuser = new GetUserAction(null, true);
-            getuser.setVisible(true);
-
-            if (!PublicVar.ReturnString.equals("")) {
-                String loginname = PublicVar.ReturnString;
-                UserRecord supUser = new UserRecord();
-                if (supUser.GetUserAction(loginname)) {
-                    if (supUser.Sale2.equals("Y")) {
-                        RefundBill refund = new RefundBill(null, true);
-                        refund.setVisible(true);
-                    } else {
-                        MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+            boolean isPermit = false;
+            try {
+                String sql = "select Username, Sale3 from posuser where username='" + Value.USERCODE + "' and Sale2='Y' limit 1";
+                try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                    if (rs.next()) {
+                        isPermit = true;
                     }
-                } else {
-                    MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(FloorPlanDialog.class, "error", e);
+            } finally {
+                mysql.close();
             }
-        }
-    }
 
+            if (isPermit) {
+                RefundBill refund = new RefundBill(null, true);
+                refund.setVisible(true);
+            } else {
+                GetUserAction getuser = new GetUserAction(null, true);
+                getuser.setVisible(true);
+
+                if (!PublicVar.ReturnString.equals("")) {
+                    String loginname = PublicVar.ReturnString;
+                    UserRecord supUser = new UserRecord();
+                    if (supUser.GetUserAction(loginname)) {
+                        if (supUser.Sale2.equals("Y")) {
+                            RefundBill refund = new RefundBill(null, true);
+                            refund.setVisible(true);
+                        } else {
+                            MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        }
+                    } else {
+                        MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    }
+                }
+            }   
+            
+        } catch (Exception e) {
+            MSG.NOTICE(e.toString());
+            AppLogUtil.log(FloorPlanDialog.class, "error", e);
+        }
+       
+    }
+    
     private void initLoadButtons() {
         buttons[0] = btn1;
         buttons[1] = btn11;
@@ -2114,7 +2145,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[7] = btn71;
         buttons[8] = btn81;
         buttons[9] = btn91;
-
+        
         buttons[10] = btn2;
         buttons[11] = btn12;
         buttons[12] = btn22;
@@ -2125,7 +2156,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[17] = btn72;
         buttons[18] = btn82;
         buttons[19] = btn92;
-
+        
         buttons[20] = btn3;
         buttons[21] = btn13;
         buttons[22] = btn23;
@@ -2136,7 +2167,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[27] = btn73;
         buttons[28] = btn83;
         buttons[29] = btn93;
-
+        
         buttons[30] = btn4;
         buttons[31] = btn14;
         buttons[32] = btn24;
@@ -2147,7 +2178,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[37] = btn74;
         buttons[38] = btn84;
         buttons[39] = btn94;
-
+        
         buttons[40] = btn5;
         buttons[41] = btn15;
         buttons[42] = btn25;
@@ -2158,7 +2189,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[47] = btn75;
         buttons[48] = btn85;
         buttons[49] = btn95;
-
+        
         buttons[50] = btn6;
         buttons[51] = btn16;
         buttons[52] = btn26;
@@ -2169,7 +2200,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[57] = btn76;
         buttons[58] = btn86;
         buttons[59] = btn96;
-
+        
         buttons[60] = btn7;
         buttons[61] = btn17;
         buttons[62] = btn27;
@@ -2180,7 +2211,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[67] = btn77;
         buttons[68] = btn87;
         buttons[69] = btn97;
-
+        
         buttons[70] = btn8;
         buttons[71] = btn18;
         buttons[72] = btn28;
@@ -2191,7 +2222,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[77] = btn78;
         buttons[78] = btn88;
         buttons[79] = btn98;
-
+        
         buttons[80] = btn9;
         buttons[81] = btn19;
         buttons[82] = btn29;
@@ -2202,7 +2233,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[87] = btn79;
         buttons[88] = btn89;
         buttons[89] = btn99;
-
+        
         buttons[90] = btn10;
         buttons[91] = btn20;
         buttons[92] = btn30;
@@ -2213,30 +2244,30 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[97] = btn80;
         buttons[98] = btn90;
         buttons[99] = btn100;
-
+        
         resetButton();
     }
-
+    
     private void resetButton() {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = initButtonTable(buttons[i], i);
-            
+
 //            for(ActionListener listener: buttons[i].getActionListeners()){
 //                buttons[i].removeActionListener(listener);
 //            }
         }
     }
-
+    
     private JButton initButtonTable(JButton button, int c) {
         button.setText("");
         button.setIcon(null);
         button.setBackground(null);
         button.setForeground(Color.BLACK);
         
-        for(ActionListener listener: button.getActionListeners()){
+        for (ActionListener listener : button.getActionListeners()) {
             button.removeActionListener(listener);
         }
-
+        
         if (buttonStyle == 1) {
             button.setFont(fontA);
             button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -2254,13 +2285,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
             button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
         }
-
+        
         return button;
     }
-
+    
     private void loadZone(String zone) {
         this.zoneSelected = zone;
-
+        
         btnZone1.setBackground("T".equals(zone) ? Color.green : null);
         btnZone2.setBackground("A".equals(zone) ? Color.green : null);
         btnZone3.setBackground("B".equals(zone) ? Color.green : null);
@@ -2288,22 +2319,24 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         // load data
         addButton();
     }
-
+    
     private class MouseFocusAction implements ActionListener {
-
+        
         private JButton button;
         private int index;
-
+        
         public MouseFocusAction(JButton button, int index) {
             this.button = button;
             this.index = index;
         }
-
+        
         private void showPOS(String tableNo) {
             dispose();
-
+            
             String sql = "delete from tempset where ptableno='" + tableNo + "';";
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
+            mysql.close();
             try {
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sql);
@@ -2313,11 +2346,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             } finally {
                 mysql.close();
             }
-
+            
             MainSale mainSale = new MainSale(null, true, tableNo);
             mainSale.setVisible(true);
         }
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             String tableNo = button.getText().trim();
@@ -2329,16 +2362,17 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 //check table is available
                 TableFileControl tfCont = new TableFileControl();
                 if (!tfCont.checkTableOpened(tableNo)) {
-
+                    
                     String P_EmpUse = CONFIG.getP_EmpUse();
                     if (P_EmpUse.equals("Y")) {
                         // get employee password
                         EmployLogin login = new EmployLogin(null, true);
                         login.setVisible(true);
-
+                        
                         if (!login.getLoginPWD().equals("")) {
                             String sql2 = "select code,name from employ where Code='" + login.getLoginPWD() + "' limit 1;";
                             MySQLConnect mysql = new MySQLConnect();
+                            mysql.close();
                             mysql.open();
                             try {
                                 Statement stmt2 = mysql.getConnection().createStatement();
@@ -2357,9 +2391,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                     } catch (SQLException e9) {
                                         MSG.ERR(e9.getMessage());
                                     }
-
+                                    
                                     Value.EMP_CODE = login.getLoginPWD();
-
+                                    
                                     showPOS(tableNo);
                                 } else {
                                     if (!login.getLoginPWD().equals("")) {
@@ -2367,7 +2401,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                     }
                                     login.setVisible(false);
                                 }
-
+                                
                                 rs2.close();
                                 stmt2.close();
                             } catch (HeadlessException | SQLException e1) {
@@ -2387,56 +2421,56 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private class MouseClickAction extends MouseAdapter {
-
+        
         private JButton button;
         private int index;
-
+        
         public MouseClickAction(JButton button, int index) {
             this.button = button;
             this.index = index;
         }
-
+        
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (evt.getButton() == 3) {
                 Value.BTN_FLOORPLAN = button.getName();
                 JPopupMenu pop = jPopupMenu1;
                 pop.show(button, evt.getX(), evt.getY());
-
+                
             }
         }
     }
-
+    
     public JPanel getPanelImage(JLabel lbCust, final JLabel lbTable, JButton btnIcon) {
         //config layout
         JPanel pnButton = new JPanel();
         pnButton.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
+        
         lbCust.setFont(new java.awt.Font("Tahoma", 1, 10));
         lbCust.setForeground(new java.awt.Color(0, 0, 204));
         lbCust.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbCust.setText("C(0) T(1,500)");
         pnButton.add(lbCust, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 80, 30));
-
+        
         lbTable.setFont(new java.awt.Font("Tahoma", 1, 12));
         lbTable.setForeground(new java.awt.Color(0, 0, 204));
         lbTable.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTable.setText("TABLE: 101");
         pnButton.add(lbTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 80, 30));
-
+        
         btnIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_void.png")));
         btnIcon.setSize(70, 70);
         btnIcon.addActionListener((ActionEvent e) -> {
             MSG.ERR(null, lbTable.getText());
         });
-
+        
         pnButton.add(btnIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 80));
-
+        
         return pnButton;
     }
-
+    
     boolean ChkEJPath() {
         if (POSHW.getEJounal().equals("Y")) {
             try {
@@ -2455,7 +2489,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             return true;
         }
     }
-
+    
     private void openDoc() {
         Desktop desktop = Desktop.getDesktop();
         String file = "user_manaual.pdf";
@@ -2470,7 +2504,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             MSG.ERR(this, ex.getMessage());
         }
     }
-
+    
     private void openWebpage(URI uri) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -2481,24 +2515,26 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void openWebpage(URL url) throws URISyntaxException {
         openWebpage(url.toURI());
     }
-
+    
     private void updateTempTset(BalanceBean bBean, String r_etd, String tableNo, ProductBean productBean) {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
+        mysql.close();
         mysql.open();
-
+        
         try {
             String sqlUpd = "update tempset set "
                     + "PIndex='" + bBean.getR_Index() + "' "
                     + "where PTableNo='" + bBean.getR_Table() + "' ";
             mysql.getConnection().createStatement().executeUpdate(sqlUpd);
-
+            
             String sql = "select * from tempset where PIndex='" + bBean.getR_Index() + "' ";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
@@ -2514,7 +2550,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         String[] data = Option.splitPrice(PCode);
                         double R_Quan = Double.parseDouble(data[0]);
                         PCode = data[1];
-
+                        
                         BalanceBean balance = new BalanceBean();
                         balance.setStkCode(StkCode);
                         balance.setR_PrintOK(PublicVar.PrintOK);
@@ -2524,11 +2560,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_Quan(R_Quan);
                         balance.setR_Table(tableNo);
                         balance.setR_Emp(emp);
-
+                        
                         balance.setR_PrCuType("");
                         balance.setR_PrCuQuan(0.00);
                         balance.setR_PrCuAmt(0.00);
-
+                        
                         balance.setR_PluCode(productBean.getPCode());
                         balance.setR_Group(productBean.getPGroup());
                         balance.setR_Status(productBean.getPStatus());
@@ -2541,7 +2577,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_PName(productBean.getPDesc());
                         balance.setR_Unit(productBean.getPUnit1());
                         balance.setR_Set(productBean.getPSet());
-
+                        
                         if (balance.getR_Status().equals("P")) {
                             switch (etd) {
                                 case "E":
@@ -2563,10 +2599,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                     break;
                             }
                         }
-
+                        
                         balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
                         balance.setR_PrChkType("");
-
+                        
                         BalanceControl balanceControl = new BalanceControl();
                         String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
                         balance.setR_Index(R_Index);
@@ -2582,23 +2618,23 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         balance.setR_QuanCanDisc(balance.getR_Quan());
                         balance.setR_KicPrint("");
                         balance.setR_Pause("P");
-
+                        
                         balanceControl.saveBalance(balance, productBean);
                         updateBalanceOptionFromTemp(bBean.getR_Index(), balance.getR_Table(), PCode);
 
                         //Process stock out
                         String StkRemark = "SAL";
                         String DocNo = tableNo + "/" + Timefmt.format(new Date());
-
+                        
                         if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
                             PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                     balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
-
+                            
                         }
 
                         //ตัดสต็อกสินค้าที่มี Ingredent
                         try {
-
+                            
                             String sql1 = "select i.*,pdesc,PBPack,pstock,pactive "
                                     + "from product p, pingredent i "
                                     + "where p.pcode=i.pingcode "
@@ -2639,7 +2675,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(FloorPlanDialog.class, "error", e);
             }
-
+            
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -2648,9 +2684,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             mysql.close();
         }
     }
-
+    
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select POption from tempset where PIndex='" + R_Index + "' and PCode='" + PCode + "' limit 1";
@@ -2668,7 +2706,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     stmt1.executeUpdate(sql1);
                 }
             }
-
+            
             rs.close();
             stmt.close();
         } catch (SQLException e) {
@@ -2677,11 +2715,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } finally {
             mysql.close();
         }
-
+        
     }
-
+    
     DateConvert dateConvertTimeShow = new DateConvert();
-
+    
     public void showTime() {
         jMenu9.setText(dateConvertTimeShow.dateGetToShow(dateConvertTimeShow.GetCurrentDate()).replace(" ", "") + " " + dateConvertTimeShow.GetCurrentTime() + " USER " + Value.CASHIER);
         try {
@@ -2689,5 +2727,5 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } catch (InterruptedException ex) {
         }
     }
-
+    
 }

@@ -109,7 +109,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();mysql.close();
         mysql.open();
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "

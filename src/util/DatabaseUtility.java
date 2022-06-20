@@ -15,6 +15,7 @@ public class DatabaseUtility {
 
     public int insert(String sql, Object... args) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -41,6 +42,7 @@ public class DatabaseUtility {
 
     public int executeUpdate(String sql, Object... args) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);
@@ -61,6 +63,7 @@ public class DatabaseUtility {
     public Map<String, Object> querySingle(String sql, Object... args) {
         Map<String, Object> map = new HashMap<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);
@@ -99,6 +102,7 @@ public class DatabaseUtility {
     public List<Map<String, Object>> queryList(String sql, Object... args) {
         List<Map<String, Object>> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);

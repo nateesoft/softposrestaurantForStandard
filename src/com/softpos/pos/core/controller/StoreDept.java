@@ -13,11 +13,12 @@ public class StoreDept {
     public boolean store(DeptButtonBean bean) {
         String sql = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             sql = "INSERT INTO menusetup (code_id,code_type,pcode,shortname,ppathname,pcolor)"
                     + " VALUES ('" + bean.getButtonName() + "','" + bean.getButtonType().toCharArray()[0] + "',"
-                    + "'" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "','','','"+bean.getPcolor()+"')";
+                    + "'" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "','','','" + bean.getPcolor() + "')";
             Statement stmt = mysql.getConnection().createStatement();
             int i = stmt.executeUpdate(sql);
             stmt.close();
@@ -25,9 +26,9 @@ public class StoreDept {
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
             AppLogUtil.log(StoreDept.class, "error", e);
-            
+
             return false;
-        } finally{
+        } finally {
             mysql.close();
         }
     }
@@ -38,6 +39,7 @@ public class StoreDept {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             sql = "UPDATE menusetup SET "
@@ -45,7 +47,7 @@ public class StoreDept {
                     + "pcode = '" + bean.getGroupcode() + "',"
                     + "shortname = '" + ThaiUtil.Unicode2ASCII(bean.getShortDesc()) + "',"
                     + "ppathname = '',"
-                    + "pcolor='"+bean.getPcolor()+"' "
+                    + "pcolor='" + bean.getPcolor() + "' "
                     + "WHERE code_id = '" + bean.getButtonName() + "'";
             Statement stmt = mysql.getConnection().createStatement();
             int i = stmt.executeUpdate(sql);
@@ -54,7 +56,7 @@ public class StoreDept {
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage() + "\n" + sql);
             AppLogUtil.log(StoreDept.class, "error", e);
-            
+
             return false;
         } finally {
             mysql.close();

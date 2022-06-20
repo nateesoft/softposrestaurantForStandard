@@ -222,6 +222,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -271,6 +272,8 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         PublicVar.ReturnString = "";
         Value.TableSelected = "";
         this.dispose();
+        FloorPlanDialog fl = new FloorPlanDialog();
+        fl.setVisible(true);
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -317,6 +320,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
@@ -326,7 +330,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     + "or TAmount>0 "
                     + "or TItem > 0 "
                     + "or Tcustomer > 0 "
-//                    + "order by tcurtime";
+                    //                    + "order by tcurtime";
                     + "order by tcode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(LoadTableFile);

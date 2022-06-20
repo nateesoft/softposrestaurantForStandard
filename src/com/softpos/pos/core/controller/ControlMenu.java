@@ -58,6 +58,7 @@ public class ControlMenu {
     public List<ProductBean> getMenuItem(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
@@ -100,6 +101,7 @@ public class ControlMenu {
     public List<ProductBean> getMenuItem2(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
@@ -138,6 +140,7 @@ public class ControlMenu {
 
     public List<MenuSetup> menuAt(String index) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         String sql = "select * from menusetup where Code_ID like '" + index + "%' "
                 + "and length(Code_ID)=3 group by Code_Id order by Code_Id";
@@ -169,6 +172,7 @@ public class ControlMenu {
 
     public List<MenuSetup> menuItemAt(String Code_ID) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID limit 1";
         try {
@@ -245,6 +249,7 @@ public class ControlMenu {
             ThaiUtil.ASCII2Unicode(companyBean.getHead4()),};
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql;
@@ -389,6 +394,7 @@ public class ControlMenu {
     public String getMenuItemAt(String pCode) {
         String menuAt = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y' limit 1";

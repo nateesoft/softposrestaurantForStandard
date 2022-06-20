@@ -16,6 +16,7 @@ public class TableMoveControl {
 
     private static void updateRLinkIndex(String tableDest) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql1 = "select R_SPIndex,R_LinkIndex,R_MoveFrom "

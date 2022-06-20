@@ -35,6 +35,7 @@ public class PosControl {
             return companyBean;
         }
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from company limit 1";
@@ -105,6 +106,7 @@ public class PosControl {
             return posConfigSetup;
         }
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from posconfigsetup limit 1";
@@ -188,6 +190,7 @@ public class PosControl {
             return poshwsetup;
         }
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "' limit 1";

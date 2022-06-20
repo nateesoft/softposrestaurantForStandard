@@ -20,6 +20,7 @@ public class TableSetupControl {
         List<FloorPlanBean> listBean = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select code_id, t1.tcode, tcustomer, tonact, "

@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MySQLConnect {
@@ -88,6 +89,7 @@ public class MySQLConnect {
             fs.close();
         } catch (IOException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MySQLConnect.class, "error", e);
         }
     }
 
@@ -106,6 +108,7 @@ public class MySQLConnect {
                 con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
             } catch (ClassNotFoundException | SQLException e) {
                 MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                AppLogUtil.log(MySQLConnect.class, "error", e);
                 System.exit(0);
             }
         }
@@ -121,7 +124,9 @@ public class MySQLConnect {
                 con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+                AppLogUtil.log(MySQLConnect.class, "error", ex);
             }
+
         }
     }
 

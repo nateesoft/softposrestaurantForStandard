@@ -25,6 +25,7 @@ public class TableFileControl {
 
     public void saveTableFile(TableFileBean tableBean) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "insert into tablefile "
@@ -72,6 +73,7 @@ public class TableFileControl {
 
     public void updateTableFile(TableFileBean tableFile) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set "
@@ -115,6 +117,7 @@ public class TableFileControl {
     public int checkTableRead(String tableNo, String user) {
         int result;
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select TItem,TOnAct,TUser from tablefile where TCode='" + tableNo + "' limit 1";
@@ -168,6 +171,7 @@ public class TableFileControl {
     public List<TableFileBean> getALlHoldTable() {
         List<TableFileBean> allTable = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile where TAmount>0")) {
@@ -244,6 +248,7 @@ public class TableFileControl {
     public List<TableFileBean> getALlTable() {
         List<TableFileBean> allTable = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile")) {
@@ -321,6 +326,7 @@ public class TableFileControl {
     public List<TableSetup> getTable(String TCode) {
         List<TableSetup> allTable = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select t2.Code_ID, t1.TCode from tablefile t1 , tablesetup t2 "
@@ -351,6 +357,7 @@ public class TableFileControl {
     public TableFileBean getData(String table) {
         TableFileBean bean = new TableFileBean();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select * from tablefile where Tcode='" + table + "' limit 1";
@@ -427,6 +434,7 @@ public class TableFileControl {
 
     public void setDefaultTableFile(String table) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set "
@@ -460,6 +468,7 @@ public class TableFileControl {
 
     public void updateTableActive(String table, String customer, String emp) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set "
@@ -492,6 +501,7 @@ public class TableFileControl {
 
     public void updateMacno(String table, String username) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set "
@@ -512,6 +522,7 @@ public class TableFileControl {
 
     public void createNewTableSplit(TableFileBean table, String newTable) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String chk = "select tcode from tablefile where tcode='" + newTable + "' limit 1";
@@ -539,6 +550,7 @@ public class TableFileControl {
 
     public String getSplitTable(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select Tcode from tablefile where Tcode='" + tableNo + "' limit 1";
@@ -575,6 +587,7 @@ public class TableFileControl {
 
     public static void updateTableFile(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             double TAmount = 0.00;
@@ -614,6 +627,7 @@ public class TableFileControl {
 
     public boolean checkTableOpened(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select Cashier from tablefile where TOnact='Y' and tcode='" + tableNo + "';";
@@ -635,6 +649,7 @@ public class TableFileControl {
 
     public void createNewTable(String tableTemp) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -654,6 +669,7 @@ public class TableFileControl {
 
     public void updateTableNotActive(String TABLE_NO) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set tonact='N' where tcode='" + TABLE_NO + "';";
@@ -671,6 +687,7 @@ public class TableFileControl {
 
     void updateTableActive(String TABLE_2) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update tablefile set tonact='Y' where tcode='" + TABLE_2 + "';";
@@ -688,6 +705,7 @@ public class TableFileControl {
 
     public int getItemCount(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         int countItem = 0;
         try {
             mysql.open();

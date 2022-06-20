@@ -204,13 +204,13 @@ public class GetUserAction extends javax.swing.JDialog {
     }//GEN-LAST:event_c_loginpasswordKeyPressed
 
     private void c_loginnameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_loginnameMouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(c_loginname);
         }
     }//GEN-LAST:event_c_loginnameMouseClicked
 
     private void c_loginpasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_loginpasswordMouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(c_loginpassword);
         }
     }//GEN-LAST:event_c_loginpasswordMouseClicked
@@ -267,16 +267,18 @@ public class GetUserAction extends javax.swing.JDialog {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
         }
-/**
+        /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select username from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
-            if(rs.next()){
+            if (rs.next()) {
                 PublicVar.ReturnString = loginname;
                 this.dispose();
             } else {
@@ -287,7 +289,7 @@ public class GetUserAction extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GetUserAction.class, "error", e);
             clearlogin();
-        }finally{
+        } finally {
             mysql.close();
         }
 

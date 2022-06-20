@@ -230,6 +230,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -238,9 +239,9 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rs.getDouble("amount");
+                            SumAmt = SumAmt + rs.getDouble("amount");
                         }
                         rs.close();
                         stmt.close();
@@ -263,10 +264,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             CntBill++;
-                                SumCash = SumCash + rs.getDouble("cash");
-                                SumCupon = SumCupon + rs.getDouble("cupon");
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                         }
                         rs.close();
                         stmt.close();
@@ -283,7 +284,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
                         rs.close();
@@ -306,7 +307,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
                         rs.close();
@@ -336,11 +337,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int bill = 0;
         int billVoid = 0;
         double billVoidAmt = 0.00;
-        
+
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
-            
+
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -412,7 +414,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         } finally {
             mysql.close();
         }
-        
+
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
         for (String data : strs) {

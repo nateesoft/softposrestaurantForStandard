@@ -106,7 +106,8 @@ public class ItemDisControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        mysql.close();
         mysql.open();
         try {
             String sql = "UPDATE balance set "
@@ -153,7 +154,7 @@ public class ItemDisControl {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+
         }
 
         BalanceControl.updateProSerTable(Table, memberBean);

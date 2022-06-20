@@ -22,6 +22,7 @@ public class MPluController {
     public static MPluBean getData(String branchCode) {
         MPluBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
@@ -60,8 +61,9 @@ public class MPluController {
     }
 
     public int create(List<MPluBean> listMPlu) {
-        int [] resultCreate = new int[0];
+        int[] resultCreate = new int[0];
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "insert into " + Value.db_member + ".mplu "
@@ -100,6 +102,7 @@ public class MPluController {
 
     public void refundBill(String receiptNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
 
         try {

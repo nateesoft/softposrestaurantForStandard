@@ -15,6 +15,7 @@ public class TCuponControl {
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from t_cupon";
@@ -51,6 +52,7 @@ public class TCuponControl {
     public List<TCuponBean> listTCupon(String R_Index) {
         List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from t_cupon "
@@ -92,6 +94,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from t_cupon where R_Index='" + R_Index + "' limit 1";
@@ -128,6 +131,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         if (bean.getTerminal() == null || bean.getCuCode() == null) {
             bean.setTerminal("");
@@ -161,7 +165,7 @@ public class TCuponControl {
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(TCuponControl.class, "error", e);
-                
+
                 isResult = false;
             } finally {
                 mysql.close();
@@ -176,6 +180,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "update t_cupon "

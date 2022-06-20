@@ -692,6 +692,7 @@ public class PPrint {
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     try {
                         mysql.open();
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
@@ -902,6 +903,7 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -928,6 +930,7 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -1029,6 +1032,7 @@ public class PPrint {
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     try {
                         mysql.open();
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
@@ -1315,6 +1319,7 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -1340,6 +1345,7 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -1423,6 +1429,7 @@ public class PPrint {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
+                        MSG.NOTICE(e.toString());
                     }
                 }
                 pd1.printHTML();
@@ -1584,6 +1591,7 @@ public class PPrint {
                         print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         try {
                             mysql.open();
                             String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
@@ -1605,6 +1613,7 @@ public class PPrint {
                         print("     " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
                         print("     " + PUtility.DataFullR(bBean.getB_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
@@ -1660,6 +1669,7 @@ public class PPrint {
                         //get credit name
                         String crName = "";
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -2491,6 +2501,7 @@ public class PPrint {
                             String NameVoid = "";
 
                             MySQLConnect mysql = new MySQLConnect();
+                            mysql.close();
                             try {
                                 mysql.open();
                                 ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
@@ -2627,6 +2638,7 @@ public class PPrint {
                     String NameVoid = "";
 
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     try {
                         mysql.open();
                         ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
@@ -2774,6 +2786,7 @@ public class PPrint {
                 Double SumTotal = 0.0;
 
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -2906,6 +2919,7 @@ public class PPrint {
                 print("----------------------------------------");
 
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -3123,6 +3137,7 @@ public class PPrint {
                     }
                     if (frec.Cupon_Disc > 0) {
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
@@ -3392,6 +3407,7 @@ public class PPrint {
             }
             if (frec.Cupon_Disc > 0) {
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
@@ -3614,6 +3630,7 @@ public class PPrint {
                     print("----------------------------------------");
 
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -4641,6 +4658,7 @@ public class PPrint {
                     }
                     if (tBean.getB_CuponDiscAmt() > 0) {
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
@@ -4686,6 +4704,7 @@ public class PPrint {
                         print("     " + PUtility.DataFullR("บัตรกำนัล..............", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_GiftVoucher()), AmtLength));
 
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
@@ -4710,6 +4729,7 @@ public class PPrint {
                         //get credit name
                         String crName = "";
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
@@ -4968,6 +4988,7 @@ public class PPrint {
             }
             if (tBean.getB_CuponDiscAmt() > 0) {
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -5005,6 +5026,7 @@ public class PPrint {
             if (tBean.getB_GiftVoucher() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "บัตรกำนัล...." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_GiftVoucher()) + "_");
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -5029,6 +5051,7 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
@@ -5229,6 +5252,7 @@ public class PPrint {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
@@ -5277,6 +5301,7 @@ public class PPrint {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
@@ -5509,6 +5534,7 @@ public class PPrint {
         }
         if (bBean.getB_CuponDiscAmt() > 0) {
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -5556,6 +5582,7 @@ public class PPrint {
             t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + PUtility.DataFullR("บัตรกำนัล...", SubLength) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher()) + "_");
 
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -5651,6 +5678,7 @@ public class PPrint {
         Double SumTotal = 0.0;
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -5715,6 +5743,7 @@ public class PPrint {
 
     private void UpdatePrintCheckBill(String table) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -5732,6 +5761,7 @@ public class PPrint {
     private List<String[]> CreName(String macNo) {
         List<String[]> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -5819,6 +5849,7 @@ public class PPrint {
         String[] credit = new String[]{"", ""};
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -5890,6 +5921,7 @@ public class PPrint {
                 + "group by b_etd";
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             int countb_refnoE = 0;
@@ -6026,6 +6058,7 @@ public class PPrint {
 
     private void Cposhwsetup() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -6048,6 +6081,7 @@ public class PPrint {
 
     private void printEntertain(String b_Table) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select CuCode, CuName, R_PrCuQuan, CuponDiscAmt "
@@ -6086,6 +6120,7 @@ public class PPrint {
     private String getLastEmployee(String tableNo) {
         String R_EMP = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         BillNoBean b = new BillNoBean();
         mysql.open();
         try {
@@ -6114,6 +6149,7 @@ public class PPrint {
     public String getLastEmployeeCheckBill(String tableNo, String refno) {
         String R_EMP = "-";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select r_emp from t_sale "
@@ -6159,6 +6195,7 @@ public class PPrint {
         String cuname;
         double total;
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total "
                     + "from t_cupon inner join cupon "
@@ -6262,6 +6299,7 @@ public class PPrint {
     public String getCuponName(String cuCode) {
         String cuName = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";

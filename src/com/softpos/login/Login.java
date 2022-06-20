@@ -328,7 +328,7 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        new MySQLConnect();
+//        MySQLConnect mysql=  new MySQLConnect();
         if (CheckApplication.isRunning()) {
             JOptionPane.showMessageDialog(null, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
@@ -340,12 +340,14 @@ public class Login extends javax.swing.JDialog {
             if (confirm == JOptionPane.OK_OPTION) {
                 new File("softrestaurant.running").delete();
             } else {
+                new File("softrestaurant.running").delete();
                 System.exit(0);
             }
         } else {
             try {
                 f.createNewFile();
             } catch (IOException ex) {
+                MSG.NOTICE(ex.toString());
             }
         }
 
@@ -410,6 +412,7 @@ public class Login extends javax.swing.JDialog {
         }
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select username,password,name,onact,macno from posuser "
@@ -530,6 +533,7 @@ public class Login extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String SQLQuery = "update posuser set "
@@ -586,16 +590,19 @@ public class Login extends javax.swing.JDialog {
                     try {
                         Thread.sleep(25);
                     } catch (InterruptedException e) {
+                        MSG.NOTICE(e.toString());
                     }
                 }
                 pbCheckUpdate.setString("SoftPOS Updated 31/05/2022 00:00:00");
             } catch (Exception e) {
+                MSG.NOTICE(e.toString());
             }
         }).start();
     }
 
     public void PosHwSetupOnAct(String Onact) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";

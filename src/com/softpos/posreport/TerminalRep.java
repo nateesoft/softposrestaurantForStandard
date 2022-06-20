@@ -169,6 +169,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -187,136 +188,136 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
-            while(rs.next()){
+            while (rs.next()) {
                 frec.StBill = rs.getString("b_refno");
-                
+
                 frec.SpBill = rs.getString("b_refno");
-                    if (!rs.getString("b_void").equals("V")) {
-                        frec.Dept_Sum = frec.Dept_Sum + rs.getDouble("b_total");
-                        if (rs.getDouble("b_serviceamt") != 0.0) {
-                            frec.Service = frec.Service + rs.getDouble("b_serviceamt");
-                            frec.ServiceCnt++;
-                        }
-                        if (rs.getDouble("b_crchargeamt1") != 0.0) {
-                            frec.Charge = frec.Charge + rs.getDouble("b_crchargeamt1");
-                            frec.ChargeCnt++;
-                        }
-                        if (rs.getDouble("b_memdiscamt") != 0.0) {
-                            frec.Vip_Disc = frec.Vip_Disc + rs.getDouble("b_memdiscamt");
-                            frec.Vip_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_empdiscamt") != 0.0) {
-                            frec.Emp_Disc = frec.Emp_Disc + rs.getDouble("b_empdiscamt");
-                            frec.Emp_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_fastdiscamt") != 0.0) {
-                            frec.Fast_Disc = frec.Fast_Disc + rs.getDouble("b_fastdiscamt");
-                            frec.Fast_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_Traindiscamt") != 0.0) {
-                            frec.Train_Disc = frec.Train_Disc + rs.getDouble("b_traindiscamt");
-                            frec.Train_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_subdiscamt") != 0.0) {
-                            frec.Sub_Disc = frec.Sub_Disc + rs.getDouble("b_subdiscamt");
-                            frec.Sub_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_subdiscbath") != 0.0) {
-                            frec.Gen_Refund = frec.Gen_Refund + rs.getDouble("b_subdiscbath");
-                            frec.Gen_RefundCnt++;
-                        }
-                        if (rs.getDouble("b_cupondiscamt") != 0.0) {
-                            frec.Cupon_Disc = frec.Cupon_Disc + rs.getDouble("b_cupondiscamt");
-                            frec.Cupon_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_prodiscamt") != 0.0) {
-                            frec.Promotion = frec.Promotion + rs.getDouble("b_prodiscamt");
-                            frec.PromotionCnt++;
-                        }
-                        if (rs.getDouble("b_spadiscamt") != 0.0) {
-                            frec.Spacial = frec.Spacial + rs.getDouble("b_spadiscamt");
-                            frec.SpacialCnt++;
-                        }
-                        if (rs.getDouble("b_itemdiscamt") != 0.0) {
-                            frec.Item_Disc = frec.Item_Disc + rs.getDouble("b_itemdiscamt");
-                            frec.Item_DiscCnt++;
-                        }
-                        frec.Net_Sale = frec.Net_Sale + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
-                        if (rs.getDouble("b_cash") != 0.0) {
-                            frec.Cash = frec.Cash + rs.getDouble("b_cash");
-                            frec.CashCnt++;
-                        }
-                        if (rs.getDouble("b_giftvoucher") != 0.0) {
-                            frec.Gift = frec.Gift + rs.getDouble("b_giftvoucher");
-                            frec.GiftCnt++;
-                        }
-                        if (rs.getDouble("b_earnest") != 0.0) {
-                            frec.Earnest = frec.Earnest + rs.getDouble("b_earnest");
-                            frec.EarnestCnt++;
-                        }
-                        if (rs.getDouble("b_accramt") != 0.0) {
-                            frec.ArPayment = frec.ArPayment + rs.getDouble("b_accramt");
-                            frec.ArPaymentCnt++;
-                        }
-                        if (rs.getDouble("b_cramt1") != 0.0) {
-                            frec.Credit_Card = frec.Credit_Card + rs.getDouble("b_cramt1");
-                            frec.Credit_CardCnt++;
-                        }
-                        frec.SaleVat = frec.SaleVat + rs.getDouble("b_netvat");
-                        frec.SaleNonVat = frec.SaleNonVat + rs.getDouble("b_netnonvat");
-                        frec.VatAmt = frec.VatAmt + rs.getDouble("b_vat");
-                        frec.CntBill++;
-                        if (rs.getDouble("b_food") != 0.0) {
-                            frec.Food = frec.Food + rs.getDouble("b_food");
-                        }
-                        if (rs.getDouble("b_drink") != 0.0) {
-                            frec.Drink = frec.Drink + rs.getDouble("b_drink");
-                        }
-                        if (rs.getDouble("b_product") != 0.0) {
-                            frec.Product = frec.Product + rs.getDouble("b_product");
-                        }
-                        if (rs.getInt("b_cust") != 0) {
-                            frec.Customer = frec.Customer + rs.getInt("b_cust");
-                        }
-                        if (rs.getString("b_etd").equals("E")) {
-                            frec.Eat_In_Cnt++;
-                            frec.Eat_In_Amt = frec.Eat_In_Amt + rs.getDouble("b_total");
-                            frec.Eat_In_Cust = frec.Eat_In_Cust + rs.getInt("b_cust");
-                            frec.Eat_In_Net = frec.Eat_In_Net + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("T")) {
-                            frec.Take_AwayCnt++;
-                            frec.Take_AwayAmt = frec.Take_AwayAmt + rs.getDouble("b_total");
-                            frec.Take_AwayCust = frec.Take_AwayCust + rs.getInt("b_cust");
-                            frec.Take_AwayNet = frec.Take_AwayNet + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("D")) {
-                            frec.DeliveryCnt++;
-                            frec.DeliveryAmt = frec.DeliveryAmt + rs.getDouble("b_total");
-                            frec.DeliveryCust = frec.DeliveryCust + rs.getInt("b_cust");
-                            frec.DeliveryNet = frec.DeliveryNet + rs.getDouble("b_nettotal");
-                            String amt = frec.DeliveryAmt + "";
-                            String cust = frec.DeliveryCust + "";
-                            String net = frec.DeliveryNet + "";
-                            System.out.println(amt + ":" + cust + ":" + net);
-                        }
-                        if (rs.getString("b_etd").equals("P")) {
-                            frec.PintoCnt++;
-                            frec.PintoAmt = frec.PintoAmt + rs.getDouble("b_total");
-                            frec.PintoCust = frec.PintoCust + rs.getInt("b_cust");
-                            frec.PintoNet = frec.PintoNet + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("W")) {
-                            frec.WholeCnt++;
-                            frec.WholeAmt = frec.WholeAmt + rs.getDouble("b_total");
-                            frec.WholeCust = frec.WholeCust + rs.getInt("b_cust");
-                            frec.WholeNet = frec.WholeNet + rs.getDouble("b_nettotal");
-                        }
-                    } else {
-                        frec.AmtBillVoid = frec.AmtBillVoid + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
-                        frec.CntBillVoid++;
-                        frec.CntBill++;
+                if (!rs.getString("b_void").equals("V")) {
+                    frec.Dept_Sum = frec.Dept_Sum + rs.getDouble("b_total");
+                    if (rs.getDouble("b_serviceamt") != 0.0) {
+                        frec.Service = frec.Service + rs.getDouble("b_serviceamt");
+                        frec.ServiceCnt++;
                     }
+                    if (rs.getDouble("b_crchargeamt1") != 0.0) {
+                        frec.Charge = frec.Charge + rs.getDouble("b_crchargeamt1");
+                        frec.ChargeCnt++;
+                    }
+                    if (rs.getDouble("b_memdiscamt") != 0.0) {
+                        frec.Vip_Disc = frec.Vip_Disc + rs.getDouble("b_memdiscamt");
+                        frec.Vip_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_empdiscamt") != 0.0) {
+                        frec.Emp_Disc = frec.Emp_Disc + rs.getDouble("b_empdiscamt");
+                        frec.Emp_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_fastdiscamt") != 0.0) {
+                        frec.Fast_Disc = frec.Fast_Disc + rs.getDouble("b_fastdiscamt");
+                        frec.Fast_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_Traindiscamt") != 0.0) {
+                        frec.Train_Disc = frec.Train_Disc + rs.getDouble("b_traindiscamt");
+                        frec.Train_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_subdiscamt") != 0.0) {
+                        frec.Sub_Disc = frec.Sub_Disc + rs.getDouble("b_subdiscamt");
+                        frec.Sub_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_subdiscbath") != 0.0) {
+                        frec.Gen_Refund = frec.Gen_Refund + rs.getDouble("b_subdiscbath");
+                        frec.Gen_RefundCnt++;
+                    }
+                    if (rs.getDouble("b_cupondiscamt") != 0.0) {
+                        frec.Cupon_Disc = frec.Cupon_Disc + rs.getDouble("b_cupondiscamt");
+                        frec.Cupon_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_prodiscamt") != 0.0) {
+                        frec.Promotion = frec.Promotion + rs.getDouble("b_prodiscamt");
+                        frec.PromotionCnt++;
+                    }
+                    if (rs.getDouble("b_spadiscamt") != 0.0) {
+                        frec.Spacial = frec.Spacial + rs.getDouble("b_spadiscamt");
+                        frec.SpacialCnt++;
+                    }
+                    if (rs.getDouble("b_itemdiscamt") != 0.0) {
+                        frec.Item_Disc = frec.Item_Disc + rs.getDouble("b_itemdiscamt");
+                        frec.Item_DiscCnt++;
+                    }
+                    frec.Net_Sale = frec.Net_Sale + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
+                    if (rs.getDouble("b_cash") != 0.0) {
+                        frec.Cash = frec.Cash + rs.getDouble("b_cash");
+                        frec.CashCnt++;
+                    }
+                    if (rs.getDouble("b_giftvoucher") != 0.0) {
+                        frec.Gift = frec.Gift + rs.getDouble("b_giftvoucher");
+                        frec.GiftCnt++;
+                    }
+                    if (rs.getDouble("b_earnest") != 0.0) {
+                        frec.Earnest = frec.Earnest + rs.getDouble("b_earnest");
+                        frec.EarnestCnt++;
+                    }
+                    if (rs.getDouble("b_accramt") != 0.0) {
+                        frec.ArPayment = frec.ArPayment + rs.getDouble("b_accramt");
+                        frec.ArPaymentCnt++;
+                    }
+                    if (rs.getDouble("b_cramt1") != 0.0) {
+                        frec.Credit_Card = frec.Credit_Card + rs.getDouble("b_cramt1");
+                        frec.Credit_CardCnt++;
+                    }
+                    frec.SaleVat = frec.SaleVat + rs.getDouble("b_netvat");
+                    frec.SaleNonVat = frec.SaleNonVat + rs.getDouble("b_netnonvat");
+                    frec.VatAmt = frec.VatAmt + rs.getDouble("b_vat");
+                    frec.CntBill++;
+                    if (rs.getDouble("b_food") != 0.0) {
+                        frec.Food = frec.Food + rs.getDouble("b_food");
+                    }
+                    if (rs.getDouble("b_drink") != 0.0) {
+                        frec.Drink = frec.Drink + rs.getDouble("b_drink");
+                    }
+                    if (rs.getDouble("b_product") != 0.0) {
+                        frec.Product = frec.Product + rs.getDouble("b_product");
+                    }
+                    if (rs.getInt("b_cust") != 0) {
+                        frec.Customer = frec.Customer + rs.getInt("b_cust");
+                    }
+                    if (rs.getString("b_etd").equals("E")) {
+                        frec.Eat_In_Cnt++;
+                        frec.Eat_In_Amt = frec.Eat_In_Amt + rs.getDouble("b_total");
+                        frec.Eat_In_Cust = frec.Eat_In_Cust + rs.getInt("b_cust");
+                        frec.Eat_In_Net = frec.Eat_In_Net + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("T")) {
+                        frec.Take_AwayCnt++;
+                        frec.Take_AwayAmt = frec.Take_AwayAmt + rs.getDouble("b_total");
+                        frec.Take_AwayCust = frec.Take_AwayCust + rs.getInt("b_cust");
+                        frec.Take_AwayNet = frec.Take_AwayNet + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("D")) {
+                        frec.DeliveryCnt++;
+                        frec.DeliveryAmt = frec.DeliveryAmt + rs.getDouble("b_total");
+                        frec.DeliveryCust = frec.DeliveryCust + rs.getInt("b_cust");
+                        frec.DeliveryNet = frec.DeliveryNet + rs.getDouble("b_nettotal");
+                        String amt = frec.DeliveryAmt + "";
+                        String cust = frec.DeliveryCust + "";
+                        String net = frec.DeliveryNet + "";
+                        System.out.println(amt + ":" + cust + ":" + net);
+                    }
+                    if (rs.getString("b_etd").equals("P")) {
+                        frec.PintoCnt++;
+                        frec.PintoAmt = frec.PintoAmt + rs.getDouble("b_total");
+                        frec.PintoCust = frec.PintoCust + rs.getInt("b_cust");
+                        frec.PintoNet = frec.PintoNet + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("W")) {
+                        frec.WholeCnt++;
+                        frec.WholeAmt = frec.WholeAmt + rs.getDouble("b_total");
+                        frec.WholeCust = frec.WholeCust + rs.getInt("b_cust");
+                        frec.WholeNet = frec.WholeNet + rs.getDouble("b_nettotal");
+                    }
+                } else {
+                    frec.AmtBillVoid = frec.AmtBillVoid + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
+                    frec.CntBillVoid++;
+                    frec.CntBill++;
+                }
             }
             rs.close();
             stmt.close();
@@ -331,9 +332,9 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='I' ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.Paid_InCnt++;
-                    frec.Paid_In = frec.Paid_In + rs.getDouble("paidinamt");
+                frec.Paid_In = frec.Paid_In + rs.getDouble("paidinamt");
             }
             rs.close();
             stmt.close();
@@ -341,16 +342,16 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TerminalRep.class, "error", e);
         }
-        
+
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile "
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='O' ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.Paid_OutCnt++;
-                    frec.Paid_Out = frec.Paid_Out + rs.getDouble("paidoutamt");
+                frec.Paid_Out = frec.Paid_Out + rs.getDouble("paidoutamt");
             }
             rs.close();
             stmt.close();
@@ -358,14 +359,14 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TerminalRep.class, "error", e);
         }
-        
+
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where r_void='V' ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.CntVoid++;
-                    frec.VoidValue = frec.VoidValue + rs.getDouble("r_total");
+                frec.VoidValue = frec.VoidValue + rs.getDouble("r_total");
             }
             rs.close();
             stmt.close();

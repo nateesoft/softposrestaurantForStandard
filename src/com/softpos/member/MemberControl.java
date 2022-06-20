@@ -28,6 +28,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select sum(R_PrSubAmt) as MemDiscount "
@@ -60,6 +61,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             /*
@@ -134,6 +136,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             /*

@@ -227,17 +227,18 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     mysql.open();
                     try {
                         String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
                                 + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
                         Statement stmt = mysql.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("cucode"), 3) + "  " + PUtility.DataFullR(rs.getString("cuname"), 30));
-                                prn.print("                    " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11));
-                                SumQty = SumQty + rs.getDouble("sum(cuquan)");
-                                SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
+                            prn.print("                    " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11));
+                            SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                            SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
                         }
                         rs.close();
                         stmt.close();
@@ -306,17 +307,18 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
                     + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFullR(rs.getString("cucode"), 3) + Space + PUtility.DataFullR(rs.getString("cuname"), 30)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11)) + "_";
-                    SumQty = SumQty + rs.getDouble("sum(cuquan)");
-                    SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
+                t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11)) + "_";
+                SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
             }
             rs.close();
             stmt.close();

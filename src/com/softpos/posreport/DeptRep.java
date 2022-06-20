@@ -347,6 +347,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -556,6 +557,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -614,89 +616,11 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
             GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
             GArray[ArraySize] = GroupRec;
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 TempGroup = rs.getString("r_group");
-                
+
                 if (!TempGroup.equals(rs.getString("r_group"))) {
-                        GroupRec = new PluRec();
-                        GroupRec.MacNo1 = MacNo1;
-                        GroupRec.MacNo2 = MacNo2;
-                        GroupRec.Cashier1 = CashNo1;
-                        GroupRec.Cashier2 = CashNo2;
-                        GroupRec.Group1 = Group1;
-                        GroupRec.Group2 = Group2;
-                        GroupRec.Plu1 = "";
-                        GroupRec.Plu2 = "";
-                        GroupRec.GroupCode = TempGroup;
-                        GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-                        GroupRec.PCode = "";
-                        GroupRec.PName = "";
-
-                        GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-                        GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
-                        GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-                        GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-                        GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-                        GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-                        GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-                        GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
-                        GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-                        GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
-                        GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-                        GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-                        if (ArraySize == 0) {
-                            GArray[ArraySize] = GroupRec;
-                            ArraySize = GArray.length;
-                        } else {
-                            GArray = PUtility.addPluArray(GArray);
-                            ArraySize = GArray.length;
-                            GArray[ArraySize - 1] = GroupRec;
-                        }
-                        TempGroup = rs.getString("r_group");
-                        SumEQty = 0.0;
-                        SumEAmt = 0.0;
-                        SumTQty = 0.0;
-
-                        SumTAmt = 0.0;
-                        SumDQty = 0.0;
-                        SumDAmt = 0.0;
-                        SumPQty = 0.0;
-                        SumPAmt = 0.0;
-                        SumWQty = 0.0;
-                        SumWAmt = 0.0;
-                        SumSQty = 0.0;
-                        SumSAmt = 0.0;
-                    }
-                    if (rs.getString("r_etd").equals("E")) {
-                        SumEQty = SumEQty + rs.getDouble("r_quan");
-                        SumEAmt = SumEAmt + rs.getDouble("r_total");
-                    }
-                    if (rs.getString("r_etd").equals("T")) {
-                        SumTQty = SumTQty + rs.getDouble("r_quan");
-                        SumTAmt = SumTAmt + rs.getDouble("r_total");
-                    }
-                    if (rs.getString("r_etd").equals("D")) {
-                        SumDQty = SumDQty + rs.getDouble("r_quan");
-                        SumDAmt = SumDAmt + rs.getDouble("r_total");
-                    }
-                    if (rs.getString("r_etd").equals("P")) {
-                        SumPQty = SumPQty + rs.getDouble("r_quan");
-                        SumPAmt = SumPAmt + rs.getDouble("r_total");
-                    }
-                    if (rs.getString("r_etd").equals("W")) {
-                        SumWQty = SumWQty + rs.getDouble("r_quan");
-                        SumWAmt = SumWAmt + rs.getDouble("r_total");
-                    }
-                    SumSQty = SumSQty + rs.getDouble("r_quan");
-                    SumSAmt = SumSAmt + rs.getDouble("r_total");
-            }
-            if (SumSQty > 0) {
                     GroupRec = new PluRec();
                     GroupRec.MacNo1 = MacNo1;
                     GroupRec.MacNo2 = MacNo2;
@@ -736,7 +660,85 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         ArraySize = GArray.length;
                         GArray[ArraySize - 1] = GroupRec;
                     }
+                    TempGroup = rs.getString("r_group");
+                    SumEQty = 0.0;
+                    SumEAmt = 0.0;
+                    SumTQty = 0.0;
+
+                    SumTAmt = 0.0;
+                    SumDQty = 0.0;
+                    SumDAmt = 0.0;
+                    SumPQty = 0.0;
+                    SumPAmt = 0.0;
+                    SumWQty = 0.0;
+                    SumWAmt = 0.0;
+                    SumSQty = 0.0;
+                    SumSAmt = 0.0;
                 }
+                if (rs.getString("r_etd").equals("E")) {
+                    SumEQty = SumEQty + rs.getDouble("r_quan");
+                    SumEAmt = SumEAmt + rs.getDouble("r_total");
+                }
+                if (rs.getString("r_etd").equals("T")) {
+                    SumTQty = SumTQty + rs.getDouble("r_quan");
+                    SumTAmt = SumTAmt + rs.getDouble("r_total");
+                }
+                if (rs.getString("r_etd").equals("D")) {
+                    SumDQty = SumDQty + rs.getDouble("r_quan");
+                    SumDAmt = SumDAmt + rs.getDouble("r_total");
+                }
+                if (rs.getString("r_etd").equals("P")) {
+                    SumPQty = SumPQty + rs.getDouble("r_quan");
+                    SumPAmt = SumPAmt + rs.getDouble("r_total");
+                }
+                if (rs.getString("r_etd").equals("W")) {
+                    SumWQty = SumWQty + rs.getDouble("r_quan");
+                    SumWAmt = SumWAmt + rs.getDouble("r_total");
+                }
+                SumSQty = SumSQty + rs.getDouble("r_quan");
+                SumSAmt = SumSAmt + rs.getDouble("r_total");
+            }
+            if (SumSQty > 0) {
+                GroupRec = new PluRec();
+                GroupRec.MacNo1 = MacNo1;
+                GroupRec.MacNo2 = MacNo2;
+                GroupRec.Cashier1 = CashNo1;
+                GroupRec.Cashier2 = CashNo2;
+                GroupRec.Group1 = Group1;
+                GroupRec.Group2 = Group2;
+                GroupRec.Plu1 = "";
+                GroupRec.Plu2 = "";
+                GroupRec.GroupCode = TempGroup;
+                GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+                GroupRec.PCode = "";
+                GroupRec.PName = "";
+
+                GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+                GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+
+                GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+                GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+
+                GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+                GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+
+                GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+                GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+
+                GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+                GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+
+                GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+                GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+                if (ArraySize == 0) {
+                    GArray[ArraySize] = GroupRec;
+                    ArraySize = GArray.length;
+                } else {
+                    GArray = PUtility.addPluArray(GArray);
+                    ArraySize = GArray.length;
+                    GArray[ArraySize - 1] = GroupRec;
+                }
+            }
 
             rs.close();
             stmt.close();

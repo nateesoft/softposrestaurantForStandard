@@ -21,6 +21,7 @@ public class DiscountControl {
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select sum(R_PrAmt) SUM_R_PrAmt "

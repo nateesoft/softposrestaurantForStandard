@@ -13,6 +13,7 @@ public class StoreList {
     public boolean store(ListButtonBean bean) {
         String sql = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             sql = "INSERT INTO menusetup (code_id,code_type,pcode,shortname,ppathname,pcolor)"
@@ -26,9 +27,9 @@ public class StoreList {
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(StoreList.class, "error", e);
-            
+
             return false;
-        } finally{
+        } finally {
             mysql.close();
         }
     }
@@ -39,6 +40,7 @@ public class StoreList {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             sql = "UPDATE menusetup SET "
@@ -52,14 +54,14 @@ public class StoreList {
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 i = stmt.executeUpdate(sql);
             }
-            
+
             return i > 0;
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(StoreList.class, "error", e);
-            
+
             return false;
-        } finally{
+        } finally {
             mysql.close();
         }
     }

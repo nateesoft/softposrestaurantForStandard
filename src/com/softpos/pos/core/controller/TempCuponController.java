@@ -18,6 +18,7 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon";
@@ -57,6 +58,7 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon(String R_Index) {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
@@ -99,6 +101,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
@@ -137,6 +140,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "delete from tempcupon "
@@ -167,6 +171,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");
@@ -177,7 +182,7 @@ public class TempCuponController {
                     + "'" + bean.getCashier() + "','" + simp.format(new Date()) + "','" + bean.getCuCode() + "','" + bean.getCuQuan() + "',"
                     + "'" + bean.getCuAmt() + "','" + bean.getCuTotal() + "','" + bean.getCuDisc() + "','" + bean.getCuRedule() + "',"
                     + "'" + bean.getCuPayment() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
-            
+
             String sql1 = "select r_index from tempcupon where r_index='" + bean.getR_Index() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql1);
@@ -197,7 +202,7 @@ public class TempCuponController {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TempCuponController.class, "error", e);
-        } finally{
+        } finally {
             mysql.close();
         }
     }

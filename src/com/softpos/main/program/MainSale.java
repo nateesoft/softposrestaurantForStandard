@@ -1203,6 +1203,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             int rowCount = model.getRowCount();
             for (int i = 0; i < rowCount; i++) {
@@ -1210,9 +1211,9 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
             }
 
             mysql.open();
-            String sql = "select * from balance where r_table='" + tableNo + "' order by r_index, r_etd";
+            String sql = "select * from balance where r_table='" + tableNo + "' order by r_index, r_etd limit 500";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            while (rs.next()) {
+             while (rs.next()) {
                 String r_linkindex = rs.getString("r_linkindex");
                 String r_index = rs.getString("r_index");
                 String voidStr = rs.getString("r_void");
@@ -1627,6 +1628,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (btnClickPrintKic == true) {
             String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             try {
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
@@ -1643,6 +1645,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             try {
                 String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
                 mysql.open();
@@ -1745,6 +1748,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
 
             try {
@@ -1930,184 +1934,197 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void btnPaymentClick() {
-        if (!chkEJPath()) {
-            return;
-        }
-
-        PublicVar.SubTotalOK = false;
-
-        //visible MainSale
-        setVisible(false);
-        CheckBill frm = new CheckBill(null, true, txtTable.getText(), memberBean, "", "");
-        frm.setVisible(true);
-        if (PublicVar.SubTotalOK) {
-            initScreen();
-            clearTable();
-            txtTable.setText("");
-            tbpMain.setSelectedIndex(0);
-            Value.TableSelected = "";
-            showFloorPlan();
-        } else {
-            loadTableBalance(txtTable.getText());
-            showSum();
-            setVisible(true);
-        }
-    }
-
-    private void bntVoidClick() {
-        int row = getSelectedRowIndex();
-        if (row == -1) {
-            return;
-        }
-        String R_Index = model.getValueAt(row, 10).toString();
-        boolean isPermit = false;
-        //check permission
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
-            String sql = "select Username from posuser where username='" + Value.USERCODE + "' "
-                    + "and Sale3='Y' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                isPermit = true;
+            if (!chkEJPath()) {
+                return;
             }
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
+            PublicVar.SubTotalOK = false;
+
+            //visible MainSale
+            setVisible(false);
+            CheckBill frm = new CheckBill(null, true, txtTable.getText(), memberBean, "", "");
+            frm.setVisible(true);
+            if (PublicVar.SubTotalOK) {
+                initScreen();
+                clearTable();
+                txtTable.setText("");
+                tbpMain.setSelectedIndex(0);
+                Value.TableSelected = "";
+                showFloorPlan();
+            } else {
+                loadTableBalance(txtTable.getText());
+                showSum();
+                setVisible(true);
+            }
+        } catch (Exception e) {
+            MSG.NOTICE(e.toString());
             AppLogUtil.log(MainSale.class, "error", e);
         }
 
-        if (isPermit) {//มีสิทธิ์ Void
-            VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
-            voidD.setVisible(true);
-            if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+    }
 
-                //check link r (26/02/2016 15:12)
-                boolean hasValue = false;
-                try {
-                    String sql = "select R_Index, R_LinkIndex from balance "
-                            + "where R_LinkIndex='" + R_Index + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    ResultSet rs = stmt.executeQuery(sql);
-                    while (rs.next()) {
-                        hasValue = true;
-                        procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
-                    }
-
-                    rs.close();
-                    stmt.close();
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e);
-                }
-
-                if (!hasValue) {
-                    procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
-                }
-                showCell(row, 0);
+    private void bntVoidClick() {
+        try {
+            int row = getSelectedRowIndex();
+            if (row == -1) {
+                return;
             }
-        } else {
-            if (!PublicVar.TableRec_PrintChkBill.equals("Y")) {
-                GetUserAction getuser = new GetUserAction(null, true);
-                getuser.setVisible(true);
+            String R_Index = model.getValueAt(row, 10).toString();
+            boolean isPermit = false;
+            //check permission
+            /**
+             * * OPEN CONNECTION **
+             */
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
+            mysql.open();
+            try {
+                String sql = "select Username from posuser where username='" + Value.USERCODE + "' "
+                        + "and Sale3='Y' limit 1";
+                Statement stmt = mysql.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    isPermit = true;
+                }
 
-                if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale3.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
-                            VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
-                            voidD.setVisible(true);
-                            if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
-                                //check link r (28/02/2016 15:12)
-                                boolean hasValue = false;
-                                try {
-                                    String sql = "select R_Index, R_LinkIndex from balance "
-                                            + "where R_LinkIndex='" + R_Index + "'";
-                                    Statement stmt = mysql.getConnection().createStatement();
-                                    ResultSet rs = stmt.executeQuery(sql);
-                                    while (rs.next()) {
-                                        hasValue = true;
-                                        procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
-                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
-                                    }
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                MSG.ERR(this, e.getMessage());
+                AppLogUtil.log(MainSale.class, "error", e);
+            }
 
-                                    rs.close();
-                                    stmt.close();
-                                } catch (SQLException e) {
-                                    MSG.ERR(this, e.getMessage());
-                                    AppLogUtil.log(MainSale.class, "error", e);
-                                }
+            if (isPermit) {//มีสิทธิ์ Void
+                VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
+                voidD.setVisible(true);
+                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
 
-                                if (!hasValue) {
-                                    procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
-                                    txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
-                                }
-                                showCell(row, 0);
-                            }
-                        } else {
-                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    //check link r (26/02/2016 15:12)
+                    boolean hasValue = false;
+                    try {
+                        String sql = "select R_Index, R_LinkIndex from balance "
+                                + "where R_LinkIndex='" + R_Index + "'";
+                        Statement stmt = mysql.getConnection().createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while (rs.next()) {
+                            hasValue = true;
+                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
                         }
-                    } else {
-                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+
+                        rs.close();
+                        stmt.close();
+                    } catch (SQLException e) {
+                        MSG.ERR(this, e.getMessage());
+                        AppLogUtil.log(MainSale.class, "error", e);
                     }
+
+                    if (!hasValue) {
+                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
+                    }
+                    showCell(row, 0);
                 }
             } else {
-                GetUserAction getuser = new GetUserAction(null, true);
-                getuser.setVisible(true);
+                if (!PublicVar.TableRec_PrintChkBill.equals("Y")) {
+                    GetUserAction getuser = new GetUserAction(null, true);
+                    getuser.setVisible(true);
 
-                if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale4.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
-                            VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
-                            voidD.setVisible(true);
-                            if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+                    if (!PublicVar.ReturnString.equals("")) {
+                        String loginname = PublicVar.ReturnString;
+                        UserRecord supUser = new UserRecord();
+                        if (supUser.GetUserAction(loginname)) {
+                            if (supUser.Sale3.equals("Y")) {
+                                PublicVar.TUserRec = supUser;
+                                VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
+                                voidD.setVisible(true);
+                                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+                                    //check link r (28/02/2016 15:12)
+                                    boolean hasValue = false;
+                                    try {
+                                        String sql = "select R_Index, R_LinkIndex from balance "
+                                                + "where R_LinkIndex='" + R_Index + "'";
+                                        Statement stmt = mysql.getConnection().createStatement();
+                                        ResultSet rs = stmt.executeQuery(sql);
+                                        while (rs.next()) {
+                                            hasValue = true;
+                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
+                                            txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                        }
 
-                                //check link r (28/02/2016 15:12)
-                                boolean hasValue = false;
-                                try {
-                                    String sql = "select R_Index, R_LinkIndex from balance "
-                                            + "where R_LinkIndex='" + R_Index + "'";
-                                    Statement stmt = mysql.getConnection().createStatement();
-                                    ResultSet rs = stmt.executeQuery(sql);
-                                    while (rs.next()) {
-                                        hasValue = true;
-                                        procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
+                                        rs.close();
+                                        stmt.close();
+                                    } catch (SQLException e) {
+                                        MSG.ERR(this, e.getMessage());
+                                        AppLogUtil.log(MainSale.class, "error", e);
                                     }
 
-                                    rs.close();
-                                    stmt.close();
-                                } catch (SQLException e) {
-                                    MSG.ERR(this, e.getMessage());
-                                    AppLogUtil.log(MainSale.class, "error", e);
+                                    if (!hasValue) {
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
+                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                    }
+                                    showCell(row, 0);
                                 }
-
-                                if (!hasValue) {
-                                    procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
-                                }
-                                showCell(row, 0);
+                            } else {
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
                             }
                         } else {
-                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                         }
-                    } else {
-                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    }
+                } else {
+                    GetUserAction getuser = new GetUserAction(null, true);
+                    getuser.setVisible(true);
+
+                    if (!PublicVar.ReturnString.equals("")) {
+                        String loginname = PublicVar.ReturnString;
+                        UserRecord supUser = new UserRecord();
+                        if (supUser.GetUserAction(loginname)) {
+                            if (supUser.Sale4.equals("Y")) {
+                                PublicVar.TUserRec = supUser;
+                                VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
+                                voidD.setVisible(true);
+                                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+
+                                    //check link r (28/02/2016 15:12)
+                                    boolean hasValue = false;
+                                    try {
+                                        String sql = "select R_Index, R_LinkIndex from balance "
+                                                + "where R_LinkIndex='" + R_Index + "'";
+                                        Statement stmt = mysql.getConnection().createStatement();
+                                        ResultSet rs = stmt.executeQuery(sql);
+                                        while (rs.next()) {
+                                            hasValue = true;
+                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
+                                        }
+
+                                        rs.close();
+                                        stmt.close();
+                                    } catch (SQLException e) {
+                                        MSG.ERR(this, e.getMessage());
+                                        AppLogUtil.log(MainSale.class, "error", e);
+                                    }
+
+                                    if (!hasValue) {
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
+                                    }
+                                    showCell(row, 0);
+                                }
+                            } else {
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                            }
+                        } else {
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                        }
                     }
                 }
             }
+
+            mysql.close();
+        } catch (Exception e) {
+            MSG.NOTICE(e.toString());
+            AppLogUtil.log(MainSale.class, "error", e);
         }
 
-        mysql.close();
     }
 
     private void procVoid(String RIndex, String voidMsg, String LoginName) {
@@ -2118,6 +2135,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
 
         if (bean.getR_Void().equals("V")) {
@@ -2354,6 +2372,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             if (Qty > 0) {
                 if (POSHW.getMenuItemList().equals("Y")) {
@@ -2469,6 +2488,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double Qty;
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         //check outofstock
         try {
@@ -2742,6 +2762,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         //ตัดสต็อกสินค้าที่มี Ingredent
         try {
@@ -2808,6 +2829,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
 
             BranchBean branchBean = BranchControl.getData();
@@ -2983,6 +3005,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 Statement stmt1 = mysql.getConnection().createStatement();
@@ -3147,6 +3170,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -3232,6 +3256,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     //ปุ่มพักโต๊ะ
     private void bntHoldTableClick() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
 
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
@@ -3273,6 +3298,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateCustomerCount(int custCount) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "update tablefile "
@@ -3293,6 +3319,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void holdTableAndSave() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         BalanceBean balanceBean = new BalanceBean();
         mysql.open();
         try {
@@ -3327,6 +3354,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 PublicVar.P_LineCount = 1;
                 PublicVar.P_LogoffOK = false;
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -3372,6 +3400,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean updateLogout(String UserCode) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -3659,6 +3688,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void showMember() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         if (Value.MemberAlready == true) {
             int confirm = JOptionPane.showConfirmDialog(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
@@ -3956,6 +3986,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         boolean result = false;
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
@@ -3984,6 +4015,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String cus = txtCust.getText();
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "SELECT COUNT(R_PName) FROM balance where r_table = '" + table + "'";
@@ -4026,6 +4058,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateTempTset(BalanceBean bBean, ProductBean productBean) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sqlUpd = "update tempset set "
@@ -4177,6 +4210,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select POption from tempset where PIndex='" + R_Index + "' "
@@ -4206,6 +4240,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private boolean checkRIndex(String chkRIndex) {
         boolean isCheck = true;
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select r_linkindex from balance "
@@ -4238,6 +4273,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         for (int i = 0; i < rows.length; i++) {
             String r_index = "" + tbShowBalance.getValueAt(rows[i], 10);
@@ -4376,6 +4412,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void upDateTableFile() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "UPDATE tablefile SET "
@@ -4396,6 +4433,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void CheckKicPrint() {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select r_kicprint "
@@ -4453,8 +4491,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void showFloorPlan() {
-        FloorPlanDialog floorPlan = new FloorPlanDialog();
-        floorPlan.setVisible(true);
+        try {
+            FloorPlanDialog floorPlan = new FloorPlanDialog();
+            floorPlan.setVisible(true);
+        } catch (Exception e) {
+            MSG.CONF(e.toString());
+            AppLogUtil.log(MainSale.class, "error", e);
+        }
+
     }
 
     public class TableTestFormatRenderer extends DefaultTableCellRenderer {
@@ -4578,6 +4622,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -4612,6 +4657,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void printBillVoidCheck() {
         if (Value.useprint) {
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
@@ -4632,6 +4678,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean showPopupOption(String MenuCode) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             boolean showModalPopup = false;
@@ -4748,6 +4795,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateTempmenuset(String Index, String PCode, String PName, String Option, String TryName) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         try {
             mysql.open();
             String pstock = PUtility.GetStkCode();

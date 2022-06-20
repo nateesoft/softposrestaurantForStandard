@@ -551,6 +551,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -654,6 +655,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -678,6 +680,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -702,6 +705,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -734,6 +738,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -761,6 +766,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1003,6 +1009,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1135,6 +1142,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1163,6 +1171,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1435,6 +1444,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1573,6 +1583,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1841,6 +1852,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2195,6 +2207,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2599,6 +2612,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2678,6 +2692,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2723,6 +2738,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2827,6 +2843,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2872,15 +2889,16 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from t_gift where (fat='V') order by giftbarcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 prn.print(PUtility.DataFullR(rs.getString("giftbarcode"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
-                    Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
+                Sumtotal++;
+                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
             rs.close();
             stmt.close();
@@ -2936,26 +2954,27 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
+                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from billnocharge order by b_refno";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         if (rs.getString("b_void").equals("V")) {
-                                prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
+                            prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
+                        }
+                        prn.print(PUtility.DataFullR(rs.getString("b_chargename"), 19) + "   " + rs.getString("b_ontime") + "  " + rs.getString("b_refno"));
+                        prn.print("  " + PUtility.DataFullR(rs.getString("b_chargecode"), 15) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_total")), 12) + "  " + rs.getString("b_cashier"));
+                        if (!rs.getString("b_void").equals("V")) {
+                            if (rs.getString("b_chargegroup").equals("1")) {
+                                Sum1 = Sum1 + rs.getDouble("b_total");
+                                Cnt1 = Cnt1 + 1;
+                            } else {
+                                Sum2 = Sum2 + rs.getDouble("b_total");
+                                Cnt2 = Cnt2 + 1;
                             }
-                            prn.print(PUtility.DataFullR(rs.getString("b_chargename"), 19) + "   " + rs.getString("b_ontime") + "  " + rs.getString("b_refno"));
-                            prn.print("  " + PUtility.DataFullR(rs.getString("b_chargecode"), 15) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_total")), 12) + "  " + rs.getString("b_cashier"));
-                            if (!rs.getString("b_void").equals("V")) {
-                                if (rs.getString("b_chargegroup").equals("1")) {
-                                    Sum1 = Sum1 + rs.getDouble("b_total");
-                                    Cnt1 = Cnt1 + 1;
-                                } else {
-                                    Sum2 = Sum2 + rs.getDouble("b_total");
-                                    Cnt2 = Cnt2 + 1;
-                                }
-                            }
+                        }
                     }
                     rs.close();
                     stmt.close();

@@ -31,11 +31,13 @@ public class ServiceControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         DateConvert dc = new DateConvert();
         try {
             BalanceControl balanceControl = new BalanceControl();
-            List<BalanceBean> dataBalance = balanceControl.getAllBalanceSum(table);
+//            List<BalanceBean> dataBalance = balanceControl.getAllBalanceSum(table);
+            List<BalanceBean> dataBalance = balanceControl.getAllBalanceNoVoidSum(table);
             double ServiceTotal = 0.00;
             double ServicePercent = POSConfigSetup.Bean().getP_Service();
             double ServiceAmt = 0.00;

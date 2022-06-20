@@ -23,6 +23,7 @@ public class ServiceControl {
 
     public void updateService(String table) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         
         try {
             BalanceControl balanceControl = new BalanceControl();

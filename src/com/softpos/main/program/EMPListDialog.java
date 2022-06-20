@@ -179,6 +179,7 @@ public class EMPListDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select * from employ order by code";
@@ -196,7 +197,7 @@ public class EMPListDialog extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(EMPListDialog.class, "error", e);
-        }finally{
+        } finally {
             mysql.close();
         }
     }

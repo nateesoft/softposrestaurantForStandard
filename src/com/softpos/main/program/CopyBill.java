@@ -34,6 +34,7 @@ public class CopyBill extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -238,6 +239,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -274,6 +276,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();

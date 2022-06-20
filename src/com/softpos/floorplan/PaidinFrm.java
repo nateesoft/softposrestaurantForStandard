@@ -23,7 +23,6 @@ public class PaidinFrm extends javax.swing.JDialog {
     PPrint Prn = new PPrint();
     DecimalFormat Decfmt = new DecimalFormat("###,###,##0.00");
     private POSHWSetup POSHW;
-    
 
     /**
      * Creates new form paidinfrm
@@ -67,7 +66,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal());
             Prn.OpenDrawerDriver();
             pd.printHTML();
-           
+
         } else if (!Value.getComPort().equals("NONE")) {
             if (Prn.OpenPrint(Value.getComPort())) {
                 try {
@@ -105,6 +104,7 @@ public class PaidinFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "insert into paidiofile "

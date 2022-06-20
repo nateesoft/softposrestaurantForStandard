@@ -286,6 +286,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
+                    mysql.close();
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -297,10 +298,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "and (fat<>'V') "
                                 + "order by giftbarcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
-                                Sumtotal++;
-                                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
+                            Sumtotal++;
+                            SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
                         }
                         rs.close();
                         stmt.close();
@@ -328,7 +329,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 }
             }
         }
-        
+
         txtMacNo1.requestFocus();
     }
 
@@ -371,6 +372,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -382,10 +384,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     + "and (fat<>'V') "
                     + "order by giftbarcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFull(rs.getString("giftno"), 27) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9) + "_");
-                    Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
+                Sumtotal++;
+                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
             rs.close();
             stmt.close();

@@ -25,6 +25,7 @@ public class StockControl {
     public boolean Active(String stock) {
         boolean isActive = false;
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         String sql = "select StkCode from stockfile where StkCode='" + stock + "' and flage='Y' limit 1";
         try {
@@ -47,11 +48,12 @@ public class StockControl {
         double qty = 0;
         SimpleDateFormat sp = new SimpleDateFormat("MM");
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
             String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "' limit 1";
-            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     qty = rs.getDouble(1);
                 }
@@ -69,6 +71,7 @@ public class StockControl {
     public StkFileBean getDataStkFile(String sql) {
         StkFileBean bean = new StkFileBean();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -138,6 +141,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -166,6 +170,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -191,6 +196,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "insert into stcard (S_Date,S_No,S_SubNo,S_Que,S_PCode,S_Stk,S_In,S_Out,S_InCost,S_OutCost,S_ACost,S_Rem,S_User,S_EntryDate,S_EntryTime,S_Link) "
@@ -239,6 +245,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             //หาว่าสินค้ามีส่วนประกอบหรือไม่ ?

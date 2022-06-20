@@ -1891,7 +1891,8 @@ public class CheckBill extends javax.swing.JDialog {
 
         //ถ้า posconfig PrintSum=Y พิมพืใบเสร็จเป็นยอดรวม
         if (config.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
+//            List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
+            List<BalanceBean> listBean = bc.getAllBalanceNoVoidSum(tableNo);
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
                 if (!"V".equals(bean.getR_Void())) {

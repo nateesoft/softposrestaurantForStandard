@@ -320,7 +320,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void saveItem() {
-        MySQLConnect mysql = new MySQLConnect();
+        MySQLConnect mysql = new MySQLConnect();mysql.close();
         mysql.open();
         try {
             String sql = "update company set "

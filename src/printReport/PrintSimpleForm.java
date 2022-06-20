@@ -115,6 +115,7 @@ public class PrintSimpleForm {
          */
 
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         ItemVoidPrint(printerName, tableNo, PCode, "E");
         try {
@@ -687,6 +688,7 @@ public class PrintSimpleForm {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select TUser,R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
@@ -859,7 +861,7 @@ public class PrintSimpleForm {
 //        String t = "";
 //        String macNo = "";
 //        String TUser = "";
-//        MySQLConnect mysql = new MySQLConnect();
+//        MySQLConnect mysql = new MySQLConnect();mysql.close();
 //        PrintService[] ps = PrinterJob.lookupPrintServices();
 //        for (PrintService p : ps) {
 //            String PrinterName = p.getName();
@@ -1471,7 +1473,6 @@ public class PrintSimpleForm {
 //
 //        pd.printHTMLKitChen();
 //    }
-
     public void KIC_FORM_3New(final String printerName, final String tableNo, final int R_Kic, final String RETD, final String ATFromPrintToKic) {
         //**** FORM 3 **** 
         //จะปริ้นรวมเป็นแผ่นเดียว//
@@ -1525,11 +1526,12 @@ public class PrintSimpleForm {
                     + "and R_Kic='" + R_Kic + "' "
                     + "group by R_Void,R_PluCode, R_PName, "
                     + "R_Price,"
-//                    + "R_Price, b.Macno,R_Date, R_Time,"
+                    //                    + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                     + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic";
             //loop Novoid
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1847,12 +1849,13 @@ public class PrintSimpleForm {
                     + "and R_KicPrint<>'P' "
                     + "and R_ETD='" + RETD + "' "
                     + "and R_Void='V' "
-//                    + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price, b.Macno,R_Date, R_Time,"
+                    //                    + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price, b.Macno,R_Date, R_Time,"
                     + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
             //loop Novoid
             MySQLConnect mysql = new MySQLConnect();
+            mysql.close();
             try {
                 mysql.open();
                 Statement stmt = mysql.getConnection().createStatement();
@@ -2169,6 +2172,7 @@ public class PrintSimpleForm {
     public String keepTextShow(String R_Index, int qty, String product) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select R_Index, R_LinkIndex,R_Void from balance where R_Index='" + R_Index + "' limit 1";
@@ -2264,6 +2268,7 @@ public class PrintSimpleForm {
                     Graphics2D g2 = (Graphics2D) g;
                     if (index == 0) {
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
@@ -2469,6 +2474,7 @@ public class PrintSimpleForm {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
+                        mysql.close();
                         mysql.open();
                         try {
                             String sql = "select TUser,R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
@@ -2639,6 +2645,7 @@ public class PrintSimpleForm {
     public void KIC_FORM_6(String printerName, final String tableNo, final String R_Index, String R_Plucode, double QTY, double Total) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, R_Quan,"
@@ -2804,6 +2811,7 @@ public class PrintSimpleForm {
 
     public void KIC_FORM_7(String printerName, final String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         //FORM 7 **** 
         //จะ CUT ปริ้นทีละสินค้าตาม Order รายการในบิล และแสดงราคาสินค้าด้วย//
         //โต๊ะ 1           C0
@@ -3029,6 +3037,8 @@ public class PrintSimpleForm {
     public void KIC_FORM_SaveOrder(final String sql1, final String printerName, final String tableNo, final int R_Kic) {
         String textToPrint = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
@@ -3214,6 +3224,7 @@ public class PrintSimpleForm {
     public void ItemVoidPrint(String printerName, final String tableNo, final String[] PCode, String ETD) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
@@ -3418,6 +3429,7 @@ public class PrintSimpleForm {
         DecimalFormat QtyIntFmt = new DecimalFormat("###########0");
         BranchBean branchBean = BranchControl.getData();
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -3502,6 +3514,7 @@ public class PrintSimpleForm {
     public String getEmpBalance(String Code, String r_index, String table) {
         String empName = "";
         MySQLConnect mysql = new MySQLConnect();
+        mysql.close();
         mysql.open();
         try {
             String sql = "select r_emp from balance "
