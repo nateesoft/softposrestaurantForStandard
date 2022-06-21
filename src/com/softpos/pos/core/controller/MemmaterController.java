@@ -37,7 +37,6 @@ public class MemmaterController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from " + Value.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
@@ -152,7 +151,6 @@ public class MemmaterController {
 
     void updateMemberPoint(String memberCode, Date lastDateService, double totalScore) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
 
         try {
@@ -280,7 +278,6 @@ public class MemmaterController {
 
     public void updateScoreRefund(String memberCode, double scoreRemove) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "update " + Value.db_member + ".memmaster "

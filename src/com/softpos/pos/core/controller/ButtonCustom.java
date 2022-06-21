@@ -31,7 +31,6 @@ public class ButtonCustom {
     public MenuMGR getDataButtonLayout(String menuCode, int menuIndex) {
         MenuMGR menuMGR = new MenuMGR();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from soft_menusetup "
@@ -70,7 +69,6 @@ public class ButtonCustom {
     public List<MenuMGR> getDataButtonLayout(String menuCode) {
         List<MenuMGR> listMenu = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from soft_menusetup "

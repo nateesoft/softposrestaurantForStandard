@@ -283,7 +283,6 @@ public class PrintToKic extends javax.swing.JFrame {
                 try {
                     if (kicPrintting == false) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.close();
                         try {
                             String sql = "select "
                                     + "r_table,"
@@ -299,7 +298,6 @@ public class PrintToKic extends javax.swing.JFrame {
                                     + "group by r_table "
                                     + "order by r_etd,r_index;";
                             mysql.open();
-                            System.out.println(sql);
                             lblProcessLog.setText(sql);
                             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                                 if (rs.next()) {
@@ -348,9 +346,7 @@ public class PrintToKic extends javax.swing.JFrame {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
-
             try {
 
                 try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rsKic = stmt1.executeQuery(sqlShowKic)) {
@@ -492,13 +488,14 @@ public class PrintToKic extends javax.swing.JFrame {
 
     public void printCheckBillStation() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
+            mysql.open();
             String sql = "select r_index form balance where r_table='" + tableNo + "' "
                     + "and PDAPrintCheckStation <>'N' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     MySQLConnect mysql2 = new MySQLConnect();
+                    mysql2.open();
                     try {
                         String sqlUpdate = "update balance set PDAPrintCheckStation='N' where r_table='" + tableNo + "';";
                         mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);

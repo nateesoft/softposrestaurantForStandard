@@ -17,8 +17,6 @@ public class CustomerConrol {
         CustomerBean bean = new CustomerBean();
         String sql = "select * from customer where sp_code='" + custCode + "' limit 1";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-
         try {
             mysql.open();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);

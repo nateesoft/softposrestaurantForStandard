@@ -100,7 +100,6 @@ public class PUtility {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -212,7 +211,6 @@ public class PUtility {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -253,7 +251,6 @@ public class PUtility {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             if (StkProc) {
@@ -337,7 +334,6 @@ public class PUtility {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             if (StkProc) {
@@ -404,7 +400,6 @@ public class PUtility {
     public static boolean CheckPSetSelect(String PCode) {
         boolean RetValue = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -429,7 +424,6 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -508,7 +502,6 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -587,7 +580,6 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -727,7 +719,6 @@ public class PUtility {
     public static boolean CheckCouponRedule(String XCode2) {
         Boolean ReturnVal = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -753,7 +744,6 @@ public class PUtility {
         String TempUser;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         for (int i = 1; i < 30; i++) {
             TempUser = XUser + "-" + i;
@@ -786,7 +776,6 @@ public class PUtility {
     public static boolean CheckCashierClose(String XUser) {
         boolean ReturnVal = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1134,7 +1123,6 @@ public class PUtility {
         String StrRefBillNo = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1171,7 +1159,6 @@ public class PUtility {
             String CurDay = DayFormat.format(CurDate);
 
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1228,7 +1215,6 @@ public class PUtility {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1300,7 +1286,6 @@ public class PUtility {
 
     public static void ClearTempPromotion(String Table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             try ( Statement stmt = mysql.getConnection().createStatement()) {
@@ -1410,7 +1395,6 @@ public class PUtility {
         String ReturnValues = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1436,7 +1420,6 @@ public class PUtility {
     public static String SeekProductName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1463,7 +1446,6 @@ public class PUtility {
         String ReturnValues = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1489,7 +1471,6 @@ public class PUtility {
     public static double SeekPluPrice(String TCode, String Etd) {
         double ReturnValues = 0.0;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1527,7 +1508,6 @@ public class PUtility {
     public static String SeekCreditName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1553,7 +1533,6 @@ public class PUtility {
     public static String SeekCuponName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1579,7 +1558,6 @@ public class PUtility {
     public static String SeekArName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1610,7 +1588,6 @@ public class PUtility {
     public static String SeekPromotionName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1636,7 +1613,6 @@ public class PUtility {
     public static Boolean SeekPromotion2(String Macno, String TCode) {
         boolean foundData = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             try ( Statement stmt = mysql.getConnection().createStatement()) {

@@ -16,7 +16,6 @@ public class BranchControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             mysql.open();
             String sql = "update branch set KicItemNo=KicItemNo+1";
@@ -34,7 +33,6 @@ public class BranchControl {
             return branchBean;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             mysql.open();
             String sql = "select * from branch limit 1";
@@ -211,7 +209,6 @@ public class BranchControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             mysql.open();
             String sql = "select KICCopy" + kicNo + " from branch limit 1";

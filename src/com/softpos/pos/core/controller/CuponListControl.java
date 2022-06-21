@@ -15,7 +15,6 @@ public class CuponListControl {
     public List<CuponlistBean> listCuponlist() {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         
         List<CuponlistBean> listBean = new ArrayList<>();
@@ -46,7 +45,6 @@ public class CuponListControl {
     public List<CuponlistBean> listCuponlist(String CuCode) {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         
         List<CuponlistBean> listBean = new ArrayList<>();
@@ -78,7 +76,6 @@ public class CuponListControl {
     public CuponlistBean getCuponlist(String CuCode) {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         
         CuponlistBean bean = new CuponlistBean();
@@ -105,9 +102,7 @@ public class CuponListControl {
     public void saveCuponlist(CuponlistBean bean) {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
-        
         try {
             String sql = "insert into cuponlist (CuCode,PCode)  "
                     + "values('" + bean.getCuCode() + "','" + bean.getPCode() + "')";
@@ -133,7 +128,6 @@ public class CuponListControl {
     public void updateCuponlist(CuponlistBean bean) {
         /*** OPEN CONNECTION ***/
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         
         try {

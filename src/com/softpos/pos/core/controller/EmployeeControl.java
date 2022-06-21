@@ -20,7 +20,6 @@ public class EmployeeControl {
         if (listAll == null) {
             listAll = new ArrayList<>();
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             try {
                 mysql.open();
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from employ");
