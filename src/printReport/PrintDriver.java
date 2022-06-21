@@ -148,7 +148,6 @@ public class PrintDriver {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
             try {
                 String sql = "update balance "

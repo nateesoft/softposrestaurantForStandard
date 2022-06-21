@@ -104,7 +104,6 @@ public class PaidinFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "insert into paidiofile "

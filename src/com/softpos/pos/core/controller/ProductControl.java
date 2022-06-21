@@ -59,8 +59,6 @@ public class ProductControl {
         if (listAll == null) {
             listAll = new ArrayList<>();
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
-            
             try {
                 mysql.open();
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from product where pactive='Y'");
@@ -140,7 +138,6 @@ public class ProductControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
@@ -214,7 +211,6 @@ public class ProductControl {
 
     public List<ProductBean> searchAllProductBy(String PCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             PCode = ThaiUtil.Unicode2ASCII(PCode);
@@ -300,7 +296,6 @@ public class ProductControl {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             key = ThaiUtil.Unicode2ASCII(key);
@@ -346,7 +341,6 @@ public class ProductControl {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             key = ThaiUtil.Unicode2ASCII(key);
@@ -391,7 +385,6 @@ public class ProductControl {
 
     public List<ProductBean> getAllProductByGroup(String PGroup) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
@@ -469,7 +462,6 @@ public class ProductControl {
     public boolean productExist(String PCode) {
         boolean isExist = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select PCode from product where PCode='" + PCode + "' limit 1";
@@ -494,7 +486,6 @@ public class ProductControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select PCode from outstocklist where PCode='" + PCode + "' limit 1";
@@ -516,7 +507,6 @@ public class ProductControl {
     public static boolean checkProductItem(String menuCode) {
         boolean isProduct = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "

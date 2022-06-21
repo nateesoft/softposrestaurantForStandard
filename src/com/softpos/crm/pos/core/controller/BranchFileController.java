@@ -17,7 +17,7 @@ public class BranchFileController {
 
     public static BranchFileBean getData(String branchCode) {
         BranchFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "select * from " + Value.db_member + ".branfile "
@@ -39,7 +39,7 @@ public class BranchFileController {
 
     public static BranchFileBean getDataMemberPoint(String branchCode) {
         BranchFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
 
         try {
             mysql.open();

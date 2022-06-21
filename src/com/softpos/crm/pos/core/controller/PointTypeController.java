@@ -19,7 +19,7 @@ public class PointTypeController {
 
     public static PointTypeBean getData(String pointTypeCode) {
         PointTypeBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "select * "
@@ -43,7 +43,7 @@ public class PointTypeController {
     
     public static PointTypeBean getDataBranchPoint() {
         PointTypeBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");

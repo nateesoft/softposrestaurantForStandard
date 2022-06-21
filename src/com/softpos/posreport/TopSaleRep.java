@@ -481,7 +481,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -546,7 +545,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -657,7 +655,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     public void PrintTopSaleDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2, String Group1, String Group2, int CntOrder) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -775,7 +772,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();

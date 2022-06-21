@@ -13,7 +13,6 @@ public class StoreDept {
     public boolean store(DeptButtonBean bean) {
         String sql = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             sql = "INSERT INTO menusetup (code_id,code_type,pcode,shortname,ppathname,pcolor)"
@@ -39,7 +38,6 @@ public class StoreDept {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             sql = "UPDATE menusetup SET "

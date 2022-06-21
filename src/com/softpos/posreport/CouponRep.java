@@ -227,7 +227,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.close();
                     mysql.open();
                     try {
                         String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
@@ -307,7 +306,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "

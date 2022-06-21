@@ -230,7 +230,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.close();
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -339,7 +338,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         double billVoidAmt = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             mysql.open();
 

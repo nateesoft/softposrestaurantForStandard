@@ -551,7 +551,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -655,7 +654,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -680,7 +678,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -705,7 +702,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -738,7 +734,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -766,7 +761,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1009,7 +1003,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1142,7 +1135,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1171,7 +1163,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1444,7 +1435,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1583,7 +1573,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1852,7 +1841,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2207,7 +2195,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2612,7 +2599,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2692,7 +2678,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2738,7 +2723,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2843,7 +2827,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2889,7 +2872,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -2954,7 +2936,6 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();

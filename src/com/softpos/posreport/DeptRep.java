@@ -347,7 +347,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -557,7 +556,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();

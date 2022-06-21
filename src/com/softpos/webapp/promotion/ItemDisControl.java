@@ -107,7 +107,6 @@ public class ItemDisControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();mysql.close();
-        mysql.close();
         mysql.open();
         try {
             String sql = "UPDATE balance set "

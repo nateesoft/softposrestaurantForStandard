@@ -451,7 +451,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
 
         try {
@@ -622,7 +621,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -679,7 +677,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -805,7 +802,6 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     private boolean checkPermit() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         boolean isPermit = false;
         try {

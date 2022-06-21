@@ -13,7 +13,6 @@ public class StorePlu {
     public boolean store(PluButtonBean bean) {
         String sql = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             sql = "INSERT INTO menusetup (code_id,code_type,pcode,shortname,ppathname,pcolor)"
@@ -39,7 +38,6 @@ public class StorePlu {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "UPDATE menusetup SET "

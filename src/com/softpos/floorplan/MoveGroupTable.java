@@ -615,7 +615,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.close();
                 mysql.open();
                 try {
                     int ct1 = 0, ct2 = 0, c = 0;
@@ -877,7 +876,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
             try {
                 String sql = "select code from employ where code='" + txtUser.getText() + "' limit 1";
@@ -958,7 +956,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
     private void updateForVoidAfterMoveTable(String table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             String sql = "update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'";
             mysql.open();
@@ -973,7 +970,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
     private void tmpTableBeforeMove(String table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String[] sql = new String[]{

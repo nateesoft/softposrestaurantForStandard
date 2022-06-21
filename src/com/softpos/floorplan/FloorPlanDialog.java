@@ -1310,7 +1310,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         if (dialogResult == JOptionPane.YES_OPTION) {
             if (dialogResult == 0) {
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.close();
                 try {
                     String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
                     mysql.open();
@@ -1411,7 +1410,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1875,7 +1873,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             System.out.println("PrintCheckBillFromPDA= loop");
             if (!POSHW.getTakeOrderChk().equals("Y")) {
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.close();
                 try {
                     mysql.open();
                     String sql = "select * from balance where PDAPrintCheck='Y' "
@@ -1915,7 +1912,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 clearTemp();
                 
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.close();
                 mysql.open();
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -1939,7 +1935,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         } else {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             try {
                 mysql.open();
                 String sql1 = "update poshwsetup set onact='N' where terminal='" + Value.MACNO + "'";
@@ -1966,7 +1961,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     
     boolean UpdateLogout(String UserCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1991,7 +1985,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         boolean checkExistTempRefund = false;
         
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select r_plucode from sp_temp_refund limit 1;";
@@ -2088,7 +2081,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void refund() {
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
 
             boolean isPermit = false;
@@ -2335,8 +2327,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             
             String sql = "delete from tempset where ptableno='" + tableNo + "';";
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
-            mysql.close();
             try {
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sql);
@@ -2372,7 +2362,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         if (!login.getLoginPWD().equals("")) {
                             String sql2 = "select code,name from employ where Code='" + login.getLoginPWD() + "' limit 1;";
                             MySQLConnect mysql = new MySQLConnect();
-                            mysql.close();
                             mysql.open();
                             try {
                                 Statement stmt2 = mysql.getConnection().createStatement();
@@ -2525,8 +2514,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-        mysql.close();
         mysql.open();
         
         try {
@@ -2687,8 +2674,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select POption from tempset where PIndex='" + R_Index + "' and PCode='" + PCode + "' limit 1";

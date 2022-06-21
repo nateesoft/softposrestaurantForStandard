@@ -18,7 +18,6 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon";
@@ -58,7 +57,6 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon(String R_Index) {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
@@ -101,7 +99,6 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
@@ -140,7 +137,6 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "delete from tempcupon "
@@ -171,7 +167,6 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");

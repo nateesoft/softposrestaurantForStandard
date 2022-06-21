@@ -32,7 +32,6 @@ public class ServiceControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         DateConvert dc = new DateConvert();
         try {

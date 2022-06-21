@@ -304,7 +304,6 @@ public class PosControl {
             return posConfigSetup;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from posconfigsetup limit 1";
@@ -388,7 +387,6 @@ public class PosControl {
             return poshwsetup;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "' limit 1";
@@ -500,7 +498,6 @@ public class PosControl {
 
     public void posHwSetupOnAct(String Onact) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         try {
             mysql.open();
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";

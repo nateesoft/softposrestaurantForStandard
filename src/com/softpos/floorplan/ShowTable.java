@@ -222,7 +222,6 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.close();
             mysql.open();
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -320,7 +319,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"

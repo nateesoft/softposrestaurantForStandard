@@ -340,7 +340,6 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.close();
                     mysql.open();
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -432,7 +431,6 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             Statement stmt = mysql.getConnection().createStatement();

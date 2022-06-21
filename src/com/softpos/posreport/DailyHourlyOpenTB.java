@@ -48,7 +48,6 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         ArrayList<Object[]> ListObj = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
         try {
             DecimalFormat df = new DecimalFormat("00.00");

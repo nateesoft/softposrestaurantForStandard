@@ -231,7 +231,6 @@ public class DiarySale extends javax.swing.JDialog {
 
     private void LoadSale() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
         mysql.open();
 
         try {

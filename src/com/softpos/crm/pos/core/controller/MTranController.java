@@ -18,7 +18,7 @@ public class MTranController {
 
     public static MTranBean getData(String branchCode) {
         MTranBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
 
         try {
             mysql.open();
@@ -40,7 +40,7 @@ public class MTranController {
 
     public boolean checkReceiptNoExist(String receiptNo) {
         boolean isNoExist = true;
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "select Receipt_No from " + Value.db_member + ".mtran "
@@ -81,7 +81,7 @@ public class MTranController {
     public int create(MTranBean bean) {
         int resultCreate = 0;
 
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
         try {
@@ -108,7 +108,7 @@ public class MTranController {
     }
 
     public void refundBill(String receiptNo) {
-        MySQLConnect mysql = new MySQLConnect();mysql.close();
+        MySQLConnect mysql = new MySQLConnect();
         mysql.open();
 
         try {
