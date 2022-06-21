@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSHWSetup;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;

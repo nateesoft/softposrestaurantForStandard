@@ -1,5 +1,7 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
@@ -397,7 +399,7 @@ public class BillControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.close();
         mysql.open();
-        
+
         //get data from balance, tablefile
         final String BillNo = BillControl.getBillIDCurrent();
 
@@ -1748,6 +1750,29 @@ public class BillControl {
         }
 
         return tSaleBean;
+    }
+
+    //check ยอดค้างที่ยังไม่ได้ปิดสิ้นวันหรือไม่ ?
+    public boolean checkBillNoValid(String dateFmt) {
+        boolean isValid = false;
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open();
+        try {
+            String sql = "select b_ondate b_ondate from billno "
+                    + "where b_ondate<>'" + dateFmt + "' limit 1";
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    isValid = true;
+                }
+            }
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysql.close();
+        }
+
+        return isValid;
     }
 
 }

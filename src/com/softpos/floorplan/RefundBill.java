@@ -5,15 +5,16 @@ import com.softpos.crm.pos.core.controller.MTranController;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.crm.pos.core.modal.CreditPaymentRec;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import convert_utility.text_to_image.TextToImage;
 import database.MySQLConnect;
@@ -455,7 +456,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         try {
             String sql = "update billno "
-                    + "set b_voiduser='" + PublicVar.TUserRec.UserCode + "',"
+                    + "set b_voiduser='" + PublicVar.TUserRec.getUserName() + "',"
                     + "b_voidtime='" + Timefmt.format(date) + "',"
                     + "b_void='V' "
                     + "where b_macno='" + macno + "' "
@@ -582,7 +583,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 String StkRemark = "SAL";
                 String DocNo = "R" + rs.getString("r_refno");
                 Date TDate = rs.getDate("r_date");
-                PUtility.ProcessStockOut(DocNo, StkCode, rs.getString("r_plucode"), TDate, StkRemark, -1 * rs.getDouble("r_quan"), -1 * rs.getDouble("r_total"), PublicVar.TUserRec.UserCode, rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
+                PUtility.ProcessStockOut(DocNo, StkCode, rs.getString("r_plucode"), TDate, StkRemark, -1 * rs.getDouble("r_quan"), -1 * rs.getDouble("r_total"), PublicVar.TUserRec.getUserName(), rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
             }
             rs.close();
             stmt.close();
@@ -831,10 +832,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             getuser.setVisible(true);
 
             if (!PublicVar.ReturnString.equals("")) {
-                String loginname = PublicVar.ReturnString;
-                UserRecord supUser = new UserRecord();
-                if (supUser.GetUserAction(loginname)) {
-                    if (supUser.Sale2.equals("Y")) {
+                PosUserBean posUser = PosControl.getPosUser(Value.USERCODE);
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale2().equals("Y")) {
                         return true;
                     } else {
                         MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");

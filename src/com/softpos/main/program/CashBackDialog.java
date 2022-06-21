@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;

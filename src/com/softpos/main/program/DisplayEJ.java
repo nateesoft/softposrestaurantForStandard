@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

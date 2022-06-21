@@ -2,8 +2,8 @@ package com.softpos.posreport;
 
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.crm.pos.core.modal.FinalcialRec;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;

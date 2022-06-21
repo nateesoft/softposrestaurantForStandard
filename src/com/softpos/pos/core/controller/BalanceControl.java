@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.member.MemberControl;
 import com.softpos.pos.core.model.BalanceBean;

@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.crm.pos.core.modal.CouponRec;
 import com.softpos.pos.core.controller.CuponControl;
 import com.softpos.pos.core.controller.CuponListControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TempCuponController;

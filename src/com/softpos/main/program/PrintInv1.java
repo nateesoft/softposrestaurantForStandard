@@ -2,8 +2,8 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.CustomerConrol;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.crm.pos.core.modal.PublicVar;

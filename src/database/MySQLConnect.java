@@ -106,6 +106,7 @@ public class MySQLConnect {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+                System.out.println("Connection:"+con.hashCode());
             } catch (ClassNotFoundException | SQLException e) {
                 MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
                 AppLogUtil.log(MySQLConnect.class, "error", e);
@@ -120,6 +121,7 @@ public class MySQLConnect {
 
     public void close() {
         if (con != null) {
+            System.out.println("Connection_Close:"+con.hashCode());
             try {
                 con.close();
             } catch (SQLException ex) {

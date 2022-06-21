@@ -15,17 +15,18 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.posreport.PromotionRep;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.PosControl;
 import com.softpos.posreport.TerminalRep;
 import com.softpos.posreport.TopSaleRep;
-import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.VoidRep;
 import util.MSG;
 import com.softpos.posreport.DailyHourlyOpenTB;
 
 public class DailyRep extends javax.swing.JDialog {
 
-    PPrint prn = new PPrint();
+    private PPrint prn = new PPrint();
 
     public DailyRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -196,9 +197,10 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     }//GEN-LAST:event_bntOKActionPerformed
 
     public void bntOkClick() {
+        PosUserBean posUser = PosControl.getPosUser(PublicVar.ReturnString);
         if (FunctionList.getSelectedIndex() == 1) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale10.equals("Y")) {
+            if (posUser.getSale10().equals("Y")) {
                 TerminalRep frm = new TerminalRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -207,11 +209,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale10.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale10().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             TerminalRep frm = new TerminalRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -225,38 +225,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             }
             PublicVar.TUserRec = PublicVar.TempUserRec;
         }
-//        if (FunctionList.getSelectedIndex() == 2) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale11.equals("Y")) {
-//                CashierRep frm = new CashierRep(null, true);
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale11.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            CashierRep frm = new CashierRep(null, true);
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
         if (FunctionList.getSelectedIndex() == 2) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale12.equals("Y")) {
+            if (posUser.getSale12().equals("Y")) {
                 DeptRep frm = new DeptRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -265,11 +236,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale12.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale12().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             DeptRep frm = new DeptRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -285,7 +254,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 3) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale13.equals("Y")) {
+            if (posUser.getSale13().equals("Y")) {
                 PLURep frm = new PLURep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -294,11 +263,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale13.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale13().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             PLURep frm = new PLURep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -314,7 +281,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 4) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale14.equals("Y")) {
+            if (posUser.getSale14().equals("Y")) {
                 DailyHourlyOpenTB frm = new DailyHourlyOpenTB(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -323,11 +290,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale14.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale14().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             DailyHourlyOpenTB frm = new DailyHourlyOpenTB(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -343,7 +308,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 5) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale15.equals("Y")) {
+            if (posUser.getSale15().equals("Y")) {
                 InvRep frm = new InvRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -352,11 +317,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale15.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale15().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             InvRep frm = new InvRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -372,7 +335,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 6) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale16.equals("Y")) {
+            if (posUser.getSale16().equals("Y")) {
                 VoidRep frm = new VoidRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -381,11 +344,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale16.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale16().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             VoidRep frm = new VoidRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -401,7 +362,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 7) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale17.equals("Y")) {
+            if (posUser.getSale17().equals("Y")) {
                 CreditRep frm = new CreditRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -410,11 +371,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale17.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale17().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             CreditRep frm = new CreditRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -430,7 +389,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 8) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale17.equals("Y")) {
+            if (posUser.getSale17().equals("Y")) {
                 GiftVoucherRep frm = new GiftVoucherRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -439,11 +398,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale17.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale17().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             GiftVoucherRep frm = new GiftVoucherRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -459,7 +416,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 9) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale18.equals("Y")) {
+            if (posUser.getSale18().equals("Y")) {
                 TopSaleRep frm = new TopSaleRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -468,11 +425,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale18.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale18().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             TopSaleRep frm = new TopSaleRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -485,70 +440,10 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 }
             }
             PublicVar.TUserRec = PublicVar.TempUserRec;
-
         }
-
-//        if (FunctionList.getSelectedIndex() == 12) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale20.equals("Y")) {
-//                HourlyByPlu frm = new HourlyByPlu(null, true);
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale20.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            HourlyByPlu frm = new HourlyByPlu(null, true);
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
-//        if (FunctionList.getSelectedIndex() == 14) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale20.equals("Y")) {
-//                MTDHourlyOpenTB frm = new MTDHourlyOpenTB(null, true);
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale20.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            MTDHourlyOpenTB frm = new MTDHourlyOpenTB(null, true);
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
         if (FunctionList.getSelectedIndex() == 10) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale18.equals("Y")) {
+            if (posUser.getSale18().equals("Y")) {
                 CouponRep frm = new CouponRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -557,11 +452,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale18.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale18().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             CouponRep frm = new CouponRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -582,7 +475,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 12) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale19.equals("Y")) {
+            if (posUser.getSale19().equals("Y")) {
                 ArPaymentRep frm = new ArPaymentRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -591,11 +484,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale19.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale19().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             ArPaymentRep frm = new ArPaymentRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -612,7 +503,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         }
         if (FunctionList.getSelectedIndex() == 13) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale21.equals("Y")) {
+            if (posUser.getSale21().equals("Y")) {
                 AutoXRep frm = new AutoXRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -621,11 +512,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale21.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale21().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             AutoXRep frm = new AutoXRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -645,7 +534,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 return;
             }
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale22.equals("Y")) {
+            if (posUser.getSale22().equals("Y")) {
                 AutoSumXRep frm = new AutoSumXRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -654,11 +543,9 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale22.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale22().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             AutoSumXRep frm = new AutoSumXRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -674,37 +561,6 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
         }
     }
-
-//    public void ClearApp() {
-//        TerminalRep frm0 = new TerminalRep(null, true);
-//        DeptRep frm1 = new DeptRep(null, true);
-//        PLURep frm2 = new PLURep(null, true);
-//        DailyHourlyOpenTB frm3 = new DailyHourlyOpenTB(null, true);
-//        InvRep frm4 = new InvRep(null, true);
-//        VoidRep frm5 = new VoidRep(null, true);
-//        CreditRep frm6 = new CreditRep(null, true);
-//        GiftVoucherRep frm7 = new GiftVoucherRep(null, true);
-//        TopSaleRep frm9 = new TopSaleRep(null, true);
-//        ArPaymentRep frm10 = new ArPaymentRep(null, true);
-//        HourlyByPlu frm11 = new HourlyByPlu(null, true);
-//        MTDHourlyOpenTB frm12 = new MTDHourlyOpenTB(null, true);
-//        CashierRep frm13 = new CashierRep(null, true);
-//        DiarySale frm14 = new DiarySale(null, true);
-//        frm0.setVisible(false);
-//        frm1.setVisible(false);
-//        frm2.setVisible(false);
-//        frm3.setVisible(false);
-//        frm4.setVisible(false);
-//        frm5.setVisible(false);
-//        frm6.setVisible(false);
-//        frm7.setVisible(false);
-//        frm9.setVisible(false);
-//        frm10.setVisible(false);
-//        frm11.setVisible(false);
-//        frm12.setVisible(false);
-//        frm13.setVisible(false);
-//        frm14.setVisible(false);
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList FunctionList;

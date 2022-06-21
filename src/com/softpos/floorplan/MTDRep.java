@@ -12,7 +12,8 @@ import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.MTDCoupon;
 import com.softpos.posreport.MTDGiftVoucher;
 import com.softpos.posreport.MTDHourlyOpenTB;
@@ -20,6 +21,7 @@ import com.softpos.posreport.MTDInvRep;
 import util.MSG;
 
 public class MTDRep extends javax.swing.JDialog {
+    private PosUserBean posUser = null;
 
     public MTDRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -27,7 +29,8 @@ public class MTDRep extends javax.swing.JDialog {
         setUndecorated(true);
         setSize(1024, 768);
         setLocationRelativeTo(null);
-//        setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+        
+        posUser = PosControl.getPosUser(PublicVar.ReturnString);
     }
 
     @SuppressWarnings("unchecked")
@@ -178,7 +181,7 @@ public class MTDRep extends javax.swing.JDialog {
     public void bntOkClick() {
         if (FunctionList.getSelectedIndex() == 0) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale23.equals("Y")) {
+            if (posUser.getSale23().equals("Y")) {
                 MTDTerminal frm = new MTDTerminal(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -187,11 +190,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale23.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale23().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDTerminal frm = new MTDTerminal(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -205,38 +206,10 @@ public class MTDRep extends javax.swing.JDialog {
             }
             PublicVar.TUserRec = PublicVar.TempUserRec;
         }
-//        if (FunctionList.getSelectedIndex() == 1) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale24.equals("Y")) {
-//                MTDCashier frm = new MTDCashier(null, true);
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale24.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            MTDCashier frm = new MTDCashier(null, true);
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
+
         if (FunctionList.getSelectedIndex() == 1) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale25.equals("Y")) {
+            if (posUser.getSale25().equals("Y")) {
                 MTDDept frm = new MTDDept(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -245,11 +218,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale25.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale25().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDDept frm = new MTDDept(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -265,7 +236,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 2) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale26.equals("Y")) {
+            if (posUser.getSale26().equals("Y")) {
                 MTDPLU frm = new MTDPLU(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -274,11 +245,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale26.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale26().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDPLU frm = new MTDPLU(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -294,7 +263,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 3) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale27.equals("Y")) {
+            if (posUser.getSale27().equals("Y")) {
                 MTDHourlyOpenTB frm = new MTDHourlyOpenTB(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -303,11 +272,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale27.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale27().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDHourlyOpenTB frm = new MTDHourlyOpenTB(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -323,7 +290,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 4) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale27.equals("Y")) {
+            if (posUser.getSale27().equals("Y")) {
                 MTDInvRep frm = new MTDInvRep(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -332,11 +299,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale27.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale27().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDInvRep frm = new MTDInvRep(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -350,38 +315,10 @@ public class MTDRep extends javax.swing.JDialog {
             }
             PublicVar.TUserRec = PublicVar.TempUserRec;
         }
-//        if (FunctionList.getSelectedIndex() == 4) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale28.equals("Y")) {
-//                MTDSubDiscount frm = new MTDSubDiscount(null, true); //สลับกับ Invoice <-> SubDiscount
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale28.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            MTDSubDiscount frm = new MTDSubDiscount(null, true); //สลับกับ Invoice <-> SubDiscount
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
+
         if (FunctionList.getSelectedIndex() == 5) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale29.equals("Y")) {
+            if (posUser.getSale29().equals("Y")) {
                 MTDVoid frm = new MTDVoid(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -390,11 +327,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale29.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale29().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDVoid frm = new MTDVoid(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -410,7 +345,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 6) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale30.equals("Y")) {
+            if (posUser.getSale30().equals("Y")) {
                 MTDCredit frm = new MTDCredit(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -419,11 +354,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale30.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale30().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDCredit frm = new MTDCredit(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -439,7 +372,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 7) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale30.equals("Y")) {
+            if (posUser.getSale30().equals("Y")) {
                 MTDGiftVoucher frm = new MTDGiftVoucher(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -448,11 +381,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale30.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale30().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDGiftVoucher frm = new MTDGiftVoucher(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -468,7 +399,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 8) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale31.equals("Y")) {
+            if (posUser.getSale31().equals("Y")) {
                 MTDTopSale frm = new MTDTopSale(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -477,11 +408,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale31.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale31().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDTopSale frm = new MTDTopSale(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -497,7 +426,7 @@ public class MTDRep extends javax.swing.JDialog {
         }
         if (FunctionList.getSelectedIndex() == 9) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
-            if (PublicVar.TUserRec.Sale18.equals("Y")) {
+            if (posUser.getSale18().equals("Y")) {
                 MTDCoupon frm = new MTDCoupon(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
@@ -506,11 +435,9 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale18.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale18().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             MTDCoupon frm = new MTDCoupon(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
@@ -524,35 +451,6 @@ public class MTDRep extends javax.swing.JDialog {
             }
             PublicVar.TUserRec = PublicVar.TempUserRec;
         }
-//        if (FunctionList.getSelectedIndex() == 9) {
-//            PublicVar.TempUserRec = PublicVar.TUserRec;
-//            if (PublicVar.TUserRec.Sale32.equals("Y")) {
-//                MTDArPayment frm = new MTDArPayment(null, true);
-//                frm.setVisible(true);
-//                FunctionList.requestFocus();
-//            } else {
-//                GetUserAction getuser = new GetUserAction(null, true);
-//                getuser.setVisible(true);
-//
-//                if (!PublicVar.ReturnString.equals("")) {
-//                    String loginname = PublicVar.ReturnString;
-//                    UserRecord supUser = new UserRecord();
-//                    if (supUser.GetUserAction(loginname)) {
-//                        if (supUser.Sale32.equals("Y")) {
-//                            PublicVar.TUserRec = supUser;
-//                            MTDArPayment frm = new MTDArPayment(null, true);
-//                            frm.setVisible(true);
-//                            FunctionList.requestFocus();
-//                        } else {
-//                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
-//                        }
-//                    } else {
-//                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-//                    }
-//                }
-//            }
-//            PublicVar.TUserRec = PublicVar.TempUserRec;
-//        }
     }
 
     public void ClearApp() {

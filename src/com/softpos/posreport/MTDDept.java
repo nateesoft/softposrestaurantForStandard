@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.main.program.Jdi_MTDdepReport;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;

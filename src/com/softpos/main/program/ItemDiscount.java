@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.ThaiUtil;

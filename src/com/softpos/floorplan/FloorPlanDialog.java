@@ -13,8 +13,8 @@ import com.softpos.main.program.PrintKicControl;
 import com.softpos.main.program.SetupButtonTable;
 import com.softpos.main.program.UpdateData;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
@@ -23,12 +23,12 @@ import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableSetupControl;
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.FloorPlanBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -85,6 +85,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     
     private final ProductControl productControl = new ProductControl();
     private JButton[] buttons = new JButton[100];
+    private PosUserBean posUser = null;
     
     public FloorPlanDialog() {
         setUndecorated(true);
@@ -94,6 +95,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
+        posUser = PosControl.getPosUser(PublicVar.ReturnString);
         
         refresh = PosControl.getRefreshTime();
         if (refresh < 1) {
@@ -2112,10 +2114,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale2.equals("Y")) {
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale2().equals("Y")) {
                             RefundBill refund = new RefundBill(null, true);
                             refund.setVisible(true);
                         } else {

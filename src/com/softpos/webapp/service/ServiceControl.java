@@ -1,7 +1,7 @@
 package com.softpos.webapp.service;
 
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;

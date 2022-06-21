@@ -1,5 +1,7 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSConfigSetup;
+
 public class CompanyConfig {
 
     public CompanyConfig() {

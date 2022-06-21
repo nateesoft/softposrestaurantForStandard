@@ -3,7 +3,7 @@ package com.softpos.discount;
 import com.softpos.main.program.CouponDiscount;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
-import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.CuponBean;

@@ -1,25 +1,22 @@
 package com.softpos.login;
 
 import com.softpos.floorplan.FloorPlanDialog;
-import com.softpos.floorplan.ShowTable;
 import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.LoginController;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.LoginBean;
+import com.softpos.pos.core.model.PosUserBean;
 import database.ConfigFile;
-import database.MySQLConnect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +26,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
 import util.CheckApplication;
 import util.MSG;
 import util.OSValidator;
@@ -39,6 +35,7 @@ public class Login extends javax.swing.JDialog {
     private Timer timer;
     private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat IntFmt = new DecimalFormat("#,##0");
+    private PosControl posControl = new PosControl();
 
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -323,12 +320,11 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPassMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        PosHwSetupOnAct("N");
+        posControl.posHwSetupOnAct("N");
         JOptionPane.showMessageDialog(this, "ปลดล้อกโปรแกรมเรียบร้อยกรุณากรอก Username : Password");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-//        MySQLConnect mysql=  new MySQLConnect();
         if (CheckApplication.isRunning()) {
             JOptionPane.showMessageDialog(null, "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
@@ -411,41 +407,43 @@ public class Login extends javax.swing.JDialog {
             return;
         }
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-        mysql.open();
-        try {
-            String sql = "select username,password,name,onact,macno from posuser "
-                    + "where username= '" + ThaiUtil.Unicode2ASCII(loginname) + "' "
-                    + "and password='" + ThaiUtil.Unicode2ASCII(password) + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                PublicVar._RealUser = rs.getString("username");
-                PublicVar._Password = rs.getString("password");
-                PublicVar._UserName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
-                OnAct = rs.getString("onact");
-                MacNoOnAct = rs.getString("macno");
+        LoginController loginController = new LoginController();
+        LoginBean loginBean = loginController.validateLogin(loginname, password);
+        if (loginBean.isValidLogin()) {
+            PublicVar._RealUser = loginBean.getUsername();
+            PublicVar._Password = loginBean.getPassword();
+            PublicVar._UserName = loginBean.getName();
+            OnAct = loginBean.getOnact();
+            MacNoOnAct = loginBean.getMacno();
 
-                SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                String St = tf.format(new Date());
-                txtShowDate.setText(St);
+            SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            String St = tf.format(new Date());
+            txtShowDate.setText(St);
 
-                String sqlCheckBillno = "select b_ondate b_ondate from billno where b_ondate<>'" + St + "' limit 1";
-                Statement stmt2 = mysql.getConnection().createStatement();
-                ResultSet rs2 = stmt2.executeQuery(sqlCheckBillno);
-                boolean checkOndate = rs2.next();
-                if (!checkOndate) {
+            BillControl billControl = new BillControl();
+            if (billControl.checkBillNoValid(St)) {
+                POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+                String POSOnActCheck = poshwSetup.getOnAct();
+                if (POSOnActCheck.equals("Y")) {
+                    JOptionPane.showMessageDialog(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                            + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
+                            + "กรุณาตรวจสอบฐานข้อมูล", "สถานะเครื่อง POS", JOptionPane.WARNING_MESSAGE);
+                    System.exit(0);
+                }
+                MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
+                GetPassword frm = new GetPassword(null, true);
+                frm.setVisible(true);
+                if (frm.ValidPassword) {
                     if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                        MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                        MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                         clearlogin();
                     } else {
-                        UserRecord TUserRec = new UserRecord();
-                        if (TUserRec.GetUserAction(loginname)) {
-                            if (TUserRec.Sale1.equals("Y")) {
-                                PublicVar.TUserRec = TUserRec;
-                                UpdateLogin(loginname);
-                                PosHwSetupOnAct("Y");
+                        PosUserBean posUserBean = PosControl.getPosUser(loginname);
+                        if (posUserBean.getUserName() != null) {
+                            if (posUserBean.getSale1().equals("Y")) {
+                                PublicVar.TUserRec = posUserBean;
+                                loginController.updateLogin(loginname);
+                                posControl.posHwSetupOnAct("Y");
                                 Value.USERCODE = txtUser.getText();
                                 PublicVar.Branch_Code = BranchControl.getData().getCode();
                                 dispose();
@@ -453,72 +451,47 @@ public class Login extends javax.swing.JDialog {
                                 FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
                                 floorPlanDialog.setVisible(true);
                             } else {
-                                MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
                                 clearlogin();
                             }
                         } else {
-                            MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                             clearlogin();
                         }
                     }
                 } else {
-                    POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
-                    String POSOnActCheck = poshwSetup.getOnAct();
-                    if (POSOnActCheck.equals("Y")) {
-                        JOptionPane.showMessageDialog(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
-                                + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
-                                + "กรุณาตรวจสอบฐานข้อมูล", "สถานะเครื่อง POS", JOptionPane.WARNING_MESSAGE);
-                        System.exit(0);
-                    }
-                    MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
-                    GetPassword frm = new GetPassword(null, true);
-                    frm.setVisible(true);
-                    if (frm.ValidPassword) {
-                        if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                            MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
-                            clearlogin();
-                        } else {
-                            UserRecord TUserRec = new UserRecord();
-                            if (TUserRec.GetUserAction(loginname)) {
-                                if (TUserRec.Sale1.equals("Y")) {
-                                    PublicVar.TUserRec = TUserRec;
-                                    UpdateLogin(loginname);
-                                    PosHwSetupOnAct("Y");
-                                    Value.USERCODE = txtUser.getText();
-                                    PublicVar.Branch_Code = BranchControl.getData().getCode();
-                                    dispose();
+                    System.exit(0);
+                }
+            } else {
+                if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                    MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                    clearlogin();
+                } else {
+                    PosUserBean posUserBean = PosControl.getPosUser(loginname);
+                    if (posUserBean.getUserName() != null) {
+                        if (posUserBean.getSale1().equals("Y")) {
+                            PublicVar.TUserRec = posUserBean;
+                            loginController.updateLogin(loginname);
+                            posControl.posHwSetupOnAct("Y");
+                            Value.USERCODE = txtUser.getText();
+                            PublicVar.Branch_Code = BranchControl.getData().getCode();
+                            dispose();
 
-                                    FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
-                                    floorPlanDialog.setVisible(true);
-                                } else {
-                                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
-                                    clearlogin();
-                                }
-                            } else {
-                                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-                                clearlogin();
-                            }
+                            FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                            floorPlanDialog.setVisible(true);
+                        } else {
+                            MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                            clearlogin();
                         }
                     } else {
-                        System.exit(0);
+                        MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                        clearlogin();
                     }
                 }
-
-                rs2.close();
-                stmt2.close();
-            } else {
-                MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                clearlogin();
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(Login.class, "error", e);
+        } else {
+            MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
             clearlogin();
-        } finally {
-            mysql.close();
         }
     }
 
@@ -526,34 +499,6 @@ public class Login extends javax.swing.JDialog {
         txtUser.setText("");
         txtPass.setText("");
         txtUser.requestFocus();
-    }
-
-    private void UpdateLogin(String UserCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-        mysql.open();
-        try {
-            String SQLQuery = "update posuser set "
-                    + "onact='Y',"
-                    + "macno='" + Value.MACNO + "' "
-                    + "where username='" + UserCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(SQLQuery);
-            Value.CASHIER = UserCode;
-            String sql = "update posuser set "
-                    + "onact='N' "
-                    + "where username<>'" + UserCode + "' "
-                    + "and macno='" + Value.MACNO + "';";
-            mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            clearlogin();
-        } finally {
-            mysql.close();
-        }
     }
 
     private void keyboardcheck(KeyEvent evt, String c_loginname) {
@@ -598,25 +543,6 @@ public class Login extends javax.swing.JDialog {
                 MSG.NOTICE(e.toString());
             }
         }).start();
-    }
-
-    public void PosHwSetupOnAct(String Onact) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
-        try {
-            mysql.open();
-            String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
-            Statement stmt = mysql.getConnection().createStatement();
-            if (stmt.executeUpdate(sql) > 0) {
-                // reset load poshwsetup
-                PosControl.resetPosHwSetup();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ShowTable.class, "error", e);
-        } finally {
-            mysql.close();
-        }
     }
 
     class TimeOfDay implements ActionListener {

@@ -1,5 +1,7 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.crm.pos.core.modal.FinalcialRec;

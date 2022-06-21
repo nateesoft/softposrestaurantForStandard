@@ -14,8 +14,8 @@ import com.softpos.pos.core.controller.ButtonCustom;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.crm.pos.core.modal.MenuMGR;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
@@ -23,11 +23,11 @@ import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.UserRecord;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
@@ -67,6 +67,7 @@ import util.ValidateValue;
 
 public class MainSale extends javax.swing.JDialog {
 
+    private PosUserBean posUser = null;
     private PPrint Prn = new PPrint();
     private DefaultTableModel model;
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
@@ -101,6 +102,8 @@ public class MainSale extends javax.swing.JDialog {
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
+        
+        posUser = PosControl.getPosUser(PublicVar.ReturnString);
 
         if (btnLangTH.isSelected()) {
             PublicVar.languagePrint = "TH";
@@ -1213,7 +1216,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
             mysql.open();
             String sql = "select * from balance where r_table='" + tableNo + "' order by r_index, r_etd limit 500";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-             while (rs.next()) {
+            while (rs.next()) {
                 String r_linkindex = rs.getString("r_linkindex");
                 String r_index = rs.getString("r_index");
                 String voidStr = rs.getString("r_void");
@@ -1425,7 +1428,7 @@ private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 
 private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
-    if (PublicVar.TUserRec.Sale7.equals("Y")) {
+    if (posUser.getSale7().equals("Y")) {
         AddNewArCustomer fmt = new AddNewArCustomer(null, true);
         fmt.setVisible(true);
     } else {
@@ -1433,11 +1436,9 @@ private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         getuser.setVisible(true);
 
         if (!PublicVar.ReturnString.equals("")) {
-            String loginname = PublicVar.ReturnString;
-            UserRecord supUser = new UserRecord();
-            if (supUser.GetUserAction(loginname)) {
-                if (supUser.Sale7.equals("Y")) {
-                    PublicVar.TUserRec = supUser;
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale7().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
                     AddNewArCustomer fmt = new AddNewArCustomer(null, true);
                     fmt.setVisible(true);
                 } else {
@@ -1453,7 +1454,8 @@ private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArNotPayment1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
-    if (PublicVar.TUserRec.Sale8.equals("Y")) {
+
+    if (posUser.getSale8().equals("Y")) {
         ArNotPay frm = new ArNotPay(null, true);
         frm.setVisible(true);
     } else {
@@ -1461,11 +1463,9 @@ private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {/
         getuser.setVisible(true);
 
         if (!PublicVar.ReturnString.equals("")) {
-            String loginname = PublicVar.ReturnString;
-            UserRecord supUser = new UserRecord();
-            if (supUser.GetUserAction(loginname)) {
-                if (supUser.Sale8.equals("Y")) {
-                    PublicVar.TUserRec = supUser;
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale8().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
                     ArNotPay frm = new ArNotPay(null, true);
                     frm.setVisible(true);
                 } else {
@@ -1483,7 +1483,7 @@ private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArHistory1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
-    if (PublicVar.TUserRec.Sale9.equals("Y")) {
+    if (posUser.getSale9().equals("Y")) {
         ArHistory frm = new ArHistory(null, true);
         frm.setVisible(true);
     } else {
@@ -1491,11 +1491,9 @@ private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         getuser.setVisible(true);
 
         if (!PublicVar.ReturnString.equals("")) {
-            String loginname = PublicVar.ReturnString;
-            UserRecord supUser = new UserRecord();
-            if (supUser.GetUserAction(loginname)) {
-                if (supUser.Sale9.equals("Y")) {
-                    PublicVar.TUserRec = supUser;
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale9().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
                     ArHistory frm = new ArHistory(null, true);
                     frm.setVisible(true);
                 } else {
@@ -1568,7 +1566,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }//GEN-LAST:event_MCancelArPayment2ActionPerformed
 
     private void MCancelArPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCancelArPayment1ActionPerformed
-        if (PublicVar.TUserRec.Sale7.equals("Y")) {
+        if (posUser.getSale7().equals("Y")) {
             if (PUtility.CheckSaleDateOK()) {
                 cancelArPaymentClick();
             }
@@ -1577,11 +1575,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             getuser.setVisible(true);
 
             if (!PublicVar.ReturnString.equals("")) {
-                String loginname = PublicVar.ReturnString;
-                UserRecord supUser = new UserRecord();
-                if (supUser.GetUserAction(loginname)) {
-                    if (supUser.Sale7.equals("Y")) {
-                        PublicVar.TUserRec = supUser;
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale7().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
                         if (PUtility.CheckSaleDateOK()) {
                             cancelArPaymentClick();
                         }
@@ -1884,7 +1880,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void cancelArPaymentClick() {
         PublicVar.TempUserRec = PublicVar.TUserRec;
 
-        if (PublicVar.TUserRec.Sale6.equals("Y")) {
+        if (posUser.getSale6().equals("Y")) {
             CancelArPayment frm = new CancelArPayment(null, true);
             frm.setVisible(true);
         } else {
@@ -1892,11 +1888,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             getuser.setVisible(true);
 
             if (!PublicVar.ReturnString.equals("")) {
-                String loginname = PublicVar.ReturnString;
-                UserRecord supUser = new UserRecord();
-                if (supUser.GetUserAction(loginname)) {
-                    if (supUser.Sale6.equals("Y")) {
-                        PublicVar.TUserRec = supUser;
+                if (posUser.getUserName()!=null) {
+                    if (posUser.getSale6().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
                         CancelArPayment frm = new CancelArPayment(null, true);
                         frm.setVisible(true);
                     } else {
@@ -2030,11 +2024,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     getuser.setVisible(true);
 
                     if (!PublicVar.ReturnString.equals("")) {
-                        String loginname = PublicVar.ReturnString;
-                        UserRecord supUser = new UserRecord();
-                        if (supUser.GetUserAction(loginname)) {
-                            if (supUser.Sale3.equals("Y")) {
-                                PublicVar.TUserRec = supUser;
+                        if (posUser.getUserName()!=null) {
+                            if (posUser.getSale3().equals("Y")) {
+                                PublicVar.TUserRec = posUser;
                                 VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
                                 voidD.setVisible(true);
                                 if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
@@ -2047,7 +2039,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         ResultSet rs = stmt.executeQuery(sql);
                                         while (rs.next()) {
                                             hasValue = true;
-                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
+                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
                                             txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
                                         }
 
@@ -2059,7 +2051,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     }
 
                                     if (!hasValue) {
-                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
                                         txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
                                     }
                                     showCell(row, 0);
@@ -2076,11 +2068,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     getuser.setVisible(true);
 
                     if (!PublicVar.ReturnString.equals("")) {
-                        String loginname = PublicVar.ReturnString;
-                        UserRecord supUser = new UserRecord();
-                        if (supUser.GetUserAction(loginname)) {
-                            if (supUser.Sale4.equals("Y")) {
-                                PublicVar.TUserRec = supUser;
+                        if (posUser.getUserName()!=null) {
+                            if (posUser.getSale4().equals("Y")) {
+                                PublicVar.TUserRec = posUser;
                                 VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
                                 voidD.setVisible(true);
                                 if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
@@ -2094,7 +2084,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                         ResultSet rs = stmt.executeQuery(sql);
                                         while (rs.next()) {
                                             hasValue = true;
-                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], loginname);
+                                            procVoid(rs.getString("R_Index"), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
                                         }
 
                                         rs.close();
@@ -2105,7 +2095,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     }
 
                                     if (!hasValue) {
-                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], loginname);
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
                                     }
                                     showCell(row, 0);
                                 }
@@ -2217,7 +2207,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             Date TDate = new Date();
             PUtility.ProcessStockOut(DocNo, StkCode, bean.getR_PluCode(), TDate, StkRemark, -1 * bean.getR_Quan(), -1 * bean.getR_Total(),
-                    PublicVar.TUserRec.UserCode, bean.getR_Stock(), bean.getR_Set(), bean.getR_Index(), "1");
+                    posUser.getUserName(), bean.getR_Stock(), bean.getR_Set(), bean.getR_Index(), "1");
 
             //ตัดสต็อกสินค้าที่มี Ingredent
             try {
@@ -2234,11 +2224,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (PBPack <= 0) {
                         PBPack = 1;
                     }
-                    String pname = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
                     double R_QuanIng = (rs.getDouble("PingQty") * bean.getR_Quan());
                     double R_Total = 0;
                     PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate, StkRemark, -1 * R_QuanIng, R_Total,
-                            PublicVar.TUserRec.UserCode, "Y", "", "", "");
+                            posUser.getUserName(), "Y", "", "", "");
                 }
 
                 rs.close();
@@ -3481,7 +3470,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
         PublicVar.TempUserRec = PublicVar.TUserRec;
         if (model.getRowCount() == 0) {
-            if (PublicVar.TUserRec.Sale2.equals("Y")) {
+            if (posUser.getSale2().equals("Y")) {
                 RefundBill frm = new RefundBill(null, true);
                 frm.setVisible(true);
                 PublicVar.P_ItemCount = 0;
@@ -3491,11 +3480,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale2.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale2().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             RefundBill frm = new RefundBill(null, true);
                             frm.setVisible(true);
                             PublicVar.P_ItemCount = 0;
@@ -3522,7 +3509,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         PublicVar.TempUserRec = PublicVar.TUserRec;
         if (model.getRowCount() == 0) {
-            if (PublicVar.TUserRec.Sale5.equals("Y")) {
+            if (posUser.getSale5().equals("Y")) {
                 ARPayment frm = new ARPayment(null, true);
                 frm.setVisible(true);
             } else {
@@ -3530,11 +3517,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    String loginname = PublicVar.ReturnString;
-                    UserRecord supUser = new UserRecord();
-                    if (supUser.GetUserAction(loginname)) {
-                        if (supUser.Sale5.equals("Y")) {
-                            PublicVar.TUserRec = supUser;
+                    if (posUser.getUserName()!=null) {
+                        if (posUser.getSale5().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
                             ARPayment frm = new ARPayment(null, true);
                             frm.setVisible(true);
                         } else {

@@ -1,7 +1,7 @@
 package com.softpos.crm.pos.core.modal;
 
 import com.softpos.pos.core.controller.SmpCoupon;
-import com.softpos.pos.core.controller.UserRecord;
+import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
 
@@ -16,11 +16,11 @@ public class PublicVar {
     public static String UseTouchScreen;
     public static TranRecord KicRec;
     public static String ProcessType;
-    public static UserRecord TUserRec;
-    public static UserRecord BarcodeLostUserRec;
-    public static UserRecord supUserRec;
-    public static UserRecord TempUserRec;
-    public static UserRecord TSupervisorRec;
+    public static PosUserBean TUserRec;
+    public static PosUserBean BarcodeLostUserRec;
+    public static PosUserBean supUserRec;
+    public static PosUserBean TempUserRec;
+    public static PosUserBean TSupervisorRec;
     public static Boolean ChangTypeOK;
     public static TranRecord[] ChangTypeArray;
     public static TranRecord[] TempMyArray;
