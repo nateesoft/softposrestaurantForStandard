@@ -28,7 +28,7 @@ public class BalanceControl {
         String tempIndex = "";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select max(R_Index) R_Index from balance "
                     + "where r_table='" + tableNo + "';";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -188,7 +188,7 @@ public class BalanceControl {
 
     private boolean saveBillNoSQL(BalanceBean bean) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             if (bean.getR_Date() == null) {
                 bean.setR_Date(new Date());
@@ -263,7 +263,7 @@ public class BalanceControl {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' "
                     + "order by R_Index";
@@ -379,7 +379,7 @@ public class BalanceControl {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select "
                     + "sum(b.r_quan) sum_R_Quan, "
                     + "sum(b.r_total) sum_R_Total, "
@@ -606,7 +606,7 @@ public class BalanceControl {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' and r_void<>'V'"
                     + "order by R_ETD,R_Index,r_time";
@@ -721,7 +721,7 @@ public class BalanceControl {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "";
             for (int i = 0; i <= 2; i++) {
                 if (i == 0) {
@@ -988,7 +988,7 @@ public class BalanceControl {
     public List<BalanceBean> getBalanceIndex(String R_Index) {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from balance where R_Index='" + R_Index + "'";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -1099,7 +1099,7 @@ public class BalanceControl {
     public List<BalanceBean> getAllBalancePromotion(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from balance "
                     + "where R_Table='" + table + "' "
@@ -1215,7 +1215,7 @@ public class BalanceControl {
         String date_default = "1899-12-30";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "update tablefile set "
                     + "TOnAct='N',"
                     + "TCurTime=curtime(),"
@@ -1238,7 +1238,7 @@ public class BalanceControl {
         String index = R_Table + "/001";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select max(R_Index) R_Index "
                     + "from balance "
                     + "where R_Table = '" + R_Table + "' "
@@ -1287,7 +1287,7 @@ public class BalanceControl {
     public void setDefaultBalance(String table) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             mysql.getConnection().createStatement().executeUpdate("delete from balance where R_Table='" + table + "'");
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1300,7 +1300,7 @@ public class BalanceControl {
     public boolean checkQuantity(String table, String R_PluCode, double R_Quan) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select sum(R_Quan) R_Quan "
                     + "from balance "
                     + "where R_PluCode='" + R_PluCode + "' "
@@ -1330,7 +1330,7 @@ public class BalanceControl {
         BalanceBean balanceBean = new BalanceBean();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * from balance "
                     + "where R_PluCode='" + PCode + "' "
                     + "and R_Index='" + R_Index + "'";
@@ -1432,7 +1432,7 @@ public class BalanceControl {
         BalanceBean balanceBean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * from balance where R_Table='" + Table + "' "
                     + "and R_Index='" + R_Index + "' limit 1";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -1540,7 +1540,7 @@ public class BalanceControl {
         List<BalanceBean> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * "
                     + "from balance "
                     + "where r_table='" + Table + "' "
@@ -1649,7 +1649,7 @@ public class BalanceControl {
     public void deleteBalance(String r_Table, String r_PluCode, String r_Index) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "delete from balance "
                     + "where R_Table = '" + r_Table + "' "
                     + "and R_PluCode = '" + r_PluCode + "' "
@@ -1668,7 +1668,7 @@ public class BalanceControl {
     public void deleteProduct(String table, String PCode, String R_Index) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "delete from balance "
                     + "where R_Index='" + R_Index + "' "
                     + "and R_Table='" + table + "' ";
@@ -1686,7 +1686,7 @@ public class BalanceControl {
     public boolean backupBalance(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "delete from temp_balance";
             try ( Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
@@ -1719,7 +1719,7 @@ public class BalanceControl {
     public boolean restoreBalance(String tableNo, String table2) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             Statement stmt = mysql.getConnection().createStatement();
 
             // clear table 1
@@ -1763,7 +1763,7 @@ public class BalanceControl {
         DateConvert dc = new DateConvert();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(BalanceControl.class);
             String sql = "select procode,prodesc,pdate1,pdate2,ptype,psum1 from protab;";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
@@ -1818,7 +1818,7 @@ public class BalanceControl {
         double discount = 0.00;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(BalanceControl.class);
             String sql = "select sum(R_PrAmt) + sum(R_Discbath) discount from balance where r_table='" + table + "' and r_void<>'V'";
             try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {

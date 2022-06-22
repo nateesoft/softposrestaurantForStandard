@@ -1577,7 +1577,7 @@ public class CheckBill extends javax.swing.JDialog {
             String sql = "select r_index from balance where r_table='" + tableNo + "' and r_type='1' limit 1";
             MySQLConnect mysql = new MySQLConnect();
             try {
-                mysql.open();
+                mysql.open(this.getClass());
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
                 boolean isTakeOrder = isTakeOrder();
                 if (rs.next() && isTakeOrder == true) {
@@ -2195,7 +2195,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void arCodeExits() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
                     + "where sp_code='" + txtArCode.getText() + "' limit 1";
@@ -2270,7 +2270,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void LoadDisc() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String query = "select sum(FastDiscAmt+EmpDiscAmt+MemDiscAmt+TrainDiscAmt+SubDiscAmt+DiscBath+CuponDiscAmt) AAA from tablefile where Tcode = '" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -2292,7 +2292,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void clearTempSet(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tempset "
                     + "where PTableNo='" + tableNo + "'";
@@ -2340,7 +2340,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void backupTempBalnace() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
             String sql2 = "insert ignore into temp_balance select * from balance "
@@ -2360,7 +2360,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void restoreTempBalance() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select r_table from temp_balance where r_table ='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -2391,7 +2391,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void clearTempGift() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tempgift";
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -2436,7 +2436,7 @@ public class CheckBill extends javax.swing.JDialog {
 //                    + "group by r_kic "
 //                    + "order by r_kic";
 //            MySQLConnect mysql = new MySQLConnect();
-//            mysql.open();
+//            mysql.open(this.getClass());
 //            try {
 //                Statement stmt1 = mysql.getConnection().createStatement();
 //                ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
@@ -2555,7 +2555,7 @@ public class CheckBill extends javax.swing.JDialog {
     public void UpdateMember(String choice) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "";
             if (choice.equals("Ins")) {
             } else {
@@ -2587,7 +2587,7 @@ public class CheckBill extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
 
             BranchBean branchBean = BranchControl.getData();
             String config = branchBean.getSaveOrder();
@@ -2746,7 +2746,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void CheckKicPrint() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
@@ -2770,7 +2770,7 @@ public class CheckBill extends javax.swing.JDialog {
     private void printBillVoidCheck() {
         if (Value.useprint) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
                 try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {

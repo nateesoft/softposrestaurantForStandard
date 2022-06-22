@@ -347,7 +347,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from s_tar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";

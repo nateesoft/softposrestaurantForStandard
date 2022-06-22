@@ -221,7 +221,7 @@ public class FindProduct extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select PCode, PDesc, PUnit1, PPrice11, PGroup, GroupName "
                     + "from product p,groupfile g "

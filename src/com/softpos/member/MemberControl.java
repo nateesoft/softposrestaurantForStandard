@@ -28,7 +28,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select sum(R_PrSubAmt) as MemDiscount "
                     + "from balance where r_table='" + table + "' "
@@ -60,7 +60,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             /*
              R_PrSubType = -M
@@ -134,7 +134,7 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             /*
              R_PrSubType = -M

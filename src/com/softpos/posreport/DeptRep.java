@@ -347,7 +347,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
@@ -556,7 +556,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from t_sale "

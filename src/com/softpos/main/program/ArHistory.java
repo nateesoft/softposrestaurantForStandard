@@ -653,7 +653,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
@@ -751,7 +751,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
@@ -825,7 +825,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "

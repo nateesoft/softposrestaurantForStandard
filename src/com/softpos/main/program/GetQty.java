@@ -773,7 +773,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             model1 = (DefaultTableModel) tblOptionMsg.getModel();
             tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));

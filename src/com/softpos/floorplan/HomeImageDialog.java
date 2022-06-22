@@ -192,7 +192,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             if (stmt.executeUpdate(jTextArea1.getText()) > 0) {
@@ -238,7 +238,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String path = txtPathImage.getText();

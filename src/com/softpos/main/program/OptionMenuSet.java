@@ -317,7 +317,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "delete from optionset "
                         + "where pcode='" + txtPCode.getText() + "' "
@@ -412,7 +412,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "INSERT INTO optionset "
                     + "(PCode, PDesc, OptionCode, OptionName) "
@@ -448,7 +448,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from optionset "
                     + "where PCode = '" + txtPCode.getText() + "'";

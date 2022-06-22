@@ -455,7 +455,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from s_gift "
@@ -538,7 +538,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from s_gift "

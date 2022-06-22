@@ -97,7 +97,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update balance set R_ETD='" + R_ETD + "' "
                     + "where R_Index='" + R_Index + "' and R_Table='" + tableNo + "'";

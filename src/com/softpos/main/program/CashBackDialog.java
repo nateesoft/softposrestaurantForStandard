@@ -173,7 +173,7 @@ public class CashBackDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             //select returnbillno from branch
             //0000002

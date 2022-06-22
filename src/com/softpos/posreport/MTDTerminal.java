@@ -434,7 +434,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from s_invoice "
@@ -747,7 +747,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
@@ -999,7 +999,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     }
                     if (frec.Cupon_DiscCnt > 0) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                                     + "from s_cupon "
@@ -1061,7 +1061,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
@@ -1277,7 +1277,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
         if (frec.Cupon_DiscCnt > 0) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
@@ -1357,7 +1357,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
@@ -1455,7 +1455,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
@@ -1570,7 +1570,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Statement stmt = mysql.getConnection().createStatement();
@@ -1610,7 +1610,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select count(b_crcode1) b_crcode1,b_crcode1,sum(B_CrAmt1) "

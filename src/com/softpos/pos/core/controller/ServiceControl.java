@@ -32,7 +32,7 @@ public class ServiceControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         DateConvert dc = new DateConvert();
         try {
             BalanceControl balanceControl = new BalanceControl();

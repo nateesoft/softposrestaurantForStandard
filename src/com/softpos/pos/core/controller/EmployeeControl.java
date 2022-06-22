@@ -21,7 +21,7 @@ public class EmployeeControl {
             listAll = new ArrayList<>();
             MySQLConnect mysql = new MySQLConnect();
             try {
-                mysql.open();
+                mysql.open(this.getClass());
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from employ");
                 while (rs.next()) {
                     EmployeeBean bean = new EmployeeBean();

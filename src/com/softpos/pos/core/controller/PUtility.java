@@ -100,7 +100,7 @@ public class PUtility {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(PUtility.class);
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SqlQuery = "select pdesc,pstock,pset from product where pcode='" + TempCode + "' limit 1";
@@ -211,7 +211,7 @@ public class PUtility {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
@@ -251,7 +251,7 @@ public class PUtility {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             if (StkProc) {
                 Statement stmt2 = mysql.getConnection().createStatement();
@@ -334,7 +334,7 @@ public class PUtility {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             if (StkProc) {
                 Statement stmt2 = mysql.getConnection().createStatement();
@@ -400,7 +400,7 @@ public class PUtility {
     public static boolean CheckPSetSelect(String PCode) {
         boolean RetValue = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select pcode from product where pcode='" + PublicVar.P_Code + "' and pactive='Y' limit 1";
@@ -424,7 +424,7 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from pset where pcode='" + XCode + "'";
@@ -502,7 +502,7 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select *from balanceset "
@@ -580,7 +580,7 @@ public class PUtility {
         Date date = new Date();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from t_saleset where r_plucode='" + XCode + "' and r_index='" + r_index + "'  and r_refno='" + XDocNo + "' ";
@@ -719,7 +719,7 @@ public class PUtility {
     public static boolean CheckCouponRedule(String XCode2) {
         Boolean ReturnVal = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select reduleDiscount from cupon where cucode=" + "'" + XCode2 + "' limit 1";
@@ -744,7 +744,7 @@ public class PUtility {
         String TempUser;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         for (int i = 1; i < 30; i++) {
             TempUser = XUser + "-" + i;
             try {
@@ -776,7 +776,7 @@ public class PUtility {
     public static boolean CheckCashierClose(String XUser) {
         boolean ReturnVal = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select b_roundclose from billno where b_cashier=" + "'" + XUser + "' limit 1";
@@ -1123,7 +1123,7 @@ public class PUtility {
         String StrRefBillNo = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From PosConfigSetup ;
@@ -1159,7 +1159,7 @@ public class PUtility {
             String CurDay = DayFormat.format(CurDate);
 
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(PUtility.class);
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from mpointtype where ptcode= '" + ProCode + "' limit 1";
@@ -1215,7 +1215,7 @@ public class PUtility {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             //Load Data From Promotion ;
@@ -1286,7 +1286,7 @@ public class PUtility {
 
     public static void ClearTempPromotion(String Table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String UpdateQry = "delete from temppromotion where tableonno=" + "'" + Table + "'";
@@ -1395,7 +1395,7 @@ public class PUtility {
         String ReturnValues = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select groupname from groupfile where groupcode='" + TCode + "' limit 1";
@@ -1420,7 +1420,7 @@ public class PUtility {
     public static String SeekProductName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select pdesc from product where pcode='" + TCode + "' limit 1";
@@ -1446,7 +1446,7 @@ public class PUtility {
         String ReturnValues = "";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select punit1 from product where pcode='" + TCode + "' limit 1";
@@ -1471,7 +1471,7 @@ public class PUtility {
     public static double SeekPluPrice(String TCode, String Etd) {
         double ReturnValues = 0.0;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select pprice11,pprice12,pprice13,pprice14,pprice15 from product where pcode='" + TCode + "' limit 1";
@@ -1508,7 +1508,7 @@ public class PUtility {
     public static String SeekCreditName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select crname from creditfile where crcode='" + TCode + "' limit 1";
@@ -1533,7 +1533,7 @@ public class PUtility {
     public static String SeekCuponName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select cuname from cupon where cucode='" + TCode + "' limit 1";
@@ -1558,7 +1558,7 @@ public class PUtility {
     public static String SeekArName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select sp_desc from custfile where sp_code='" + TCode + "' limit 1";
@@ -1588,7 +1588,7 @@ public class PUtility {
     public static String SeekPromotionName(String TCode) {
         String ReturnValues = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select prodesc from protab where procode='" + TCode + "' limit 1";
@@ -1613,7 +1613,7 @@ public class PUtility {
     public static Boolean SeekPromotion2(String Macno, String TCode) {
         boolean foundData = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PUtility.class);
         try {
             try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String SeekPromotion2 = "select pcode from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "') limit 1";

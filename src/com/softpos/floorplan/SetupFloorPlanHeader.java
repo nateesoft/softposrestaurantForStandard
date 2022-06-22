@@ -321,7 +321,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
 
     private void saveItem() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update company set "
                     + "FloorTab1='" + ThaiUtil.Unicode2ASCII(txtTab1.getText()) + "',"

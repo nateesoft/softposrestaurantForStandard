@@ -110,7 +110,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String reson = ThaiUtil.Unicode2ASCII(txtReson.getText());
 

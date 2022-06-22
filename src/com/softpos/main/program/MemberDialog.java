@@ -375,7 +375,7 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -417,7 +417,7 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -464,7 +464,7 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -521,7 +521,7 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
@@ -554,7 +554,7 @@ public class MemberDialog extends javax.swing.JDialog {
     public void UpdateMember(String choice) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql;
             String memCode = MemCode + "";
             if (memCode.equals("null")) {

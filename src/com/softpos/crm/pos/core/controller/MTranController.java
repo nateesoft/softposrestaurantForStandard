@@ -21,7 +21,7 @@ public class MTranController {
         MySQLConnect mysql = new MySQLConnect();
 
         try {
-            mysql.open();
+            mysql.open(MTranController.class);
             String sql = "select * from " + Value.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
@@ -42,7 +42,7 @@ public class MTranController {
         boolean isNoExist = true;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select Receipt_No from " + Value.db_member + ".mtran "
                     + "where Receipt_No='" + receiptNo + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -82,7 +82,7 @@ public class MTranController {
         int resultCreate = 0;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String sql = "insert into " + Value.db_member + ".mtran "
@@ -109,7 +109,7 @@ public class MTranController {
 
     public void refundBill(String receiptNo) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String sql = "delete from " + Value.db_member + ".mtran "

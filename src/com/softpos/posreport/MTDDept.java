@@ -133,7 +133,7 @@ public class MTDDept extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
@@ -576,7 +576,7 @@ public class MTDDept extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
@@ -1120,7 +1120,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);

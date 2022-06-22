@@ -21,7 +21,7 @@ public class PointTypeController {
         PointTypeBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(PointTypeController.class);
             String sql = "select * "
                     + "from " + Value.db_member + ".pointtype "
                     + "where Point_TypeCode='" + pointTypeCode + "' limit 1";
@@ -45,7 +45,7 @@ public class PointTypeController {
         PointTypeBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(PointTypeController.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
             String sql = "SELECT * FROM " + Value.db_member + ".pointtype WHERE 1=1 "
                         + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "

@@ -384,7 +384,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
@@ -458,7 +458,7 @@ public class MTDCoupon extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"

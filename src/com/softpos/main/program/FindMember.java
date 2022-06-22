@@ -86,7 +86,7 @@ public class FindMember extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select * from " + Value.db_member + ".memmaster order by m_name";
@@ -138,7 +138,7 @@ public class FindMember extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_code = '" + TempStr + "' order by m_name";
@@ -193,7 +193,7 @@ public class FindMember extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_name like '" + TempStr + "' order by m_name";
@@ -243,7 +243,7 @@ public class FindMember extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select * from " + Value.db_member + ".memmaster "

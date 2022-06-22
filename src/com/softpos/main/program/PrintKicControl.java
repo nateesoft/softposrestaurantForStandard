@@ -200,7 +200,7 @@ public class PrintKicControl extends javax.swing.JDialog {
 
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
                     + "from product "
                     + "where pfix='F' "
@@ -226,7 +226,7 @@ public class PrintKicControl extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) tblKicSetup.getModel();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             for (int i = 0; i < model.getRowCount(); i++) {
                 String code = model.getValueAt(i, 0).toString();
                 String kic = model.getValueAt(i, 2).toString();

@@ -459,7 +459,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select *from s_void left join product on s_void.pcode=product.pcode where (s_date>='" + Datefmt.format(TDate1) + "') "
@@ -539,7 +539,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from s_void left join product on s_void.pcode=product.pcode "

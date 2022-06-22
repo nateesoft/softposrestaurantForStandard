@@ -298,7 +298,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "select R_Index from balance "
                                 + "where R_LinkIndex='" + R_Index + "' "
@@ -377,7 +377,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "select R_Index from balance "
                                 + "where R_LinkIndex='" + R_Index + "' "

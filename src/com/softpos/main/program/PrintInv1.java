@@ -1067,7 +1067,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select * from customer where sp_code='" + ExtItemList.data + "' limit 1";
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1150,7 +1150,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "' limit 1";
@@ -1259,7 +1259,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from customer where sp_code='" + txtCode.getText() + "' limit 1";
@@ -1301,7 +1301,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from customer where sp_desc='" + ThaiUtil.Unicode2ASCII(txtName.getText()) + "' limit 1";
@@ -1336,7 +1336,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from billno where (b_refno='" + txtDocNoRef.getText() + "') and "
@@ -1578,7 +1578,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "insert into customer "
                     + "(sp_code,sp_Desc,sp_Addr1,sp_Addr2,sp_zip,tel,fax,Contack,Remark,Remark2) "
@@ -1602,7 +1602,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update customer "
                     + "set sp_code='" + bean.getSp_code() + "', sp_Desc='" + bean.getSp_Desc() + "', sp_Addr1='" + bean.getSp_Addr1() + "', "
@@ -1634,7 +1634,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from invdetail where invno=?";
@@ -1688,7 +1688,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update billno set b_invno=?,b_invtype=? where (b_macno=?) and (b_refno=?)";
@@ -1713,7 +1713,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update accr set arinvno=? where arno=?";
@@ -1745,7 +1745,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert into invcashdoc (s_bran,invdate,custcode,custname,custaddr1,"
@@ -1819,7 +1819,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update invcashdoc set s_bran=?,invdate=?,custcode=?,custname=?,custaddr1=?,"
@@ -1879,7 +1879,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
@@ -1903,7 +1903,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select sp_code from customer where sp_code='" + CustCode + "' limit 1";
@@ -1928,7 +1928,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select invcashno from branch limit 1";
@@ -1984,7 +1984,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                              * * OPEN CONNECTION **
                              */
                             MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
+                            mysql.open(this.getClass());
                             try {
                                 Statement stmt = mysql.getConnection().createStatement();
                                 String SqlQuery = "update invcashdoc set void=?,uservoid=?,voiddate=?,"
@@ -2067,7 +2067,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update invcashdoc set printok='Y',invuser=? where invno=?";

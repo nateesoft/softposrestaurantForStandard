@@ -31,7 +31,7 @@ public class ButtonCustom {
     public MenuMGR getDataButtonLayout(String menuCode, int menuIndex) {
         MenuMGR menuMGR = new MenuMGR();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
@@ -69,7 +69,7 @@ public class ButtonCustom {
     public List<MenuMGR> getDataButtonLayout(String menuCode) {
         List<MenuMGR> listMenu = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode like '" + menuCode + "__' order by menucode";

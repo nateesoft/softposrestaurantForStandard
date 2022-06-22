@@ -821,7 +821,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SQLQuery = "delete from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
@@ -863,7 +863,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SQLQuery = "update " + Value.db_member + ".memmaster set m_name='" + M_Name.getText() + "',"
@@ -892,7 +892,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SQLQuery = "insert into " + Value.db_member + ".memmaster (m_code,m_bran,m_barcode,m_type,m_name,m_card,m_sex,m_status,"
@@ -986,7 +986,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     if (M_Code.getText().length() == 13) {
                         TempCode = TempCode.substring(5, 12);
@@ -1068,7 +1068,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select m_code from " + Value.db_member + ".memmaster where m_code='" + TempCode + "' limit 1";

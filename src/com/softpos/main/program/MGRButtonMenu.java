@@ -900,7 +900,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from soft_menusetup "
                     + "where MenuCode ='" + menucode + "'"
@@ -922,7 +922,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "insert into soft_menusetup"
                     + "(MenuCode,MenuType,OptSet,PSet,PCode,MenuShowText,"
@@ -954,7 +954,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update soft_menusetup "
                     + "set "
@@ -1001,7 +1001,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
@@ -1201,7 +1201,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
          */
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
             if (rs.next()) {

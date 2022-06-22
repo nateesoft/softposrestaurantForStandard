@@ -89,8 +89,9 @@ public class MainSale extends javax.swing.JDialog {
     private boolean btnClickPrintKic = false;
 
     // init bean list
-    private EmployeeControl empControl = new EmployeeControl();
-    private ProductControl productControl = new ProductControl();
+    private final EmployeeControl empControl = new EmployeeControl();
+    private final ProductControl productControl = new ProductControl();
+    private final BalanceControl balanceControl = new BalanceControl();
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -1212,7 +1213,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 model.removeRow(0);
             }
 
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select * from balance where r_table='" + tableNo + "' order by r_index, r_etd limit 500";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
@@ -1624,7 +1625,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
             MySQLConnect mysql = new MySQLConnect();
             try {
-                mysql.open();
+                mysql.open(this.getClass());
                 mysql.getConnection().createStatement().executeUpdate(sqlTurnPrintKicOff);
                 mysql.close();
             } catch (SQLException e) {
@@ -1641,7 +1642,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MySQLConnect mysql = new MySQLConnect();
             try {
                 String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
-                mysql.open();
+                mysql.open(this.getClass());
                 mysql.getConnection().createStatement().executeUpdate(sql);
                 kichenPrint();
                 sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
@@ -1741,7 +1742,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
 
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1967,7 +1968,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select Username from posuser where username='" + Value.USERCODE + "' "
                         + "and Sale3='Y' limit 1";
@@ -2113,14 +2114,14 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void procVoid(String RIndex, String voidMsg, String LoginName) {
-        BalanceControl bc = new BalanceControl();
-        BalanceBean bean = bc.getBalanceIndex(txtTable.getText(), RIndex);
+        BalanceControl branchControl = new BalanceControl();
+        BalanceBean bean = branchControl.getBalanceIndex(txtTable.getText(), RIndex);
 
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         if (bean.getR_Void().equals("V")) {
             bean.setR_Void("");
@@ -2355,7 +2356,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             if (Qty > 0) {
                 if (POSHW.getMenuItemList().equals("Y")) {
                     if (PluCode.length() <= 3) {
@@ -2470,7 +2471,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double Qty;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //check outofstock
         try {
             String sql = "select pcode from outstocklist where pcode='" + TempCode + "' limit 1";
@@ -2683,7 +2684,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
         balance.setR_PrChkType("");
 
-        BalanceControl balanceControl = new BalanceControl();
         String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
         balance.setR_Index(R_Index);
 
@@ -2743,7 +2743,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //ตัดสต็อกสินค้าที่มี Ingredent
         try {
             String sql = "select i.*,pdesc,PBPack,pstock,pactive "
@@ -2809,7 +2809,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
 
             BranchBean branchBean = BranchControl.getData();
             String config = branchBean.getSaveOrder();
@@ -2984,7 +2984,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt1 = mysql.getConnection().createStatement();
                 ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
@@ -3148,7 +3148,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select TAmount, TCustomer, tonact from tablefile where tcode='" + txtTable.getText().trim() + "' limit 1";
@@ -3233,7 +3233,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     //ปุ่มพักโต๊ะ
     private void bntHoldTableClick() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
@@ -3274,7 +3274,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateCustomerCount(int custCount) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update tablefile "
                     + "set tcustomer='" + custCount + "',"
@@ -3295,7 +3295,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void holdTableAndSave() {
         MySQLConnect mysql = new MySQLConnect();
         BalanceBean balanceBean = new BalanceBean();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String getLogIntimeBalance = "select r_time,r_date from balance where r_table ='" + txtTable.getText() + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(getLogIntimeBalance);
@@ -3328,7 +3328,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 PublicVar.P_LineCount = 1;
                 PublicVar.P_LogoffOK = false;
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
@@ -3373,7 +3373,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean updateLogout(String UserCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
@@ -3656,7 +3656,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void showMember() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         if (Value.MemberAlready == true) {
             int confirm = JOptionPane.showConfirmDialog(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
             if (confirm == JOptionPane.YES_OPTION) {
@@ -3953,7 +3953,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         boolean result = false;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
                     + "and R_QuanCanDisc>0 limit 1";
@@ -3981,7 +3981,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String cus = txtCust.getText();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "SELECT COUNT(R_PName) FROM balance where r_table = '" + table + "'";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -4023,7 +4023,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateTempTset(BalanceBean bBean, ProductBean productBean) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sqlUpd = "update tempset set "
                     + "PIndex='" + bBean.getR_Index() + "' "
@@ -4099,7 +4099,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
                         balance.setR_PrChkType("");
 
-                        BalanceControl balanceControl = new BalanceControl();
                         String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
                         balance.setR_Index(R_Index);
                         memberBean = null;
@@ -4174,7 +4173,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select POption from tempset where PIndex='" + R_Index + "' "
                     + "and PCode='" + PCode + "' limit 1";
@@ -4203,7 +4202,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private boolean checkRIndex(String chkRIndex) {
         boolean isCheck = true;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select r_linkindex from balance "
                     + "where r_index='" + chkRIndex + "' "
@@ -4228,18 +4227,17 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void cancelItemBeforeHold() {
-        BalanceControl bc = new BalanceControl();
         int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
         String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         for (int i = 0; i < rows.length; i++) {
             String r_index = "" + tbShowBalance.getValueAt(rows[i], 10);
             try {
-                BalanceBean bean = bc.getBalanceIndex(txtTable.getText(), r_index);
+                BalanceBean bean = balanceControl.getBalanceIndex(txtTable.getText(), r_index);
                 if (bean == null) {
                     continue;
                 }
@@ -4305,7 +4303,6 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     + "where R_LinkIndex='" + r_index + "'";
                             Statement stmt2 = mysql.getConnection().createStatement();
                             ResultSet rs = stmt2.executeQuery(sql3);
-                            BalanceControl balanceControl = new BalanceControl();
                             while (rs.next()) {
                                 BalanceBean bean2 = balanceControl.getBalanceIndex(txtTable.getText(), rs.getString("R_Index"));
                                 String sqlDel = "delete from balance "
@@ -4373,7 +4370,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void upDateTableFile() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "UPDATE tablefile SET "
                     + "TOnAct= 'Y',"
@@ -4393,7 +4390,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void CheckKicPrint() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
@@ -4581,7 +4578,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT head1, head2, head3, head4 FROM company limit 1");
@@ -4615,7 +4612,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void printBillVoidCheck() {
         if (Value.useprint) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
                 try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -4635,7 +4632,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean showPopupOption(String MenuCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             boolean showModalPopup = false;
             String pcode = "", pname = "", main = "";
@@ -4752,7 +4749,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void updateTempmenuset(String Index, String PCode, String PName, String Option, String TryName) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String pstock = PUtility.GetStkCode();
             String sql = "INSERT INTO tempset "
                     + "(PTableNo, PIndex, PCode, PDesc, "

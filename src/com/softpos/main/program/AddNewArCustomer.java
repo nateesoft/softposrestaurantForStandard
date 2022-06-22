@@ -595,7 +595,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         if (!TempCode.equals("")) {
             if (PUtility.ShowConfirmMsg("ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SQLQuery = "delete from custfile where sp_code='" + TempCode + "'";
@@ -622,7 +622,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             if (SeekCustFile(TempCode)) {
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -707,7 +707,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
@@ -743,7 +743,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select * from custfile where sp_code='" + TempCode + "' limit 1";

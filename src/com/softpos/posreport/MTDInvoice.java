@@ -432,7 +432,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select b_etd,count(*) as billcnt,sum(b_cust),Sum(b_empdiscAmt),Sum(b_memdiscamt),sum(b_cupondiscamt),sum(b_prodiscamt),sum(b_nettotal) from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (b_void<>'V') Group by b_etd order by b_etd ";

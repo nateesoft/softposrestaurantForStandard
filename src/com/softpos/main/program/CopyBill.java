@@ -34,7 +34,7 @@ public class CopyBill extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "'";
@@ -238,7 +238,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select b_refno from billno where (b_macno='" + Value.MACNO + "') "
@@ -274,7 +274,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from billno where (b_macno='" + Value.MACNO + "') "
@@ -447,7 +447,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 prn.PrintBillCopy(MyArray, BillNo, i, CreditArray);
             }
             try {
-                mysql.open();
+                mysql.open(this.getClass());
                 Statement stmt = mysql.getConnection().createStatement();
                 String SqlQuery = "update billno set "
                         + "b_billcopy=b_billcopy+1 "

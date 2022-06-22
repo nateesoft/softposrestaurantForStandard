@@ -33,7 +33,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select p.pcode, p.pdesc "
                     + "from soft_menusetup m, product p "
@@ -1009,7 +1009,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from mgrbuttonsetup where pcode='" + txtPCode.getText() + "' order by pcode";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1076,7 +1076,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'");
@@ -1126,7 +1126,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         int size1 = model1.getRowCount();
         for (int i = 0; i < size1; i++) {
@@ -1214,7 +1214,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model1.getRowCount();
             for (int i = 0; i < size; i++) {
@@ -1248,7 +1248,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model2.getRowCount();
             for (int i = 0; i < size; i++) {
@@ -1282,7 +1282,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model3.getRowCount();
             for (int i = 0; i < size; i++) {

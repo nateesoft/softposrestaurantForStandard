@@ -645,7 +645,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
@@ -721,7 +721,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
@@ -980,7 +980,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "

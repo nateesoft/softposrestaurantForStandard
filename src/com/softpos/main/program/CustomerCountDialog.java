@@ -476,7 +476,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
@@ -513,7 +513,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();

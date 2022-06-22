@@ -16,7 +16,7 @@ public class DatabaseUtility {
     public int insert(String sql, Object... args) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             for (int i = 0; i < args.length; i++) {
@@ -42,7 +42,7 @@ public class DatabaseUtility {
     public int executeUpdate(String sql, Object... args) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
@@ -62,7 +62,7 @@ public class DatabaseUtility {
         Map<String, Object> map = new HashMap<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
@@ -100,7 +100,7 @@ public class DatabaseUtility {
         List<Map<String, Object>> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql);
 
             for (int i = 0; i < args.length; i++) {

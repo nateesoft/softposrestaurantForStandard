@@ -170,7 +170,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.close();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from billno "

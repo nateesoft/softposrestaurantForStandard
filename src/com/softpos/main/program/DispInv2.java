@@ -107,7 +107,7 @@ public class DispInv2 extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from invcashdoc "

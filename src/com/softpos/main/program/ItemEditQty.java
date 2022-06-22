@@ -93,7 +93,7 @@ public class ItemEditQty extends javax.swing.JDialog {
             if (balanceBean != null) {
                 MySQLConnect mysql = new MySQLConnect();
                 try {
-                    mysql.open();
+                    mysql.open(this.getClass());
                     balanceBean.setR_Quan(XNewQty);
                     balanceBean.setR_Price(newAmount);
                     balanceBean.setR_Total(XNewAmount);

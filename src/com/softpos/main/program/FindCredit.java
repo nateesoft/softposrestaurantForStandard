@@ -233,7 +233,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String UserGroupFile = "select creditact from branch limit 1";
@@ -266,7 +266,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             if (!DefaultBank.equals("")) {

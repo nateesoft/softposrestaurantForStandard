@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BranchControl;
@@ -297,7 +292,7 @@ public class PrintToKic extends javax.swing.JFrame {
                                     + "and r_pause='P' "
                                     + "group by r_table "
                                     + "order by r_etd,r_index;";
-                            mysql.open();
+                            mysql.open(this.getClass());
                             lblProcessLog.setText(sql);
                             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                                 if (rs.next()) {
@@ -346,7 +341,7 @@ public class PrintToKic extends javax.swing.JFrame {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
 
                 try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rsKic = stmt1.executeQuery(sqlShowKic)) {
@@ -489,13 +484,13 @@ public class PrintToKic extends javax.swing.JFrame {
     public void printCheckBillStation() {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select r_index form balance where r_table='" + tableNo + "' "
                     + "and PDAPrintCheckStation <>'N' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     MySQLConnect mysql2 = new MySQLConnect();
-                    mysql2.open();
+                    mysql2.open(this.getClass());
                     try {
                         String sqlUpdate = "update balance set PDAPrintCheckStation='N' where r_table='" + tableNo + "';";
                         mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);

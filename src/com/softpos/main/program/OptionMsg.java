@@ -105,7 +105,7 @@ public class OptionMsg extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadOption = "select *from optionfile where pgroup='" + bean.getR_Group() + "'";
@@ -177,7 +177,7 @@ public class OptionMsg extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String[] opt = new String[]{"", "", "", "", "", "", "", ""};
@@ -226,7 +226,7 @@ public class OptionMsg extends javax.swing.JDialog {
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     String sqlDel = "delete from optionfile "
                             + "where PGroup='" + bean.getR_Group() + "' "

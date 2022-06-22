@@ -213,7 +213,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     public void uploadBillno() {
         try {
             mysql.close();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.close();
             myOnline.open();
 
@@ -302,7 +302,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     public void uploadT_Sale() {
         try {
             mysql.close();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.close();
             myOnline.open();
 
@@ -584,7 +584,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     public void uploadCreditFile() {
         try {
             mysql.close();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.close();
             myOnline.open();
 
@@ -626,7 +626,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     private void uploadGroupFile() {
         try {
             mysql.close();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.close();
             myOnline.open();
 
@@ -670,7 +670,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         try {
             mysql.close();
             myOnline.close();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.open();
             Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
@@ -726,7 +726,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             mysql.close();
             myOnline.close();
                     
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.open();
 
             Statement stmtLocal = mysql.getConnection().createStatement();

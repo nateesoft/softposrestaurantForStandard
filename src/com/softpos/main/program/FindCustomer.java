@@ -87,7 +87,7 @@ public class FindCustomer extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select * from customer order by sp_desc";
@@ -126,7 +126,7 @@ public class FindCustomer extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select *from customer where sp_code like '" + TempStr + "' order by sp_desc";
@@ -165,7 +165,7 @@ public class FindCustomer extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select * from customer where sp_desc like '" + TempStr + "' order by sp_desc";
@@ -204,7 +204,7 @@ public class FindCustomer extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTableFile = "select *from customer where (tel like '" + TempStr + "') order by sp_desc";

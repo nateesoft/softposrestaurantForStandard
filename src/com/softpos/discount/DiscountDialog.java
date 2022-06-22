@@ -770,7 +770,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         discBean.setCuponSpecialDiscount(CuponSpecialDiscount);
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         if (FestDiscount > 0) {
             updateDiscountBalanceDiscClick("FestDiscount", tableNo);
@@ -820,7 +820,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                 }
                 if (discBean.getBahtDiscount() > 0) {
                     try {
-                        mysql.open();
+                        mysql.open(this.getClass());
                         String sqlgetBL = "select count(r_index) r_index from balance where r_table='" + tableNo + "' and r_void<>'V'";
                         ResultSet rsBL = mysql.getConnection().createStatement().executeQuery(sqlgetBL);
                         if (rsBL.next()) {
@@ -868,7 +868,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                 MySQLConnect mysql = new MySQLConnect();
                 try {
                     //เช็คประเภทสินค้า
-                    mysql.open();
+                    mysql.open(this.getClass());
                     String[] typeDisc = posConfig.getP_EmpDisc().split("/");
                     double typeNormalN = 0;
                     double typeNormalC = 0;
@@ -1021,7 +1021,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     private void updateCancelDiscountBalanceDiscClick(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "update balance set "
                     + "R_PRSubType='', R_PRSubCode='', R_PRSubQuan='0', "
                     + "R_PRSubDisc='0', R_PRSubAmt='0' "
@@ -1237,7 +1237,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (chkInputAmt()) {
             // update tablefile for discount
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "update tablefile set "
                         + "EmpDisc='" + discBean.getStrEmpDiscount() + "', EmpDiscAmt='" + discBean.getEmpDiscount() + "',"
@@ -1347,7 +1347,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1413,7 +1413,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1483,7 +1483,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1548,7 +1548,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1603,7 +1603,7 @@ public class DiscountDialog extends javax.swing.JDialog {
 
     private void CheckDis1() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from posconfigsetup";
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1625,7 +1625,7 @@ public class DiscountDialog extends javax.swing.JDialog {
 
     private void CheckDis2() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from posconfigsetup";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1651,7 +1651,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from posconfigsetup";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1677,7 +1677,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from posconfigsetup";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1703,7 +1703,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from posconfigsetup";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1754,7 +1754,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1831,7 +1831,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' and r_void<>'V' "
@@ -1901,7 +1901,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1971,7 +1971,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -2014,7 +2014,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     public void LoadDiscPermis() {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select P_MemDiscGet,P_FastDiscGet,P_EmpDiscGet,P_TrainDiscGet,P_SubDiscGet,P_DiscBathChk from posconfigsetup limit 1;";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
@@ -2083,7 +2083,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tablefile where Tcode = '" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -2184,7 +2184,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "delete from tempcupon where r_table='" + tableNo + "'";
@@ -2234,7 +2234,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"

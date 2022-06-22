@@ -107,7 +107,7 @@ public class ItemDisControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();mysql.close();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
                     + "R_PrType = '" + bean.getR_PrType() + "',"

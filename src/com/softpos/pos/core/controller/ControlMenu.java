@@ -58,7 +58,7 @@ public class ControlMenu {
     public List<ProductBean> getMenuItem(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
                     + "PPrice14, PPrice15, Code_Type, PPathName "
@@ -100,7 +100,7 @@ public class ControlMenu {
     public List<ProductBean> getMenuItem2(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
                     + "PPrice14, PPrice15, Code_Type, PPathName "
@@ -138,7 +138,7 @@ public class ControlMenu {
 
     public List<MenuSetup> menuAt(String index) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         String sql = "select * from menusetup where Code_ID like '" + index + "%' "
                 + "and length(Code_ID)=3 group by Code_Id order by Code_Id";
         List<MenuSetup> menuAll = new ArrayList<>();
@@ -169,7 +169,7 @@ public class ControlMenu {
 
     public List<MenuSetup> menuItemAt(String Code_ID) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -245,7 +245,7 @@ public class ControlMenu {
             ThaiUtil.ASCII2Unicode(companyBean.getHead4()),};
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql;
             CompanyMenu headMenu;
@@ -389,7 +389,7 @@ public class ControlMenu {
     public String getMenuItemAt(String pCode) {
         String menuAt = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y' limit 1";
             Statement stmt = mysql.getConnection().createStatement();

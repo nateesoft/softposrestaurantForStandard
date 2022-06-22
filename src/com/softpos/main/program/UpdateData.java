@@ -236,7 +236,7 @@ public class UpdateData extends javax.swing.JDialog {
                     ArrayList<Object[]> ListObj = LoadData();
                     MySQLConnect mysql = new MySQLConnect();
                     try {
-                        mysql.open();
+                        mysql.open(this.getClass());
                         Statement stmt = mysql.getConnection().createStatement();
                         if (ListObj != null && !ListObj.isEmpty()) {
                             for (int i = 0; i < ListObj.size(); i++) {
@@ -277,7 +277,7 @@ public class UpdateData extends javax.swing.JDialog {
 
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sqlGetBType = "Select btype btype from tranconfig limit 1";
             ResultSet rsGetBtype = mysql.getConnection().createStatement().executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {

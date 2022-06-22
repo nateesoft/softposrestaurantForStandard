@@ -454,7 +454,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') "

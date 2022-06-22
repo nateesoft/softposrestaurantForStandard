@@ -244,7 +244,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select prtype,prcode,sum(pqty),sum(pramt),protab.prodesc from t_promotion left join protab on procode=prcode "
@@ -285,7 +285,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");

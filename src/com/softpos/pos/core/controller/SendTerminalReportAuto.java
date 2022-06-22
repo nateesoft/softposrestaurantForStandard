@@ -52,7 +52,7 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select * from s_invoice "
@@ -442,7 +442,7 @@ public class SendTerminalReportAuto {
         }
         if (frec.Cupon_DiscCnt > 0) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
@@ -522,7 +522,7 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
@@ -620,7 +620,7 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
@@ -731,7 +731,7 @@ public class SendTerminalReportAuto {
     private List<String[]> CreName(String macNo1, String macNo2) {
         List<String[]> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Statement stmt = mysql.getConnection().createStatement();
@@ -772,7 +772,7 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select count(b_crcode1) b_crcode1,b_crcode1,sum(B_CrAmt1) "
@@ -863,7 +863,7 @@ public class SendTerminalReportAuto {
         
         try {
             DateConvert dc1 = new DateConvert();
-            mysql.open();
+            mysql.open(this.getClass());
             String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig limit 1; ";
             ResultSet rsConfig = mysql.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
             if (rsConfig.next()) {

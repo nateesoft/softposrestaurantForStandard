@@ -171,7 +171,7 @@ public class CancelCashBack extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from billret where fat = 'N'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -202,7 +202,7 @@ public class CancelCashBack extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int row = table.getSelectedRow();
             if (row != -1) {

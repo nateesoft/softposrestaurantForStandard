@@ -244,7 +244,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void bntClearAllClick() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             PreparedStatement prm = mysql.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
             prm.setString(1, Value.MACNO);
@@ -318,7 +318,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                  * * OPEN CONNECTION **
                                  */
                                 MySQLConnect mysql = new MySQLConnect();
-                                mysql.open();
+                                mysql.open(this.getClass());
                                 try {
                                     String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                             + "values (?,?,?,?,?,?,?,?,?,?)";
@@ -346,7 +346,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                              * * OPEN CONNECTION **
                              */
                             MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
+                            mysql.open(this.getClass());
                             try {
                                 String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                         + "values (?,?,?,?,?,?,?,?,?,?)";
@@ -381,7 +381,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                     + "values (?,?,?,?,?,?,?,?,?,?)";
@@ -410,7 +410,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                 + "values (?,?,?,?,?,?,?,?,?,?)";
@@ -445,7 +445,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select gcode from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') limit 1";
@@ -475,7 +475,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select priceamt from giftprice where (pricecode='" + GiftPrice + "') limit 1");
@@ -517,7 +517,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "' limit 1";

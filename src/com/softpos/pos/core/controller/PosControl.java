@@ -44,7 +44,7 @@ public class PosControl {
             return posUser;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PosControl.class);
         try {
             String sql = "select * from posuser where username='" + username + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -234,7 +234,7 @@ public class PosControl {
             return companyBean;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PosControl.class);
         try {
             String sql = "select * from company limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -304,7 +304,7 @@ public class PosControl {
             return posConfigSetup;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PosControl.class);
         try {
             String sql = "select * from posconfigsetup limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -387,7 +387,7 @@ public class PosControl {
             return poshwsetup;
         }
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(PosControl.class);
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -499,7 +499,7 @@ public class PosControl {
     public void posHwSetupOnAct(String Onact) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(PosControl.class);
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
             Statement stmt = mysql.getConnection().createStatement();
             if (stmt.executeUpdate(sql) > 0) {

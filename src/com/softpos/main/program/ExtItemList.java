@@ -205,7 +205,7 @@ public class ExtItemList extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "delete from customer where sp_code='" + code + "'";
                 Statement stmt = mysql.getConnection().createStatement();
@@ -241,7 +241,7 @@ public class ExtItemList extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) tbCustomer.getModel();
             int size = model.getRowCount();

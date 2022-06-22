@@ -187,7 +187,7 @@ public class VoidPopupDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from voidmsg";
             Statement stmt = mysql.getConnection().createStatement();

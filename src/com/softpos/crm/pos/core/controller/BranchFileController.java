@@ -19,7 +19,7 @@ public class BranchFileController {
         BranchFileBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -42,7 +42,7 @@ public class BranchFileController {
         MySQLConnect mysql = new MySQLConnect();
 
         try {
-            mysql.open();
+            mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' "
                     + "and PointCode_Active='Y' "

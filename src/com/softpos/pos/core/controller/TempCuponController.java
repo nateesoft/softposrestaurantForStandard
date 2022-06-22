@@ -18,7 +18,7 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon";
             Statement stmt = mysql.getConnection().createStatement();
@@ -57,7 +57,7 @@ public class TempCuponController {
     public List<TempCuponBean> listTempcupon(String R_Index) {
         List<TempCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -99,7 +99,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -137,7 +137,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tempcupon "
                     + "where r_index='" + index + "'";
@@ -167,7 +167,7 @@ public class TempCuponController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");
             String sql = "insert into tempcupon"

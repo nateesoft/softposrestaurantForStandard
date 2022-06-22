@@ -110,7 +110,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";

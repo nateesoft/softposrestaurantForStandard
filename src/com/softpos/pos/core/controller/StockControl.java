@@ -25,7 +25,7 @@ public class StockControl {
     public boolean Active(String stock) {
         boolean isActive = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         String sql = "select StkCode from stockfile where StkCode='" + stock + "' and flage='Y' limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -47,7 +47,7 @@ public class StockControl {
         double qty = 0;
         SimpleDateFormat sp = new SimpleDateFormat("MM");
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
             String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "' limit 1";
@@ -69,7 +69,7 @@ public class StockControl {
     public StkFileBean getDataStkFile(String sql) {
         StkFileBean bean = new StkFileBean();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -138,7 +138,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
@@ -166,7 +166,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
@@ -191,7 +191,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "insert into stcard (S_Date,S_No,S_SubNo,S_Que,S_PCode,S_Stk,S_In,S_Out,S_InCost,S_OutCost,S_ACost,S_Rem,S_User,S_EntryDate,S_EntryTime,S_Link) "
                     + "values(curdate(),'" + bean.getS_No() + "','" + bean.getS_SubNo() + "','" + bean.getS_Que() + "','" + bean.getS_PCode() + "','" + bean.getS_Stk() + "',"
@@ -239,7 +239,7 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             //หาว่าสินค้ามีส่วนประกอบหรือไม่ ?
             String sql = "select * from pset "

@@ -148,7 +148,7 @@ public class PrintDriver {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "update balance "
                         + "set r_kicprint='P' "

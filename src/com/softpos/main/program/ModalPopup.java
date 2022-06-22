@@ -251,7 +251,7 @@ public class ModalPopup extends javax.swing.JDialog {
         button[24] = jButton25;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select * from optionset where pcode='" + PCode + "'");
@@ -271,7 +271,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sqll = "select pcode, pdesc from mgrbuttonsetup "
                                     + "where pcode = '" + PCode + "'";
@@ -374,7 +374,7 @@ public class ModalPopup extends javax.swing.JDialog {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup "
                     + "where pcode='" + PCode + "' and sd_pcode<>''";
@@ -401,7 +401,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     private void UpdateTempmenusetSideDish(String Index, String PCodeSet, String PNameSet, String ProFree, String free) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sqll = "select sd_pcode, sd_pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
                             Statement stmt1 = mysql.getConnection().createStatement();
@@ -492,7 +492,7 @@ public class ModalPopup extends javax.swing.JDialog {
         });
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select ex_pcode, ex_pdesc from mgrbuttonsetup "
                     + "where pcode='" + PCode + "' and ex_pcode<>''";
@@ -531,7 +531,7 @@ public class ModalPopup extends javax.swing.JDialog {
                     private boolean checkLimiExtra(String TableNo) {
                         boolean checkExtra = false;
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "select PCode from tempset where PTableNo='" + TableNo + "' and PProTry='main' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
@@ -622,7 +622,7 @@ public class ModalPopup extends javax.swing.JDialog {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from optionset "
                     + "where pcode='" + PCodeItem + "'";
@@ -648,7 +648,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     private void UpdateTempmenusetExtraOption(String PCode, String POption) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "update tempset set "
                                     + "POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
@@ -680,7 +680,7 @@ public class ModalPopup extends javax.swing.JDialog {
     private boolean showPopupOption(String pCodeItem) {
         boolean isCheck = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select pcode from optionset where pcode ='" + pCodeItem + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -703,7 +703,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
     private void UpdateTempmenusetExtra(String Index, String PCode, String PName, String Option, String TryName) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select ex_pcode , ex_pdesc from mgrbuttonsetup "
                     + "where ex_pdesc = '" + ThaiUtil.Unicode2ASCII(PName) + "' limit 1";
@@ -736,7 +736,7 @@ public class ModalPopup extends javax.swing.JDialog {
     private boolean loadMenu2Pcs() {
         boolean show = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select qty from mgrbuttonsetup where pcode='" + PCode + "' and check_qty='Y' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -810,7 +810,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                     private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sqll = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "'";
                             Statement stmt = mysql.getConnection().createStatement();

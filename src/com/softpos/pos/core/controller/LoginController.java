@@ -20,7 +20,7 @@ public class LoginController {
         loginBean.setValidLogin(false);
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select username,password,name,onact,macno from posuser "
                     + "where username= '" + ThaiUtil.Unicode2ASCII(username) + "' "
@@ -50,7 +50,7 @@ public class LoginController {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String SQLQuery = "update posuser set "
                     + "onact='Y',"

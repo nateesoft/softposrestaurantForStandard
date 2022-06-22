@@ -46,7 +46,7 @@ public class BillControl {
     public static String getBillIDCurrent() {
         String ReceNo1 = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sql = "select ReceNo1 from poshwsetup where Terminal='" + getLocalMacNO() + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -120,7 +120,7 @@ public class BillControl {
 
     public static void updateNextBill() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sql = "UPDATE poshwsetup "
                     + "SET receno1=receno1+1 "
@@ -143,7 +143,7 @@ public class BillControl {
         BranchBean branchBean = BranchControl.getData();
         MySQLConnect mysql = new MySQLConnect();
         BalanceBean blBean = new BalanceBean();
-        mysql.open();
+        mysql.open(BillControl.class);
         DateConvert dc = new DateConvert();
         try {
             String sqlGetLoginTime = "select r_time from balance "
@@ -213,7 +213,7 @@ public class BillControl {
                             + "'', '', '', '','', "
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
-                    mysql2.open();
+                    mysql2.open(BillControl.class);
                     mysql2.getConnection().createStatement().executeUpdate(sqlInsAccr);
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -233,7 +233,7 @@ public class BillControl {
     public static String getQueUpdate() {
         String q = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sql = "select max(b_refno), max(B_KicQue) maxque from billno";
             int que;
@@ -267,7 +267,7 @@ public class BillControl {
 
     public static void saveTSale(TSaleBean bean) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sqlTSale = "insert into t_sale "
                     + "(R_Index,R_Refno,R_Table,R_Date,R_Time,MacNo,Cashier,R_Emp,R_PluCode,R_PName,R_Unit,"
@@ -392,7 +392,7 @@ public class BillControl {
 
     public String saveBillNo(final String table, BillNoBean billBean) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
 
         //get data from balance, tablefile
         final String BillNo = BillControl.getBillIDCurrent();
@@ -1064,7 +1064,7 @@ public class BillControl {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         List<TSaleBean> data = new ArrayList<>();
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1098,7 +1098,7 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -1201,7 +1201,7 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
@@ -1302,7 +1302,7 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -1507,7 +1507,7 @@ public class BillControl {
     public BillNoBean getData(String billNo) {
         BillNoBean bean = new BillNoBean();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sql = "select * from billno where B_Refno='" + billNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -1745,7 +1745,7 @@ public class BillControl {
     public boolean checkBillNoValid(String dateFmt) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(BillControl.class);
         try {
             String sql = "select b_ondate b_ondate from billno "
                     + "where b_ondate<>'" + dateFmt + "' limit 1";

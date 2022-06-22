@@ -293,7 +293,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlCheckTempGiftf);
@@ -420,7 +420,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tempgift";
             Statement stmt = mysql.getConnection().createStatement();
@@ -481,7 +481,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tempgift";
             Statement stmt = mysql.getConnection().createStatement();

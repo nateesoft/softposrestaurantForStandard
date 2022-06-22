@@ -15,7 +15,7 @@ public class TCuponControl {
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon";
             Statement stmt = mysql.getConnection().createStatement();
@@ -51,7 +51,7 @@ public class TCuponControl {
     public List<TCuponBean> listTCupon(String R_Index) {
         List<TCuponBean> listBean = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon "
                     + "where R_Index='" + R_Index + "'";
@@ -92,7 +92,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon where R_Index='" + R_Index + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -128,7 +128,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         if (bean.getTerminal() == null || bean.getCuCode() == null) {
             bean.setTerminal("");
             bean.setCuCode("");
@@ -176,7 +176,7 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update t_cupon "
                     + "set R_Index='" + bean.getR_Index() + "', "

@@ -231,7 +231,7 @@ public class DiarySale extends javax.swing.JDialog {
 
     private void LoadSale() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";

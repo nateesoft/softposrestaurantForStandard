@@ -661,7 +661,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
@@ -743,7 +743,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลูกหนี้    วันที่      เลขที่เอกสาร     จำนวนเงิน") + "_";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
@@ -801,7 +801,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "

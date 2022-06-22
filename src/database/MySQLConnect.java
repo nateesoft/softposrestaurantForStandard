@@ -24,6 +24,7 @@ public class MySQLConnect {
     public static String PortNumber = null;
     public static String CharSet = "utf-8";
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
+    private Class clazz = null;
 
     static {
         try {
@@ -101,12 +102,18 @@ public class MySQLConnect {
         this.msgError = msgError;
     }
 
-    public void open() {
+    public void open(Class clazz) {
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+            System.out.println(this.clazz + "(not close)");
+        }
+        
         if (con == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-                System.out.println("Connection:"+con.hashCode());
+//                System.out.println(this.clazz + "Connection:" + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.put(this.clazz, con.hashCode());
             } catch (ClassNotFoundException | SQLException e) {
                 MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
                 AppLogUtil.log(MySQLConnect.class, "error", e);
@@ -121,9 +128,10 @@ public class MySQLConnect {
 
     public void close() {
         if (con != null) {
-            System.out.println("Connection_Close:"+con.hashCode());
             try {
                 con.close();
+//                System.out.println(this.clazz + "Connection_Close:" + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.remove(this.clazz);
             } catch (SQLException ex) {
                 Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
                 AppLogUtil.log(MySQLConnect.class, "error", ex);

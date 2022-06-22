@@ -22,7 +22,7 @@ public class DiscountControl {
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select sum(R_PrAmt) SUM_R_PrAmt "
                     + "from balance "

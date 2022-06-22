@@ -228,7 +228,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -249,7 +249,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String tableNo = txtTable.getText();
             String ch = "select tcode from tablefile where tcode='" + tableNo + "' limit 1";
@@ -303,7 +303,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "SELECT TCode FROM tablesetup where code_id = '" + codeid + "'";
             Statement stmt = mysql.getConnection().createStatement();

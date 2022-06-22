@@ -458,7 +458,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
@@ -505,7 +505,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 
                 MySQLConnect mysql = new MySQLConnect();
                 try {
-                    mysql.open();
+                    mysql.open(this.getClass());
                     String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
                     mysql.getConnection().createStatement().executeUpdate(sql);
                 } catch (SQLException e) {
@@ -595,7 +595,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                              * * OPEN CONNECTION **
                              */
                             MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
+                            mysql.open(this.getClass());
                             try {
                                 String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
                                 Statement stmt = mysql.getConnection().createStatement();
@@ -731,7 +731,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             /*
              drop table IF EXISTS temp_tablefile;
@@ -765,7 +765,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate("delete from tablefile "

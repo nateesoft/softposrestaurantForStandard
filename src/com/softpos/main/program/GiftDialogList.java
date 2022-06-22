@@ -141,7 +141,7 @@ public class GiftDialogList extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from gifttype";
             Statement stmt = mysql.getConnection().createStatement();

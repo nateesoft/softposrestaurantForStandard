@@ -37,7 +37,7 @@ public final class ViewReport {
                 + " FROM company c limit 1";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
                 if (rs1.next()) {
@@ -193,7 +193,7 @@ public final class ViewReport {
                 + " FROM company c";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
             if (rs1.next()) {
                 comName = rs1.getString("c.Name");
@@ -348,7 +348,7 @@ public final class ViewReport {
         String branchName = "";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sqlBranch = "SELECT * FROM branch limit 1";
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
@@ -492,7 +492,7 @@ public final class ViewReport {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Map parameters = new HashMap();
             parameters.put("branchName", "");

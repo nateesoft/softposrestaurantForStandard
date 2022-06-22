@@ -329,7 +329,7 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
      * * OPEN CONNECTION **
      */
     MySQLConnect mysql = new MySQLConnect();
-    mysql.open();
+    mysql.open(this.getClass());
 
     try {
         String head1 = ThaiUtil.Unicode2ASCII(txtHeader1.getText());
@@ -510,7 +510,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         String sql = "SELECT * FROM company limit 1";
         try {
             Statement stmt = mysql.getConnection().createStatement();

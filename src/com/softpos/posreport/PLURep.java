@@ -504,7 +504,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
@@ -815,7 +815,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale "

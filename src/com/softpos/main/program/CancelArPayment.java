@@ -82,7 +82,7 @@ public class CancelArPayment extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
@@ -135,7 +135,7 @@ public class CancelArPayment extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "update billar set fat='V',uservoid='" + PublicVar._User + "' where ref_no='" + TempBillNo + "' ";
@@ -186,7 +186,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
@@ -248,7 +248,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from t_ar where ref_no='" + TempBillNo + "'";

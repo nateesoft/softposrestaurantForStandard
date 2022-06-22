@@ -23,7 +23,7 @@ public class MPluController {
         MPluBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(MPluController.class);
             String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
@@ -62,7 +62,7 @@ public class MPluController {
     public int create(List<MPluBean> listMPlu) {
         int[] resultCreate = new int[0];
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "insert into " + Value.db_member + ".mplu "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, PLU_Group, Sale_Type, "
@@ -100,7 +100,7 @@ public class MPluController {
 
     public void refundBill(String receiptNo) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String sql = "delete from " + Value.db_member + ".mplu "

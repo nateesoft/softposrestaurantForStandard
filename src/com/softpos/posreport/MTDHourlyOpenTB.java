@@ -57,7 +57,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     public ArrayList<Object[]> LoadData() {
         ArrayList<Object[]> ListObj = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             DecimalFormat df = new DecimalFormat("00.00");
             DecimalFormat df1 = new DecimalFormat("00.00");

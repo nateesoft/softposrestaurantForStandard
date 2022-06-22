@@ -133,7 +133,7 @@ public class CheckStockNow extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             table.setFont(new Font("Tahoma", Font.PLAIN, 14));
