@@ -4,6 +4,7 @@ import com.softpos.pos.core.model.EmployeeBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import util.MSG;
@@ -12,7 +13,7 @@ import util.MSG;
  *
  * @author nateesun
  */
-public class EmployeeControl {
+public class EmployeeControl extends DatabaseConnection {
 
     private List<EmployeeBean> listAll = null;
 
@@ -51,7 +52,28 @@ public class EmployeeControl {
                 }
             }
         }
-        
+
         return new EmployeeBean("", "");
+    }
+
+    public boolean getEmployeeByCode(String code) {
+        boolean isValid = false;
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(EmployeeControl.class);
+        try {
+            String sql = "select code,name from employ "
+                    + "where Code='" + code + "' limit 1;";
+            Statement stmt = mysql.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                isValid = true;
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+        } finally {
+            mysql.close();
+        }
+
+        return isValid;
     }
 }

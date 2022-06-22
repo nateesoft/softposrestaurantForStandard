@@ -1764,4 +1764,32 @@ public class BillControl {
         return isValid;
     }
 
+    public BillNoBean getLastBillNo() {
+        BillNoBean bean = null;
+        
+        MySQLConnect mysql = new MySQLConnect();
+        try {
+            String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
+            mysql.open(BillControl.class);
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    bean = new BillNoBean();
+                    String tableNo = ThaiUtil.Unicode2ASCII(rs.getString("b_table"));
+                    String b_refno = rs.getString("b_refno");
+                    int b_cust = rs.getInt("b_cust");
+                    bean.setB_Table(tableNo);
+                    bean.setB_Refno(b_refno);
+                    bean.setB_Cust(b_cust);
+                }
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysql.close();
+        }
+        
+        return bean;
+    }
+
 }

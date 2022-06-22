@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.floorplan.ShowTable;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -33,6 +34,29 @@ public class PosControl {
 
     public static void resetPosUser() {
         posUser = null;
+    }
+
+    public static void logout() {
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(PosControl.class);
+        try {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._User + "')";
+                stmt.executeUpdate(sql1);
+                
+                String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
+                if (stmt.executeUpdate(sql2) > 0) {
+                    // reset load poshwsetup
+                    PosControl.resetPosHwSetup();
+                }
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
+            System.exit(0);
+        } finally {
+            mysql.close();
+        }
     }
 
     public CompanyBean getCompany() {

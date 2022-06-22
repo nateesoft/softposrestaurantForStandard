@@ -12,7 +12,7 @@ import java.util.List;
 import util.AppLogUtil;
 import util.MSG;
 
-public class TableFileControl {
+public class TableFileControl extends DatabaseConnection {
 
     public static final int TABLE_READY = 1;
     public static final int TABLE_NOT_ACTIVE = 2;
@@ -731,6 +731,27 @@ public class TableFileControl {
         }
 
         return countItem;
+    }
+
+    public boolean checkTableMoreItem(String tableNo) {
+        boolean isValid = false;
+        MySQLConnect mysql = new MySQLConnect();
+        try {
+            mysql.open(TableFileControl.class);
+            String checkTablefile = "select titem from tablefile "
+                    + "where tcode = '" + tableNo + "' and titem>'0' limit 1 ";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(checkTablefile);
+            if (rs.next()) {
+                isValid = true;
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.close();
+        }
+
+        return isValid;
     }
 
 }
