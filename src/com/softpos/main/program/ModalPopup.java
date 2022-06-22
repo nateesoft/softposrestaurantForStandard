@@ -518,7 +518,8 @@ public class ModalPopup extends javax.swing.JDialog {
                             UpdateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
                             loadProductExtraOption(btnPCode);
                         } else {
-                            UpdateTempmenusetExtra("", btnPCode, PName, "", "extra");
+                            UpdateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
+//                            UpdateTempmenusetExtra("", btnPCode, PName, "", "extra");
                             if (!checkLimiExtra(TableNo)) {
                                 dispose();
                             } else {
@@ -560,7 +561,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         } finally {
                             mysql.close();
                         }
-                        
+
                         return checkExtra;
                     }
                 });
@@ -688,7 +689,7 @@ public class ModalPopup extends javax.swing.JDialog {
                 if (rs.next()) {
                     isCheck = true;
                 }
-                
+
                 rs.close();
             }
         } catch (SQLException e) {
@@ -854,7 +855,7 @@ public class ModalPopup extends javax.swing.JDialog {
         } finally {
             mysql.close();
         }
-        
+
         return show;
     }
 }
