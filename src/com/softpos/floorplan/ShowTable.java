@@ -239,8 +239,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         PublicVar.ReturnString = "";
         this.dispose();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F5) {
+    } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
         loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
         Value.TableSelected = "";
@@ -258,7 +257,6 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             }
         }
     }
-    loadDataToGrid();
 }//GEN-LAST:event_ShowTableLoginKeyPressed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -315,7 +313,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 
     private void loadDataToGrid() {
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
-
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
@@ -326,7 +323,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     + "or TAmount>0 "
                     + "or TItem > 0 "
                     + "or Tcustomer > 0 "
-                    //                    + "order by tcurtime";
                     + "order by tcode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(LoadTableFile);

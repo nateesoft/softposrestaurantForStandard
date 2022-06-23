@@ -98,6 +98,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private JButton[] buttons = new JButton[100];
     private PosUserBean posUser = null;
     private PPrint pPrint = new PPrint();
+    private FloorPlanController floorPlanControl = new FloorPlanController();
 
     public FloorPlanDialog() {
         if (OSValidator.isWindows()) {
@@ -107,7 +108,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 MSG.ERR(null, e.getMessage());
             }
         }
-        
+
         setUndecorated(true);
         initComponents();
 
@@ -1270,7 +1271,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         SetupButtonTable setup = new SetupButtonTable(null, true, Value.BTN_FLOORPLAN);
         setup.setVisible(true);
 
-        addButton();
+        if (setup.isActionButton()) {
+            loadZone(zoneSelected);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem32ActionPerformed
@@ -2160,11 +2163,19 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         private void showPOS(String tableNo) {
-            dispose();
+            String sql = "update tablefile "
+                    + "set TUser='',"
+                    + "TLoginDate=curdate(),"
+                    + "TLoginTime=curtime(),"
+                    + "Macno='" + Value.MACNO + "' "
+                    + "where TCode = '" + tableNo + "'";
+            floorPlanControl.execUpdate(sql);
 
-            String sql = "delete from tempset where ptableno='" + tableNo + "';";
+            sql = "delete from tempset where ptableno='" + tableNo + "';";
             FloorPlanController floorPlanControl = new FloorPlanController();
             floorPlanControl.execUpdate(sql);
+            
+            dispose();
 
             MainSale mainSale = new MainSale(null, true, tableNo);
             mainSale.setVisible(true);
@@ -2193,13 +2204,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             if (employeeControl.getEmployeeByCode(login.getLoginPWD())) {
                                 login.setVisible(false);
 
-                                String sql9 = "update tablefile "
+                                String sql = "update tablefile "
                                         + "set TUser='" + login.getLoginPWD() + "',"
+                                        + "TLoginDate=curdate(),"
+                                        + "TLoginTime=curtime(),"
                                         + "Macno='" + Value.MACNO + "' "
                                         + "where TCode = '" + tableNo + "'";
-                                employeeControl.execUpdate(sql9);
+                                floorPlanControl.execUpdate(sql);
                                 Value.EMP_CODE = login.getLoginPWD();
                                 showPOS(tableNo);
+                                loadZone(zoneSelected);
                             } else {
                                 if (!login.getLoginPWD().equals("")) {
                                     JOptionPane.showMessageDialog(null, "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
@@ -2209,6 +2223,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         }
                     } else {
                         showPOS(tableNo);
+                        loadZone(zoneSelected);
                     }
                 } else {
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
@@ -2319,13 +2334,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         /**
          * * OPEN CONNECTION **
          */
-        FloorPlanController floorPlaneControl = new FloorPlanController();
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";
-        floorPlaneControl.execUpdate(sqlUpd);
+        floorPlanControl.execUpdate(sqlUpd);
 
-        List<TempsetBean> listTempset = floorPlaneControl.getTempsetByPIndex(bBean.getR_Index());
+        List<TempsetBean> listTempset = floorPlanControl.getTempsetByPIndex(bBean.getR_Index());
         for (TempsetBean tempsetBean : listTempset) {
             if (tempsetBean.getPCode().equals(bBean.getR_PluCode())) {
                 updateBalanceOptionFromTemp(bBean.getR_Index(), bBean.getR_Table(), bBean.getR_PluCode());
@@ -2422,7 +2436,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     }
 
                     //ตัดสต็อกสินค้าที่มี Ingredent
-                    List<PIngredientBean> listPING = floorPlaneControl.listIngredeint(balance.getR_PluCode());
+                    List<PIngredientBean> listPING = floorPlanControl.listIngredeint(balance.getR_PluCode());
                     for (PIngredientBean pngBean : listPING) {
                         String R_PluCode = pngBean.getPingCode();
                         double PBPack = pngBean.getPBPack();
@@ -2442,7 +2456,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         //clear tempset
         String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-        floorPlaneControl.execUpdate(sqlClear);
+        floorPlanControl.execUpdate(sqlClear);
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {

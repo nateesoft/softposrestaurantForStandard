@@ -19,13 +19,14 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private final String codeId;
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
+    private boolean actionButton = false;
 
     public SetupButtonTable(java.awt.Frame parent, boolean modal, String codeId) {
         super(parent, modal);
         initComponents();
 
         this.codeId = codeId;
-        loadTebleno(codeId);
+        loadTableNo(codeId);
     }
 
     @SuppressWarnings("unchecked")
@@ -196,7 +197,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtTable.getText().trim().equals("")) {
-                btnSample.setText("<html><center><h3>" + txtTable.getText() + "(0)</h3></center>" + df.format(new Date()) + "</html>");
+                loadAutoText(txtTable.getText());
             } else {
                 btnSample.setText("");
             }
@@ -239,6 +240,8 @@ public class SetupButtonTable extends javax.swing.JDialog {
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
             mysql.close();
+            setActionButton(true);
+            dispose();
         }
     }
 
@@ -293,10 +296,11 @@ public class SetupButtonTable extends javax.swing.JDialog {
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
             mysql.close();
+            setActionButton(true);
         }
     }
 
-    private void loadTebleno(String codeid) {
+    private void loadTableNo(String codeid) {
         /**
          * * OPEN CONNECTION **
          */
@@ -309,9 +313,12 @@ public class SetupButtonTable extends javax.swing.JDialog {
             while (rs.next()) {
                 String Tcode = ThaiUtil.ASCII2Unicode(rs.getString("TCode"));
                 if (!Tcode.equals("")) {
+                    loadAutoText(Tcode);
+                    txtTable.setEnabled(false);
                     txtTable.setText(Tcode);
                     txtTable.requestFocus();
                 } else {
+                    txtTable.setEnabled(true);
                     txtTable.setText("");
                     txtTable.requestFocus();
                 }
@@ -325,4 +332,17 @@ public class SetupButtonTable extends javax.swing.JDialog {
             mysql.close();
         }
     }
+
+    public boolean isActionButton() {
+        return actionButton;
+    }
+
+    public void setActionButton(boolean actionButton) {
+        this.actionButton = actionButton;
+    }
+
+    private void loadAutoText(String table) {
+        btnSample.setText("<html><center><h3>" + table + "(0)</h3></center>" + df.format(new Date()) + "</html>");
+    }
+
 }

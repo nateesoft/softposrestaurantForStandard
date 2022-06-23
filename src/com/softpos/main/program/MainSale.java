@@ -21,7 +21,6 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.CompanyConfig;
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.PosUserController;
@@ -50,9 +49,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -2800,8 +2796,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void bntHoldTableClick() {
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
-                String sqlTurnPrintKicOff = "update balance set r_kic='0' "
-                        + "where r_kicprint<>'P' and r_table='" + tableNo + "';";
+                String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
                 mainSaleControl.execUpdate(sqlTurnPrintKicOff);
             }
             String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
@@ -2813,8 +2808,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             initScreen();
             return;
         }
-        String sql = "update tablefile set tonact ='N',tcurtime='00:00:00',tcustomer='0' "
-                + "where tcode='" + txtTable.getText() + "';";
+        String sql = "update tablefile set tonact ='N' where tcode='" + txtTable.getText() + "';";
         mainSaleControl.execUpdate(sql);
     }
 
@@ -2828,17 +2822,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void holdTableAndSave() {
-        BalanceBean balanceBean = mainSaleControl.getBalanceByTableNo(txtTable.getText());
-        String loginDate = balanceBean.getR_LoginDate();
-        if (loginDate == null) {
-            loginDate = DateFormat.getMySQL_yyyyMMdd(new Date());
-        }
-
         String UpdateTableFile = "update tablefile "
-                + "set tonact='N', tlogintime ='" + balanceBean.getLoginTime() + "',"
-                + "macno='" + Value.MACNO + "',"
-                + "tlogindate='" + loginDate + "' ,"
-                + "tpause='Y' "
+                + "set tonact='N', macno='" + Value.MACNO + "', tpause='Y' "
                 + "where tcode='" + txtTable.getText() + "'";
         mainSaleControl.execUpdate(UpdateTableFile);
 

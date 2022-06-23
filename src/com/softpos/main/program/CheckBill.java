@@ -1851,7 +1851,7 @@ public class CheckBill extends javax.swing.JDialog {
                 + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
                 + tBean.getSubDiscAmt() + tBean.getDiscBath() + tBean.getItemDiscAmt();
         txtTotalCash.setText(dec.format(tBean.getTAmount() - totalDiscount));
-        txtBillNo.setText(BillControl.getBillIDCurrent());
+        txtBillNo.setText("WAIT");
 
         POSConfigSetup config = PosControl.getData();
         BalanceControl bc = new BalanceControl();
@@ -2053,7 +2053,9 @@ public class CheckBill extends javax.swing.JDialog {
             }
             BillControl billControl = new BillControl();
             PublicVar.SubTotalOK = true;
-            billControl.saveBillNo(tableNo, billBean);
+            String billNoRef = billControl.saveBillNo(tableNo, billBean);
+            txtBillNo.setText(billNoRef);
+            
             //clear tempset
             clearTempSet(tableNo);
             lockScreen1(false);
