@@ -326,9 +326,6 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
                 stmt2.executeUpdate(sql);
                 stmt2.close();
             }
-
-            loadData();
-
             rs.close();
             stmt.close();
         } catch (SQLException e) {
@@ -337,6 +334,8 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         } finally {
             mysql.close();
         }
+
+        loadData();
     }
 
     private void loadData() {
@@ -384,10 +383,10 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         if (row != -1) {
             String PCode = table.getValueAt(row, 0).toString();
             /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+             * * OPEN CONNECTION **
+             */
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 int i = stmt.executeUpdate("delete from outstocklist where pcode='" + PCode + "'");
@@ -397,7 +396,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CheckProductNotEnough.class, "error", e);
-            } finally{
+            } finally {
                 mysql.close();
             }
         }

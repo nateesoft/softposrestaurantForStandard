@@ -1890,16 +1890,16 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadTempGift = "select sum(giftamt) "
-                    + "from tempgift where macno='" + Value.MACNO + "'";
-            ResultSet rs = stmt.executeQuery(LoadTempGift);
-            _TGiftvoucher.setValue(0.0);
-            while (rs.next()) {
-                _TGiftvoucher.setValue(rs.getDouble("sum(giftamt)"));
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String LoadTempGift = "select sum(giftamt) "
+                        + "from tempgift where macno='" + Value.MACNO + "'";
+                try (ResultSet rs = stmt.executeQuery(LoadTempGift)) {
+                    _TGiftvoucher.setValue(0.0);
+                    while (rs.next()) {
+                        _TGiftvoucher.setValue(rs.getDouble("sum(giftamt)"));
+                    }
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR_MSG(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
@@ -1940,12 +1940,10 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
-                    String DeleteGift = "delete from tempgift where (macno=?) ";
-                    PreparedStatement prm = mysql.getConnection().prepareStatement(DeleteGift);
+                    PreparedStatement prm;
+                    prm = mysql.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
                     prm.setString(1, Value.MACNO);
                     prm.executeUpdate();
-                    stmt.close();
                     prm.close();
                 } catch (SQLException e) {
                     MSG.ERR_MSG(this, e.getMessage());
@@ -1986,29 +1984,26 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public String FindArBillNo() {
-        String RetVal;
+        String RetVal = null;
         int TempBill = 0;
 
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String SqlQuery = "select arbillno from branch limit 1";
-                try ( ResultSet rs = stmt.executeQuery(SqlQuery)) {
+                try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
                     if (rs.next()) {
                         TempBill = rs.getInt("arbillno");
                     }
                 }
             }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(ARPayment.class, "error", e);
-        }
-        TempBill = TempBill + 1;
-        String TempStr = IntFmt.format(TempBill);
-        RetVal = PUtility.Addzero(TempStr, 7);
-        try {
-            try ( Statement stmt1 = mysql.getConnection().createStatement()) {
+
+            TempBill = TempBill + 1;
+            String TempStr = IntFmt.format(TempBill);
+            RetVal = PUtility.Addzero(TempStr, 7);
+
+            try (Statement stmt1 = mysql.getConnection().createStatement()) {
                 stmt1.executeUpdate("update branch set arbillno=" + TempBill);
             }
         } catch (SQLException e) {
@@ -2033,8 +2028,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SqlQuery = "insert into billar (ref_no,ondate,arcode,stotal,cash,cupon,credit,terminal,"
-                        + "cashier,fat,uservoid) "
-                        + "values (?,?,?,?,?,?,?,?,?,?,?)";
+                        + "cashier,fat,uservoid) values (?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
                 prm.setString(1, XRef_No);
                 prm.setString(2, Datefmt.format(date));

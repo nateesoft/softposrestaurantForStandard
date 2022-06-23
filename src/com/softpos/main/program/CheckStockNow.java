@@ -133,7 +133,6 @@ public class CheckStockNow extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             table.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -143,6 +142,7 @@ public class CheckStockNow extends javax.swing.JDialog {
             for (int i = 0; i < size; i++) {
                 model.removeRow(0);
             }
+            mysql.open(this.getClass());
             String sql = "select * from stockfile;";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);

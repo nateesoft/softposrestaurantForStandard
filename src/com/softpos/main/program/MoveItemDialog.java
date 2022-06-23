@@ -5,6 +5,7 @@ import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -24,6 +25,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
     private String TABLE_NO;
     private String TABLE_2;
     private boolean loadDataActive = false;
+    private TableFileControl tableFileControl = new TableFileControl();
 
     public MoveItemDialog(java.awt.Frame parent, boolean modal, String TABLE_NO) {
         super(parent, modal);
@@ -454,38 +456,20 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     if (R_Void.equalsIgnoreCase("V")) {
                         JOptionPane.showMessageDialog(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                     } else {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
-                            Statement stmt = mysql.getConnection().createStatement();
-                            ResultSet rs = stmt.executeQuery(sql);
-                            if (rs.next()) {
-                                //add data
-                                TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
-                            } else {
-                                //create table2 before add data
-                                TableFileControl tfc = new TableFileControl();
-                                tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
+                        TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
+                        if (tableFileBean != null) {
+                            //add data
+                            TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
+                        } else {
+                            //create table2 before add data
+                            TableFileControl tfc = new TableFileControl();
+                            tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
 
-                                //add data
-                                TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
-                            }
-
-                            rs.close();
-                            stmt.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(MoveItemDialog.class, "error", e);
-                        } finally {
-                            mysql.close();
+                            //add data
+                            TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                         }
                     }
                 }
-
 
                 loadTable1();
                 loadTable2();
@@ -502,19 +486,10 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 //none active table1
                 TableFileControl tfControl = new TableFileControl();
                 tfControl.updateTableNotActive(TABLE_NO);
-                
-                MySQLConnect mysql = new MySQLConnect();
-                try {
-                    mysql.open(this.getClass());
-                    String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
-                    mysql.getConnection().createStatement().executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                    AppLogUtil.log(MoveItemDialog.class, "error", e);
-                } finally {
-                    mysql.close();
-                }
-                
+
+                String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
+                tableFileControl.execUpdate(sql);
+
                 Value.TableSelected = TABLE_2;
                 dispose();
             }
@@ -591,34 +566,17 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         if (R_Void.equalsIgnoreCase("V")) {
                             JOptionPane.showMessageDialog(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                         } else {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
-                            MySQLConnect mysql = new MySQLConnect();
-                            mysql.open(this.getClass());
-                            try {
-                                String sql = "select tcode from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
-                                Statement stmt = mysql.getConnection().createStatement();
-                                ResultSet rs = stmt.executeQuery(sql);
-                                if (rs.next()) {
-                                    //add data
-                                    TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
-                                } else {
-                                    //create table2 before add data
-                                    TableFileControl tfc = new TableFileControl();
-                                    tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
+                            TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
+                            if (tableFileBean != null) {
+                                //add data
+                                TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
+                            } else {
+                                //create table2 before add data
+                                TableFileControl tfc = new TableFileControl();
+                                tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
 
-                                    //add data
-                                    TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
-                                }
-
-                                rs.close();
-                                stmt.close();
-                            } catch (SQLException e) {
-                                MSG.ERR(this, e.getMessage());
-                                AppLogUtil.log(MoveItemDialog.class, "error", e);
-                            } finally {
-                                mysql.close();
+                                //add data
+                                TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                             }
                         }
                     }
@@ -733,14 +691,6 @@ public class MoveItemDialog extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            /*
-             drop table IF EXISTS temp_tablefile;
-             create table IF NOT EXISTS temp_tablefile select * from tablefile where tcode in('1','2');
-
-             drop table IF EXISTS temp_balance;
-             create table IF NOT EXISTS temp_balance select * from balance where R_Table in('1','2');
-             */
-
             Statement stmt = mysql.getConnection().createStatement();
 
             stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
@@ -767,16 +717,16 @@ public class MoveItemDialog extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate("delete from tablefile "
-                    + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.executeUpdate("delete from balance "
-                    + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.executeUpdate("insert into tablefile select * from temp_tablefile "
-                    + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.executeUpdate("insert into balance select * from temp_balance "
-                    + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate("delete from tablefile "
+                        + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
+                stmt.executeUpdate("delete from balance "
+                        + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
+                stmt.executeUpdate("insert into tablefile select * from temp_tablefile "
+                        + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
+                stmt.executeUpdate("insert into balance select * from temp_balance "
+                        + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MoveItemDialog.class, "error", e);

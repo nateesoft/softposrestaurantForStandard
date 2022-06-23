@@ -1,7 +1,10 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ModalPopupController;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.model.MgrButtonSetupBean;
+import com.softpos.pos.core.model.OptionSetBean;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -9,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import util.AppLogUtil;
@@ -24,6 +28,7 @@ public class ModalPopup extends javax.swing.JDialog {
     private String PNameSet = "";
     private String Main = "";
     private String TableNo = "";
+    private ModalPopupController modalControl = new ModalPopupController();
 
     public ModalPopup(java.awt.Dialog parent, boolean modal,
             String PCode, String PName, String TableNo, String Main, String MenuCode) {
@@ -250,81 +255,59 @@ public class ModalPopup extends javax.swing.JDialog {
         button[23] = jButton24;
         button[24] = jButton25;
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from optionset where pcode='" + PCode + "'");
-            int count = 0;
-            while (rs.next()) {
-                button[count].setText("<html><center>" + ThaiUtil.ASCII2Unicode(rs.getString("OptionName")) + "</center></html>");
-                button[count].addActionListener(new ActionListener() {
+        List<OptionSetBean> listOptions = modalControl.getListOptionSet(PCode);
+        int count = 0;
+        for (OptionSetBean optionBean : listOptions) {
+            button[count].setText("<html><center>" + optionBean.getOptionName() + "</center></html>");
+            button[count].addActionListener(new ActionListener() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton btn = (JButton) e.getSource();
-                        String ProMain = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn = (JButton) e.getSource();
+                    String ProMain = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
 
-                        UpdateTempmenusetProduct("", PCode, PName, ProMain, Main);
-                        loadProductSideDish();
-                    }
+                    updateTempmenusetProduct("", PCode, PName, ProMain, Main);
+                    loadProductSideDish();
+                }
 
-                    private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sqll = "select pcode, pdesc from mgrbuttonsetup "
-                                    + "where pcode = '" + PCode + "'";
-                            String pstock = PUtility.GetStkCode();
-                            Statement stmt1 = mysql.getConnection().createStatement();
-                            ResultSet rss = stmt1.executeQuery(sqll);
+                private void updateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open(this.getClass());
+                    try {
+                        String sqll = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "'";
+                        String pstock = PUtility.GetStkCode();
+                        try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rss = stmt1.executeQuery(sqll)) {
                             if (rss.next()) {
                                 String pcode = rss.getString("pcode");
-                                String tempset = "INSERT INTO tempset "
-                                        + "(PTableNo, PIndex, PCode, PDesc, "
+                                String tempset = "INSERT INTO tempset (PTableNo, PIndex, PCode, PDesc, "
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + Main + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                try (Statement stmt2 = mysql.getConnection().createStatement()) {
-                                    stmt2.executeUpdate(tempset);
-                                }
+                                mysql.getConnection().createStatement().executeUpdate(tempset);
                             } else {
                                 String pcode = PCode;
-                                String tempset = "INSERT INTO tempset "
-                                        + "(PTableNo, PIndex, PCode, PDesc, "
+                                String tempset = "INSERT INTO tempset (PTableNo, PIndex, PCode, PDesc, "
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                try (Statement stmt2 = mysql.getConnection().createStatement()) {
-                                    stmt2.executeUpdate(tempset);
-                                }
+                                mysql.getConnection().createStatement().executeUpdate(tempset);
                             }
-                            rss.close();
-                            stmt1.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
-                            AppLogUtil.log(ModalPopup.class, "error", e);
-                        } finally {
-                            mysql.close();
                         }
+                    } catch (SQLException e) {
+                        MSG.ERR(null, e.getMessage());
+                        AppLogUtil.log(ModalPopup.class, "error", e);
+                    } finally {
+                        mysql.close();
                     }
-                });
-                count++;
-            }
+                }
+            });
+            count++;
+        }
 
-            if (count == 0) {
-                loadProductSideDish();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql.close();
+        if (count == 0) {
+            loadProductSideDish();
         }
     }
 
@@ -373,76 +356,58 @@ public class ModalPopup extends javax.swing.JDialog {
             button1.setBackground(Color.PINK);
         }
 
+        List<MgrButtonSetupBean> listMgrSetup = modalControl.getListMgrButtonSetupByPCode(PCode, "sd");
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        try {
-            String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup "
-                    + "where pcode='" + PCode + "' and sd_pcode<>''";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int count = 0;
-            while (rs.next()) {
-                String PNameSide = ThaiUtil.ASCII2Unicode(rs.getString("sd_pdesc"));
-                this.PNameSet = PNameSide;
-                String PCodeSide = rs.getString("sd_pcode");
-                this.PCodeSet = PCodeSide;
-                button[count].setName(rs.getString("sd_pcode"));
-                button[count].setText("<html><center>" + PNameSet + "</center></html>");
-                button[count].addActionListener(new ActionListener() {
+        int count = 0;
+        for (MgrButtonSetupBean mgrBean : listMgrSetup) {
+            String PNameSide = mgrBean.getSd_pdesc();
+            this.PNameSet = PNameSide;
+            String PCodeSide = mgrBean.getSd_pcode();
+            this.PCodeSet = PCodeSide;
+            button[count].setName(mgrBean.getSd_pcode());
+            button[count].setText("<html><center>" + PNameSet + "</center></html>");
+            button[count].addActionListener(new ActionListener() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton btn = (JButton) e.getSource();
-                        String ProFree = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
-                        UpdateTempmenusetSideDish("", btn.getName(), ProFree, "", "free");
-                        loadProductExtra();
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn = (JButton) e.getSource();
+                    String ProFree = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
+                    updateTempmenusetSideDish("", btn.getName(), ProFree, "", "free");
+                    loadProductExtra();
+                }
 
-                    }
+                private void updateTempmenusetSideDish(String Index, String PCodeSet, String PNameSet, String ProFree, String free) {
+                    String pstock = PUtility.GetStkCode();
 
-                    private void UpdateTempmenusetSideDish(String Index, String PCodeSet, String PNameSet, String ProFree, String free) {
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sqll = "select sd_pcode, sd_pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
-                            Statement stmt1 = mysql.getConnection().createStatement();
-                            ResultSet rs = stmt1.executeQuery(sqll);
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open(this.getClass());
+                    try {
+                        String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
+                        try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rs = stmt1.executeQuery(sql)) {
                             if (rs.next()) {
-                                String pstock = PUtility.GetStkCode();
                                 String tempset = "INSERT INTO tempset "
                                         + "(PTableNo, PIndex, PCode, PDesc, "
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCodeSet + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PNameSet) + "', '" + pstock + "','" + free + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProFree) + "', CURTIME())";
-                                Statement stmt2 = mysql.getConnection().createStatement();
-                                stmt2.executeUpdate(tempset);
-                                stmt2.close();
+                                mysql.getConnection().createStatement().executeUpdate(tempset);
                             }
-
-                            rs.close();
-                            stmt1.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
-                            AppLogUtil.log(ModalPopup.class, "error", e);
-                        } finally {
-                            mysql.close();
                         }
+                    } catch (SQLException e) {
+                        MSG.ERR(null, e.getMessage());
+                        AppLogUtil.log(ModalPopup.class, "error", e);
+                    } finally {
+                        mysql.close();
                     }
-                });
-                count++;
-            }
+                }
+            });
+            count++;
+        }
 
-            if (count == 0) {
-                loadProductExtra();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql.close();
+        if (count == 0) {
+            loadProductExtra();
         }
     }
 
@@ -493,93 +458,73 @@ public class ModalPopup extends javax.swing.JDialog {
 
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        try {
-            String sql = "select ex_pcode, ex_pdesc from mgrbuttonsetup "
-                    + "where pcode='" + PCode + "' and ex_pcode<>''";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int count = 0;
+        List<MgrButtonSetupBean> listMgrSetup = modalControl.getListMgrButtonSetupByPCode(PCode, "ex");
 
-            while (rs.next()) {
-                String pcode = rs.getString("ex_pcode");
-                this.PCode = pcode;
-                String pname = ThaiUtil.ASCII2Unicode(rs.getString("ex_pdesc"));
-                this.PName = pname;
-                button[count].setText("<html><center>" + pname + "</center></html>");
-                button[count].setName(rs.getString("ex_pcode"));
-                button[count].addActionListener(new ActionListener() {
+        int count = 0;
+        for (MgrButtonSetupBean mgrBean : listMgrSetup) {
+            String pcode = mgrBean.getEx_pcode();
+            this.PCode = pcode;
+            String pname = mgrBean.getEx_pdesc();
+            this.PName = pname;
+            button[count].setText("<html><center>" + pname + "</center></html>");
+            button[count].setName(mgrBean.getEx_pcode());
+            button[count].addActionListener(new ActionListener() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton btn = (JButton) e.getSource();
-                        String btnPCode = btn.getName();
-                        String PDesc = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
-                        if (showPopupOption(btnPCode)) {
-                            UpdateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
-                            loadProductExtraOption(btnPCode);
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn = (JButton) e.getSource();
+                    String btnPCode = btn.getName();
+                    String PDesc = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
+                    if (showPopupOption(btnPCode)) {
+                        updateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
+                        loadProductExtraOption(btnPCode);
+                    } else {
+                        updateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
+                        if (!checkLimiExtra(TableNo)) {
+                            dispose();
                         } else {
-                            UpdateTempmenusetExtra("", btnPCode, PDesc, "", "extra");
-//                            UpdateTempmenusetExtra("", btnPCode, PName, "", "extra");
-                            if (!checkLimiExtra(TableNo)) {
-                                dispose();
-                            } else {
-                                btn.setIcon(new ImageIcon(getClass().getResource("/images/button_ok.png")));
-                                jButton25.setText("ยืนยัน (OK)");
-                            }
+                            btn.setIcon(new ImageIcon(getClass().getResource("/images/button_ok.png")));
+                            jButton25.setText("ยืนยัน (OK)");
                         }
                     }
+                }
 
-                    private boolean checkLimiExtra(String TableNo) {
-                        boolean checkExtra = false;
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sql = "select PCode from tempset where PTableNo='" + TableNo + "' and PProTry='main' limit 1";
-                            Statement stmt = mysql.getConnection().createStatement();
-                            ResultSet rs = stmt.executeQuery(sql);
+                private boolean checkLimiExtra(String TableNo) {
+                    boolean checkExtra = false;
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open(this.getClass());
+                    try {
+                        String sql = "select PCode from tempset where PTableNo='" + TableNo + "' and PProTry='main' limit 1";
+                        try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                             if (rs.next()) {
                                 String PCode = rs.getString("PCode");
                                 String sql2 = "select check_extra "
                                         + "from mgrbuttonsetup "
                                         + "where pcode='" + PCode + "' "
                                         + "and check_extra='Y'";
-                                Statement stmt1 = mysql.getConnection().createStatement();
-                                ResultSet rs2 = stmt1.executeQuery(sql2);
-                                if (rs2.next()) {
-                                    checkExtra = true;
+                                try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rs2 = stmt1.executeQuery(sql2)) {
+                                    if (rs2.next()) {
+                                        checkExtra = true;
+                                    }
                                 }
-
-                                rs2.close();
-                                stmt1.close();
                             }
-
-                            rs.close();
-                            stmt.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
-                            AppLogUtil.log(ModalPopup.class, "error", e);
-                        } finally {
-                            mysql.close();
                         }
-
-                        return checkExtra;
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(ModalPopup.class, "error", e);
+                    } finally {
+                        mysql.close();
                     }
-                });
-                count++;
-            }
-
-            if (count == 0) {
-                dispose();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql.close();
+                    return checkExtra;
+                }
+            });
+            count++;
         }
+
+        if (count == 0) {
+            dispose();
+        }
+
     }
 
     private void loadProductExtraOption(String PCodeItem) {
@@ -622,59 +567,44 @@ public class ModalPopup extends javax.swing.JDialog {
             button1.setIcon(null);
         }
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select * from optionset "
-                    + "where pcode='" + PCodeItem + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int count = 0;
-            while (rs.next()) {
-                String POpName = ThaiUtil.ASCII2Unicode(rs.getString("OptionName"));
-                String PNameEx = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
-                this.PNameSet = PNameEx;
-                String PCodeEx = ThaiUtil.ASCII2Unicode(rs.getString("pcode"));
-                this.PCodeSet = PCodeEx;
-                button[count].setText("<html><center>" + POpName + "</center></html>");
-                button[count].addActionListener(new ActionListener() {
+        List<OptionSetBean> listOptions = modalControl.getListOptionSet(PCodeItem);
+        int count = 0;
+        for (OptionSetBean optionBean : listOptions) {
+            String POpName = optionBean.getOptionName();
+            String PNameEx = optionBean.getPdesc();
+            this.PNameSet = PNameEx;
+            String PCodeEx = optionBean.getPcode();
+            this.PCodeSet = PCodeEx;
+            button[count].setText("<html><center>" + POpName + "</center></html>");
+            button[count].addActionListener(new ActionListener() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton btn1 = (JButton) e.getSource();
-                        String Extra = btn1.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
-                        UpdateTempmenusetExtraOption(PCodeSet, Extra);
-                        dispose();
-                    }
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn1 = (JButton) e.getSource();
+                    String Extra = btn1.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
+                    UpdateTempmenusetExtraOption(PCodeSet, Extra);
+                    dispose();
+                }
 
-                    private void UpdateTempmenusetExtraOption(String PCode, String POption) {
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sql = "update tempset set "
-                                    + "POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
-                                    + "where PCode='" + PCode + "'";
-                            try (Statement stmt = mysql.getConnection().createStatement()) {
-                                stmt.executeUpdate(sql);
-                            }
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
-                            AppLogUtil.log(ModalPopup.class, "error", e);
-                        } finally {
-                            mysql.close();
+                private void UpdateTempmenusetExtraOption(String PCode, String POption) {
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open(this.getClass());
+                    try {
+                        String sql = "update tempset set "
+                                + "POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
+                                + "where PCode='" + PCode + "'";
+                        try (Statement stmt = mysql.getConnection().createStatement()) {
+                            stmt.executeUpdate(sql);
                         }
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(ModalPopup.class, "error", e);
+                    } finally {
+                        mysql.close();
                     }
-                });
-                count++;
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql.close();
+                }
+            });
+            count++;
         }
     }
 
@@ -684,13 +614,10 @@ public class ModalPopup extends javax.swing.JDialog {
         mysql.open(this.getClass());
         try {
             String sql = "select pcode from optionset where pcode ='" + pCodeItem + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isCheck = true;
                 }
-
-                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -702,7 +629,7 @@ public class ModalPopup extends javax.swing.JDialog {
         return isCheck;
     }
 
-    private void UpdateTempmenusetExtra(String Index, String PCode, String PName, String Option, String TryName) {
+    private void updateTempmenusetExtra(String Index, String PCode, String PName, String Option, String TryName) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
@@ -739,7 +666,8 @@ public class ModalPopup extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            String sql = "select qty from mgrbuttonsetup where pcode='" + PCode + "' and check_qty='Y' limit 1";
+            String sql = "select qty from mgrbuttonsetup "
+                    + "where pcode='" + PCode + "' and check_qty='Y' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {

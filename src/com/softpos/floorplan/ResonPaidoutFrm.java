@@ -89,7 +89,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
-        SaveResonPaidout();
+        saveResonPaidout();
         dispose();
         
         PaidoutFrm frm = new PaidoutFrm(null, true, txtReson.getText());
@@ -105,7 +105,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     private javax.swing.JTextArea txtReson;
     // End of variables declaration//GEN-END:variables
 
-    private void SaveResonPaidout() {
+    private void saveResonPaidout() {
         /**
          * * OPEN CONNECTION **
          */

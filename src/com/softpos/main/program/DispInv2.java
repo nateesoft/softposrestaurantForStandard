@@ -110,11 +110,11 @@ public class DispInv2 extends javax.swing.JDialog {
             mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select * from invcashdoc "
+                String sql = "select * from invcashdoc "
                         + "where (invdate>='" + Datefmt.format(TempDate1) + "') and (invdate<='" + Datefmt.format(TempDate2) + "') "
                         + "and substring(invno,1,1)='I' "
                         + "order by invno";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
+                ResultSet rs = stmt.executeQuery(sql);
                 while(rs.next()){
                     String VoidDate = "";
                         try {

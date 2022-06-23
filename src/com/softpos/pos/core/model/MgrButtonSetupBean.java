@@ -17,4 +17,9 @@ public class MgrButtonSetupBean {
     private String PCode;
     private String Check_before;
     private String PDesc;
+    
+    private String sd_pcode;
+    private String sd_pdesc;
+    private String ex_pcode;
+    private String ex_pdesc;
 }

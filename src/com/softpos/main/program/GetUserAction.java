@@ -272,13 +272,14 @@ public class GetUserAction extends javax.swing.JDialog {
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
+        boolean isClose = false;
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select username from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 PublicVar.ReturnString = loginname;
-                this.dispose();
+                isClose = true;
             } else {
                 MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                 clearlogin();
@@ -291,6 +292,9 @@ public class GetUserAction extends javax.swing.JDialog {
             mysql.close();
         }
 
+        if(isClose){
+            this.dispose();
+        }
     }
 
     public void clearlogin() {

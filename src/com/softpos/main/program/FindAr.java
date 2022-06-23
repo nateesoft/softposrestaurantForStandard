@@ -183,7 +183,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            SQLQuery = "Select *from custfile order by sp_desc";
+            SQLQuery = "Select * from custfile order by sp_desc";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             while (rs.next()) {
                 Object[] input = {

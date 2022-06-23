@@ -302,9 +302,9 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                         String sqlAdd = "insert into tempgift"
                                 + "(macno,gifttype,giftno,giftamt) "
                                 + "values('" + Value.MACNO + "','" + PublicVar.VoucherType + "','" + GNo + "','" + GAmt + "')";
-                        Statement stmt = mysql.getConnection().createStatement();
-                        stmt.executeUpdate(sqlAdd);
-                        stmt.close();
+                        try (Statement stmt = mysql.getConnection().createStatement()) {
+                            stmt.executeUpdate(sqlAdd);
+                        }
                         setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
                     }
                 }
@@ -423,9 +423,9 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         mysql.open(this.getClass());
         try {
             String sql = "delete from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -484,17 +484,17 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         mysql.open(this.getClass());
         try {
             String sql = "select * from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("giftno"),
-                    NumberFormat.showDouble2(rs.getDouble("giftamt"))
-                });
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("giftno"),
+                        NumberFormat.showDouble2(rs.getDouble("giftamt"))
+                    });
+                }
+                
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);

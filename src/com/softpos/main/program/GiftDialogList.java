@@ -145,12 +145,11 @@ public class GiftDialogList extends javax.swing.JDialog {
         try {
             String sql = "select * from gifttype";
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
+                }
             }
-
-            rs.close();
         } catch (SQLException e) {
             MSG.WAR(e.getMessage());
             AppLogUtil.log(GiftDialogList.class, "error", e);

@@ -174,23 +174,22 @@ public class CashBackDialog extends javax.swing.JDialog {
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
+        String refStr = "";
         try {
             //select returnbillno from branch
             //0000002
             String sql = "select returnbillno from branch limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int refNo = 0;
-            String refStr;
-            if (rs.next()) {
-                String ref = rs.getString(1);
-                if (ref != null) {
-                    refNo = Integer.parseInt(ref);
-                }
+            int refNo;
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                refNo = 0;
+                if (rs.next()) {
+                    String ref = rs.getString(1);
+                    if (ref != null) {
+                        refNo = Integer.parseInt(ref);
+                    }
+                }   rs.close();
             }
-
-            rs.close();
-            stmt.close();
 
             if (refNo < 10) {
                 refStr = "000000" + refNo;
@@ -220,13 +219,14 @@ public class CashBackDialog extends javax.swing.JDialog {
                 stmt1.close();
                 dispose();
             }
-            PrintReturnMoney(refStr);
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CashBackDialog.class, "error", e);
         } finally {
             mysql.close();
         }
+        
+        PrintReturnMoney(refStr);
     }
 
     public void PrintReturnMoney(String Refno) {

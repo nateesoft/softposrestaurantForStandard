@@ -21,7 +21,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     public OptionMenuSet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         initTable();
     }
 
@@ -354,7 +354,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     }//GEN-LAST:event_txtOptionNameKeyPressed
 
     private void txtPCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPCodeKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             LoadOpt();
         }
     }//GEN-LAST:event_txtPCodeKeyPressed
@@ -378,35 +378,6 @@ public class OptionMenuSet extends javax.swing.JDialog {
     private javax.swing.JTextField txtPDesc;
     // End of variables declaration//GEN-END:variables
 
-//    private void CheckOpt(String pcode, String pdesc, String opcode, String opname) {
-//        try {
-//            String sql = "select * from optionset where PCode = '" + pcode + "'";
-//            ResultSet rs = MySQLConnect.getResultSet(sql);
-//            if (rs.next()) {
-//                Update(pcode,pdesc,opcode,opname);
-//            } else {
-//                Save(pcode,pdesc,opcode,opname);
-//            }
-//            rs.close();
-//        } catch (Exception e) {
-//            MSG.WAR(e.getMessage());
-//        }
-//
-//    }
-//    private void Update(String pcode, String pdesc, String opcode, String opname) {
-//        try {
-//            String sql = "UPDATE optionmenuset SET "
-//                    + "Opt1= '" + opt1 + "', Opt2= '" + opt2 + "', Opt3= '" + opt3 + "', Opt4= '" + opt4 + "', "
-//                    + "Opt5= '" + opt5 + "', Opt6= '" + opt6 + "', Opt7= '" + opt7 + "', Opt8= '" + opt8 + "' "
-//                    + "WHERE PCode='" + pcode + "'";
-//
-//            MySQLConnect.exeUpdate(sql);
-//            LoadOpt();
-//
-//        } catch (Exception e) {
-//            MSG.ERR(null, e.getMessage());
-//        }
-//    }
     private void Save(String pcode, String pdesc, String opcode, String opname) {
         /**
          * * OPEN CONNECTION **
@@ -420,20 +391,20 @@ public class OptionMenuSet extends javax.swing.JDialog {
                     + "'" + ThaiUtil.Unicode2ASCII(pdesc) + "', "
                     + "'" + opcode + "', "
                     + "'" + ThaiUtil.Unicode2ASCII(opname) + "');";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-            
-            LoadOpt();
-
-            txtOptionName.setText("");
-            txtOptionName.requestFocus();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
             mysql.close();
         }
+
+        LoadOpt();
+
+        txtOptionName.setText("");
+        txtOptionName.requestFocus();
     }
 
     private void LoadOpt() {

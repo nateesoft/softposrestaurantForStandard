@@ -266,21 +266,31 @@ public class PopupItemJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditQtyActionPerformed
 
     private void btnCloseKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCloseKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            typeIndex = "none";
-            dispose();
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD1) {
-            btnOptionActionPerformed(null);
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD2) {
-            btnTypeSaleActionPerformed(null);
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD3) {
-            btnDiscountActionPerformed(null);
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD4) {
-            btnVoidItemActionPerformed(null);
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD5) {
-            btnMoveItemActionPerformed(null);
-        } else if (evt.getKeyCode() == KeyEvent.VK_NUMPAD6) {
-            btnEditQtyActionPerformed(null);
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE:
+                typeIndex = "none";
+                dispose();
+                break;
+            case KeyEvent.VK_NUMPAD1:
+                btnOptionActionPerformed(null);
+                break;
+            case KeyEvent.VK_NUMPAD2:
+                btnTypeSaleActionPerformed(null);
+                break;
+            case KeyEvent.VK_NUMPAD3:
+                btnDiscountActionPerformed(null);
+                break;
+            case KeyEvent.VK_NUMPAD4:
+                btnVoidItemActionPerformed(null);
+                break;
+            case KeyEvent.VK_NUMPAD5:
+                btnMoveItemActionPerformed(null);
+                break;
+            case KeyEvent.VK_NUMPAD6:
+                btnEditQtyActionPerformed(null);
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_btnCloseKeyPressed
 

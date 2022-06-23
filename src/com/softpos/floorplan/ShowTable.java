@@ -28,7 +28,7 @@ import util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
 
-    DefaultTableModel model2;
+    private DefaultTableModel model2;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
     public ShowTable(java.awt.Frame parent, boolean modal) {
@@ -57,10 +57,8 @@ public class ShowTable extends javax.swing.JDialog {
 
         DecimalFormat DoubleFmt = new DecimalFormat("##,###,##0.00");
         DecimalFormat IntegerFmt = new DecimalFormat("##,###,##0");
-        DecimalFormat PersentFmt = new DecimalFormat("#,##0.00%");
 
         TableColumnModel tcm = ShowTableLogin.getColumnModel();
-
         TableTestFormatRenderer r = new TableTestFormatRenderer(IntegerFmt);
 
         r.setHorizontalAlignment(SwingConstants.CENTER);
@@ -74,7 +72,7 @@ public class ShowTable extends javax.swing.JDialog {
         r.setHorizontalAlignment(SwingConstants.RIGHT);
         tcm.getColumn(5).setCellRenderer(r);
 
-        LoadDataToGrid();
+        loadDataToGrid();
     }
 
     @SuppressWarnings("unchecked")
@@ -224,18 +222,18 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             MySQLConnect mysql = new MySQLConnect();
             mysql.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
-                String QryUpdatetable = "update tablefile set TonAct='N' "
-                        + "where (TCode='" + TableSelected + "')";
-                stmt.executeUpdate(QryUpdatetable);
-                stmt.close();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    String QryUpdatetable = "update tablefile set TonAct='N' where (TCode='" + TableSelected + "')";
+                    stmt.executeUpdate(QryUpdatetable);
+                }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ShowTable.class, "error", e);
             } finally {
                 mysql.close();
             }
-            LoadDataToGrid();
+            
+            loadDataToGrid();
         }
 
     } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -243,7 +241,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
         this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        LoadDataToGrid();
+        loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
         Value.TableSelected = "";
         if (row != -1) {
@@ -260,7 +258,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             }
         }
     }
-    LoadDataToGrid();
+    loadDataToGrid();
 }//GEN-LAST:event_ShowTableLoginKeyPressed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -315,7 +313,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         }
     }//GEN-LAST:event_ShowTableLoginMouseClicked
 
-    private void LoadDataToGrid() {
+    private void loadDataToGrid() {
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
 
         MySQLConnect mysql = new MySQLConnect();
@@ -364,33 +362,13 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
         }
     }
 
-    public void showCell(int row, int column) {
+    private void showCell(int row, int column) {
         if (row > 0) {
             Rectangle rect = ShowTableLogin.getCellRect(row, column, true);
             ShowTableLogin.scrollRectToVisible(rect);
             ShowTableLogin.clearSelection();
             ShowTableLogin.setRowSelectionInterval(row, row);
         }
-    }
-
-    public void GetSelectedRow() {
-        int maxrow;
-        int currow = 0;
-        String TableSelected = "";
-        maxrow = ShowTableLogin.getRowCount();
-        if (maxrow > 0) {
-            for (int i = 0; i < maxrow; i++) {
-                if (ShowTableLogin.isRowSelected(i)) {
-                    currow = i;
-                }
-            }
-            TableSelected = ShowTableLogin.getValueAt(currow, 0).toString();
-            PublicVar.ReturnString = TableSelected;
-        } else {
-            PublicVar.ReturnString = "";
-
-        }
-        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

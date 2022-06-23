@@ -773,7 +773,6 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         try {
             model1 = (DefaultTableModel) tblOptionMsg.getModel();
             tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -781,6 +780,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             JTableHeader tHeader = tblOptionMsg.getTableHeader();
             tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
+            mysql.open(this.getClass());
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select o.* "
                     + "from product p, optionfile o "

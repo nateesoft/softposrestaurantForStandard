@@ -905,8 +905,9 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             String sql = "delete from soft_menusetup "
                     + "where MenuCode ='" + menucode + "'"
                     + "AND MenuShowText='" + ThaiUtil.Unicode2ASCII(ShortName) + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.WAR(e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
@@ -934,13 +935,13 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     + "'" + mgr.getIMG() + "','" + mgr.getFontColor() + "','" + mgr.getBGColor() + "','" + mgr.getLayout() + "',"
                     + "'" + mgr.getFontSize() + "','" + mgr.getFontName() + "','" + mgr.getFontAttr() + "'"
                     + ",'" + mgr.getMIndex() + "','" + mgr.getImgSize() + "');";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate("delete from soft_menusetup where MenuCode='" + mgr.getMenuCode() + "'");
-            if (stmt.executeUpdate(sql) > 0) {
-                MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
-                dispose();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate("delete from soft_menusetup where MenuCode='" + mgr.getMenuCode() + "'");
+                if (stmt.executeUpdate(sql) > 0) {
+                    MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+                    dispose();
+                }
             }
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
@@ -965,11 +966,12 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     + "FontName='" + mgr.getFontName() + "',"
                     + "FontAttr='" + mgr.getFontAttr() + "' "
                     + "where MenuType='" + mgr.getMenuType() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            if (stmt.executeUpdate(sql) > 0) {
-                stmt.close();
-                MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
-                dispose();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                if (stmt.executeUpdate(sql) > 0) {
+                    stmt.close();
+                    MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+                    dispose();
+                }
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
@@ -1006,82 +1008,82 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
                     + "and M_Index='" + menuIndex + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                MenuMGR m = new MenuMGR();
-                m.setMenuCode(rs.getString("MenuCode"));
-                m.setMenuType(rs.getInt("MenuType"));
-                m.setOptSet(rs.getString("OptSet"));
-                m.setPSet(rs.getString("PSet"));
-                m.setPCode(rs.getString("PCode"));
-                m.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                m.setIMG(rs.getString("IMG"));
-                m.setFontColor(rs.getString("FontColor"));
-                m.setBGColor(rs.getString("BGColor"));
-                m.setLayout(rs.getInt("Layout"));
-                m.setFontSize(rs.getInt("FontSize"));
-                m.setFontName(rs.getString("FontName"));
-                m.setMIndex(rs.getInt("M_Index"));
-                m.setFontAttr(rs.getString("FontAttr"));
-
-                cbTypeMenu.setSelectedIndex(m.getMenuType());
-                if (m.getMenuType() == 0) {
-                    txtPCode.setEnabled(false);
-                    btnFindProduct.setEnabled(false);
-                } else {
-                    txtPCode.setEnabled(true);
-                    btnFindProduct.setEnabled(true);
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    MenuMGR m = new MenuMGR();
+                    m.setMenuCode(rs.getString("MenuCode"));
+                    m.setMenuType(rs.getInt("MenuType"));
+                    m.setOptSet(rs.getString("OptSet"));
+                    m.setPSet(rs.getString("PSet"));
+                    m.setPCode(rs.getString("PCode"));
+                    m.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                    m.setIMG(rs.getString("IMG"));
+                    m.setFontColor(rs.getString("FontColor"));
+                    m.setBGColor(rs.getString("BGColor"));
+                    m.setLayout(rs.getInt("Layout"));
+                    m.setFontSize(rs.getInt("FontSize"));
+                    m.setFontName(rs.getString("FontName"));
+                    m.setMIndex(rs.getInt("M_Index"));
+                    m.setFontAttr(rs.getString("FontAttr"));
+                    
+                    cbTypeMenu.setSelectedIndex(m.getMenuType());
+                    if (m.getMenuType() == 0) {
+                        txtPCode.setEnabled(false);
+                        btnFindProduct.setEnabled(false);
+                    } else {
+                        txtPCode.setEnabled(true);
+                        btnFindProduct.setEnabled(true);
+                    }
+                    txtPCode.setText(m.getPCode());
+                    
+                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        ResultSet rsFind = stmt1.executeQuery("select PDesc from product where pcode='" + m.getPCode() + "' and PActive='Y'");
+                        if (rsFind.next()) {
+                            txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
+                        }
+                        
+                        rsFind.close();
+                    }
+                    
+                    txtShortName.setText(m.getMenuShowText());
+                    ButtonCustom buttonCustom = new ButtonCustom();
+                    Color bgColor = buttonCustom.getColorFormat(m.getBGColor());
+                    btnBGColor.setBackground(bgColor);
+                    if (m.getFontAttr().equals("B")) {
+                        chkFontBold.setSelected(true);
+                        chkFontItalic.setSelected(false);
+                        chkFontBoldAndItalic.setSelected(false);
+                    } else if (m.getFontAttr().equals("I")) {
+                        chkFontItalic.setSelected(true);
+                        chkFontBold.setSelected(true);
+                        chkFontBoldAndItalic.setSelected(false);
+                    } else if (m.getFontAttr().equals("BI")) {
+                        chkFontBoldAndItalic.setSelected(true);
+                        chkFontBold.setSelected(true);
+                        chkFontItalic.setSelected(false);
+                    } else {
+                        chkFontBold.setSelected(false);
+                        chkFontItalic.setSelected(false);
+                        chkFontBoldAndItalic.setSelected(false);
+                    }
+                    
+                    btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
+                    if (m.getFontName().equals("")) {
+                        cbFontList.setSelectedItem("Tahoma");
+                    } else {
+                        cbFontList.setSelectedItem(m.getFontName());
+                    }
+                    
+                    cbLayoutMenu.setSelectedIndex(m.getLayout());
+                    txtPathIMG.setText(m.getIMG());
+                    txtImgSize.setText("" + m.getImgSize());
+                    
+                    autoPreview();
                 }
-                txtPCode.setText(m.getPCode());
                 
-                Statement stmt1 = mysql.getConnection().createStatement();
-                ResultSet rsFind = stmt1.executeQuery("select PDesc from product where pcode='" + m.getPCode() + "' and PActive='Y'");
-                if (rsFind.next()) {
-                    txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
-                }
-
-                rsFind.close();
-                stmt1.close();
-
-                txtShortName.setText(m.getMenuShowText());
-                ButtonCustom buttonCustom = new ButtonCustom();
-                Color bgColor = buttonCustom.getColorFormat(m.getBGColor());
-                btnBGColor.setBackground(bgColor);
-                if (m.getFontAttr().equals("B")) {
-                    chkFontBold.setSelected(true);
-                    chkFontItalic.setSelected(false);
-                    chkFontBoldAndItalic.setSelected(false);
-                } else if (m.getFontAttr().equals("I")) {
-                    chkFontItalic.setSelected(true);
-                    chkFontBold.setSelected(true);
-                    chkFontBoldAndItalic.setSelected(false);
-                } else if (m.getFontAttr().equals("BI")) {
-                    chkFontBoldAndItalic.setSelected(true);
-                    chkFontBold.setSelected(true);
-                    chkFontItalic.setSelected(false);
-                } else {
-                    chkFontBold.setSelected(false);
-                    chkFontItalic.setSelected(false);
-                    chkFontBoldAndItalic.setSelected(false);
-                }
-
-                btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
-                if (m.getFontName().equals("")) {
-                    cbFontList.setSelectedItem("Tahoma");
-                } else {
-                    cbFontList.setSelectedItem(m.getFontName());
-                }
-
-                cbLayoutMenu.setSelectedIndex(m.getLayout());
-                txtPathIMG.setText(m.getIMG());
-                txtImgSize.setText("" + m.getImgSize());
-
-                autoPreview();
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
@@ -1202,13 +1204,13 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
-            if (rs.next()) {
-                txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
+                if (rs.next()) {
+                    txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                }
+                rs.close();
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);

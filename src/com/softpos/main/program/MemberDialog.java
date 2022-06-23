@@ -375,7 +375,6 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -385,70 +384,21 @@ public class MemberDialog extends javax.swing.JDialog {
                 model.removeRow(0);
             }
 
+            mysql.open(this.getClass());
             String sql = "select * from " + Value.db_member + ".memmaster order by Member_Code; ";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("Member_Code"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
-                    rs.getString("Member_HomeTel"),
-                    "",
-                    rs.getString("Member_Mobile"),
-                    rs.getString("Member_ExpiredDate"),
-                    rs.getString("Member_Fax")
-                });
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("Member_Code"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                        rs.getString("Member_HomeTel"),
+                        "",
+                        rs.getString("Member_Mobile"),
+                        rs.getString("Member_ExpiredDate"),
+                        rs.getString("Member_Fax")
+                    });
+                }
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        } finally {
-            mysql.close();
-        }
-
-        tbMember.requestFocus();
-    }
-
-    private void loadAllMember(String memCode, String memName, String memTel) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            model = (DefaultTableModel) tbMember.getModel();
-            tbMember.setRowHeight(35);
-
-            int size = model.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model.removeRow(0);
-            }
-
-            String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "where Member_Code like '%" + memCode + "%' "
-                    + "and Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
-                    + "and Member_HomeTel like '%" + memTel + "%' "
-                    + "order by Member_Code ";
-//                    + "limit 0,10";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("Member_Code"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
-                    rs.getString("Member_HomeTel"),
-                    "",
-                    rs.getString("Member_Mobile"),
-                    rs.getString("Member_ExpiredDate")
-
-                });
-            }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
@@ -464,7 +414,6 @@ public class MemberDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -473,13 +422,13 @@ public class MemberDialog extends javax.swing.JDialog {
             for (int i = 0; i < size; i++) {
                 model.removeRow(0);
             }
-
+            
+            mysql.open(this.getClass());
             String sql = "";
             if (!memCode.equals("")) {
                 sql = "select * from " + Value.db_member + ".memmaster "
                         + "where Member_Code like '%" + memCode + "%' "
                         + "order by Member_Code ";
-//                    + "limit 0,10";
             } else if (!memName.equals("")) {
                 sql = "select * from " + Value.db_member + ".memmaster "
                         + "where Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
@@ -489,23 +438,20 @@ public class MemberDialog extends javax.swing.JDialog {
                         + "where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' "
                         + "order by Member_Code ";
             }
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("Member_Code"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
-                    rs.getString("Member_HomeTel"),
-                    "",
-                    rs.getString("Member_Mobile"),
-                    rs.getString("Member_ExpiredDate"),
-                    rs.getString("member_fax")
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("Member_Code"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                        rs.getString("Member_HomeTel"),
+                        "",
+                        rs.getString("Member_Mobile"),
+                        rs.getString("Member_ExpiredDate"),
+                        rs.getString("member_fax")
 
-                });
+                    });
+                }
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
@@ -526,14 +472,10 @@ public class MemberDialog extends javax.swing.JDialog {
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
                     + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        }
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
 
-        try {
             String sqlUpdate = "update balance "
                     + "set "
                     + "r_prsubtype='',"

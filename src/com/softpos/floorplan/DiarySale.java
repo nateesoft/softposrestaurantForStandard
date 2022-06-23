@@ -22,7 +22,7 @@ public class DiarySale extends javax.swing.JDialog {
         initComponents();
 
         jLabel5.setText("ยอดขายประจำวันที่ : " + DD);
-        LoadSale();
+        loadSale();
     }
 
     @SuppressWarnings("unchecked")
@@ -229,13 +229,12 @@ public class DiarySale extends javax.swing.JDialog {
     private javax.swing.JLabel lblTotal;
     // End of variables declaration//GEN-END:variables
 
-    private void LoadSale() {
+    private void loadSale() {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         try {
             String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";
-            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -248,6 +247,8 @@ public class DiarySale extends javax.swing.JDialog {
             } else {
                 TS = 0.00;
             }
+            
+            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1.next()) {
                 TS1 = rs1.getDouble("b_nettotal");

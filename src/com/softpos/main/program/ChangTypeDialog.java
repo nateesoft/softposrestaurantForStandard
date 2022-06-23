@@ -101,9 +101,9 @@ public class ChangTypeDialog extends javax.swing.JDialog {
         try {
             String sql = "update balance set R_ETD='" + R_ETD + "' "
                     + "where R_Index='" + R_Index + "' and R_Table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ChangTypeDialog.class, "error", e);

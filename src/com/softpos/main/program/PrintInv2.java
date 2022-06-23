@@ -1141,7 +1141,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         Statement stmt2 = mysql.getConnection().createStatement();
                         String SQLQuery2 = "Select b_refno from billno where (b_refno='" + RefNo.getText() + "') and "
                                 + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
-                        ResultSet rec2 = stmt.executeQuery(SQLQuery2);
+                        ResultSet rec2 = stmt2.executeQuery(SQLQuery2);
                         if(rec2.next()){
                             NoEdit = true;
                             MacNo.setFocusable(false);
@@ -1287,7 +1287,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         XCashPay = rs.getDouble("b_cash");
                         XCrPay = rs.getDouble("b_cramt1");
 //                        XCrNo = rec.getString("b_cardno1")+"/"+rec.getString("b_appcode1");
-                        XCrNo = GetCrNo(RefNo.getText(), MacNo.getText());
+                        XCrNo = "";
                         XCupon = rs.getDouble("b_giftvoucher");
                         XEarnest = rs.getDouble("b_earnest");
                         XRegNo = PUtility.SeekRegNo(MacNo.getText());
@@ -1621,7 +1621,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update billno set b_invno=?,b_invtype=? where (b_macno=?) and (b_refno=?)";
             PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, InvNo);
@@ -1630,7 +1629,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(4, RefNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
@@ -1646,14 +1644,12 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update accr set arinvno=? where arno=?";
             PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, InvNo);
             prm.setString(2, BillNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
@@ -1679,7 +1675,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert into invcashdoc (s_bran,invdate,custcode,custname,custaddr1,"
                     + "custaddr2,macno,refno,ondate,ontime,cashier,totalamt,discount,subtotal,"
                     + "vat,amount,invuser,service,regno,cashpay,crpay,cupon,crno,arcode,"
@@ -1727,7 +1722,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(39, "N");
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
@@ -1752,7 +1746,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update invcashdoc set s_bran=?,invdate=?,custcode=?,custname=?,custaddr1=?,"
                     + "custaddr2=?,macno=?,refno=?,ondate=?,ontime=?,cashier=?,totalamt=?,discount=?,subtotal=?,"
                     + "vat=?,amount=?,invuser=?,service=?,regno=?,cashpay=?,crpay=?,cupon=?,crno=?,arcode=?,"
@@ -1795,7 +1788,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(34, InvNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
@@ -1916,7 +1908,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             MySQLConnect mysql = new MySQLConnect();
                             mysql.open(this.getClass());
                             try {
-                                Statement stmt = mysql.getConnection().createStatement();
                                 String SqlQuery = "update invcashdoc set void=?,uservoid=?,voiddate=?,"
                                         + "voidmessage=? where invno=?";
                                 PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
@@ -1927,7 +1918,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 prm.setString(5, TempInvNo);
                                 prm.executeUpdate();
                                 prm.close();
-                                stmt.close();
                             } catch (SQLException e2) {
                                 MSG.ERR(e2.getMessage());
                                 AppLogUtil.log(PrintInv2.class, "error", e2);
@@ -2073,25 +2063,5 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
-    private String GetCrNo(String refno, String macno) {
-        String str = "";
-        String str2 = "";
-//        try {
-//            String sql = "SELECT decode(b_crcardno1,'snpfood') as bcardno1 FROM billcredit " +
-//                    "where b_refno='"+refno+"' and b_macno='"+macno+"'";
-////            System.out.println(sql);
-//            MySQLConnect db1 = new MySQLConnect();
-//            db1.dbconnect();
-//            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            while(rs.next()){
-//                str = rs.getString(1);
-//                str2+= "XXXXXXXXXXX" + PUtility.Addzero(str,16).substring(12, 16)+",";
-//            }
-//            System.out.println(str2);
-//        } catch (SQLException e) {
-//        }
-        return str2;
-    }
 
 }

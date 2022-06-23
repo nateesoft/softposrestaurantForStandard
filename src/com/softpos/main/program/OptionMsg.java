@@ -107,21 +107,22 @@ public class OptionMsg extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadOption = "select *from optionfile where pgroup='" + bean.getR_Group() + "'";
-            ResultSet rs = stmt.executeQuery(LoadOption);
-            //Clear tblOptionMsg       
-            int RowCount = model1.getRowCount();
-            for (int i = 0; i <= RowCount - 1; i++) {
-                model1.removeRow(0);
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String LoadOption = "select * from optionfile where pgroup='" + bean.getR_Group() + "'";
+                //Clear tblOptionMsg
+                try (ResultSet rs = stmt.executeQuery(LoadOption)) {
+                    //Clear tblOptionMsg
+                    int RowCount = model1.getRowCount();
+                    for (int i = 0; i <= RowCount - 1; i++) {
+                        model1.removeRow(0);
+                    }
+                    while(rs.next()){
+                        Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
+                        model1.addRow(input);
+                        showCell1(0, 0);
+                    }
+                }
             }
-            while(rs.next()){
-                Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
-                    model1.addRow(input);
-                    showCell1(0, 0);
-            }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
@@ -179,29 +180,29 @@ public class OptionMsg extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String[] opt = new String[]{"", "", "", "", "", "", "", ""};
-            BalanceBean bBean = new BalanceBean();
-            bBean.setR_Index(index);
-            bBean.setR_Table(tableNo);
-
-            for (int i = 0; i < model2.getRowCount(); i++) {
-                opt[i] = model2.getValueAt(i, 0).toString();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String[] opt = new String[]{"", "", "", "", "", "", "", ""};
+                BalanceBean bBean = new BalanceBean();
+                bBean.setR_Index(index);
+                bBean.setR_Table(tableNo);
+                
+                for (int i = 0; i < model2.getRowCount(); i++) {
+                    opt[i] = model2.getValueAt(i, 0).toString();
+                }
+                
+                String SqlQuery = "update balance set "
+                        + "r_opt1='" + ThaiUtil.Unicode2ASCII(opt[0]) + "',"
+                        + "r_opt2='" + ThaiUtil.Unicode2ASCII(opt[1]) + "',"
+                        + "r_opt3='" + ThaiUtil.Unicode2ASCII(opt[2]) + "',"
+                        + "r_opt4='" + ThaiUtil.Unicode2ASCII(opt[3]) + "',"
+                        + "r_opt5='" + ThaiUtil.Unicode2ASCII(opt[4]) + "',"
+                        + "r_opt6='" + ThaiUtil.Unicode2ASCII(opt[5]) + "',"
+                        + "r_opt7='" + ThaiUtil.Unicode2ASCII(opt[6]) + "',"
+                        + "r_opt8='" + ThaiUtil.Unicode2ASCII(opt[7]) + "' "
+                        + "where r_index='" + index + "' "
+                        + "and r_table='" + tableNo + "'";
+                stmt.executeUpdate(SqlQuery);
             }
-
-            String SqlQuery = "update balance set "
-                    + "r_opt1='" + ThaiUtil.Unicode2ASCII(opt[0]) + "',"
-                    + "r_opt2='" + ThaiUtil.Unicode2ASCII(opt[1]) + "',"
-                    + "r_opt3='" + ThaiUtil.Unicode2ASCII(opt[2]) + "',"
-                    + "r_opt4='" + ThaiUtil.Unicode2ASCII(opt[3]) + "',"
-                    + "r_opt5='" + ThaiUtil.Unicode2ASCII(opt[4]) + "',"
-                    + "r_opt6='" + ThaiUtil.Unicode2ASCII(opt[5]) + "',"
-                    + "r_opt7='" + ThaiUtil.Unicode2ASCII(opt[6]) + "',"
-                    + "r_opt8='" + ThaiUtil.Unicode2ASCII(opt[7]) + "' "
-                    + "where r_index='" + index + "' "
-                    + "and r_table='" + tableNo + "'";
-            stmt.executeUpdate(SqlQuery);
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
@@ -231,14 +232,13 @@ public class OptionMsg extends javax.swing.JDialog {
                     String sqlDel = "delete from optionfile "
                             + "where PGroup='" + bean.getR_Group() + "' "
                             + "and OptionName='" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sqlDel);
-
-                    String sql = "insert into optionfile(PGroup, OptionName) "
-                            + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
-                    stmt.executeUpdate(sql);
-                    
-                    stmt.close();
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sqlDel);
+                        
+                        String sql = "insert into optionfile(PGroup, OptionName) "
+                                + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
+                        stmt.executeUpdate(sql);
+                    }
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(OptionMsg.class, "error", e);

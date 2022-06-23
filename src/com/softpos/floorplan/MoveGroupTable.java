@@ -650,6 +650,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
+                } finally {
+                    mysql.close();
                 }
 
                 // backup tmp
@@ -662,9 +664,11 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 /*
                  ค้นหาปริ้นเตอร์ในตารางนั้นๆ ก่อนว่ามีปริ้นเตอร์อะไรบ้าง ที่จะต้องปริ้นออก
                  */
+                MySQLConnect mysql2 = new MySQLConnect();
+                mysql2.open(this.getClass());
                 try {
                     String sql1 = "select r_kic from balance where r_table='" + txtTable2.getText() + "' group by r_kic;";
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysql2.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql1);
                     while (rs.next()) {
                         strKic += "kic" + rs.getString("r_kic") + ",";//เก็บข้อมูลปริ้นเตอร์ลงในตัวแปร
@@ -676,7 +680,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql2.close();
                 }
 
                 //แยกปริ้นเตอร์ สำหรับพิมพ์ออกจากระบบ
@@ -686,7 +690,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 }
 
                 // clear tmp
-                //clearTmpTableBeforeMove();
                 dispose();
             }
         }
@@ -898,32 +901,6 @@ public class MoveGroupTable extends javax.swing.JDialog {
             }
         } else {
             txtUser.requestFocus();
-        }
-    }
-
-    private void backText() {
-        String temp;
-        if (txtTable1.hasFocus()) {
-            temp = txtTable1.getText();
-            if (temp.length() > 0) {
-                temp = temp.substring(0, temp.length() - 1);
-            }
-
-            txtTable1.setText(temp);
-        } else if (txtTable2.hasFocus()) {
-            temp = txtTable2.getText();
-            if (temp.length() > 0) {
-                temp = temp.substring(0, temp.length() - 1);
-            }
-
-            txtTable2.setText(temp);
-        } else if (txtUser.hasFocus()) {
-            temp = txtUser.getText();
-            if (temp.length() > 0) {
-                temp = temp.substring(0, temp.length() - 1);
-            }
-
-            txtUser.setText(temp);
         }
     }
 

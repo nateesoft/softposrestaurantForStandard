@@ -186,25 +186,22 @@ public class CustomerName extends javax.swing.JDialog {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
                     MSG.ERR("กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
-
                     txtCustomerName.requestFocus();
                 } else {
                     String sql = "UPDATE tablefile SET "
                             + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                             + "WHERE Tcode = '" + TABLE_NO + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                    dispose();
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sql);
+                    }
                 }
             } else {
                 String sql = "UPDATE tablefile SET "
                         + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                         + "WHERE Tcode = '" + TABLE_NO + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-                dispose();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
@@ -212,6 +209,8 @@ public class CustomerName extends javax.swing.JDialog {
         } finally {
             mysql.close();
         }
+
+        dispose();
     }
 
     private void LoadCustomer() {
