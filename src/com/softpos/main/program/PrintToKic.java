@@ -2,19 +2,18 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.PrintToKicController;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
-import database.MySQLConnect;
 import java.awt.Cursor;
-import java.awt.HeadlessException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 import printReport.PrintSimpleForm;
-import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -24,17 +23,20 @@ import util.MSG;
 public class PrintToKic extends javax.swing.JFrame {
 
     private String tableNo = "";
-    private int refresh = 30;
+    private int refresh = 10;
     private boolean kicPrintting = false;
-    boolean printkic = false;
+    private boolean printkic = false;
+    private final PrintToKicController control = new PrintToKicController();
 
     /**
      * Creates new form PrintToKic
+     *
      * @param parent
      * @param modal
      */
     public PrintToKic(java.awt.Frame parent, boolean modal) {
         initComponents();
+
         BranchBean branchBean = BranchControl.getData();
         String config = branchBean.getSaveOrder();
         lblProcessLog.setText("Log! : ");
@@ -44,73 +46,51 @@ public class PrintToKic extends javax.swing.JFrame {
 
         printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
         lblProcessShow.setText("สถานะการพิมพ์");
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    setState(JFrame.ICONIFIED);
-                    for (int i = 0; i < 10; i++) {
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                        if (i == 9) {
-                            i = 0;
-                        }
-                        if (printkic == true) {
-                            System.out.println("PROCESS " + refresh + "sec/" + i);
-                            kicPrintFromPDA();
-                            try {
-                                Thread.sleep(refresh * 100);
-                            } catch (InterruptedException ex) {
-                                lblProcessLog.setText(ex.toString());
-                                AppLogUtil.log(PrintToKic.class, "error", ex);
-                            }
-                        }
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
-            lblProcessLog.setText(e.toString());
-             AppLogUtil.log(PrintToKic.class, "error", e);
-        }
+        setState(JFrame.ICONIFIED);
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
+        ActionListener timerListener = (ActionEvent e) -> {
+            if (printkic == true) {
+                System.out.println("PROCESS " + refresh + "sec");
+                new Thread(() -> {
+                    kicPrintFromPDA();
+                }).start();
+            }
+        };
+        if (refresh < 0) {
+            refresh = 10;
+        }
+        Timer timer = new Timer(refresh * 1000, timerListener);
+        timer.start();
     }
 
     private void loadStatus() {
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                //check ftp file date
+        //check ftp file date
+        try {
+            pbCheckUpdate.setStringPainted(true);
+            pbCheckUpdate.setMinimum(0);
+            pbCheckUpdate.setMaximum(100);
+            for (int i = 1; i <= 100; i++) {
+                pbCheckUpdate.setValue(i);
+                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
                 try {
-                    pbCheckUpdate.setStringPainted(true);
-                    pbCheckUpdate.setMinimum(0);
-                    pbCheckUpdate.setMaximum(100);
-                    for (int i = 1; i <= 100; i++) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (InterruptedException e) {
-                            AppLogUtil.log(PrintToKic.class, "error", e);
-                        }
-                    }
-
-                    pbCheckUpdate.setString("Load data Complete ");
                     Thread.sleep(25);
-                    for (int i = 100; i >= 0; i--) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (InterruptedException e) {
-                            AppLogUtil.log(PrintToKic.class, "error", e);
-                        }
-                    }
                 } catch (InterruptedException e) {
-                    AppLogUtil.log(PrintToKic.class, "error", e);
                 }
             }
-        }).start();
+
+            pbCheckUpdate.setString("Load data Complete ");
+            Thread.sleep(25);
+            for (int i = 100; i >= 0; i--) {
+                pbCheckUpdate.setValue(i);
+                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
+                try {
+                    Thread.sleep(25);
+                } catch (InterruptedException e) {
+                }
+            }
+        } catch (InterruptedException e) {
+        }
     }
 
     /**
@@ -263,251 +243,120 @@ public class PrintToKic extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (MSG.CONF(this, "ต้องการออกจากโปรแกรม Print PDA หรือไม่")) {
             System.exit(0);
-        } else {
-            System.exit(0);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public void kicPrintFromPDA() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (kicPrintting == false) {
-                        MySQLConnect mysql = new MySQLConnect();
-                        try {
-                            String sql = "select "
-                                    + "r_table,"
-                                    + "sum(b.r_quan) qty,"
-                                    + "sum(b.r_total) total"
-                                    + " from balance b "
-                                    + "where trantype='PDA' "
-                                    + "and r_kicprint<>'P' "
-                                    + "and r_void<>'V' "
-                                    + "and r_kic<>'0' "
-                                    + "and r_printOK='Y' "
-                                    + "and r_pause='P' "
-                                    + "group by r_table "
-                                    + "order by r_etd,r_index;";
-                            mysql.open(this.getClass());
-                            lblProcessLog.setText(sql);
-                            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
-                                if (rs.next()) {
-                                    if (kicPrintting == false) {
-                                        kicPrintting = true;
-                                        Thread.sleep(700);
-                                        tableNo = ThaiUtil.Unicode2ASCII(rs.getString("r_table"));
-                                        kichenPrint(ThaiUtil.ASCII2Unicode(tableNo));
-                                        lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + rs.getString("r_table"));
-                                    }
-                                } else {
-                                    kicPrintting = false;
-                                }
-                            }
-                        } catch (InterruptedException | SQLException e) {
-                            MSG.ERR(e.getMessage());
-                            AppLogUtil.log(PrintToKic.class, "error", e);
-                        } finally {
-                            mysql.close();
-                        }
-                    }
-                } catch (Exception e) {
-                    lblProcessLog.setText(lblProcessLog.getText() + ": " + e.toString());
-                    AppLogUtil.log(PrintToKic.class, "error", e);
-                }
-            }
-        }).start();
+    private void kicPrintFromPDA() {
+        if (kicPrintting == false) {
+            BalanceBean balanceBean = control.getBalaneForPDA();
+            if (balanceBean != null) {
+                System.out.println("Found data to print");
+                lblProcessLog.setText("Total Bill: " + balanceBean.getR_Total());
+                if (kicPrintting == false) {
+                    kicPrintting = true;
+                    tableNo = balanceBean.getR_Table();
+                    lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + balanceBean.getR_Table());
 
+                    kichenPrint(balanceBean.getR_Table());
+                }
+            } else {
+                kicPrintting = false;
+            }
+        }
     }
 
     private void kichenPrint(String tableNo) {
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-        try {
-            String printerName;
-            String[] kicMaster = BranchControl.getKicData20();
-            // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-            String sqlShowKic = "select r_kic,r_etd from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'0' "
-                    + "and R_Void<>'V' "
-                    + "group by r_kic,r_etd "
-                    + "order by r_kic, r_etd";
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
-            try {
-
-                try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rsKic = stmt1.executeQuery(sqlShowKic)) {
-
-                    if (!PublicVar.Branch_Saveorder.equals("N")) {
-                        printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-                    }
-                    //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
-                    while (rsKic.next()) {
-                        kicPrintting = true;
-                        loadStatus();
-                        String rKic = rsKic.getString("r_kic");
-                        if (!rKic.equals("")) {
-                            try {
-                                int iKic = Integer.parseInt(rKic);
-                                if (iKic - 1 < 0) {
-                                    //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
-                                } else {
-                                    if (kicMaster[iKic - 1].equals("N")) {
-                                        //NOT PRINT or Print already
-                                    } else {
-//                                    printerName = rKic;
-                                        printerName = "kic" + rKic;
-                                        String printerForm = BranchControl.getForm(rKic);
-                                        if (printerForm.equals("1")) {
-                                            String sql1 = "select * from balance "
-                                                    + "where r_table='" + tableNo + "' "
-                                                    + "and R_PrintOK='Y' "
-                                                    + "and R_KicPrint<>'P' "
-                                                    + "and R_Kic<>'' "
-                                                    + "and R_Void<>'V' "
-                                                    + "and R_kic='" + rKic + "' "
-                                                    + "group by r_plucode";
-                                            printerName = "kic" + rKic;
-                                            Statement stmt2 = mysql.getConnection().createStatement();
-                                            ResultSet rs1 = stmt2.executeQuery(sql1);
-                                            while (rs1.next()) {
-                                                String PCode = rs1.getString("R_PluCode");
-                                                if (printerForm.equals("1")) {
-                                                    if (Value.printkic) {
-                                                        printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-                                                    }
-                                                }
-                                            }
-                                            rs1.close();
-                                            stmt2.close();
-//                                    } 
-
-                                        } else if (printerForm.equals("6")) {
-                                            String sql2 = "select * from balance "
-                                                    + "where r_table='" + tableNo + "' "
-                                                    + "and R_PrintOK='Y' "
-                                                    + "and R_KicPrint<>'P' "
-                                                    + "and R_Kic<>'' "
-                                                    + "and R_Void<>'V' "
-                                                    + "and R_Kic='" + rKic + "'";
-                                            Statement stmt2 = mysql.getConnection().createStatement();
-                                            ResultSet rs2 = stmt2.executeQuery(sql2);
-                                            while (rs2.next()) {
-                                                kicPrintting = true;
-                                                if (Value.printkic) {
-                                                    double qty = rs2.getDouble("R_Quan");
-                                                    double total = rs2.getDouble("R_Total");
-                                                    String r_plucode = rs2.getString("R_Plucode");
-                                                    String R_Index = rs2.getString("R_Index");
-                                                    printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, r_plucode, qty, total);
-//                                                printBillCheck();
-                                                }
-                                            }
-                                            rs2.close();
-                                            stmt2.close();
-                                        } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-
-                                            if (printerForm.equals("3")) {
-                                                if (Value.printkic) {
-                                                    String retd = rsKic.getString("r_etd");
-                                                    printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA");
-//                                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-//                                                if (CheckBillBeforeCash.equals("Y")) {
-//                                                    printBillVoidCheck();
-//                                                }
-                                                }
-                                            } else if (printerForm.equals("4")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_4(printerName, tableNo);
-//                                                printBillVoidCheck();
-                                                }
-                                            } else if (printerForm.equals("5")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_5(printerName, tableNo);
-//                                                printBillVoidCheck();
-                                                }
-                                            }
-
-                                        } else if (printerForm.equals("7") || printerForm.equals("2")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_7(printerName, tableNo);
-                                            }
-                                        } else {
-//                                        printBillVoidCheck();
-                                            MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+        String printerName;
+        String[] kicMaster = BranchControl.getKicData20();
+        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        List<BalanceBean> listBalance = control.getBalaneForPDAByTableNo(tableNo);
+        if (!PublicVar.Branch_Saveorder.equals("N")) {
+            printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+        }
+        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
+        for (BalanceBean balanceBean : listBalance) {
+            kicPrintting = true;
+            loadStatus();
+            String rKic = balanceBean.getR_Kic();
+            if (!rKic.equals("")) {
+                int iKic = Integer.parseInt(rKic);
+                if (iKic - 1 < 0) {
+                    //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                } else {
+                    if (kicMaster[iKic - 1].equals("N")) {
+                        //NOT PRINT or Print already
+                    } else {
+                        printerName = "kic" + rKic;
+                        String printerForm = BranchControl.getForm(rKic);
+                        switch (printerForm) {
+                            case "1":
+                                List<BalanceBean> listForm1 = control.getBalancePrintForm1(tableNo, rKic);
+                                printerName = "kic" + rKic;
+                                for (BalanceBean bean : listForm1) {
+                                    String PCode = bean.getR_PluCode();
+                                    if (printerForm.equals("1")) {
+                                        if (Value.printkic) {
+                                            printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
                                         }
                                     }
                                 }
-                            } catch (SQLException e) {
-                                MSG.ERR(this, e.getMessage());
-                                AppLogUtil.log(PrintToKic.class, "error", e);
-                            }
+                                break;
+                            case "6":
+                                List<BalanceBean> listForm6 = control.getBalancePrintForm6(tableNo, rKic);
+                                for (BalanceBean bean : listForm6) {
+                                    kicPrintting = true;
+                                    if (Value.printkic) {
+                                        double qty = bean.getR_Quan();
+                                        double total = bean.getR_Total();
+                                        String r_plucode = bean.getR_PluCode();
+                                        String R_Index = bean.getR_Index();
+                                        printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, r_plucode, qty, total);
+                                    }
+                                }
+                                break;
+                            case "3":
+                            case "4":
+                            case "5":
+                                if (printerForm.equals("3")) {
+                                    if (Value.printkic) {
+                                        String retd = balanceBean.getR_ETD();
+                                        printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA");
+                                    }
+                                } else if (printerForm.equals("4")) {
+                                    if (Value.printkic) {
+                                        printSimpleForm.KIC_FORM_4(printerName, tableNo);
+                                    }
+                                } else if (printerForm.equals("5")) {
+                                    if (Value.printkic) {
+                                        printSimpleForm.KIC_FORM_5(printerName, tableNo);
+                                    }
+                                }
+                                break;
+                            case "7":
+                            case "2":
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);
+                                }
+                                break;
+                            default:
+                                MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+                                break;
                         }
                     }
                 }
-                //update r_kicprint
-                try {
-                    String sql = "update balance "
-                            + "set r_kicprint='P',"
-                            + "r_pause='Y' "
-                            + "where r_table='" + tableNo + "' "
-                            + "and r_kicprint<>'P' "
-                            + "and r_printOk='Y' "
-                            + "and r_kic<>'';";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(PrintToKic.class, "error", e);
-                }
-                kicPrintting = false;
-            } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
-                AppLogUtil.log(PrintToKic.class, "error", e);
-            } finally {
-                mysql.close();
             }
-        } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e);
         }
-    }
-
-    public void printCheckBillStation() {
-        MySQLConnect mysql = new MySQLConnect();
-        try {
-            mysql.open(this.getClass());
-            String sql = "select r_index form balance where r_table='" + tableNo + "' "
-                    + "and PDAPrintCheckStation <>'N' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
-                if (rs.next()) {
-                    MySQLConnect mysql2 = new MySQLConnect();
-                    mysql2.open(this.getClass());
-                    try {
-                        String sqlUpdate = "update balance set PDAPrintCheckStation='N' where r_table='" + tableNo + "';";
-                        mysql2.getConnection().createStatement().executeUpdate(sqlUpdate);
-                    } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
-                        AppLogUtil.log(PrintToKic.class, "error", e);
-                    } finally {
-                        mysql2.close();
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(PrintToKic.class, "error", e);
-        } finally {
-            mysql.close();
-        }
+        //update r_kicprint
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + tableNo + "' "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'';";
+        control.execUpdate(sql);
+        kicPrintting = false;
     }
 
     public static void main(String args[]) {

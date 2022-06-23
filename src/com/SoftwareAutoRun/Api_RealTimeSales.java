@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.SoftwareAutoRun;
 
 import com.softpos.pos.core.controller.BillControl;
@@ -64,13 +59,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 uploadCheckConfig();
             }
         } catch (InterruptedException e) {
-            try {
-                Thread.sleep(30 * 1000 * 2);
-            } catch (InterruptedException ex) {
-                ErrorText += ex.toString();
-                txtLogErr.setText(logTab + ErrorText);
-                Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
 
     }
@@ -165,49 +153,39 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         setState(JFrame.ICONIFIED);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+    
     public void uploadCheckConfig() {
-        String sendRealtimeWeb = "";
-        sendRealtimeWeb = ConfigFile.getProperties("sendRealtimeWeb");
-        try {
-            if (sendRealtimeWeb.equals("true")) {
-//                for (int a = 0; a < 1; a++) {
-//                    a = 0;
-                if (FlageCheckProcess != true) {
-                    uploadBillno();
-                    System.out.println("Exit Loop Billno;\n");
-                    ErrorText += ".....Exit Loop Billno;\n";
-                    txtLogErr.setText(logTab + ErrorText);
-                }
+        String sendRealtimeWeb = ConfigFile.getProperties("sendRealtimeWeb");
+        if (sendRealtimeWeb.equals("true")) {
+            if (FlageCheckProcess != true) {
+                uploadBillno();
+                System.out.println("Exit Loop Billno;\n");
+                ErrorText += ".....Exit Loop Billno;\n";
+                txtLogErr.setText(logTab + ErrorText);
+            }
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException ex) {
+            }
+            if (FlageCheckProcess != true) {
+                uploadT_Sale();
+                System.out.println("Exit Loop T_Sale\n;");
+                ErrorText += ".....Exit Loop T_Sale\n;";
+                txtLogErr.setText(logTab + ErrorText);
                 try {
                     Thread.sleep(10 * 1000);
                 } catch (InterruptedException ex) {
+                    txtLogErr.setText(logTab + ex.toString());
+                    Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (FlageCheckProcess != true) {
-                    uploadT_Sale();
-                    System.out.println("Exit Loop T_Sale\n;");
-                    ErrorText += ".....Exit Loop T_Sale\n;";
-                    txtLogErr.setText(logTab + ErrorText);
-                    try {
-                        Thread.sleep(10 * 1000);
-                    } catch (InterruptedException ex) {
-                        txtLogErr.setText(logTab + ex.toString());
-                        Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (FlageCheckProcess != true) {
-                    checkBillVoid();
-                    System.out.println("Exit Loop Bill Void\n;");
-                    ErrorText += ".....Exit Loop Bill Void\n;";
-                    txtLogErr.setText(logTab + ErrorText);
-                }
-//                }
             }
-        } catch (Exception e) {
-            ErrorText += e.toString();
-            txtLogErr.setText(logTab + ErrorText);
-            MSG.NOTICE(e.toString());
+            if (FlageCheckProcess != true) {
+                checkBillVoid();
+                System.out.println("Exit Loop Bill Void\n;");
+                ErrorText += ".....Exit Loop Bill Void\n;";
+                txtLogErr.setText(logTab + ErrorText);
+            }
         }
-
     }
 
     public void uploadBillno() {
@@ -226,11 +204,9 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 ResultSet rs = stmtLocal.executeQuery(sql);
                 while (rs.next()) {
                     FlageCheckProcess = true;
-                    BillNoBean billbean = new BillNoBean();
                     BillControl billControl = new BillControl();
                     String refno = rs.getString("b_refno");
-                    billbean = billControl.getData(refno);
-//                    branchBean = branControl.getBranch();
+                    BillNoBean billbean = billControl.getData(refno);
                     if (billbean.getB_PostDate() == null || billbean.getB_PostDate().equals("null")) {
                         billbean.setB_PostDate(new Date());
                     }
@@ -260,7 +236,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                             + " '" + billbean.getB_ROUNDCLOSE() + "', '', '', '', '',"
                             + " '', '', '', '', '',"
                             + " '', '', '','', 'Y');";
-                    //insert into website Online Database (billno)
                     try {
 //                        MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
                         System.out.println(sqlUpdateOnline);
@@ -725,7 +700,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         try {
             mysql.close();
             myOnline.close();
-                    
+
             mysql.open(this.getClass());
             myOnline.open();
 
@@ -820,6 +795,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
