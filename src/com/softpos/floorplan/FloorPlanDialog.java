@@ -69,9 +69,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
+import util.OSValidator;
 import util.Option;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
@@ -97,6 +100,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private PPrint pPrint = new PPrint();
 
     public FloorPlanDialog() {
+        if (OSValidator.isWindows()) {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                MSG.ERR(null, e.getMessage());
+            }
+        }
+        
         setUndecorated(true);
         initComponents();
 
