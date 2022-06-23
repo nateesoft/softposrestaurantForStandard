@@ -9,3 +9,4 @@ connect.ini
 *.ini*
 *.htm*
 /connect.ini
+*.running
