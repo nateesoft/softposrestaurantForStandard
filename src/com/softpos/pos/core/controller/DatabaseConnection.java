@@ -12,18 +12,21 @@ import util.MSG;
 public class DatabaseConnection {
     
     public boolean execUpdate(String sql) {
+        boolean isValid = false;
+        
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(TableFileControl.class);
+        mysql.open(DatabaseConnection.class);
         try {
-            mysql.getConnection().createStatement().executeUpdate(sql);
-            return true;
+            int result = mysql.getConnection().createStatement().executeUpdate(sql);
+            isValid = result > 0;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(TableFileControl.class, "error", e);
-            return false;
+            AppLogUtil.log(DatabaseConnection.class, "error", e);
         } finally {
             mysql.close();
         }
+        
+        return isValid;
     }
 
 }

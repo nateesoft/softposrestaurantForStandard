@@ -13,7 +13,7 @@ import java.util.List;
 import util.AppLogUtil;
 import util.MSG;
 
-public class TempCuponController {
+public class TempCuponController extends DatabaseConnection {
 
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
@@ -133,33 +133,8 @@ public class TempCuponController {
     }
 
     public void clearTempOld(String index) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "delete from tempcupon "
-                    + "where r_index='" + index + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e);
-        }
-
-        try {
-            String sql = "delete from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(TempCuponController.class, "error", e);
-        } finally {
-            mysql.close();
-        }
+        this.execUpdate("delete from tempcupon where r_index='" + index + "'");
+        this.execUpdate("delete from tempgift");
     }
 
     public void saveTempCupon(TempCuponBean bean) {

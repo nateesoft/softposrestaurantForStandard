@@ -12,24 +12,24 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.CheckBillController;
+import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.CustFileBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.TableFileBean;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -53,6 +53,8 @@ public class CheckBill extends javax.swing.JDialog {
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
     private POSConfigSetup CONFIG;
+
+    private CheckBillController checkBillControl = new CheckBillController();
 
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
@@ -1574,22 +1576,12 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
         new Thread(() -> {
-            String sql = "select r_index from balance where r_table='" + tableNo + "' and r_type='1' limit 1";
-            MySQLConnect mysql = new MySQLConnect();
-            try {
-                mysql.open(this.getClass());
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-                boolean isTakeOrder = isTakeOrder();
-                if (rs.next() && isTakeOrder == true) {
-                    MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
-                } else {
-                    checkBillOK();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(CheckBill.class, "error", e);
-            } finally {
-                mysql.close();
+            BalanceBean balanceBean = checkBillControl.getBalanceByTableNo(tableNo);
+            boolean isTakeOrder = isTakeOrder();
+            if (balanceBean != null && isTakeOrder == true) {
+                MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
+            } else {
+                checkBillOK();
             }
         }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
@@ -2194,55 +2186,29 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void arCodeExits() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
-                    + "where sp_code='" + txtArCode.getText() + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                lbArName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
-                lbCredit.setText("" + rs.getInt("sp_cr"));
-                lbCreditMoney.setText("" + rs.getDouble("sp_cramt"));
-                try {
-                    String sql2 = "select sum(aramount) total "
-                            + "from accr "
-                            + "where arcode='" + txtArCode.getText() + "' "
-                            + "group by arcode";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    ResultSet rs2 = stmt2.executeQuery(sql2);
-                    if (rs2.next()) {
-                        lbCreditAmt.setText("" + rs2.getDouble("total"));
-                    } else {
-                        lbCreditAmt.setText("0.00");
-                    }
+        CustFileBean custFileBean = checkBillControl.getCustFileBySpCode(txtArCode.getText());
+        if (custFileBean != null) {
+            lbArName.setText(custFileBean.getSp_desc());
+            lbCredit.setText("" + custFileBean.getSp_cr());
+            lbCreditMoney.setText("" + custFileBean.getSp_cramt());
 
-                    rs2.close();
-                    stmt2.close();
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(CheckBill.class, "error", e);
-                }
-                txtArAmount.setFocusable(true);
-                txtArAmount.setText(txtTotalAmount.getText());
-                txtArAmount.requestFocus();
-                txtArAmount.selectAll();
+            AccrBean accrBean = checkBillControl.getTotalAccrByArCode(txtArCode.getText());
+            if (accrBean != null) {
+                lbCreditAmt.setText("" + accrBean.getTotal());
             } else {
-                //แจ้งเตือนให้เพิ่มลูกค้าเพื่อเป็นหนี้ใหม่
-                int confirm = JOptionPane.showConfirmDialog(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
-                if (confirm == JOptionPane.YES_OPTION) {
-                    AddNewArCustomer addNew = new AddNewArCustomer(null, true);
-                    addNew.setVisible(true);
-                }
+                lbCreditAmt.setText("0.00");
             }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
+            txtArAmount.setFocusable(true);
+            txtArAmount.setText(txtTotalAmount.getText());
+            txtArAmount.requestFocus();
+            txtArAmount.selectAll();
+        } else {
+            //แจ้งเตือนให้เพิ่มลูกค้าเพื่อเป็นหนี้ใหม่
+            int confirm = JOptionPane.showConfirmDialog(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
+            if (confirm == JOptionPane.YES_OPTION) {
+                AddNewArCustomer addNew = new AddNewArCustomer(null, true);
+                addNew.setVisible(true);
+            }
         }
     }
 
@@ -2269,42 +2235,16 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void LoadDisc() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String query = "select sum(FastDiscAmt+EmpDiscAmt+MemDiscAmt+TrainDiscAmt+SubDiscAmt+DiscBath+CuponDiscAmt) AAA from tablefile where Tcode = '" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            if (rs.next()) {
-                String DiscTotal = ThaiUtil.ASCII2Unicode(rs.getString("AAA"));
-                txtDiscountAmount.setText(DiscTotal);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(this, ex.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", ex);
-        } finally {
-            mysql.close();
+        TableFileBean tableFileBean = checkBillControl.loadDiscByTableNo(tableNo);
+        if (tableFileBean != null) {
+            txtDiscountAmount.setText("" + tableFileBean.getTAmount());
         }
-
     }
 
     private void clearTempSet(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "delete from tempset "
-                    + "where PTableNo='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
-        }
+        String sql = "delete from tempset "
+                + "where PTableNo='" + tableNo + "'";
+        checkBillControl.execUpdate(sql);
     }
 
     private void checkBillOK() {
@@ -2333,76 +2273,28 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
 
-        new Thread(() -> {
-            checkBillPayment();
-        }).start();
+        checkBillPayment();
     }
 
     private void backupTempBalnace() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
-            String sql2 = "insert ignore into temp_balance select * from balance "
-                    + "where r_table='" + tableNo + "' order by r_index";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql1);
-                stmt.executeUpdate(sql2);
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
-        }
-
+        String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
+        String sql2 = "insert ignore into temp_balance select * from balance "
+                + "where r_table='" + tableNo + "' order by r_index";
+        checkBillControl.execUpdate(sql1);
+        checkBillControl.execUpdate(sql2);
     }
 
     private void restoreTempBalance() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select r_table from temp_balance where r_table ='" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                try {
-                    String sql1 = "delete from balance where r_table='" + tableNo + "'";
-                    String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    stmt2.executeUpdate(sql1);
-                    stmt2.executeUpdate(sql2);
-                    stmt2.close();
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(CheckBill.class, "error", e);
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
+        if (checkBillControl.restoreTempBalance(tableNo)) {
+            String sql1 = "delete from balance where r_table='" + tableNo + "'";
+            String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
+            checkBillControl.execUpdate(sql1);
+            checkBillControl.execUpdate(sql2);
         }
-
     }
 
     private void clearTempGift() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "delete from tempgift";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
-        }
+        checkBillControl.execUpdate("delete from tempgift");
     }
 
     private boolean checkStatusCreditData() {
@@ -2422,368 +2314,147 @@ public class CheckBill extends javax.swing.JDialog {
         }
     }
 
-//    private void kichenPrintAfterPrintCheck() {
-//        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-//        try {
-//            String printerName;
-//            String[] kicMaster = BranchControl.getKicData20();
-//            // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-//            String sqlShowKic = "select r_kic from balance "
-//                    + "where r_table='" + tableNo + "' "
-//                    + "and R_PrintOK='Y' "
-//                    + "and R_KicPrint<>'P' "
-//                    + "and R_Kic<>'' "
-//                    + "group by r_kic "
-//                    + "order by r_kic";
-//            MySQLConnect mysql = new MySQLConnect();
-//            mysql.open(this.getClass());
-//            try {
-//                Statement stmt1 = mysql.getConnection().createStatement();
-//                ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
-//                while (rsKic.next()) {
-//                    String rKic = rsKic.getString("r_kic");
-//                    if (!rKic.equals("")) {
-//                        int iKic = Integer.parseInt(rKic);
-//                        if (iKic - 1 < 0) {
-//                            //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
-//                        } else {
-//                            if (kicMaster[iKic - 1].equals("N")) {
-//                                //NOT PRINT or Print already
-//                            } else {
-//                                printerName = "KIC" + rKic;
-//                                String printerForm = BranchControl.getForm(rKic);
-//                                if (printerForm.equals("1") || printerForm.equals("2")) {
-//                                    String sql1 = "select * from balance "
-//                                            + "where r_table='" + tableNo + "' "
-//                                            + "and R_PrintOK='Y' "
-//                                            + "and R_KicPrint<>'P' "
-//                                            + "and R_Kic<>'' "
-//                                            + "and R_Void <> 'V' "
-//                                            + "group by r_plucode";
-//                                    Statement stmt2 = mysql.getConnection().createStatement();
-//                                    ResultSet rs1 = stmt2.executeQuery(sql1);
-//                                    while (rs1.next()) {
-//                                        String PCode = rs1.getString("R_PluCode");
-//                                        if (printerForm.equals("1")) {
-//                                            if (Value.printkic) {
-//                                                printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-//                                            }
-//                                        } else if (printerForm.equals("2")) {
-//                                            if (Value.printkic) {
-//                                                printSimpleForm.KIC_FORM_2(printerName, tableNo, new String[]{PCode});
-//                                            }
-//                                        }
-//                                    }
-//
-//                                    rs1.close();
-//                                    stmt2.close();
-//                                } else if (printerForm.equals("6")) {
-//                                    String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
-//                                            + "where r_table='" + tableNo + "' "
-//                                            + "and R_PrintOK='Y' "
-//                                            + "and R_KicPrint<>'P' "
-//                                            + "and R_Kic<>'' "
-//                                            + "and R_Void<>'V' and R_KIC='" + rKic + "' "
-//                                            + "group by r_plucode order by r_opt1";
-//                                    Statement stmt2 = mysql.getConnection().createStatement();
-//                                    ResultSet rs2 = stmt2.executeQuery(sql2);
-//                                    while (rs2.next()) {
-//                                        if (Value.printkic) {
-//
-//                                            String R_Index = rs2.getString("R_Index");
-//                                            String R_Plucode = rs2.getString("R_Plucode");
-//                                            double qty = rs2.getDouble("R_Quan");
-//                                            double priceTotal = rs2.getDouble("Total");
-//                                            printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_Plucode, qty, priceTotal);
-//                                        }
-//                                    }
-//
-//                                    rs2.close();
-//                                    stmt2.close();
-//                                } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-//                                    if (printerForm.equals("3")) {
-//                                        if (Value.printkic) {
-////                                            printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
-//
-//                                        }
-//                                    } else if (printerForm.equals("4")) {
-//                                        if (Value.printkic) {
-//                                            printSimpleForm.KIC_FORM_4(printerName, tableNo);
-//                                        }
-//                                    } else if (printerForm.equals("5")) {
-//                                        if (Value.printkic) {
-//                                            printSimpleForm.KIC_FORM_5(printerName, tableNo);
-//                                        }
-//                                    }
-//                                } else {
-//                                    MSG.WAR(this, "ไม่พบฟอร์มปริ้นเตอร์ในระบบที่สามารใช้งานได้ !!!");
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                rsKic.close();
-//                stmt1.close();
-//
-//                //update r_kicprint
-//                String sql = "update balance "
-//                        + "set r_kicprint='P',"
-//                        + "r_pause='Y' "
-//                        + "where r_table='" + tableNo + "' "
-//                        + "and r_kicprint<>'P' "
-//                        + "and r_printOk='Y' "
-//                        + "and r_kic<>'';";
-//                Statement stmt = mysql.getConnection().createStatement();
-//                stmt.executeUpdate(sql);
-//
-//            } catch (SQLException e) {
-//                MSG.ERR(this, e.getMessage());
-//                AppLogUtil.log(CheckBill.class, "error", e);
-//            } finally {
-//                mysql.close();
-//            }
-//        } catch (HeadlessException e) {
-//            MSG.ERR(this, e.getMessage());
-//        }
-//    }
     private boolean isTakeOrder() {
         POSHWSetup posHwSetup = PosControl.getData(Value.MACNO);
         return "Y".equals(posHwSetup.getTakeOrderChk());
     }
 
     public void UpdateMember(String choice) {
-        MySQLConnect mysql = new MySQLConnect();
-        try {
-            mysql.open(this.getClass());
-            String sql = "";
-            if (choice.equals("Ins")) {
-            } else {
-                sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
-            }
-            switch (choice) {
-                case "Ins":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
-                    break;
-                case "Del":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
-                    break;
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckBill.class, "error", e);
-        } finally {
-            mysql.close();
+        String sql = "";
+        if (choice.equals("Ins")) {
+        } else {
+            sql = "Update tablefile "
+                    + "set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount "
+                    + "where tcode='" + tableNo + "'";
+        }
+        switch (choice) {
+            case "Ins":
+                checkBillControl.execUpdate(sql);
+                break;
+            case "Del":
+                checkBillControl.execUpdate(sql);
+                break;
         }
     }
 
     private void kichenPrint() {
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-        try {
-            String printerName;
-            String[] kicMaster = BranchControl.getKicData20();
+        String printerName;
+        String[] kicMaster = BranchControl.getKicData20();
 
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+        BranchBean branchBean = BranchControl.getData();
+        String config = branchBean.getSaveOrder();
+        if (!config.equals("N")) {
+            PublicVar.Branch_Saveorder = config;
+        }
 
-            BranchBean branchBean = BranchControl.getData();
-            String config = branchBean.getSaveOrder();
-            if (!config.equals("N")) {
-                PublicVar.Branch_Saveorder = config;
+        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        MainSaleController mainSaleControl = new MainSaleController();
+        if (mainSaleControl.checkCountPrinterTo(tableNo)) {
+            if (!PublicVar.Branch_Saveorder.equals("N")) {
+                printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
             }
+        }
 
-            try {
-                // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-                String sqlShowKic = "select r_kic,r_etd from balance "
-                        + "where r_table='" + tableNo + "' "
-                        + "and R_PrintOK='Y' "
-                        + "and R_KicPrint<>'P' "
-                        + "and R_Kic<>'' "
-                        + "group by r_kic,r_etd "
-                        + "order by r_kic,r_etd";
-                try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlShowKic)) {
-                    if (rs.next()) {
-                        if (!PublicVar.Branch_Saveorder.equals("N")) {
-                            printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-                        }
-                    }
-                }
-
-                //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
-                Statement stmt = mysql.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sqlShowKic);
-                while (rs.next()) {
-                    String rKic = rs.getString("r_kic");
-                    if (!rKic.equals("")) {
-                        try {
-                            int iKic = Integer.parseInt(rKic);
-                            if (iKic - 1 < 0) {
-                                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
-                            } else {
-                                if (kicMaster[iKic - 1].equals("N")) {
-                                    //NOT PRINT or Print already
-                                } else {
-                                    printerName = "kic" + rKic;
-                                    String printerForm = BranchControl.getForm(rKic);
-                                    if (printerForm.equals("1")) {
-                                        String sql1 = "select * from balance "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_kic='" + rKic + "' "
-                                                + "group by r_plucode";
-                                        printerName = "kic" + rKic;
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs1 = stmt2.executeQuery(sql1);
-                                        while (rs1.next()) {
-                                            String PCode = rs1.getString("R_PluCode");
-                                            if (printerForm.equals("1")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-                                                }
-                                            }
-                                        }
-                                        rs1.close();
-                                        stmt2.close();
-
-                                    } else if (printerForm.equals("6")) {
-                                        String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_KIC='" + rKic + "' "
-                                                + "group by r_plucode,r_void order by r_opt1";
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs2 = stmt2.executeQuery(sql2);
-                                        while (rs2.next()) {
-                                            if (Value.printkic) {
-                                                String R_Index = rs2.getString("R_Index");
-                                                String R_PLUCODE = rs2.getString("R_Plucode");
-                                                double qty = rs2.getDouble("R_Quan");
-                                                double priceTotal = rs2.getDouble("Total");
-                                                printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_PLUCODE, qty, priceTotal);
-                                            }
-                                        }
-                                        rs2.close();
-                                        stmt2.close();
-                                    } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-                                        if (printerForm.equals("3")) {
-                                            if (Value.printkic) {
-                                                String retd = rs.getString("r_etd");
-                                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "");
-                                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-                                                if (CheckBillBeforeCash.equals("Y")) {
-                                                    printBillVoidCheck();
-                                                }
-                                            }
-                                        } else if (printerForm.equals("4")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_4(printerName, tableNo);
-                                                printBillVoidCheck();
-                                            }
-                                        } else if (printerForm.equals("5")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_5(printerName, tableNo);
-                                                printBillVoidCheck();
-                                            }
-                                        }
-
-                                    } else if (printerForm.equals("7") || printerForm.equals("2")) {
-                                        if (Value.printkic) {
-                                            printSimpleForm.KIC_FORM_7(printerName, tableNo);
-                                            printBillVoidCheck();
-                                        }
-                                    } else {
-                                        printBillVoidCheck();
-                                        MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
+        List<BalanceBean> listToKic = mainSaleControl.getListAllPrintToKic(tableNo);
+        for (BalanceBean balanceBean : listToKic) {
+            String rKic = balanceBean.getR_Kic();
+            if (!rKic.equals("")) {
+                int iKic = Integer.parseInt(rKic);
+                if (iKic - 1 < 0) {
+                    //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                } else {
+                    if (kicMaster[iKic - 1].equals("N")) {
+                        //NOT PRINT or Print already
+                    } else {
+                        printerName = "kic" + rKic;
+                        String printerForm = BranchControl.getForm(rKic);
+                        if (printerForm.equals("1")) {
+                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic);
+                            printerName = "kic" + rKic;
+                            for (BalanceBean balance : listBalanceForm) {
+                                String PCode = balance.getR_PluCode();
+                                if (printerForm.equals("1")) {
+                                    if (Value.printkic) {
+                                        printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
                                     }
                                 }
                             }
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(MainSale.class, "error", e);
+                        } else if (printerForm.equals("6")) {
+                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(tableNo, rKic);
+                            for (BalanceBean balance : listBalanceForm) {
+                                if (Value.printkic) {
+                                    String R_Index = balance.getR_Index();
+                                    String R_PLUCODE = balance.getR_PluCode();
+                                    double qty = balance.getR_Quan();
+                                    double priceTotal = balance.getR_Total();
+                                    printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_PLUCODE, qty, priceTotal);
+                                }
+                            }
+                        } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
+                            if (printerForm.equals("3")) {
+                                if (Value.printkic) {
+                                    String retd = balanceBean.getR_ETD();
+                                    printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "");
+                                    String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                                    if (CheckBillBeforeCash.equals("Y")) {
+                                        printBillVoidCheck();
+                                    }
+                                }
+                            } else if (printerForm.equals("4")) {
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_4(printerName, tableNo);
+                                    printBillVoidCheck();
+                                }
+                            } else if (printerForm.equals("5")) {
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_5(printerName, tableNo);
+                                    printBillVoidCheck();
+                                }
+                            }
+
+                        } else if (printerForm.equals("7") || printerForm.equals("2")) {
+                            if (Value.printkic) {
+                                printSimpleForm.KIC_FORM_7(printerName, tableNo);
+                                printBillVoidCheck();
+                            }
+                        } else {
+                            printBillVoidCheck();
+                            MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
                         }
                     }
                 }
-
-                CheckKicPrint();
-
-                //update r_kicprint
-                try {
-                    String sql = "update balance "
-                            + "set r_kicprint='P',"
-                            + "r_pause='Y' "
-                            + "where r_table='" + tableNo + "' "
-                            + "and r_kicprint<>'P' "
-                            + "and r_printOk='Y' "
-                            + "and r_kic<>'';";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    stmt2.executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(MainSale.class, "error", e);
-                }
-                rs.close();
-                stmt.close();
-
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e);
-            } finally {
-                mysql.close();
             }
-
-        } catch (HeadlessException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e);
         }
+
+        CheckKicPrint();
+
+        //update r_kicprint
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + tableNo + "' "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'';";
+        checkBillControl.execUpdate(sql);
     }
 
     private void CheckKicPrint() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select r_kicprint "
-                    + "from balance where r_table='" + tableNo + "' "
-                    + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                if (rs.next()) {
-                    String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-                    if (CheckBillBeforeCash.equals("Y")) {
-                        printBillVoidCheck();
-                    }
-                }
+        if (checkBillControl.readyToCheckKic(tableNo)) {
+            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+            if (CheckBillBeforeCash.equals("Y")) {
+                printBillVoidCheck();
             }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MainSale.class, "error", e);
-        } finally {
-            mysql.close();
         }
     }
 
     private void printBillVoidCheck() {
         if (Value.useprint) {
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
-            try {
-                String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
-                try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                    if (rs.next()) {
-                        PPrint print = new PPrint();
-                        print.PrintVoidBill(tableNo);
-                    }
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MainSale.class, "error", e);
-            } finally {
-                mysql.close();
+            if (checkBillControl.readyToPrintVoid(tableNo)) {
+                PPrint print = new PPrint();
+                print.PrintVoidBill(tableNo);
             }
         }
     }

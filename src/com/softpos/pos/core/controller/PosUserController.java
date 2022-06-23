@@ -25,6 +25,7 @@ public class PosUserController {
                 if (rs.next()) {
                     bean = new PosUserBean();
                     bean.setSale2(rs.getString("Sale2"));
+                    bean.setSale3(rs.getString("Sale3"));
                     bean.setUserName(rs.getString("Username"));
                 }
             }

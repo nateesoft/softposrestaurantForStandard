@@ -391,9 +391,6 @@ public class BillControl {
     }
 
     public String saveBillNo(final String table, BillNoBean billBean) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(BillControl.class);
-
         //get data from balance, tablefile
         final String BillNo = BillControl.getBillIDCurrent();
 
@@ -584,6 +581,8 @@ public class BillControl {
             tableControl.setDefaultTableFile(table);
 
             //move tempgift
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open(BillControl.class);
             try {
                 String sql = "select * from tempgift";
                 Statement stmt = mysql.getConnection().createStatement();
@@ -608,6 +607,8 @@ public class BillControl {
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(BillControl.class, "error", e);
+            } finally {
+                mysql.close();
             }
 
             //save t_cupon
@@ -955,14 +956,16 @@ public class BillControl {
             double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
             double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
 
+            MySQLConnect mysql2 = new MySQLConnect();
             try {
+                mysql2.open(BillControl.class);
                 String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time limit 1;";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysql2.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sqlUpdate);
                 if (rs.next()) {
                     String r_index = rs.getString("R_Index");
                     String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysql2.getConnection().createStatement()) {
                         stmt1.executeUpdate(sqlUpdateT_sale);
                     }
                 }
@@ -971,46 +974,45 @@ public class BillControl {
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(BillControl.class, "error", e);
+            } finally {
+                mysql2.close();
             }
 
             BillControl.saveBillNo(billNo, memberBean);
             if (Value.useprint) {
-                new Thread(() -> {
+//                new Thread(() -> {
                     PPrint print = new PPrint();
                     print.PrintSubTotalBill(BillNo, table);
                     if (PublicVar.PrintCopyAuto.equals("true")) {
                         print.PrintSubTotalBill(BillNo, table);
                     }
-                }).start();
+//                }).start();
             }
 
             //clear transaction for table (balance, tablefile)
             balanceControl.setDefaultBalance(table);
             tableControl.setDefaultTableFile(table);
 
+            MySQLConnect mysql3 = new MySQLConnect();
             try {
+                mysql3.open(BillControl.class);
                 String sql = "select * from tempgift";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysql3.getConnection().createStatement();
                 try (ResultSet rs = stmt.executeQuery(sql)) {
                     while (rs.next()) {
-                        try {
-                            String sqlAdd = "insert into t_gift "
-                                    + "(ondate,macno,refno,"
-                                    + "cashier,giftbarcode,gifttype,"
-                                    + "giftprice,giftmodel,giftlot,"
-                                    + "giftexp,giftcode,giftno,"
-                                    + "giftamt,fat) "
-                                    + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
-                                    + "'','','',"
-                                    + "'','',"
-                                    + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
-                                stmt1.executeUpdate(sqlAdd);
-                            }
-                        } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
-                            AppLogUtil.log(BillControl.class, "error", e);
+                        String sqlAdd = "insert into t_gift "
+                                + "(ondate,macno,refno,"
+                                + "cashier,giftbarcode,gifttype,"
+                                + "giftprice,giftmodel,giftlot,"
+                                + "giftexp,giftcode,giftno,"
+                                + "giftamt,fat) "
+                                + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
+                                + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                + "'','','',"
+                                + "'','',"
+                                + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
+                        try (Statement stmt1 = mysql3.getConnection().createStatement()) {
+                            stmt1.executeUpdate(sqlAdd);
                         }
                     }
                 }
@@ -1018,7 +1020,7 @@ public class BillControl {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(BillControl.class, "error", e);
             } finally {
-                mysql.close();
+                mysql3.close();
             }
 
             //save t_cupon

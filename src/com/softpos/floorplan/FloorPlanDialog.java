@@ -1,5 +1,6 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.login.FileSettingDialog;
 import com.softpos.main.program.CheckProductNotEnough;
 import com.softpos.main.program.CheckStockNow;

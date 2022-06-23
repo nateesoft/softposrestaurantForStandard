@@ -60,6 +60,14 @@ public class DateFormat {
             return null;
         }
     }
+    
+    public static String getMySQL_yyyyMMdd(Date d) {
+        if (d != null) {
+            return mysql_date_yyyyMMdd.format(d);
+        } else {
+            return null;
+        }
+    }
 
     public static String getMySQL_Date(Date d) {
         if (d != null) {

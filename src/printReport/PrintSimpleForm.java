@@ -1814,6 +1814,8 @@ public class PrintSimpleForm {
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            } finally {
+                mysql.close();
             }
 
             //loop Void to Print

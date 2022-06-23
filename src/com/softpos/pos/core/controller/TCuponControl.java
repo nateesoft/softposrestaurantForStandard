@@ -10,7 +10,7 @@ import java.util.List;
 import util.AppLogUtil;
 import util.MSG;
 
-public class TCuponControl {
+public class TCuponControl extends DatabaseConnection {
 
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
@@ -87,7 +87,7 @@ public class TCuponControl {
     }
 
     public TCuponBean getTCupon(String R_Index) {
-        TCuponBean bean = new TCuponBean();
+        TCuponBean bean = null;
         /**
          * * OPEN CONNECTION **
          */
@@ -98,6 +98,7 @@ public class TCuponControl {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
+                bean = new TCuponBean();
                 bean.setR_Index(rs.getString("R_Index"));
                 bean.setR_Refno(rs.getString("R_Refno"));
                 bean.setTerminal(rs.getString("Terminal"));
@@ -124,16 +125,13 @@ public class TCuponControl {
 
     public boolean saveTCupon(TCuponBean bean) {
         boolean isResult = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         if (bean.getTerminal() == null || bean.getCuCode() == null) {
             bean.setTerminal("");
             bean.setCuCode("");
         } else {
-            try {
+            if (getTCupon(bean.getR_Index()) != null) {
+                isResult = updateTCupon(bean);
+            } else {
                 String sql = "insert into t_cupon "
                         + "(R_Index,R_Refno,Terminal,Cashier,Time,CuCode,CuQuan,"
                         + "CuAmt,Refund,CuTextCode,CuTextComment)  "
@@ -141,30 +139,8 @@ public class TCuponControl {
                         + "'" + bean.getTerminal() + "','" + bean.getCashier() + "','" + bean.getTime() + "',"
                         + "'" + bean.getCuCode() + "','" + bean.getCuQuan() + "','" + bean.getCuAmt() + "',"
                         + "'" + bean.getRefund() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
-
-                String sqlChk = "select R_Index from t_cupon where R_Index='" + bean.getR_Index() + "' limit 1";
-
-                Statement stmt1 = mysql.getConnection().createStatement();
-                ResultSet rs = stmt1.executeQuery(sqlChk);
-
-                if (rs.next()) {
-                    isResult = updateTCupon(bean);
-                } else {
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                    isResult = true;
-                }
-
-                rs.close();
-                stmt1.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                AppLogUtil.log(TCuponControl.class, "error", e);
-
-                isResult = false;
-            } finally {
-                mysql.close();
+                this.execUpdate(sql);
+                isResult = true;
             }
         }
 
@@ -172,36 +148,19 @@ public class TCuponControl {
     }
 
     public boolean updateTCupon(TCuponBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "update t_cupon "
-                    + "set R_Index='" + bean.getR_Index() + "', "
-                    + "R_Refno='" + bean.getR_Refno() + "', "
-                    + "Terminal='" + bean.getTerminal() + "', "
-                    + "Cashier='" + bean.getCashier() + "', "
-                    + "Time='" + bean.getTime() + "', "
-                    + "CuCode='" + bean.getCuCode() + "', "
-                    + "CuQuan='" + bean.getCuQuan() + "', "
-                    + "CuAmt='" + bean.getCuAmt() + "', "
-                    + "Refund='" + bean.getRefund() + "', "
-                    + "CuTextCode='" + bean.getCuTextCode() + "', "
-                    + "CuTextComment='" + bean.getCuTextComment() + "' "
-                    + "where R_Index='" + bean.getR_Index() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-            return true;
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            AppLogUtil.log(TCuponControl.class, "error", e);
-        } finally {
-            mysql.close();
-        }
-
-        return false;
+        String sql = "update t_cupon "
+                + "set R_Index='" + bean.getR_Index() + "', "
+                + "R_Refno='" + bean.getR_Refno() + "', "
+                + "Terminal='" + bean.getTerminal() + "', "
+                + "Cashier='" + bean.getCashier() + "', "
+                + "Time='" + bean.getTime() + "', "
+                + "CuCode='" + bean.getCuCode() + "', "
+                + "CuQuan='" + bean.getCuQuan() + "', "
+                + "CuAmt='" + bean.getCuAmt() + "', "
+                + "Refund='" + bean.getRefund() + "', "
+                + "CuTextCode='" + bean.getCuTextCode() + "', "
+                + "CuTextComment='" + bean.getCuTextComment() + "' "
+                + "where R_Index='" + bean.getR_Index() + "'";
+        return this.execUpdate(sql);
     }
 }
