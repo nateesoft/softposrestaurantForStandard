@@ -2213,7 +2213,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 floorPlanControl.execUpdate(sql);
                                 Value.EMP_CODE = login.getLoginPWD();
                                 showPOS(tableNo);
-                                loadZone(zoneSelected);
                             } else {
                                 if (!login.getLoginPWD().equals("")) {
                                     JOptionPane.showMessageDialog(null, "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
@@ -2223,11 +2222,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         }
                     } else {
                         showPOS(tableNo);
-                        loadZone(zoneSelected);
                     }
                 } else {
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                 }
+                
+                loadZone(zoneSelected);
             }
         }
     }

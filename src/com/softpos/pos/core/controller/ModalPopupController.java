@@ -24,7 +24,7 @@ public class ModalPopupController extends DatabaseConnection {
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select OptionName from optionset where pcode='" + pCode + "'");
+            ResultSet rs = stmt.executeQuery("select * from optionset where pcode='" + pCode + "'");
             while (rs.next()) {
                 OptionSetBean bean = new OptionSetBean();
                 bean.setPcode(rs.getString("pcode"));

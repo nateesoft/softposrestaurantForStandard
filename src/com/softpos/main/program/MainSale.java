@@ -3898,17 +3898,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private boolean showPopupOption(String MenuCode) {
-        boolean showModalPopup = false;
-        String pcode = "", pname = "", main = "";
+        String pcode, pname, main;
         SoftMenuSetup menuSetup = mainSaleControl.getMenuShowText(MenuCode);
         if (menuSetup != null) {
             pcode = menuSetup.getPCode();
             pname = ThaiUtil.Unicode2ASCII(menuSetup.getMenuShowText());
             main = "main";
-            showModalPopup = true;
-        }
 
-        if (showModalPopup) {
             ModalPopup popup = new ModalPopup(null, true, pcode, pname, tableNo, main, MenuCode);
             popup.setVisible(true);
         } else {
@@ -3919,7 +3915,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //check before order foods
                 boolean checkBefore = mgrButtonBean.getCheck_before().equals("Y");
                 if (checkBefore) {
-                    boolean passBefore = mainSaleControl.getBalanceByRTable(txtTable.getText()) != null;
+                    boolean passBefore = mainSaleControl.checkPassBeforeOrder(txtTable.getText());
                     if (!passBefore) {
                         MSG.WAR("ไม่มีรายการอาหาร กรุณาเลือกเมนูอาหารหลักก่อน");
                         return false;
@@ -3933,6 +3929,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 List<MgrButtonSetupBean> listMgr = mainSaleControl.getAllMgrButtonSetup(PCode);
                 for (MgrButtonSetupBean mgrBean : listMgr) {
                     isAutoAdd = true;
+
                     String autoPCode = mgrBean.getAutu_pcode();
                     String autoPDesc = mgrBean.getAuto_pdesc();
                     String tempset = "INSERT INTO tempset "

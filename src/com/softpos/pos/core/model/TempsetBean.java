@@ -12,7 +12,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TempsetBean {
-    
-    private String POption;
+
+    private String PTableNo;
+    private String PIndex;
     private String PCode;
+    private String PDesc;
+    private String PPostStock;
+    private String PProTry;
+    private String POption;
+    private String PTime;
 }

@@ -507,7 +507,7 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     bean = new SoftMenuSetup();
                     bean.setPCode(rs.getString("PCode"));
-                    bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("")));
+                    bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
                 }
             }
         } catch (SQLException e) {
@@ -547,7 +547,7 @@ public class MainSaleController extends DatabaseConnection {
 
         return listMgrButton;
     }
-    
+
     public MgrButtonSetupBean getMgrButtonAndMenuSetup(String menuCode) {
         MgrButtonSetupBean bean = null;
 
@@ -555,8 +555,8 @@ public class MainSaleController extends DatabaseConnection {
         mysql.open(MainSaleController.class);
         try {
             String sql = "select o.PCode,o.PDesc, o.check_before "
-                        + "from mgrbuttonsetup o,soft_menusetup n "
-                        + "where o.pcode = n.pcode "
+                    + "from mgrbuttonsetup o,soft_menusetup n "
+                    + "where o.pcode = n.pcode "
                     + "and n.menucode='" + menuCode + "' limit 1";;
             Statement stmt = mysql.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -575,5 +575,27 @@ public class MainSaleController extends DatabaseConnection {
         }
 
         return bean;
+    }
+
+    public boolean checkPassBeforeOrder(String tableNo) {
+        boolean isFound = false;
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(MainSaleController.class);
+        try {
+            String sql = "SELECT 1 FROM balance where r_table = '" + tableNo + "' limit 1";
+            Statement stmt = mysql.getConnection().createStatement();
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    isFound = true;
+                }
+            }
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(MainSaleController.class, "error", e);
+        } finally {
+            mysql.close();
+        }
+
+        return isFound;
     }
 }
