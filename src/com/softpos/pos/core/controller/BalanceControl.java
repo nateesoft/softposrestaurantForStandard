@@ -48,7 +48,7 @@ public class BalanceControl extends DatabaseConnection {
         return tempIndex;
     }
 
-    public boolean saveBalance(BalanceBean bb, ProductBean product) {
+    public boolean saveBalance(BalanceBean bb) {
         BalanceBean bean = new BalanceBean();
 
         //### Save to balance ###
@@ -120,11 +120,11 @@ public class BalanceControl extends DatabaseConnection {
         bean.setR_VoidTime("");
         bean.setR_MoveFlag("0");
 
+        ProductControl productControl = new ProductControl();
+        ProductBean product = productControl.getData(bb.getR_PluCode());
+
         bean.setR_Index(bb.getR_Index());//หมายเลขโต๊ะ/ลำดับที่รายการอาหาร
         bean.setR_Table(bb.getR_Table());//หมายเลขโต๊ะ
-        //bean.setR_Date(Calendar.getInstance().getTime());
-        //bean.setR_Time("16:04:14");
-//            bean.setMacno(bb.getMacno());//หมายเลขเครื่อง
         bean.setCashier(bb.getCashier());//รหัส login
         bean.setR_Emp(bb.getR_Emp());//รหัสบริกร
         bean.setR_PluCode(product.getPCode());//รหัสสินค้า
@@ -145,8 +145,6 @@ public class BalanceControl extends DatabaseConnection {
         bean.setR_Total(bb.getR_Quan() * bb.getR_Price());//ราคารวม            
         bean.setR_Kic(product.getPKic());
 
-        //Add new Field
-//            bean.setStkCode(product.getMSStk());
         bean.setStkCode(bb.getStkCode());
         bean.setPosStk(product.getPOSStk());
 
@@ -1763,7 +1761,7 @@ public class BalanceControl extends DatabaseConnection {
             bean.setR_LinkIndex(table2 + "/" + getIndex);
         }
 
-        return saveBalance(bean, product);
+        return saveBalance(bean);
     }
 
     public static void updateProSerTable(String table, MemberBean memberBean) {

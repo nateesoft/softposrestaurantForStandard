@@ -2539,10 +2539,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         balance.setR_Pause("P");
 
-        balanceControl.saveBalance(balance, productBean);
+        balanceControl.saveBalance(balance);
 
         //update temptset
-        updateTempTset(balance, productBean);
+        updateTempTset(balance);
 
         //Process Stock Out
         String StkRemark = "SAL";
@@ -3453,7 +3453,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         return isTakeOrder;
     }
 
-    private void updateTempTset(BalanceBean bBean, ProductBean productBean) {
+    private void updateTempTset(BalanceBean bBean) {
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";
@@ -3472,6 +3472,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String[] data = Option.splitPrice(PCode);
                     double R_Quan = Double.parseDouble(data[0]);
                     PCode = data[1];
+                    ProductControl pCon = new ProductControl();
+                    ProductBean productBean = pCon.getData(PCode);
 
                     BalanceBean balance = new BalanceBean();
                     balance.setStkCode(StkCode);
@@ -3541,7 +3543,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     balance.setR_KicPrint("");
                     balance.setR_Pause("P");
 
-                    balanceControl.saveBalance(balance, productBean);
+                    balanceControl.saveBalance(balance);
                     updateBalanceOptionFromTemp(bBean.getR_Index(), balance.getR_Table(), PCode);
 
                     //Process stock out

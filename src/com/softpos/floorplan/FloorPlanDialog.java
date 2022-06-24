@@ -1504,7 +1504,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
 
                 balance.setR_Pause("P");
-                balanceControl.saveBalance(balance, productBean);
+                balanceControl.saveBalance(balance);
 
                 //update temptset
                 updateTempTset(balance, r_etd, tableNo, productBean);
@@ -1919,9 +1919,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
 
             bBean.setR_Index(tableTemp + "/" + runningIndex);
-
-            ProductBean productBean = productControl.getProductCodeArray(bBean.getR_PluCode());
-            bControl.saveBalance(bBean, productBean);
+            bControl.saveBalance(bBean);
         }
 
         if (!checkExistTempRefund) {
@@ -2174,7 +2172,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             sql = "delete from tempset where ptableno='" + tableNo + "';";
             FloorPlanController floorPlanControl = new FloorPlanController();
             floorPlanControl.execUpdate(sql);
-            
+
             dispose();
 
             MainSale mainSale = new MainSale(null, true, tableNo);
@@ -2226,7 +2224,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 } else {
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                 }
-                
+
                 loadZone(zoneSelected);
             }
         }
@@ -2422,7 +2420,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     balance.setR_KicPrint("");
                     balance.setR_Pause("P");
 
-                    balanceControl.saveBalance(balance, productBean);
+                    balanceControl.saveBalance(balance);
                     updateBalanceOptionFromTemp(bBean.getR_Index(), balance.getR_Table(), PCode);
 
                     //Process stock out
