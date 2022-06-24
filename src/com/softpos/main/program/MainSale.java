@@ -17,12 +17,13 @@ import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
+//import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.pos.core.controller.MainSaleController;
+import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosUserController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.ThaiUtil;
@@ -65,7 +66,6 @@ import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
-import util.DateFormat;
 import util.JTableUtility;
 import util.MSG;
 import util.NumberUtil;
@@ -1575,24 +1575,24 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             if (PUtility.CheckSaleDateOK()) {
                 cancelArPaymentClick();
             }
-        } else {
-            GetUserAction getuser = new GetUserAction(null, true);
-            getuser.setVisible(true);
+            return;
+        }
+        GetUserAction getuser = new GetUserAction(null, true);
+        getuser.setVisible(true);
 
-            if (!PublicVar.ReturnString.equals("")) {
-                if (posUser.getUserName() != null) {
-                    if (posUser.getSale7().equals("Y")) {
-                        PublicVar.TUserRec = posUser;
-                        if (PUtility.CheckSaleDateOK()) {
-                            cancelArPaymentClick();
-                        }
-                    } else {
-                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+        if (!PublicVar.ReturnString.equals("")) {
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale7().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
+                    if (PUtility.CheckSaleDateOK()) {
+                        cancelArPaymentClick();
                     }
                 } else {
-                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
                 }
+                return;
             }
+            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
         }
     }//GEN-LAST:event_MCancelArPayment1ActionPerformed
 

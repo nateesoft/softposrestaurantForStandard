@@ -140,22 +140,4 @@ public class MySQLConnect {
         }
     }
 
-    public static void startMysql() {
-        try {
-            Runtime.getRuntime().exec("cmd /c start d:\"\"startService.bat");
-            System.out.println("MySQL server start successfully!");
-        } catch (IOException e) {
-
-        }
-    }
-
-    public static void stopMysql() {
-        try {
-            Runtime.getRuntime().exec("cmd /c start d:\"\"stopService.bat");
-            System.out.println("MySQL server stopped successfully!");
-        } catch (IOException e) {
-
-        }
-    }
-
 }

@@ -2,9 +2,11 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ModalPopupController;
 import com.softpos.pos.core.controller.PUtility;
+//import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.MgrButtonSetupBean;
 import com.softpos.pos.core.model.OptionSetBean;
+import com.softpos.pos.core.model.SoftMenuSetup;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -271,11 +273,12 @@ public class ModalPopup extends javax.swing.JDialog {
                 }
 
                 private void updateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
+                    String pstock = PUtility.GetStkCode();
+                    
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open(this.getClass());
                     try {
                         String sqll = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "'";
-                        String pstock = PUtility.GetStkCode();
                         try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rss = stmt1.executeQuery(sqll)) {
                             if (rss.next()) {
                                 String pcode = rss.getString("pcode");
@@ -357,8 +360,6 @@ public class ModalPopup extends javax.swing.JDialog {
         }
 
         List<MgrButtonSetupBean> listMgrSetup = modalControl.getListMgrButtonSetupByPCode(PCode, "sd");
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         int count = 0;
         for (MgrButtonSetupBean mgrBean : listMgrSetup) {
             String PNameSide = mgrBean.getSd_pdesc();
@@ -456,8 +457,6 @@ public class ModalPopup extends javax.swing.JDialog {
             dispose();
         });
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
         List<MgrButtonSetupBean> listMgrSetup = modalControl.getListMgrButtonSetupByPCode(PCode, "ex");
 
         int count = 0;
@@ -582,16 +581,15 @@ public class ModalPopup extends javax.swing.JDialog {
                 public void actionPerformed(ActionEvent e) {
                     JButton btn1 = (JButton) e.getSource();
                     String Extra = btn1.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
-                    UpdateTempmenusetExtraOption(PCodeSet, Extra);
+                    updateTempmenusetExtraOption(PCodeSet, Extra);
                     dispose();
                 }
 
-                private void UpdateTempmenusetExtraOption(String PCode, String POption) {
+                private void updateTempmenusetExtraOption(String PCode, String POption) {
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open(this.getClass());
                     try {
-                        String sql = "update tempset set "
-                                + "POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
+                        String sql = "update tempset set POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
                                 + "where PCode='" + PCode + "'";
                         try (Statement stmt = mysql.getConnection().createStatement()) {
                             stmt.executeUpdate(sql);
@@ -708,79 +706,64 @@ public class ModalPopup extends javax.swing.JDialog {
         button[23] = jButton24;
         button[24] = jButton25;
 
-        MySQLConnect mysql2 = new MySQLConnect();
-        mysql2.open(this.getClass());
-        try {
-            String menuSub = "";
-            if (MenuCode.length() > 5) {
-                menuSub = MenuCode.substring(0, 5);
+        String menuSub = "";
+        if (MenuCode.length() > 5) {
+            menuSub = MenuCode.substring(0, 5);
+        }
+        List<SoftMenuSetup> listMenu = modalControl.loadSoftMenuSetupByMenuCode(menuSub);
+        int count = 0;
+        for (SoftMenuSetup softMenuBean : listMenu) {
+            if (count == button.length) {
+                break;
             }
-            String sql = "select PCode, MenuShowText from soft_menusetup "
-                    + "where menucode like '" + menuSub + "%' and menutype='1'";
-            Statement stmt = mysql2.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int count = 0;
-            while (rs.next()) {
-                if(count == button.length) {
-                    break;
+            button[count].setName(softMenuBean.getPCode());
+            button[count].setText("<html><center>" + softMenuBean.getMenuShowText() + "</center></html>");
+            button[count].addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btn = (JButton) e.getSource();
+                    String ProMain = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
+                    String PCode = btn.getName();
+
+                    updateTempmenusetProduct("", PCode, ProMain, "qty");
+                    loadProductSideDish();
                 }
-                button[count].setName(rs.getString("PCode"));
-                button[count].setText("<html><center>" + ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")) + "</center></html>");
-                button[count].addActionListener(new ActionListener() {
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton btn = (JButton) e.getSource();
-                        String ProMain = btn.getText().replace("<html>", "").replace("<center>", "").replace("</center>", "").replace("</html>", "");
-                        String PCode = btn.getName();
-
-                        UpdateTempmenusetProduct("", PCode, PName, ProMain, "qty");
-                        loadProductSideDish();
-                    }
-
-                    private void UpdateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
-                        try {
-                            String sql = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
-                            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                                if (rs.next()) {
-                                    String pcode = rs.getString("pcode");
-                                    String pstock = PUtility.GetStkCode();
-                                    String tempset = "INSERT INTO tempset "
-                                            + "(PTableNo, PIndex, PCode, PDesc, "
-                                            + "PPostStock,PProTry, POption, PTime) "
-                                            + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
-                                            + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '" + pstock + "','" + Main + "', "
-                                            + "'', CURTIME())";
-                                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
-                                        stmt1.executeUpdate(tempset);
-                                    }
+                private void updateTempmenusetProduct(String Index, String PCode, String ProMain, String Main) {
+                    String pstock = PUtility.GetStkCode();
+                    
+                    MySQLConnect mysql = new MySQLConnect();
+                    mysql.open(this.getClass());
+                    try {
+                        String sql = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
+                        try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                            if (rs.next()) {
+                                String pcode = rs.getString("pcode");
+                                String tempset = "INSERT INTO tempset "
+                                        + "(PTableNo, PIndex, PCode, PDesc, "
+                                        + "PPostStock,PProTry, POption, PTime) "
+                                        + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
+                                        + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '" + pstock + "','" + Main + "', "
+                                        + "'', CURTIME())";
+                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                    stmt1.executeUpdate(tempset);
                                 }
-                                
                             }
-                        } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
-                            AppLogUtil.log(ModalPopup.class, "error", e);
-                        } finally {
-                            mysql.close();
                         }
+                    } catch (SQLException e) {
+                        MSG.ERR(null, e.getMessage());
+                        AppLogUtil.log(ModalPopup.class, "error", e);
+                    } finally {
+                        mysql.close();
                     }
-                });
-                count++;
-            }
+                }
+            });
+            count++;
+        }
 
-            if (count == 0) {
-                loadProductSideDish();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(ModalPopup.class, "error", e);
-        } finally {
-            mysql2.close();
+        if (count == 0) {
+            loadProductSideDish();
         }
 
         return show;

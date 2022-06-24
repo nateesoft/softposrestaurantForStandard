@@ -2,6 +2,7 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.MgrButtonSetupBean;
 import com.softpos.pos.core.model.OptionSetBean;
+import com.softpos.pos.core.model.SoftMenuSetup;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,6 +65,33 @@ public class ModalPopupController extends DatabaseConnection {
                 bean.setSd_pdesc(ThaiUtil.ASCII2Unicode(rs.getString("sd_pdesc")));
                 bean.setEx_pcode(rs.getString("ex_pcode"));
                 bean.setEx_pdesc(ThaiUtil.ASCII2Unicode(rs.getString("ex_pdesc")));
+
+                listOption.add(bean);
+            }
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ModalPopupController.class, "error", e);
+        } finally {
+            mysql.close();
+        }
+
+        return listOption;
+    }
+    
+    public List<SoftMenuSetup> loadSoftMenuSetupByMenuCode(String menuSub) {
+        List<SoftMenuSetup> listOption = new ArrayList<>();
+
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(this.getClass());
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            String sql = "select PCode, MenuShowText from soft_menusetup "
+                    + "where menucode like '" + menuSub + "%' and menutype='1'";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                SoftMenuSetup bean = new SoftMenuSetup();
+                bean.setPCode(rs.getString("PCode"));
+                bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
 
                 listOption.add(bean);
             }

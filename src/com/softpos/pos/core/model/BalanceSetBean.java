@@ -8,13 +8,11 @@ import lombok.ToString;
  *
  * @author nathee
  */
-
 @Getter
 @Setter
 @ToString
-public class PSetBean {
+public class BalanceSetBean {
     
-    private String pcode;
-    private String psubcode;
-    private Double psubQTY;
+    private String r_psubcode;
+    private double r_setqty;
 }
