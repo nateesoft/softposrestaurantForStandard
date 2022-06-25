@@ -19,8 +19,7 @@ public class PosUserController {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PosUserController.class);
         try {
-            String sql = "select Username, Sale3 from posuser "
-                    + "where username='" + Value.USERCODE + "' limit 1";
+            String sql = "select * from posuser where username='" + Value.USERCODE + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new PosUserBean();
