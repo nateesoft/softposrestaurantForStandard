@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -11,14 +12,14 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class GetQty extends javax.swing.JDialog {
 
     public int ReturnQty;
     private String PCode;
-    public static String []OPTION_TEXT=new String[]{"","","","","","","","",""};
+    public static String[] OPTION_TEXT = new String[]{"", "", "", "", "", "", "", "", ""};
     private boolean isFirst = true;
 
     /**
@@ -80,8 +81,7 @@ public class GetQty extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ป้อนจำนวนสินค้า");
-        setAlwaysOnTop(true);
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -92,7 +92,7 @@ public class GetQty extends javax.swing.JDialog {
         StrAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#####0"))));
         StrAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         StrAmount.setText("1");
-        StrAmount.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        StrAmount.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         StrAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 StrAmountKeyPressed(evt);
@@ -387,7 +387,7 @@ public class GetQty extends javax.swing.JDialog {
         });
         calc.add(c_bntsal);
 
-        tblOptionMsg.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        tblOptionMsg.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         tblOptionMsg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -524,9 +524,9 @@ public class GetQty extends javax.swing.JDialog {
 private void StrAmountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StrAmountKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         GetAndReturnQty();
-    }else if(evt.getKeyCode()==KeyEvent.VK_F1){
+    } else if (evt.getKeyCode() == KeyEvent.VK_F1) {
         tblOptionMsg.requestFocus();
-    }else {
+    } else {
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             ReturnQty = 0;
             clear();
@@ -573,9 +573,9 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
 
     private void tblOptionMsgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOptionMsgMouseClicked
         int rows = tblOptionMsg.getSelectedRow();
-        if(rows!=-1){
+        if (rows != -1) {
             String opt = tblOptionMsg.getValueAt(rows, 0).toString();
-            String optAll = txtShowOption.getText()+opt+",";
+            String optAll = txtShowOption.getText() + opt + ",";
             txtShowOption.setText(optAll);
             txtShowOption.requestFocus();
         }
@@ -584,37 +584,37 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private void btnKeyBoardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeyBoardActionPerformed
         KeyBoardDialog kb = new KeyBoardDialog(new JFrame(), true, 4);
         kb.setVisible(true);
-        
-        if(!KeyBoardDialog.TEXT_INPUT.equals("")){
-            String optAll = txtShowOption.getText()+KeyBoardDialog.TEXT_INPUT+",";
+
+        if (!KeyBoardDialog.TEXT_INPUT.equals("")) {
+            String optAll = txtShowOption.getText() + KeyBoardDialog.TEXT_INPUT + ",";
             txtShowOption.setText(optAll);
             txtShowOption.requestFocus();
         }
     }//GEN-LAST:event_btnKeyBoardActionPerformed
 
     private void txtShowOptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtShowOptionKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_F2){
+        if (evt.getKeyCode() == KeyEvent.VK_F2) {
             btnKeyBoardActionPerformed(null);
             txtShowOption.requestFocus();
-        }else if(evt.getKeyCode()==KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             tblOptionMsg.requestFocus();
-        }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnOKActionPerformed(null);
-        }else if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             StrAmount.requestFocus();
         }
     }//GEN-LAST:event_txtShowOptionKeyPressed
 
     private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblOptionMsgKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             int rows = tblOptionMsg.getSelectedRow();
-            if(rows!=-1){
+            if (rows != -1) {
                 String opt = tblOptionMsg.getValueAt(rows, 0).toString();
-                String optAll = txtShowOption.getText()+opt+",";
+                String optAll = txtShowOption.getText() + opt + ",";
                 txtShowOption.setText(optAll);
                 txtShowOption.requestFocus();
             }
-        }else if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             txtShowOption.requestFocus();
         }
     }//GEN-LAST:event_tblOptionMsgKeyPressed
@@ -624,7 +624,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_c_bnt1ActionPerformed
 
     private void c_bnt0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bnt0ActionPerformed
-       inputfrombnt("0");
+        inputfrombnt("0");
     }//GEN-LAST:event_c_bnt0ActionPerformed
 
     private void c_bnt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bnt2ActionPerformed
@@ -673,7 +673,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_c_bntescActionPerformed
 
     private void c_bntbsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntbsActionPerformed
-        if(StrAmount.hasFocus()){
+        if (StrAmount.hasFocus()) {
             String tempstr = "";
             String tempstr2 = "";
             tempstr = StrAmount.getText();
@@ -681,7 +681,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
                 tempstr2 = tempstr2 + tempstr.charAt(i);
             }
             StrAmount.setText(tempstr2);
-        }else if(txtShowOption.hasFocus()){
+        } else if (txtShowOption.hasFocus()) {
             String tempstr = "";
             String tempstr2 = "";
             tempstr = txtShowOption.getText();
@@ -693,19 +693,19 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     }//GEN-LAST:event_c_bntbsActionPerformed
 
     private void chkAutoQtyItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkAutoQtyItemStateChanged
-        if(chkAutoQty.isSelected()){
+        if (chkAutoQty.isSelected()) {
             // set fix autoqty = false
             Value.autoqty = false;
-        }else{
+        } else {
             // set fix autoqty = true;
             Value.autoqty = true;
         }
     }//GEN-LAST:event_chkAutoQtyItemStateChanged
 
     public void inputfrombnt(String str) {
-        String tempstr;        
+        String tempstr;
         tempstr = StrAmount.getText();
-        if(isFirst){
+        if (isFirst) {
             tempstr = "";
             isFirst = false;
         }
@@ -717,8 +717,8 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         try {
             int TempQty = Integer.parseInt(StrAmount.getText());
             ReturnQty = TempQty;
-            
-            String []data = txtShowOption.getText().split(",");
+
+            String[] data = txtShowOption.getText().split(",");
             System.arraycopy(data, 0, OPTION_TEXT, 0, data.length);
             this.dispose();
         } catch (NumberFormatException e) {
@@ -726,9 +726,9 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             StrAmount.requestFocus();
         }
     }
-    
-    public static void clear(){
-        OPTION_TEXT = new String[]{"","","","","","","","",""};
+
+    public static void clear() {
+        OPTION_TEXT = new String[]{"", "", "", "", "", "", "", "", ""};
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -773,41 +773,37 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
             model1 = (DefaultTableModel) tblOptionMsg.getModel();
-            tblOptionMsg.setFont(new Font("Norasi", Font.PLAIN, 14));
+            tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
             tblOptionMsg.setRowHeight(30);
             JTableHeader tHeader = tblOptionMsg.getTableHeader();
-            tHeader.setFont(new Font("Norasi", Font.BOLD, 14));
+            tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
+            mysql.open(this.getClass());
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select o.* "
                     + "from product p, optionfile o "
                     + "where p.pgroup=o.pgroup "
                     + "and p.pcode='" + PCode + "';";
-            ResultSet rec = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(sql);
 
             //Clear tblOptionMsg
             int RowCount = model1.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model1.removeRow(0);
             }
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {ThaiUtil.ASCII2Unicode(rec.getString("optionname"))};
-                    model1.addRow(input);
-                } while (rec.next());
+            while (rs.next()) {
+                Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
+                model1.addRow(input);
             }
-            rec.close();
+            rs.close();
             stmt.close();
-
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
-            mysql.close();
+            AppLogUtil.log(GetQty.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 

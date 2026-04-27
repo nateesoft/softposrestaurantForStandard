@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -17,15 +16,6 @@ public class Jdi_dailyReport_Hourly_Plu extends javax.swing.JDialog {
     DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     public Jdi_dailyReport_Hourly_Plu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-          try{         
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        }catch(Exception e){
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
         initComponents();
         model = (DefaultTableModel) tblDept.getModel();
         tblDept.setShowGrid(true);        
@@ -55,8 +45,8 @@ public class Jdi_dailyReport_Hourly_Plu extends javax.swing.JDialog {
         tcm.getColumn(4).setCellRenderer(d);
         
         
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));        
-        tblDept.setFont(new java.awt.Font("Norasi" , java.awt.Font.PLAIN ,14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));        
+        tblDept.setFont(new java.awt.Font("Tahoma" , java.awt.Font.PLAIN ,14));
         tblDept.setRowHeight(25);
         
     }
@@ -234,7 +224,7 @@ public class Jdi_dailyReport_Hourly_Plu extends javax.swing.JDialog {
         );
 
         tblDept.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblDept.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblDept.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblDept.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

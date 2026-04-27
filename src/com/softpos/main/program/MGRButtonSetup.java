@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import database.AppCheckDB;
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
@@ -8,8 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import setupmenu.DlgBrowseProduct;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MGRButtonSetup extends javax.swing.JDialog {
@@ -30,34 +29,30 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
 
-        //ตรวจสอบในกรณีที่ยังไม่มี column check_extra ในระบบ
-        AppCheckDB.checkExtra();
-        //จบการตรวจสอบ
-
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select p.pcode, p.pdesc "
                     + "from soft_menusetup m, product p "
                     + "where m.pcode=p.pcode "
                     + "and menucode='" + menuCode + "' "
-                    + "and m.pcode<>''";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                txtPCode.setText(rs.getString("pcode"));
-                txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
+                    + "and m.pcode<>'' limit 1";
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    txtPCode.setText(rs.getString("pcode"));
+                    txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
+                }
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         model1 = (DefaultTableModel) tbSideDishFree.getModel();
@@ -129,7 +124,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
@@ -713,7 +708,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -793,7 +788,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     }//GEN-LAST:event_chkMSet2MouseClicked
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -1013,58 +1008,52 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "select * from mgrbuttonsetup "
-                    + "where pcode='" + txtPCode.getText() + "' "
-                    + "order by pcode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                if (rs.getString("Check_before").equals("Y")) {
-                    isBefore = true;
-                }
-                if (rs.getString("Check_qty").equals("Y")) {
-                    isQtyCheck = true;
-                }
-                if (rs.getString("check_autoadd").equals("Y")) {
-                    isAutoAdd = true;
-                }
-
-                //เพิ่มใหม่
-                if (rs.getString("check_extra").equals("Y")) {
-                    isExtraNoLimit = true;
-                }
-
-                try {
+            String sql = "select * from mgrbuttonsetup where pcode='" + txtPCode.getText() + "' order by pcode";
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    if (rs.getString("Check_before").equals("Y")) {
+                        isBefore = true;
+                    }
+                    if (rs.getString("Check_qty").equals("Y")) {
+                        isQtyCheck = true;
+                    }
+                    if (rs.getString("check_autoadd").equals("Y")) {
+                        isAutoAdd = true;
+                    }
+                    
+                    //เพิ่มใหม่
+                    if (rs.getString("check_extra").equals("Y")) {
+                        isExtraNoLimit = true;
+                    }
+                    
                     qtyAmt = rs.getInt("qty");
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
+                    
+                    model4.addRow(new Object[]{
+                        rs.getString("pcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
+                        rs.getString("sd_pcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("sd_pdesc")),
+                        rs.getString("ex_pcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("ex_pdesc")),
+                        rs.getString("auto_pcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("auto_pdesc")),
+                        rs.getString("Check_before"),
+                        rs.getString("Check_qty"),
+                        rs.getInt("qty"),
+                        rs.getString("check_autoadd"),
+                        rs.getString("check_extra")
+                    });
                 }
-
-                model4.addRow(new Object[]{
-                    rs.getString("pcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
-                    rs.getString("sd_pcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("sd_pdesc")),
-                    rs.getString("ex_pcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("ex_pdesc")),
-                    rs.getString("auto_pcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("auto_pdesc")),
-                    rs.getString("Check_before"),
-                    rs.getString("Check_qty"),
-                    rs.getInt("qty"),
-                    rs.getString("check_autoadd"),
-                    rs.getString("check_extra")
-                });
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         loadSideDish();
@@ -1085,16 +1074,17 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'");
+                stmt.close();
+            }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1135,7 +1125,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         int size1 = model1.getRowCount();
         for (int i = 0; i < size1; i++) {
@@ -1153,11 +1143,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'','','','','" + beforeCheck + "','" + qtyCheck + "',"
                         + "'" + qtyAmt + "','" + autocheck + "',"
                         + "'" + extraCheck + "')";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                    stmt.close();
+                }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e);
             }
         }
 
@@ -1178,11 +1170,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'','','" + beforeCheck + "','" + qtyCheck + "',"
                         + "'" + qtyAmt + "','" + autocheck + "',"
                         + "'" + extraCheck + "')";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-            } catch (Exception e) {
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                    stmt.close();
+                }
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e);
             }
         }
 
@@ -1204,15 +1198,17 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'" + beforeCheck + "','" + qtyCheck + "',"
                         + "'" + qtyAmt + "','" + autocheck + "',"
                         + "'" + extraCheck + "')";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-            } catch (Exception e) {
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                    stmt.close();
+                }
+            } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(MGRButtonSetup.class, "error", e);
             }
         }
 
-        mysql.close();
+        mysql.closeConnection(this.getClass());
     }
 
     private void loadSideDish() {
@@ -1220,7 +1216,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model1.getRowCount();
             for (int i = 0; i < size; i++) {
@@ -1230,21 +1226,22 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup "
                     + "where pcode='" + txtPCode.getText() + "' and sd_pcode<>'' "
                     + "order by sd_pcode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model1.addRow(new Object[]{
-                    rs.getString(1),
-                    ThaiUtil.ASCII2Unicode(rs.getString(2))
-                });
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    model1.addRow(new Object[]{
+                        rs.getString(1),
+                        ThaiUtil.ASCII2Unicode(rs.getString(2))
+                    });
+                }
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1253,7 +1250,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model2.getRowCount();
             for (int i = 0; i < size; i++) {
@@ -1263,21 +1260,22 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             String sql = "select ex_pcode, ex_pdesc from mgrbuttonsetup "
                     + "where pcode='" + txtPCode.getText() + "' and ex_pcode<>'' "
                     + "order by ex_pcode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model2.addRow(new Object[]{
-                    rs.getString(1),
-                    ThaiUtil.ASCII2Unicode(rs.getString(2))
-                });
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    model2.addRow(new Object[]{
+                        rs.getString(1),
+                        ThaiUtil.ASCII2Unicode(rs.getString(2))
+                    });
+                }
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1286,7 +1284,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int size = model3.getRowCount();
             for (int i = 0; i < size; i++) {
@@ -1296,21 +1294,23 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             String sql = "select auto_pcode, auto_pdesc from mgrbuttonsetup "
                     + "where pcode='" + txtPCode.getText() + "' and auto_pcode<>'' "
                     + "order by auto_pcode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model3.addRow(new Object[]{
-                    rs.getString(1),
-                    ThaiUtil.ASCII2Unicode(rs.getString(2))
-                });
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    model3.addRow(new Object[]{
+                        rs.getString(1),
+                        ThaiUtil.ASCII2Unicode(rs.getString(2))
+                    });
+                }
+                
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

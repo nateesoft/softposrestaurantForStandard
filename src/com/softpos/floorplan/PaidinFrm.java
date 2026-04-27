@@ -1,19 +1,20 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
 import printReport.PrintDriver;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
-import java.sql.SQLException;
-import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PaidinFrm extends javax.swing.JDialog {
@@ -22,7 +23,6 @@ public class PaidinFrm extends javax.swing.JDialog {
     PPrint Prn = new PPrint();
     DecimalFormat Decfmt = new DecimalFormat("###,###,##0.00");
     private POSHWSetup POSHW;
-    
 
     /**
      * Creates new form paidinfrm
@@ -30,7 +30,7 @@ public class PaidinFrm extends javax.swing.JDialog {
     public PaidinFrm(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     public void inputfrombnt(String str) {
@@ -66,7 +66,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal());
             Prn.OpenDrawerDriver();
             pd.printHTML();
-           
+
         } else if (!Value.getComPort().equals("NONE")) {
             if (Prn.OpenPrint(Value.getComPort())) {
                 try {
@@ -104,7 +104,7 @@ public class PaidinFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
@@ -112,13 +112,15 @@ public class PaidinFrm extends javax.swing.JDialog {
                     + "'" + Value.MACNO + "','I','" + PaidinAmt + "','" + PaidoutAmt + "')";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PaidinFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
 
@@ -153,7 +155,6 @@ public class PaidinFrm extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("บันทึกเงินสำรองทอน");
-        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
@@ -494,7 +495,7 @@ public class PaidinFrm extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntCancelActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -571,7 +572,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             SaveDataPaidin();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

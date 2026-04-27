@@ -1,7 +1,12 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,13 +14,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class InvRep extends javax.swing.JDialog {
@@ -39,7 +40,7 @@ public class InvRep extends javax.swing.JDialog {
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     @SuppressWarnings("unchecked")
@@ -245,7 +246,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from billno "
@@ -253,40 +254,38 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                                 + "and (b_macno<='" + MacNo2 + "') "
                                 + "and b_ondate=curdate() "
                                 + "order by b_refno";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                if (rec.getString("b_void").equals("V")) {
-                                    prn.print("***Void โดย :" + rec.getString("b_voiduser") + "  " + rec.getString("b_voidtime"));
-                                }
-                                prn.print(rec.getString("b_refno") + " " + rec.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rec.getDouble("b_vat")), 10));
-                                if (rec.getDouble("b_cash") != 0) {
-                                    prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_cash")), 12));
-                                }
-                                if (rec.getDouble("b_giftvoucher") != 0) {
-                                    prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_giftvoucher")), 12));
-                                }
-                                if (rec.getDouble("b_earnest") != 0) {
-                                    prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_earnest")), 12));
-                                }
-                                if (rec.getDouble("b_cramt1") != 0) {
-                                    prn.print("       " + "***" + PUtility.DataFullR(rec.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rec.getDouble("b_cramt1")), 12));
-                                }
-                                if (rec.getDouble("b_accramt") != 0) {
-                                    prn.print("       " + "AR-" + PUtility.DataFullR(rec.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rec.getDouble("b_accramt")), 12));
-                                    prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rec.getString("b_accrcode")), 30));
-                                }
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            if (rs.getString("b_void").equals("V")) {
+                                prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
+                            }
+                            prn.print(rs.getString("b_refno") + " " + rs.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_vat")), 10));
+                            if (rs.getDouble("b_cash") != 0) {
+                                prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cash")), 12));
+                            }
+                            if (rs.getDouble("b_giftvoucher") != 0) {
+                                prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_giftvoucher")), 12));
+                            }
+                            if (rs.getDouble("b_earnest") != 0) {
+                                prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_earnest")), 12));
+                            }
+                            if (rs.getDouble("b_cramt1") != 0) {
+                                prn.print("       " + "***" + PUtility.DataFullR(rs.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cramt1")), 12));
+                            }
+                            if (rs.getDouble("b_accramt") != 0) {
+                                prn.print("       " + "AR-" + PUtility.DataFullR(rs.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_accramt")), 12));
+                                prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rs.getString("b_accrcode")), 30));
+                            }
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(InvRep.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
+
                     prn.print("----------------------------------------");
                     prn.print(" ");
                     prn.print(" ");
@@ -342,48 +341,45 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from billno "
                     + "where (b_macno>='" + MacNo1 + "') "
                     + "and (b_macno<='" + MacNo2 + "') "
-                    //                    + "and b_ondate=curdate() "
                     + "order by b_refno";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    if (rec.getString("b_void").equals("V")) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***Void โดย :" + rec.getString("b_voiduser") + Space + rec.getString("b_voidtime") + "_");
-                    }
-                    t += "align=left><font face=Angsana New size=1>" + (rec.getString("b_refno") + rec.getString("b_ontime") + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_nettotal")), 12) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("b_vat")), 10) + "_");
-                    if (rec.getDouble("b_cash") != 0) {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Cash...:" + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("b_cash")) + "_");
-                    }
-                    if (rec.getDouble("b_giftvoucher") != 0) {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Gift Voucher...:" + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("b_giftvoucher")) + "_");
-                    }
-                    if (rec.getDouble("b_earnest") != 0) {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Earnest...:" + "</td></font><td align=right><font face=Angsana New size=1>" + (DecFmt.format(rec.getDouble("b_earnest")) + "_"));
-                    }
-                    if (rec.getDouble("b_cramt1") != 0) {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "***" + PUtility.DataFullR(rec.getString("b_crcode1"), 8) + "..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("b_cramt1")) + "_");
-                    }
-                    if (rec.getDouble("b_accramt") != 0) {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "AR-" + PUtility.DataFullR(rec.getString("b_accrcode"), 8) + "..." + "</td></font><td align=right><font face=Angsana New size=1>" + (DecFmt.format(rec.getDouble("b_accramt")) + "_"));
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFullR(PUtility.SeekArName(rec.getString("b_accrcode")), 30) + "_");
-                    }
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                if (rs.getString("b_void").equals("V")) {
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***Void โดย :" + rs.getString("b_voiduser") + Space + rs.getString("b_voidtime") + "_");
+                }
+                t += "align=left><font face=Angsana New size=1>" + (rs.getString("b_refno") + rs.getString("b_ontime") + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_nettotal")), 12) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_vat")), 10) + "_");
+                if (rs.getDouble("b_cash") != 0) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Cash...:" + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("b_cash")) + "_");
+                }
+                if (rs.getDouble("b_giftvoucher") != 0) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Gift Voucher...:" + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("b_giftvoucher")) + "_");
+                }
+                if (rs.getDouble("b_earnest") != 0) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "Earnest...:" + "</td></font><td align=right><font face=Angsana New size=1>" + (DecFmt.format(rs.getDouble("b_earnest")) + "_"));
+                }
+                if (rs.getDouble("b_cramt1") != 0) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "***" + PUtility.DataFullR(rs.getString("b_crcode1"), 8) + "..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("b_cramt1")) + "_");
+                }
+                if (rs.getDouble("b_accramt") != 0) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + "AR-" + PUtility.DataFullR(rs.getString("b_accrcode"), 8) + "..." + "</td></font><td align=right><font face=Angsana New size=1>" + (DecFmt.format(rs.getDouble("b_accramt")) + "_"));
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFullR(PUtility.SeekArName(rs.getString("b_accrcode")), 30) + "_");
+                }
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(InvRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
@@ -399,7 +395,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

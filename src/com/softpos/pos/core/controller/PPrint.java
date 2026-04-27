@@ -1,33 +1,40 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.model.TranRecord;
-import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.model.TSaleBean;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.crm.pos.core.modal.CreditRec;
+import com.softpos.crm.pos.core.modal.HourlyRec;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.crm.pos.core.modal.FinalcialRec;
+import com.softpos.crm.pos.core.modal.CreditPaymentRec;
+import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.TSaleBean;
+import com.softpos.pos.core.model.TableFileBean;
+import com.softpos.pos.core.model.TranRecord;
 import database.ConfigFile;
-import printReport.PrintDriver;
+import database.MySQLConnect;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Locale;
-import database.MySQLConnect;
-import java.io.IOException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -41,7 +48,8 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import javax.swing.JOptionPane;
-import sun.natee.project.util.ThaiUtil;
+import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.DateUtil;
 import util.MSG;
 import util.NumberUtil;
@@ -61,11 +69,9 @@ public class PPrint {
     private SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    private DecimalFormat DecFmt1 = new DecimalFormat("###,##0.00");
     private DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     private DecimalFormat IntFmt1 = new DecimalFormat("#,##0");
     private DecimalFormat df = new DecimalFormat("#,##0.00");
-    private DecimalFormat Name = new DecimalFormat("");
     private int LineCount = 0;
     private boolean EJPrint = false;
     private POSHWSetup POSHW;
@@ -74,10 +80,9 @@ public class PPrint {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
-    private String SPLIT = "=";
 
     public void PPrint() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
 
@@ -86,7 +91,7 @@ public class PPrint {
         if (OpenStatus) {
             return OpenStatus;
         }
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getPRNTYPE().equals("6")) {
             OpenStatus = false;
             portList = CommPortIdentifier.getPortIdentifiers();
@@ -97,14 +102,14 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            PUtility.ShowMsg("Can not Open Port...1");
+                            MSG.WAR("Can not Open Port...1");
                         } catch (RuntimeException re) {
                             MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName());
                         }
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            PUtility.ShowMsg("Can not Open Port...2");
+                            MSG.WAR("Can not Open Port...2");
                         }
                         try {
                             try {
@@ -119,7 +124,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            PUtility.ShowMsg("Can not Open Port...3");
+                            MSG.WAR("Can not Open Port...3");
                         }
                     }
                 }
@@ -137,7 +142,7 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            PUtility.ShowMsg("Can not Open Port...1\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...1\n" + e.getMessage());
 
                         } catch (RuntimeException re) {
                             MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName() + "\n" + re.getMessage());
@@ -145,16 +150,14 @@ public class PPrint {
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            PUtility.ShowMsg("Can not Open Port...2\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...2\n" + e.getMessage());
 
                         }
                         try {
                             try {
-                                //PUtility.ShowMsg(serialPort.toString());
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                PUtility.ShowMsg("Can not Open Port...2\n" + ex.getMessage());
-                                ex.printStackTrace();
+                                MSG.ERR("Can not Open Port...2\n" + ex.getMessage());
                             }
                             serialPort.setSerialPortParams(9600, //boardrate
                                     SerialPort.DATABITS_8,
@@ -163,7 +166,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            PUtility.ShowMsg("Can not Open Port...3\n" + e.getMessage());
+                            MSG.ERR("Can not Open Port...3\n" + e.getMessage());
 
                         }
                     }
@@ -175,7 +178,7 @@ public class PPrint {
     }
 
     public void OpenDrawer() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!POSHW.getDRPort().equals("NONE") && POSHW.getDRType().equals("1")) {
             String TempRate = POSHW.getDRCOM().trim();
             byte Rate = 49;
@@ -234,7 +237,6 @@ public class PPrint {
             LineCount = 0;
         } catch (IOException ex) {
             if (ex.getMessage().contains("nativeDrain")) {
-                //ex.printStackTrace();
                 //System.err.println(ex.getMessage());
             } else {
                 MSG.ERR(ex.getMessage());
@@ -414,7 +416,7 @@ public class PPrint {
     }
 
     public void Print_Head_EJ() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         String TempFile = POSHW.getEJDailyPath() + "/tempbill.txt";
         File fObject = new File(TempFile);
         if (fObject.canRead()) {
@@ -585,10 +587,10 @@ public class PPrint {
 
     public void printLogin(String user) {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
-            if (Value.printdriver) {
+            if (Value.printdriver == true) {
                 PrintDriver pd = new PrintDriver();
                 pd.addTextLn("Log In User : " + user);
                 pd.addTextLn("Log In Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / ").replace("/", " / "));
@@ -619,10 +621,10 @@ public class PPrint {
 
     public void printLogout() {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
-            if (Value.printdriver) {
+            if (Value.printdriver == true) {
                 PrintDriver pd = new PrintDriver();
                 pd.addTextLn("Log Out User : " + Value.USERCODE);
                 pd.addTextLn("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
@@ -669,7 +671,7 @@ public class PPrint {
     public void PrintSubTotalBillDriver(String _RefNo, String tableNo) {
         String t = "";
         String t1 = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         double totalDiscount = 0.00;
         BillControl billC = new BillControl();
@@ -695,56 +697,66 @@ public class PPrint {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     MySQLConnect mysql = new MySQLConnect();
                     try {
-                        mysql.open();
+                        mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         int Q = 0;
-                        if (rs.next() && !rs.wasNull()) {
+                        if (rs.next()) {
                             queue = rs.getInt("cbillno");
                             queue++;
                         }
-                        t += "colspan=3 align=center><font face=Angsana New size=5>" + "คิว(Queue): " + queue + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
                         rs.close();
 
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                 }
                 Date dateP = new Date();
                 if (POSHW.getHeading1().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
-                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading1().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
                 if (POSHW.getHeading2().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
-                        t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading2().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
+                if (!POSHW.getHeading3().equals("")) {
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
+                }
+                if (!POSHW.getHeading4().equals("")) {
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
+                }
                 Cposhwsetup();
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
-                t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
+                t += "colspan=3 align=center><font face=Angsana New size=2> " + "-----------------------------------------_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
-                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
-                        + "</td><td align=right><font face=Angsana New size=2>"
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / " + "_");
+                t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + "TABLE :" + Space + tableNo + "_";
-                t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
+                t += "colspan=4 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
                         + " Seat :"
-                        + "</td><td align=right><font face=Angsana New size=2>"
-                        + "NAME: " + Space
+                        + "_";
+                t += "colspan=4 align=left><font face=Angsana New size=2> "
+                        + "=ชื่อ: " + Space
                         + getLastEmployee(tableNo) + "_";
-                t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
+                t += "colspan=3 align=center><font face=Angsana New size=2> " + "-----------------------------------------_";
 
                 for (int i = 0; i < listTSale.size(); i++) {
                     TSaleBean bean = (TSaleBean) listTSale.get(i);
@@ -757,11 +769,11 @@ public class PPrint {
                     } else {
                         if (bean.getR_PrAmt() == 0) {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
-                                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + bean.getR_PName()) + "_";
+                                t += ("colspan=3 align=left><font face=Angsana New size=2> " + SubStringText(bean.getR_PName(), 20)) + "_";
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + TAB + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                                 if (!bean.getR_Opt1().equals("")) {
@@ -770,12 +782,13 @@ public class PPrint {
                                             + (ThaiUtil.ASCII2Unicode(bean.getR_Opt1())) + "_";
                                 }
                             } else {
-                                t += "align=left width=-90%><font face=Angsana New size=2>"
+                                t += "align=left width=100%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + TAB + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+
                             }
                         } else {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
@@ -783,14 +796,14 @@ public class PPrint {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_Normal() + VatStr + "" + bean.getR_PName(), 20)
+                                        + SubStringText(bean.getR_Normal() + VatStr + "" + bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + "_";
                             } else {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + TAB + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + "_";
 
@@ -809,10 +822,10 @@ public class PPrint {
                     }
                 }
             } else {
-                t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
+                t += ("colspan=3 align=center><font face=Angsana New size=2> " + "-----------------------------------------") + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "     อาหารและเครื่องดื่ม " + DecFmt.format(bBean.getB_Total())) + "_";
             }
-            t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
+            t += ("colspan=3 align=center><font face=Angsana New size=2> " + "-----------------------------------------") + "_";
 
             if (bBean.getB_ProDiscAmt() > 0) {
                 t += ("colspan=3 align=right><font face=Angsana New size=2> " + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(bBean.getB_ProDiscAmt())) + "_";
@@ -846,13 +859,13 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ส่วนลดคูปอง  " + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(bBean.getB_SubDiscAmt())) + "_";
             }
             if (bBean.getB_CuponDiscAmt() > 0) {
-                List<Object[]> list = printCuponName(_RefNo);
-                String CuName;
-                if (list != null && list.size() > 0) {
-                    CuName = list.get(0)[0].toString();
-                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
-                    t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + CuName + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + "-" + "_";
-                }
+//                List<Object[]> list = printCuponName(_RefNo);
+//                String CuName;
+//                if (list != null && list.size() > 0) {
+//                    CuName = list.get(0)[0].toString();
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + bBean.getB_CuponName() + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + "-" + "_";
+//                }
                 if (bBean.getB_Total() != bBean.getB_NetTotal()) {
                     t += "align=right colspan=3><font face=Angsana New size=3>" + "TOTAL : " + DecFmt.format(bBean.getB_Total() - discountBath) + "_";
                 }
@@ -864,9 +877,10 @@ public class PPrint {
                 if (bBean.getB_ServiceAmt() > 0) {
                     t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + IntFmt.format(CONFIG.getP_Service()) + " %</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ServiceAmt())) + "+_";
                 }
-                t += ("colspan=2 align=right><font face=Angsana New size=3> " + "Net-TOTAL.." + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(Math.round(bBean.getB_NetTotal() - discountBath) - bBean.getB_Vat())) + "</font>_";
+                t += ("colspan=2 align=right><font face=Angsana New size=2> " + "Net-TOTAL.." + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(Math.round(bBean.getB_NetTotal() - discountBath) - bBean.getB_Vat())) + "</font>_";
                 if (CONFIG.getP_VatPrn().equals("Y")) {
                     t += ("colspan=2 align=right><font face=Angsana New size=2> " + "Vat..." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_Vat())) + "_";
+                    t += ("colspan=2 align=right><font face=Angsana New size=3> " + "Net-TOTAL + VAT" + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(Math.round(bBean.getB_NetTotal() - discountBath))) + "</font>_";
                     if (bBean.getB_NetDiff() != 0) {
                         t += ("colspan=2 align=left><font face=Angsana New size=2> " + "Round" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_NetDiff())) + "_";
                     }
@@ -886,7 +900,7 @@ public class PPrint {
                     t += ("colspan =2 align=left><font face=Angsana New size=2> " + Space + "Net-Amount " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_NetTotal() - discountBath - bBean.getB_ServiceAmt() - bBean.getB_Vat())) + "_";
                 }
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat())))) + "_";
+                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat())))) + "_";
                 } else {
                     t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(Math.round(bBean.getB_NetVat() + bBean.getB_NetNonVat() + bBean.getB_Vat()))) + "_";
                 }
@@ -903,24 +917,21 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rec.getString("giftbarcode") + rec.getString("giftno") + "@" + DecFmt.format(rec.getDouble("giftamt"))) + "_";
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while (rs.next()) {
+                        t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
@@ -932,9 +943,9 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
-                    String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -945,11 +956,12 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + crName) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-> " + crName) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CrAmt1())) + "_";
             }
@@ -961,13 +973,14 @@ public class PPrint {
             if (bBean.getB_Entertain1() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Entertain  : " + DecFmt.format(bBean.getB_Entertain1())) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=3>" + "Signature..." + "_");
+                t += ("colspan=3 align=center><font face=Angsana New size=3>" + "" + "_");
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
+                t += ("colspan=3 align=center><font face=Angsana New size=3>" + "" + "_");
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
             }
             if (!bBean.getB_MemCode().equals("")) {
                 t += ("colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------") + "_";
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(bBean.getB_MemCode());
+                MemberBean MemBean = MemmaterController.getMember(bBean.getB_MemCode());
                 t += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -1005,10 +1018,10 @@ public class PPrint {
 
             for (String data1 : strs) {
                 pd.addTextIFont(data1);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                }
             }
             OpenDrawerDriver();
             pd.printHTML();
@@ -1034,32 +1047,37 @@ public class PPrint {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     MySQLConnect mysql = new MySQLConnect();
                     try {
-                        mysql.open();
+                        mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
                         ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
                         int queue = 0;
-                        if (rs.next() && !rs.wasNull()) {
+                        if (rs.next()) {
                             queue = rs.getInt("cbillno");
                             queue++;
                         }
-                        t += "colspan=3 align=center><font face=Angsana New size=5>" + "คิว(Queue): " + queue + "_";
-                        t1 += "colspan=3 align=center><font face=Angsana New size=4>" + "คิว(Queue): " + queue + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=4>" + "คิว(Queue): " + queue + "_";
+                        t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
 
                         rs.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                 }
                 Date dateP = new Date();
+
                 if (POSHW.getHeading1().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading1().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=4>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+
+                    }
                 }
                 if (POSHW.getHeading2().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
@@ -1067,15 +1085,20 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading2().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
+
                 if (POSHW.getHeading3().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
                     for (String data : strs) {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading3().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
                 if (POSHW.getHeading4().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
@@ -1083,21 +1106,28 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (!POSHW.getHeading4().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Cposhwsetup();
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
+//                t += "colspan=2 align=left><font face=Angsana New size=2> "
+//                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
+//                        + "</td><td align=right><font face=Angsana New size=2>"
+//                        + "TABLE :" + Space + tableNo + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
-                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
-                        + "</td><td align=right><font face=Angsana New size=2>"
+                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
+                t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + "TABLE :" + Space + tableNo + "_";
-                t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
+                t += "colspan=3 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
                         + " Seat :"
-                        + "</td><td align=right><font face=Angsana New size=2>"
-                        + "NAME: " + Space
+                        //                        + "</td><td align=left><font face=Angsana New size=2>"
+                        + TAB + TAB
+                        + "ชื่อ:"
                         + getLastEmployeeCheckBill(tableNo, _RefNo) + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
 
@@ -1116,7 +1146,7 @@ public class PPrint {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + Space + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                                 if (!bean.getR_Opt1().equals("")) {
@@ -1126,17 +1156,17 @@ public class PPrint {
                                 }
                             } else {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Quan())
-                                        + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + IntFmt.format(bean.getR_Quan())
+                                        + "</td><td style= text-align:left; align=left; width=-30%><font face=Angsana New size=2>"
+                                        + Space + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                                        + IntFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                                 t1 += "align=left><font face=Angsana New size=2>"
-                                        + IntFmt1.format(bean.getR_Quan())
-                                        + "</td><td align=left width=80><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + IntFmt.format(bean.getR_Quan())
+                                        + "</td><td td style= text-align:left; align=left ;width=80><font face=Angsana New size=2>"
+                                        + Space + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + IntFmt1.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
                             }
                         } else {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
@@ -1151,20 +1181,20 @@ public class PPrint {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
                                         + DecFmt.format(bean.getR_Total()) + "_";
                                 t1 += "colspan=3 align=left><font face=Angsana New size=2>"
-                                        + IntFmt1.format(bean.getR_Quan())
+                                        + IntFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=80><font face=Angsana New size=2>"
-                                        + SubStringText(bean.getR_PName(), 20)
+                                        + SubStringText(bean.getR_PName(), 26)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + IntFmt1.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
 
                             }
                             if (bean.getR_PrType().equals("-P")) {
                                 if (bean.getR_PrAmt() > 0) {
-                                    t += ("colspan=3 align=left><font face=Angsana New size=1> " + Space + "**Promotion  " + bean.getR_PrCode()) + "_";
+                                    t += ("colspan=3 align=left><font face=Angsana New size=2> " + Space + "**Promotion  " + bean.getR_PrCode()) + "_";
                                 }
                             }
                             if (bean.getR_PrType().equals("-I")) {
@@ -1182,7 +1212,9 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                    if (POSHW.getHeading1().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
                 if (POSHW.getHeading2().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
@@ -1190,7 +1222,9 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (POSHW.getHeading2().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
                 if (POSHW.getHeading3().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
@@ -1198,7 +1232,9 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (POSHW.getHeading3().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
                 if (POSHW.getHeading4().trim().length() >= 18) {
                     String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
@@ -1206,7 +1242,9 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                     }
                 } else {
-                    t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                    if (POSHW.getHeading4().equals("")) {
+                        t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
+                    }
                 }
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
@@ -1261,13 +1299,13 @@ public class PPrint {
             }
 
             if (bBean.getB_CuponDiscAmt() > 0) {
-                List<Object[]> list = printCuponName(_RefNo);
-                String CuName;
-                if (list != null && list.size() > 0) {
-                    CuName = list.get(0)[0].toString();
-                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
-                    t += ("colspan=2 align=left><font face=Angsana New size=2> " + CuName + " : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + "-" + "_";
-                }
+//                List<Object[]> list = printCuponName(_RefNo);
+//                String CuName;
+//                if (list != null && list.size() > 0) {
+//                    CuName = list.get(0)[0].toString();
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + bBean.getB_CuponName() + " : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + " -" + "_";
+//                }
             }
             totalDiscount = bBean.getB_ProDiscAmt() + bBean.getB_SpaDiscAmt()
                     + bBean.getB_FastDiscAmt() + bBean.getB_EmpDiscAmt() + bBean.getB_TrainDiscAmt()
@@ -1281,7 +1319,7 @@ public class PPrint {
                     t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + "ค่าบริการ : " + IntFmt.format(CONFIG.getP_Service()) + "% : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ServiceAmt())) + " +_";
                 }
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetTotal())))) + "_";
+                    t += ("colspan =2 align=left><font face=Angsana New size=3> " + Space + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(bBean.getB_NetTotal())))) + "_";
                     if (CONFIG.getP_VatPrn().equals("Y")) {
                         t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + "Vat..." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_Vat())) + "_";
                     }
@@ -1318,24 +1356,21 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rec.getString("giftbarcode") + rec.getString("giftno") + "@" + DecFmt.format(rec.getDouble("giftamt"))) + "_";
-                        } while (rec.next());
+                    String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while (rs.next()) {
+                        t += ("colspan=3 align=left><font face=Angsana New size=2> " + TAB + rs.getString("giftbarcode") + rs.getString("giftno") + "@" + DecFmt.format(rs.getDouble("giftamt"))) + "_";
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
@@ -1346,9 +1381,9 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
-                    String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -1358,8 +1393,9 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + crName) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
@@ -1425,10 +1461,11 @@ public class PPrint {
 
                 for (String data2 : strs1) {
                     pd1.addTextIFont(data2);
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                    }
+//                    try {
+//                        Thread.sleep(50);
+//                    } catch (InterruptedException e) {
+//                        MSG.NOTICE(e.toString());
+//                    }
                 }
                 pd1.printHTML();
             }
@@ -1436,7 +1473,7 @@ public class PPrint {
     }
 
     public void PrintSubTotalBill(String _RefNo, String tableNo) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true) {
             PrintSubTotalBillDriver(_RefNo, tableNo);
         } else {
             BillControl billC = new BillControl();
@@ -1587,12 +1624,12 @@ public class PPrint {
                     }
                     if (bBean.getB_GiftVoucher() > 0) {
                         print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
-                        String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "';";
-                        String giffno;
 
                         MySQLConnect mysql = new MySQLConnect();
                         try {
-                            mysql.open();
+                            mysql.open(this.getClass());
+                            String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
+                            String giffno;
                             ResultSet rsGetGiftno = mysql.getConnection().createStatement().executeQuery(sqlGetGiffNo);
                             if (rsGetGiftno.next()) {
                                 giffno = rsGetGiftno.getString("giftno");
@@ -1601,38 +1638,36 @@ public class PPrint {
                             }
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
                         print("     " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
-                        print("     " + PUtility.DataFullR(bBean.get_B_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
+                        print("     " + PUtility.DataFullR(bBean.getB_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while (rs.next()) {
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     } else {
                         List<Object[]> list = printCuponName(_RefNo);
                         String CuName;
                         double CuDisc;
-                        if (list != null && list.size() > 0) {
+                        if (list != null && !list.isEmpty()) {
                             CuName = list.get(0)[0].toString();
                             CuDisc = Double.parseDouble(list.get(0)[1].toString());
                             print(" " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
@@ -1667,9 +1702,9 @@ public class PPrint {
                         //get credit name
                         String crName = "";
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
-                            String sql = "select * from creditfile where crcode='" + bBean.getB_CrCode1() + "'";
+                            String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -1679,8 +1714,9 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                         print(bBean.getB_CrCode1() + "  " + crName);
@@ -1744,32 +1780,41 @@ public class PPrint {
     }
 
     public void printCheckBillDriver(String tableNo) {
+        PublicVar.printerCheckBill = true;
         PrintDriver pd = new PrintDriver();
         String t = "";
         String t1 = "";//Header1
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         BalanceControl bc = new BalanceControl();
         double totalDiscount;
         String cuponCode = "";
         if (CONFIG.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoidSum(tableNo);
+            List<BalanceBean> listBeanNoVoid = null;
+            listBeanNoVoid = bc.getAllBalanceNoVoidSum(tableNo);
             TableFileControl tCon = new TableFileControl();
-            TableFileBean tBean = tCon.getData(tableNo);
+            TableFileBean tBean = null;
+            tBean = tCon.getData(tableNo);
             int ItemCnt = 0;
             String VatStr;
             CONFIG = POSConfigSetup.Bean();
-
+            double totalNonVat = 0;
             totalDiscount = tBean.getProDiscAmt() + tBean.getSpaDiscAmt()
                     + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
                     + tBean.getSubDiscAmt() + tBean.getDiscBath() + tBean.getItemDiscAmt() + tBean.getCuponDiscAmt() + tBean.getMemDiscAmt();
-            double vatPrint = ServiceControl.getDouble(tBean.getTAmount(), "PAYMENT") - (totalDiscount) + tBean.getServiceAmt();
+
             for (int i = 0; i < listBeanNoVoid.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBeanNoVoid.get(i);
                 if (!bean.getR_Void().equals("V")) {
                     ItemCnt = (int) (ItemCnt + bean.getR_Quan());
+                    if (bean.getR_Vat().equals("N")) {
+                        totalNonVat += bean.getR_Total();
+                    }
+
                 }
             }
+            double vatPrint = ServiceControl.getDouble(tBean.getTAmount() - totalNonVat, "PAYMENT") - (totalDiscount) + tBean.getServiceAmt();
+
             if (CONFIG.getP_VatType().equals("I")) {
                 vatPrint = vatPrint * CONFIG.getP_Vat() / 107;
             }
@@ -1782,7 +1827,9 @@ public class PPrint {
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                 }
             } else {
-                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                if (!POSHW.getHeading1().equals("") || POSHW.getHeading1() != null) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                }
             }
             if (POSHW.getHeading2().length() >= 18) {
                 String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
@@ -1790,7 +1837,9 @@ public class PPrint {
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                 }
             } else {
-                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                if (!POSHW.getHeading2().equals("")) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                }
             }
             if (POSHW.getHeading3().length() >= 18) {
                 String[] strs = POSHW.getHeading3().trim().replace(" ", Space).split("_");
@@ -1798,7 +1847,9 @@ public class PPrint {
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                 }
             } else {
-                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
+                if (!POSHW.getHeading3().equals("")) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading3().trim().replace(" ", "&nbsp; ") + "_";
+                }
             }
             if (POSHW.getHeading4().length() >= 18) {
                 String[] strs = POSHW.getHeading4().trim().replace(" ", Space).split("_");
@@ -1806,16 +1857,18 @@ public class PPrint {
                     t1 += "colspan=3 align=center><font face=Angsana New size=3>" + data + "_";
                 }
             } else {
-                t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
+                if (!POSHW.getHeading4().equals("")) {
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
+                }
             }
             t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------_";
             Cposhwsetup();
             Date dateP = new Date();
-            t1 += "colspan=2 align=left><font face=Angsana New size=2> "
+            t1 += "colspan=3 align=left><font face=Angsana New size=2> "
                     + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
             t1 += "colspan=3 align=left><font face=Angsana New size=2> "
                     + "TABLE :" + Space + tableNo + "_";
-            t1 += "colspan=2 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(tBean.getTCustomer())
+            t1 += "colspan=2 align=left><font face=Angsana New size=2> " + "CC " + IntFmt.format(tBean.getTCustomer())
                     + " Seat :" + "</td><td align=right><font face=Angsana New size=2>"
                     + "NAME: " + Space
                     + getLastEmployee(tableNo) + "_";
@@ -1832,36 +1885,38 @@ public class PPrint {
                     if (bean.getR_PrAmt() == 0) {
                         //ให้พิมพ์รหัสสินค้าบนใบเสร็จ
                         if (CONFIG.getP_CodePrn().equals("Y")) {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=3>" + SubStringText(bean.getR_PName(), 16) + "_";
-                            t1 += "colspan=3 align=left><font face=Angsana New size=3>" + bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + df.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                            t1 += "colspan=3 align=left><font face=Angsana New size=2>" + SubStringText(bean.getR_PName(), 16) + "_";
+                            t1 += "colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + df.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                         } else {
-                            t1 += "align=left width=-90%><font face=Angsana New size=2>"
-                                    + df.format(bean.getR_Quan())
-                                    + "</td></font><td align=left width=-30%><font face=Angsana New size=2>"
-                                    + SubStringText(bean.getR_PName(), 20)
-                                    + "</td></font><td align=right width=50><font face=Angsana New size=2>"
-                                    + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                            t1 += "style=vertical-align:topcolspan=1; width=-90%; align=left;><font face=Angsana New size=2>"
+                                    + IntFmt.format(bean.getR_Quan()) + " "
+                                    + "</font></td><td align=left width=70><font face=Angsana New size=2>"
+                                    + SubStringText(bean.getR_PName(), 30)
+                                    + "</font></td><td align=right width=70><font face=Angsana New size=2>"
+                                    + IntFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                             if (!bean.getR_Opt1().equals("")) {
-                                t1 += "></td><td align=left colspan=2>"
-                                        + "<font face=Angsana New size=2>"
-                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 30) + "_";
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>"
+                                        + SubStringText(ThaiUtil.ASCII2Unicode(TAB + bean.getR_Opt1()), 30) + "_";
+//                                t1 += "></td><td align=left colspan=2>"
+//                                        + "<font face=Angsana New size=2>"
+//                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 30) + "_";
                             }
                         }
                     } else {
                         if (CONFIG.getP_CodePrn().equals("Y")) {
-                            t1 += "colspan=3 align=left><font face=Angsana New size=1>" + SubStringText(bean.getR_PName(), 16) + "_";
-                            t1 += "colspan=3 align=left><font face=Angsana New size=1>" + bean.getR_PluCode() + TAB + df.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                            t1 += "colspan=3 align=left><font face=Angsana New size=2>" + SubStringText(bean.getR_PName(), 16) + "_";
+                            t1 += "colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PluCode() + TAB + df.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                         } else {
-                            t1 += "colspan=2 align=left><font face=Angsana New size=1>" + IntFmt.format(bean.getR_Quan()) + VatStr + bean.getR_PName() + "</td></font><td align=right><font face=Angsana New size=1> " + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + IntFmt.format(bean.getR_Quan()) + VatStr + bean.getR_PName() + "</td></font><td align=right><font face=Angsana New size=2> " + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                         }
                         if (bean.getR_PrType().equals("-P")) {
                             if (bean.getR_PrAmt() > 0) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + "**Promotion  " + bean.getR_PrCode() + "_";
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + "**Promotion  " + bean.getR_PrCode() + "_";
                             }
                         }
                         if (bean.getR_PrType().equals("-I")) {
                             if (bean.getR_PrDisc() != 0) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + "**Item Discount " + bean.getR_PrCode() + DecFmt.format(bean.getR_PrAmt()) + " -_";
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + TAB + "**Item Discount " + bean.getR_PrCode() + DecFmt.format(bean.getR_PrAmt()) + " -_";
                             }
                         }
                     }
@@ -1870,52 +1925,55 @@ public class PPrint {
                     cuponCode = bean.getR_PrCuCode();
                 }
             }
-            t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
-            t1 += "align=left colspan=2><font face=Angsana New size=1>" + "Sub-TOTAL : " + ItemCnt + " Item" + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(tBean.getTAmount()) + "_";
-            t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+            t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + ItemCnt + " Item" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getTAmount()) + "_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+//            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "NonVAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(totalNonVat) + "_";
+
             if (tBean.getProDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + TAB + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=1>- " + DecFmt.format(tBean.getProDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + TAB + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getProDiscAmt()) + "_";
             }
             if (tBean.getSpaDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "Special Disc.." + "</td><td align=right ><font face=Angsana New size=1>- " + DecFmt.format(tBean.getSpaDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "Special Disc.." + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getSpaDiscAmt()) + "_";
             }
             if (tBean.getMemDiscAmt() > 0) {
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "ลดสมาชิก.." + tBean.getMemDisc() + "</td><td align=right ><font face=Angsana New size=1> " + DecFmt.format(tBean.getMemDiscAmt()) + "_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "ลดสมาชิก.." + tBean.getMemDisc() + "</td><td align=right ><font face=Angsana New size=2> " + DecFmt.format(tBean.getMemDiscAmt()) + "_";
             }
             if (tBean.getFastDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "ลดเทศกาล.." + "</td><td align=right ><font face=Angsana New size=1>- " + tBean.getFastDisc() + DecFmt.format(tBean.getFastDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดเทศกาล.." + "</td><td align=right ><font face=Angsana New size=2>- " + tBean.getFastDisc() + DecFmt.format(tBean.getFastDiscAmt()) + "_";
             }
             if (tBean.getEmpDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "ลดพนักงาน.." + "</td><td align=right ><font face=Angsana New size=1>- " + tBean.getEmpDisc() + DecFmt.format(tBean.getEmpDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดพนักงาน.." + "</td><td align=right ><font face=Angsana New size=2>- " + tBean.getEmpDisc() + DecFmt.format(tBean.getEmpDiscAmt()) + "_";
             }
             if (tBean.getTrainDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "ลด Trainnee.." + "</td><td align=right ><font face=Angsana New size=1>- " + tBean.getTrainDisc() + DecFmt.format(tBean.getTrainDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลด Trainnee.." + "</td><td align=right ><font face=Angsana New size=2>- " + tBean.getTrainDisc() + DecFmt.format(tBean.getTrainDiscAmt()) + "_";
             }
             if (tBean.getSubDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "ลดคูปอง.." + "</td><td align=right ><font face=Angsana New size=1> " + tBean.getSubDisc() + DecFmt.format(tBean.getSubDiscAmt()) + "-_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดคูปอง.." + "</td><td align=right ><font face=Angsana New size=2> " + tBean.getSubDisc() + DecFmt.format(tBean.getSubDiscAmt()) + "-_";
             }
             if (tBean.getDiscBath() > 0) {
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "Disc(Bath).." + "</td><td align=right ><font face=Angsana New size=1>- " + DecFmt.format(tBean.getDiscBath()) + "_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "Disc(Bath).." + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getDiscBath()) + "_";
             }
             if (tBean.getItemDiscAmt() > 0) {
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "ลดรายการ(Item)" + "</td><td align=right ><font face=Angsana New size=1>- " + DecFmt.format(tBean.getItemDiscAmt()) + "_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "ลดรายการ(Item)" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getItemDiscAmt()) + "_";
             }
 
             if (tBean.getCuponDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=1>" + getCuponName(cuponCode) + "</td><td align=right ><font face=Angsana New size=1> " + DecFmt.format(tBean.getCuponDiscAmt()) + "-_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + getCuponName(cuponCode) + "</td><td align=right ><font face=Angsana New size=2> " + DecFmt.format(tBean.getCuponDiscAmt()) + "-_";
             }
             if (tBean.getServiceAmt() > 0) {
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "Service :" + TAB + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + TAB + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
             }
-            t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt())) + "_";
-            t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(vatPrint) + "_";
+            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt())) + "_";
+            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
+
             if (CONFIG.getP_VatType().equals("I")) {
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()))) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()))) + "_";
                     double round;
-                    round = tBean.getNetTotal() - NumberControl.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()));
+                    round = tBean.getNetTotal() - NumberUtil.UP_DOWN_NATURAL_BAHT((tBean.getNetTotal()));
                     if (round != 0.00) {
-                        t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "Round...." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(round) + "_";
+                        t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "Round...." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(round) + "_";
                     }
                 } else {
                     t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format((tBean.getNetTotal())) + "_";
@@ -1929,20 +1987,19 @@ public class PPrint {
             t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + Value.MACNO + " **No Receipt**" + "_";
             t1 += "colspan=3 align=center>_";
 
-            if (!POSHW.getFootting3().equals("")) {
-                t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting3().trim().replace(" ", Space) + "_";
-            }
-            if (!POSHW.getFootting2().equals("")) {
+            if (!POSHW.getFootting1().equals("")) {
                 t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting1().trim().replace(" ", Space) + "_";
             }
-            if (!POSHW.getFootting1().equals("")) {
+            if (!POSHW.getFootting2().equals("")) {
                 t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting2().trim().replace(" ", Space) + "_";
+            }
+            if (!POSHW.getFootting3().equals("")) {
+                t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting3().trim().replace(" ", Space) + "_";
             }
             t += "align=center colspan=3>_";
             String t2 = "";
             if (!tBean.getMemCode().equals("")) {
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(tBean.getMemCode());
+                MemberBean MemBean = MemmaterController.getMember(tBean.getMemCode());
                 t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -1954,6 +2011,7 @@ public class PPrint {
                 t1 = t1.replace("CC", "ลูกค้า : ").replace("Seat: ", "ที่").replace("NAME", "ชื่อ").replace("Service", "ค่าบริการ").replace("VAT", "ภาษีมูลค่าเพิ่ม").replace("Sub-TOTAL", "มูลค่ารวม").replace("No Receipt", "ไม่ใช่ใบเสร็จรับเงิน");
                 t1 = t1.replace("Net-Amount", "รวม").replace("Net-Total", "รวมที่ต้องชำระ").replace("TABLE", "โต๊ะ").replace("Seat", "ที่").replace("Round", "ปัดเศษ");
                 t1 = t1.replace("Disc(Bath)..", "ส่วนลด(บาท)..");
+
             }
             //print
             String[] strs = t.split("_");
@@ -1989,9 +2047,11 @@ public class PPrint {
             pd.printHTML();
 
         } else {
-            List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoid(tableNo);
+            List<BalanceBean> listBeanNoVoid = null;
+            listBeanNoVoid = bc.getAllBalanceNoVoid(tableNo);
             TableFileControl tCon = new TableFileControl();
-            TableFileBean tBean = tCon.getData(tableNo);
+            TableFileBean tBean = null;
+            tBean = tCon.getData(tableNo);
             int ItemCnt = 0;
             String VatStr;
             CONFIG = POSConfigSetup.Bean();
@@ -2051,17 +2111,17 @@ public class PPrint {
                             t1 += "colspan=3 align=left><font face=Angsana New size=3>" + SubStringText(bean.getR_PName(), 16) + "_";
                             t1 += "colspan=3 align=left><font face=Angsana New size=3>" + bean.getR_Normal() + VatStr + bean.getR_PluCode() + TAB + df.format(bean.getR_Quan()) + TAB2 + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                         } else {
-                            t1 += "align=left width=-90%><font face=Angsana New size=1>"
+                            t1 += "align=left width=-90%><font face=Angsana New size=2>"
                                     + df.format(bean.getR_Quan())
-                                    + "</td></font><td align=left width=-30%><font face=Angsana New size=1>"
+                                    + "</td></font><td align=left width=-30%><font face=Angsana New size=2>"
                                     + SubStringText(bean.getR_PName(), 20)
                                     //                                + bean.getR_Normal() + VatStr + "" + bean.getR_PName()
-                                    + "</td></font><td align=right width=50><font face=Angsana New size=1>"
+                                    + "</td></font><td align=right width=50><font face=Angsana New size=2>"
                                     + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "></td><td align=left colspan=2>"
-                                        + "<font face=Angsana New size=1>"
-                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()),20) + "_";
+                                        + "<font face=Angsana New size=2>"
+                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 20) + "_";
                             }
                         }
                     } else {
@@ -2073,12 +2133,12 @@ public class PPrint {
                         }
                         if (bean.getR_PrType().equals("-P")) {
                             if (bean.getR_PrAmt() > 0) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + "**Pro...  " + bean.getR_PrCode() + "_";
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + "**Pro...  " + bean.getR_PrCode() + "_";
                             }
                         }
                         if (bean.getR_PrType().equals("-I")) {
                             if (bean.getR_PrDisc() != 0) {
-                                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + "**Item-Discount " + bean.getR_PrCode() + TAB + DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()) + "%_";
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + "**Item-Discount " + bean.getR_PrCode() + TAB + DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()) + "%_";
                             }
                         }
                     }
@@ -2089,13 +2149,13 @@ public class PPrint {
                     + tBean.getSubDiscAmt() + tBean.getDiscBath() + tBean.getItemDiscAmt();
 
             if (tBean.getProDiscAmt() > 0) {
-                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + "ลด Promotion" + DecFmt.format(tBean.getProDiscAmt()) + "_";
+                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + TAB + "ลด Promotion" + DecFmt.format(tBean.getProDiscAmt()) + "_";
             }
             if (tBean.getSpaDiscAmt() > 0) {
                 t1 += "colspan=3 align=left><font face=Angsana New size=3>" + "Special Disc     " + DecFmt.format(tBean.getSpaDiscAmt()) + "_";
             }
             if (tBean.getMemDiscAmt() > 0) {
-                t1 += "colspan=3 align=left><font face=Angsana New size=1>" + "ลดสมาชิก.." + tBean.getMemDisc() + TAB + "-" + DecFmt.format(tBean.getMemDiscAmt()) + "_";
+                t1 += "colspan=3 align=left><font face=Angsana New size=2>" + "ลดสมาชิก.." + tBean.getMemDisc() + TAB + "-" + DecFmt.format(tBean.getMemDiscAmt()) + "_";
             }
             if (tBean.getFastDiscAmt() > 0) {
                 t1 += "colspan=3 align=left><font face=Angsana New size=2>" + "ลดเทศกาล.." + tBean.getFastDisc() + DecFmt.format(tBean.getFastDiscAmt()) + "_";
@@ -2124,31 +2184,34 @@ public class PPrint {
             t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
             if (tBean.getTAmount() != tBean.getNetTotal()) {
                 if (tBean.getServiceAmt() > 0) {
-                    t1 += "align=left colspan=2><font face=Angsana New size=1>" + "Sub-TOTAL : " + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(Math.round(tBean.getTAmount())) + "_";
-                    t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "Service :" + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
+                    t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(Math.round(tBean.getTAmount())) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
                 }
-                t1 += "align=left colspan=2><font face=Angsana New size=1>" + "Sub-TOTAL : " + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(Math.round(tBean.getTAmount())) + "_";
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(tBean.getTAmount() - totalDiscount + tBean.getServiceAmt()) + "_";
-                t1 += "colspan=2 align=left><font face=Angsana New size=1>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(vatPrint) + "_";
+                t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(Math.round(tBean.getTAmount())) + "_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getTAmount() - totalDiscount + tBean.getServiceAmt()) + "_";
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
-                    t1 += "colspan=2 align=left><font face=Angsana New size=1>" + "Round...." + "</td><td align=right ><font face=Angsana New size=1>" + DecFmt.format(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint) - (tBean.getTAmount() + tBean.getServiceAmt() + vatPrint)) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "Round...." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint) - (tBean.getTAmount() + tBean.getServiceAmt() + vatPrint)) + "_";
                 } else {
                     t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint)) + "_";
+                    t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
                 }
+            } else {
+                t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
             }
             t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
-            t1 += "align=center colspan=3><font face=Angsana New size=1>" + "COM: " + Value.MACNO + " **No Recipt**" + "_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + Value.MACNO + " **No Recipt**" + "_";
             t1 += "colspan=3 align=center>_";
 
             if (!POSHW.getFootting3().equals("")) {
-                t1 += "align=center colspan=3><font face=Angsana New size=1>" + POSHW.getFootting3().trim().replace(" ", Space) + "_";
+                t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting3().trim().replace(" ", Space) + "_";
             }
             if (!POSHW.getFootting2().equals("")) {
-                t1 += "align=center colspan=3><font face=Angsana New size=1>" + POSHW.getFootting1().trim().replace(" ", Space) + "_";
+                t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting1().trim().replace(" ", Space) + "_";
             }
             if (!POSHW.getFootting1().equals("")) {
-                t1 += "align=center colspan=3><font face=Angsana New size=1>" + POSHW.getFootting2().trim().replace(" ", Space) + "_";
+                t1 += "align=center colspan=3><font face=Angsana New size=2>" + POSHW.getFootting2().trim().replace(" ", Space) + "_";
             }
             t += "align=center colspan=3>_";
 
@@ -2159,8 +2222,7 @@ public class PPrint {
             }
             String t2 = "";
             if (!tBean.getMemCode().equals("")) {
-                MemberBean MemBean = new MemberBean();
-                MemBean = MemberBean.getMember(tBean.getMemCode());
+                MemberBean MemBean = MemmaterController.getMember(tBean.getMemCode());
                 t2 += "align=left colspan=3><font face=Angsana New size=2>สมาชิก - " + MemBean.getMember_Code() + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_NameThai()) + "_";
                 t2 += "align=left colspan=3><font face=Angsana New size=2>" + ThaiUtil.ASCII2Unicode(MemBean.getMember_Remark1()) + "_";
@@ -2201,7 +2263,7 @@ public class PPrint {
     public void printCheckBillDriverPDA(String tableNo, String emp) {
         PrintDriver pd = new PrintDriver();
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         t += "colspan=3 align=center><font face=Angsana New size=5>" + "-----------------------------------------_";
         t += "colspan=3 align=left><font face=Angsana New size=5>" + "***โต๊ะ " + tableNo + " สั่งเช็คบิล***_";
@@ -2222,7 +2284,7 @@ public class PPrint {
     }
 
     public void PrintCheckBill(String tableNo) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true) {
             printCheckBillDriver(tableNo);
         } else {
             BalanceControl bc = new BalanceControl();
@@ -2235,6 +2297,8 @@ public class PPrint {
             int ItemCnt = 0;
             String VatStr;
             CONFIG = POSConfigSetup.Bean();
+            String t1 = "";
+            String t2 = "";
             if (!Value.getComPort().equals("NONE")) {
                 if (OpenPrint(Value.getComPort())) {
                     TableFileControl tCon = new TableFileControl();
@@ -2249,8 +2313,32 @@ public class PPrint {
                         }
                     }
                     SelectStye(14);
-                    print(POSHW.getHeading1());
-                    print(POSHW.getHeading2());
+
+                    if (POSHW.getHeading1().length() >= 18) {
+                        String[] strs = POSHW.getHeading1().trim().split("_");
+                        for (String data : strs) {
+                            t1 += data.replace("_", "\n") + "\n";
+                        }
+//                        print(POSHW.getHeading1());
+                        print(t1);
+                    } else {
+                        if (!POSHW.getHeading1().equals("") || POSHW.getHeading1() != null) {
+                            t1 += POSHW.getHeading1().trim().replace("_", "\n");
+                        }
+                        print(t1);
+                    }
+                    if (POSHW.getHeading2().length() >= 18) {
+                        String[] strs = POSHW.getHeading2().trim().split("_");
+                        for (String data : strs) {
+                            t2 += data.replace("_", "\n");
+                        }
+                        print(t2);
+                    } else {
+                        if (!POSHW.getHeading2().equals("") || POSHW.getHeading2() != null) {
+                            t2 += POSHW.getHeading2().trim().replace("_", "\n") + "\n";
+                        }
+                        print(t2);
+                    }
                     Cposhwsetup();
                     SelectStye(1);
                     print(" ");
@@ -2438,143 +2526,152 @@ public class PPrint {
     }
 
     public void PrintCheckBillPDA(String tableNo) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             printCheckBillDriver(tableNo);
         } else {
 
         }
     }
 
-    public void PrintVoidBill(String tableNo) {
-        if (Value.printdriver) {
-            PrintVoidBillDriver(tableNo);
-        } else {
-            BalanceControl bc = new BalanceControl();
-            List<BalanceBean> listBean = bc.getAllBalance(tableNo);
+    public void PrintVoidBill(final String tableNo) {
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        service.submit(new Runnable() {
+            public void run() {
+                System.out.println("PrintVoidBill : Start Printing....");
+                if (Value.printdriver == true == true) {
+                    PrintVoidBillDriver(tableNo);
+                } else {
+                    BalanceControl bc = new BalanceControl();
+                    List<BalanceBean> listBean = bc.getAllBalance(tableNo);
 
-            int QtyLength = 5;
-            int AmtLength = 10;
-            int SubLength = 20;
-            int SubLength2 = 13;
-            int ItemCnt = 0;
-            String VatStr;
-            CONFIG = POSConfigSetup.Bean();
-            if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
-                    InitPrinter();
-                    PublicVar.P_LineCount = 0;
-                    for (int i = 0; i < listBean.size(); i++) {
-                        BalanceBean bean = (BalanceBean) listBean.get(i);
-                        if (!bean.getR_Void().equals("V")) {
-                            ItemCnt = (int) (ItemCnt + bean.getR_Quan());
-                            break;
-                        }
-                    }
-                    print(POSHW.getHeading1());
-                    print(POSHW.getHeading2());
-                    Cposhwsetup();
-                    print(" *** ใบยกเลิกรายการอาหาร *** ");
-
-                    print(" ");
-                    Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + PUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
-                    print("COM: " + Value.MACNO);
-                    print(" ");
-                    print("----------------------------------------");
-                    for (int i = 0; i < listBean.size(); i++) {
-                        BalanceBean bean = (BalanceBean) listBean.get(i);
-                        if (bean.getR_Void().equals("V")) {
-                            if (bean.getR_Vat().equals("V")) {
-                                VatStr = "-";
-                            } else {
-                                VatStr = "*";
-                            }
-                            if (CONFIG.getP_CodePrn().equals("Y")) {
-                                print(bean.getR_PName());
-                                print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
-                            } else {
-                                print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
-                            }
-                            String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
-                            String NameVoid = "";
-
-                            MySQLConnect mysql = new MySQLConnect();
-                            try {
-                                mysql.open();
-                                ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
-                                if (rsNameVoid.next()) {
-                                    NameVoid = (rsNameVoid.getString("name"));
+                    int QtyLength = 5;
+                    int AmtLength = 10;
+                    int SubLength = 20;
+                    int SubLength2 = 13;
+                    int ItemCnt = 0;
+                    String VatStr;
+                    CONFIG = POSConfigSetup.Bean();
+                    if (!Value.getComPort().equals("NONE")) {
+                        if (OpenPrint(Value.getComPort())) {
+                            InitPrinter();
+                            PublicVar.P_LineCount = 0;
+                            for (int i = 0; i < listBean.size(); i++) {
+                                BalanceBean bean = (BalanceBean) listBean.get(i);
+                                if (!bean.getR_Void().equals("V")) {
+                                    ItemCnt = (int) (ItemCnt + bean.getR_Quan());
+                                    break;
                                 }
-                            } catch (SQLException e) {
-                                MSG.ERR(e.getMessage());
-                            } finally {
-                                mysql.close();
                             }
-                            SelectStye(12);
-                            print("  VOID...Item by : " + ThaiUtil.ASCII2Unicode(NameVoid));
-                            if (!bean.getR_Opt1().equals("")) {
-                                print(bean.getR_Opt1());
+                            print(POSHW.getHeading1());
+                            print(POSHW.getHeading2());
+                            Cposhwsetup();
+                            print(" *** ใบยกเลิกรายการอาหาร *** ");
+
+                            print(" ");
+                            Date dateP = new Date();
+                            print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + PUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
+                            print("COM: " + Value.MACNO);
+                            print(" ");
+                            print("----------------------------------------");
+                            for (int i = 0; i < listBean.size(); i++) {
+                                BalanceBean bean = (BalanceBean) listBean.get(i);
+                                if (bean.getR_Void().equals("V")) {
+                                    if (bean.getR_Vat().equals("V")) {
+                                        VatStr = "-";
+                                    } else {
+                                        VatStr = "*";
+                                    }
+                                    if (CONFIG.getP_CodePrn().equals("Y")) {
+                                        print(bean.getR_PName());
+                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    } else {
+                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    }
+                                    String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
+                                    String NameVoid = "";
+
+                                    MySQLConnect mysql = new MySQLConnect();
+                                    try {
+                                        mysql.open(this.getClass());
+                                        ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
+                                        if (rsNameVoid.next()) {
+                                            NameVoid = (rsNameVoid.getString("name"));
+                                        }
+                                        rsNameVoid.close();
+                                    } catch (SQLException e) {
+                                        MSG.ERR(e.getMessage());
+                                        AppLogUtil.log(PPrint.class, "error", e);
+                                    } finally {
+                                        mysql.closeConnection(this.getClass());
+                                    }
+                                    SelectStye(12);
+                                    print("  VOID...Item by : " + ThaiUtil.ASCII2Unicode(NameVoid));
+                                    if (!bean.getR_Opt1().equals("")) {
+                                        print(bean.getR_Opt1());
+                                    }
+                                    print("    #" + bean.getR_Opt9());
+                                    print("");
+                                }
                             }
-                            print("    #" + bean.getR_Opt9());
+
+                            TableFileControl tCon = new TableFileControl();
+                            TableFileBean tBean = tCon.getData(tableNo);
+
+                            if (tBean.getProDiscAmt() > 0) {
+                                print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getSpaDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getMemDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getFastDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getEmpDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getTrainDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getSubDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getDiscBath() > 0) {
+                                print("     " + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
+                            }
+                            if (tBean.getItemDiscAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
+                            }
+                            if (tBean.getServiceAmt() > 0) {
+                                print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
+                            }
+
+                            print("----------------------------------------");
+                            SelectStye(1);
+                            print("TABLE  " + PUtility.DataFullR(tableNo, 5) + "   " + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน");
+
+                            print(" ");
                             print("");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+                            print(" ");
+
+                            CutPaper();
+                            UpdatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
+                            closePrint();
                         }
                     }
-
-                    TableFileControl tCon = new TableFileControl();
-                    TableFileBean tBean = tCon.getData(tableNo);
-
-                    if (tBean.getProDiscAmt() > 0) {
-                        print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getSpaDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getMemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getFastDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getEmpDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getTrainDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getSubDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getDiscBath() > 0) {
-                        print("     " + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
-                    }
-                    if (tBean.getItemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
-                    }
-                    if (tBean.getServiceAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
-                    }
-
-                    print("----------------------------------------");
-                    SelectStye(1);
-                    print("TABLE  " + PUtility.DataFullR(tableNo, 5) + "   " + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน");
-
-                    print(" ");
-                    print("");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-                    print(" ");
-
-                    CutPaper();
-                    UpdatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
-                    closePrint();
                 }
+
             }
-        }
+        });
 
     }
 
@@ -2596,62 +2693,65 @@ public class PPrint {
                     break;
                 }
             }
+            PPrint();
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
-                    t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                 }
             } else {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
             }
             if (POSHW.getHeading2().length() >= 18) {
                 String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
-                    t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                 }
             } else {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
             }
             t += "colspan=3 align=center>_";
             Cposhwsetup();
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + " *** ใบยกเลิกรายการอาหาร *** " + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + " *** ใบยกเลิกรายการอาหาร *** " + "_");
 
             t += "colspan=3 align=center>_";
             Date dateP = new Date();
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "</td><td align=right><font face=Angsana New size=1>" + "NAME:" + Space + getLastEmployee(tableNo) + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "COM: " + Value.MACNO + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "------------------------------------------------------------" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "</td><td align=right><font face=Angsana New size=2>" + "NAME:" + Space + getLastEmployee(tableNo) + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "COM: " + Value.MACNO + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
                 if (bean.getR_Void().equals("V")) {
                     if (CONFIG.getP_CodePrn().equals("Y")) {
-                        t += ("colspan=3 align=left><font face=Angsana New size=1>" + bean.getR_PName() + "_");
-                        t += ("align=left><font face=Angsana New size=1>" + PUtility.DataFullR(bean.getR_PluCode(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PName() + "_");
+                        t += ("align=left><font face=Angsana New size=2>" + PUtility.DataFullR(bean.getR_PluCode(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
                     } else {
-                        t += ("align=left><font face=Angsana New size=1>" + PUtility.DataFullR(bean.getR_PName(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
+                        t += ("align=left><font face=Angsana New size=2>" + PUtility.DataFullR(bean.getR_PName(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
                     }
-                    String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "';";
+                    String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
                     String NameVoid = "";
 
                     MySQLConnect mysql = new MySQLConnect();
                     try {
-                        mysql.open();
+                        mysql.open(this.getClass());
                         ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
                         if (rsNameVoid.next()) {
                             NameVoid = (rsNameVoid.getString("name"));
                         }
+                        rsNameVoid.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     SelectStye(12);
                     t += (Space + "VOID...Item by : " + ThaiUtil.ASCII2Unicode(NameVoid));
                     if (!bean.getR_Opt1().equals("")) {
-                        t += ("colspan=3 align=left><font face=Angsana New size=1>" + bean.getR_Opt1() + "_");
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_Opt1() + "_");
                     }
-                    t += ("colspan=3 align=left><font face=Angsana New size=1>" + TAB + "#" + bean.getR_Opt9() + "_");
+                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + "#" + bean.getR_Opt9() + "_");
                 }
             }
 
@@ -2659,38 +2759,38 @@ public class PPrint {
             TableFileBean tBean = tCon.getData(tableNo);
 
             if (tBean.getProDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getSpaDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getMemDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + "-" + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + "-" + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getFastDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getEmpDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getTrainDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getSubDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getDiscBath() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength) + "_");
             }
             if (tBean.getItemDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getServiceAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + Space + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9) + "_");
             }
 
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "------------------------------------------------------------" + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "TABLE  " + TAB + PUtility.DataFullR(tableNo, 5) + Space + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "TABLE  " + TAB + PUtility.DataFullR(tableNo, 5) + Space + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน" + "_");
             t += (">_");
             t = changeLanguage(t);
             UpdatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
@@ -2757,7 +2857,7 @@ public class PPrint {
     }
 
     public void PrintTableAction() {
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             PrintTableActionDriver();
         } else if (!Value.getComPort().equals("NONE")) {
             if (OpenPrint(Value.getComPort())) {
@@ -2780,32 +2880,28 @@ public class PPrint {
                 Double SumTotal = 0.0;
 
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
                             + " left join tablefile on balance.r_table=tablefile.tcode "
                             + "where (r_void<>'V') or (r_void is null) "
                             + "group by r_table";
-                    ResultSet rec = stmt.executeQuery(ChkTable);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFull(rec.getString("r_table"), 6)
-                                    + PUtility.DataFull(DecFmt.format(rec.getDouble("sum(r_total)")), 10) + "     "
-                                    + PUtility.DataFull(rec.getString("TCurTime"), 8) + "  "
-                                    + PUtility.DataFull(IntFmt.format(rec.getInt("tcustomer")), 5));
-                            SumTotal = SumTotal + rec.getDouble("sum(r_total)");
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(ChkTable);
+                    while (rs.next()) {
+                        print(PUtility.DataFull(rs.getString("r_table"), 6)
+                                + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
+                                + PUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
+                                + PUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
+                        SumTotal = SumTotal + rs.getDouble("sum(r_total)");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 print("-----------------------------------------");
@@ -2831,7 +2927,7 @@ public class PPrint {
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
         Date dateP = new Date();
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             //PrintDriver
         } else if (!Value.getComPort().equals("NONE")) {
             if (OpenPrint(Value.getComPort())) {
@@ -2916,25 +3012,22 @@ public class PPrint {
                 print("----------------------------------------");
 
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rec.getDouble("amount");
-                        } while (rec.next());
+                    String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while (rs.next()) {
+                        print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                        SumAmt = SumAmt + rs.getDouble("amount");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 print("----------------------------------------");
@@ -2946,18 +3039,14 @@ public class PPrint {
                 int CntBill = 0;
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            CntBill++;
-                            SumCash = SumCash + rec.getDouble("cash");
-                            SumCupon = SumCupon + rec.getDouble("cupon");
-                        } while (rec.next());
+                    String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while (rs.next()) {
+                        CntBill++;
+                        SumCash = SumCash + rs.getDouble("cash");
+                        SumCupon = SumCupon + rs.getDouble("cupon");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2966,17 +3055,12 @@ public class PPrint {
                 print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while (rs.next()) {
+                        print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -2989,17 +3073,12 @@ public class PPrint {
                 print("----------------------------------------");
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SqlQuery = "select *from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                        } while (rec.next());
+                    String SqlQuery = "select * from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while (rs.next()) {
+                        print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
@@ -3033,7 +3112,7 @@ public class PPrint {
     public void PrintTerminalEngForm(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         CONFIG = POSConfigSetup.Bean();
         Date dateP = new Date();
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             PrintTerminalEngFormDriver(frec, CrArray, macNo);
         } else {
             if (!Value.getComPort().equals("NONE")) {
@@ -3150,7 +3229,7 @@ public class PPrint {
                     }
                     if (frec.Cupon_Disc > 0) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
                                     + " t_cupon.cucode code,cupon.cuname name "
@@ -3167,11 +3246,12 @@ public class PPrint {
                                 String name = rs.getString("name");
                                 print(PUtility.DataFullR(name, 20) + PUtility.DataFull(quan, 6) + PUtility.DataFull(DecFmt.format(amt), 13));
                             }
-
+                            rs.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                     }
@@ -3192,7 +3272,7 @@ public class PPrint {
                         print(PUtility.DataFullR("Entertain                       ", 20) + PUtility.DataFull(IntFmt.format(frec.BillEntertain), 6) + PUtility.DataFull(DecFmt.format(frec.Entertain), 13));
                     }
                     print(PUtility.DataFullR("CASH                   ", 20) + PUtility.DataFull(IntFmt.format(frec.CashCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Cash), 13));
-                    String[] credit = credit();
+                    String[] credit = credit(macNo);
                     if (!credit.equals("")) {
                         String cd = credit[0];
                         String am = credit[1];
@@ -3290,7 +3370,7 @@ public class PPrint {
 
     private void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         Date dateP = new Date();
         if (!Value.getComPort().equals("NONE")) {
@@ -3354,71 +3434,72 @@ public class PPrint {
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
-                    t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                 }
             } else {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
             }
             if (POSHW.getHeading2().length() >= 18) {
                 String[] strs = POSHW.getHeading2().replace(" ", Space).split("_");
                 for (String data : strs) {
-                    t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
                 }
             } else {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
             }
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading3()) + "_";
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading4()) + "_";
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
-            t += ("colspan=3 align=center><font face=Angsana New size=1>_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "รายงานการขายยอดเงินของเครื่อง" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "(Daily Sale..Terminal Report)" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>_");
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3()) + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4()) + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
+            t += ("colspan=3 align=center><font face=Angsana New size=2>_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "รายงานการขายยอดเงินของเครื่อง" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "(Daily Sale..Terminal Report)" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>_");
             Cposhwsetup();
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + "Cashier:" + PublicVar._User + " Mac:" + macNo + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Cashier:" + PublicVar._UserName + " Mac:" + macNo + "_");
 
             double NetSale_VatExclude = frec.Net_Sale * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-------------------------------------------------" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "FOOD" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Food) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "BEVERAGE" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Drink) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FOOD" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Food) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "BEVERAGE" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Drink) + TAB + "_");
             if (frec.Product > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "PRODUCT" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Product) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "PRODUCT" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Product) + TAB + "_");
             }
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "TOTAL-SALES" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Dept_Sum) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "TOTAL-SALES" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Dept_Sum) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=====================================" + "_");
             if (frec.Charge > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Charge   Credit", 20) + PUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Charge), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Charge   Credit", 20) + PUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Charge), 13) + "_");
             }
             if (frec.Vip_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Member", 20) + PUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Member", 20) + PUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13) + "_");
             }
             if (frec.Fast_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Festival", 20) + PUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Festival", 20) + PUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13) + "_");
             }
             if (frec.Emp_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Employ", 20) + PUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Employ", 20) + PUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13) + "_");
             }
             if (frec.Train_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Staff Discound", 20) + PUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Train_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Staff Discound", 20) + PUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Train_Disc), 13) + "_");
             }
             if (frec.Sub_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Cupon", 20) + PUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Cupon", 20) + PUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13) + "_");
             }
             if (frec.Gen_Refund > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Bath.", 20) + PUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Bath.", 20) + PUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13) + "_");
             }
             if (frec.Promotion > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Promotion", 20) + PUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Promotion), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Promotion", 20) + PUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Promotion), 13) + "_");
             }
             if (frec.Spacial > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Special", 20) + PUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Spacial), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Special", 20) + PUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Spacial), 13) + "_");
             }
             if (frec.Item_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13) + "_");
             }
             if (frec.Cupon_Disc > 0) {
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
                             + " t_cupon.cucode code,cupon.cuname name "
@@ -3433,48 +3514,49 @@ public class PPrint {
                         double amt = rs.getDouble("amt");
                         String quan = rs.getString("quan");
                         String name = rs.getString("name");
-                        t += (Space + "align=left><font face=Angsana New size=1>" + PUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
+                        t += (Space + "align=left><font face=Angsana New size=2>" + PUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
                     }
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
 
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-------------------------------------------------" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Gross-Sales" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Dept_Sum - totalDiscount) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=================================" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Service Charge" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Service), 19) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Gross-Sales" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Dept_Sum - totalDiscount) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Service Charge" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Service), 19) + TAB + "_");
             if (frec.Gift > 0) {
-                t += ("align=left><font face=Angsana New size=1>" + "Gift Voucher" + "</td><td align=right><font face=Angsana New size=1>" + IntFmt.format(frec.GiftCnt) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Gift) + TAB + "_");
+                t += ("align=left><font face=Angsana New size=2>" + "Gift Voucher" + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(frec.GiftCnt) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Gift) + TAB + "_");
             }
             if (frec.Entertain > 0) {
-                t += ("colspan=3 align=center><font face=Angsana New size=1>" + "Entertain" + IntFmt.format(frec.BillEntertain) + DecFmt.format(frec.Entertain) + TAB + "_");
+                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "Entertain" + IntFmt.format(frec.BillEntertain) + DecFmt.format(frec.Entertain) + TAB + "_");
             }
             if (CONFIG.getP_VatType().contains("I")) {
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
             }
             if (CONFIG.getP_VatType().contains("E")) {
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Net (มูลค่า)" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net (มูลค่า)" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19) + TAB + "_");
             }
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Round Total" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.B_NetDiff) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=1>" + "CASH" + "</td><td align=right><font face=Angsana New size=1>" + IntFmt.format(frec.CashCnt) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Cash) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Round Total" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.B_NetDiff) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "CASH" + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(frec.CashCnt) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Cash) + TAB + "_");
 
 //            พิมพ์ Credit แบบ Detail 
 //            ตัวอย่าง VISA   xxx1234  1000
 //            MASTER xxx3346  1500
-            String[] credit = credit();
+            String[] credit = credit(macNo);
             if (!credit.equals("")) {
                 String cd = credit[0];
                 String am = credit[1];
                 if (am == null) {
                     am = "0";
                 }
-                t += ("align=left><font face=Angsana New size=1>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(cd, 6) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(Double.parseDouble(am)) + TAB + "_");
+                t += ("align=left><font face=Angsana New size=2>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(cd, 6) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(Double.parseDouble(am)) + TAB + "_");
                 List<String[]> list = CreName(macNo);
-                t += ("colspan=3 align=center><font face=Angsana New size=1>" + "รายการรับชำระเครดิต" + "_");
+                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "รายการรับชำระเครดิต" + "_");
                 for (int i = 0; i < list.size(); i++) {
                     String[] CreName = (String[]) list.get(i);
 
@@ -3482,63 +3564,63 @@ public class PPrint {
                     String num = CreName[1];
                     String amt = CreName[2];
                     double amt1 = Double.parseDouble(amt);
-                    t += ("align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFull(name, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(("" + num), 8) + "</td><td  align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(amt1), 13)) + TAB + "_";
+                    t += ("align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(name, 16) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(("" + num), 8) + "</td><td  align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(amt1), 13)) + TAB + "_";
                 }
             }
             if (frec.ArPaymentCnt > 0) {
-                t += ("colspan=1 left=center><font face=Angsana New size=1>" + TAB + "AR." + "</td><td align=right><font face=Angsana New size=1>" + IntFmt.format(frec.ArPaymentCnt) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.ArPayment) + TAB + "_");
+                t += ("colspan=1 left=center><font face=Angsana New size=2>" + TAB + "AR." + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(frec.ArPaymentCnt) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.ArPayment) + TAB + "_");
             }
             if (CrArray != null) {
                 int ArraySize = CrArray.length;
                 for (int i = 0; i < ArraySize; i++) {
-                    t += ("colspan=2 align=center><font face=Angsana New size=1>" + Space + PUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13) + TAB + "_");
+                    t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + PUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13) + TAB + "_");
                 }
             }
 
-            t += ("colspan=3 align=center><font face=Angsana New size=1>_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>_");
             if (frec.Paid_In > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "FLOAT IN" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Paid_In), 13) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT IN" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Paid_In), 13) + TAB + "_");
             }
             if (frec.Paid_Out > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=1>" + "FLOAT OUT" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Paid_Out), 13) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT OUT" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Paid_Out), 13) + TAB + "_");
             }
             double in = frec.Paid_In;
             double out = frec.Paid_Out;
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "CASH IN DRAWER" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Bank In" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Cash), 19) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=================================" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Net Total : " + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale + (frec.B_NetDiff * -1)), 19) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Vat" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.VatAmt), 19) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-------------------------------------------------" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Customer" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(frec.Customer), 6) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "MGR Refund" + Space + PUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + Space + "Doc." + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "MGR Void" + Space + TAB + PUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + Space + "Items." + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.VoidValue), 13) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Total Docket" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(frec.CntBill), 6) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Start Docket" + Space + frec.StBill + Space + "To.." + Space + frec.SpBill + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=================================" + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "SaleType" + TAB + TAB + "Docket" + TAB + TAB + "CC" + TAB + "Amount" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=================================" + "_");
-            t += ("align=left><font face=Angsana New size=1>" + "Dine - In" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=1>" + "Take Away" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=1>" + "Delivery" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=================================" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "Analysts" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>_");
-            t += ("colspan=3 align=right><font face=Angsana New size=1>" + "DineIn" + TAB + TAB + "TakeAway" + TAB + TAB + "Delivery" + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Gross Sales" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + DecFmt.format(totalE) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(totalT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(totalD) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Net Sales" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + DecFmt.format(nettotalE) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(nettotalT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(nettotalD) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Docket" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + IntFmt.format(countBillE) + "</td><td align=right><font face=Angsana New size=1>" + IntFmt.format(countBillT) + "</td><td align=right><font face=Angsana New size=1>" + IntFmt.format(countBillD) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Customer" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + DecFmt.format(countCCE) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(countCCT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(countCCD) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "AVG/Dock" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_DockE) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_DockT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_DockD) + TAB + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=1>" + "AVG/Head" + "_");
-            t += ("align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCE) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCD) + TAB + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-------------------------------------------------" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=1>_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "CASH IN DRAWER" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Bank In" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Cash), 19) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net Total : " + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale + (frec.B_NetDiff * -1)), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Vat" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.VatAmt), 19) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Customer" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(frec.Customer), 6) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Refund" + Space + PUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + Space + "Doc." + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Void" + Space + TAB + PUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + Space + "Items." + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.VoidValue), 13) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Total Docket" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(frec.CntBill), 6) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Start Docket" + Space + frec.StBill + Space + "To.." + Space + frec.SpBill + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "SaleType" + TAB + TAB + "Docket" + TAB + TAB + "CC" + TAB + "Amount" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Dine - In" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Take Away" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Delivery" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "Analysts" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>_");
+            t += ("colspan=3 align=right><font face=Angsana New size=2>" + "DineIn" + TAB + TAB + "TakeAway" + TAB + TAB + "Delivery" + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Gross Sales" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + DecFmt.format(totalE) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(totalT) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(totalD) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Net Sales" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + DecFmt.format(nettotalE) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(nettotalT) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(nettotalD) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Docket" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + IntFmt.format(countBillE) + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(countBillT) + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(countBillD) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Customer" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + DecFmt.format(countCCE) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(countCCT) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(countCCD) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "AVG/Dock" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_DockE) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_DockT) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_DockD) + TAB + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "AVG/Head" + "_");
+            t += ("align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_CCE) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_CCT) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(AVG_CCD) + TAB + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>_");
 
         }
         t = changeReportLanguage(t);
@@ -3556,7 +3638,7 @@ public class PPrint {
     }
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             PrintCashierDriver(frec, CrArray);
         } else {
             if (!Value.getComPort().equals("NONE")) {
@@ -3639,25 +3721,20 @@ public class PPrint {
                     print("----------------------------------------");
 
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rec.getDouble("amount");
-                            } while (rec.next());
+                        String SqlQuery = "select * from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                            SumAmt = SumAmt + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                    } finally {
-                        mysql.close();
+                        AppLogUtil.log(PPrint.class, "error", e);
                     }
 
                     print("----------------------------------------");
@@ -3669,18 +3746,14 @@ public class PPrint {
                     int CntBill = 0;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                CntBill++;
-                                SumCash = SumCash + rec.getDouble("cash");
-                                SumCupon = SumCupon + rec.getDouble("cupon");
-                            } while (rec.next());
+                        String SqlQuery = "select * from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            CntBill++;
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3689,17 +3762,12 @@ public class PPrint {
                     print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                            } while (rec.next());
+                        String SqlQuery = "select * from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3712,17 +3780,12 @@ public class PPrint {
                     print("----------------------------------------");
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                            } while (rec.next());
+                        String SqlQuery = "select * from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
@@ -3744,23 +3807,21 @@ public class PPrint {
                     Double SumAmount = 0.0;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                print(rec.getString("macno") + " " + PUtility.DataFullR(rec.getString("cashier"), 6) + " " + PUtility.DataFullR(rec.getString("r_table"), 5) + " " + PUtility.DataFullR(rec.getString("r_time"), 6) + "  " + PUtility.DataFullR(rec.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rec.getString("r_voidtime"), 6));
-                                print("     " + PUtility.DataFullR(rec.getString("r_pname"), 35));
-                                print("     " + rec.getString("r_refno") + " " + PUtility.DataFull(rec.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 8));
-                                SumVoid++;
-                                SumAmount = SumAmount + rec.getDouble("r_total");
-                            } while (rec.next());
+                        String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
+                            print("     " + PUtility.DataFullR(rs.getString("r_pname"), 26));
+                            print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
+                            SumVoid++;
+                            SumAmount = SumAmount + rs.getDouble("r_total");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                    } finally {
+                        mysql.closeConnection(this.getClass());
                     }
                     print("----------------------------------------");
                     print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
@@ -3803,7 +3864,7 @@ public class PPrint {
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
-        if (Value.printdriver) {
+        if (Value.printdriver == true == true) {
             PrintGroupDriver(GArray);
         } else {
             if (!Value.getComPort().equals("NONE")) {
@@ -3891,52 +3952,52 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
 
         if (POSHW.getHeading1().length() >= 18) {
             String[] strs = POSHW.getHeading1().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
         }
         if (POSHW.getHeading2().length() >= 18) {
             String[] strs = POSHW.getHeading2().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading3()) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading4()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4()) + "_";
         Cposhwsetup();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "REG ID :" + POSHW.getTerminal() + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายงานการขายตามกลุ่มสินค้า" + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("(Daily..Department Report)" + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal() + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("รายงานการขายตามกลุ่มสินค้า" + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("(Daily..Department Report)" + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
-        t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_");
-        t += "align=left><font face=Angsana New size=1>" + ("พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_");
-        t += "align=left><font face=Angsana New size=1>" + ("รหัสกลุ่มสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "รายละเอียด" + "_";
-        t += "align=left><font face=Angsana New size=1>" + "EAT IN " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "TAKE AWAY " + "_";
-        t += "align=left><font face=Angsana New size=1>" + "DELIVERY" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "PINTO " + "_";
-        t += "align=left><font face=Angsana New size=1>" + "WHOLE SALE" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "TOTAL " + "_";
-        t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+        t += "align=left><font face=Angsana New size=2>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_");
+        t += "align=left><font face=Angsana New size=2>" + ("พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_");
+        t += "align=left><font face=Angsana New size=2>" + ("รหัสกลุ่มสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "รายละเอียด" + "_";
+        t += "align=left><font face=Angsana New size=2>" + "EAT IN " + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "TAKE AWAY " + "_";
+        t += "align=left><font face=Angsana New size=2>" + "DELIVERY" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "PINTO " + "_";
+        t += "align=left><font face=Angsana New size=2>" + "WHOLE SALE" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "TOTAL " + "_";
+        t += "colspan=3 align=Center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
         if (GArray[0].S_Qty > 0) {
             for (int i = 0; i < ArraySize; i++) {
-                t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullR(GArray[i].GroupCode, 4) + Space + Space + GArray[i].GroupName + "_");
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullR(GArray[i].GroupCode, 4) + Space + Space + GArray[i].GroupName + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
 
                 SumEQty = SumEQty + GArray[i].E_Qty;
                 SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -3952,13 +4013,13 @@ public class PPrint {
                 SumSAmt = SumSAmt + GArray[i].S_Amt;
             }
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
-        t += "align=center><font face=Angsana New size=1>" + ("***Subtotal***" + "_");
-        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 12) + "_");
-        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 12) + "_");
-        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 12) + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-        t += "align=center><font face=Angsana New size=1>" + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
+        t += "align=center><font face=Angsana New size=2>" + ("***Subtotal***" + "_");
+        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 12) + "_");
+        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 12) + "_");
+        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 12) + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
+        t += "align=center><font face=Angsana New size=2>" + "_";
 
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
@@ -4118,7 +4179,7 @@ public class PPrint {
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver) {
+            if (Value.printdriver == true == true) {
                 PrintPluDriver(GArray);
             } else {
                 if (OpenPrint(Value.getComPort())) {
@@ -4214,46 +4275,46 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
         }
         if (POSHW.getHeading2().trim().length() >= 18) {
             String[] strs = POSHW.getHeading2().trim().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading3().trim()) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading4().trim()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
         Cposhwsetup();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "REG.ID :" + POSHW.getTerminal() + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "รายงานการขายตามรหัสสินค้า" + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "(PLU Report)" + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG.ID :" + POSHW.getTerminal() + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "รายงานการขายตามรหัสสินค้า" + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "(PLU Report)" + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>_";
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + PublicVar._User + " Mac:" + Space + Value.MACNO + "_";
-        t += "align=left><font face=Angsana New size=1>" + "หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_";
-        t += "align=left><font face=Angsana New size=1>" + "พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_";
-        t += "align=left><font face=Angsana New size=1>" + "รหัสกลุ่มสินค้า : " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_";
-        t += "align=left><font face=Angsana New size=1>" + "รหัสสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + GArray[0].Plu1 + "..." + GArray[0].Plu2 + "_";
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายละเอียด" + "_");
-        t += "align=left><font face=Angsana New size=1>" + "EAT IN " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "TAKE AWAY " + "_";
-        t += "align=left><font face=Angsana New size=1>" + "DELIVERY" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "PINTO " + "_";
-        t += "align=left><font face=Angsana New size=1>" + "WHOLE SALE" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + "TOTAL " + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + PublicVar._User + " Mac:" + Space + Value.MACNO + "_";
+        t += "align=left><font face=Angsana New size=2>" + "หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_";
+        t += "align=left><font face=Angsana New size=2>" + "พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_";
+        t += "align=left><font face=Angsana New size=2>" + "รหัสกลุ่มสินค้า : " + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_";
+        t += "align=left><font face=Angsana New size=2>" + "รหัสสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Plu1 + "..." + GArray[0].Plu2 + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("รายละเอียด" + "_");
+        t += "align=left><font face=Angsana New size=2>" + "EAT IN " + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "TAKE AWAY " + "_";
+        t += "align=left><font face=Angsana New size=2>" + "DELIVERY" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "PINTO " + "_";
+        t += "align=left><font face=Angsana New size=2>" + "WHOLE SALE" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + "TOTAL " + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
         String TempDept = "";
         if (ArraySize > 0) {
             TempDept = "";
@@ -4261,14 +4322,16 @@ public class PPrint {
         if (GArray[0].S_Qty > 0) {
             for (int i = 0; i < ArraySize; i++) {
                 if (!GArray[i].GroupCode.equals(TempDept)) {
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(GArray[i].GroupCode, 4) + Space + GArray[i].GroupName) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(GArray[i].GroupCode, 4) + Space + GArray[i].GroupName) + "_";
                     TempDept = GArray[i].GroupCode;
                 }
 
-                t += "align=left><font face=Angsana New size=1>" + SubStringText(GArray[i].PCode + Space + GArray[i].PName, 33) + "_";
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
+//                t += "align=left><font face=Angsana New size=2>" + SubStringText(GArray[i].PCode + Space + GArray[i].PName, 33) + "_";
+                t += "align=left><font face=Angsana New size=2>" + SubStringText(GArray[i].PCode, 33) + "_";
+                t += "align=left><font face=Angsana New size=2>" + SubStringText(Space + GArray[i].PName, 33) + "_";
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
 
                 SumEQty = SumEQty + GArray[i].E_Qty;
                 SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -4284,13 +4347,13 @@ public class PPrint {
                 SumSAmt = SumSAmt + GArray[i].S_Amt;
             }
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("***Subtotal***") + "_";
-        t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 10)) + "_";
-        t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 10)) + "_";
-        t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 10)) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("***Subtotal***") + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 10)) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "_";
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 
@@ -4541,7 +4604,7 @@ public class PPrint {
     }
 
     public void PrintBillCopy(TranRecord[] myArray1, String _RefNo, int ICopy, CreditPaymentRec[] CreditArray1) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true) {
             PrintBillCopyDriver(_RefNo, ICopy);
         } else {
             BillControl bc = new BillControl();
@@ -4574,7 +4637,7 @@ public class PPrint {
                         }
                     }
                     CONFIG = POSConfigSetup.Bean();
-                    POSHW = POSHWSetup.Bean(Value.getMacno());
+                    POSHW = POSHWSetup.Bean(Value.MACNO);
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
@@ -4687,28 +4750,25 @@ public class PPrint {
                     }
                     if (tBean.getB_CuponDiscAmt() > 0) {
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                            ResultSet rec = stmt.executeQuery(CheckCoupon);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rec.getString("sms_code");
-                                    if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
-                                        print("     " + "SMS CODE " + SMS_Code);
-                                    }
-                                } while (rec.next());
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            ResultSet rs = stmt.executeQuery(CheckCoupon);
+                            while (rs.next()) {
+                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                String SMS_Code = rs.getString("sms_code");
+                                if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
+                                    print("     " + "SMS CODE " + SMS_Code);
+                                }
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     if (tBean.getB_ServiceAmt() > 0) {
@@ -4735,24 +4795,21 @@ public class PPrint {
                         print("     " + PUtility.DataFullR("บัตรกำนัล..............", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_GiftVoucher()), AmtLength));
 
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while (rs.next()) {
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     if (tBean.getB_PayAmt() > 0) {
@@ -4762,9 +4819,9 @@ public class PPrint {
                         //get credit name
                         String crName = "";
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
-                            String sql = "select * from creditfile where crcode='" + tBean.getB_CrCode1() + "'";
+                            String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
@@ -4775,8 +4832,9 @@ public class PPrint {
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                         print(tBean.getB_CrCode1() + "  " + crName);
@@ -4838,8 +4896,8 @@ public class PPrint {
 
         BillControl billControl = new BillControl();
         BillNoBean tBean = billControl.getData(RefNo);
-
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        PPrint p = new PPrint();
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!Value.getComPort().equals("NONE")) {
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -4878,9 +4936,10 @@ public class PPrint {
                         + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
                         + "</td><td align=right><font face=Angsana New size=2>"
                         + "TABLE :" + Space + tBean.getB_Table() + "_";
-                t += "colspan=2 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(tBean.getB_Cust())
+                t += "colspan=4 align=left><font face=Angsana New size=-2> " + "CC : " + IntFmt.format(tBean.getB_Cust())
                         + " Seat :"
-                        + "</td><td align=right><font face=Angsana New size=2>"
+                        + "_";
+                t += "colspan=4 align=right><font face=Angsana New size=2> "
                         + "NAME: " + Space
                         + getLastEmployeeCheckBill(tBean.getB_Table(), RefNo) + "_";
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -4891,59 +4950,59 @@ public class PPrint {
                         if (CONFIG.getP_CodePrn().equals("Y")) {
                             t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PName() + "_");
                             t += "align=left width=-90%><font face=Angsana New size=2>"
-                                    + DecFmt.format(bean.getR_Quan())
+                                    + IntFmt.format(bean.getR_Quan())
                                     + "</td><td align=left width=-30%><font face=Angsana New size=2>"
                                     + SubStringText(bean.getR_PName(), 20)
                                     + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                    + DecFmt.format(bean.getR_Total()) + "_";
+                                    + IntFmt.format(bean.getR_Total()) + "_";
                         } else {
                             t += "align=left width=-90%><font face=Angsana New size=2>"
-                                    + DecFmt.format(bean.getR_Quan())
+                                    + IntFmt.format(bean.getR_Quan())
                                     + "</td><td align=left width=-30%><font face=Angsana New size=2>"
                                     + SubStringText(bean.getR_PName(), 20)
                                     + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                    + DecFmt.format(bean.getR_Total()) + "_";
+                                    + IntFmt.format(bean.getR_Total()) + "_";
                         }
                     } else {
                         if (bean.getR_PrAmt() == 0) {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PName() + "_");
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Quan())
+                                        + IntFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
                             } else {
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Quan())
+                                        + IntFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
                             }
                         } else {
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PName() + "_");
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Quan())
+                                        + IntFmt.format(bean.getR_Quan())
                                         + "</td><td align=left width=-30%><font face=Angsana New size=2>"
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
                             } else {
                                 if (bean.getR_PName().length() > 20) {
                                 }
                                 t += "align=left width=-90%><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Quan())
-                                        + "</td><td align=left width=-30%><font face=Angsana New size=2>"
+                                        + IntFmt.format(bean.getR_Quan())
+                                        + "</td><td align=left width=-30%><font face=Angsana New size=3>"
                                         + SubStringText(bean.getR_PName(), 20)
                                         + "</td><td align=right width=50><font face=Angsana New size=2>"
-                                        + DecFmt.format(bean.getR_Total()) + "_";
+                                        + IntFmt.format(bean.getR_Total()) + "_";
                             }
                             if (bean.getR_PrType().equals("-P")) {
                                 if (bean.getR_PrAmt() > 0) {
-                                    t += ("colspan=3 align=left><font face=Angsana New size=1>" + "**Promotion  " + bean.getR_PrCode() + "_");
+                                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**Promotion  " + bean.getR_PrCode() + "_");
                                 }
                                 if (bean.getR_PrAmt2() > 0) {
                                     t += ("colspan=3 align=left><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode2()), 20) + "_");
@@ -5019,24 +5078,21 @@ public class PPrint {
             }
             if (tBean.getB_CuponDiscAmt() > 0) {
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                    ResultSet rec = stmt.executeQuery(CheckCoupon);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength) + "_");
-                        } while (rec.next());
+                    ResultSet rs = stmt.executeQuery(CheckCoupon);
+                    while (rs.next()) {
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
             if (tBean.getB_ServiceAmt() > 0) {
@@ -5050,7 +5106,7 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-TOTAL " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(tBean.getB_NetTotal()) + "_");
             } else {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format((tBean.getB_NetVat() + tBean.getB_NetNonVat())) + "_");
-                t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getB_NetTotal())) + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total " + "</td><td align=right><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getB_NetTotal())) + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Round..." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_NetDiff()) + "_");
 
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "VAT INCLUDED" + "_");
@@ -5059,24 +5115,21 @@ public class PPrint {
             if (tBean.getB_GiftVoucher() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "บัตรกำนัล...." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_GiftVoucher()) + "_");
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String CheckGift = "select *from t_gift where (refno='" + RefNo + "')";
-                    ResultSet rec = stmt.executeQuery(CheckGift);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        do {
-                            t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rec.getString("giftbarcode") + rec.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength) + "_");
-                        } while (rec.next());
+                    String CheckGift = "select * from t_gift where (refno='" + RefNo + "')";
+                    ResultSet rs = stmt.executeQuery(CheckGift);
+                    while (rs.next()) {
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rs.getString("giftbarcode") + rs.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength) + "_");
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
             if (tBean.getB_PayAmt() > 0) {
@@ -5086,9 +5139,9 @@ public class PPrint {
                 //get credit name
                 String crName = "";
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
-                    String sql = "select * from creditfile where crcode='" + tBean.getB_CrCode1() + "'";
+                    String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
                     Statement stmt = mysql.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
@@ -5099,9 +5152,11 @@ public class PPrint {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
+                    AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
+
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + tBean.getB_CrCode1() + Space + crName + "_");
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + "XXXXXXXXXXX" + PUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + TAB + tBean.getB_AppCode1() + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength) + "_");
@@ -5141,7 +5196,7 @@ public class PPrint {
     }
 
     public void PrintBillRefund(String _RefNo) {
-        if (Value.printdriver) {
+        if (Value.printdriver == true) {
             PrintBillRefundDriver(_RefNo);
         } else {
             BillControl bc = new BillControl();
@@ -5157,7 +5212,7 @@ public class PPrint {
             BillControl bill = new BillControl();
             BillNoBean bBean = bill.getData(_RefNo);
 
-            POSHW = POSHWSetup.Bean(Value.getMacno());
+            POSHW = POSHWSetup.Bean(Value.MACNO);
             CONFIG = POSConfigSetup.Bean();
 
             if (!Value.getComPort().equals("NONE")) {
@@ -5284,28 +5339,25 @@ public class PPrint {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
-                            ResultSet rec = stmt.executeQuery(CheckCoupon);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength));
-                                    String SMS_Code = rec.getString("sms_code");
-                                    if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
-                                        print("     " + "SMS CODE " + SMS_Code);
-                                    }
-                                } while (rec.next());
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            ResultSet rs = stmt.executeQuery(CheckCoupon);
+                            while (rs.next()) {
+                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                String SMS_Code = rs.getString("sms_code");
+                                if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
+                                    print("     " + "SMS CODE " + SMS_Code);
+                                }
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_ServiceAmt() > 0) {
@@ -5335,24 +5387,21 @@ public class PPrint {
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
-                            String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                            ResultSet rec = stmt.executeQuery(CheckGift);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    print("   " + PUtility.DataFull(rec.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), AmtLength));
-                                } while (rec.next());
+                            String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                            ResultSet rs = stmt.executeQuery(CheckGift);
+                            while (rs.next()) {
+                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_PayAmt() > 0) {
@@ -5416,7 +5465,7 @@ public class PPrint {
         BillControl bill = new BillControl();
         BillNoBean bBean = bill.getData(_RefNo);
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -5570,24 +5619,21 @@ public class PPrint {
         }
         if (bBean.getB_CuponDiscAmt() > 0) {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
-                ResultSet rec = stmt.executeQuery(CheckCoupon);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rec.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rec.getDouble("cuamt")), AmtLength) + "_");
-                    } while (rec.next());
+                ResultSet rs = stmt.executeQuery(CheckCoupon);
+                while (rs.next()) {
+                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(PPrint.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
         totalDiscount = bBean.getB_ProDiscAmt() + bBean.getB_SpaDiscAmt()
@@ -5620,24 +5666,21 @@ public class PPrint {
             t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + PUtility.DataFullR("บัตรกำนัล...", SubLength) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher()) + "_");
 
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
-                ResultSet rec = stmt.executeQuery(CheckGift);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += ("colspan=3 align=center><font face=Angsana New size=2>" + TAB + rec.getString("giftbarcode") + "@" + DecFmt.format(rec.getDouble("giftamt")) + "_");
-                    } while (rec.next());
+                String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
+                ResultSet rs = stmt.executeQuery(CheckGift);
+                while (rs.next()) {
+                    t += ("colspan=3 align=center><font face=Angsana New size=2>" + TAB + rs.getString("giftbarcode") + "@" + DecFmt.format(rs.getDouble("giftamt")) + "_");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(PPrint.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -5682,73 +5725,69 @@ public class PPrint {
     }
 
     private void PrintTableActionDriver() {
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {
             String[] strs = POSHW.getHeading1().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=Angsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading1().trim().replace(" ", "&nbsp; ") + "_";
         }
         if (POSHW.getHeading2().length() >= 18) {
             String[] strs = POSHW.getHeading2().replace(" ", Space).split("_");
             for (String data : strs) {
-                t += "colspan=3 align=center><font face=sAngsana New size=1>" + data + "_";
+                t += "colspan=3 align=center><font face=sAngsana New size=2>" + data + "_";
             }
         } else {
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading3()) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getHeading4()) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
-        t += ("colspan=3 align=center><font face=Angsana New size=1>_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4()) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
+        t += ("colspan=3 align=center><font face=Angsana New size=2>_");
 
         Cposhwsetup();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน)") + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Daily...Table Check" + "_");
-        t += ("colspan=3 align=center><font face=Angsana New size=1>_");
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน)") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("Daily...Table Check" + "_");
+        t += ("colspan=3 align=center><font face=Angsana New size=2>_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ")) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Table" + Space + "Amount" + Space + "Open-Time" + Space + "Customer") + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ")) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("Table" + Space + "Amount" + Space + "Open-Time" + Space + "Customer") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
         Double SumTotal = 0.0;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
                     + " left join tablefile on balance.r_table=tablefile.tcode "
                     + "where (r_void<>'V') or (r_void is null) "
                     + "group by r_table";
-            ResultSet rec = stmt.executeQuery(ChkTable);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(rec.getString("r_table"), 6)
-                            + PUtility.DataFullSpace(DecFmt.format(rec.getDouble("sum(r_total)")), 10) + Space
-                            + "</td><td align=right><fonjt face=Angsana New size=1>"
-                            + PUtility.DataFullSpace(rec.getString("TCurTime"), 8) + Space
-                            + PUtility.DataFullSpace(IntFmt.format(rec.getInt("tcustomer")), 5)) + "_";
-                    SumTotal = SumTotal + rec.getDouble("sum(r_total)");
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(ChkTable);
+            while (rs.next()) {
+                t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(rs.getString("r_table"), 6)
+                        + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
+                        + "</td><td align=right><fonjt face=Angsana New size=2>"
+                        + PUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
+                        + PUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
+                SumTotal = SumTotal + rs.getDouble("sum(r_total)");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";
-        t += "align=left><font face=Angsana New size=1>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=1" + PUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("------------------------------------------------------------") + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
+        t += "align=left><font face=Angsana New size=2>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=2" + PUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
 
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
@@ -5763,7 +5802,7 @@ public class PPrint {
     }
 
     public void printHeaderBill() {
-        if (Value.printdriver) {
+        if (Value.printdriver == true) {
             printHeaderBillDriver();
         } else if (!Value.getComPort().equals("NONE")) {
             if (OpenPrint(Value.getComPort())) {
@@ -5786,7 +5825,7 @@ public class PPrint {
 
     private void UpdatePrintCheckBill(String table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 String sql = "UPDATE tablefile SET PrintChkBill= 'Y' WHERE Tcode='" + table + "'";
@@ -5794,15 +5833,16 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     private List<String[]> CreName(String macNo) {
         List<String[]> list = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String sql = "select B_CrCode1, B_CardNo1, sum(B_CrAmt1) B_CrAmt1 "
@@ -5812,20 +5852,20 @@ public class PPrint {
                     + "and b_macno='" + macNo + "' "
                     + "and b_void<>'V' "
                     + "group by B_CrCode1 order by B_CrCode1 ";
-            ResultSet rec = stmt.executeQuery(sql);
-            while (rec.next()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
                 String[] CreName = new String[]{"", "", ""};
-                String name = rec.getString("B_CrCode1");
-                String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "'";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
+                String name = rs.getString("B_CrCode1");
+                String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "' limit 1";
+                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
                 String creditName;
-                if (rs.next()) {
-                    creditName = ThaiUtil.ASCII2Unicode(rs.getString("crname"));
+                if (rs2.next()) {
+                    creditName = ThaiUtil.ASCII2Unicode(rs2.getString("crname"));
                     name = name + " : " + creditName;
                 }
-                rs.close();
-                String code = rec.getString("B_CardNo1");
-                String amount = rec.getString("B_CrAmt1");
+                rs2.close();
+                String code = rs2.getString("B_CardNo1");
+                String amount = rs2.getString("B_CrAmt1");
                 switch (code.length()) {
                     case 5:
                         code = code.substring(1, 5);
@@ -5871,52 +5911,54 @@ public class PPrint {
                 CreName[2] = amount;
                 list.add(CreName);
             }
-
-            rec.close();
+            rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return list;
     }
 
-    private String[] credit() {
+    private String[] credit(String Macno) {
         CONFIG = POSConfigSetup.Bean();
         String[] credit = new String[]{"", ""};
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select  count(b_crcode1) b_crcode1,b_crcode1,sum(b_cramt1) "
                     + "from billno"
                     + " where b_void<>'V' "
                     + "and b_cramt1>'0' "
+                    + "and B_MacNo='" + Macno + "'"
                     + "group by b_crcode1 "
                     + "order by b_crcode1 ";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
+            ResultSet rs = stmt.executeQuery(SqlQuery);
             int dCardNo = 0;
             double dAmt = 0.00;
             String CardNo;
             String Amt;
-            while (rec.next()) {
-                CardNo = rec.getString("b_crcode1");
-                Amt = rec.getString("sum(b_cramt1)");
+            while (rs.next()) {
+                CardNo = rs.getString("b_crcode1");
+                Amt = rs.getString("sum(b_cramt1)");
 
                 dAmt += Double.parseDouble(Amt);
                 dCardNo += Integer.parseInt(CardNo);
             }
             credit[0] = dCardNo + "";
             credit[1] = dAmt + "";
-            rec.close();
+            rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return credit;
@@ -5957,7 +5999,7 @@ public class PPrint {
                 + "group by b_etd";
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int countb_refnoE = 0;
             int countb_refnoT;
@@ -6083,39 +6125,39 @@ public class PPrint {
 
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(PPrint.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
 
         return listObj;
     }
 
     private void Cposhwsetup() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String billnoT = "select macno from poshwsetup";
-            ResultSet rec = stmt.executeQuery(billnoT);
-
-            if (rec.next()) {
-                String regid = rec.getString("macno");
+            String billnoT = "select macno from poshwsetup limit 1";
+            ResultSet rs = stmt.executeQuery(billnoT);
+            if (rs.next()) {
+                String regid = rs.getString("macno");
                 this.Regid = regid;
             }
 
-            rec.close();
+            rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     private void printEntertain(String b_Table) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select CuCode, CuName, R_PrCuQuan, CuponDiscAmt "
                     + "from tablefile t,balance b,cupon c "
@@ -6144,8 +6186,9 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -6153,7 +6196,7 @@ public class PPrint {
         String R_EMP = "";
         MySQLConnect mysql = new MySQLConnect();
         BillNoBean b = new BillNoBean();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select balance.r_emp r_emp,employ.code R_EmpCode,employ.name R_EmpName "
                     + "from balance "
@@ -6164,27 +6207,26 @@ public class PPrint {
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     R_EMP = ThaiUtil.ASCII2Unicode(rs.getString("R_EmpName").replace(">", "").replace("<", "").replace("_", ""));
-                    b.set_Employ(R_EMP);
+                    b.setEmploy(R_EMP);
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        return ThaiUtil.ASCII2Unicode(R_EMP);
+        return R_EMP;
     }
 
     public String getLastEmployeeCheckBill(String tableNo, String refno) {
         String R_EMP = "-";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "select r_emp "
-                    + "from t_sale "
-                    + "where r_table='" + tableNo + "' "
-                    + "and r_refno='" + refno + "'";
+            String sql = "select r_emp from t_sale "
+                    + "where r_table='" + tableNo + "' and r_refno='" + refno + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -6200,17 +6242,20 @@ public class PPrint {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return R_EMP;
     }
 
     public String SubStringText(String str, int prefix) {
-        if (POSHW.getPRNTYPE().equals("4")) {
-            prefix = 16;
-        }
+//        if (POSHW.getPRNTYPE().equals("4")) {
+//            prefix = 16;
+//        } else {
+//        prefix = 50;
+//        }
         int i;
         i = str.length();
         if (i > prefix) {
@@ -6224,15 +6269,13 @@ public class PPrint {
         List<Object[]> listObj = new ArrayList<>();
         String cuname;
         double total;
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
-            String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total"
-                    + " from t_cupon "
-                    + "inner join cupon "
+            String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total "
+                    + "from t_cupon inner join cupon "
                     + "on t_cupon.cucode = cupon.cucode "
-                    + "where r_refno='" + r_refno + "' "
-                    + "group by r_refno";
-            mysql.open();
+                    + "where r_refno='" + r_refno + "' group by r_refno";
+            mysql.open(this.getClass());
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 cuname = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
@@ -6241,7 +6284,11 @@ public class PPrint {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
+
         return listObj;
     }
 
@@ -6327,17 +6374,20 @@ public class PPrint {
         String cuName = "";
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
-            String sql = "select cuname from cupon where cucode='" + cuCode + "'";
+            mysql.open(this.getClass());
+            String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 cuName = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
             }
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
         return cuName;
     }
 }

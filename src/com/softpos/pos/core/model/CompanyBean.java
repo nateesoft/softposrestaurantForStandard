@@ -386,6 +386,14 @@ public class CompanyBean {
         this.FloorTab6 = FloorTab6;
     }
 
+    public String getFloorTab7() {
+        return FloorTab7;
+    }
+
+    public void setFloorTab7(String FloorTab7) {
+        this.FloorTab7 = FloorTab7;
+    }
+
     public String getPdahead3() {
         return pdahead3;
     }
@@ -401,13 +409,6 @@ public class CompanyBean {
     public void setPdahead4(String pdahead4) {
         this.pdahead4 = pdahead4;
     }
-
-    public String getFloorTab7() {
-        return FloorTab7;
-    }
-
-    public void setFloorTab7(String FloorTab7) {
-        this.FloorTab7 = FloorTab7;
-    }
+    
     
 }

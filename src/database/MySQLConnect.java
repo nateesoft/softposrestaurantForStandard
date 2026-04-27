@@ -1,16 +1,17 @@
 package database;
 
+import com.softpos.pos.core.controller.Value;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.softpos.pos.core.controller.Value;
+import util.AppLogUtil;
 import util.MSG;
 
 public class MySQLConnect {
@@ -21,41 +22,11 @@ public class MySQLConnect {
     public static String UserName = null;
     public static String Password = null;
     public static String PortNumber = null;
+    public static String CharSet = "utf-8";
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
+    private Class clazz = null;
 
-    public String getMsgError() {
-        return msgError;
-    }
-
-    public void setMsgError(String msgError) {
-        this.msgError = msgError;
-    }
-
-    public void open() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-        } catch (ClassNotFoundException | SQLException e) {
-            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    public Connection getConnection() {
-        return con;
-    }
-
-    public void close() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public static void getDbVar() {
+    static {
         try {
             FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
             DataInputStream ds = new DataInputStream(fs);
@@ -67,6 +38,7 @@ public class MySQLConnect {
                     HostName = data[1];
                 } else if (data[0].equalsIgnoreCase("database")) {
                     DbName = data[1];
+                    System.out.println("Database Name = "+DbName);
                     Value.DATABASE = data[1];
                 } else if (data[0].equalsIgnoreCase("user")) {
                     UserName = data[1];
@@ -74,6 +46,8 @@ public class MySQLConnect {
                     Password = data[1];
                 } else if (data[0].equalsIgnoreCase("port")) {
                     PortNumber = data[1];
+                } else if (data[0].equalsIgnoreCase("charset")) {
+                    CharSet = data[1];
                 } else if (data[0].equalsIgnoreCase("macno")) {
                     Value.MACNO = data[1];
                 } else if (data[0].equalsIgnoreCase("language")) {
@@ -117,24 +91,106 @@ public class MySQLConnect {
             fs.close();
         } catch (IOException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(MySQLConnect.class, "error", e);
         }
     }
 
-    public static void startMysql() {
-        try {
-            Runtime.getRuntime().exec("cmd /c start d:\"\"startService.bat");
-            System.out.println("MySQL server start successfully!");
-        } catch (IOException e) {
+    public String getMsgError() {
+        return msgError;
+    }
 
+    public void setMsgError(String msgError) {
+        this.msgError = msgError;
+    }
+
+    public void open(Class clazz) {
+//        try {
+//            close();
+//            Thread.sleep(1);
+//        } catch (Exception e) {
+//        }
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+//            System.out.println(this.clazz + "(not close) CON CODE >> " + MySQLConstants.MYSQL_CONNECT.toString());
+            closeConnection(clazz);
+        }
+
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+//                System.out.println(this.clazz + "Connection:" + con.hashCode());
+//                System.out.println(this.clazz + "(new connected) CON CODE >> " + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.put(con.hashCode(), this.clazz);
+            } catch (ClassNotFoundException | SQLException e) {
+                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                AppLogUtil.log(MySQLConnect.class, "error", e);
+                System.exit(0);
+            }
+        }
+    }
+    public void open() {
+        try {
+            close();
+            Thread.sleep(2);
+        } catch (Exception e) {
+        }
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+//            System.out.println(this.clazz + "(not close) CON CODE >> " + MySQLConstants.MYSQL_CONNECT.toString());
+            closeConnection(clazz);
+        }
+
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+//                System.out.println(this.clazz + "Connection:" + con.hashCode());
+//                System.out.println(this.clazz + "(new connected) CON CODE >> " + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.put(con.hashCode(), this.clazz);
+            } catch (ClassNotFoundException | SQLException e) {
+                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                AppLogUtil.log(MySQLConnect.class, "error", e);
+                System.exit(0);
+            }
         }
     }
 
-    public static void stopMysql() {
-        try {
-            Runtime.getRuntime().exec("cmd /c start d:\"\"stopService.bat");
-            System.out.println("MySQL server stopped successfully!");
-        } catch (IOException e) {
+    public Connection getConnection() {
+        return con;
+    }
 
+    public void close() {
+        if (con != null) {
+            try {
+                con.close();
+//                System.out.println(this.clazz + "Connection_Close:" + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.remove(con.hashCode());
+            } catch (SQLException ex) {
+                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+                AppLogUtil.log(MySQLConnect.class, "error", ex);
+            }
+
+        }
+
+    }
+
+    public void closeConnection(Class clazz) {
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+
+            if (con != null) {
+                try {
+//                     System.out.println(this.clazz + "(close) CON CODE >> " + con.hashCode());
+                    con.close();
+//                System.out.println(this.clazz + "Connection_Close:" + con.hashCode());
+                    MySQLConstants.MYSQL_CONNECT.remove(con.hashCode());
+                } catch (SQLException ex) {
+                    Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+                    AppLogUtil.log(MySQLConnect.class, "error", ex);
+                }
+
+            }
         }
     }
 

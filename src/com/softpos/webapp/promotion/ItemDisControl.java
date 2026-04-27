@@ -1,21 +1,19 @@
 package com.softpos.webapp.promotion;
 
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.webapp.service.ServiceControl;
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class ItemDisControl {
-
-    public ItemDisControl() {
-    }
 
     public void saveBalanceItemDiscount(String PCode, String Table, String Index, double prDisc, double prBaht, MemberBean memberBean) {
         BalanceControl bCon = new BalanceControl();
@@ -84,15 +82,15 @@ public class ItemDisControl {
                 addServiceAmt = Service / 100 * R_Total;
 
                 if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
-                    addServiceAmt = NumberControl.UP_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("D")) {
-                    addServiceAmt = NumberControl.DOWN_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.DOWN_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("O")) {
                     //ไม่มีการปัด
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("N")) {
-                    addServiceAmt = NumberControl.UP_DOWN_NATURAL_BAHT(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_DOWN_NATURAL_BAHT(addServiceAmt);
                 } else if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("F")) {
-                    addServiceAmt = NumberControl.UP_DOWN_25(addServiceAmt);
+                    addServiceAmt = NumberUtil.UP_DOWN_25(addServiceAmt);
                 }
 
                 R_Total = bean.getR_Total() + addServiceAmt;
@@ -108,8 +106,8 @@ public class ItemDisControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();mysql.closeConnection(this.getClass());
+        mysql.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
                     + "R_PrType = '" + bean.getR_PrType() + "',"
@@ -141,7 +139,7 @@ public class ItemDisControl {
                 stmt1.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
-                
+                AppLogUtil.log(ItemDisControl.class, "error", e);
             }
 
             //update tablefile
@@ -155,7 +153,9 @@ public class ItemDisControl {
             stmt1.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
         BalanceControl.updateProSerTable(Table, memberBean);

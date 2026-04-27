@@ -1,31 +1,28 @@
 package com.softpos.discount;
 
-import com.softpos.pos.core.model.DiscountBean;
+import com.softpos.main.program.CouponDiscount;
+import com.softpos.pos.core.controller.BalanceControl;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.CuponBean;
+import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
-import com.softpos.member.MemberControl;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import javax.swing.JOptionPane;
-import com.softpos.pos.core.controller.BalanceControl;
-import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
-import com.softpos.main.program.CouponDiscount;
-import com.softpos.main.program.MemberDialog;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
 import java.sql.SQLException;
 import java.sql.Statement;
-import sun.natee.project.util.NumberFormat;
-import sun.natee.project.util.ThaiUtil;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+import util.AppLogUtil;
 import util.MSG;
+import util.NumberFormat;
+import util.NumberUtil;
 
 public class DiscountDialog extends javax.swing.JDialog {
 
@@ -38,9 +35,10 @@ public class DiscountDialog extends javax.swing.JDialog {
     private MemberBean memberBean;
     private String Member1;
     private String Member2;
+    private Double ServiceAmt = 0.00;
 
     public DiscountDialog(java.awt.Dialog parent, boolean modal,
-            String tableNo, double totalAmount, MemberBean memberBean, String Member1, String Member2) {
+            String tableNo, double totalAmount, MemberBean memberBean, String Member1, String Member2, double ServiceAmt) {
         super(parent, modal);
         initComponents();
         jPanel6.setVisible(false);
@@ -55,6 +53,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         this.Member2 = Member2;
         this.tableNo = tableNo;
         this.totalAmount = totalAmount;
+        this.ServiceAmt = ServiceAmt;
 
         discBean = new DiscountBean();
         cuponBean = new CuponBean();
@@ -738,13 +737,21 @@ public class DiscountDialog extends javax.swing.JDialog {
         txtCuponAmt.setText("0.00");
         txtBahtAmt.setText("0.00");
         txtCuponDiscount.setText("0.00");
+        btnCuponSpecial.setEnabled(true);
+        updateCancelDiscountBalanceDiscClick(tableNo);
         clearCuponSpecail();
         clearMemberDiscount();
-        updateCancelDiscountBalanceDiscClick(tableNo);
-
+        BalanceControl.updateProSerTable(tableNo, memberBean);
+        btnCuponSpecial.setEnabled(true);
+        btnSave.setEnabled(true);
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        updateCalCelTableFile(tableNo);
+        clearCuponSpecail();
+        clearMemberDiscount();
+        updateCancelDiscountBalanceDiscClick(tableNo);
+        updateCalCelTableFile(tableNo);
         double FestDiscount = Double.parseDouble(txtFestAmt.getText().replace(",", ""));
         double EmpDiscount = Double.parseDouble(txtEmpAmt.getText().replace(",", ""));
         double MemDiscount = Double.parseDouble(txtMemAmt.getText().replace(",", ""));
@@ -752,8 +759,10 @@ public class DiscountDialog extends javax.swing.JDialog {
         double CuponDiscount = Double.parseDouble(txtCuponAmt.getText().replace(",", ""));
         double BahtDiscount = Double.parseDouble(txtBahtAmt.getText().replace(",", ""));
         double CuponSpecialDiscount = Double.parseDouble(txtCuponDiscount.getText().replace(",", ""));
-
         double totalDiscAll = FestDiscount + EmpDiscount + MemDiscount + TrainDiscount + CuponDiscount + BahtDiscount + CuponSpecialDiscount;
+        if(CuponSpecialDiscount>0){
+            btnCuponSpecial.setEnabled(false);
+        }
         if (totalDiscAll > totalAmount && totalAmount > 0) {
             MSG.WAR("จำนวนส่วนลดเกินจำนวนเงินรับชำระ กรุณาตรวจสอบ !");
             return;
@@ -773,9 +782,6 @@ public class DiscountDialog extends javax.swing.JDialog {
         discBean.setBahtDiscount(BahtDiscount);
         discBean.setCuponSpecialDiscount(CuponSpecialDiscount);
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-
         if (FestDiscount > 0) {
             updateDiscountBalanceDiscClick("FestDiscount", tableNo);
         }
@@ -787,6 +793,8 @@ public class DiscountDialog extends javax.swing.JDialog {
         }
         if (chkInputAmt()) {
             // update tablefile for discount
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.open(this.getClass());
             try {
                 String sql = "update tablefile set "
                         + "EmpDisc='" + discBean.getStrEmpDiscount() + "', "
@@ -803,10 +811,27 @@ public class DiscountDialog extends javax.swing.JDialog {
                         + "CuponDiscAmt='" + discBean.getCuponSpecialDiscount() + "', "
                         + "NetTotal= NetTotal-'" + totalDiscAll + "' "
                         + "where TCode='" + tableNo + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                if (discBean.getCuponSpecialDiscount() <= 0) {
-                    try {
+                if (posConfig.getP_VatType().equals("I")) {
+                    sql = "update tablefile set "
+                            + "EmpDisc='" + discBean.getStrEmpDiscount() + "', "
+                            + "EmpDiscAmt='" + discBean.getEmpDiscount() + "',"
+                            + "FastDisc='" + discBean.getStrFestDiscount() + "', "
+                            + "FastDiscAmt='" + discBean.getFestDiscount() + "',"
+                            + "TrainDisc='" + discBean.getStrTrainDiscount() + "', "
+                            + "TrainDiscAmt='" + discBean.getTrainDiscount() + "',"
+                            + "MemDisc='" + discBean.getStrMemDiscount() + "', "
+                            + "MemDiscAmt='" + discBean.getMemDiscount() + "',"
+                            + "SubDisc='" + discBean.getStrCuponDiscount() + "', "
+                            + "SubDiscAmt='" + discBean.getCuponDiscount() + "',"
+                            + "DiscBath='" + discBean.getBahtDiscount() + "',"
+                            + "CuponDiscAmt='" + discBean.getCuponSpecialDiscount() + "' "
+                            + ", "
+                            + "NetTotal= NetTotal-'" + totalDiscAll + "' "
+                            + " where TCode='" + tableNo + "'";
+                }
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                    if (discBean.getCuponSpecialDiscount() <= 0) {
                         //update detail
                         String sqlUpd = "update balance set "
                                 + "R_PrCuDisc='0',"
@@ -816,39 +841,35 @@ public class DiscountDialog extends javax.swing.JDialog {
                                 + "R_QuanCanDisc=R_Quan "
                                 + "where r_table='" + tableNo + "'";
                         stmt.executeUpdate(sqlUpd);
-
-                    } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
                     }
-                }
-                if (discBean.getBahtDiscount() > 0) {
-                    try {
-                        mysql.open();
+                    if (discBean.getBahtDiscount() > 0) {
                         String sqlgetBL = "select count(r_index) r_index from balance where r_table='" + tableNo + "' and r_void<>'V'";
-                        ResultSet rsBL = mysql.getConnection().createStatement().executeQuery(sqlgetBL);
-                        if (rsBL.next()) {
-                            String sqlUpdate = "update balance set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "'";
-                            mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
+                        try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rsBL = stmt1.executeQuery(sqlgetBL)) {
+                            if (rsBL.next()) {
+                                String sqlUpdate = "update balance set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "' where r_table='" + tableNo + "'";
+                                try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                                    stmt2.executeUpdate(sqlUpdate);
+                                    stmt2.close();
+                                }
+                            }
+                            stmt1.close();
                         }
-                        rsBL.close();
-                        mysql.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
                     }
+                    stmt.close();
                 }
-                stmt.close();
                 if (discBean.getMemDiscount() > 0) {
                     updateProSerTableMemVIP(tableNo, discBean.getStrMemDiscount());
                     BalanceControl.updateProSerTable(tableNo, memberBean);
                 }
-                BalanceControl.updateProSerTable(tableNo, memberBean);
+//                BalanceControl.updateProSerTable(tableNo, memberBean);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(DiscountDialog.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
-
-            dispose();
+            this.setVisible(false);
+//            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_btnSaveActionPerformed
     private void updateDiscountBalanceDiscClick(String type, String tableNo) {
@@ -865,31 +886,30 @@ public class DiscountDialog extends javax.swing.JDialog {
                     discForC = data[1];
                     discForS = data[2];
                 }
-                
-                MySQLConnect mysql = new MySQLConnect();
-                try {
-                    //เช็คประเภทสินค้า
-                    mysql.open();
-                    String[] typeDisc = posConfig.getP_EmpDisc().split("/");
-                    double typeNormalN = 0;
-                    double typeNormalC = 0;
-                    double typeNormalS = 0;
-                    for (String data1 : typeDisc) {
-                        typeNormalN = Double.parseDouble(typeDisc[0]);
-                        typeNormalC = Double.parseDouble(typeDisc[1]);
-                        typeNormalS = Double.parseDouble(typeDisc[2]);
-                    }
+                //เช็คประเภทสินค้า
+                String[] typeDisc = posConfig.getP_EmpDisc().split("/");
+                double typeNormalN = 0;
+                double typeNormalC = 0;
+                double typeNormalS = 0;
+                for (String data1 : typeDisc) {
+                    typeNormalN = Double.parseDouble(typeDisc[0]);
+                    typeNormalC = Double.parseDouble(typeDisc[1]);
+                    typeNormalS = Double.parseDouble(typeDisc[2]);
+                }
 
-                    String[] saleTypeDiscCheck = posConfig.getP_DiscChkBySaleType().split("/");
-                    String saleTypeE = "";
-                    String saleTypeT = "";
-                    String saleTypeD = "";
-                    String saleTypeP = "";
-                    String saleTypeW = "";
-                    String sql = "";
-                    for (String data2 : saleTypeDiscCheck) {
-                        saleTypeE = saleTypeDiscCheck[0];
-                        if ("Y".equals(saleTypeE)) {
+                String[] saleTypeDiscCheck = posConfig.getP_DiscChkBySaleType().split("/");
+                String saleTypeE = "";
+                String saleTypeT = "";
+                String saleTypeD = "";
+                String saleTypeP = "";
+                String saleTypeW = "";
+                String sql = "";
+                for (String data2 : saleTypeDiscCheck) {
+                    saleTypeE = saleTypeDiscCheck[0];
+                    if ("Y".equals(saleTypeE)) {
+                        MySQLConnect mysql = new MySQLConnect();
+                        try {
+                            mysql.open(this.getClass());
                             if (typeNormalN > 0) {
                                 sql = "update balance set "
                                         + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -909,10 +929,19 @@ public class DiscountDialog extends javax.swing.JDialog {
                                         + "where r_table='" + tableNo + "' and R_ETD='E' and R_Normal='S' and R_Discount='Y';";
                                 mysql.getConnection().createStatement().executeUpdate(sql);
                             }
+                        } catch (SQLException e) {
+                            MSG.ERR(e.getMessage());
+                            AppLogUtil.log(DiscountDialog.class, "error", e);
+                        } finally {
+                            mysql.closeConnection(this.getClass());
                         }
-                        saleTypeT = saleTypeDiscCheck[1];
-                        if ("E".equals(saleTypeT)) {
-                            if ("Y".equals(saleTypeE)) {
+                    }
+                    saleTypeT = saleTypeDiscCheck[1];
+                    if ("E".equals(saleTypeT)) {
+                        if ("Y".equals(saleTypeE)) {
+                            MySQLConnect mysql = new MySQLConnect();
+                            try {
+                                mysql.open(this.getClass());
                                 if (typeNormalN > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -932,11 +961,21 @@ public class DiscountDialog extends javax.swing.JDialog {
                                             + "where r_table='" + tableNo + "' and R_ETD='T' and R_Normal='S' and R_Discount='Y';";
                                     mysql.getConnection().createStatement().executeUpdate(sql);
                                 }
+                            } catch (SQLException e) {
+                                MSG.ERR(e.getMessage());
+                                AppLogUtil.log(DiscountDialog.class, "error", e);
+                            } finally {
+                                mysql.closeConnection(this.getClass());
                             }
+
                         }
-                        saleTypeD = saleTypeDiscCheck[2];
-                        if (saleTypeD.equals("Y")) {
-                            if (saleTypeE.equals("Y")) {
+                    }
+                    saleTypeD = saleTypeDiscCheck[2];
+                    if (saleTypeD.equals("Y")) {
+                        if (saleTypeE.equals("Y")) {
+                            MySQLConnect mysql = new MySQLConnect();
+                            try {
+                                mysql.open(this.getClass());
                                 if (typeNormalN > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -956,11 +995,21 @@ public class DiscountDialog extends javax.swing.JDialog {
                                             + "where r_table='" + tableNo + "' and R_ETD='D' and R_Normal='S' and R_Discount='Y';";
                                     mysql.getConnection().createStatement().executeUpdate(sql);
                                 }
+                            } catch (SQLException e) {
+                                MSG.ERR(e.getMessage());
+                                AppLogUtil.log(DiscountDialog.class, "error", e);
+                            } finally {
+                                mysql.closeConnection(this.getClass());
                             }
+
                         }
-                        saleTypeP = saleTypeDiscCheck[3];
-                        if (saleTypeP.equals("Y")) {
-                            if (saleTypeE.equals("Y")) {
+                    }
+                    saleTypeP = saleTypeDiscCheck[3];
+                    if (saleTypeP.equals("Y")) {
+                        if (saleTypeE.equals("Y")) {
+                            MySQLConnect mysql = new MySQLConnect();
+                            try {
+                                mysql.open(this.getClass());
                                 if (typeNormalN > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -980,12 +1029,22 @@ public class DiscountDialog extends javax.swing.JDialog {
                                             + "where r_table='" + tableNo + "' and R_ETD='P' and R_Normal='S' and R_Discount='Y';";
                                     mysql.getConnection().createStatement().executeUpdate(sql);
                                 }
+                            } catch (SQLException e) {
+                                MSG.ERR(e.getMessage());
+                                AppLogUtil.log(DiscountDialog.class, "error", e);
+                            } finally {
+                                mysql.closeConnection(this.getClass());
                             }
 
                         }
-                        saleTypeW = saleTypeDiscCheck[4];
-                        if (saleTypeW.equals("Y")) {
-                            if (saleTypeE.equals("Y")) {
+
+                    }
+                    saleTypeW = saleTypeDiscCheck[4];
+                    if (saleTypeW.equals("Y")) {
+                        if (saleTypeE.equals("Y")) {
+                            MySQLConnect mysql = new MySQLConnect();
+                            try {
+                                mysql.open(this.getClass());
                                 if (typeNormalN > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
@@ -1005,13 +1064,15 @@ public class DiscountDialog extends javax.swing.JDialog {
                                             + "where r_table='" + tableNo + "' and R_ETD='W' and R_Normal='S' and R_Discount='Y';";
                                     mysql.getConnection().createStatement().executeUpdate(sql);
                                 }
+                            } catch (SQLException e) {
+                                MSG.ERR(e.getMessage());
+                                AppLogUtil.log(DiscountDialog.class, "error", e);
+                            } finally {
+                                mysql.closeConnection(this.getClass());
                             }
+
                         }
                     }
-                } catch (NumberFormatException | SQLException e) {
-                    MSG.ERR(e.getMessage());
-                } finally {
-                    mysql.close();
                 }
                 break;
         }
@@ -1021,7 +1082,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     private void updateCancelDiscountBalanceDiscClick(String tableNo) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "update balance set "
                     + "R_PRSubType='', R_PRSubCode='', R_PRSubQuan='0', "
                     + "R_PRSubDisc='0', R_PRSubAmt='0' "
@@ -1029,17 +1090,36 @@ public class DiscountDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
+    }
+
+    private void updateCalCelTableFile(String tableNo) {
+        MySQLConnect mysql = new MySQLConnect();
+        try {
+            String sql = "update tablefile set nettotal=(TAmount+ServiceAmt),"
+                    + "EMPDisc='', EMPDiscAmt='0',"
+                    + "FastDisc='', FASTDiscAmt='0',"
+                    + "TrainDisc='', TrainDiscAmt='0',"
+                    + "MemDisc='', MemDiscAmt='0',"
+                    + "SubDisc='', SubDiscAmt='0',"
+                    + "CuponDiscAmt='0' where tcode='" + tableNo + "'; ";
+            mysql.open(this.getClass());
+            mysql.getConnection().createStatement().executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(DiscountDialog.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
+        }
     }
     private void btnCuponActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuponActionPerformed
         String fest = txtFestAmt.getText();
         String emp = txtEmpAmt.getText();
         String mem = txtMemAmt.getText();
         String train = txtTrainAmt.getText();
-        String cup = txtCuponAmt.getText();
         CheckDis5();
         if (!fest.equals("0.00") || !emp.equals("0.00") || !mem.equals("0.00") || !train.equals("0.00")) {
             txtCupon.setText("");
@@ -1191,7 +1271,6 @@ public class DiscountDialog extends javax.swing.JDialog {
     private void txtFestAmtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFestAmtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
-            ReturnFast(txtFestAmt.getText());
         }
     }//GEN-LAST:event_txtFestAmtKeyPressed
 
@@ -1236,7 +1315,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (chkInputAmt()) {
             // update tablefile for discount
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "update tablefile set "
                         + "EmpDisc='" + discBean.getStrEmpDiscount() + "', EmpDiscAmt='" + discBean.getEmpDiscount() + "',"
@@ -1249,16 +1328,18 @@ public class DiscountDialog extends javax.swing.JDialog {
                         + "where TCode='" + tableNo + "'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
 
                 BalanceControl.updateProSerTable(tableNo, memberBean);
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(DiscountDialog.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
-
-            dispose();
+            this.setVisible(false);
+//            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_btnClose1ActionPerformed
 
@@ -1315,7 +1396,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txtTrainAmt;
     // End of variables declaration//GEN-END:variables
 
-    public String nextDiscountFest() {
+    private String nextDiscountFest() {
         String[] sp = txtFest.getText().split("/");
         int DISC_EE;
         int DISC_TT;
@@ -1345,7 +1426,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1360,11 +1441,14 @@ public class DiscountDialog extends javax.swing.JDialog {
                         TOTAL_DD = total;
                     }
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1380,7 +1464,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         return strFestDisc;
     }
 
-    public String nextMem() {
+    private String nextMem() {
         String[] sp = txtMem.getText().split("/");
         int DISC_EE;
         int DISC_TT;
@@ -1410,7 +1494,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1427,13 +1511,15 @@ public class DiscountDialog extends javax.swing.JDialog {
                         TOTAL_DD = total;
                     }
                 }
-                
+
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1479,7 +1565,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1494,11 +1580,14 @@ public class DiscountDialog extends javax.swing.JDialog {
                         TOTAL_DD = total;
                     }
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1543,7 +1632,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_TT = 0.00;
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1558,11 +1647,14 @@ public class DiscountDialog extends javax.swing.JDialog {
                         TOTAL_DD = total;
                     }
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1582,7 +1674,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         int DiscBathMax = posConfig.getP_DiscBathMax();
 
         double discAllow = (input * DiscBathMax) / 100;
-        discAllow = NumberControl.UP_DOWN_NATURAL_BAHT(discAllow);
+        discAllow = NumberUtil.UP_DOWN_NATURAL_BAHT(discAllow);
         if (input > discAllow) {
             // warning
             JOptionPane.showMessageDialog(this, "ยอดส่วนลดมากกว่า % ที่สามารถให้ส่วนลดได้ !");
@@ -1596,154 +1688,69 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void CheckDis1() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from posconfigsetup";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    String P_FastDisc = rs.getString("P_FastDisc");
-                    txtFest.setText(P_FastDisc);
-                    nextFest();
-                }
-                rs.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        POSConfigSetup configSetup = PosControl.getData();
+        txtFest.setText(configSetup.getP_FastDisc());
+        nextFest();
     }
 
     private void CheckDis2() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from posconfigsetup";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String P_EmpDisc = rs.getString("P_EmpDisc");
-                txtEmp.setText(P_EmpDisc);
-                nextEmp();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        POSConfigSetup configSetup = PosControl.getData();
+        txtEmp.setText(configSetup.getP_EmpDisc());
+        nextEmp();
     }
 
     private void CheckDis3() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from posconfigsetup";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String P_MemDisc = rs.getString("P_MemDisc");
-                txtMem.setText(P_MemDisc);
-                nextMem();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        POSConfigSetup configSetup = PosControl.getData();
+        txtMem.setText(configSetup.getP_MemDisc());
+        nextMem();
     }
 
     private void CheckDis4() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from posconfigsetup";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String P_TrainDisc = rs.getString("P_TrainDisc");
-                txtTrain.setText(P_TrainDisc);
-                nextTrain();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        POSConfigSetup configSetup = PosControl.getData();
+        txtTrain.setText(configSetup.getP_TrainDisc());
+        nextTrain();
     }
 
     private void CheckDis5() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from posconfigsetup";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String P_SubDisc = rs.getString("P_SubDisc");
-                txtCupon.setText(P_SubDisc);
-                nextSubDisc();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        POSConfigSetup configSetup = PosControl.getData();
+        txtCupon.setText(configSetup.getP_SubDisc());
+        nextSubDisc();
     }
 
     private String nextFest() {
         String[] sp = txtFest.getText().split("/");
-        String strFestDisc = "0/0/0";
-
         int DISC_EE = 0;
         int DISC_TT = 0;
         int DISC_DD = 0;
 
-        if (sp.length == 3) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = Integer.parseInt(sp[2]);
-        } else if (sp.length == 2) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = 0;
-        } else {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = 0;
-            DISC_DD = 0;
+        switch (sp.length) {
+            case 3:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = Integer.parseInt(sp[2]);
+                break;
+            case 2:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = 0;
+                break;
+            default:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = 0;
+                DISC_DD = 0;
+                break;
         }
-        strFestDisc = DISC_EE + "/" + DISC_TT + "/" + DISC_DD;
 
+        String strFestDisc = DISC_EE + "/" + DISC_TT + "/" + DISC_DD;
         double TOTAL_EE = 0.00;
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
+
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
@@ -1765,8 +1772,9 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1782,33 +1790,30 @@ public class DiscountDialog extends javax.swing.JDialog {
         return strFestDisc;
     }
 
-    private void ReturnFast(String RF) {
-
-        if (RF.equals("") || RF.equals("0")) {
-            RF = "0.00";
-        }
-    }
-
     private String nextEmp() {
         String[] sp = txtEmp.getText().split("/");
-        String strEmpDisc = "0/0/0";
+        String strEmpDisc;
 
         int DISC_EE = 0;
         int DISC_TT = 0;
         int DISC_DD = 0;
 
-        if (sp.length == 3) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = Integer.parseInt(sp[2]);
-        } else if (sp.length == 2) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = 0;
-        } else {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = 0;
-            DISC_DD = 0;
+        switch (sp.length) {
+            case 3:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = Integer.parseInt(sp[2]);
+                break;
+            case 2:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = 0;
+                break;
+            default:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = 0;
+                DISC_DD = 0;
+                break;
         }
         strEmpDisc = DISC_EE + "/" + DISC_TT + "/" + DISC_DD;
 
@@ -1819,7 +1824,7 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' and r_void<>'V' "
@@ -1841,8 +1846,9 @@ public class DiscountDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -1858,106 +1864,30 @@ public class DiscountDialog extends javax.swing.JDialog {
         return strEmpDisc;
     }
 
-    private void showMember() {
-        if (Value.MemberAlready == true) {
-            int confirm = JOptionPane.showConfirmDialog(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
-            if (confirm == JOptionPane.YES_OPTION) {
-                Value.MemberAlready = false;
-
-                /**
-                 * * OPEN CONNECTION **
-                 */
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
-                try {
-                    String sql = "update tablefile set "
-                            + "MemDisc='', "
-                            + "MemDiscAmt='0.00', "
-                            + "MemCode='', "
-                            + "MemCurAmt='0.00', "
-                            + "MemName='' "
-                            + "where TCode='" + tableNo + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    showMember();
-
-                    stmt.close();
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                } finally {
-                    mysql.close();
-                }
-            }
-        } else {
-            MemberDialog frm = new MemberDialog(null, true, tableNo);
-            frm.setVisible(true);
-
-            if (frm.getMemCode() != null) {
-                Value.MemberAlready = true;
-                memberBean = MemberBean.getMember(frm.getMemCode());
-                if (memberBean == null) {
-                    memberBean = new MemberBean();
-                }
-                //String memDisc = memberBean.getMember_DiscountRate();
-                txtMember1.setText(memberBean.getMember_Code());
-                txtMember2.setText(memberBean.getMember_NameThai());
-                CheckDis3();
-                // update member in tablefile
-                SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                /**
-                 * * OPEN CONNECTION **
-                 */
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
-                try {
-                    String sql = "update tablefile set "
-                            + "MemDisc='" + memberBean.getMember_DiscountRate() + "', "
-                            + "MemDiscAmt='0.00', "
-                            + "MemCode='" + memberBean.getMember_Code() + "', "
-                            + "MemCurAmt='" + memberBean.getMember_TotalScore() + "', "
-                            + "MemName='" + ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()) + "', "
-                            + "MemBegin='" + simp.format(memberBean.getMember_Brithday()) + "', "
-                            + "MemEnd='" + simp.format(memberBean.getMember_ExpiredDate()) + "' "
-                            + "where TCode='" + tableNo + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                } finally {
-                    mysql.close();
-                }
-
-                // update old order
-                MemberControl mc = new MemberControl();
-                mc.updateMemberAllBalance(tableNo, memberBean);
-
-                // update all discount and promotion
-                BalanceControl.updateProSerTable(tableNo, memberBean);
-            }
-        }
-
-    }
-
     private String nextTrain() {
         String[] sp = txtTrain.getText().split("/");
-        String strTrainDisc = "0/0/0";
+        String strTrainDisc;
 
         int DISC_EE = 0;
         int DISC_TT = 0;
         int DISC_DD = 0;
 
-        if (sp.length == 3) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = Integer.parseInt(sp[2]);
-        } else if (sp.length == 2) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = 0;
-        } else {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = 0;
-            DISC_DD = 0;
+        switch (sp.length) {
+            case 3:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = Integer.parseInt(sp[2]);
+                break;
+            case 2:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = 0;
+                break;
+            default:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = 0;
+                DISC_DD = 0;
+                break;
         }
         strTrainDisc = DISC_EE + "/" + DISC_TT + "/" + DISC_DD;
 
@@ -1968,30 +1898,29 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
                     + "group by R_Normal;";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String type = rs.getString("R_Normal");
-                double total = rs.getDouble("R_Total");
-
-                if (type.equals("N")) {
-                    TOTAL_EE = total;
-                } else {
-                    TOTAL_DD = total;
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String type = rs.getString("R_Normal");
+                    double total = rs.getDouble("R_Total");
+                    if (type.equals("N")) {
+                        TOTAL_EE = total;
+                    } else {
+                        TOTAL_DD = total;
+                    }
                 }
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -2009,24 +1938,28 @@ public class DiscountDialog extends javax.swing.JDialog {
 
     private String nextSubDisc() {
         String[] sp = txtCupon.getText().split("/");
-        String strSubDisc = "0/0/0";
+        String strSubDisc;
 
         int DISC_EE = 0;
         int DISC_TT = 0;
         int DISC_DD = 0;
 
-        if (sp.length == 3) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = Integer.parseInt(sp[2]);
-        } else if (sp.length == 2) {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = Integer.parseInt(sp[1]);
-            DISC_DD = 0;
-        } else {
-            DISC_EE = Integer.parseInt(sp[0]);
-            DISC_TT = 0;
-            DISC_DD = 0;
+        switch (sp.length) {
+            case 3:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = Integer.parseInt(sp[2]);
+                break;
+            case 2:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = Integer.parseInt(sp[1]);
+                DISC_DD = 0;
+                break;
+            default:
+                DISC_EE = Integer.parseInt(sp[0]);
+                DISC_TT = 0;
+                DISC_DD = 0;
+                break;
         }
         strSubDisc = DISC_EE + "/" + DISC_TT + "/" + DISC_DD;
 
@@ -2037,30 +1970,30 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
                     + "from balance where R_Table='" + tableNo + "' "
                     + "group by R_Normal;";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String type = rs.getString("R_Normal");
-                double total = rs.getDouble("R_Total");
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String type = rs.getString("R_Normal");
+                    double total = rs.getDouble("R_Total");
 
-                if (type.equals("N")) {
-                    TOTAL_EE = total;
-                } else {
-                    TOTAL_DD = total;
+                    if (type.equals("N")) {
+                        TOTAL_EE = total;
+                    } else {
+                        TOTAL_DD = total;
+                    }
                 }
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         TOTAL_EE = (TOTAL_EE * DISC_EE) / 100;
@@ -2076,11 +2009,11 @@ public class DiscountDialog extends javax.swing.JDialog {
         return strSubDisc;
     }
 
-    public void LoadDiscPermis() {
+    private void LoadDiscPermis() {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
-            String sql = "select P_MemDiscGet,P_FastDiscGet,P_EmpDiscGet,P_TrainDiscGet,P_SubDiscGet,P_DiscBathChk from posconfigsetup;";
+            mysql.open(this.getClass());
+            String sql = "select P_MemDiscGet,P_FastDiscGet,P_EmpDiscGet,P_TrainDiscGet,P_SubDiscGet,P_DiscBathChk from posconfigsetup limit 1;";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 String MemDiscGet = rs.getString("P_MemDiscGet");
@@ -2136,8 +2069,9 @@ public class DiscountDialog extends javax.swing.JDialog {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -2147,9 +2081,9 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "select * from tablefile where Tcode = '" + tableNo + "'";
+            String sql = "select * from tablefile where Tcode = '" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -2221,25 +2155,29 @@ public class DiscountDialog extends javax.swing.JDialog {
                     txtBahtAmt.setText(DiscBath);
                 }
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     private void loadDataToText() {
         TableFileControl tfCon = new TableFileControl();
         TableFileBean tBean = tfCon.getData(tableNo);
-
         txtFestAmt.setText(NumberFormat.showDouble2(tBean.getFastDiscAmt()));
         txtEmpAmt.setText(NumberFormat.showDouble2(tBean.getEmpDiscAmt()));
         txtMemAmt.setText(NumberFormat.showDouble2(tBean.getMemDiscAmt()));
         txtTrainAmt.setText(NumberFormat.showDouble2(tBean.getTrainDiscAmt()));
-//        txtCuponAmt.setText(NumberFormat.showDouble2(tBean.getCuponDiscAmt()));
-//        txtBahtAmt.setText(NumberFormat.showDouble2(tBean.getCuponDiscAmt()));
-//        txtMemAmt.setText(NumberFormat.showDouble2(tBean.getMemDiscAmt()));
         txtCuponDiscount.setText(NumberFormat.showDouble2(tBean.getCuponDiscAmt()));
+        if(tBean.getCuponDiscAmt()>0){
+            btnCuponSpecial.setEnabled(false);
+            txtCuponDiscount.setEnabled(false);
+            btnSave.setEnabled(false);
+        }
     }
 
     private void clearCuponSpecail() {
@@ -2247,48 +2185,49 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "delete from tempcupon where r_table='" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        mysql.open();
-        try {
-            String sql = "select * from temp_balance "
-                    + "where r_table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String sql1 = "delete from balance where r_table='" + tableNo + "'";
-                String sql2 = "insert into balance select * from temp_balance "
-                        + "where r_table='" + tableNo + "' "
-                        + "order by r_index";
-                String sql3 = "delete from temp_balance where r_table='" + tableNo + "'";
-                stmt.executeUpdate(sql1);
-                stmt.executeUpdate(sql2);
-                stmt.executeUpdate(sql3);
-
-                BalanceControl.updateProSerTable(tableNo, memberBean);
-            }
-            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         }
+
         try {
-            mysql.open();
+            String sql = "select * from temp_balance where r_table='" + tableNo + "' limit 1";
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    String sql1 = "delete from balance where r_table='" + tableNo + "'";
+                    String sql2 = "insert into balance select * from temp_balance "
+                            + "where r_table='" + tableNo + "' "
+                            + "order by r_index";
+                    String sql3 = "delete from temp_balance where r_table='" + tableNo + "'";
+                    stmt.executeUpdate(sql1);
+                    stmt.executeUpdate(sql2);
+                    stmt.executeUpdate(sql3);
+
+                    BalanceControl.updateProSerTable(tableNo, memberBean);
+                }
+                rs.close();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
+        }
+
+        try {
             String sqlUpdateBalance = "update balance set r_prcuamt='0',r_discbath='0' where r_table='" + tableNo + "'";
             mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -2297,20 +2236,15 @@ public class DiscountDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
                     + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-        mysql.open();
-        try {
+            stmt.close();
+
             String sqlUpdate = "update balance "
                     + "set "
                     + "r_prsubtype='',"
@@ -2322,8 +2256,9 @@ public class DiscountDialog extends javax.swing.JDialog {
             mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiscountDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

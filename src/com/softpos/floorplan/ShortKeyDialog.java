@@ -37,7 +37,7 @@ public class ShortKeyDialog extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLabel1.setText("Key ลัดก่อนเปิดโต๊ะอาหาร");
 
-        tb1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tb1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tb1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"F1", "Open Floor Plan (เปิดโต๊ะ)"},
@@ -75,7 +75,7 @@ public class ShortKeyDialog extends javax.swing.JDialog {
             tb1.getColumnModel().getColumn(1).setPreferredWidth(350);
         }
 
-        tb2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tb2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tb2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"F1", "Find PLU List (ค้นหารายการสินค้า)"},

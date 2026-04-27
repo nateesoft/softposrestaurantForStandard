@@ -77,7 +77,6 @@ public class KeyBoardDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Virtual Keyboard");
-        setAlwaysOnTop(true);
         setUndecorated(true);
 
         tbControl.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);

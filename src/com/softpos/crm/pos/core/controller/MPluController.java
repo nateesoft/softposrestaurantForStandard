@@ -1,6 +1,7 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MPluBean;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.Date;
@@ -9,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -22,18 +23,19 @@ public class MPluController {
         MPluBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
-            String sql = "select * from " + Value.db_member + ".mplu "
-                    + "where Branch_Code='" + branchCode + "'";
+            mysql.open(MPluController.class);
+            String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
 
         return bean;
@@ -59,9 +61,9 @@ public class MPluController {
     }
 
     public int create(List<MPluBean> listMPlu) {
-        int [] resultCreate = new int[0];
+        int[] resultCreate = new int[0];
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(MPluController.class);
         try {
             String sql = "insert into " + Value.db_member + ".mplu "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, PLU_Group, Sale_Type, "
@@ -87,10 +89,12 @@ public class MPluController {
 
             prm.clearParameters();
             resultCreate = prm.executeBatch();
+            prm.close();
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
 
         return resultCreate.length;
@@ -98,18 +102,20 @@ public class MPluController {
 
     public void refundBill(String receiptNo) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(MPluController.class);
 
         try {
             String sql = "delete from " + Value.db_member + ".mplu "
                     + "where receipt_no='" + receiptNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR("MPluController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
     }
 }

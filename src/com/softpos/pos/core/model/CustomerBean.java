@@ -110,5 +110,6 @@ public class CustomerBean {
     public void setCustBranch(String CustBranch) {
         this.CustBranch = CustBranch;
     }
-
+    
+    
 }

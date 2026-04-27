@@ -2,59 +2,57 @@ package com.softpos.pos.core.controller;
 
 import database.MySQLConnect;
 import java.awt.HeadlessException;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import printReport.convertToChar;
+import util.AppLogUtil;
 import util.MSG;
 
 public final class ViewReport {
 
-    private Statement stmt;
-    DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
-    SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
+    private SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     public void printReportPVat(String vatNo) {
         ResultSet rs1;
         String comName = null, address = null, comTel = null, comFax = null, no = null, tax = null;
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
-                + " FROM company c";
-
+                + " FROM company c limit 1";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
-                if (rs1 != null) {
-                    if (rs1.next()) {
-                        comName = rs1.getString("c.Name");
-                        address = rs1.getString("c.Address");
-                        comTel = rs1.getString("c.Tel");
-                        comFax = rs1.getString("c.Fax");
-                        tax = rs1.getString("c.Tax");
-                    }
+                if (rs1.next()) {
+                    comName = rs1.getString("c.Name");
+                    address = rs1.getString("c.Address");
+                    comTel = rs1.getString("c.Tel");
+                    comFax = rs1.getString("c.Fax");
+                    tax = rs1.getString("c.Tax");
                 }
                 rs1.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
 
-            String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
             String[] hrecive = new String[4];
             ResultSet rs;
             int check = 0;
@@ -66,36 +64,36 @@ public final class ViewReport {
             String cupon = "";
             String onDate = "";
             try {
+                String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
                 rs = mysql.getConnection().createStatement().executeQuery(sql);
-                if (rs != null) {
-                    if (rs.next()) {
-                        onDate = rs.getString("InvDate");
-                        amount = rs.getString("Amount");
-                        cashPay = rs.getString("CashPay");
-                        crPay = rs.getString("CrPay");
-                        crNo = rs.getString("CrNo");
-                        cupon = rs.getString("Cupon");
-                        check = 1;
-                    }
+                if (rs.next()) {
+                    onDate = rs.getString("InvDate");
+                    amount = rs.getString("Amount");
+                    cashPay = rs.getString("CashPay");
+                    crPay = rs.getString("CrPay");
+                    crNo = rs.getString("CrNo");
+                    cupon = rs.getString("Cupon");
+                    check = 1;
                 }
 
                 rs.close();
             } catch (SQLException e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
 
             if (check > 0) {
-                String sqlBranch = "SELECT * FROM branch ";
+                String sqlBranch = "SELECT * FROM branch limit 1";
                 String branchName = "";
                 try {
-                    rs = stmt.executeQuery(sqlBranch);
-                    if (rs != null) {
-                        if (rs.next()) {
-                            branchName = rs.getString("Name");
-                        }
+                    rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                    if (rs.next()) {
+                        branchName = rs.getString("Name");
                     }
+                    rs.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(ViewReport.class, "error", e);
                 }
                 try {
                     Float cp = Float.parseFloat(cashPay);
@@ -174,16 +172,16 @@ public final class ViewReport {
                     j.setLocationRelativeTo(null);
                     j.setVisible(true);
                     v.setTitle("Report...");
-                    mysql.close();
                 } catch (HeadlessException | NumberFormatException | JRException e) {
                     MSG.ERR(e.getMessage());
                 }
             } else {
                 MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
             }
-            mysql.close();
         } catch (Exception e) {
             MSG.NOTICE(e.toString());
+        } finally{
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -194,24 +192,22 @@ public final class ViewReport {
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-
-            rs1 = stmt.executeQuery(sqlCompany);
-            if (rs1 != null) {
-                if (rs1.next()) {
-                    comName = rs1.getString("c.Name");
-                    address = rs1.getString("c.Address");
-                    comTel = rs1.getString("c.Tel");
-                    comFax = rs1.getString("c.Fax");
-                    tax = rs1.getString("c.Tax");
-                }
+            mysql.open(this.getClass());
+            rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
+            if (rs1.next()) {
+                comName = rs1.getString("c.Name");
+                address = rs1.getString("c.Address");
+                comTel = rs1.getString("c.Tel");
+                comFax = rs1.getString("c.Fax");
+                tax = rs1.getString("c.Tax");
             }
             rs1.close();
         } catch (SQLException e) {
-            MSG.NOTICE(e.getMessage());
+            MSG.ERR(e.getMessage());
         }
 
-        String sql = "SELECT *  FROM invcashdoc  WHERE invNo = '" + vatNo + "' ;";
         ResultSet rs;
         int check = 0;
         String onDate = "";
@@ -235,50 +231,50 @@ public final class ViewReport {
         String amount = "";
         String ramark = "";
         try {
-            rs = stmt.executeQuery(sql);
-            if (rs != null) {
-                if (rs.next()) {
-                    onDate = rs.getString("InvDate");
-                    CustCode = rs.getString("CustCode");
-                    CustName = rs.getString("CustName");
-                    CustAddr = rs.getString("CustAddr1");
-                    CustTel = rs.getString("CustTel");
-                    CustFax = rs.getString("CustFax");
-                    dueDate = rs.getString("DueDate");
-                    crTerm = rs.getString("CrTerm");
-                    OnTime = rs.getString("OnTime");
-                    MacNo = rs.getString("MacNo");
-                    RegNo = rs.getString("RegNo");
-                    RefNo = rs.getString("RefNo");
-                    Cashier = rs.getString("Cashier");
-                    discount = rs.getString("Discount");
-                    earnest = rs.getString("Earnest");
-                    service = rs.getString("Service");
-                    subtotal = rs.getString("Subtotal");
-                    vat = rs.getString("Vat");
-                    amount = rs.getString("Amount");
-                    ramark = rs.getString("Remark");
-                    check = 1;
-                }
+            String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
+            rs = mysql.getConnection().createStatement().executeQuery(sql);
+            if (rs.next()) {
+                onDate = rs.getString("InvDate");
+                CustCode = rs.getString("CustCode");
+                CustName = rs.getString("CustName");
+                CustAddr = rs.getString("CustAddr1");
+                CustTel = rs.getString("CustTel");
+                CustFax = rs.getString("CustFax");
+                dueDate = rs.getString("DueDate");
+                crTerm = rs.getString("CrTerm");
+                OnTime = rs.getString("OnTime");
+                MacNo = rs.getString("MacNo");
+                RegNo = rs.getString("RegNo");
+                RefNo = rs.getString("RefNo");
+                Cashier = rs.getString("Cashier");
+                discount = rs.getString("Discount");
+                earnest = rs.getString("Earnest");
+                service = rs.getString("Service");
+                subtotal = rs.getString("Subtotal");
+                vat = rs.getString("Vat");
+                amount = rs.getString("Amount");
+                ramark = rs.getString("Remark");
+                check = 1;
             }
             rs.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
         }
 
         if (check > 0) {
-            String sqlBranch = "SELECT * FROM branch ";
+            String sqlBranch = "SELECT Name FROM branch limit 1 ";
             String branchName = "";
             try {
-                rs = stmt.executeQuery(sqlBranch);
-                if (rs != null) {
-                    if (rs.next()) {
-                        branchName = rs.getString("Name");
-                    }
+                rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                if (rs.next()) {
+                    branchName = rs.getString("Name");
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
+
             try {
                 Map parameters = new HashMap();
 
@@ -326,8 +322,6 @@ public final class ViewReport {
                 parameters.put("amount", doubleFmt.format(amt));
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/debtVat.jasper"));
 
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
                 JasperViewer v = new JasperViewer(jasperPrint, false);
                 JDialog j = new JDialog(new JFrame(), true);
@@ -337,39 +331,39 @@ public final class ViewReport {
                 j.setLocationRelativeTo(null);
                 j.setVisible(true);
                 v.setTitle("Report...");
-                mysql.close();
             } catch (HeadlessException | NumberFormatException | JRException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
         } else {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
         }
+
+        mysql.closeConnection(this.getClass());
     }
 
     public void printReportPVatDaily(String str, String end) {
-        ResultSet rs;
         String date1 = "";
         String date2 = "";
         String header = "รายงานการพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน ประจำวันที่ " + str + " - " + end;
-        String sqlBranch = "SELECT * FROM branch ";
+
         String branchName = "";
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
-                rs = stmt.executeQuery(sqlBranch);
-                if (rs != null) {
-                    if (rs.next()) {
-                        branchName = rs.getString("Name");
-                    }
+                String sqlBranch = "SELECT * FROM branch limit 1";
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                if (rs.next()) {
+                    branchName = rs.getString("Name");
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ViewReport.class, "error", e);
             }
-            
-            Date dates;
+
             try {
-                dates = outFmt.parse(str);
+                Date dates = outFmt.parse(str);
                 date1 = inFmt.format(dates);
 
                 dates = outFmt.parse(end);
@@ -406,13 +400,14 @@ public final class ViewReport {
                     MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
                 }
 
-                mysql.close();
-            } catch (Exception e) {
+                mysql.closeConnection(this.getClass());
+            } catch (HeadlessException | JRException e) {
                 MSG.ERR(e.getMessage());
             }
-            mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(e.toString());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -422,26 +417,29 @@ public final class ViewReport {
         String date1 = "";
         String date2 = "";
         String header = "รายงานการพิมพ์ใบกำกับภาษี / ใบแจ้งหนี้ ประจำวันที่ " + str + " - " + end;
-        String sqlBranch = "SELECT * FROM branch ";
+        String sqlBranch = "SELECT * FROM branch limit 1 ";
         String branchName = "";
+
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            rs = stmt.executeQuery(sqlBranch);
-            if (rs != null) {
-                if (rs.next()) {
-                    branchName = rs.getString("Name");
-                }
+            rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+            if (rs.next()) {
+                branchName = rs.getString("Name");
             }
-        } catch (Exception e) {
+            rs.close();
+        } catch (SQLException e) {
         }
-        Date dates = new Date();
+
+        Date dates;
         try {
             dates = outFmt.parse(str);
             date1 = inFmt.format(dates);
 
             dates = outFmt.parse(end);
             date2 = inFmt.format(dates);
-        } catch (Exception e) {
+        } catch (ParseException e) {
         }
+
         try {
             Map parameters = new HashMap();
             parameters.put("header", header);
@@ -456,11 +454,6 @@ public final class ViewReport {
                 MSG.ERR(null, e.getMessage());
             }
 
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
             int pageSize = jasperPrint.getPages().size();
             if (pageSize > 0) {
@@ -474,12 +467,12 @@ public final class ViewReport {
                 v.setTitle("Report...");
 
             } else {
-                MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
+                MSG.WAR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
             }
-
-            mysql.close();
-        } catch (Exception e) {
+        } catch (HeadlessException | JRException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -501,7 +494,7 @@ public final class ViewReport {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Map parameters = new HashMap();
             parameters.put("branchName", "");
@@ -512,11 +505,11 @@ public final class ViewReport {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/stockInhand_balanceVender.jasper"));
 
             JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
-        } catch (JRException ex) {
-            Logger.getLogger(ViewReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException e) {
+            AppLogUtil.log(ViewReport.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
     }
 
 }

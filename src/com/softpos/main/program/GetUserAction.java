@@ -1,12 +1,13 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.MySQLConnect;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class GetUserAction extends javax.swing.JDialog {
@@ -41,7 +42,7 @@ public class GetUserAction extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กรุณาป้อนรหัสผู้ใช้งาน/รหัสผ่าน");
-        setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -191,7 +192,7 @@ public class GetUserAction extends javax.swing.JDialog {
 
     private void c_bntlogincancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntlogincancelActionPerformed
         PublicVar.ReturnString = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_c_bntlogincancelActionPerformed
 
     private void c_loginnameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_c_loginnameKeyPressed
@@ -203,13 +204,13 @@ public class GetUserAction extends javax.swing.JDialog {
     }//GEN-LAST:event_c_loginpasswordKeyPressed
 
     private void c_loginnameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_loginnameMouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(c_loginname);
         }
     }//GEN-LAST:event_c_loginnameMouseClicked
 
     private void c_loginpasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_c_loginpasswordMouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(c_loginpassword);
         }
     }//GEN-LAST:event_c_loginpasswordMouseClicked
@@ -226,7 +227,7 @@ public class GetUserAction extends javax.swing.JDialog {
         } else {
             if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 PublicVar.ReturnString = "";
-                this.dispose();
+                this.setVisible(false);//dispose();
             }
         }
     }
@@ -266,31 +267,39 @@ public class GetUserAction extends javax.swing.JDialog {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
         }
-/**
+        /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
+        boolean isClose = false;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select * from posuser Where(username= '" + loginname + "') and (password='" + password + "')";
-
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String SQLQuery = "select username,sale2 from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if (rs.next()) {
+                PublicVar.ReturnString = loginname;
+                if(rs.getString("sale2").equals("Y")){
+                    PublicVar.ReturnPermitRefund = true;
+                }
+                isClose = true;
+            } else {
                 MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                 clearlogin();
-            } else {
-                PublicVar.ReturnString = loginname;
-                this.dispose();
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(GetUserAction.class, "error", e);
             clearlogin();
-        }finally{
-            mysql.close();
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
+        if(isClose){
+            this.setVisible(false);//dispose();
+        }
     }
 
     public void clearlogin() {

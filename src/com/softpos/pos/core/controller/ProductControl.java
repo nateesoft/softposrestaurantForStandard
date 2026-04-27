@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ProductControl {
@@ -17,22 +17,130 @@ public class ProductControl {
     public static final int PRODUCT_ACTIVE = 1;
     public static final int PRODUCT_NOT_ACTIVE = 2;
 
+    private List<ProductBean> listAll = null;
+
     public ProductControl() {
         dataProduct = new ArrayList<>();
     }
 
+    public ProductBean getProductCodeArray(String pCode) {
+        if (pCode == null) {
+            return new ProductBean();
+        }
+        if (listAll != null) {
+            for (int i = 0; i < listAll.size(); i++) {
+                ProductBean bean = listAll.get(i);
+                if (pCode.trim().equals(bean.getPCode())) {
+                    return bean;
+                }
+            }
+        }
+
+        return new ProductBean();
+    }
+
+    public ProductBean getProductBarCodeArray(String barCode) {
+        if (barCode == null) {
+            return new ProductBean();
+        }
+        if (listAll != null) {
+            for (int i = 0; i < listAll.size(); i++) {
+                ProductBean bean = listAll.get(i);
+                if (barCode.trim().equals(bean.getPBarCode())) {
+                    return bean;
+                }
+            }
+        }
+
+        return new ProductBean();
+    }
+
+    public List<ProductBean> initLoadProductActive() {
+        if (listAll == null) {
+            listAll = new ArrayList<>();
+            MySQLConnect mysql = new MySQLConnect();
+            try {
+                mysql.open(ProductControl.class);
+                ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from product where pactive='Y'");
+                while (rs.next()) {
+                    ProductBean bean = new ProductBean();
+                    bean.setPCode(rs.getString("PCode"));
+                    bean.setPFix(rs.getString("PFix"));
+                    bean.setPReferent(rs.getString("PReferent"));
+                    bean.setPAccNo(rs.getString("PAccNo"));
+                    bean.setPGroup(rs.getString("PGroup"));
+                    bean.setPVender(rs.getString("PVender"));
+                    bean.setPType(rs.getString("PType"));
+                    bean.setPNormal(rs.getString("PNormal"));
+                    bean.setPRemark(rs.getString("PRemark"));
+                    bean.setPDiscount(rs.getString("PDiscount"));
+                    bean.setPService(rs.getString("PService"));
+                    bean.setPStatus(rs.getString("PStatus"));
+                    bean.setPStock(rs.getString("PStock"));
+                    bean.setPSet(rs.getString("PSet"));
+                    bean.setPVat(rs.getString("PVat"));
+                    bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                    bean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                    bean.setPPack1(rs.getInt("PPack1"));
+                    bean.setPArea(rs.getString("PArea"));
+                    bean.setPKic(rs.getString("PKic"));
+                    bean.setPPrice11(rs.getFloat("PPrice11"));
+                    bean.setPPrice12(rs.getFloat("PPrice12"));
+                    bean.setPPrice13(rs.getFloat("PPrice13"));
+                    bean.setPPrice14(rs.getFloat("PPrice14"));
+                    bean.setPPrice15(rs.getFloat("PPrice15"));
+                    bean.setPPromotion1(rs.getString("PPromotion1"));
+                    bean.setPPromotion2(rs.getString("PPromotion2"));
+                    bean.setPPromotion3(rs.getString("PPromotion3"));
+                    bean.setPMax(rs.getFloat("PMax"));
+                    bean.setPMin(rs.getFloat("PMin"));
+                    bean.setPBUnit(rs.getString("PBUnit"));
+                    bean.setPBPack(rs.getFloat("PBPack"));
+                    bean.setPLCost(rs.getFloat("PLCost"));
+                    bean.setPSCost(rs.getFloat("PSCost"));
+                    bean.setPACost(rs.getFloat("PACost"));
+                    bean.setPLink1(rs.getString("PLink1"));
+                    bean.setPLink2(rs.getString("PLink2"));
+                    bean.setPLastTime(rs.getString("PLastTime"));
+                    bean.setPUserUpdate(rs.getString("PUserUpdate"));
+                    bean.setPBarCode(rs.getString("PBarCode"));
+                    bean.setPActive(rs.getString("PActive"));
+                    bean.setPSPVat(rs.getString("PSPVat"));
+                    bean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
+                    bean.setPOSStk(rs.getString("POSStk"));
+                    bean.setMSStk(rs.getString("MSStk"));
+                    bean.setPTimeCharge(rs.getFloat("PTimeCharge"));
+                    bean.setPOrder(rs.getString("POrder"));
+                    bean.setPFoodType(rs.getString("PFoodType"));
+                    bean.setPPackOld(rs.getInt("PPackOld"));
+                    bean.setPDesc2(rs.getString("PDesc2"));
+                    bean.setPselectItem(rs.getString("PselectItem"));
+                    bean.setPselectNum(rs.getFloat("PselectNum"));
+                    bean.setPShowOption(rs.getString("PShowOption"));
+                    bean.setPEDesc(rs.getString("PEDesc"));
+
+                    listAll.add(bean);
+                }
+                rs.close();
+            } catch (SQLException e) {
+                MSG.ERR(e.getMessage());
+            } finally {
+                mysql.closeConnection(this.getClass());
+            }
+        }
+
+        return listAll;
+    }
+
     public ProductBean getData(String PCode) {
-        String sql = "select * "
-                + "from product "
-                + "where PCode='" + PCode + "'";
+        String sql = "select * from product where PCode='" + PCode + "' limit 1";
         ProductBean productBean = new ProductBean();
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
-//            Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 productBean.setPCode(rs.getString("PCode"));
@@ -94,8 +202,9 @@ public class ProductControl {
 //            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return productBean;
@@ -103,7 +212,7 @@ public class ProductControl {
 
     public List<ProductBean> searchAllProductBy(String PCode) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
             PCode = ThaiUtil.Unicode2ASCII(PCode);
             String sql = "select * from product "
@@ -173,8 +282,9 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -187,7 +297,7 @@ public class ProductControl {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
             key = ThaiUtil.Unicode2ASCII(key);
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
@@ -217,8 +327,9 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return arrList;
@@ -231,7 +342,7 @@ public class ProductControl {
         }
 
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
             key = ThaiUtil.Unicode2ASCII(key);
             String sql = "select MenuItem, PCode, PGroup, PDesc, PUnit1, "
@@ -265,8 +376,9 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return arrList;
@@ -274,7 +386,7 @@ public class ProductControl {
 
     public List<ProductBean> getAllProductByGroup(String PGroup) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
@@ -340,8 +452,9 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -350,9 +463,9 @@ public class ProductControl {
     public boolean productExist(String PCode) {
         boolean isExist = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
-            String sql = "select PCode from product where PCode='" + PCode + "'";
+            String sql = "select PCode from product where PCode='" + PCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
@@ -360,9 +473,11 @@ public class ProductControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
         return isExist;
     }
 
@@ -372,20 +487,19 @@ public class ProductControl {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
-            String sql = "select PCode from outstocklist where PCode='" + PCode + "'";
-//            Statement stmt = mysql.getConnection().createStatement();
+            String sql = "select PCode from outstocklist where PCode='" + PCode + "' limit 1";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
             rs.close();
-//            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isExist;
@@ -394,20 +508,21 @@ public class ProductControl {
     public static boolean checkProductItem(String menuCode) {
         boolean isProduct = false;
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(ProductControl.class);
         try {
-            String sql = "select pcode from soft_menusetup "
-                    + "where menucode='" + menuCode + "' "
+            String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isProduct = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(ProductControl.class);
         }
 
         return isProduct;

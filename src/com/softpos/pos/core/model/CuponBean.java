@@ -40,12 +40,6 @@ public class CuponBean {
     private double CuEDiscount;//
     private double CuEPayment;//
 
-    private ArrayList<CuponlistBean> listBean;
-
-    public CuponBean() {
-        listBean = new ArrayList<>();
-    }
-
     public String getCuCode() {
         return CuCode;
     }
@@ -57,9 +51,8 @@ public class CuponBean {
     public int getSetCuQTY() {
         return setCuQTY;
     }
-    //public void setCuQTY(int setCuQTY)
-    public void setCuQTY(int parseInt) {
-    //public void setSetCuQTY(int setCuQTY) {
+
+    public void setSetCuQTY(int setCuQTY) {
         this.setCuQTY = setCuQTY;
     }
 
@@ -326,4 +319,8 @@ public class CuponBean {
     public void setListBean(ArrayList<CuponlistBean> listBean) {
         this.listBean = listBean;
     }
+    
+    
+
+    private ArrayList<CuponlistBean> listBean = new ArrayList<>();
 }

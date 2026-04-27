@@ -1,7 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class AddNewArCustomer extends javax.swing.JDialog {
@@ -74,7 +75,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ปรับรุงรายการลูกหนี้การค้า");
-        setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         setUndecorated(true);
         setResizable(false);
 
@@ -590,10 +591,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        
         if (!TempCode.equals("")) {
             if (PUtility.ShowConfirmMsg("ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SQLQuery = "delete from custfile where sp_code='" + TempCode + "'";
@@ -601,13 +603,16 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
+                
                 ClearVariable();
             }
         }
 
-        mysql.close();
+        
     }
 
     public void bntSaveClick() {
@@ -617,7 +622,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             if (SeekCustFile(TempCode)) {
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -638,8 +643,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
+                
                 ClearVariable();
             } else {
                 try {
@@ -654,11 +662,13 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                    AppLogUtil.log(AddNewArCustomer.class, "error", e);
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
+                
                 ClearVariable();
             }
-
-            mysql.close();
         }
 
     }
@@ -697,33 +707,30 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile "
-                        + "where sp_code='" + TempCode + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    sp_desc.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")));
-                    sp_address1.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_addr1")));
-                    sp_address2.setText(ThaiUtil.ASCII2Unicode(rec.getString("sp_addr2")));
-                    sp_zip.setText(rec.getString("sp_zip"));
-                    sp_tel.setText(rec.getString("tel"));
-                    sp_contack.setText(ThaiUtil.ASCII2Unicode(rec.getString("contack")));
-                    sp_remark.setText(ThaiUtil.ASCII2Unicode(rec.getString("remark")));
-                    sp_tax.setText(rec.getString("sp_tax"));
-                    sp_cramount.setValue(rec.getDouble("sp_cramt"));
-                    sp_crday.setValue(rec.getInt("sp_cr"));
+                String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
+                    sp_address1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
+                    sp_address2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
+                    sp_zip.setText(rs.getString("sp_zip"));
+                    sp_tel.setText(rs.getString("tel"));
+                    sp_contack.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
+                    sp_remark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
+                    sp_tax.setText(rs.getString("sp_tax"));
+                    sp_cramount.setValue(rs.getDouble("sp_cramt"));
+                    sp_crday.setValue(rs.getInt("sp_cr"));
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-
+                AppLogUtil.log(AddNewArCustomer.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             GetDataValue();
@@ -736,22 +743,19 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from custfile where sp_code='" + TempCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            String SQLQuery = "select * from custfile where sp_code='" + TempCode + "' limit 1";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-
+            AppLogUtil.log(AddNewArCustomer.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -773,7 +777,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

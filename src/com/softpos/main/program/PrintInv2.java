@@ -1,9 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,8 +13,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.PreparedStatement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PrintInv2 extends javax.swing.JDialog {
@@ -136,7 +137,7 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("โปรแกรมพิมพ์ใบกำกับภาษี/ใบแจ้งหนี้");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(243, 187, 225));
@@ -175,7 +176,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setText("PO Number");
 
-        InvNo.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        InvNo.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         InvNo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 InvNoFocusLost(evt);
@@ -189,9 +190,9 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         InvDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         InvDate.setFocusable(false);
-        InvDate.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        InvDate.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
 
-        Contack.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        Contack.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         Contack.setNextFocusableComponent(PONo);
         Contack.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -199,7 +200,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        PONo.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        PONo.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         PONo.setNextFocusableComponent(MacNo);
         PONo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -214,7 +215,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         CustCr.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
         CustCr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         CustCr.setFocusable(false);
-        CustCr.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustCr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         CustCr.setRequestFocusEnabled(false);
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -223,13 +224,13 @@ public class PrintInv2 extends javax.swing.JDialog {
         DueDate.setEditable(false);
         DueDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         DueDate.setFocusable(false);
-        DueDate.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        DueDate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel23.setText("รหัสลูกหนี้");
 
         ArCode.setEditable(false);
-        ArCode.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ArCode.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ArCode.setFocusable(false);
 
         TPrintOK.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -243,7 +244,7 @@ public class PrintInv2 extends javax.swing.JDialog {
 
         jPanel4.setBackground(new java.awt.Color(255, 204, 255));
 
-        CustTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustTel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustTel.setNextFocusableComponent(CustFax);
         CustTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -254,7 +255,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("รหัสลูกค้า (Code)");
 
-        CustAddr2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustAddr2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustAddr2.setNextFocusableComponent(CustTel);
         CustAddr2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -268,15 +269,15 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("...");
 
-        CustCode.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
-        CustCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CustCodeActionPerformed(evt);
-            }
-        });
+        CustCode.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustCode.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 CustCodeFocusLost(evt);
+            }
+        });
+        CustCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CustCodeActionPerformed(evt);
             }
         });
         CustCode.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -285,7 +286,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustAddr1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustAddr1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustAddr1.setNextFocusableComponent(CustAddr2);
         CustAddr1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,16 +299,16 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustName.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustName.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustName.setNextFocusableComponent(CustAddr1);
-        CustName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CustNameActionPerformed(evt);
-            }
-        });
         CustName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 CustNameFocusLost(evt);
+            }
+        });
+        CustName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CustNameActionPerformed(evt);
             }
         });
         CustName.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -316,7 +317,7 @@ public class PrintInv2 extends javax.swing.JDialog {
             }
         });
 
-        CustFax.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustFax.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustFax.setNextFocusableComponent(CustRemark);
         CustFax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -332,7 +333,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("หมายเหตุ");
 
-        CustRemark.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustRemark.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustRemark.setNextFocusableComponent(CustRemark2);
         CustRemark.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -349,7 +350,7 @@ public class PrintInv2 extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("โทรสาร");
 
-        CustRemark2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        CustRemark2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         CustRemark2.setNextFocusableComponent(Contack);
         CustRemark2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1078,76 +1079,70 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from invcashdoc where invno='" + TempInvNo + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                    MSG.ERR(this, "ไม่พบใบกำกับภาษี/ใบแจ้งหนี้ที่ต้องการ...");
-                    ClearVariable();
-                } else {
-                    InvDate.setText(DateFmt.format(rec.getDate("invdate")));
-                    CustCode.setText(rec.getString("custcode"));
-                    CustName.setText(rec.getString("custname"));
-                    CustAddr1.setText(rec.getString("custaddr1"));
-                    CustAddr2.setText(rec.getString("custaddr2"));
-                    CustTel.setText(rec.getString("custtel"));
-                    CustFax.setText(rec.getString("custfax"));
-                    Contack.setText(rec.getString("contack"));
-                    CustRemark.setText(rec.getString("remark"));
-                    CustRemark2.setText(rec.getString("remark2"));
-                    PONo.setText(rec.getString("pono"));
-                    CustCr.setText(IntFmt.format(rec.getInt("custcr")));
-                    ArCode.setText(rec.getString("arcode"));
-                    DueDate.setText(DateFmt.format(rec.getDate("duedate")));
+                String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "' limit 1";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    InvDate.setText(DateFmt.format(rs.getDate("invdate")));
+                    CustCode.setText(rs.getString("custcode"));
+                    CustName.setText(rs.getString("custname"));
+                    CustAddr1.setText(rs.getString("custaddr1"));
+                    CustAddr2.setText(rs.getString("custaddr2"));
+                    CustTel.setText(rs.getString("custtel"));
+                    CustFax.setText(rs.getString("custfax"));
+                    Contack.setText(rs.getString("contack"));
+                    CustRemark.setText(rs.getString("remark"));
+                    CustRemark2.setText(rs.getString("remark2"));
+                    PONo.setText(rs.getString("pono"));
+                    CustCr.setText(IntFmt.format(rs.getInt("custcr")));
+                    ArCode.setText(rs.getString("arcode"));
+                    DueDate.setText(DateFmt.format(rs.getDate("duedate")));
 
-                    MacNo.setText(rec.getString("macno"));
-                    RefNo.setText(rec.getString("refno"));
-                    OnDate.setText(DateFmt.format(rec.getDate("ondate")));
-                    OnTime.setText(rec.getString("ontime"));
-                    Cashier.setText(rec.getString("cashier"));
-                    OnTime.setText(rec.getString("ontime"));
-                    SubTotal.setValue(rec.getDouble("subtotal"));
-                    Vat.setValue(rec.getDouble("vat"));
-                    Amount.setValue(rec.getDouble("amount"));
+                    MacNo.setText(rs.getString("macno"));
+                    RefNo.setText(rs.getString("refno"));
+                    OnDate.setText(DateFmt.format(rs.getDate("ondate")));
+                    OnTime.setText(rs.getString("ontime"));
+                    Cashier.setText(rs.getString("cashier"));
+                    OnTime.setText(rs.getString("ontime"));
+                    SubTotal.setValue(rs.getDouble("subtotal"));
+                    Vat.setValue(rs.getDouble("vat"));
+                    Amount.setValue(rs.getDouble("amount"));
 
-                    XTotalAmt = rec.getDouble("totalamt");
-                    XSubTotal = rec.getDouble("subtotal");
-                    XVat = rec.getDouble("vat");
-                    XAmount = rec.getDouble("amount");
-                    XDiscount = rec.getDouble("discount");
-                    XRegNo = rec.getString("regno");
-                    XCashPay = rec.getDouble("cashpay");
-                    XCrPay = rec.getDouble("crpay");
-                    XCrNo = rec.getString("crno");
-                    XCupon = rec.getDouble("cupon");
-                    XEarnest = rec.getDouble("earnest");
-                    XService = rec.getDouble("service");
+                    XTotalAmt = rs.getDouble("totalamt");
+                    XSubTotal = rs.getDouble("subtotal");
+                    XVat = rs.getDouble("vat");
+                    XAmount = rs.getDouble("amount");
+                    XDiscount = rs.getDouble("discount");
+                    XRegNo = rs.getString("regno");
+                    XCashPay = rs.getDouble("cashpay");
+                    XCrPay = rs.getDouble("crpay");
+                    XCrNo = rs.getString("crno");
+                    XCupon = rs.getDouble("cupon");
+                    XEarnest = rs.getDouble("earnest");
+                    XService = rs.getDouble("service");
 
-                    PrintOK = rec.getString("printok");
+                    PrintOK = rs.getString("printok");
                     if (PrintOK.equals("Y")) {
-                        TPrintOK.setText("พิมพ์เอกสารแล้ว โดย : " + rec.getString("invuser"));
+                        TPrintOK.setText("พิมพ์เอกสารแล้ว โดย : " + rs.getString("invuser"));
                         TPrintOK.setVisible(true);
                         SetReadOnlyOn();
                     }
-                    VoidOK = rec.getString("void");
+                    VoidOK = rs.getString("void");
                     if (VoidOK.equals("Y")) {
-                        TCancel.setText("เอกสารยกเลิกโดย : " + rec.getString("uservoid"));
-                        TCancelMsg.setText(rec.getString("voidmessage"));
+                        TCancel.setText("เอกสารยกเลิกโดย : " + rs.getString("uservoid"));
+                        TCancelMsg.setText(rs.getString("voidmessage"));
                         TCancel.setVisible(true);
                         TCancelMsg.setVisible(true);
                         SetReadOnlyOn();
                     }
                     try {
                         Statement stmt2 = mysql.getConnection().createStatement();
-                        String SQLQuery2 = "Select *from billno where (b_refno='" + RefNo.getText() + "') and "
+                        String SQLQuery2 = "Select b_refno from billno where (b_refno='" + RefNo.getText() + "') and "
                                 + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
-                        ResultSet rec2 = stmt.executeQuery(SQLQuery2);
-                        rec2.first();
-                        if (rec2.getRow() == 0) {
-                        } else {
+                        ResultSet rec2 = stmt2.executeQuery(SQLQuery2);
+                        if(rec2.next()){
                             NoEdit = true;
                             MacNo.setFocusable(false);
                             RefNo.setFocusable(false);
@@ -1156,20 +1151,26 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         stmt2.close();
                     } catch (SQLException e2) {
                         MSG.ERR(e2.getMessage());
+                        AppLogUtil.log(PrintInv1.class, "error", e2);
                     }
+                    
                     InvNo.setFocusable(true);
                     if (!CustCode.getText().equals("")) {
                         CustName.requestFocus();
                     } else {
                         CustCode.requestFocus();
                     }
+                }else{
+                    MSG.ERR(this, "ไม่พบใบกำกับภาษี/ใบแจ้งหนี้ที่ต้องการ...");
+                    ClearVariable();
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!DisplayClick) {
@@ -1190,31 +1191,30 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile where sp_code='" + CustCode.getText() + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    CustCode.setText(rec.getString("sp_code"));
-                    CustName.setText(rec.getString("sp_desc"));
-                    CustAddr1.setText(rec.getString("sp_addr1"));
-                    CustAddr2.setText(rec.getString("sp_addr2") + " " + rec.getString("sp_zip"));
-                    CustTel.setText(rec.getString("tel"));
-                    CustFax.setText(rec.getString("fax"));
-                    Contack.setText(rec.getString("contack"));
-                    CustRemark.setText(rec.getString("remark"));
+                String SQLQuery = "Select * from custfile where sp_code='" + CustCode.getText() + "' limit 1";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    CustCode.setText(rs.getString("sp_code"));
+                    CustName.setText(rs.getString("sp_desc"));
+                    CustAddr1.setText(rs.getString("sp_addr1"));
+                    CustAddr2.setText(rs.getString("sp_addr2") + " " + rs.getString("sp_zip"));
+                    CustTel.setText(rs.getString("tel"));
+                    CustFax.setText(rs.getString("fax"));
+                    Contack.setText(rs.getString("contack"));
+                    CustRemark.setText(rs.getString("remark"));
                     CustRemark2.setText("");
                     MacNo.requestFocus();
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!InvNo.isFocusable()) {
@@ -1233,30 +1233,28 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from custfile where sp_desc='" + CustName.getText() + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    CustCode.setText(rec.getString("sp_code"));
-                    CustName.setText(rec.getString("sp_desc"));
-                    CustAddr1.setText(rec.getString("sp_addr1"));
-                    CustAddr2.setText(rec.getString("sp_addr2") + " " + rec.getString("sp_zip"));
-                    CustTel.setText(rec.getString("tel"));
-                    CustFax.setText(rec.getString("fax"));
-                    Contack.setText(rec.getString("contack"));
-                    CustRemark.setText(rec.getString("remark"));
-                    //CustRemark2.setText(rec.getString("remark2"));
+                String SQLQuery = "Select * from custfile where sp_desc='" + CustName.getText() + "' limit 1";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    CustCode.setText(rs.getString("sp_code"));
+                    CustName.setText(rs.getString("sp_desc"));
+                    CustAddr1.setText(rs.getString("sp_addr1"));
+                    CustAddr2.setText(rs.getString("sp_addr2") + " " + rs.getString("sp_zip"));
+                    CustTel.setText(rs.getString("tel"));
+                    CustFax.setText(rs.getString("fax"));
+                    Contack.setText(rs.getString("contack"));
+                    CustRemark.setText(rs.getString("remark"));
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1269,53 +1267,47 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from billno where (b_refno='" + RefNo.getText() + "') and "
-                        + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                    MSG.ERR(this, "ไม่พบรายการขายของใบกำกับภาษีอย่างย่อเลขที่ " + RefNo.getText() + " ที่เครื่อง " + MacNo.getText() + " กรุณาตรวจสอบ...");
-                    MacNo.setText("");
-                    RefNo.setText("");
-                    MacNo.requestFocus();
-                } else {
-                    TempInv = rec.getString("b_invno");
-                    TempType = rec.getString("b_invtype");
+                String SQLQuery = "Select * from billno where (b_refno='" + RefNo.getText() + "') and "
+                        + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V') limit 1";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                if(rs.next()){
+                    TempInv = rs.getString("b_invno");
+                    TempType = rs.getString("b_invtype");
                     if (((TempInv.equals("")) & (TempType.equals(""))) | (TempInv.equals(InvNo.getText()))) {
-                        OnDate.setText(DateFmt.format(rec.getDate("b_ondate")));
-                        OnTime.setText(rec.getString("b_ontime"));
-                        Cashier.setText(rec.getString("b_cashier"));
-                        XTotalAmt = rec.getDouble("b_total");
-                        XVat = rec.getDouble("b_vat");
-                        XAmount = rec.getDouble("b_nettotal");
-                        XService = rec.getDouble("b_serviceamt");
-                        XCashPay = rec.getDouble("b_cash");
-                        XCrPay = rec.getDouble("b_cramt1");
+                        OnDate.setText(DateFmt.format(rs.getDate("b_ondate")));
+                        OnTime.setText(rs.getString("b_ontime"));
+                        Cashier.setText(rs.getString("b_cashier"));
+                        XTotalAmt = rs.getDouble("b_total");
+                        XVat = rs.getDouble("b_vat");
+                        XAmount = rs.getDouble("b_nettotal");
+                        XService = rs.getDouble("b_serviceamt");
+                        XCashPay = rs.getDouble("b_cash");
+                        XCrPay = rs.getDouble("b_cramt1");
 //                        XCrNo = rec.getString("b_cardno1")+"/"+rec.getString("b_appcode1");
-                        XCrNo = GetCrNo(RefNo.getText(), MacNo.getText());
-                        XCupon = rec.getDouble("b_giftvoucher");
-                        XEarnest = rec.getDouble("b_earnest");
+                        XCrNo = "";
+                        XCupon = rs.getDouble("b_giftvoucher");
+                        XEarnest = rs.getDouble("b_earnest");
                         XRegNo = PUtility.SeekRegNo(MacNo.getText());
                         XSubTotal = XAmount - XVat;
-                        XDiscount = rec.getDouble("b_itemdiscamt")
-                                + rec.getDouble("b_fastdiscamt")
-                                + rec.getDouble("b_empdiscamt")
-                                + rec.getDouble("b_traindiscamt")
-                                + rec.getDouble("b_memdiscamt")
-                                + rec.getDouble("b_subdiscamt")
-                                + rec.getDouble("b_subdiscbath")
-                                + rec.getDouble("b_prodiscamt")
-                                + rec.getDouble("b_cupondiscamt")
-                                + rec.getDouble("b_spadiscamt");
+                        XDiscount = rs.getDouble("b_itemdiscamt")
+                                + rs.getDouble("b_fastdiscamt")
+                                + rs.getDouble("b_empdiscamt")
+                                + rs.getDouble("b_traindiscamt")
+                                + rs.getDouble("b_memdiscamt")
+                                + rs.getDouble("b_subdiscamt")
+                                + rs.getDouble("b_subdiscbath")
+                                + rs.getDouble("b_prodiscamt")
+                                + rs.getDouble("b_cupondiscamt")
+                                + rs.getDouble("b_spadiscamt");
                         SubTotal.setValue(XSubTotal);
-                        ArCode.setText(rec.getString("b_accrcode"));
+                        ArCode.setText(rs.getString("b_accrcode"));
                         Vat.setValue(XVat);
                         Amount.setValue(XAmount);
                     } else {
-                        if (!rec.getString("b_accrcode").equals("")) {
+                        if (!rs.getString("b_accrcode").equals("")) {
                             if (TempType.equals("1")) {
                                 MSG.ERR(this, "ใบกำกับภาษีอย่างย่อเลขที่ " + MacNo.getText() + "/" + RefNo.getText() + " มีการพิมพ์ใบกำกับภาษีแล้วเลขที่ " + TempInv);
                             } else {
@@ -1328,13 +1320,19 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         RefNo.setText("");
                         MacNo.requestFocus();
                     }
+                }else{
+                    MSG.ERR(this, "ไม่พบรายการขายของใบกำกับภาษีอย่างย่อเลขที่ " + RefNo.getText() + " ที่เครื่อง " + MacNo.getText() + " กรุณาตรวจสอบ...");
+                    MacNo.setText("");
+                    RefNo.setText("");
+                    MacNo.requestFocus();
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e2) {
                 MSG.ERR(e2.getMessage());
+                AppLogUtil.log(PrintInv2.class, "error", e2);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1494,7 +1492,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert into custfile (sp_code,sp_desc,sp_addr1,sp_addr2,tel,fax,sp_zip,remark,"
@@ -1515,8 +1513,9 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1525,7 +1524,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update custfile set sp_desc=?,sp_addr1=?,sp_addr2=?,tel=?,fax=?,sp_zip=?"
@@ -1546,8 +1545,9 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1563,7 +1563,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from invdetail where invno=?";
@@ -1574,45 +1574,44 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         }
+        
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from t_sale where (macno='" + MacNo + "') and (r_refno='" + RefNo + "')";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    try {
+            String SQLQuery = "Select * from t_sale where (macno='" + MacNo + "') and (r_refno='" + RefNo + "')";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while(rs.next()){
+                try {
                         Statement stmt2 = mysql.getConnection().createStatement();
                         String SqlQuery = "insert into invdetail (invno,invdate,pcode,pname,price,pqty,"
                                 + "pamount,punit,pgroup) values (?,?,?,?,?,?,?,?,?)";
                         PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
                         prm.setString(1, InvNo);
                         prm.setString(2, SqlDateFmt.format(TempInvDate));
-                        prm.setString(3, rec.getString("r_plucode"));
-                        prm.setString(4, rec.getString("r_pname"));
-                        prm.setDouble(5, rec.getDouble("r_price"));
-                        prm.setDouble(6, rec.getDouble("r_quan"));
-                        prm.setDouble(7, rec.getDouble("r_total"));
-                        prm.setString(8, rec.getString("r_unit"));
-                        prm.setString(9, rec.getString("r_group"));
+                        prm.setString(3, rs.getString("r_plucode"));
+                        prm.setString(4, rs.getString("r_pname"));
+                        prm.setDouble(5, rs.getDouble("r_price"));
+                        prm.setDouble(6, rs.getDouble("r_quan"));
+                        prm.setDouble(7, rs.getDouble("r_total"));
+                        prm.setString(8, rs.getString("r_unit"));
+                        prm.setString(9, rs.getString("r_group"));
                         prm.executeUpdate();
                         prm.close();
                         stmt2.close();
                     } catch (SQLException e2) {
                         MSG.ERR(e2.getMessage());
+                        AppLogUtil.log(PrintInv2.class, "error", e2);
                     }
-
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
     }
 
     public void UpdateBillNo(String MacNo, String RefNo, String InvNo, String InvType) {
@@ -1620,9 +1619,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update billno set b_invno=?,b_invtype=? where (b_macno=?) and (b_refno=?)";
             PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, InvNo);
@@ -1631,11 +1629,11 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(4, RefNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1644,20 +1642,19 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update accr set arinvno=? where arno=?";
             PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, InvNo);
             prm.setString(2, BillNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -1676,9 +1673,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert into invcashdoc (s_bran,invdate,custcode,custname,custaddr1,"
                     + "custaddr2,macno,refno,ondate,ontime,cashier,totalamt,discount,subtotal,"
                     + "vat,amount,invuser,service,regno,cashpay,crpay,cupon,crno,arcode,"
@@ -1726,11 +1722,11 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(39, "N");
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1748,9 +1744,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update invcashdoc set s_bran=?,invdate=?,custcode=?,custname=?,custaddr1=?,"
                     + "custaddr2=?,macno=?,refno=?,ondate=?,ontime=?,cashier=?,totalamt=?,discount=?,subtotal=?,"
                     + "vat=?,amount=?,invuser=?,service=?,regno=?,cashpay=?,crpay=?,cupon=?,crno=?,arcode=?,"
@@ -1793,11 +1788,11 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             prm.setString(34, InvNo);
             prm.executeUpdate();
             prm.close();
-            stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1807,23 +1802,19 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from invcashdoc where invno='" + InvNo + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1835,23 +1826,19 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from custfile where sp_code='" + CustCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            String sql = "Select sp_code from custfile where sp_code='" + CustCode + "' limit 1";
+            ResultSet rs = stmt.executeQuery(sql);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1864,35 +1851,36 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from branch";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
+            String SQLQuery = "Select invno from branch limit 1";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            if(rs.next()){
+                TempInv = rs.getInt("invno");
+                RetVal = 'I' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
+            }else {
                 TempInv = 1;
                 RetVal = 'I' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
-            } else {
-                TempInv = rec.getInt("invno");
-                RetVal = 'I' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         }
+        
         int UpdateInvNo = TempInv + 1;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update branch set invno=" + UpdateInvNo;
-            stmt.executeUpdate(SQLQuery);
+            stmt.executeUpdate("update branch set invno=" + UpdateInvNo);
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
 
         return RetVal;
     }
@@ -1918,9 +1906,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                              * * OPEN CONNECTION **
                              */
                             MySQLConnect mysql = new MySQLConnect();
-                            mysql.open();
+                            mysql.open(this.getClass());
                             try {
-                                Statement stmt = mysql.getConnection().createStatement();
                                 String SqlQuery = "update invcashdoc set void=?,uservoid=?,voiddate=?,"
                                         + "voidmessage=? where invno=?";
                                 PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
@@ -1931,11 +1918,11 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 prm.setString(5, TempInvNo);
                                 prm.executeUpdate();
                                 prm.close();
-                                stmt.close();
                             } catch (SQLException e2) {
                                 MSG.ERR(e2.getMessage());
+                                AppLogUtil.log(PrintInv2.class, "error", e2);
                             } finally {
-                                mysql.close();
+                                mysql.closeConnection(this.getClass());
                             }
                             TCancel.setText("เอกสารยกเลิกโดย : " + PublicVar._User + "/" + DateFmt.format(date));
                             TCancelMsg.setText("  " + VoidMessage);
@@ -1989,7 +1976,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "update invcashdoc set printok='Y',invuser=? where invno=?";
@@ -2001,8 +1988,9 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             stmt.close();
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
+            AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -2075,25 +2063,5 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
-    private String GetCrNo(String refno, String macno) {
-        String str = "";
-        String str2 = "";
-//        try {
-//            String sql = "SELECT decode(b_crcardno1,'snpfood') as bcardno1 FROM billcredit " +
-//                    "where b_refno='"+refno+"' and b_macno='"+macno+"'";
-////            System.out.println(sql);
-//            MySQLConnect db1 = new MySQLConnect();
-//            db1.dbconnect();
-//            Statement stmt = mysql.getConnection().createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            while(rs.next()){
-//                str = rs.getString(1);
-//                str2+= "XXXXXXXXXXX" + PUtility.Addzero(str,16).substring(12, 16)+",";
-//            }
-//            System.out.println(str2);
-//        } catch (SQLException e) {
-//        }
-        return str2;
-    }
 
 }

@@ -129,7 +129,7 @@
     <Component class="javax.swing.JButton" name="bntOK">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Norasi" size="14" style="0"/>
+          <Font name="Tahoma" size="14" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="F5- &#xe1e;&#xe34;&#xe21;&#xe1e;&#xe4c;"/>
         <Property name="focusable" type="boolean" value="false"/>
@@ -141,7 +141,7 @@
     <Component class="javax.swing.JButton" name="bntExit">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Norasi" size="14" style="0"/>
+          <Font name="Tahoma" size="14" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="ESC- &#xe2d;&#xe2d;&#xe01;"/>
         <Property name="focusable" type="boolean" value="false"/>

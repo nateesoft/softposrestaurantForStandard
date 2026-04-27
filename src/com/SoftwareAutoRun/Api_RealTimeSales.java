@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.SoftwareAutoRun;
 
 import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
-import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.TSaleBean;
 import database.ConfigFile;
 import database.MySQLConnect;
@@ -20,72 +16,62 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import sun.natee.project.util.ThaiUtil;
 import util.DateConvert;
-//import util.ExportSQLImportSQL;
 import util.MSG;
 
 /**
  *
  * @author Dell
  */
-public final class Api_RealTimeSales extends javax.swing.JFrame {
+public class Api_RealTimeSales extends javax.swing.JFrame {
 
     private boolean FlageCheckProcess = false;
     BranchBean branchBean = new BranchBean();
     BranchControl branControl = new BranchControl();
     final private MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
+//    MySQLConnect mysql = new MySQLConnect();
     public String ErrorText = "Log Error.." + "\r\n";
     public String LogQuery = "Log SQL.." + "\r\n";
     String logTab = "Log Check..." + "\r\n";
+    String configCheck = "Config check..." + "\r\n";
+    String businessType = ConfigFile.getProperties("businessType");
     DateConvert dc = new DateConvert();
 
-    public Api_RealTimeSales() {
-        setUndecorated(true);
+    public void Api_RealTimeSales() {
+//        setUndecorated(true);
         initComponents();
-
+        setState(JFrame.ICONIFIED);
         branchBean = new BranchBean();
-        
-        MySQLConnect.getDbVar();
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        this.dispose();
+        try {
+             System.out.println("Thread.sleep(5 * (60 * 1000));");
+            Thread.sleep(5 * (60 * 1000));
+           
+        } catch (InterruptedException ex) {
+        }
         branchBean = BranchControl.getData();
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
-                btnUpload.setVisible(false);
+//            btnUpload.setVisible(false); 
+
                 processRun();
             }
         }).start();
     }
 
     public void processRun() {
+        System.out.println("Into Method processRun() ");
 //        uploadSQL();
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
-            myOnline.open();
-//            uploadMaster();
+            uploadMaster();
             for (int i = 0; i < 10; i++) {
                 Thread.sleep(10 * 1000);
                 i = 0;
                 uploadCheckConfig();
-                myOnline.close();
-                mysql.close();
             }
-            myOnline.close();
-        } catch (Exception e) {
-            try {
-                Thread.sleep(30 * 1000 * 2);
-            } catch (InterruptedException ex) {
-                ErrorText += ex.toString();
-                txtLogErr.setText(logTab + ErrorText);
-                Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            mysql.open();
-            e.printStackTrace();
+        } catch (InterruptedException e) {
         }
 
     }
@@ -106,17 +92,20 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         txtLogErr = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
 
-        btnUpload.setBackground(new java.awt.Color(255, 255, 255));
+        setTitle("API_RealtimeOnline");
+
         btnUpload.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload-icon-18.png"))); // NOI18N
-        btnUpload.setText("   Click hear");
+        btnUpload.setText("   Click here");
         btnUpload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUploadActionPerformed(evt);
             }
         });
 
-        jToggleButton1.setText("-");
+        jToggleButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jToggleButton1.setForeground(new java.awt.Color(255, 102, 102));
+        jToggleButton1.setText("X");
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
@@ -127,7 +116,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("API-AutoSales Online V2.1 15102020/14:10");
+        jLabel1.setText("API-AutoSales Online V2.1 2509024/09:10");
 
         txtLogErr.setColumns(20);
         txtLogErr.setRows(5);
@@ -156,17 +145,15 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnUpload)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -178,68 +165,54 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUploadActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        setState(JFrame.ICONIFIED);
+//        setState(JFrame.ICONIFIED);
+        this.dispose();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
     public void uploadCheckConfig() {
-        String sendRealtimeWeb = "";
-        sendRealtimeWeb = ConfigFile.getProperties("sendRealtimeWeb");
-        try {
-            if (sendRealtimeWeb.equals("true")) {
-//                for (int a = 0; a < 1; a++) {
-//                    a = 0;
-                try {
-                    if (FlageCheckProcess != true) {
-                        uploadBillno();
-                        System.out.println("Exit Loop Billno;\n");
-                        ErrorText += ".....Exit Loop Billno;\n";
-                        txtLogErr.setText(logTab + ErrorText);
-                    }
-                    try {
-                        Thread.sleep(10 * 1000);
-                    } catch (InterruptedException ex) {
-                        txtLogErr.setText(logTab + ex.toString());
-                        Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if (FlageCheckProcess != true) {
-                        uploadT_Sale();
-                        System.out.println("Exit Loop T_Sale\n;");
-                        ErrorText += ".....Exit Loop T_Sale\n;";
-                        txtLogErr.setText(logTab + ErrorText);
-                        try {
-                            Thread.sleep(10 * 1000);
-                        } catch (InterruptedException ex) {
-                            txtLogErr.setText(logTab + ex.toString());
-                            Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    if (FlageCheckProcess != true) {
-                        checkBillVoid();
-                        System.out.println("Exit Loop Bill Void\n;");
-                        ErrorText += ".....Exit Loop Bill Void\n;";
-                        txtLogErr.setText(logTab + ErrorText);
-                    }
+        System.out.println("uploadCheckConfig() Process");
+        String sendRealtimeWeb = ConfigFile.getProperties("sendRealtimeWeb");
 
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                    ErrorText += e.toString();
-                    txtLogErr.setText(logTab + ErrorText);
-                }
-//                }
+        txtLogErr.setText(configCheck + "sendRealtimeWeb Value=" + sendRealtimeWeb);
+        txtLogErr.setText(configCheck + "DB: Value=" + ConfigFile.getProperties("database"));
+        if (sendRealtimeWeb.equals("true")) {
+            if (FlageCheckProcess != true) {
+                uploadBillno();
+                System.out.println("Exit Loop Billno;\n");
+                ErrorText += ".....Exit Loop Billno;\n";
+                txtLogErr.setText(logTab);
             }
-        } catch (Exception e) {
-            ErrorText += e.toString();
-            txtLogErr.setText(logTab + ErrorText);
-            MSG.NOTICE(e.toString());
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException ex) {
+            }
+            if (FlageCheckProcess != true) {
+                uploadT_Sale();
+                System.out.println("Exit Loop T_Sale\n;");
+                ErrorText += ".....Exit Loop T_Sale\n";
+                txtLogErr.setText(logTab + ErrorText);
+                try {
+                    Thread.sleep(10 * 1000);
+                } catch (InterruptedException ex) {
+                    txtLogErr.setText(logTab + ex.toString());
+                    Logger.getLogger(Api_RealTimeSales.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (FlageCheckProcess != true) {
+                checkBillVoid();
+                System.out.println("Exit Loop Bill Void\n;");
+                ErrorText += ".....Exit Loop Bill Void\n;";
+                txtLogErr.setText(logTab + ErrorText);
+            }
         }
-
     }
 
     public void uploadBillno() {
-
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.open();
+
             DateConvert dc = new DateConvert();
             String sql = "select b_refno from billno where B_SendOnline='N';";
             Statement stmtLocal = mysql.getConnection().createStatement();
@@ -249,11 +222,9 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 ResultSet rs = stmtLocal.executeQuery(sql);
                 while (rs.next()) {
                     FlageCheckProcess = true;
-                    BillNoBean billbean = new BillNoBean();
                     BillControl billControl = new BillControl();
                     String refno = rs.getString("b_refno");
-                    billbean = billControl.getData(refno);
-//                    branchBean = branControl.getBranch();
+                    BillNoBean billbean = billControl.getData(refno);
                     if (billbean.getB_PostDate() == null || billbean.getB_PostDate().equals("null")) {
                         billbean.setB_PostDate(new Date());
                     }
@@ -283,7 +254,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                             + " '" + billbean.getB_ROUNDCLOSE() + "', '', '', '', '',"
                             + " '', '', '', '', '',"
                             + " '', '', '','', 'Y');";
-                    //insert into website Online Database (billno)
                     try {
 //                        MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
                         System.out.println(sqlUpdateOnline);
@@ -306,35 +276,38 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 ErrorText += "loop Billno Finished Insert";
                 rs.close();
                 stmtLocalUpdate.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e);
                 ErrorText += e.toString();
                 txtLogErr.setText(logTab + ErrorText);
             }
             stmtLocal.close();
             stmtServer.close();
-            mysql.close();
-            myOnline.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ErrorText += e.toString();
             txtLogErr.setText(logTab + ErrorText);
-            System.out.println(e);
         }
+//            mysql.closeConnection(this.getClass());
+        myOnline.close();
+
     }
 
     public void uploadT_Sale() {
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             myOnline.open();
+
+            Statement stmtLocal;
+            Statement stmtServer;
+            ResultSet rs;
             Statement stmtLocalUpdate = mysql.getConnection().createStatement();
-            Statement stmtLocal = mysql.getConnection().createStatement();
-            Statement stmtServer = myOnline.getConnection().createStatement();
+            stmtLocal = mysql.getConnection().createStatement();
+            stmtServer = myOnline.getConnection().createStatement();
             String sql = "select * from t_sale where r_sendOnline='N' order by macno,r_refno,r_index;";
-            ResultSet rs = stmtLocal.executeQuery(sql);
+            rs = stmtLocal.executeQuery(sql);
             TSaleBean bean = new TSaleBean();
 //            branchBean = branControl.getBranch();
-
             while (rs.next()) {
                 FlageCheckProcess = true;
                 bean.setR_Index(rs.getString("R_Index"));
@@ -346,6 +319,9 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 bean.setCashier((rs.getString("Cashier")));
                 bean.setR_Emp((rs.getString("R_Emp")));
                 bean.setR_PluCode(rs.getString("R_PluCode"));
+
+                bean.setR_Cost(getCostfile(rs.getString("R_PluCode")));
+
                 bean.setR_PName((rs.getString("R_PName")));
                 bean.setR_Unit((rs.getString("R_Unit")));
                 bean.setR_Group((rs.getString("R_Group")));
@@ -376,10 +352,9 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 bean.setR_Redule(rs.getDouble("R_Redule"));
                 bean.setR_DiscBath(rs.getDouble("R_DiscBath"));
                 bean.setR_PrAdj(rs.getDouble("R_PrAdj"));
-                bean.setR_PreDisAmt(rs.getDouble("R_PreDisAmt"));
+
                 bean.setR_NetTotal(rs.getDouble("R_NetTotal"));
-                bean.setR_Kic(rs.getString("R_Kic"));
-                bean.setR_KicPrint(rs.getString("R_KicPrint"));
+
                 bean.setR_Refund(rs.getString("R_Refund"));
                 bean.setVoidMsg((rs.getString("VoidMsg")));
                 bean.setR_Void(rs.getString("R_Void"));
@@ -408,49 +383,92 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 bean.setR_PrBath2(rs.getDouble("R_PrBath2"));
                 bean.setR_PrAmt2(rs.getDouble("R_PrAmt2"));
                 bean.setR_PrAdj2(rs.getDouble("R_PrAdj2"));
-                bean.setR_PItemNo(rs.getInt("R_PItemNo"));
-                bean.setR_PKicQue(rs.getInt("R_PKicQue"));
-                bean.setR_PrVcType(rs.getString("R_PrVcType"));
-                bean.setR_PrVcCode(rs.getString("R_PrVcCode"));
-                bean.setR_PrVcAmt(rs.getDouble("R_PrVcAmt"));
-                bean.setR_PrVcAdj(rs.getDouble("R_PrVcAdj"));
-                bean.setR_MoveFlag(rs.getString("R_MoveFlag"));
-                bean.setR_Pause(rs.getString("R_Pause"));
-                bean.setR_SPIndex(rs.getString("R_SPIndex"));
-                bean.setR_LinkIndex(rs.getString("R_LinkIndex"));
-                bean.setR_VoidPause(rs.getString("R_VoidPause"));
-                bean.setR_SetPrice(rs.getDouble("R_SetPrice"));
-                bean.setR_SetDiscAmt(rs.getDouble("R_SetDiscAmt"));
-                bean.setR_MoveItem(rs.getString("R_MoveItem"));
-                bean.setR_MoveFrom(rs.getString("R_MoveFrom"));
-                bean.setR_MoveUser(ThaiUtil.ASCII2Unicode(rs.getString("R_MoveUser")));
-                bean.setR_Opt9((rs.getString("R_Opt9")));
-                bean.setR_Opt1((rs.getString("R_Opt1")));
-                bean.setR_Opt2((rs.getString("R_Opt2")));
-                bean.setR_Opt3((rs.getString("R_Opt3")));
-                bean.setR_Opt4((rs.getString("R_Opt4")));
-                bean.setR_Opt5((rs.getString("R_Opt5")));
-                bean.setR_Opt6((rs.getString("R_Opt6")));
-                bean.setR_Opt7((rs.getString("R_Opt7")));
-                bean.setR_Opt8((rs.getString("R_Opt8")));
-                bean.setR_PrintItemBill(rs.getString("R_PrintItemBill"));
-                bean.setR_CountTime(rs.getString("R_CountTime"));
-                bean.setR_Return(rs.getString("R_Return"));
-                bean.setR_Earn(rs.getString("R_Earn"));
-                bean.setR_EarnNo(rs.getString("R_EarnNo"));
 
-                bean.setR_NetDiff(rs.getDouble("R_NetDiff"));
                 bean.setR_SendOnline("Y");
+
+                //check businessType
+                if (!businessType.equals("retail")) {
+                    bean.setR_PreDisAmt(rs.getDouble("R_PreDisAmt"));
+                    bean.setR_Kic(rs.getString("R_Kic"));
+                    bean.setR_KicPrint(rs.getString("R_KicPrint"));
+                    bean.setR_PItemNo(rs.getInt("R_PItemNo"));
+                    bean.setR_PKicQue(rs.getInt("R_PKicQue"));
+                    bean.setR_PrVcType(rs.getString("R_PrVcType"));
+                    bean.setR_PrVcCode(rs.getString("R_PrVcCode"));
+                    bean.setR_PrVcAmt(rs.getDouble("R_PrVcAmt"));
+                    bean.setR_PrVcAdj(rs.getDouble("R_PrVcAdj"));
+                    bean.setR_MoveFlag(rs.getString("R_MoveFlag"));
+                    bean.setR_Pause(rs.getString("R_Pause"));
+                    bean.setR_SPIndex(rs.getString("R_SPIndex"));
+                    bean.setR_LinkIndex(rs.getString("R_LinkIndex"));
+                    bean.setR_VoidPause(rs.getString("R_VoidPause"));
+                    bean.setR_SetPrice(rs.getDouble("R_SetPrice"));
+                    bean.setR_SetDiscAmt(rs.getDouble("R_SetDiscAmt"));
+                    bean.setR_MoveItem(rs.getString("R_MoveItem"));
+                    bean.setR_MoveFrom(rs.getString("R_MoveFrom"));
+                    bean.setR_MoveUser(ThaiUtil.ASCII2Unicode(rs.getString("R_MoveUser")));
+                    bean.setR_PrintItemBill(rs.getString("R_PrintItemBill"));
+                    bean.setR_CountTime(rs.getString("R_CountTime"));
+                    bean.setR_Return(rs.getString("R_Return"));
+                    bean.setR_Earn(rs.getString("R_Earn"));
+                    bean.setR_EarnNo(rs.getString("R_EarnNo"));
+                    bean.setR_Opt1((rs.getString("R_Opt1")));
+                    bean.setR_Opt2((rs.getString("R_Opt2")));
+                    bean.setR_Opt3((rs.getString("R_Opt3")));
+                    bean.setR_Opt4((rs.getString("R_Opt4")));
+                    bean.setR_Opt5((rs.getString("R_Opt5")));
+                    bean.setR_Opt6((rs.getString("R_Opt6")));
+                    bean.setR_Opt7((rs.getString("R_Opt7")));
+                    bean.setR_Opt8((rs.getString("R_Opt8")));
+                    bean.setR_Opt9((rs.getString("R_Opt9")));
+
+                    bean.setR_NetDiff(rs.getDouble("R_NetDiff"));
+                } else {
+                    bean.setR_PreDisAmt(0.00);
+                    bean.setR_Kic("");
+                    bean.setR_KicPrint("");
+                    bean.setR_PItemNo(0);
+                    bean.setR_PKicQue(0);
+                    bean.setR_PrVcType("");
+                    bean.setR_PrVcCode("");
+                    bean.setR_PrVcAmt(0);
+                    bean.setR_PrVcAdj(0);
+                    bean.setR_MoveFlag("");
+                    bean.setR_Pause("");
+                    bean.setR_SPIndex("");
+                    bean.setR_LinkIndex("");
+                    bean.setR_VoidPause("");
+                    bean.setR_SetPrice(0);
+                    bean.setR_SetDiscAmt(0);
+                    bean.setR_MoveItem("");
+                    bean.setR_MoveFrom("");
+                    bean.setR_MoveUser("");
+                    bean.setR_PrintItemBill("");
+                    bean.setR_CountTime("");
+                    bean.setR_Return("");
+                    bean.setR_Earn("");
+                    bean.setR_EarnNo("");
+                    bean.setR_Opt1("");
+                    bean.setR_Opt2("");
+                    bean.setR_Opt3("");
+                    bean.setR_Opt4("");
+                    bean.setR_Opt5("");
+                    bean.setR_Opt6("");
+                    bean.setR_Opt7("");
+                    bean.setR_Opt8("");
+                    bean.setR_Opt9("");
+                    bean.setR_NetDiff(0.00);
+                }
                 bean.setR_BranchCode(branchBean.getCode());
 
                 if (bean.getR_PrVcType() == null) {
-                    bean.setR_PrVcType("");;
+                    bean.setR_PrVcType("");
                 }
                 if (bean.getR_PrintItemBill() == null) {
-                    bean.setR_PrintItemBill("");;
+                    bean.setR_PrintItemBill("");
                 }
                 if (bean.getR_CountTime() == null) {
-                    bean.setR_CountTime("");;
+                    bean.setR_CountTime("");
                 }
                 String sqlUploadTSaleOnline = "INSERT INTO t_sale VALUES("
                         + "'" + bean.getR_Index() + "',"
@@ -553,7 +571,8 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                         + "'" + bean.getR_EarnNo() + "',"
                         + "'" + bean.getR_NetDiff() + "',"
                         + "'" + bean.getR_SendOnline() + "',"
-                        + "'" + bean.getR_BranchCode() + "')";
+                        + "'" + bean.getR_BranchCode() + "',"
+                        + "'" + bean.getR_Cost() + "')";
 //                stkfileUpdate(bean.getR_PluCode());
                 try {
 //                    MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
@@ -575,7 +594,7 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                             + "and macno='" + bean.getMacNo() + "';";
                     stmtLocalUpdate.executeUpdate(sqlUpdateTSaleSendOnlineFlag);
                     System.out.println(sqlUpdateTSaleSendOnlineFlag);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     ErrorText += e.toString();
                     txtLogErr.setText(logTab + ErrorText);
                     System.out.println(e);
@@ -584,36 +603,36 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                 }
                 Thread.sleep(90);
             }
-            stmtLocalUpdate.close();
             stmtServer.close();
             stmtLocal.close();
-            myOnline.close();
             System.out.println("Loop T_Sale Finished;");
             FlageCheckProcess = false;
             rs.close();
-            mysql.close();
             Thread.sleep(10 * 1000);
+            mysql.close();
 //            uploadCheckConfig();
-        } catch (Exception e) {
+        } catch (InterruptedException | SQLException e) {
+            MSG.NOTICE(e.toString());
             System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(logTab + ErrorText);
         }
+        myOnline.close();
     }
 
     public void uploadCreditFile() {
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.closeConnection(this.getClass());
+            mysql.open(this.getClass());
             myOnline.open();
+
             Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             String sqlGetCreditFile = "select crcode,crname from creditfile order by crcode;";
             ResultSet rsCredit = stmtLocal.executeQuery(sqlGetCreditFile);
             String creditCode = "";
             String creditName = "";
-//            MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
-//            myOnline.open();
             String delCreditFile = "delete from creditfile;";
             stmtServer.executeUpdate(delCreditFile);
             while (rsCredit.next()) {
@@ -624,29 +643,32 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                             + "VALUES('" + creditCode + "', '', '" + creditName + "', 'N', '0.00', '0.00', '', '1');";
                     stmtServer.executeUpdate(sqlUploadCreditFile);
                     System.out.println(sqlUploadCreditFile);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     System.out.println(e);
                     ErrorText += e.toString();
                     txtLogErr.setText(logTab + ErrorText);
                 }
             }
-            myOnline.close();
             rsCredit.close();
-            mysql.close();
             stmtLocal.close();
             stmtServer.close();
-        } catch (Exception e) {
+            mysql.close();
+        } catch (SQLException e) {
             System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(logTab + ErrorText);
+
         }
+        myOnline.close();
     }
 
     private void uploadGroupFile() {
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.closeConnection(this.getClass());
+            mysql.open(this.getClass());
             myOnline.open();
+
             Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
             Statement stmtServerDel = myOnline.getConnection().createStatement();
@@ -654,8 +676,6 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             ResultSet rsGroupFile = stmtLocal.executeQuery(sqlGetGroupFile);
             String groupCode = "";
             String groupName = "";
-//            MySQLConnectWebOnline myOnline = new MySQLConnectWebOnline();
-//            myOnline.open();
             String delGroupFile = "delete from groupfile;";
             stmtServerDel.executeUpdate(delGroupFile);
             while (rsGroupFile.next()) {
@@ -671,23 +691,25 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                     txtLogErr.setText(logTab + ErrorText);
                 }
             }
-            mysql.close();
-            myOnline.close();
             stmtServerDel.close();
             rsGroupFile.close();
             stmtLocal.close();
             stmtServer.close();
-        } catch (Exception e) {
+            mysql.close();
+        } catch (SQLException e) {
             System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(logTab + ErrorText);
         }
+        myOnline.close();
     }
 
     private void uploadProtab() {
         try {
+
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.closeConnection(this.getClass());
+            mysql.open(this.getClass());
             myOnline.open();
             Statement stmtLocal = mysql.getConnection().createStatement();
             Statement stmtServer = myOnline.getConnection().createStatement();
@@ -705,21 +727,45 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
                     String sqlUploadCreditFile = "INSERT INTO protab VALUES('" + groupCode + "', '" + groupName + "');";
                     stmtServer.executeUpdate(sqlUploadCreditFile);
                     System.out.println(sqlUploadCreditFile);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     System.out.println(e);
                     MSG.NOTICE(e.toString());
                     ErrorText += e.toString();
                     txtLogErr.setText(logTab + ErrorText);
                 }
             }
-            myOnline.close();
             rsProtab.close();
             mysql.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(ErrorText);
         }
+        myOnline.close();
+    }
+
+    private double getCostfile(String pcode) {
+        double pscost = 0;
+        try {
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.closeConnection(this.getClass());
+            mysql.open(this.getClass());
+            Statement stmtLocal = mysql.getConnection().createStatement();
+            String sqlGetCostfile = "select pscost,pacost,plcost from product where pcode ='" + pcode + "';";
+            ResultSet rsCostfile = stmtLocal.executeQuery(sqlGetCostfile);
+
+            if (rsCostfile.next()) {
+                pscost = rsCostfile.getDouble("pscost");
+            }
+            rsCostfile.close();
+            mysql.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            ErrorText += e.toString();
+            txtLogErr.setText(ErrorText);
+        }
+        return pscost;
     }
 
     private void uploadMaster() {
@@ -730,25 +776,27 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
             uploadProtab();
 
             Thread.sleep(10 * 1000);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(ErrorText);
         }
     }
 
-    private void checkBillVoid() throws SQLException {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        myOnline.open();
-        Statement stmtLocal = mysql.getConnection().createStatement();
-        Statement stmtServerBillno = myOnline.getConnection().createStatement();
-        Statement stmtServerTSale = myOnline.getConnection().createStatement();
-        String sql = "select b_void,b_refno,b_macno from billno where b_void='V' and void_sendOnline='N';";
-        ResultSet rs = stmtLocal.executeQuery(sql);
-//            myOnline.open();
-        FlageCheckProcess = true;
+    private void checkBillVoid() {
         try {
+            MySQLConnect mysql = new MySQLConnect();
+            mysql.closeConnection(this.getClass());
+            mysql.open(this.getClass());
+            myOnline.open();
+
+            Statement stmtLocal = mysql.getConnection().createStatement();
+            Statement stmtServerBillno = myOnline.getConnection().createStatement();
+            Statement stmtServerTSale = myOnline.getConnection().createStatement();
+            String sql = "select b_void,b_refno,b_macno from billno where b_void='V' and void_sendOnline='N';";
+            ResultSet rs = stmtLocal.executeQuery(sql);
+            FlageCheckProcess = true;
+
             while (rs.next()) {
                 FlageCheckProcess = true;
                 String b_refno = rs.getString("B_Refno");
@@ -770,18 +818,17 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
 //                }
 //                rs1.close();
             }
-        } catch (Exception e) {
+            rs.close();
+            FlageCheckProcess = false;
+            stmtLocal.close();
+            stmtServerBillno.close();
+            stmtServerTSale.close();
+            System.out.println("Loop Bill Void Finished;");
+            mysql.close();
+        } catch (SQLException e) {
             txtLogErr.setText(ErrorText + e);
         }
-        rs.close();
-        FlageCheckProcess = false;
-        stmtLocal.close();
-        stmtServerBillno.close();
-        stmtServerTSale.close();
-        System.out.println("Loop Bill Void Finished;");
         myOnline.close();
-        mysql.close();
-
     }
 
 //    public void uploadSQL() {
@@ -833,50 +880,23 @@ public final class Api_RealTimeSales extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Api_RealTimeSales.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Api_RealTimeSales.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Api_RealTimeSales.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Api_RealTimeSales.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Api_RealTimeSales dialog = new Api_RealTimeSales();
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                Api_RealTimeSales APTRT = new Api_RealTimeSales();
+                APTRT.setVisible(true);
+                APTRT.Api_RealTimeSales();
             }
+//                Api_RealTimeSales dialog = new Api_RealTimeSales();
+//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+//                    @Override
+//                    public void windowClosing(java.awt.event.WindowEvent e) {
+//                        System.exit(0);
+//                    }
+//                });
+//                dialog.setVisible(true);
+//            }
         });
     }
 

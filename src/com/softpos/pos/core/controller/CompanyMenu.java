@@ -1,30 +1,15 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.MenuSetup;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyMenu {
     
     private String headName;
-    private final List<MenuSetup> menuSetupData;
+    private final List<MenuSetup> menuSetupData = new ArrayList<>();
     public static final String TYPE_PRODUCT = "P";
     public static final String TYPE_GROUP = "S";
-    
-    public CompanyMenu(){
-        menuSetupData = new ArrayList<>();
-    }
-    
-    public void addMenuSetup(MenuSetup menu){
-        menuSetupData.add(menu);
-    }
-    
-    public List<MenuSetup> getAllMenuSetup(){
-        return menuSetupData;
-    }
-    
-    public MenuSetup getMenuSetup(int index){
-        return menuSetupData.get(index);
-    }
 
     public String getHeadName() {
         return headName;
@@ -34,4 +19,9 @@ public class CompanyMenu {
         this.headName = headName;
     }
     
+    
+
+    public void addMenuSetup(MenuSetup menu){
+        menuSetupData.add(menu);
+    }
 }

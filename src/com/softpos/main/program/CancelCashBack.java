@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.TABLE;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -8,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
+import util.JTableUtility;
 import util.MSG;
 
 public class CancelCashBack extends javax.swing.JDialog {
@@ -160,7 +161,7 @@ public class CancelCashBack extends javax.swing.JDialog {
 
     private void loadData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        table = TABLE.getDefaultTableFont(table);
+        table = JTableUtility.getDefaultTableFont(table);
 
         int size = model.getRowCount();
         for (int i = 0; i < size; i++) {
@@ -170,7 +171,7 @@ public class CancelCashBack extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from billret where fat = 'N'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -190,8 +191,9 @@ public class CancelCashBack extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -200,7 +202,7 @@ public class CancelCashBack extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             int row = table.getSelectedRow();
             if (row != -1) {
@@ -213,14 +215,14 @@ public class CancelCashBack extends javax.swing.JDialog {
                     dispose();
                 }
             } else {
-                MSG.WAR_MSG(this, "กรุณาเลือกราย !!!");
+                MSG.WAR(this, "กรุณาเลือกราย !!!");
                 table.requestFocus();
             }
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
-            
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -12,10 +12,11 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -214,7 +215,7 @@ public class UpdateData extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
     public void btnUpdate() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -228,46 +229,43 @@ public class UpdateData extends javax.swing.JDialog {
             @Override
             @SuppressWarnings({"static-access", "UnusedAssignment"})
             public void run() {
-                try {
-                    DecimalFormat df = new DecimalFormat("#,###");
-                    while (!flag) {
-                        try {
-                            setFlag(true);
-                            DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
-                            ArrayList<Object[]> ListObj = LoadData();
-                            try {
-                                MySQLConnect mysql = new MySQLConnect();
-                                mysql.open();
-                                if (ListObj != null && ListObj.size() > 0) {
-                                    for (int i = 0; i < ListObj.size(); i++) {
-                                        String sql = ThaiUtil.ASCII2Unicode(ListObj.get(i)[0].toString());
-                                        model.addRow(new Object[]{sql});
-                                        try {
-                                            mysql.getConnection().createStatement().executeUpdate(sql);
-                                            lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                }
-                                mysql.close();
-                            } catch (Exception e) {
-                            }
-                            setFlag(true);
-                        } catch (Exception e) {
-                        }
-                    }
+                DecimalFormat df = new DecimalFormat("#,###");
+                while (!flag) {
+                    setFlag(true);
+                    DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
+                    ArrayList<Object[]> ListObj = LoadData();
+                    MySQLConnect mysql = new MySQLConnect();
                     try {
-                        Thread.sleep(200);
-                        System.out.println("Success View Data");
-                        btnUpdate.setEnabled(flag);
+                        mysql.open(this.getClass());
+                        Statement stmt = mysql.getConnection().createStatement();
+                        if (ListObj != null && !ListObj.isEmpty()) {
+                            for (int i = 0; i < ListObj.size(); i++) {
+                                String sql = ThaiUtil.ASCII2Unicode(ListObj.get(i)[0].toString());
+                                model.addRow(new Object[]{sql});
 
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
+                                stmt.executeUpdate(sql);
+                                stmt.close();
+                                lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
+                            }
+                        }
+                    } catch (SQLException e) {
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(UpdateData.class, "error", e);
+                    } finally {
+                        mysql.closeConnection(this.getClass());
                     }
-                    pbCheckUpdate.setString("Load data Complete ");
-                } catch (Exception e) {
+
+                    setFlag(true);
                 }
+                try {
+                    Thread.sleep(200);
+                    System.out.println("Success View Data");
+                    btnUpdate.setEnabled(flag);
+
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                } catch (InterruptedException e) {
+                }
+                pbCheckUpdate.setString("Load data Complete ");
             }
         }).start();
 
@@ -277,28 +275,31 @@ public class UpdateData extends javax.swing.JDialog {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ArrayList<Object[]> ListObj = new ArrayList<>();
         String BType = "-";
-        
+
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
-            String sqlGetBType = "Select btype btype from tranconfig";
+            mysql.open(this.getClass());
+            String sqlGetBType = "Select btype btype from tranconfig limit 1";
             ResultSet rsGetBtype = mysql.getConnection().createStatement().executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {
                 BType = rsGetBtype.getString("btype");
             }
             String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
-            try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     String sqlUpdate = rs.getString("qforbranch");
                     ListObj.add(new Object[]{sqlUpdate});
                 }
+                rs.close();
             }
+            rsGetBtype.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(UpdateData.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
-        
+
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         return ListObj;
     }
@@ -306,18 +307,18 @@ public class UpdateData extends javax.swing.JDialog {
     public void SVStatusCheck() {
         try {
             SQLServerConnect SV = new SQLServerConnect();
-            String sql = "select * from company";
+            String sql = "select code from company limit 1";
             ResultSet rs = SV.getResultSet(sql);
             if (rs.next()) {
                 lblStatus.setText("Online");
                 PanelStatus.setBackground(Color.green);
             }
             rs.close();
-            SV.close();
+            
         } catch (Exception e) {
             lblStatus.setText("OFFLINE");
             PanelStatus.setBackground(Color.red);
-            JOptionPane.showMessageDialog(this, "ไม่สามารถเชื่อมต่อฐานข้อมูลเซิร์ฟเวอร์ได้กรุณาตรวจสอบอินเทอร์เน็ต");
+            MSG.WAR(this, "ไม่สามารถเชื่อมต่อฐานข้อมูลเซิร์ฟเวอร์ได้กรุณาตรวจสอบอินเทอร์เน็ต");
         }
     }
 

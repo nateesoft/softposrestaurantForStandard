@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -14,6 +14,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindCredit extends javax.swing.JDialog {
@@ -39,7 +40,7 @@ public class FindCredit extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {50, 100, 250, 50, 50, 50};
         for (int i = 0; i < 6; i++) {
@@ -76,7 +77,7 @@ public class FindCredit extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -195,7 +196,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         TCharge = 0.00;
     }
 
-    dispose();
+    this.setVisible(false);//dispose();
 }//GEN-LAST:event_bntOKActionPerformed
 
 private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowKeyPressed
@@ -218,7 +219,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void bntExitClick() {
         PublicVar.ReturnString = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntShowAllClick() {
@@ -232,26 +233,24 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String UserGroupFile = "select *from branch ";
-            ResultSet rec = stmt.executeQuery(UserGroupFile);
-            rec.first();
-            if (rec.getRow() == 0) {
-                ReturnValues = "";
-            } else {
-                ReturnValues = rec.getString("creditact");
+            String UserGroupFile = "select creditact from branch limit 1";
+            ResultSet rs = stmt.executeQuery(UserGroupFile);
+            if (rs.next()) {
+                ReturnValues = rs.getString("creditact");
                 if (ReturnValues == null) {
                     ReturnValues = "";
                 }
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnValues;
@@ -267,7 +266,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             if (!DefaultBank.equals("")) {
@@ -275,30 +274,25 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             } else {
                 SQLQuery = "Select *from creditfile order by crbank,crcode";
             }
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {rec.getString("crbank"),
-                        rec.getString("crcode"),
-                        ThaiUtil.ASCII2Unicode(rec.getString("crname")),
-                        rec.getFloat("crcharge"),
-                        rec.getFloat("crredule"),
-                        rec.getString("crgetcardno")
-                    };
-                    model2.addRow(input);
-                } while (rec.next());
-                RowCount = model2.getRowCount();
-                showCell(0, 0);
-
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while (rs.next()) {
+                Object[] input = {rs.getString("crbank"),
+                    rs.getString("crcode"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("crname")),
+                    rs.getFloat("crcharge"),
+                    rs.getFloat("crredule"),
+                    rs.getString("crgetcardno")
+                };
+                model2.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();

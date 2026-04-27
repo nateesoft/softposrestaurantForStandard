@@ -5,7 +5,7 @@
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="&#xe2a;&#xe32;&#xe40;&#xe2b;&#xe15;&#xe38;&#xe01;&#xe32;&#xe23;&#xe22;&#xe01;&#xe40;&#xe25;&#xe34;&#xe01;"/>
     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-      <Font name="Norasi" size="14" style="0"/>
+      <Font name="Tahoma" size="14" style="0"/>
     </Property>
     <Property name="undecorated" type="boolean" value="true"/>
   </Properties>

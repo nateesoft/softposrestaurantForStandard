@@ -1,10 +1,16 @@
 package com.softpos.floorplan;
 
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -17,17 +23,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import database.MySQLConnect;
-import java.awt.GraphicsEnvironment;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
 
-    DefaultTableModel model2;
+    private DefaultTableModel model2;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
     public ShowTable(java.awt.Frame parent, boolean modal) {
@@ -56,10 +57,8 @@ public class ShowTable extends javax.swing.JDialog {
 
         DecimalFormat DoubleFmt = new DecimalFormat("##,###,##0.00");
         DecimalFormat IntegerFmt = new DecimalFormat("##,###,##0");
-        DecimalFormat PersentFmt = new DecimalFormat("#,##0.00%");
 
         TableColumnModel tcm = ShowTableLogin.getColumnModel();
-
         TableTestFormatRenderer r = new TableTestFormatRenderer(IntegerFmt);
 
         r.setHorizontalAlignment(SwingConstants.CENTER);
@@ -73,7 +72,7 @@ public class ShowTable extends javax.swing.JDialog {
         r.setHorizontalAlignment(SwingConstants.RIGHT);
         tcm.getColumn(5).setCellRenderer(r);
 
-        LoadDataToGrid();
+        loadDataToGrid();
     }
 
     @SuppressWarnings("unchecked")
@@ -208,7 +207,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     if (evt.getKeyCode() == KeyEvent.VK_F8) {
         int maxrow;
         int currow = 0;
-        String TableSelected = "";
+        String TableSelected;
         maxrow = ShowTableLogin.getRowCount();
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {
@@ -221,27 +220,28 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
-                String QryUpdatetable = "update tablefile set TonAct='N' "
-                        + "where (TCode='" + TableSelected + "')";
-                stmt.executeUpdate(QryUpdatetable);
-                stmt.close();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    String QryUpdatetable = "update tablefile set TonAct='N' where (TCode='" + TableSelected + "')";
+                    stmt.executeUpdate(QryUpdatetable);
+                    stmt.close();
+                }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(ShowTable.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
-            LoadDataToGrid();
+            
+            loadDataToGrid();
         }
 
     } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         PublicVar.ReturnString = "";
-        this.dispose();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        LoadDataToGrid();
+        this.setVisible(false);//dispose();
+    } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
+        loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
         Value.TableSelected = "";
         if (row != -1) {
@@ -253,12 +253,11 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
                 } else {
-                    dispose();
+                    this.setVisible(false);//dispose();
                 }
             }
         }
     }
-    LoadDataToGrid();
 }//GEN-LAST:event_ShowTableLoginKeyPressed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -268,7 +267,9 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         PublicVar.ReturnString = "";
         Value.TableSelected = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
+        FloorPlanDialog fl = new FloorPlanDialog();
+        fl.setVisible(true);
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -283,7 +284,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
                 } else {
-                    dispose();
+                    this.setVisible(false);//dispose();
                 }
             }
         }
@@ -304,18 +305,17 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                         MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                         Value.TableSelected = "";
                     } else {
-                        dispose();
+                        this.setVisible(false);//dispose();
                     }
                 }
             }
         }
     }//GEN-LAST:event_ShowTableLoginMouseClicked
 
-    private void LoadDataToGrid() {
+    private void loadDataToGrid() {
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
-
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
                     + "TOnAct, ChkBill, PrintChkBill"
@@ -324,7 +324,6 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     + "or TAmount>0 "
                     + "or TItem > 0 "
                     + "or Tcustomer > 0 "
-//                    + "order by tcurtime";
                     + "order by tcode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(LoadTableFile);
@@ -354,38 +353,19 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
-    public void showCell(int row, int column) {
+    private void showCell(int row, int column) {
         if (row > 0) {
             Rectangle rect = ShowTableLogin.getCellRect(row, column, true);
             ShowTableLogin.scrollRectToVisible(rect);
             ShowTableLogin.clearSelection();
             ShowTableLogin.setRowSelectionInterval(row, row);
         }
-    }
-
-    public void GetSelectedRow() {
-        int maxrow;
-        int currow = 0;
-        String TableSelected = "";
-        maxrow = ShowTableLogin.getRowCount();
-        if (maxrow > 0) {
-            for (int i = 0; i < maxrow; i++) {
-                if (ShowTableLogin.isRowSelected(i)) {
-                    currow = i;
-                }
-            }
-            TableSelected = ShowTableLogin.getValueAt(currow, 0).toString();
-            PublicVar.ReturnString = TableSelected;
-        } else {
-            PublicVar.ReturnString = "";
-
-        }
-        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,10 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -51,7 +53,7 @@ public class ArNotPay extends javax.swing.JDialog {
         super(parent, modal);
 
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
@@ -62,7 +64,7 @@ public class ArNotPay extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {100, 300, 100, 150, 150, 100};
         for (int i = 0; i < 6; i++) {
@@ -115,7 +117,7 @@ public class ArNotPay extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการลูกหนี้ค้างชำระ");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -123,7 +125,7 @@ public class ArNotPay extends javax.swing.JDialog {
             }
         });
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -254,7 +256,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFocusable(false);
 
-        arcode1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode1.setNextFocusableComponent(arcode2);
         arcode1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -265,7 +267,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("ถึง");
 
-        arcode2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode2.setNextFocusableComponent(ardate1);
         arcode2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -330,7 +332,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jPanel3.setFocusable(false);
 
         ardate1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate1.setNextFocusableComponent(ardate2);
         ardate1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -345,7 +347,7 @@ public class ArNotPay extends javax.swing.JDialog {
         jLabel4.setText("ถึง");
 
         ardate2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate2.setNextFocusableComponent(tblShow);
         ardate2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -451,7 +453,7 @@ public class ArNotPay extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -659,26 +661,22 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') and (arflage='N') order by arcode";
-                            ResultSet rec = stmt.executeQuery(SQLQuery);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    prn.print(rec.getString("arcode") + " " + ShowDatefmt.format(rec.getDate("ardate")) + " " + PUtility.DataFullR(rec.getString("arno"), 15) + " " + DecFmt.format(rec.getDouble("arnet")));
-                                } while (rec.next());
+                            ResultSet rs = stmt.executeQuery(SQLQuery);
+                            while (rs.next()) {
+                                prn.print(rs.getString("arcode") + " " + ShowDatefmt.format(rs.getDate("ardate")) + " " + PUtility.DataFullR(rs.getString("arno"), 15) + " " + DecFmt.format(rs.getDouble("arnet")));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
+                            AppLogUtil.log(ArNotPay.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                         prn.print("----------------------------------------");
@@ -745,27 +743,24 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลูกหนี้    วันที่      เลขที่เอกสาร     จำนวนเงิน") + "_";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') and (arflage='N') order by arcode";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "colspan=2 align=left><font face=Angsana New size=1>" + Space + rec.getString("arcode") + Space + ShowDatefmt.format(rec.getDate("ardate")) + Space + PUtility.DataFullR(rec.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("arnet")) + "_";
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            while (rs.next()) {
+                t += "colspan=2 align=left><font face=Angsana New size=1>" + Space + rs.getString("arcode") + Space + ShowDatefmt.format(rs.getDate("ardate")) + Space + PUtility.DataFullR(rs.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("arnet")) + "_";
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(ArNotPay.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 
@@ -782,7 +777,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void bntOKClick() {
         if (ChkValidDate()) {
             String TempCode1 = arcode1.getText();
-            String TempCode2 = "";
+            String TempCode2;
             Date TempDate1 = new Date();
             Date TempDate2 = new Date();
             XTotalCnt = 0.0;
@@ -790,7 +785,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -806,7 +801,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
@@ -816,32 +811,27 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         + "and (ardate<='" + Datefmt.format(TempDate2) + "') "
                         + "and (arflage='N') "
                         + "order by arcode";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        XTotalCnt++;
-                        XTotalAmt = XTotalAmt + rec.getDouble("arnet");
-                        Object[] input = {rec.getString("arcode"),
-                            ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")),
-                            ShowDatefmt.format(rec.getDate("ardate")),
-                            rec.getString("arno"),
-                            rec.getString("arinvno"),
-                            rec.getDouble("arnet")
-                        };
-                        model2.addRow(input);
-                    } while (rec.next());
-                    showCell(0, 0);
-
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    XTotalCnt++;
+                    XTotalAmt = XTotalAmt + rs.getDouble("arnet");
+                    Object[] input = {rs.getString("arcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                        ShowDatefmt.format(rs.getDate("ardate")),
+                        rs.getString("arno"),
+                        rs.getString("arinvno"),
+                        rs.getDouble("arnet")
+                    };
+                    model2.addRow(input);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArNotPay.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

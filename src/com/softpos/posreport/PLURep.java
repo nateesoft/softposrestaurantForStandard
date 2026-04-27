@@ -1,16 +1,17 @@
 package com.softpos.posreport;
 
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import database.MySQLConnect;
-import java.sql.Statement;
 import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PluRec;
+import com.softpos.crm.pos.core.modal.PluRec;
+import com.softpos.pos.core.controller.ThaiUtil;
+import database.MySQLConnect;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PLURep extends javax.swing.JDialog {
@@ -28,6 +29,7 @@ public class PLURep extends javax.swing.JDialog {
         txtGroup2.setText("9999");
         txtPlu1.setText("0000");
         txtPlu2.setText("9999");
+
     }
 
     /**
@@ -481,6 +483,226 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
         bntOKClick();
     }//GEN-LAST:event_bntOKActionPerformed
+//    public void bntViewClick() {
+//        String MacNo1 = txtMacNo1.getText();
+//        String MacNo2 = txtMacNo2.getText();
+//        String CashNo1 = txtCashNo1.getText();
+//        String CashNo2 = txtCashNo2.getText();
+//        String Group1 = txtGroup1.getText();
+//        String Group2 = txtGroup2.getText();
+//        String Plu1 = txtPlu1.getText();
+//        String Plu2 = txtPlu2.getText();
+//
+//        String TempGroup = "";
+//        String TempPlu = "";
+//        String TempName = "";
+//        int ArraySize = 0;
+//        Boolean Found = false;
+//        PluRec[] GArray;
+//        GArray = new PluRec[1];
+//        ArraySize = 0;
+//        /**
+//         * * OPEN CONNECTION **
+//         */
+//        MySQLConnect mysql = new MySQLConnect();
+//        mysql.open(this.getClass());
+//        try {
+//            Statement stmt = mysql.getConnection().createStatement();
+//            String SqlQuery = "select * from t_sale where macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+//                    + "and cashier between '" + CashNo1 + "' and '" + CashNo2 + "' "
+//                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+//                    + "and r_void<>'V' and r_refund<>'V' Order by r_group,r_plucode";
+//            ResultSet rs = stmt.executeQuery(SqlQuery);
+//            TempGroup = "";
+//            TempPlu = "";
+//            TempName = "";
+//            Double SumEQty = 0.0;
+//            Double SumEAmt = 0.0;
+//            Double SumTQty = 0.0;
+//            Double SumTAmt = 0.0;
+//            Double SumDQty = 0.0;
+//            Double SumDAmt = 0.0;
+//            Double SumPQty = 0.0;
+//            Double SumPAmt = 0.0;
+//            Double SumWQty = 0.0;
+//            Double SumWAmt = 0.0;
+//            Double SumSQty = 0.0;
+//            Double SumSAmt = 0.0;
+//            PluRec GroupRec = new PluRec();
+//            GroupRec.MacNo1 = MacNo1;
+//            GroupRec.MacNo2 = MacNo2;
+//            GroupRec.Cashier1 = CashNo1;
+//            GroupRec.Cashier2 = CashNo2;
+//            GroupRec.Group1 = Group1;
+//            GroupRec.Group2 = Group2;
+//            GroupRec.Plu1 = Plu1;
+//            GroupRec.Plu2 = Plu2;
+//            GroupRec.GroupCode = TempGroup;
+//            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//            GroupRec.PCode = TempPlu;
+//            GroupRec.PName = TempName;
+//
+//            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//            GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+//
+//            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//            GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+//
+//            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//
+//            GArray[0] = GroupRec;
+//            while (rs.next()) {
+//                TempGroup = rs.getString("r_group");
+//                TempPlu = rs.getString("r_plucode");
+//                TempName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+//
+//                if (!TempPlu.equals(rs.getString("r_plucode"))) {
+//                    GroupRec = new PluRec();
+//                    GroupRec.MacNo1 = MacNo1;
+//                    GroupRec.MacNo2 = MacNo2;
+//                    GroupRec.Cashier1 = CashNo1;
+//                    GroupRec.Cashier2 = CashNo2;
+//                    GroupRec.Group1 = Group1;
+//                    GroupRec.Group2 = Group2;
+//                    GroupRec.Plu1 = Plu1;
+//                    GroupRec.Plu2 = Plu2;
+//                    GroupRec.GroupCode = TempGroup;
+//                    GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//                    GroupRec.PCode = TempPlu;
+//                    GroupRec.PName = TempName;
+//
+//                    GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//                    GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//                    GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//                    GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//                    GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//                    GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//                    GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//                    GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+//
+//                    GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//                    GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+//
+//                    GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//                    GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//                    if (ArraySize == 0) {
+//                        GArray[ArraySize] = GroupRec;
+//                        ArraySize = GArray.length;
+//                    } else {
+//                        GArray = PUtility.addPluArray(GArray);
+//                        ArraySize = GArray.length;
+//                        GArray[ArraySize - 1] = GroupRec;
+//                    }
+//                    TempGroup = rs.getString("r_group");
+//                    TempPlu = ThaiUtil.ASCII2Unicode(rs.getString("r_plucode"));
+//                    TempName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+//                    SumEQty = 0.0;
+//                    SumEAmt = 0.0;
+//                    SumTQty = 0.0;
+//                    SumTAmt = 0.0;
+//                    SumDQty = 0.0;
+//                    SumDAmt = 0.0;
+//                    SumPQty = 0.0;
+//                    SumPAmt = 0.0;
+//                    SumWQty = 0.0;
+//                    SumWAmt = 0.0;
+//                    SumSQty = 0.0;
+//                    SumSAmt = 0.0;
+//                }
+//                if (rs.getString("r_etd").equals("E")) {
+//                    SumEQty = SumEQty + rs.getDouble("r_quan");
+//                    SumEAmt = SumEAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("T")) {
+//                    SumTQty = SumTQty + rs.getDouble("r_quan");
+//                    SumTAmt = SumTAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("D")) {
+//                    SumDQty = SumDQty + rs.getDouble("r_quan");
+//                    SumDAmt = SumDAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("P")) {
+//                    SumPQty = SumPQty + rs.getDouble("r_quan");
+//                    SumPAmt = SumPAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("W")) {
+//                    SumWQty = SumWQty + rs.getDouble("r_quan");
+//                    SumWAmt = SumWAmt + rs.getDouble("r_total");
+//                }
+//                SumSQty = SumSQty + rs.getDouble("r_quan");
+//                SumSAmt = SumSAmt + rs.getDouble("r_total");
+//            }
+//            if (SumSQty > 0) {
+//                GroupRec = new PluRec();
+//                GroupRec.MacNo1 = MacNo1;
+//                GroupRec.MacNo2 = MacNo2;
+//                GroupRec.Cashier1 = CashNo1;
+//                GroupRec.Cashier2 = CashNo2;
+//                GroupRec.Group1 = Group1;
+//                GroupRec.Group2 = Group2;
+//                GroupRec.Plu1 = Plu1;
+//                GroupRec.Plu2 = Plu2;
+//                GroupRec.GroupCode = TempGroup;
+//                GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//                GroupRec.PCode = TempPlu;
+//                GroupRec.PName = TempName;
+//
+//                GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//                GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//                GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//                GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//                GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//                GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//                GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//                GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+//
+//                GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//                GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+//
+//                GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//                GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//                if (ArraySize == 0) {
+//                    GArray[ArraySize] = GroupRec;
+//                    ArraySize = GArray.length;
+//                } else {
+//                    GArray = PUtility.addPluArray(GArray);
+//                    ArraySize = GArray.length;
+//                    GArray[ArraySize - 1] = GroupRec;
+//                }
+//            }
+//
+//            rs.close();
+//            stmt.close();
+//        } catch (SQLException e) {
+//            MSG.ERR(e.getMessage());
+//            AppLogUtil.log(PLURep.class, "error", e);
+//        } finally {
+//            mysql.closeConnection(this.getClass());
+//        }
+//
+//        Jdi_report_SalePLU view = new Jdi_report_SalePLU(null, true);
+//        view.setData(GArray);
+//        view.setVisible(true);
+//
+//        txtMacNo1.requestFocus();
+//    }
+
     public void bntViewClick() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
@@ -503,13 +725,13 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from t_sale where macno between'"+ MacNo1 + "' and '" + MacNo2 + "' "
+            String SqlQuery = "select *from t_sale where macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
                     + "and cashier between '" + CashNo1 + "' and '" + CashNo2 + "' "
                     + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
-//                    + "and r_plucode between'" + Plu1 + "' and '" + Plu2 + "' "
+                    //                    + "and r_plucode between'" + Plu1 + "' and '" + Plu2 + "' "
                     + "and r_void<>'V' and r_refund<>'V' Order by r_group,r_plucode";
 //            String SqlQuery = "select *from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
 //                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -700,7 +922,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         Jdi_report_SalePLU view = new Jdi_report_SalePLU(null, true);
@@ -711,7 +933,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {
@@ -800,7 +1022,227 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
     }
 
-    public void bntOKClick() {
+//    public void bntOKClick() {
+//        String MacNo1 = txtMacNo1.getText();
+//        String MacNo2 = txtMacNo2.getText();
+//        String CashNo1 = txtCashNo1.getText();
+//        String CashNo2 = txtCashNo2.getText();
+//        String Group1 = txtGroup1.getText();
+//        String Group2 = txtGroup2.getText();
+//        String Plu1 = txtPlu1.getText();
+//        String Plu2 = txtPlu2.getText();
+//
+//        String TempGroup = "";
+//        String TempPlu = "";
+//        String TempName = "";
+//        int ArraySize = 0;
+//        Boolean Found = false;
+//        PluRec[] GArray;
+//        GArray = new PluRec[1];
+//        ArraySize = 0;
+//
+//        /**
+//         * * OPEN CONNECTION **
+//         */
+//        MySQLConnect mysql = new MySQLConnect();
+//        mysql.open(this.getClass());
+//        try {
+//            Statement stmt = mysql.getConnection().createStatement();
+//            String SqlQuery = "select * from t_sale "
+//                    + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
+//                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
+//                    + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
+//                    + "and (r_void<>'V') and (r_refund<>'V') "
+//                    + "Order by r_group,r_plucode";
+//            ResultSet rs = stmt.executeQuery(SqlQuery);
+//            TempGroup = "";
+//            TempPlu = "";
+//            TempName = "";
+//            Double SumEQty = 0.0;
+//            Double SumEAmt = 0.0;
+//            Double SumTQty = 0.0;
+//            Double SumTAmt = 0.0;
+//            Double SumDQty = 0.0;
+//            Double SumDAmt = 0.0;
+//            Double SumPQty = 0.0;
+//            Double SumPAmt = 0.0;
+//            Double SumWQty = 0.0;
+//            Double SumWAmt = 0.0;
+//            Double SumSQty = 0.0;
+//            Double SumSAmt = 0.0;
+//            PluRec GroupRec = new PluRec();
+//            GroupRec.MacNo1 = MacNo1;
+//            GroupRec.MacNo2 = MacNo2;
+//            GroupRec.Cashier1 = CashNo1;
+//            GroupRec.Cashier2 = CashNo1;
+//            GroupRec.Group1 = Group1;
+//            GroupRec.Group2 = Group1;
+//            GroupRec.Plu1 = Plu1;
+//            GroupRec.Plu2 = Plu2;
+//            GroupRec.GroupCode = TempGroup;
+//            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//            GroupRec.PCode = TempPlu;
+//            GroupRec.PName = TempName;
+//
+//            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//            GroupRec.P_Amt = GroupRec.P_Qty + SumPAmt;
+//
+//            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//            GroupRec.W_Amt = GroupRec.W_Qty + SumWAmt;
+//
+//            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//
+//            GArray[0] = GroupRec;
+//
+//            while (rs.next()) {
+//                TempGroup = rs.getString("r_group");
+//                TempPlu = rs.getString("r_plucode");
+//                TempName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+//
+//                if (!TempPlu.equals(rs.getString("r_plucode"))) {
+//                    GroupRec = new PluRec();
+//                    GroupRec.MacNo1 = MacNo1;
+//                    GroupRec.MacNo2 = MacNo2;
+//                    GroupRec.Cashier1 = CashNo1;
+//                    GroupRec.Cashier2 = CashNo1;
+//                    GroupRec.Group1 = Group1;
+//                    GroupRec.Group2 = Group1;
+//                    GroupRec.Plu1 = Plu1;
+//                    GroupRec.Plu2 = Plu2;
+//                    GroupRec.GroupCode = TempGroup;
+//                    GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//                    GroupRec.PCode = TempPlu;
+//                    GroupRec.PName = TempName;
+//
+//                    GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//                    GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//                    GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//                    GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//                    GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//                    GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//                    GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//                    GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+//
+//                    GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//                    GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+//
+//                    GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//                    GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//                    if (ArraySize == 0) {
+//                        GArray[ArraySize] = GroupRec;
+//                        ArraySize = GArray.length;
+//                    } else {
+//                        GArray = PUtility.addPluArray(GArray);
+//                        ArraySize = GArray.length;
+//                        GArray[ArraySize - 1] = GroupRec;
+//                    }
+//                    TempGroup = rs.getString("r_group");
+//                    TempPlu = rs.getString("r_plucode");
+//                    TempName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+//                    SumEQty = 0.0;
+//                    SumEAmt = 0.0;
+//                    SumTQty = 0.0;
+//                    SumTAmt = 0.0;
+//                    SumDQty = 0.0;
+//                    SumDAmt = 0.0;
+//                    SumPQty = 0.0;
+//                    SumPAmt = 0.0;
+//                    SumWQty = 0.0;
+//                    SumWAmt = 0.0;
+//                    SumSQty = 0.0;
+//                    SumSAmt = 0.0;
+//                }
+//                if (rs.getString("r_etd").equals("E")) {
+//                    SumEQty = SumEQty + rs.getDouble("r_quan");
+//                    SumEAmt = SumEAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("T")) {
+//                    SumTQty = SumTQty + rs.getDouble("r_quan");
+//                    SumTAmt = SumTAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("D")) {
+//                    SumDQty = SumDQty + rs.getDouble("r_quan");
+//                    SumDAmt = SumDAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("P")) {
+//                    SumPQty = SumPQty + rs.getDouble("r_quan");
+//                    SumPAmt = SumPAmt + rs.getDouble("r_total");
+//                }
+//                if (rs.getString("r_etd").equals("W")) {
+//                    SumWQty = SumWQty + rs.getDouble("r_quan");
+//                    SumWAmt = SumWAmt + rs.getDouble("r_total");
+//                }
+//                SumSQty = SumSQty + rs.getDouble("r_quan");
+//                SumSAmt = SumSAmt + rs.getDouble("r_total");
+//            }
+//            if (SumSQty > 0) {
+//                GroupRec = new PluRec();
+//                GroupRec.MacNo1 = MacNo1;
+//                GroupRec.MacNo2 = MacNo2;
+//                GroupRec.Cashier1 = CashNo1;
+//                GroupRec.Cashier2 = CashNo1;
+//                GroupRec.Group1 = Group1;
+//                GroupRec.Group2 = Group1;
+//                GroupRec.Plu1 = Plu1;
+//                GroupRec.Plu2 = Plu2;
+//                GroupRec.GroupCode = TempGroup;
+//                GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+//                GroupRec.PCode = TempPlu;
+//                GroupRec.PName = TempName;
+//
+//                GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+//                GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+//
+//                GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+//                GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+//
+//                GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+//                GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+//
+//                GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+//                GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+//
+//                GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+//                GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+//
+//                GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+//                GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+//                if (ArraySize == 0) {
+//                    GArray[ArraySize] = GroupRec;
+//                    ArraySize = GArray.length;
+//                } else {
+//                    GArray = PUtility.addPluArray(GArray);
+//                    ArraySize = GArray.length;
+//                    GArray[ArraySize - 1] = GroupRec;
+//                }
+//            }
+//
+//            rs.close();
+//            stmt.close();
+//        } catch (SQLException e) {
+//            MSG.ERR(e.getMessage());
+//            AppLogUtil.log(PLURep.class, "error", e);
+//        } finally {
+//            mysql.closeConnection(this.getClass());
+//        }
+//
+//        prn.PrintPlu(GArray);
+//        txtMacNo1.requestFocus();
+//    }
+      public void bntOKClick() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
         String CashNo1 = txtCashNo1.getText();
@@ -823,7 +1265,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from t_sale "
@@ -974,9 +1416,9 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     GroupRec.MacNo1 = MacNo1;
                     GroupRec.MacNo2 = MacNo2;
                     GroupRec.Cashier1 = CashNo1;
-                    GroupRec.Cashier2 = CashNo1;
+                    GroupRec.Cashier2 = CashNo2;
                     GroupRec.Group1 = Group1;
-                    GroupRec.Group2 = Group1;
+                    GroupRec.Group2 = Group2;
                     GroupRec.Plu1 = Plu1;
                     GroupRec.Plu2 = Plu2;
                     GroupRec.GroupCode = TempGroup;
@@ -1017,7 +1459,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         prn.PrintPlu(GArray);
         txtMacNo1.requestFocus();

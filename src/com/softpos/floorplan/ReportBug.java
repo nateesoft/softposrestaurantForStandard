@@ -42,7 +42,7 @@ public class ReportBug extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtFrom.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtFrom.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtFrom.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtFromKeyPressed(evt);
@@ -50,7 +50,7 @@ public class ReportBug extends javax.swing.JDialog {
         });
 
         txtMSG.setColumns(20);
-        txtMSG.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtMSG.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtMSG.setRows(5);
         txtMSG.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -65,7 +65,7 @@ public class ReportBug extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("ผู้ส่งเอกสาร / เบอร์ติดต่อกลับ");
 
-        txtSubject.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtSubject.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSubject.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtSubjectKeyPressed(evt);
@@ -99,7 +99,7 @@ public class ReportBug extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        txtEmail.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtEmailKeyPressed(evt);
@@ -111,6 +111,8 @@ public class ReportBug extends javax.swing.JDialog {
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("รหัสผ่านอีเมล์");
+
+        txtPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setText("ส่งข้อมูล");

@@ -1,23 +1,24 @@
 package com.softpos.posreport;
 
-import com.softpos.pos.core.controller.POSConfigSetup;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.MSG;
 
 public class VoidRep extends javax.swing.JDialog {
@@ -41,7 +42,7 @@ public class VoidRep extends javax.swing.JDialog {
         txtMacNo2.setText("999");
         txtCashNo1.setText("0000");
         txtCashNo2.setText("9999");
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
 
@@ -339,34 +340,32 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_sale "
+                        String SqlQuery = "select * from t_sale "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                                 + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                                 + "and (r_void='V') "
                                 + "and r_date=curdate() "
                                 + "order by macno,cashier,r_time";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(rec.getString("macno") + " " + PUtility.DataFullR(rec.getString("cashier"), 6) + " " + PUtility.DataFullR(rec.getString("r_table"), 5) + " " + PUtility.DataFullR(rec.getString("r_time"), 6) + "  " + PUtility.DataFullR(rec.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rec.getString("r_voidtime"), 6));
-                                prn.print("     " + PUtility.DataFullR(rec.getString("r_pname"), 35));
-                                prn.print("     " + rec.getString("r_refno") + " " + PUtility.DataFull(rec.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 8));
-                                SumVoid++;
-                                SumAmount = SumAmount + rec.getDouble("r_total");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
+                            prn.print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
+                            prn.print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
+                            SumVoid++;
+                            SumAmount = SumAmount + rs.getDouble("r_total");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(VoidRep.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
+
                     prn.print("----------------------------------------");
                     prn.print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
                     prn.print("----------------------------------------");
@@ -391,7 +390,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     public void PrintVoidDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2) {
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {
@@ -432,35 +431,32 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from t_sale "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_void='V') "
-                    //                    + "and r_date=curdate() "
                     + "order by macno,cashier,r_time";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "conspan=3 align=left><font face=Angsana New size=1>" + rec.getString("macno") + Space + rec.getString("cashier") + Space + rec.getString("r_table") + "_";
-                    t += "conspan=3 align=left><font face=Angsana New size=1>" + rec.getString("r_time") + Space + rec.getString("r_voiduser") + Space + rec.getString("r_voidtime") + "_";
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (ThaiUtil.ASCII2Unicode(rec.getString("r_pname"))) + "_";
-                    t += "align=left><font face=Angsana New size=1>" + (TAB + rec.getString("r_refno") + Space + PUtility.DataFullSpace(rec.getString("r_plucode"), 13) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rec.getDouble("r_quan")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rec.getDouble("r_total")), 8)) + "_";
-                    SumVoid++;
-                    SumAmount = SumAmount + rec.getDouble("r_total");
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                t += "conspan=3 align=left><font face=Angsana New size=1>" + rs.getString("macno") + Space + rs.getString("cashier") + Space + rs.getString("r_table") + "_";
+                t += "conspan=3 align=left><font face=Angsana New size=1>" + rs.getString("r_time") + Space + rs.getString("r_voiduser") + Space + rs.getString("r_voidtime") + "_";
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + (ThaiUtil.ASCII2Unicode(rs.getString("r_pname"))) + "_";
+                t += "align=left><font face=Angsana New size=1>" + (TAB + rs.getString("r_refno") + Space + PUtility.DataFullSpace(rs.getString("r_plucode"), 13) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rs.getDouble("r_quan")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("r_total")), 8)) + "_";
+                SumVoid++;
+                SumAmount = SumAmount + rs.getDouble("r_total");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(VoidRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("จำนวน Void :" + IntFmt.format(SumVoid) + TAB + "จำนวนเงิน :" + TAB + DecFmt.format(SumAmount) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
@@ -480,7 +476,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

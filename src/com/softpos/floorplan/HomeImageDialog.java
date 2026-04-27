@@ -8,6 +8,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFileChooser;
+import util.AppLogUtil;
 import util.MSG;
 
 public class HomeImageDialog extends javax.swing.JDialog {
@@ -191,7 +192,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             if (stmt.executeUpdate(jTextArea1.getText()) > 0) {
@@ -200,8 +201,9 @@ public class HomeImageDialog extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -236,7 +238,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String path = txtPathImage.getText();
@@ -246,11 +248,12 @@ public class HomeImageDialog extends javax.swing.JDialog {
             if (stmt.executeUpdate(sql) > 0) {
                 MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
             }
-
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

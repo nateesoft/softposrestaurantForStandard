@@ -1,6 +1,5 @@
 package convert_utility.text_to_image;
 
-import directory_utility.DirectoryUtility;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -17,11 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import util.DirectoryUtility;
 
 public class TextToImage {
     private int charecter = 50;

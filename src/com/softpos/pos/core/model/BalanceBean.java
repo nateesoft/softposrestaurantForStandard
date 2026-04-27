@@ -8,7 +8,7 @@ public class BalanceBean {
     private String R_Table;
     private Date R_Date;
     private String R_Time;
-    private String R_logindate;
+    private String R_LoginDate;
     private String LoginTime;
     private String Macno;
     private String Cashier;
@@ -108,38 +108,8 @@ public class BalanceBean {
     private String R_PEName;
     private double R_ServiceAmt;
     private String R_Indulgent;
-
-    public String getR_Indulgent() {
-        return R_Indulgent;
-    }
-
-    public void setR_Indulgent(String R_Indulgent) {
-        this.R_Indulgent = R_Indulgent;
-    }
-
-    public String getR_logindate() {
-        return R_logindate;
-    }
-
-    public void setR_logindate(String R_logindate) {
-        this.R_logindate = R_logindate;
-    }
-
-    public double getR_ServiceAmt() {
-        return R_ServiceAmt;
-    }
-
-    public void setR_ServiceAmt(double R_ServiceAmt) {
-        this.R_ServiceAmt = R_ServiceAmt;
-    }
-
-    public String getR_CashCard() {
-        return R_CashCard;
-    }
-
-    public void setR_CashCard(String R_CashCard) {
-        this.R_CashCard = R_CashCard;
-    }
+    private double R_totalVAT = 0;
+    private double R_totalNonVAT = 0;
 
     public String getR_Index() {
         return R_Index;
@@ -171,6 +141,22 @@ public class BalanceBean {
 
     public void setR_Time(String R_Time) {
         this.R_Time = R_Time;
+    }
+
+    public String getR_LoginDate() {
+        return R_LoginDate;
+    }
+
+    public void setR_LoginDate(String R_LoginDate) {
+        this.R_LoginDate = R_LoginDate;
+    }
+
+    public String getLoginTime() {
+        return LoginTime;
+    }
+
+    public void setLoginTime(String LoginTime) {
+        this.LoginTime = LoginTime;
     }
 
     public String getMacno() {
@@ -913,16 +899,16 @@ public class BalanceBean {
         return R_SPIndex;
     }
 
-    public void setR_SPIndex(String LoginTime) {
-        this.LoginTime = LoginTime;
+    public void setR_SPIndex(String R_SPIndex) {
+        this.R_SPIndex = R_SPIndex;
     }
 
-    public String getLoginTime() {
-        return LoginTime;
+    public String getR_CashCard() {
+        return R_CashCard;
     }
 
-    public void setLoginTime(String LoginTime) {
-        this.LoginTime = LoginTime;
+    public void setR_CashCard(String R_CashCard) {
+        this.R_CashCard = R_CashCard;
     }
 
     public String getVoidMSG() {
@@ -932,13 +918,7 @@ public class BalanceBean {
     public void setVoidMSG(String VoidMSG) {
         this.VoidMSG = VoidMSG;
     }
-    public String getR_LoginDate() {
-        return R_logindate;
-    }
 
-    public void setR_LoginDate(String LoginDate) {
-        this.R_logindate = LoginDate;
-    }
     public String getR_PEName() {
         return R_PEName;
     }
@@ -946,4 +926,37 @@ public class BalanceBean {
     public void setR_PEName(String R_PEName) {
         this.R_PEName = R_PEName;
     }
+
+    public double getR_ServiceAmt() {
+        return R_ServiceAmt;
+    }
+
+    public void setR_ServiceAmt(double R_ServiceAmt) {
+        this.R_ServiceAmt = R_ServiceAmt;
+    }
+
+    public String getR_Indulgent() {
+        return R_Indulgent;
+    }
+
+    public void setR_Indulgent(String R_Indulgent) {
+        this.R_Indulgent = R_Indulgent;
+    }
+
+    public double getR_totalVAT() {
+        return R_totalVAT;
+    }
+
+    public void setR_totalVAT(double R_totalVAT) {
+        this.R_totalVAT = R_totalVAT;
+    }
+
+    public double getR_totalNonVAT() {
+        return R_totalNonVAT;
+    }
+
+    public void setR_totalNonVAT(double R_totalNonVAT) {
+        this.R_totalNonVAT = R_totalNonVAT;
+    }
+
 }

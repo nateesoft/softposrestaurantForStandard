@@ -1,15 +1,19 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,13 +21,10 @@ import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.awt.GraphicsEnvironment;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CancelArPayment extends javax.swing.JDialog {
@@ -38,7 +39,6 @@ public class CancelArPayment extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    
 
     /**
      * Creates new form CancelArPaymentClick
@@ -48,7 +48,7 @@ public class CancelArPayment extends javax.swing.JDialog {
 
         initComponents();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
         tblShow.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -57,7 +57,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         tblShow.setGridColor(Color.gray);
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
         //this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
         int[] ColSize = {175, 150, 150, 150, 150, 250, 100, 100, 100};
@@ -82,34 +82,32 @@ public class CancelArPayment extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
-            ResultSet rec = stmt.executeQuery(sql);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {rec.getString("ref_no"),
-                        rec.getDate("ondate"),
-                        rec.getString("terminal"),
-                        rec.getString("cashier"),
-                        rec.getString("arcode"),
-                        ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")),
-                        rec.getDouble("stotal"),
-                        rec.getString("fat"),
-                        rec.getString("uservoid")
-                    };
-                    model2.addRow(input);
-                } while (rec.next());
-                showCell(0, 0);
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Object[] input = {rs.getString("ref_no"),
+                    rs.getDate("ondate"),
+                    rs.getString("terminal"),
+                    rs.getString("cashier"),
+                    rs.getString("arcode"),
+                    ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                    rs.getDouble("stotal"),
+                    rs.getString("fat"),
+                    rs.getString("uservoid")
+                };
+                model2.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(CancelArPayment.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();
@@ -126,7 +124,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                     this.dispose();
                 }
             } else {
-                PUtility.ShowMsg("รายการนี้ได้ทำการยกเลิกไปแล้ว...");
+                MSG.WAR("รายการนี้ได้ทำการยกเลิกไปแล้ว...");
             }
         }
 
@@ -137,45 +135,33 @@ public class CancelArPayment extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "update billar set fat='V',uservoid='" + PublicVar._User + "' where ref_no='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update t_ar set fat='V' where ref_no='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update t_crar set fat='V' where ref_no='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "update accr set ardocpay='',arflage='N' where ardocpay='" + TempBillNo + "' ";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-            
-        }
 
-        mysql.close();
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update t_ar set fat='V' where ref_no='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update t_crar set fat='V' where ref_no='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+
+            stmt = mysql.getConnection().createStatement();
+            SQLQuery = "update accr set ardocpay='',arflage='N' where ardocpay='" + TempBillNo + "' ";
+            stmt.executeUpdate(SQLQuery);
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
+        }
     }
 
     public void PrintCancelArPayment(String TempBillNo) {
@@ -200,23 +186,22 @@ public class CancelArPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
-                        ResultSet rec = stmt.executeQuery(SQLQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(rec.getString("billno") + " " + DatefmtThai.format(rec.getDate("billdate")) + " " + DecFmt.format(-1 * rec.getDouble("amount")));
-                                SumAmount = SumAmount + rec.getDouble("amount");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SQLQuery);
+                        while (rs.next()) {
+                            prn.print(rs.getString("billno") + " " + DatefmtThai.format(rs.getDate("billdate")) + " " + DecFmt.format(-1 * rs.getDouble("amount")));
+                            SumAmount = SumAmount + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(CancelArPayment.class, "error", e);
+                    } finally {
+                        mysql.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print("Sub-Total................." + DecFmt.format(SumAmount));
@@ -227,8 +212,6 @@ public class CancelArPayment extends javax.swing.JDialog {
 
                     prn.CutPaper();
                     prn.closePrint();
-                } else {
-//                PUtility.showError("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
                 }
             }
 
@@ -265,30 +248,31 @@ public class CancelArPayment extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         try {
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + "อ้างถึงใบกำกับภาษีเลขที่" + "</td></font><td align=right><font face=Angsana New size=1>" + "จำนวนเงิน" + "_";
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + rec.getString("billno") + TAB + DatefmtThai.format(rec.getDate("billdate")) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(-1 * rec.getDouble("amount")) + "_";
-                        SumAmount = SumAmount + rec.getDouble("amount");
-                    } while (rec.next());
+                String SQLQuery = "Select * from t_ar where ref_no='" + TempBillNo + "'";
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + "อ้างถึงใบกำกับภาษีเลขที่" + "</td></font><td align=right><font face=Angsana New size=1>" + "จำนวนเงิน" + "_";
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + rs.getString("billno") + TAB + DatefmtThai.format(rs.getDate("billdate")) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(-1 * rs.getDouble("amount")) + "_";
+                    SumAmount = SumAmount + rs.getDouble("amount");
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(CancelArPayment.class, "error", e);
+            } finally {
+                mysql.closeConnection(this.getClass());
             }
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------")+"_";
-            t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount*-1)+"_";
-            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------")+"_";
+
+            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
+            t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount * -1) + "_";
+            t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(CancelArPayment.class, "error", e);
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1().trim()) + "_";
@@ -357,7 +341,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         setLocationByPlatform(true);
         setUndecorated(true);
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

@@ -1,14 +1,17 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,10 +19,9 @@ import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -53,7 +55,7 @@ public class RepMember extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {100, 200, 100, 150, 150, 100, 80, 100};
         for (int i = 0; i < 8; i++) {
@@ -108,7 +110,7 @@ public class RepMember extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการซื้อของสมาชิก");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -116,7 +118,7 @@ public class RepMember extends javax.swing.JDialog {
             }
         });
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -153,26 +155,26 @@ public class RepMember extends javax.swing.JDialog {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel4.setFocusable(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("จำนวนรายการทั้งสิ้น");
 
-        TotalCnt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalCnt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalCnt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalCnt.setFocusable(false);
         TotalCnt.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("จำนวนเงินรวม");
 
-        TotalAmt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt.setFocusable(false);
         TotalAmt.setRequestFocusEnabled(false);
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("จำนวนส่วนลดรวม");
 
-        TotalDisc.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalDisc.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalDisc.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalDisc.setFocusable(false);
         TotalDisc.setRequestFocusEnabled(false);
@@ -194,7 +196,7 @@ public class RepMember extends javax.swing.JDialog {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TotalDisc, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(390, Short.MAX_VALUE))
+                .addContainerGap(416, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,7 +215,7 @@ public class RepMember extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFocusable(false);
 
-        arcode1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode1.setNextFocusableComponent(arcode2);
         arcode1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -221,10 +223,10 @@ public class RepMember extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("ถึง");
 
-        arcode2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode2.setNextFocusableComponent(ardate1);
         arcode2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -232,7 +234,7 @@ public class RepMember extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("รหัสสมาชิก");
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/magnifying glass.jpg"))); // NOI18N
@@ -275,7 +277,7 @@ public class RepMember extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(arcode1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,11 +291,11 @@ public class RepMember extends javax.swing.JDialog {
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setFocusable(false);
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("ช่วงวันที่");
 
         ardate1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate1.setNextFocusableComponent(ardate2);
         ardate1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -301,11 +303,11 @@ public class RepMember extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("ถึง");
 
         ardate2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate2.setNextFocusableComponent(tblShow);
         ardate2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -374,7 +376,7 @@ public class RepMember extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bntOk.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntOk.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntOk.setText("F5 ประมวลผล");
         bntOk.setFocusable(false);
         bntOk.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -387,7 +389,7 @@ public class RepMember extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntExit.setText("ออก(Exit)");
         bntExit.setFocusable(false);
         bntExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -402,10 +404,10 @@ public class RepMember extends javax.swing.JDialog {
 
         jMenu1.setText("Function");
         jMenu1.setFocusable(false);
-        jMenu1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jMenu1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        jMenuItem1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem1.setText("ประมาลผล ");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,7 +418,7 @@ public class RepMember extends javax.swing.JDialog {
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
-        jMenuItem3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem3.setText("ออก (Exit)");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -461,7 +463,7 @@ public class RepMember extends javax.swing.JDialog {
                         .addComponent(bntOk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -524,7 +526,7 @@ private void arcode2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_a
 }//GEN-LAST:event_arcode2KeyPressed
 
 private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-   //arcode1.requestFocus();
+    //arcode1.requestFocus();
 }//GEN-LAST:event_formWindowActivated
 
 private void ardate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ardate1KeyPressed
@@ -589,12 +591,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public Boolean ChkValidDate() {
         Boolean RetVal = true;
         if (!PUtility.ChkDate(ardate1.getText())) {
-            PUtility.ShowMsg("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate1.requestFocus();
             RetVal = false;
         }
         if (!PUtility.ChkDate(ardate2.getText())) {
-            PUtility.ShowMsg("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate2.requestFocus();
             RetVal = false;
         }
@@ -630,39 +632,36 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from mtran left join memmaster on mtran.m_code=memmaster.m_code "
+                String SQLQuery = "select * from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
                         + "where (mtran.m_code>='" + TempCode1 + "') and (mtran.m_code<='" + TempCode2 + "') and (m_date>='" + Datefmt.format(TempDate1) + "') and (m_date<='" + Datefmt.format(TempDate2) + "') order by mtran.m_code,m_date,m_billno";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        XTotalCnt++;
-                        XTotalAmt = XTotalAmt + rec.getDouble("m_netamt");
-                        XTotalDisc = XTotalDisc + rec.getDouble("m_disc");
-                        Object[] input = {rec.getString("m_code"),
-                            rec.getString("m_name"),
-                            ShowDatefmt.format(rec.getDate("m_date")),
-                            rec.getString("m_billno"),
-                            rec.getDouble("m_netamt"),
-                            rec.getDouble("m_disc"),
-                            rec.getDouble("m_score"),
-                            rec.getDouble("m_sum")
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    XTotalCnt++;
+                    XTotalAmt = XTotalAmt + rs.getDouble("m_netamt");
+                    XTotalDisc = XTotalDisc + rs.getDouble("m_disc");
+                    Object[] input = {rs.getString("m_code"),
+                        rs.getString("m_name"),
+                        ShowDatefmt.format(rs.getDate("m_date")),
+                        rs.getString("m_billno"),
+                        rs.getDouble("m_netamt"),
+                        rs.getDouble("m_disc"),
+                        rs.getDouble("m_score"),
+                        rs.getDouble("m_sum")
 
-                        };
-                        model2.addRow(input);
-                    } while (rec.next());
-                    showCell(0, 0);
+                    };
+                    model2.addRow(input);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(RepMember.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

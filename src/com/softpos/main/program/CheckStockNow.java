@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -7,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CheckStockNow extends javax.swing.JDialog {
@@ -132,7 +133,6 @@ public class CheckStockNow extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
         try {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             table.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -142,6 +142,7 @@ public class CheckStockNow extends javax.swing.JDialog {
             for (int i = 0; i < size; i++) {
                 model.removeRow(0);
             }
+            mysql.open(this.getClass());
             String sql = "select * from stockfile;";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -157,9 +158,9 @@ public class CheckStockNow extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(CheckStockNow.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

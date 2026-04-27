@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindProduct extends javax.swing.JDialog {
@@ -220,7 +221,7 @@ public class FindProduct extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select PCode, PDesc, PUnit1, PPrice11, PGroup, GroupName "
                     + "from product p,groupfile g "
@@ -248,8 +249,9 @@ public class FindProduct extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(FindProduct.class, "error", e);
         }finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

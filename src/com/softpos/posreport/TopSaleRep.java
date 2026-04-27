@@ -1,27 +1,27 @@
 package com.softpos.posreport;
 
+import com.softpos.main.program.Jdi_dailyReport_Topsale;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import javax.swing.UIManager;
-import com.softpos.main.program.Jdi_dailyReport_Topsale;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class TopSaleRep extends javax.swing.JDialog {
@@ -39,15 +39,6 @@ public class TopSaleRep extends javax.swing.JDialog {
 
     public TopSaleRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        try {
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
@@ -56,7 +47,7 @@ public class TopSaleRep extends javax.swing.JDialog {
         txtGroup1.setText("0000");
         txtGroup2.setText("9999");
         txtCntOrder.setValue(10);
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**
@@ -490,7 +481,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
@@ -498,6 +489,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -505,36 +497,35 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String SqlQuery = "select r_group,groupName,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale inner join groupfile on t_sale.r_group = groupfile.groupcode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') and (r_refund<>'V') "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String[] data = new String[7];
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                String[] data = new String[7];
+                String TGroup = rs.getString("r_group");
+                String TCode = rs.getString("r_plucode");
+                String TName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
+                Double TQuan = rs.getDouble("sum(r_quan)");
+                Double Tamount = rs.getDouble("sum(r_total)");
 
-                    InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-                    data[0] = TGroup;
-                    data[1] = TCode;
-                    data[2] = TName;
-                    data[3] = TQuan + "";
-                    data[4] = Tamount + "";
-                    data[5] = ThaiUtil.ASCII2Unicode(rec.getString("groupName"));
-                    data[6] = "";
-                    topsale.add(data);
-                } while (rec.next());
+                InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
+                data[0] = TGroup;
+                data[1] = TCode;
+                data[2] = TName;
+                data[3] = TQuan + "";
+                data[4] = Tamount + "";
+                data[5] = ThaiUtil.ASCII2Unicode(rs.getString("groupName"));
+                data[6] = "";
+
+                topsale.add(data);
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
-        mysql.close();
         Jdi_dailyReport_Topsale top = new Jdi_dailyReport_Topsale(new Frame(), true);
         top.setData(topsale);
         top.setHeaderPage(MacNo1, MacNo2, CashNo1, CashNo2, Group1, Group2, txtCntOrder.getText());
@@ -554,14 +545,14 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
-            stmt.executeUpdate(SqlQuery);
+            stmt.executeUpdate("delete from temptopsale where terminal='" + Value.MACNO + "'");
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -571,26 +562,22 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            System.out.println(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = rec.getString("r_pname");
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
-                    InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                String TGroup = rs.getString("r_group");
+                String TCode = rs.getString("r_plucode");
+                String TName = rs.getString("r_pname");
+                Double TQuan = rs.getDouble("sum(r_quan)");
+                Double Tamount = rs.getDouble("sum(r_total)");
+
+                InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         if (Value.printdriver) {
@@ -620,32 +607,31 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     //int CntOrder = 10 ;
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                            TempGroup = rec.getString("r_group");
-                            do {
-                                if (!rec.getString("r_group").equals(TempGroup)) {
-                                    prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                                    TempGroup = rec.getString("r_group");
-                                    Cnt = 1;
-                                }
-                                if (Cnt <= CntOrder) {
-                                    prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rec.getString("r_pname"), 30));
-                                    prn.print("     " + PUtility.DataFullR(rec.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 13));
-                                    Cnt++;
-                                }
-                            } while (rec.next());
+                        String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                            TempGroup = rs.getString("r_group");
+
+                            if (!rs.getString("r_group").equals(TempGroup)) {
+                                prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                                Cnt = 1;
+                            }
+                            if (Cnt <= CntOrder) {
+                                prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rs.getString("r_pname"), 30));
+                                prn.print("     " + PUtility.DataFullR(rs.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13));
+                                Cnt++;
+                            }
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
+                        AppLogUtil.log(TopSaleRep.class, "error", e);
+                    } finally {
+                        mysql.closeConnection(this.getClass());
                     }
-                    mysql.close();
+
                     prn.print("----------------------------------------");
                     prn.print(" ");
                     prn.print(" ");
@@ -669,7 +655,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     public void PrintTopSaleDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2, String Group1, String Group2, int CntOrder) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
@@ -677,6 +663,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         try {
@@ -686,25 +673,22 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') "
                     + "and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("r_group");
-                    String TCode = rec.getString("r_plucode");
-                    String TName = rec.getString("r_pname");
-                    Double TQuan = rec.getDouble("sum(r_quan)");
-                    Double Tamount = rec.getDouble("sum(r_total)");
-                    InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                String TGroup = rs.getString("r_group");
+                String TCode = rs.getString("r_plucode");
+                String TName = rs.getString("r_pname");
+                Double TQuan = rs.getDouble("sum(r_quan)");
+                Double Tamount = rs.getDouble("sum(r_total)");
+
+                InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
         if (POSHW.getHeading1().trim().length() >= 18) {
@@ -737,37 +721,36 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("กลุ่มสินค้า") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลำดับ" + Space + "รหัสสินค้า" + Space + "จำนวน" + Space + "จำนวนเงิน ") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-        String TempGroup = "";
+        String TempGroup;
         int Cnt = 1;
         //int CntOrder = 10 ;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                TempGroup = rec.getString("r_group");
-                do {
-                    if (!rec.getString("r_group").equals(TempGroup)) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                        TempGroup = rec.getString("r_group");
-                        Cnt = 1;
-                    }
-                    if (Cnt <= CntOrder) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>"  + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rec.getString("r_pname")), 28)) + "_";
-                        t += "align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(rec.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(IntFmt.format(rec.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(rec.getDouble("r_total")), 13)) + "_";
-                        Cnt++;
-                    }
-                } while (rec.next());
+            String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                TempGroup = rs.getString("r_group");
+
+                if (!rs.getString("r_group").equals(TempGroup)) {
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                    Cnt = 1;
+                }
+                if (Cnt <= CntOrder) {
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 28)) + "_";
+                    t += "align=left><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(rs.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(IntFmt.format(rs.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(rs.getDouble("r_total")), 13)) + "_";
+                    Cnt++;
+                }
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(TopSaleRep.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-        mysql.close();
+
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
 
@@ -789,7 +772,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert ignore into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
@@ -798,14 +781,14 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            //
+            AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

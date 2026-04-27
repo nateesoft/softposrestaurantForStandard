@@ -2,10 +2,6 @@ package com.softpos.crm.pos.core.modal;
 
 import java.util.Date;
 
-/**
- *
- * @author nathee
- */
 public class MPluBean {
 
     private Date Service_Date;
@@ -125,5 +121,6 @@ public class MPluBean {
     public void setTranferFlag(String TranferFlag) {
         this.TranferFlag = TranferFlag;
     }
-
+    
+    
 }

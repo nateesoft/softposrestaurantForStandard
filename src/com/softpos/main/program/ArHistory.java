@@ -1,10 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -52,7 +54,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         initComponents();
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
 
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
@@ -63,7 +65,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {100, 200, 100, 150, 150, 100, 80, 100, 100, 150};
         for (int i = 0; i < 10; i++) {
@@ -116,7 +118,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ประวัติการซื้อของลูกหนี้ภายนอก");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -124,7 +126,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -161,21 +163,19 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel4.setFocusable(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("จำนวนรายการทั้งสิ้น");
 
-        TotalCnt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalCnt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalCnt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        TotalCnt.setText("jTextField1");
         TotalCnt.setFocusable(false);
         TotalCnt.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("จำนวนเงินรวม");
 
-        TotalAmt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        TotalAmt.setText("jTextField2");
         TotalAmt.setFocusable(false);
         TotalAmt.setRequestFocusEnabled(false);
 
@@ -209,7 +209,7 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFocusable(false);
 
-        arcode1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode1.setNextFocusableComponent(arcode2);
         arcode1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -217,10 +217,10 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("ถึง");
 
-        arcode2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        arcode2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         arcode2.setNextFocusableComponent(ardate1);
         arcode2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -228,7 +228,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("รหัสลูกหนี้");
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/magnifying glass.jpg"))); // NOI18N
@@ -284,11 +284,11 @@ public class ArHistory extends javax.swing.JDialog {
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setFocusable(false);
 
-        jLabel3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("ช่วงวันที่");
 
         ardate1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate1.setNextFocusableComponent(ardate2);
         ardate1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -296,11 +296,11 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("ถึง");
 
         ardate2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        ardate2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        ardate2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         ardate2.setNextFocusableComponent(tblShow);
         ardate2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -359,7 +359,7 @@ public class ArHistory extends javax.swing.JDialog {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        bntOk.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntOk.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntOk.setText("F5 ประมวลผล");
         bntOk.setBorderPainted(false);
         bntOk.setFocusable(false);
@@ -374,7 +374,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        bntPrint.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntPrint.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntPrint.setText("F10 พิมพ์");
         bntPrint.setBorderPainted(false);
         bntPrint.setFocusable(false);
@@ -390,7 +390,7 @@ public class ArHistory extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        bntExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntExit.setText("ออก(Exit)");
         bntExit.setBorderPainted(false);
         bntExit.setFocusable(false);
@@ -408,10 +408,10 @@ public class ArHistory extends javax.swing.JDialog {
 
         jMenu1.setText("Function");
         jMenu1.setFocusable(false);
-        jMenu1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jMenu1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        jMenuItem1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem1.setText("ประมาลผล ");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -421,7 +421,7 @@ public class ArHistory extends javax.swing.JDialog {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F10, 0));
-        jMenuItem2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem2.setText("พิมพ์");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -432,7 +432,7 @@ public class ArHistory extends javax.swing.JDialog {
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
-        jMenuItem3.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem3.setText("ออก (Exit)");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -562,9 +562,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, point);
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
-    ardate2.requestFocus();
+    if (dcd.getSelectDate() != null) {
+        ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+        ardate2.requestFocus();
+    }
 }//GEN-LAST:event_cmdDateChoose2ActionPerformed
 
 private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDateChoose3ActionPerformed
@@ -572,9 +573,10 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, point);
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
-    ardate1.requestFocus();
+    if (dcd.getSelectDate() != null) {
+        ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+        ardate1.requestFocus();
+    }
 }//GEN-LAST:event_cmdDateChoose3ActionPerformed
 
     public void FindAr1Click() {
@@ -651,32 +653,31 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                          * * OPEN CONNECTION **
                          */
                         MySQLConnect mysql = new MySQLConnect();
-                        mysql.open();
+                        mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                            ResultSet rec = stmt.executeQuery(SQLQuery);
-                            rec.first();
-                            if (rec.getRow() == 0) {
-                            } else {
-                                do {
-                                    String PayDate = "";
-                                    if (rec.getString("arflage").equals("Y")) {
-                                        PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                                    } else {
-                                        PayDate = "";
-                                    }
-                                    prn.print(rec.getString("arcode") + " " + ShowDatefmt.format(rec.getDate("ardate")) + " " + PUtility.DataFullR(rec.getString("arno"), 15) + " " + DecFmt.format(rec.getDouble("arnet")));
-                                    prn.print(rec.getString("arflage") + " " + PUtility.DataFullR(PayDate, 10) + " " + rec.getString("ardocpay"));
-                                } while (rec.next());
+                            ResultSet rs = stmt.executeQuery(SQLQuery);
+                            while (rs.next()) {
+                                String PayDate = "";
+                                if (rs.getString("arflage").equals("Y")) {
+                                    PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                                } else {
+                                    PayDate = "";
+                                }
+                                prn.print(rs.getString("arcode") + " " + ShowDatefmt.format(rs.getDate("ardate")) + " " + PUtility.DataFullR(rs.getString("arno"), 15) + " " + DecFmt.format(rs.getDouble("arnet")));
+                                prn.print(rs.getString("arflage") + " " + PUtility.DataFullR(PayDate, 10) + " " + rs.getString("ardocpay"));
                             }
-                            rec.close();
+                            rs.close();
                             stmt.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
-                            
+                            AppLogUtil.log(ArHistory.class, "error", e);
+                        } finally {
+                            mysql.closeConnection(this.getClass());
                         }
+
                         prn.print("----------------------------------------");
                         prn.print("");
                         prn.print("");
@@ -700,13 +701,13 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String t = "";
         try {
             String TempCode1 = arcode1.getText();
-            String TempCode2 = "";
+            String TempCode2;
             Date TempDate1 = new Date();
             Date TempDate2 = new Date();
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -750,32 +751,30 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String PayDate = "";
-                        if (rec.getString("arflage").equals("Y")) {
-                            PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                        } else {
-                            PayDate = "";
-                        }
-                        t += "colspan=2 align=left><font face=Angsana New size=1>" + rec.getString("arcode") + Space + ShowDatefmt.format(rec.getDate("ardate")) + Space + PUtility.DataFullR(rec.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rec.getDouble("arnet")) + "_";
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + Space + rec.getString("arflage") + Space + PUtility.DataFullR(PayDate, 10) + Space + rec.getString("ardocpay") + "_";
-                        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
-                    } while (rec.next());
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    String PayDate;
+                    if (rs.getString("arflage").equals("Y")) {
+                        PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                    } else {
+                        PayDate = "";
+                    }
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + rs.getString("arcode") + Space + ShowDatefmt.format(rs.getDate("ardate")) + Space + PUtility.DataFullR(rs.getString("arno"), 15) + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(rs.getDouble("arnet")) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + Space + rs.getString("arflage") + Space + PUtility.DataFullR(PayDate, 10) + Space + rs.getString("ardocpay") + "_";
+                    t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArHistory.class, "error", e);
+            } finally {
+                mysql.closeConnection(this.getClass());
             }
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1()).trim() + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2()).trim() + "_";
@@ -826,46 +825,42 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String PayDate;
-                        if (rec.getString("arflage").equals("Y")) {
-                            PayDate = ShowDatefmt.format(rec.getDate("arpdate"));
-                        } else {
-                            PayDate = "";
-                        }
-                        XTotalCnt++;
-                        XTotalAmt = XTotalAmt + rec.getDouble("arnet");
-                        Object[] input = {rec.getString("arcode"),
-                            ThaiUtil.ASCII2Unicode(rec.getString("sp_desc")),
-                            ShowDatefmt.format(rec.getDate("ardate")),
-                            rec.getString("arno"),
-                            rec.getString("arinvno"),
-                            rec.getDouble("arnet"),
-                            rec.getString("arflage"),
-                            PayDate,
-                            rec.getString("arbranpay"),
-                            rec.getString("ardocpay")
-                        };
-                        model2.addRow(input);
-                    } while (rec.next());
-                    showCell(0, 0);
+                ResultSet rs = stmt.executeQuery(SQLQuery);
+                while (rs.next()) {
+                    String PayDate;
+                    if (rs.getString("arflage").equals("Y")) {
+                        PayDate = ShowDatefmt.format(rs.getDate("arpdate"));
+                    } else {
+                        PayDate = "";
+                    }
+                    XTotalCnt++;
+                    XTotalAmt = XTotalAmt + rs.getDouble("arnet");
+                    Object[] input = {rs.getString("arcode"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                        ShowDatefmt.format(rs.getDate("ardate")),
+                        rs.getString("arno"),
+                        rs.getString("arinvno"),
+                        rs.getDouble("arnet"),
+                        rs.getString("arflage"),
+                        PayDate,
+                        rs.getString("arbranpay"),
+                        rs.getString("ardocpay")
+                    };
+                    model2.addRow(input);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-                
+                AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

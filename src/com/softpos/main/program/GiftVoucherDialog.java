@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -9,8 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.NumberFormat;
+import util.AppLogUtil;
 import util.MSG;
+import util.NumberFormat;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
 
@@ -292,28 +293,31 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
-                String sqlCheckTempGiftf = "select * from tempgift where giftno='" + GNo + "'";
+                String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlCheckTempGiftf);
                 if (netTotalAmount > 0) {
                     if (!rs.next()) {
                         String sqlAdd = "insert into tempgift"
                                 + "(macno,gifttype,giftno,giftamt) "
                                 + "values('" + Value.MACNO + "','" + PublicVar.VoucherType + "','" + GNo + "','" + GAmt + "')";
-                        Statement stmt = mysql.getConnection().createStatement();
-                        stmt.executeUpdate(sqlAdd);
-                        stmt.close();
+                        try (Statement stmt = mysql.getConnection().createStatement()) {
+                            stmt.executeUpdate(sqlAdd);
+                        }
                         setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
                     }
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                
+                AppLogUtil.log(GiftVoucherDialog.class, "error", e);
+            } finally {
+                mysql.closeConnection(this.getClass());
             }
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -355,7 +359,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         PublicVar.VoucherType = "";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -417,17 +421,19 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "delete from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+                stmt.close();
+            }
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
-            
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         int size = model.getRowCount();
@@ -457,22 +463,9 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             return;
         }
 
-//        try {
-//            String sql = "select * from gifttype where gtcode='" + GNo + "'";
-//            ResultSet rs = MySQLConnect.getResultSet(sql);
-//            if (rs.next()) {
         removeAtRow(txtGiftCode.getText());
         model.addRow(new Object[]{txtGiftCode.getText(), txtGiftMoney.getText()});
         clearText();
-//            } else {
-//                MSG.ERR("ไม่พบรหัสบัตรกำนัลในระบบ");
-//                clearText();
-//                rs.close();
-//                return;
-//            }
-//        } catch (Exception e) {
-//            
-//        }
     }
 
     private void removeAtRow(String GNoInput) {
@@ -490,25 +483,26 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from tempgift";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("giftno"),
-                    NumberFormat.showDouble2(rs.getDouble("giftamt"))
-                });
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getString("giftno"),
+                        NumberFormat.showDouble2(rs.getDouble("giftamt"))
+                    });
+                }
+                
+                rs.close();
+                stmt.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -14,7 +14,6 @@ public class PropControl {
     
     public void sampleSaveProp(){
         Properties prop = new Properties();
- 
     	try {
     		//set the properties value
     		prop.setProperty("DB_SERVER", "localhost");

@@ -1,26 +1,26 @@
 package com.softpos.posreport;
 
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import util.DateChooseDialog;
-import database.MySQLConnect;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.DateChooseDialog;
 import util.MSG;
 
 public class MTDTopSale extends javax.swing.JDialog {
@@ -49,7 +49,7 @@ public class MTDTopSale extends javax.swing.JDialog {
         txtMacNo2.setText("9999");
 //        txtCntOrder.setValue(0);
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**
@@ -468,7 +468,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntOKClick() {
@@ -499,7 +499,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale";
@@ -512,22 +512,18 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
-                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("s_dept");
-                    String TCode = rec.getString("s_pcode");
-                    String TName = rec.getString("pdesc");
-                    Double TQuan = rec.getDouble("sum(s_qty)");
-                    Double Tamount = rec.getDouble("sum(s_amt)");
+                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
+                    + "and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String TGroup = rs.getString("s_dept");
+                    String TCode = rs.getString("s_pcode");
+                    String TName = rs.getString("pdesc");
+                    Double TQuan = rs.getDouble("sum(s_qty)");
+                    Double Tamount = rs.getDouble("sum(s_amt)");
                     InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -560,29 +556,28 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
-                    ResultSet rec = stmt.executeQuery(SqlQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
-                    } else {
-                        prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                        TempGroup = rec.getString("r_group");
-                        do {
-                            if (!rec.getString("r_group").equals(TempGroup)) {
-                                prn.print("***" + rec.getString("r_group") + "  " + PUtility.SeekGroupName(rec.getString("r_group")));
-                                TempGroup = rec.getString("r_group");
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while(rs.next()){
+                        prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                        TempGroup = rs.getString("r_group");
+                        
+                        if (!rs.getString("r_group").equals(TempGroup)) {
+                                prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                                TempGroup = rs.getString("r_group");
                                 Cnt = 1;
                             }
                             if (Cnt <= CntOrder) {
-                                prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rec.getString("r_pname"), 30));
-                                prn.print("     " + PUtility.DataFullR(rec.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 13));
+                                prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rs.getString("r_pname"), 30));
+                                prn.print("     " + PUtility.DataFullR(rs.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13));
                                 Cnt++;
                             }
-                        } while (rec.next());
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally {
+                     mysql.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
@@ -595,15 +590,14 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 //                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
             }
         }
-
-        mysql.close();
+       
         InitScreen();
     }
 
     public void PrintTopSaleDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2, String Group1, String Group2, int CntOrder) {
         String t = "";
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
@@ -616,22 +610,18 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
-                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    String TGroup = rec.getString("s_dept");
-                    String TCode = rec.getString("s_pcode");
-                    String TName = rec.getString("pdesc");
-                    Double TQuan = rec.getDouble("sum(s_qty)");
-                    Double Tamount = rec.getDouble("sum(s_amt)");
+                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') "
+                    + "and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                String TGroup = rs.getString("s_dept");
+                    String TCode = rs.getString("s_pcode");
+                    String TName = rs.getString("pdesc");
+                    Double TQuan = rs.getDouble("sum(s_qty)");
+                    Double Tamount = rs.getDouble("sum(s_amt)");
                     InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
-
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -669,35 +659,32 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         String TempGroup = "";
         int Cnt = 1;
-        //int CntOrder = 10 ;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SqlQuery = "select *from temptopsale order by r_group,r_quan DESC";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                TempGroup = rec.getString("r_group");
-                do {
-                    if (!rec.getString("r_group").equals(TempGroup)) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rec.getString("r_group") + Space + PUtility.SeekGroupName(rec.getString("r_group"))) + "_";
-                        TempGroup = rec.getString("r_group");
+            String SqlQuery = "select * from temptopsale order by r_group,r_quan DESC";
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while(rs.next()){
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                TempGroup = rs.getString("r_group");
+                
+                if (!rs.getString("r_group").equals(TempGroup)) {
+                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                        TempGroup = rs.getString("r_group");
                         Cnt = 1;
                     }
                     if (Cnt <= CntOrder) {
-                        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rec.getString("r_pname")), 28)) + "_";
-                        t += "align=left><font face=Angsana New size=1>" + (Space + PUtility.DataFull(rec.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rec.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("r_total")), 13)) + "_";
+                        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 28)) + "_";
+                        t += "align=left><font face=Angsana New size=1>" + (Space + PUtility.DataFull(rs.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13)) + "_";
                         Cnt++;
                     }
-                } while (rec.next());
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-        mysql.close();
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
 
@@ -719,7 +706,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "insert into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
@@ -729,7 +716,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

@@ -109,190 +109,7 @@ public class TSaleBean {
     private String R_Return = "";
     private String R_Earn = "";
     private String R_EarnNo = "";
-
-    public String getR_PrVcType() {
-        return R_PrVcType;
-    }
-
-    public void setR_PrVcType(String R_PrVcType) {
-        this.R_PrVcType = R_PrVcType;
-    }
-
-    public String getR_PrVcCode() {
-        return R_PrVcCode;
-    }
-
-    public void setR_PrVcCode(String R_PrVcCode) {
-        this.R_PrVcCode = R_PrVcCode;
-    }
-
-    public double getR_PrVcAmt() {
-        return R_PrVcAmt;
-    }
-
-    public void setR_PrVcAmt(double R_PrVcAmt) {
-        this.R_PrVcAmt = R_PrVcAmt;
-    }
-
-    public double getR_PrVcAdj() {
-        return R_PrVcAdj;
-    }
-
-    public void setR_PrVcAdj(double R_PrVcAdj) {
-        this.R_PrVcAdj = R_PrVcAdj;
-    }
-
-    public double getR_SetPrice() {
-        return R_SetPrice;
-    }
-
-    public void setR_SetPrice(double R_SetPrice) {
-        this.R_SetPrice = R_SetPrice;
-    }
-
-    public double getR_SetDiscAmt() {
-        return R_SetDiscAmt;
-    }
-
-    public void setR_SetDiscAmt(double R_SetDiscAmt) {
-        this.R_SetDiscAmt = R_SetDiscAmt;
-    }
-
-    public String getR_PrintItemBill() {
-        return R_PrintItemBill;
-    }
-
-    public void setR_PrintItemBill(String R_PrintItemBill) {
-        this.R_PrintItemBill = R_PrintItemBill;
-    }
-
-    public String getR_CountTime() {
-        return R_CountTime;
-    }
-
-    public void setR_CountTime(String R_CountTime) {
-        this.R_CountTime = R_CountTime;
-    }
-
-    public String getR_Return() {
-        return R_Return;
-    }
-
-    public void setR_Return(String R_Return) {
-        this.R_Return = R_Return;
-    }
-
-    public String getR_Earn() {
-        return R_Earn;
-    }
-
-    public void setR_Earn(String R_Earn) {
-        this.R_Earn = R_Earn;
-    }
-
-    public String getR_EarnNo() {
-        return R_EarnNo;
-    }
-
-    public void setR_EarnNo(String R_EarnNo) {
-        this.R_EarnNo = R_EarnNo;
-    }
-
-    public String getR_BranchCode() {
-        return R_BranchCode;
-    }
-
-    public void setR_BranchCode(String R_BranchCode) {
-        this.R_BranchCode = R_BranchCode;
-    }
-
-    public String getR_SendOnline() {
-        return R_SendOnline;
-    }
-
-    public void setR_SendOnline(String R_SendOnline) {
-        this.R_SendOnline = R_SendOnline;
-    }
-
-    public double getR_NetDiff() {
-        return R_NetDiff;
-    }
-
-    public void setR_NetDiff(double R_NetDiff) {
-        this.R_NetDiff = R_NetDiff;
-    }
-
-    public String getR_Opt1() {
-        return R_Opt1;
-    }
-
-    public void setR_Opt1(String R_Opt1) {
-        this.R_Opt1 = R_Opt1;
-    }
-
-    public String getR_Opt2() {
-        return R_Opt2;
-    }
-
-    public void setR_Opt2(String R_Opt2) {
-        this.R_Opt2 = R_Opt2;
-    }
-
-    public String getR_Opt3() {
-        return R_Opt3;
-    }
-
-    public void setR_Opt3(String R_Opt3) {
-        this.R_Opt3 = R_Opt3;
-    }
-
-    public String getR_Opt4() {
-        return R_Opt4;
-    }
-
-    public void setR_Opt4(String R_Opt4) {
-        this.R_Opt4 = R_Opt4;
-    }
-
-    public String getR_Opt5() {
-        return R_Opt5;
-    }
-
-    public void setR_Opt5(String R_Opt5) {
-        this.R_Opt5 = R_Opt5;
-    }
-
-    public String getR_Opt6() {
-        return R_Opt6;
-    }
-
-    public void setR_Opt6(String R_Opt6) {
-        this.R_Opt6 = R_Opt6;
-    }
-
-    public String getR_Opt7() {
-        return R_Opt7;
-    }
-
-    public void setR_Opt7(String R_Opt7) {
-        this.R_Opt7 = R_Opt7;
-    }
-
-    public String getR_Opt8() {
-        return R_Opt8;
-    }
-
-    public void setR_Opt8(String R_Opt8) {
-        this.R_Opt8 = R_Opt8;
-    }
-
-    public String getR_Opt9() {
-        return R_Opt9;
-    }
-
-    public void setR_Opt9(String R_Opt9) {
-        this.R_Opt9 = R_Opt9;
-    }
+    private double R_Cost = 0.00;
 
     public String getR_Index() {
         return R_Index;
@@ -942,4 +759,197 @@ public class TSaleBean {
         this.R_CashCard = R_CashCard;
     }
 
+    public String getR_Opt1() {
+        return R_Opt1;
+    }
+
+    public void setR_Opt1(String R_Opt1) {
+        this.R_Opt1 = R_Opt1;
+    }
+
+    public String getR_Opt2() {
+        return R_Opt2;
+    }
+
+    public void setR_Opt2(String R_Opt2) {
+        this.R_Opt2 = R_Opt2;
+    }
+
+    public String getR_Opt3() {
+        return R_Opt3;
+    }
+
+    public void setR_Opt3(String R_Opt3) {
+        this.R_Opt3 = R_Opt3;
+    }
+
+    public String getR_Opt4() {
+        return R_Opt4;
+    }
+
+    public void setR_Opt4(String R_Opt4) {
+        this.R_Opt4 = R_Opt4;
+    }
+
+    public String getR_Opt5() {
+        return R_Opt5;
+    }
+
+    public void setR_Opt5(String R_Opt5) {
+        this.R_Opt5 = R_Opt5;
+    }
+
+    public String getR_Opt6() {
+        return R_Opt6;
+    }
+
+    public void setR_Opt6(String R_Opt6) {
+        this.R_Opt6 = R_Opt6;
+    }
+
+    public String getR_Opt7() {
+        return R_Opt7;
+    }
+
+    public void setR_Opt7(String R_Opt7) {
+        this.R_Opt7 = R_Opt7;
+    }
+
+    public String getR_Opt8() {
+        return R_Opt8;
+    }
+
+    public void setR_Opt8(String R_Opt8) {
+        this.R_Opt8 = R_Opt8;
+    }
+
+    public String getR_Opt9() {
+        return R_Opt9;
+    }
+
+    public void setR_Opt9(String R_Opt9) {
+        this.R_Opt9 = R_Opt9;
+    }
+
+    public double getR_NetDiff() {
+        return R_NetDiff;
+    }
+
+    public void setR_NetDiff(double R_NetDiff) {
+        this.R_NetDiff = R_NetDiff;
+    }
+
+    public String getR_SendOnline() {
+        return R_SendOnline;
+    }
+
+    public void setR_SendOnline(String R_SendOnline) {
+        this.R_SendOnline = R_SendOnline;
+    }
+
+    public String getR_BranchCode() {
+        return R_BranchCode;
+    }
+
+    public void setR_BranchCode(String R_BranchCode) {
+        this.R_BranchCode = R_BranchCode;
+    }
+
+    public String getR_PrVcType() {
+        return R_PrVcType;
+    }
+
+    public void setR_PrVcType(String R_PrVcType) {
+        this.R_PrVcType = R_PrVcType;
+    }
+
+    public String getR_PrVcCode() {
+        return R_PrVcCode;
+    }
+
+    public void setR_PrVcCode(String R_PrVcCode) {
+        this.R_PrVcCode = R_PrVcCode;
+    }
+
+    public double getR_PrVcAmt() {
+        return R_PrVcAmt;
+    }
+
+    public void setR_PrVcAmt(double R_PrVcAmt) {
+        this.R_PrVcAmt = R_PrVcAmt;
+    }
+
+    public double getR_PrVcAdj() {
+        return R_PrVcAdj;
+    }
+
+    public void setR_PrVcAdj(double R_PrVcAdj) {
+        this.R_PrVcAdj = R_PrVcAdj;
+    }
+
+    public double getR_SetPrice() {
+        return R_SetPrice;
+    }
+
+    public void setR_SetPrice(double R_SetPrice) {
+        this.R_SetPrice = R_SetPrice;
+    }
+
+    public double getR_SetDiscAmt() {
+        return R_SetDiscAmt;
+    }
+
+    public void setR_SetDiscAmt(double R_SetDiscAmt) {
+        this.R_SetDiscAmt = R_SetDiscAmt;
+    }
+
+    public String getR_PrintItemBill() {
+        return R_PrintItemBill;
+    }
+
+    public void setR_PrintItemBill(String R_PrintItemBill) {
+        this.R_PrintItemBill = R_PrintItemBill;
+    }
+
+    public String getR_CountTime() {
+        return R_CountTime;
+    }
+
+    public void setR_CountTime(String R_CountTime) {
+        this.R_CountTime = R_CountTime;
+    }
+
+    public String getR_Return() {
+        return R_Return;
+    }
+
+    public void setR_Return(String R_Return) {
+        this.R_Return = R_Return;
+    }
+
+    public String getR_Earn() {
+        return R_Earn;
+    }
+
+    public void setR_Earn(String R_Earn) {
+        this.R_Earn = R_Earn;
+    }
+
+    public String getR_EarnNo() {
+        return R_EarnNo;
+    }
+
+    public void setR_EarnNo(String R_EarnNo) {
+        this.R_EarnNo = R_EarnNo;
+    }
+
+    public double getR_Cost() {
+        return R_Cost;
+    }
+
+    public void setR_Cost(double R_Cost) {
+        this.R_Cost = R_Cost;
+    }
+    
+    
 }

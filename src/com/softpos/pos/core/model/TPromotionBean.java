@@ -128,5 +128,6 @@ public class TPromotionBean {
     public void setFlage(String Flage) {
         this.Flage = Flage;
     }
-
+    
+    
 }

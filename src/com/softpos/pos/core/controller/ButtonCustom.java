@@ -1,5 +1,7 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.crm.pos.core.modal.MenuMGR;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -29,7 +32,7 @@ public class ButtonCustom {
     public MenuMGR getDataButtonLayout(String menuCode, int menuIndex) {
         MenuMGR menuMGR = new MenuMGR();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
@@ -40,7 +43,7 @@ public class ButtonCustom {
                 menuMGR.setMenuCode(rs.getString("MenuCode"));
                 menuMGR.setMenuType(rs.getInt("MenuType"));
                 menuMGR.setPCode(rs.getString("PCode"));
-                menuMGR.setMenuShowText(sun.natee.project.util.ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                menuMGR.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
                 menuMGR.setIMG(rs.getString("IMG"));
                 menuMGR.setFontColor(rs.getString("FontColor"));
                 menuMGR.setBGColor(rs.getString("BGColor"));
@@ -56,8 +59,9 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return menuMGR;
@@ -66,7 +70,7 @@ public class ButtonCustom {
     public List<MenuMGR> getDataButtonLayout(String menuCode) {
         List<MenuMGR> listMenu = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode like '" + menuCode + "__' order by menucode";
@@ -77,8 +81,13 @@ public class ButtonCustom {
                 bean.setMenuCode(rs.getString("MenuCode"));
                 bean.setMenuType(rs.getInt("MenuType"));
                 bean.setPCode(rs.getString("PCode"));
-                bean.setMenuShowText(sun.natee.project.util.ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                bean.setIMG(rs.getString("IMG"));
+                bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                if (PublicVar.loadFromDelphiBOR == true) {
+                    bean.setIMG(PublicVar.picturePath + rs.getString("IMG"));
+                } else {
+                    bean.setIMG(rs.getString("IMG"));
+                }
+
                 bean.setFontColor(rs.getString("FontColor"));
                 bean.setBGColor(rs.getString("BGColor"));
                 bean.setLayout(rs.getInt("Layout"));
@@ -95,8 +104,9 @@ public class ButtonCustom {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listMenu;

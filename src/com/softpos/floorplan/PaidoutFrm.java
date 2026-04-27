@@ -1,21 +1,22 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
 import javax.swing.JFrame;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
 import printReport.PrintDriver;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
-import java.sql.SQLException;
-import java.sql.Statement;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {
@@ -30,7 +31,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
     public PaidoutFrm(java.awt.Frame parent, boolean modal, String reson) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
         this.reson = reson;
     }
 
@@ -97,7 +98,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
                         Prn.print("");
                         Prn.CutPaper();
                     } catch (Exception e2) {
-                        MSG.ERR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");
+                        MSG.WAR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");
                         return;
                     }
                     Prn.closePrint();
@@ -109,22 +110,21 @@ public class PaidoutFrm extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
-            if (txtAmount.getText().equals("")) {
-
-            }
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PaidoutFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -494,7 +494,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtAmountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountKeyPressed
@@ -502,7 +502,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
             SaveDataPaidout();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

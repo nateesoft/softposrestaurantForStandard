@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.POSHWSetup;
+import com.softpos.pos.core.model.POSHWSetup;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -42,10 +42,10 @@ public class DisplayEJ extends javax.swing.JDialog {
         TextArea.setDocument(doc);
         } catch (IOException e) {
                 MSG.ERR(this, " ไม่สามารถอ่านไฟล์การทำงานของเครื่องนี้ได้ !!! ");
-                this.dispose();
+                this.setVisible(false);//dispose();
         } catch (BadLocationException e) {
             MSG.ERR(this, " ไม่สามารถอ่านไฟล์การทำงานของเครื่องนี้ได้ !!! ");
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }
 
@@ -144,7 +144,7 @@ public class DisplayEJ extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

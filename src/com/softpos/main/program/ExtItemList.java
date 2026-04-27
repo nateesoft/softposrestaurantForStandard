@@ -1,13 +1,14 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.model.CustomerBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.pos.core.model.CustomerBean;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ExtItemList extends javax.swing.JDialog {
@@ -40,7 +41,6 @@ public class ExtItemList extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("แสดงรายการลูกหนี้การค้า");
-        setUndecorated(true);
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -205,18 +205,19 @@ public class ExtItemList extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 String sql = "delete from customer where sp_code='" + code + "'";
                 Statement stmt = mysql.getConnection().createStatement();
                 if (stmt.executeUpdate(sql) > 0) {
-                    MSG.ERR(this, "ลบข้อมูลเรียบร้อยแล้ว");
+                    MSG.NOTICE(this, "ลบข้อมูลเรียบร้อยแล้ว");
                 }
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
+                AppLogUtil.log(ExtItemList.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -240,7 +241,7 @@ public class ExtItemList extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) tbCustomer.getModel();
             int size = model.getRowCount();
@@ -287,14 +288,16 @@ public class ExtItemList extends javax.swing.JDialog {
                 });
 
                 tbCustomer.setRowHeight(30);
-                tbCustomer.setFont(new Font("Norasi", Font.PLAIN, 14));
+                tbCustomer.setFont(new Font("Tahoma", Font.PLAIN, 14));
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());AppLogUtil.log(ExtItemList.class, "error", e);
+            AppLogUtil.log(ExtItemList.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

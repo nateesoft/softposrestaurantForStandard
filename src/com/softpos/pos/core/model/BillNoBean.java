@@ -2,177 +2,106 @@ package com.softpos.pos.core.model;
 
 import java.util.Date;
 
+
 public class BillNoBean {
+
     private String B_Refno = "0";
-     private double B_CuponDiscAmt;
-     private String B_Ontime;
-     private String B_LoginTime;
-     private Date B_OnDate;
-     private Date B_PostDate;
-     private String B_Table;
-     private String B_MacNo;
-     private String B_Cashier;
-     private int B_Cust = 0;
-     private String B_ETD;
-     private double B_Total = 0.00;
-     private double B_Food = 0.00;
-     private double B_Drink = 0.00;
-     private double B_Product = 0.00;
-     private double B_Service = 0.00;
-     private double B_ServiceAmt = 0.00;
-     private double B_ItemDiscAmt = 0.00;
-     private String B_FastDisc;
-     private double B_FastDiscAmt = 0.00;
-     private String B_EmpDisc;
-     private double B_EmpDiscAmt = 0.00;
-     private String B_TrainDisc;
-     private double B_TrainDiscAmt = 0.00;
-     private String B_MemDisc;
-     private double B_MemDiscAmt = 0.00;
-     private String B_SubDisc;
-     private double B_SubDiscAmt = 0.00;
-     private double B_SubDiscBath = 0.00;
-     private double B_ProDiscAmt = 0.00;
-     private double B_SpaDiscAmt = 0.00;
-     private double B_AdjAmt = 0.00;
-     private double B_PreDisAmt = 0.00;
-     private double B_NetTotal = 0.00;
-     private double B_NetFood = 0.00;
-     private double B_NetDrink = 0.00;
-     private double B_NetProduct = 0.00;
-     private double B_NetVat = 0.00;
-     private double B_NetNonVat = 0.00;
-     private double B_Vat = 0.00;
-     private double B_PayAmt = 0.00;
-     private double B_Cash = 0.00;
-     private double B_GiftVoucher = 0.00;
-     private double B_Earnest = 0.00;
-     private double B_Ton = 0.00;
-     private String B_CrCode1;
-     private String B_CardNo1;
-     private String B_AppCode1;
-     private double B_CrCharge1 = 0.00;
-     private double B_CrChargeAmt1 = 0.00;
-     private double B_CrAmt1 = 0.00;
-     private String B_AccrCode;
-     private double B_AccrAmt = 0.00;
-     private int B_AccrCr = 0;
-     private String B_MemCode;
-     private String B_MemName;
-     private Date B_MemBegin;
-     private Date B_MemEnd;
-     private double B_MemCurSum = 0.00;
-     private String B_Void = "-";
-     private String B_VoidUser;
-     private String B_VoidTime;
-     private int B_BillCopy = 0;
-     private int B_PrnCnt = 0;
-     private String B_PrnTime1;
-     private String B_PrnTime2;
-     private String B_InvNo;
-     private String B_InvType;
-     private String B_Bran;
-     private String B_BranName;
-     private String B_Tel;
-     private String B_RecTime;
-     private String MStamp;
-     private String MScore;
-     private String CurStamp;
-     private String StampRate;
-     private String B_ChkBill = "N";
-     private String B_ChkBillTime = "00:00:00";
-     private String B_CashTime = "00:00:00";
-     private String B_WaitTime = "00:00:00";
-     private double B_SumScore = 0;
-     private String B_CrBank;
-     private double B_CrCardAmt = 0.00;
-     private double B_CrCurPoint = 0.00;
-     private double B_CrSumPoint = 0.00;
-//     private double B_Entertain;
-     private double B_Entertain1 = 0.00;
-     private double B_VoucherDiscAmt = 0.00;
-     private double B_VoucherOver = 0.00;
-     private double B_NetDiff = 0.00;
-     private double B_SumSetDiscAmt = 0.00;
-     private double B_DetailFood = 0.00;
-     private double B_DetailDrink = 0.00;
-     private double B_DetailProduct = 0.00;
-     private String B_KicQue;
-     private String B_ROUNDCLOSE = "N";
-     private String Employ = "";
-     private String B_CuponName = "";
-     
-     
-//    public double getB_Entertain() {
-//        return B_Entertain;
-//    }
-//
-//    public void setB_Entertain(double B_Entertain) {
-//        this.B_Entertain = B_Entertain;
-//    }
-    public double getB_Entertain1() {
-        return B_Entertain1;
-    }
-
-    public void setB_Entertain1(double B_Entertain1) {
-        this.B_Entertain1 = B_Entertain1;
-    }
-
-    public double getB_VoucherDiscAmt() {
-        return B_VoucherDiscAmt;
-    }
-
-    public void setB_VoucherDiscAmt(double B_VoucherDiscAmt) {
-        this.B_VoucherDiscAmt = B_VoucherDiscAmt;
-    }
-
-    public double getB_VoucherOver() {
-        return B_VoucherOver;
-    }
-
-    public void setB_VoucherOver(double B_VoucherOver) {
-        this.B_VoucherOver = B_VoucherOver;
-    }
-
-    public double getB_SumSetDiscAmt() {
-        return B_SumSetDiscAmt;
-    }
-
-    public void setB_SumSetDiscAmt(double B_SumSetDiscAmt) {
-        this.B_SumSetDiscAmt = B_SumSetDiscAmt;
-    }
-
-    public double getB_DetailFood() {
-        return B_DetailFood;
-    }
-
-    public void setB_DetailFood(double B_DetailFood) {
-        this.B_DetailFood = B_DetailFood;
-    }
-
-    public double getB_DetailDrink() {
-        return B_DetailDrink;
-    }
-
-    public void setB_DetailDrink(double B_DetailDrink) {
-        this.B_DetailDrink = B_DetailDrink;
-    }
-
-    public double getB_DetailProduct() {
-        return B_DetailProduct;
-    }
-
-    public void setB_DetailProduct(double B_DetailProduct) {
-        this.B_DetailProduct = B_DetailProduct;
-    }
-
-    public String getB_ROUNDCLOSE() {
-        return B_ROUNDCLOSE;
-    }
-
-    public void setB_ROUNDCLOSE(String B_ROUNDCLOSE) {
-        this.B_ROUNDCLOSE = B_ROUNDCLOSE;
-    }
+    private double B_CuponDiscAmt;
+    private String B_Ontime;
+    private String B_LoginTime;
+    private Date B_OnDate;
+    private Date B_PostDate;
+    private String B_Table;
+    private String B_MacNo;
+    private String B_Cashier;
+    private int B_Cust = 0;
+    private String B_ETD;
+    private double B_Total = 0.00;
+    private double B_Food = 0.00;
+    private double B_Drink = 0.00;
+    private double B_Product = 0.00;
+    private double B_Service = 0.00;
+    private double B_ServiceAmt = 0.00;
+    private double B_ItemDiscAmt = 0.00;
+    private String B_FastDisc;
+    private double B_FastDiscAmt = 0.00;
+    private String B_EmpDisc;
+    private double B_EmpDiscAmt = 0.00;
+    private String B_TrainDisc;
+    private double B_TrainDiscAmt = 0.00;
+    private String B_MemDisc;
+    private double B_MemDiscAmt = 0.00;
+    private String B_SubDisc;
+    private double B_SubDiscAmt = 0.00;
+    private double B_SubDiscBath = 0.00;
+    private double B_ProDiscAmt = 0.00;
+    private double B_SpaDiscAmt = 0.00;
+    private double B_AdjAmt = 0.00;
+    private double B_PreDisAmt = 0.00;
+    private double B_NetTotal = 0.00;
+    private double B_NetFood = 0.00;
+    private double B_NetDrink = 0.00;
+    private double B_NetProduct = 0.00;
+    private double B_NetVat = 0.00;
+    private double B_NetNonVat = 0.00;
+    private double B_Vat = 0.00;
+    private double B_PayAmt = 0.00;
+    private double B_Cash = 0.00;
+    private double B_GiftVoucher = 0.00;
+    private double B_Earnest = 0.00;
+    private double B_Ton = 0.00;
+    private String B_CrCode1;
+    private String B_CardNo1;
+    private String B_AppCode1;
+    private double B_CrCharge1 = 0.00;
+    private double B_CrChargeAmt1 = 0.00;
+    private double B_CrAmt1 = 0.00;
+    private String B_AccrCode;
+    private double B_AccrAmt = 0.00;
+    private int B_AccrCr = 0;
+    private String B_MemCode;
+    private String B_MemName;
+    private Date B_MemBegin;
+    private Date B_MemEnd;
+    private double B_MemCurSum = 0.00;
+    private String B_Void = "-";
+    private String B_VoidUser;
+    private String B_VoidTime;
+    private int B_BillCopy = 0;
+    private int B_PrnCnt = 0;
+    private String B_PrnTime1;
+    private String B_PrnTime2;
+    private String B_InvNo;
+    private String B_InvType;
+    private String B_Bran;
+    private String B_BranName;
+    private String B_Tel;
+    private String B_RecTime;
+    private String MStamp;
+    private String MScore;
+    private String CurStamp;
+    private String StampRate;
+    private String B_ChkBill = "N";
+    private String B_ChkBillTime = "00:00:00";
+    private String B_CashTime = "00:00:00";
+    private String B_WaitTime = "00:00:00";
+    private double B_SumScore = 0;
+    private String B_CrBank;
+    private double B_CrCardAmt = 0.00;
+    private double B_CrCurPoint = 0.00;
+    private double B_CrSumPoint = 0.00;
+    private double B_Entertain1 = 0.00;
+    private double B_VoucherDiscAmt = 0.00;
+    private double B_VoucherOver = 0.00;
+    private double B_NetDiff = 0.00;
+    private double B_SumSetDiscAmt = 0.00;
+    private double B_DetailFood = 0.00;
+    private double B_DetailDrink = 0.00;
+    private double B_DetailProduct = 0.00;
+    private String B_KicQue;
+    private String B_ROUNDCLOSE = "N";
+    private String Employ = "";
+    private String B_CuponName = "";
 
     public String getB_Refno() {
         return B_Refno;
@@ -854,12 +783,28 @@ public class BillNoBean {
         this.B_CrSumPoint = B_CrSumPoint;
     }
 
-    public String getB_KicQue() {
-        return B_KicQue;
+    public double getB_Entertain1() {
+        return B_Entertain1;
     }
 
-    public void setB_KicQue(String B_KicQue) {
-        this.B_KicQue = B_KicQue;
+    public void setB_Entertain1(double B_Entertain1) {
+        this.B_Entertain1 = B_Entertain1;
+    }
+
+    public double getB_VoucherDiscAmt() {
+        return B_VoucherDiscAmt;
+    }
+
+    public void setB_VoucherDiscAmt(double B_VoucherDiscAmt) {
+        this.B_VoucherDiscAmt = B_VoucherDiscAmt;
+    }
+
+    public double getB_VoucherOver() {
+        return B_VoucherOver;
+    }
+
+    public void setB_VoucherOver(double B_VoucherOver) {
+        this.B_VoucherOver = B_VoucherOver;
     }
 
     public double getB_NetDiff() {
@@ -869,26 +814,71 @@ public class BillNoBean {
     public void setB_NetDiff(double B_NetDiff) {
         this.B_NetDiff = B_NetDiff;
     }
-//    public double getB_NetDiff() {
-//        return B_NetDiff;
-//    }
-//
-//    public void setB_NetDiff(double B_getB_CashPayMent) {
-//        this.B_NetDiff = B_NetDiff;
-//    }
-    public String get_Employ() {
+
+    public double getB_SumSetDiscAmt() {
+        return B_SumSetDiscAmt;
+    }
+
+    public void setB_SumSetDiscAmt(double B_SumSetDiscAmt) {
+        this.B_SumSetDiscAmt = B_SumSetDiscAmt;
+    }
+
+    public double getB_DetailFood() {
+        return B_DetailFood;
+    }
+
+    public void setB_DetailFood(double B_DetailFood) {
+        this.B_DetailFood = B_DetailFood;
+    }
+
+    public double getB_DetailDrink() {
+        return B_DetailDrink;
+    }
+
+    public void setB_DetailDrink(double B_DetailDrink) {
+        this.B_DetailDrink = B_DetailDrink;
+    }
+
+    public double getB_DetailProduct() {
+        return B_DetailProduct;
+    }
+
+    public void setB_DetailProduct(double B_DetailProduct) {
+        this.B_DetailProduct = B_DetailProduct;
+    }
+
+    public String getB_KicQue() {
+        return B_KicQue;
+    }
+
+    public void setB_KicQue(String B_KicQue) {
+        this.B_KicQue = B_KicQue;
+    }
+
+    public String getB_ROUNDCLOSE() {
+        return B_ROUNDCLOSE;
+    }
+
+    public void setB_ROUNDCLOSE(String B_ROUNDCLOSE) {
+        this.B_ROUNDCLOSE = B_ROUNDCLOSE;
+    }
+
+    public String getEmploy() {
         return Employ;
     }
 
-    public void set_Employ(String Employ) {
+    public void setEmploy(String Employ) {
         this.Employ = Employ;
     }
-    public String get_B_CuponName() {
+
+    public String getB_CuponName() {
         return B_CuponName;
     }
 
-    public void set_B_CuponName(String B_CuponName) {
+    public void setB_CuponName(String B_CuponName) {
         this.B_CuponName = B_CuponName;
     }
-     
+    
+    
+    
 }

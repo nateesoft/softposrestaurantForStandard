@@ -1,7 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import util.AppLogUtil;
 import util.DateUtil;
 import util.MSG;
 
@@ -92,10 +94,10 @@ public class AddNewMember extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ปรับรุงรายการข้อมูลสมาชิก");
-        setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setUndecorated(true);
 
-        jToolBar1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        jToolBar1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         bntCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bntCancel.setText("  ยกเลิก  ");
@@ -200,7 +202,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Name.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Name.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Name.setMinimumSize(new java.awt.Dimension(10, 25));
         M_Name.setPreferredSize(new java.awt.Dimension(76, 30));
         M_Name.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -209,7 +211,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_HomeTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_HomeTel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_HomeTel.setPreferredSize(new java.awt.Dimension(10, 30));
         M_HomeTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -217,7 +219,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_OfficeTel.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_OfficeTel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_OfficeTel.setPreferredSize(new java.awt.Dimension(10, 30));
         M_OfficeTel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -225,7 +227,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Mobile.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Mobile.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Mobile.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Mobile.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -233,7 +235,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Reamrk1.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Reamrk1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Reamrk1.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Reamrk1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -241,7 +243,7 @@ public class AddNewMember extends javax.swing.JDialog {
             }
         });
 
-        M_Remark2.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Remark2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Remark2.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Remark2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -256,7 +258,7 @@ public class AddNewMember extends javax.swing.JDialog {
         jLabel13.setText("วันหมดอายุ");
 
         M_Brithday.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        M_Brithday.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Brithday.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Brithday.setMinimumSize(new java.awt.Dimension(10, 25));
         M_Brithday.setPreferredSize(new java.awt.Dimension(10, 30));
         M_Brithday.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -266,16 +268,16 @@ public class AddNewMember extends javax.swing.JDialog {
         });
 
         M_Begin.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        M_Begin.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_Begin.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_Begin.setPreferredSize(new java.awt.Dimension(10, 30));
-        M_Begin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                M_BeginFocusLost(evt);
-            }
-        });
         M_Begin.addHierarchyListener(new java.awt.event.HierarchyListener() {
             public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
                 M_BeginHierarchyChanged(evt);
+            }
+        });
+        M_Begin.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                M_BeginFocusLost(evt);
             }
         });
         M_Begin.addInputMethodListener(new java.awt.event.InputMethodListener() {
@@ -293,7 +295,7 @@ public class AddNewMember extends javax.swing.JDialog {
 
         M_End.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         M_End.setEnabled(false);
-        M_End.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        M_End.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         M_End.setPreferredSize(new java.awt.Dimension(10, 30));
         M_End.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -429,9 +431,9 @@ public class AddNewMember extends javax.swing.JDialog {
                             .addComponent(M_Begin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmdDateChoose2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(M_HomeTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(M_HomeTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -768,12 +770,12 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         if (M_Name.getText().length() == 0) {
-            PUtility.ShowMsg("กรุณาป้อนชื่อสมาชิก...");
+            MSG.WAR("กรุณาป้อนชื่อสมาชิก...");
             M_Name.requestFocus();
             RetVal = false;
         }
         if (M_HomeTel.getText().length() == 0 && M_OfficeTel.getText().length() == 0 && M_Mobile.getText().length() == 0) {
-            PUtility.ShowMsg("กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
+            MSG.WAR("กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
             M_HomeTel.requestFocus();
             RetVal = false;
         }
@@ -798,8 +800,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     RetVal = false;
                 }
             } else {
-                //PUtility.ShowMsg("รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
-                MSG.WAR_MSG(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
+                MSG.WAR(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
                 M_Barcode.requestFocus();
                 RetVal = false;
             }
@@ -820,17 +821,17 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SQLQuery = "delete from memmaster where m_code='" + TempCode + "'";
+                    String SQLQuery = "delete from " + Value.db_member + ".memmaster where m_code='" + TempCode + "'";
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
-                    
+                    AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 ClearVariable();
@@ -862,10 +863,10 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SQLQuery = "update memmaster set m_name='" + M_Name.getText() + "',"
+                        String SQLQuery = "update " + Value.db_member + ".memmaster set m_name='" + M_Name.getText() + "',"
                                 + "m_brid='" + Datefmt.format(TempDate1) + "',"
                                 + "m_begin='" + Datefmt.format(TempDate2) + "',"
                                 + "m_end='" + Datefmt.format(TempDate3) + "',"
@@ -880,9 +881,9 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        
+                            AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     ClearVariable();
@@ -891,10 +892,10 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SQLQuery = "insert into memmaster (m_code,m_bran,m_barcode,m_type,m_name,m_card,m_sex,m_status,"
+                        String SQLQuery = "insert into " + Value.db_member + ".memmaster (m_code,m_bran,m_barcode,m_type,m_name,m_card,m_sex,m_status,"
                                 + "m_brid,m_begin,m_end,m_nation,m_occu,m_incom,m_company,m_email,m_addr1,m_addr2,m_addr3,"
                                 + "m_addr4,m_addr5,m_addr6,m_post,m_tel,m_fax,m_wise,m_chai,m_food,m_rem1,m_rem2,m_last,m_sum,"
                                 + "m_discrate,m_mobile,m_office) "
@@ -937,9 +938,9 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR_MSG(this, e.getMessage());
-                        
+                        AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     
                     ClearVariable();
@@ -985,17 +986,16 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     if (M_Code.getText().length() == 13) {
                         TempCode = TempCode.substring(5, 12);
                         M_Code.setText(TempCode);
                     }
                     Statement stmt = mysql.getConnection().createStatement();
-                    String SQLQuery = "Select *from memmaster where m_code='" + TempCode + "'";
-                    ResultSet rec = stmt.executeQuery(SQLQuery);
-                    rec.first();
-                    if (rec.getRow() == 0) {
+                    String SQLQuery = "Select * from " + Value.db_member + ".memmaster where m_code='" + TempCode + "' limit 1";
+                    ResultSet rs = stmt.executeQuery(SQLQuery);
+                    if (rs.next()) {
                         Calendar cal = Calendar.getInstance();
                         cal.add(Calendar.DAY_OF_MONTH, 44);
                         M_Brithday.setText(ShowDatefmt.format(cal.getTime()));
@@ -1019,19 +1019,19 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         GetDataValue();
                         M_Barcode.requestFocus();
                     } else {
-                        if (rec.getString("m_active").equals("Y")) {
-                            M_Name.setText(rec.getString("m_name"));
-                            M_Barcode.setText(rec.getString("m_barcode"));
-                            M_Brithday.setText(ShowDatefmt.format(rec.getDate("m_brid")));
-                            M_Begin.setText(ShowDatefmt.format(rec.getDate("m_begin")));
-                            M_End.setText(ShowDatefmt.format(rec.getDate("m_end")));
-                            M_HomeTel.setText(rec.getString("m_tel"));
-                            M_OfficeTel.setText(rec.getString("m_office"));
-                            M_Mobile.setText(rec.getString("m_mobile"));
-                            M_Reamrk1.setText(rec.getString("m_rem1"));
-                            M_Remark2.setText(rec.getString("m_rem2"));
+                        if (rs.getString("m_active").equals("Y")) {
+                            M_Name.setText(rs.getString("m_name"));
+                            M_Barcode.setText(rs.getString("m_barcode"));
+                            M_Brithday.setText(ShowDatefmt.format(rs.getDate("m_brid")));
+                            M_Begin.setText(ShowDatefmt.format(rs.getDate("m_begin")));
+                            M_End.setText(ShowDatefmt.format(rs.getDate("m_end")));
+                            M_HomeTel.setText(rs.getString("m_tel"));
+                            M_OfficeTel.setText(rs.getString("m_office"));
+                            M_Mobile.setText(rs.getString("m_mobile"));
+                            M_Reamrk1.setText(rs.getString("m_rem1"));
+                            M_Remark2.setText(rs.getString("m_rem2"));
                             Calendar cal = Calendar.getInstance();
-                            cal.setTime(rec.getDate("m_begin"));
+                            cal.setTime(rs.getDate("m_begin"));
                             cal.add(Calendar.DAY_OF_MONTH, 44);
                             M_NewEnd.setText("วันที่หมดอายุบัตรชั่วคราว : " + ShowDatefmt.format(cal.getTime()));
                             ProcessStr.setText("แก้ข้อมูลเก่า...");
@@ -1040,17 +1040,17 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             GetDataValue();
                             M_Name.requestFocus();
                         } else {
-                            PUtility.ShowMsg("รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
+                            MSG.WAR("รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
                             ClearVariable();
                         }
                     }
-                    rec.close();
+                    rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR_MSG(this, e.getMessage());
-                    
+                    MSG.ERR(this, e.getMessage());
+                    AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally{
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
             } else {
@@ -1068,24 +1068,19 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "Select *from memmaster where m_code='" + TempCode + "'";
-            ResultSet rec = stmt.executeQuery(SQLQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-                RetVal = false;
-            } else {
-                RetVal = true;
-            }
-            rec.close();
+            String SQLQuery = "Select m_code from " + Value.db_member + ".memmaster where m_code='" + TempCode + "' limit 1";
+            ResultSet rs = stmt.executeQuery(SQLQuery);
+            RetVal = rs.next();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
+            AppLogUtil.log(AddNewMember.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return RetVal;

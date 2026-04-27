@@ -1,16 +1,19 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.pos.core.model.POSConfigSetup;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class DiscountControl {
 
     public static double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
-            return NumberControl.UP_DOWN_25(db);
+            return NumberUtil.UP_DOWN_25(db);
         } else {
             return db;
         }
@@ -19,7 +22,7 @@ public class DiscountControl {
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select sum(R_PrAmt) SUM_R_PrAmt "
                     + "from balance "
@@ -28,7 +31,7 @@ public class DiscountControl {
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            if (rs.next() && !rs.wasNull()) {
+            if (rs.next()) {
                 String sqlUpd = "update tablefile set "
                         + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
                         + "where Tcode = '" + tableNo + "'";
@@ -40,12 +43,9 @@ public class DiscountControl {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            
-        } finally {
-            mysql.close();
+            AppLogUtil.log(DiscountControl.class, "error", e);
         }
-
-        mysql.open();
+        
         //หามูลค่าบัตรลดคูปอง
         try {
             String sql = "select sum(R_PrCuAmt) SUM_R_PrCuAmt "
@@ -56,11 +56,11 @@ public class DiscountControl {
                     + "and R_PrCuType = '-C'";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next() && !rs.wasNull()) {
+            if (rs.next()) {
                 String sqlUpd;
                 if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
                     sqlUpd = "update tablefile set "
-                            + "CuponDiscAmt='" + NumberControl.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
+                            + "CuponDiscAmt='" + NumberUtil.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
                             + "where Tcode = '" + tableNo + "'";
                 } else {
                     sqlUpd = "update tablefile set "
@@ -75,7 +75,7 @@ public class DiscountControl {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

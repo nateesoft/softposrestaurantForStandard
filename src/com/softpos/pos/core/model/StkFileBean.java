@@ -273,4 +273,5 @@ public class StkFileBean {
         this.BQty24 = BQty24;
     }
     
+    
 }

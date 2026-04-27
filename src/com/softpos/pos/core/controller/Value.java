@@ -1,14 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.softpos.pos.core.model.POSHWSetup;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import util.MSG;
 
 public class Value {
 
@@ -30,7 +25,7 @@ public class Value {
     public static String TableSelected = "";
     public static String TEMP_TABLE_REFUND = "999";
     public static String db_member = "";
-    public static boolean printdriver = true;
+    public static boolean printdriver = false;
     public static String printerDriverName = "SoftPrint";
     public static String printerDriverKitChenName = "";
     public static String takeorder = "N";
@@ -57,41 +52,6 @@ public class Value {
     }
 
     public static String getComPort() {
-        return POSHWSetup.Bean(getMacno()).getPRNPort();
+        return POSHWSetup.Bean(Value.MACNO).getPRNPort();
     }
-
-    public static String getMacno() {
-        String macno;
-        try {
-            try (FileInputStream fs = new FileInputStream(FILE_CONFIG)) {
-                DataInputStream ds = new DataInputStream(fs);
-                BufferedReader br = new BufferedReader(new InputStreamReader(ds));
-                macno = "";
-                String tmp;
-                while ((tmp = br.readLine()) != null) {
-                    String[] data = tmp.split(",", tmp.length());
-                    if (data[0].equalsIgnoreCase("macno")) {
-                        Value.MACNO = data[1];
-                        macno = data[1];
-                        break;
-                    }
-                }
-                br.close();
-                ds.close();
-            }
-        } catch (IOException e) {
-            MSG.ERR(e.getMessage());
-            macno = "";
-        }
-
-        if (!macno.equals("")) {
-            POSHWSetup poshwSetup = PosControl.getData(macno);
-            if(poshwSetup.getOnAct().equals("N")){
-                macno = poshwSetup.getTerminal();
-            }
-        }
-
-        return macno;
-    }
-
 }

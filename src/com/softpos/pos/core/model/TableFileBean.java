@@ -59,27 +59,7 @@ public class TableFileBean {
     private String TFinishTime;
     private String TTableIsOn = "N";
     private String TAutoClose = "Y";
-    private ArrayList<BalanceBean> dataBalance;
-    
-    public TableFileBean(){
-        dataBalance = new ArrayList<BalanceBean>();
-    }
-    
-    public void addBalance(BalanceBean bb){
-        dataBalance.add(bb);
-    }
-    
-    public BalanceBean getBalance(int i){
-        return dataBalance.get(i);
-    }
-    
-    public ArrayList<BalanceBean> getAllBalance(){
-        return dataBalance;
-    }
-    
-    public int size(){
-        return dataBalance.size();
-    }
+    private ArrayList<BalanceBean> dataBalance = new ArrayList<BalanceBean>();
 
     public String getTcode() {
         return Tcode;
@@ -512,4 +492,14 @@ public class TableFileBean {
     public void setTAutoClose(String TAutoClose) {
         this.TAutoClose = TAutoClose;
     }
+
+    public ArrayList<BalanceBean> getDataBalance() {
+        return dataBalance;
+    }
+
+    public void setDataBalance(ArrayList<BalanceBean> dataBalance) {
+        this.dataBalance = dataBalance;
+    }
+    
+    
 }

@@ -1,6 +1,5 @@
 package com.softpos.pos.core.model;
 
-import com.softpos.pos.core.controller.BranchControl;
 import java.util.Date;
 
 public class BranchBean {
@@ -107,17 +106,17 @@ public class BranchBean {
     private String KicPrintOnReceipt8 = "N";
     private String KicPrintOnReceipt9 = "N";
     private int KicQue = 0;
-    private String Kic10 = "N";
-    private String Kic11 = "N";
-    private String Kic12 = "N";
-    private String Kic13 = "N";
-    private String Kic14 = "N";
-    private String Kic15 = "N";
-    private String Kic16 = "N";
-    private String Kic17 = "N";
-    private String Kic18 = "N";
-    private String Kic19 = "N";
-    private String Kic20 = "N";
+    private String KIC10 = "N";
+    private String KIC11 = "N";
+    private String KIC12 = "N";
+    private String KIC13 = "N";
+    private String KIC14 = "N";
+    private String KIC15 = "N";
+    private String KIC16 = "N";
+    private String KIC17 = "N";
+    private String KIC18 = "N";
+    private String KIC19 = "N";
+    private String KIC20 = "N";
     private String KicCopy10 = "1";
     private String KicCopy11 = "1";
     private String KicCopy12 = "1";
@@ -141,10 +140,6 @@ public class BranchBean {
     private String KicChk19 = "N";
     private String KicChk20 = "N";
     private String imageHomePath = "";
-    
-    public static BranchBean Bean(){
-        return new BranchControl().getData();
-    }
 
     public String getCode() {
         return Code;
@@ -962,92 +957,92 @@ public class BranchBean {
         this.KicQue = KicQue;
     }
 
-    public String getKic10() {
-        return Kic10;
+    public String getKIC10() {
+        return KIC10;
     }
 
-    public void setKic10(String Kic10) {
-        this.Kic10 = Kic10;
+    public void setKIC10(String KIC10) {
+        this.KIC10 = KIC10;
     }
 
-    public String getKic11() {
-        return Kic11;
+    public String getKIC11() {
+        return KIC11;
     }
 
-    public void setKic11(String Kic11) {
-        this.Kic11 = Kic11;
+    public void setKIC11(String KIC11) {
+        this.KIC11 = KIC11;
     }
 
-    public String getKic12() {
-        return Kic12;
+    public String getKIC12() {
+        return KIC12;
     }
 
-    public void setKic12(String Kic12) {
-        this.Kic12 = Kic12;
+    public void setKIC12(String KIC12) {
+        this.KIC12 = KIC12;
     }
 
-    public String getKic13() {
-        return Kic13;
+    public String getKIC13() {
+        return KIC13;
     }
 
-    public void setKic13(String Kic13) {
-        this.Kic13 = Kic13;
+    public void setKIC13(String KIC13) {
+        this.KIC13 = KIC13;
     }
 
-    public String getKic14() {
-        return Kic14;
+    public String getKIC14() {
+        return KIC14;
     }
 
-    public void setKic14(String Kic14) {
-        this.Kic14 = Kic14;
+    public void setKIC14(String KIC14) {
+        this.KIC14 = KIC14;
     }
 
-    public String getKic15() {
-        return Kic15;
+    public String getKIC15() {
+        return KIC15;
     }
 
-    public void setKic15(String Kic15) {
-        this.Kic15 = Kic15;
+    public void setKIC15(String KIC15) {
+        this.KIC15 = KIC15;
     }
 
-    public String getKic16() {
-        return Kic16;
+    public String getKIC16() {
+        return KIC16;
     }
 
-    public void setKic16(String Kic16) {
-        this.Kic16 = Kic16;
+    public void setKIC16(String KIC16) {
+        this.KIC16 = KIC16;
     }
 
-    public String getKic17() {
-        return Kic17;
+    public String getKIC17() {
+        return KIC17;
     }
 
-    public void setKic17(String Kic17) {
-        this.Kic17 = Kic17;
+    public void setKIC17(String KIC17) {
+        this.KIC17 = KIC17;
     }
 
-    public String getKic18() {
-        return Kic18;
+    public String getKIC18() {
+        return KIC18;
     }
 
-    public void setKic18(String Kic18) {
-        this.Kic18 = Kic18;
+    public void setKIC18(String KIC18) {
+        this.KIC18 = KIC18;
     }
 
-    public String getKic19() {
-        return Kic19;
+    public String getKIC19() {
+        return KIC19;
     }
 
-    public void setKic19(String Kic19) {
-        this.Kic19 = Kic19;
+    public void setKIC19(String KIC19) {
+        this.KIC19 = KIC19;
     }
 
-    public String getKic20() {
-        return Kic20;
+    public String getKIC20() {
+        return KIC20;
     }
 
-    public void setKic20(String Kic20) {
-        this.Kic20 = Kic20;
+    public void setKIC20(String KIC20) {
+        this.KIC20 = KIC20;
     }
 
     public String getKicCopy10() {
@@ -1233,5 +1228,5 @@ public class BranchBean {
     public void setImageHomePath(String imageHomePath) {
         this.imageHomePath = imageHomePath;
     }
-    
+
 }

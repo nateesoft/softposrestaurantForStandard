@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import util.AppLogUtil;
 import util.MSG;
 
 public class DiarySale extends javax.swing.JDialog {
@@ -21,7 +22,7 @@ public class DiarySale extends javax.swing.JDialog {
         initComponents();
 
         jLabel5.setText("ยอดขายประจำวันที่ : " + DD);
-        LoadSale();
+        loadSale();
     }
 
     @SuppressWarnings("unchecked")
@@ -209,7 +210,7 @@ public class DiarySale extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -228,13 +229,12 @@ public class DiarySale extends javax.swing.JDialog {
     private javax.swing.JLabel lblTotal;
     // End of variables declaration//GEN-END:variables
 
-    private void LoadSale() {
+    private void loadSale() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
 
         try {
             String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";
-            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -247,6 +247,8 @@ public class DiarySale extends javax.swing.JDialog {
             } else {
                 TS = 0.00;
             }
+            
+            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1.next()) {
                 TS1 = rs1.getDouble("b_nettotal");
@@ -263,8 +265,9 @@ public class DiarySale extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(DiarySale.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

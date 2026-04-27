@@ -1,11 +1,14 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.model.TableFileBean;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.ProductBean;
+import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -15,14 +18,15 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SplitBillPayment extends javax.swing.JDialog {
 
     private String tableNo;
     private String table2;
-    DecimalFormat df = new DecimalFormat("###0.00");
+    private DecimalFormat df = new DecimalFormat("###0.00");
+    private ProductControl productControl = new ProductControl();
 
     public SplitBillPayment(java.awt.Dialog parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -34,6 +38,9 @@ public class SplitBillPayment extends javax.swing.JDialog {
         this.tableNo = tableNo;
         init();
         table2 = "";
+
+        productControl.initLoadProductActive();
+
         txtTable1.requestFocus();
     }
 
@@ -242,13 +249,15 @@ public class SplitBillPayment extends javax.swing.JDialog {
         bcontrol.restoreBalance(txtTable1.getText(), txtTable2.getText());
 
         table2 = "";
-        dispose();
+        this.setVisible(false);
+//        dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTable1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             table2 = "";
-            dispose();
+            this.setVisible(false);
+//            dispose();
         }
     }//GEN-LAST:event_txtTable1KeyPressed
 
@@ -256,10 +265,12 @@ public class SplitBillPayment extends javax.swing.JDialog {
         if (tbSecond.getRowCount() > 0) {
             Value.TableSelected = txtTable2.getText();
             table2 = txtTable2.getText();
-            dispose();
+            this.setVisible(false);
+//            dispose();
         } else {
             table2 = "";
-            dispose();
+            this.setVisible(false);
+//            dispose();
         }
     }//GEN-LAST:event_btnOkActionPerformed
 
@@ -291,7 +302,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "select R_Index from balance "
                                 + "where R_LinkIndex='" + R_Index + "' "
@@ -301,8 +312,10 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         while (rs.next()) {
                             isLoop = true;
                             String R_Index_In = rs.getString("R_Index");
+
                             // Move product
-                            if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode)) {
+                            ProductBean productBean = productControl.getProductCodeArray(PCode);
+                            if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode, productBean)) {
                                 balanceControl.deleteProduct(table, PCode, R_Index_In);
                             }
                         }
@@ -311,14 +324,15 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-
+                        AppLogUtil.log(SplitBillPayment.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     if (!isLoop) {
                         // Move product
-                        if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index, PCode)) {
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index, PCode, productBean)) {
                             balanceControl.deleteProduct(table, PCode, R_Index);
                         }
                     }
@@ -367,7 +381,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         String sql = "select R_Index from balance "
                                 + "where R_LinkIndex='" + R_Index + "' "
@@ -377,8 +391,10 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         while (rs.next()) {
                             isLoop = true;
                             String R_Index_In = rs.getString("R_Index");
+
                             // Move product
-                            if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode)) {
+                            ProductBean productBean = productControl.getProductCodeArray(PCode);
+                            if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode, productBean)) {
                                 balanceControl.deleteProduct(table, PCode, R_Index_In);
                             }
                         }
@@ -387,14 +403,16 @@ public class SplitBillPayment extends javax.swing.JDialog {
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-
+                        AppLogUtil.log(SplitBillPayment.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     if (!isLoop) {
+
                         // Move product
-                        if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index, PCode)) {
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index, PCode, productBean)) {
                             balanceControl.deleteProduct(newTable, PCode, R_Index);
                         }
                     }
@@ -501,7 +519,8 @@ public class SplitBillPayment extends javax.swing.JDialog {
         if (balance.backupBalance(txtTable1.getText())) {
             loadTable(txtTable1.getText());
         } else {
-            dispose();
+            this.setVisible(false);
+//            dispose();
         }
     }
 }

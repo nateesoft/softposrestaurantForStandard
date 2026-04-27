@@ -131,7 +131,7 @@ public class MSG {
         boolean success = false;
         try {
             URL imgURL = MSG.class.getResource("/util/warning64.png");
-            int rs = JOptionPane.showConfirmDialog(com, confirm, "Confirm Dialog", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(imgURL));
+            int rs = JOptionPane.showConfirmDialog(com, confirm, "Confirm Dialog", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(imgURL));
             if (rs == JOptionPane.YES_OPTION) {
                 success = true;
             }

@@ -2,10 +2,6 @@ package com.softpos.crm.pos.core.modal;
 
 import java.util.Date;
 
-/**
- *
- * @author nathee
- */
 public class PointTypeBean {
 
     private String Point_TypeCode;
@@ -161,5 +157,6 @@ public class PointTypeBean {
     public void setPoint_TypeName(String Point_TypeName) {
         this.Point_TypeName = Point_TypeName;
     }
-
+    
+    
 }

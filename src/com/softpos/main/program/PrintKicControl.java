@@ -5,8 +5,8 @@ import database.MySQLConnect;
 import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -181,7 +181,7 @@ public class PrintKicControl extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -200,7 +200,7 @@ public class PrintKicControl extends javax.swing.JDialog {
 
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
                     + "from product "
                     + "where pfix='F' "
@@ -216,8 +216,9 @@ public class PrintKicControl extends javax.swing.JDialog {
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -225,20 +226,21 @@ public class PrintKicControl extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) tblKicSetup.getModel();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(this.getClass());
             for (int i = 0; i < model.getRowCount(); i++) {
                 String code = model.getValueAt(i, 0).toString();
                 String kic = model.getValueAt(i, 2).toString();
                 String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
                 mysql.getConnection().createStatement().executeUpdate(sql);
             }
-            JOptionPane.showMessageDialog(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
+            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
 
             loadData();
         } catch (HeadlessException | SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

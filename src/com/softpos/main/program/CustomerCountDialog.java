@@ -1,12 +1,12 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
 import util.MSG;
 
 public class CustomerCountDialog extends javax.swing.JDialog {
@@ -14,7 +14,6 @@ public class CustomerCountDialog extends javax.swing.JDialog {
     private int custCountTotal = 0;
     private String TABLE_NO;
     private String R_ETD;
-    private MySQLConnect mysql = new MySQLConnect();
 
     public CustomerCountDialog(java.awt.Dialog parent, boolean modal, String TABLE_NO, String R_ETD) {
         super(parent, modal);
@@ -90,7 +89,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton2.setText("9");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,7 +97,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton3.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton3.setText("8");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,7 +105,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton1.setText("7");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,7 +113,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton6.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton6.setText("4");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,7 +121,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton5.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton5.setText("5");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,7 +129,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton4.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton4.setText("6");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +137,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton8.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton8.setText("3");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,7 +145,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton9.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton9.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton9.setText("2");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +153,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton7.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton7.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton7.setText("1");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,7 +161,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton15.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jButton15.setFont(new java.awt.Font("Castellar", 1, 36)); // NOI18N
         jButton15.setText("0");
         jButton15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -170,7 +169,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        txtAmount.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        txtAmount.setFont(new java.awt.Font("Tempus Sans ITC", 1, 36)); // NOI18N
         txtAmount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtAmount.setText("0");
         txtAmount.addActionListener(new java.awt.event.ActionListener() {
@@ -184,7 +183,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
             }
         });
 
-        jPanel3.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel3.setBackground(new java.awt.Color(204, 153, 0));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -334,7 +333,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
                 .addGap(6, 6, 6)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnCustName, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnCustName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -476,8 +475,8 @@ public class CustomerCountDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(this.getClass());
         try {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
@@ -491,6 +490,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
                             + "WHERE Tcode = '" + TABLE_NO + "'";
                     Statement stmt = mysql.getConnection().createStatement();
                     stmt.executeUpdate(sql);
+                    stmt.close();
                     this.dispose();
                 }
             } else {
@@ -500,10 +500,13 @@ public class CustomerCountDialog extends javax.swing.JDialog {
                         + "WHERE Tcode = '" + TABLE_NO + "'";
                 Statement stmt = mysql.getConnection().createStatement();
                 stmt.executeUpdate(sql);
+                stmt.close();
                 this.dispose();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -511,10 +514,10 @@ public class CustomerCountDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        //MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(this.getClass());
         try {
-            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "'";
+            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -524,10 +527,11 @@ public class CustomerCountDialog extends javax.swing.JDialog {
                 txtCustomerName.setText("");
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

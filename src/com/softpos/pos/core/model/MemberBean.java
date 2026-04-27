@@ -1,13 +1,6 @@
 package com.softpos.pos.core.model;
 
-import database.MySQLConnect;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import com.softpos.pos.core.controller.Value;
-import java.sql.Statement;
-import sun.natee.project.util.ThaiUtil;
-import util.MSG;
 
 public class MemberBean {
 
@@ -84,145 +77,6 @@ public class MemberBean {
     private String Member_BranchReques = "000";
     private String Member_PriceChk = "1";
     private int Member_CurPoint = 0;
-
-    public int getMember_CurPoint() {
-        return Member_CurPoint;
-    }
-
-    public void setMember_CurPoint(int Member_CurPoint) {
-        this.Member_CurPoint = Member_CurPoint;
-    }
-
-    public static MemberBean getMember(String MemberCode) {
-        MemberBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from " + Value.db_member + ".memmaster "
-                    + "where member_code='" + MemberCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                bean = new MemberBean();
-                bean.setMember_Code(rs.getString("Member_Code"));
-                bean.setMember_TypeCode(rs.getString("Member_TypeCode"));
-                bean.setMember_BranchCode(rs.getString("Member_BranchCode"));
-                bean.setMember_NameThai(ThaiUtil.ASCII2Unicode(rs.getString("Member_NameThai")));
-                bean.setMember_NameEng(rs.getString("Member_NameEng"));
-                bean.setMember_Gender(rs.getString("Member_Gender"));
-                bean.setMember_Status(rs.getString("Member_Status"));
-                bean.setMember_NationCode(rs.getString("Member_NationCode"));
-                bean.setMember_OccupationCode(rs.getString("Member_OccupationCode"));
-                bean.setMember_IncomeCode(rs.getString("Member_IncomeCode"));
-                bean.setMember_EducationCode(rs.getString("Member_EducationCode"));
-                bean.setMember_Company(rs.getString("Member_Company"));
-                bean.setMember_AddressNo(rs.getString("Member_AddressNo"));
-                bean.setMember_Building(rs.getString("Member_Building"));
-                bean.setMember_AddressSoi(rs.getString("Member_AddressSoi"));
-                bean.setMember_AddressStreet(rs.getString("Member_AddressStreet"));
-                bean.setMember_AddressSubDistrict(rs.getString("Member_AddressSubDistrict"));
-                bean.setMember_AddressDistrict(rs.getString("Member_AddressDistrict"));
-                bean.setMember_Province(rs.getString("Member_Province"));
-                bean.setMember_PostalCode(rs.getString("Member_PostalCode"));
-                bean.setMember_HomeTel(ThaiUtil.ASCII2Unicode(rs.getString("Member_HomeTel")));
-                bean.setMember_Fax(rs.getString("Member_Fax"));
-                bean.setMember_Email(rs.getString("Member_Email"));
-                bean.setMember_DiscountRate(rs.getString("Member_DiscountRate"));
-                bean.setMember_SpouseName(rs.getString("Member_SpouseName"));
-                bean.setMember_Food(rs.getString("Member_Food"));
-                bean.setMember_TotalPurchase(rs.getFloat("Member_TotalPurchase"));
-                bean.setMember_Remark1(rs.getString("Member_Remark1"));
-                bean.setMember_Remark2(rs.getString("Member_Remark2"));
-                bean.setMember_Mobile(rs.getString("Member_Mobile"));
-                bean.setMember_ReceiveInformation(rs.getString("Member_ReceiveInformation"));
-                bean.setMember_HobbySetCode(rs.getString("Member_HobbySetCode"));
-                bean.setMember_ServiceCount(rs.getFloat("Member_ServiceCount"));
-                bean.setMember_TotalScore(rs.getDouble("Member_TotalScore"));
-                try {
-                    bean.setMember_LastDateService(rs.getDate("Member_LastDateService"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setMember_PointExpiredDate(rs.getDate("Member_PointExpiredDate"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setMember_Brithday(rs.getDate("Member_Brithday"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setMember_AppliedDate(rs.getDate("Member_AppliedDate"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setMember_ExpiredDate(rs.getDate("Member_ExpiredDate"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setEmployee_CreateDate(rs.getDate("Employee_CreateDate"));
-                } catch (SQLException e) {
-                }
-
-                try {
-                    bean.setEmployee_ModifyDate(rs.getDate("Employee_ModifyDate"));
-                } catch (SQLException e) {
-                }
-
-                bean.setMember_TotalScore(rs.getFloat("Member_TotalScore"));
-                bean.setMember_TitleNameThai(ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai")));
-                bean.setMember_SurnameThai(ThaiUtil.ASCII2Unicode(rs.getString("Member_SurnameThai")));
-                bean.setMember_CompanyAddressNo(rs.getString("Member_CompanyAddressNo"));
-                bean.setMember_CompanyBuilding(rs.getString("Member_CompanyBuilding"));
-                bean.setMember_CompanySoi(rs.getString("Member_CompanySoi"));
-                bean.setMember_CompanyStreet(rs.getString("Member_CompanyStreet"));
-                bean.setMember_CompanySubDistrict(rs.getString("Member_CompanySubDistrict"));
-                bean.setMember_CompanyDistrict(rs.getString("Member_CompanyDistrict"));
-                bean.setMember_CompanyProvince(rs.getString("Member_CompanyProvince"));
-                bean.setMember_CompanyPostalCode(rs.getString("Member_CompanyPostalCode"));
-                bean.setMember_CompanyTel(rs.getString("Member_CompanyTel"));
-                bean.setMember_CompanyFax(rs.getString("Member_CompanyFax"));
-                bean.setMember_Active(rs.getString("Member_Active"));
-                bean.setMember_UsedTitle(rs.getString("Member_UsedTitle"));
-                bean.setMember_MailTo(rs.getString("Member_MailTo"));
-                bean.setMember_PrintLabel(rs.getString("Member_PrintLabel"));
-                bean.setMember_UnknowBirth(rs.getString("Member_UnknowBirth"));
-                bean.setEmployee_CodeCreate(rs.getString("Employee_CodeCreate"));
-                bean.setEmployee_CreateTime(rs.getString("Employee_CreateTime"));
-                bean.setEmployee_CodeModify(rs.getString("Employee_CodeModify"));
-                bean.setEmployee_ModifyTime(rs.getString("Employee_ModifyTime"));
-                // bean.setCardPro_Code(rs.getString("CardPro_Code"));
-                //bean.setMember_SMSBirthDayCheck(rs.getString("Member_SMSBirthDayCheck"));
-                // bean.setMember_SMSPromotionCheck(rs.getString("Member_SMSPromotionCheck"));
-                //bean.setMember_SMSActivityCheck(rs.getString("Member_SMSActivityCheck"));
-                //bean.setMember_SMSNewsCheck(rs.getString("Member_SMSNewsCheck"));
-                //bean.setMember_SMSBranchCheck(rs.getInt("Member_SMSBranchCheck"));
-                // bean.setMember_BranchNearHourse(rs.getString("Member_BranchNearHourse"));
-                //bean.setMember_BranchNearOffice(rs.getString("Member_BranchNearOffice"));
-                //bean.setMember_BranchReques(rs.getString("Member_BranchReques"));
-                //bean.setMember_PriceChk(rs.getString("Member_PriceChk"));
-            } else {
-                bean = null;
-                
-            }
-
-            rs.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-
-        } finally {
-            mysql.close();
-        }
-
-        return bean;
-    }
 
     public String getMember_Code() {
         return Member_Code;
@@ -800,4 +654,13 @@ public class MemberBean {
         this.Member_PriceChk = Member_PriceChk;
     }
 
+    public int getMember_CurPoint() {
+        return Member_CurPoint;
+    }
+
+    public void setMember_CurPoint(int Member_CurPoint) {
+        this.Member_CurPoint = Member_CurPoint;
+    }
+    
+    
 }

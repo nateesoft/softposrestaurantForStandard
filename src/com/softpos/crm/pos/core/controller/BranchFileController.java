@@ -1,11 +1,12 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.BranchFileBean;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 /**
@@ -18,18 +19,20 @@ public class BranchFileController {
         BranchFileBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open();
+            mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
-                    + "where Branch_Code='" + branchCode + "'";
+                    + "where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR("BranchFileController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BranchFileController.class);
         }
 
         return bean;
@@ -40,7 +43,7 @@ public class BranchFileController {
         MySQLConnect mysql = new MySQLConnect();
 
         try {
-            mysql.open();
+            mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' "
                     + "and PointCode_Active='Y' "
@@ -48,16 +51,18 @@ public class BranchFileController {
                     + "or PointCode_Type2 <> '' "
                     + "or PointCode_Type3 <> '' "
                     + "or PointCode_Type4 <> '' "
-                    + "or PointCode_Type5 <> '')";
+                    + "or PointCode_Type5 <> '') limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR("BranchFileController:" + e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BranchFileController.class);
         }
 
         return bean;

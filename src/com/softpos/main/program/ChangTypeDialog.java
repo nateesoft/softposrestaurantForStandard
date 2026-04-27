@@ -1,7 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -15,7 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ChangTypeDialog extends javax.swing.JDialog {
@@ -96,16 +97,19 @@ public class ChangTypeDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "update balance set R_ETD='" + R_ETD + "' "
                     + "where R_Index='" + R_Index + "' and R_Table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+                stmt.close();
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+            AppLogUtil.log(ChangTypeDialog.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -212,12 +216,12 @@ public class ChangTypeDialog extends javax.swing.JDialog {
 
     public void bntOKClick() {
         PublicVar.ChangTypeOK = true;
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     public void bntCancelClick() {
         PublicVar.ChangTypeOK = false;
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -239,7 +243,6 @@ public class ChangTypeDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("เปลี่ยนประเภทการขาย");
-        setAlwaysOnTop(true);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusTraversalPolicyProvider(true);
         setUndecorated(true);
@@ -436,7 +439,7 @@ private void bntWholeSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void tblshowpluKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblshowpluKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

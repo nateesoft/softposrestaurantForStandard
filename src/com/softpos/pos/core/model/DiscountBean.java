@@ -18,58 +18,6 @@ public class DiscountBean {
     
     private CuponBean cuponBean = new CuponBean();
 
-    public String getStrFestDiscount() {
-        return strFestDiscount;
-    }
-
-    public void setStrFestDiscount(String strFestDiscount) {
-        this.strFestDiscount = strFestDiscount;
-    }
-
-    public String getStrEmpDiscount() {
-        return strEmpDiscount;
-    }
-
-    public void setStrEmpDiscount(String strEmpDiscount) {
-        this.strEmpDiscount = strEmpDiscount;
-    }
-
-    public String getStrMemDiscount() {
-        return strMemDiscount;
-    }
-
-    public void setStrMemDiscount(String strMemDiscount) {
-        this.strMemDiscount = strMemDiscount;
-    }
-
-    public String getStrTrainDiscount() {
-        return strTrainDiscount;
-    }
-
-    public void setStrTrainDiscount(String strTrainDiscount) {
-        this.strTrainDiscount = strTrainDiscount;
-    }
-
-    public String getStrCuponDiscount() {
-        return strCuponDiscount;
-    }
-
-    public void setStrCuponDiscount(String strCuponDiscount) {
-        this.strCuponDiscount = strCuponDiscount;
-    }
-
-    public double getTotalDiscount() {
-        return festDiscount + empDiscount + memDiscount + trainDiscount + cuponDiscount + bahtDiscount + cuponSpecialDiscount;
-    }
-
-    public double getCuponSpecialDiscount() {
-        return cuponSpecialDiscount;
-    }
-
-    public void setCuponSpecialDiscount(double cuponSpecialDiscount) {
-        this.cuponSpecialDiscount = cuponSpecialDiscount;
-    }
-
     public double getFestDiscount() {
         return festDiscount;
     }
@@ -118,6 +66,54 @@ public class DiscountBean {
         this.bahtDiscount = bahtDiscount;
     }
 
+    public double getCuponSpecialDiscount() {
+        return cuponSpecialDiscount;
+    }
+
+    public void setCuponSpecialDiscount(double cuponSpecialDiscount) {
+        this.cuponSpecialDiscount = cuponSpecialDiscount;
+    }
+
+    public String getStrFestDiscount() {
+        return strFestDiscount;
+    }
+
+    public void setStrFestDiscount(String strFestDiscount) {
+        this.strFestDiscount = strFestDiscount;
+    }
+
+    public String getStrEmpDiscount() {
+        return strEmpDiscount;
+    }
+
+    public void setStrEmpDiscount(String strEmpDiscount) {
+        this.strEmpDiscount = strEmpDiscount;
+    }
+
+    public String getStrMemDiscount() {
+        return strMemDiscount;
+    }
+
+    public void setStrMemDiscount(String strMemDiscount) {
+        this.strMemDiscount = strMemDiscount;
+    }
+
+    public String getStrTrainDiscount() {
+        return strTrainDiscount;
+    }
+
+    public void setStrTrainDiscount(String strTrainDiscount) {
+        this.strTrainDiscount = strTrainDiscount;
+    }
+
+    public String getStrCuponDiscount() {
+        return strCuponDiscount;
+    }
+
+    public void setStrCuponDiscount(String strCuponDiscount) {
+        this.strCuponDiscount = strCuponDiscount;
+    }
+
     public CuponBean getCuponBean() {
         return cuponBean;
     }
@@ -125,5 +121,10 @@ public class DiscountBean {
     public void setCuponBean(CuponBean cuponBean) {
         this.cuponBean = cuponBean;
     }
-
+    
+    
+    
+    public double getTotalDiscount() {
+        return festDiscount + empDiscount + memDiscount + trainDiscount + cuponDiscount + bahtDiscount + cuponSpecialDiscount;
+    }
 }

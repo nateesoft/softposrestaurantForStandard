@@ -1,20 +1,22 @@
 package com.softpos.posreport;
 
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
+import util.AppLogUtil;
+import util.MSG;
 
 public class GiftVoucherRep extends javax.swing.JDialog {
 
@@ -40,7 +42,7 @@ public class GiftVoucherRep extends javax.swing.JDialog {
         txtCashNo1.setText("0000");
         txtCashNo2.setText("9999");
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     @SuppressWarnings("unchecked")
@@ -284,33 +286,29 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
-                        String SqlQuery = "select *from t_gift "
+                        String SqlQuery = "select * from t_gift "
                                 + "where (macno>='" + MacNo1 + "') "
                                 + "and (macno<='" + MacNo2 + "') "
                                 + "and (cashier>='" + CashNo1 + "') "
                                 + "and (cashier<='" + CashNo2 + "') "
                                 + "and (fat<>'V') "
-                                //                                + "and ondate=curdate() "
                                 + "order by giftbarcode";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(rec.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9));
-                                Sumtotal++;
-                                SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(PUtility.DataFullR(rs.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
+                            Sumtotal++;
+                            SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        PUtility.showError(e.getMessage());
+                        MSG.ERR(e.getMessage());
+                        AppLogUtil.log(GiftVoucherRep.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -330,6 +328,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 }
             }
         }
+
         txtMacNo1.requestFocus();
     }
 
@@ -372,7 +371,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select *from t_gift "
@@ -381,24 +380,20 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     + "and (cashier>='" + CashNo1 + "') "
                     + "and (cashier<='" + CashNo2 + "') "
                     + "and (fat<>'V') "
-                    //                    + "and ondate=curdate() "
                     + "order by giftbarcode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFull(rec.getString("giftno"), 27) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rec.getDouble("giftamt")), 9) + "_");
-                    Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rec.getDouble("giftamt");
-                } while (rec.next());
+            ResultSet rs = stmt.executeQuery(SqlQuery);
+            while (rs.next()) {
+                t += "align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFull(rs.getString("giftno"), 27) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9) + "_");
+                Sumtotal++;
+                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
-            rec.close();
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(GiftVoucherRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");
@@ -418,7 +413,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

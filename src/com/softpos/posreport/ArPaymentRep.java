@@ -1,20 +1,22 @@
 package com.softpos.posreport;
 
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.controller.MemmaterController;
+import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import database.MySQLConnect;
-import java.sql.Statement;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.Value;
 import printReport.PrintDriver;
+import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
 
@@ -40,7 +42,7 @@ public class ArPaymentRep extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("001");
 
-        POSHW = POSHWSetup.Bean(Value.getMacno());
+        POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
     /**
@@ -89,14 +91,14 @@ public class ArPaymentRep extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("หมายเลขเครื่อง");
 
-        txtMacNo1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtMacNo1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtMacNo1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtMacNo1KeyPressed(evt);
             }
         });
 
-        txtMacNo2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        txtMacNo2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtMacNo2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtMacNo2KeyPressed(evt);
@@ -228,27 +230,23 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     MySQLConnect mysql = new MySQLConnect();
-                    mysql.open();
+                    mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
                         String SqlQuery = "select * from t_ar "
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFull(rec.getString("arcode"), 4) + "  " + rec.getString("billno") + "  " + ShowDatefmt.format(rec.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rec.getDouble("amount")), 9));
-                                SumAmt = SumAmt + rec.getDouble("amount");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
+                            SumAmt = SumAmt + rs.getDouble("amount");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        
+                        AppLogUtil.log(ArPaymentRep.class, "error", e);
                     }
 
                     prn.print("----------------------------------------");
@@ -264,21 +262,17 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                CntBill++;
-                                SumCash = SumCash + rec.getDouble("cash");
-                                SumCupon = SumCupon + rec.getDouble("cupon");
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            CntBill++;
+                            SumCash = SumCash + rs.getDouble("cash");
+                            SumCupon = SumCupon + rs.getDouble("cupon");
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        
+                        AppLogUtil.log(MemmaterController.class, "error", e);
                     }
                     prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                     prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -288,20 +282,15 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rec.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rec.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rec.getDouble("cramt")), 13));
-
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        
+                        AppLogUtil.log(MemmaterController.class, "error", e);
                     }
 
                     prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -316,20 +305,15 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 + "where (fat='V') "
                                 + "and (terminal>='" + MacNo1 + "') "
                                 + "and (terminal<='" + MacNo2 + "')";
-                        ResultSet rec = stmt.executeQuery(SqlQuery);
-                        rec.first();
-                        if (rec.getRow() == 0) {
-                        } else {
-                            do {
-                                prn.print(rec.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rec.getDouble("stotal")), 9) + "  " + rec.getString("terminal") + "  " + PUtility.DataFull(rec.getString("cashier"), 6) + "  " + PUtility.DataFull(rec.getString("uservoid"), 6));
-
-                            } while (rec.next());
+                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        while (rs.next()) {
+                            prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                         }
-                        rec.close();
+                        rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
-                        
+                        AppLogUtil.log(MemmaterController.class, "error", e);
                     }
 
                     prn.print("----------------------------------------");
@@ -352,11 +336,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int bill = 0;
         int billVoid = 0;
         double billVoidAmt = 0.00;
+
+        MySQLConnect mysql = new MySQLConnect();
         try {
-            MySQLConnect c = new MySQLConnect();
-            c.open();
-            String sql = "select * from billar order by Ref_No,fat;";
-            ResultSet rs = c.getConnection().createStatement().executeQuery(sql);
+            mysql.open(this.getClass());
+
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -387,7 +371,9 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Ar-Code" + Space + "เลขที่ใบเสร็จรับเงิน/วันที่" + Space + "จำนวนเงิน ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
-            if (!rs.wasNull()) {
+            String sql = "select * from billar order by Ref_No,fat limit 1;";
+            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            if (rs.next()) {
                 double total = 0.00;
                 double amount = 0.00;
                 double cash = 0.00;
@@ -421,11 +407,13 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 t += "colspan=2 align=left><font face=Angsana New size=1>" + "เครดิต" + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + DecFmt.format(credit) + "_";
                 t += "colspan=3 align=right><font face=Angsana New size=1>" + "รับชำระ Ar." + TAB + bill + Space + "บิล" + "_";
             }
-            c.close();
-
-        } catch (Exception e) {
+            rs.close();
+        } catch (SQLException e) {
             MSG.NOTICE(e.toString());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
+
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
         for (String data : strs) {
@@ -452,7 +440,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

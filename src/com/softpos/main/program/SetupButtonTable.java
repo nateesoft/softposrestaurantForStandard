@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -10,21 +11,22 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class SetupButtonTable extends javax.swing.JDialog {
 
-    private String codeId;
+    private final String codeId;
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
+    private boolean actionButton = false;
 
     public SetupButtonTable(java.awt.Frame parent, boolean modal, String codeId) {
         super(parent, modal);
         initComponents();
 
         this.codeId = codeId;
-        loadTebleno(codeId);
+        loadTableNo(codeId);
     }
 
     @SuppressWarnings("unchecked")
@@ -185,7 +187,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
-        deleteItem();
+        deleteItem(codeId);
     }//GEN-LAST:event_btnDelActionPerformed
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
@@ -195,7 +197,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtTable.getText().trim().equals("")) {
-                btnSample.setText("<html><center><h3>" + txtTable.getText() + "(0)</h3></center>" + df.format(new Date()) + "</html>");
+                loadAutoText(txtTable.getText());
             } else {
                 btnSample.setText("");
             }
@@ -222,22 +224,25 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private javax.swing.JTextField txtTable;
     // End of variables declaration//GEN-END:variables
 
-    private void deleteItem() {
+    private void deleteItem(String codeId) {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+                stmt.close();
+            }
         } catch (SQLException e) {
-            MSG.WAR(e.getMessage());
-            dispose();
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
+            setActionButton(true);
+            dispose();
         }
     }
 
@@ -246,15 +251,15 @@ public class SetupButtonTable extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String tableNo = txtTable.getText();
-            String ch = "select * from tablefile where tcode='" + tableNo + "'";
+            String ch = "select tcode from tablefile where tcode='" + tableNo + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             try (ResultSet rChk = stmt.executeQuery(ch)) {
                 if (rChk.next()) {
                     String sql = "insert into tablesetup(code_id,tcode) values('" + codeId + "','" + tableNo + "')";
-                    String sqlChk = "select * from tablesetup where code_id='" + tableNo + "'";
+                    String sqlChk = "select code_id from tablesetup where code_id='" + tableNo + "' limit 1";
                     Statement stmt1 = mysql.getConnection().createStatement();
                     ResultSet rs = stmt1.executeQuery(sqlChk);
                     if (rs.next()) {
@@ -272,9 +277,9 @@ public class SetupButtonTable extends javax.swing.JDialog {
                             return;
                         }
                     } else {
-                        Statement stmt3 = mysql.getConnection().createStatement();
-                        stmt3.executeUpdate(sql);
-                        stmt3.close();
+                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                            stmt3.executeUpdate(sql);
+                        }
                         dispose();
                     }
 
@@ -285,21 +290,24 @@ public class SetupButtonTable extends javax.swing.JDialog {
                     txtTable.setText("");
                     txtTable.requestFocus();
                 }
+                rChk.close();
             }
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
+            setActionButton(true);
         }
     }
 
-    private void loadTebleno(String codeid) {
+    private void loadTableNo(String codeid) {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "SELECT TCode FROM tablesetup where code_id = '" + codeid + "'";
             Statement stmt = mysql.getConnection().createStatement();
@@ -307,20 +315,36 @@ public class SetupButtonTable extends javax.swing.JDialog {
             while (rs.next()) {
                 String Tcode = ThaiUtil.ASCII2Unicode(rs.getString("TCode"));
                 if (!Tcode.equals("")) {
+                    loadAutoText(Tcode);
+                    txtTable.setEnabled(false);
                     txtTable.setText(Tcode);
                     txtTable.requestFocus();
                 } else {
+                    txtTable.setEnabled(true);
                     txtTable.setText("");
                     txtTable.requestFocus();
                 }
             }
             rs.close();
             stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
-            ex.printStackTrace();
-        }finally{
-            mysql.close();
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(SetupButtonTable.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
+
+    public boolean isActionButton() {
+        return actionButton;
+    }
+
+    public void setActionButton(boolean actionButton) {
+        this.actionButton = actionButton;
+    }
+
+    private void loadAutoText(String table) {
+        btnSample.setText("<html><center><h3>" + table + "(0)</h3></center>" + df.format(new Date()) + "</html>");
+    }
+
 }

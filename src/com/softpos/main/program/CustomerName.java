@@ -1,11 +1,12 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class CustomerName extends javax.swing.JDialog {
@@ -180,36 +181,38 @@ public class CustomerName extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
                     MSG.ERR("กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
-
                     txtCustomerName.requestFocus();
                 } else {
                     String sql = "UPDATE tablefile SET "
                             + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                             + "WHERE Tcode = '" + TABLE_NO + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                    dispose();
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sql);
+                        stmt.close();
+                    }
                 }
             } else {
                 String sql = "UPDATE tablefile SET "
                         + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                         + "WHERE Tcode = '" + TABLE_NO + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-                dispose();
+                try (Statement stmt = mysql.getConnection().createStatement()) {
+                    stmt.executeUpdate(sql);
+                    stmt.close();
+                }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
+
+        dispose();
     }
 
     private void LoadCustomer() {
@@ -217,9 +220,9 @@ public class CustomerName extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "'";
+            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -228,10 +231,13 @@ public class CustomerName extends javax.swing.JDialog {
             } else {
                 txtCustomerName.setText("");
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

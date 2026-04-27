@@ -1,22 +1,23 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.MSG;
 
 public class FindMember extends javax.swing.JDialog {
@@ -41,7 +42,7 @@ public class FindMember extends javax.swing.JDialog {
 
         JTableHeader header = tblShowMember.getTableHeader();
         header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {80, 120, 250, 100, 100, 120, 100, 100};
         for (int i = 0; i < 8; i++) {
@@ -85,10 +86,10 @@ public class FindMember extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String sql = "select *from memmaster order by m_name";
+            String sql = "select * from " + Value.db_member + ".memmaster order by m_name";
             ResultSet rs = stmt.executeQuery(sql);
             ClearGrid();
 
@@ -117,14 +118,15 @@ public class FindMember extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR_MSG(this, e.getMessage());
+            AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
 
     public void ShowMemberByCode() {
-        int LineCnt = 1;
+        int LineCnt = 0;
         if ((TMemCode.getText().length() == 7) || (TMemCode.getText().length() == 13)) {
             if (TMemCode.getText().length() == 13) {
                 String TempCode = TMemCode.getText();
@@ -136,165 +138,152 @@ public class FindMember extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String LoadTableFile = "select *from memmaster where m_code = '" + TempStr + "' order by m_name";
-                ResultSet rec = stmt.executeQuery(LoadTableFile);
-                Date dt = new Date();
+                String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_code = '" + TempStr + "' order by m_name";
+                ResultSet rs = stmt.executeQuery(LoadTableFile);
                 ClearGrid();
-                rec.first();
-                if (rec.getRow() == 0) {
-                    MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
-                    TMemCode.requestFocus();
-                } else {
-                    do {
-                        String TDate1 = "";
-                        String TDate2 = "";
-                        try {
-                            TDate1 = Datefmtshow.format(rec.getDate("m_end"));
-                            TDate2 = Datefmtshow.format(rec.getDate("m_brid"));
-                        } catch (SQLException e) {
-                        }
-                        try {
-                            Object[] input = {
-                                LineCnt,
-                                rec.getString("m_code"),
-                                rec.getString("m_name"),
-                                rec.getString("m_tel"),
-                                rec.getString("m_mobile"),
-                                rec.getString("m_office"),
-                                TDate1, TDate2
-                            };
-                            model.addRow(input);
-                        } catch (SQLException e) {
-                        }
-                        LineCnt++;
-                    } while (rec.next());
+                while (rs.next()) {
+                    LineCnt++;
+                    String TDate1 = "";
+                    String TDate2 = "";
+                    try {
+                        TDate1 = Datefmtshow.format(rs.getDate("m_end"));
+                        TDate2 = Datefmtshow.format(rs.getDate("m_brid"));
+                    } catch (SQLException e) {
+                    }
+                    Object[] input = {
+                        LineCnt,
+                        rs.getString("m_code"),
+                        rs.getString("m_name"),
+                        rs.getString("m_tel"),
+                        rs.getString("m_mobile"),
+                        rs.getString("m_office"),
+                        TDate1, TDate2
+                    };
+                    model.addRow(input);
                     showCell(0, 0);
                     tblShowMember.requestFocus(true);
-                    //ShowTableLogin.setRowSelectionInterval(0, 0);
+                    if (LineCnt == 0) {
+                        MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                        TMemCode.requestFocus();
+                    }
                 }
-                rec.close();
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
-            }finally{
-                mysql.close();
+                AppLogUtil.log(FindMember.class, "error", e);
+            } finally {
+                mysql.closeConnection(this.getClass());
             }
+
         } else {
-            PUtility.ShowMsg("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
+            MSG.WAR("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
             TMemCode.setText("");
             TMemCode.requestFocus();
         }
     }
 
     public void ShowMemberByName() {
-        int LineCnt = 1;
+        int LineCnt = 0;
         String TempStr = "%" + TMemName.getText() + "%";
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from memmaster where m_name like '" + TempStr + "' order by m_name";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
+            String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_name like '" + TempStr + "' order by m_name";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
-                TMemName.requestFocus();
-            } else {
-                do {
-                    String TDate1 = "";
-                    String TDate2 = "";
-                    try {
-                        TDate1 = Datefmtshow.format(rec.getDate("m_end"));
-                        TDate2 = Datefmtshow.format(rec.getDate("m_brid"));
-                    } catch (SQLException e) {
-                    }
-                    try {
-                        Object[] input = {
-                            LineCnt,
-                            rec.getString("m_code"),
-                            rec.getString("m_name"),
-                            rec.getString("m_tel"),
-                            rec.getString("m_mobile"),
-                            rec.getString("m_office"),
-                            TDate1, TDate2
-                        };
-                        model.addRow(input);
-                    } catch (SQLException e) {
-                    }
-                    LineCnt++;
-                } while (rec.next());
-                showCell(0, 0);
-                tblShowMember.requestFocus(true);
-                //ShowTableLogin.setRowSelectionInterval(0, 0);
+            while (rs.next()) {
+                LineCnt++;
+                String TDate1 = "";
+                String TDate2 = "";
+                try {
+                    TDate1 = Datefmtshow.format(rs.getDate("m_end"));
+                    TDate2 = Datefmtshow.format(rs.getDate("m_brid"));
+                } catch (SQLException e) {
+                }
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    TDate1, TDate2
+                };
+                model.addRow(input);
             }
-            rec.close();
+            if (LineCnt == 0) {
+                MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                TMemName.requestFocus();
+            }
+
+            showCell(0, 0);
+            tblShowMember.requestFocus(true);
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
-            mysql.close();
+            AppLogUtil.log(FindMember.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 
     public void ShowMemberByTel() {
-        int LineCnt = 1;
+        int LineCnt = 0;
         String TempStr = "%" + TMemTel.getText() + "%";
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String LoadTableFile = "select *from memmaster where (m_tel like '" + TempStr + "') or (m_mobile like '" + TempStr + "') or (m_office like '" + TempStr + "') order by m_name";
-            ResultSet rec = stmt.executeQuery(LoadTableFile);
-            Date dt = new Date();
+            String LoadTableFile = "select * from " + Value.db_member + ".memmaster "
+                    + "where (m_tel like '" + TempStr + "') or (m_mobile like '" + TempStr + "') "
+                    + "or (m_office like '" + TempStr + "') order by m_name";
+            ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
-            rec.first();
-            if (rec.getRow() == 0) {
-                MSG.ERR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
-                TMemTel.requestFocus();
-            } else {
-                do {
-                    String TDate1 = "";
-                    String TDate2 = "";
-                    try {
-                        TDate1 = Datefmtshow.format(rec.getDate("m_end"));
-                        TDate2 = Datefmtshow.format(rec.getDate("m_brid"));
-                    } catch (SQLException e) {
-                    }
-                    try {
-                        Object[] input = {
-                            LineCnt,
-                            rec.getString("m_code"),
-                            rec.getString("m_name"),
-                            rec.getString("m_tel"),
-                            rec.getString("m_mobile"),
-                            rec.getString("m_office"),
-                            TDate1, TDate2
-                        };
-                        model.addRow(input);
-                    } catch (SQLException e) {
-                    }
-                    LineCnt++;
-                } while (rec.next());
-                showCell(0, 0);
-                tblShowMember.requestFocus(true);
+            while (rs.next()) {
+                LineCnt++;
+                String TDate1 = "";
+                String TDate2 = "";
+                try {
+                    TDate1 = Datefmtshow.format(rs.getDate("m_end"));
+                    TDate2 = Datefmtshow.format(rs.getDate("m_brid"));
+                } catch (SQLException e) {
+                }
+                Object[] input = {
+                    LineCnt,
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    TDate1, TDate2
+                };
+                model.addRow(input);
             }
-            rec.close();
+            showCell(0, 0);
+            tblShowMember.requestFocus(true);
+            if (LineCnt == 0) {
+                MSG.WAR(this, "ไม่พบข้อมูลสมาชิก ตามที่ต้องการ...");
+                TMemTel.requestFocus();
+            }
+            rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-        }finally{
-            mysql.close();
+            AppLogUtil.log(FindMember.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -470,7 +459,7 @@ public class FindMember extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        tblShowMember.setFont(new java.awt.Font("Norasi", 0, 16)); // NOI18N
+        tblShowMember.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShowMember.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

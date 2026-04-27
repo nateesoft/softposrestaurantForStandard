@@ -1,12 +1,11 @@
 package com.softpos.main.program;
-import com.softpos.pos.core.controller.PluRec;
+import com.softpos.crm.pos.core.modal.PluRec;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -18,15 +17,6 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
     DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     public Jdi_MTDdepReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-          try{         
-            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        }catch(Exception e){
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
         initComponents();
         model = (DefaultTableModel) tblDept.getModel();
         tblDept.setShowGrid(true);        
@@ -53,8 +43,8 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
         tcm.getColumn(3).setCellRenderer(d);
         
         
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));        
-        tblDept.setFont(new java.awt.Font("Norasi" , java.awt.Font.PLAIN ,14));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));        
+        tblDept.setFont(new java.awt.Font("Tahoma" , java.awt.Font.PLAIN ,14));
         tblDept.setRowHeight(25);
         
     }
@@ -111,6 +101,7 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานสรุปการขายตามแผนก (MTD Dept)");
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(252, 192, 239));
@@ -132,7 +123,7 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
         txt2.setFocusable(false);
         txt2.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("ถึง");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -169,7 +160,7 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
         txt6.setFocusable(false);
         txt6.setRequestFocusEnabled(false);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("ถึง");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -243,7 +234,7 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
         );
 
         tblDept.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        tblDept.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblDept.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblDept.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -282,13 +273,13 @@ public class Jdi_MTDdepReport extends javax.swing.JDialog {
 
         txtsumQty.setEditable(false);
         txtsumQty.setBackground(new java.awt.Color(254, 208, 163));
-        txtsumQty.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtsumQty.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtsumQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtsumQty.setText("0.00");
 
         txtsumAmount.setEditable(false);
         txtsumAmount.setBackground(new java.awt.Color(254, 208, 163));
-        txtsumAmount.setFont(new java.awt.Font("Norasi", 1, 16)); // NOI18N
+        txtsumAmount.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         txtsumAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtsumAmount.setText("0.00");
 

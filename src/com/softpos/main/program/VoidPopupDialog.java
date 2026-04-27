@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.awt.Font;
@@ -8,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class VoidPopupDialog extends javax.swing.JDialog {
@@ -186,7 +187,7 @@ public class VoidPopupDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from voidmsg";
             Statement stmt = mysql.getConnection().createStatement();
@@ -201,9 +202,10 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(VoidPopupDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

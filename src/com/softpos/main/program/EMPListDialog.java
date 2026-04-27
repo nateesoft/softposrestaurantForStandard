@@ -1,12 +1,14 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class EMPListDialog extends javax.swing.JDialog {
@@ -164,7 +166,7 @@ public class EMPListDialog extends javax.swing.JDialog {
 
     private void loadEmpList() {
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        tb.setFont(new Font("Norasi", Font.PLAIN, 14));
+        tb.setFont(new Font("Tahoma", Font.PLAIN, 14));
         tb.setRowHeight(25);
         tb.setShowGrid(true);
 
@@ -177,7 +179,7 @@ public class EMPListDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String sql = "select * from employ order by code";
             Statement stmt = mysql.getConnection().createStatement();
@@ -191,10 +193,11 @@ public class EMPListDialog extends javax.swing.JDialog {
 
             rs.close();
             stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-        }finally{
-            mysql.close();
+            AppLogUtil.log(EMPListDialog.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -397,7 +397,6 @@ public class SendSQLToFTP {
 
         } catch (IOException ex) {
             System.out.println("Error: " + ex.getMessage());
-            ex.printStackTrace();
         } finally {
             try {
                 if (ftpClient.isConnected()) {
@@ -405,7 +404,6 @@ public class SendSQLToFTP {
                     ftpClient.disconnect();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
     }

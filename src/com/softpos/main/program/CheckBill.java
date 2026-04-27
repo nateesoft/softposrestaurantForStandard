@@ -1,43 +1,46 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.pos.core.model.TableFileBean;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.discount.DiscountDialog;
+import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.CheckBillController;
+import com.softpos.pos.core.controller.MainSaleController;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.AccrBean;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.BillNoBean;
+import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.CustFileBean;
+import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
-import database.MySQLConnect;
+import com.softpos.pos.core.model.TableFileBean;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
-import soft.virtual.JTableControl;
-import sun.natee.project.util.NumberFormat;
-import sun.natee.project.util.ThaiUtil;
+import util.JTableUtility;
 import util.MSG;
+import util.NumberFormat;
+import util.NumberUtil;
 
 public class CheckBill extends javax.swing.JDialog {
 
@@ -50,12 +53,13 @@ public class CheckBill extends javax.swing.JDialog {
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
     private POSConfigSetup CONFIG;
+    private CheckBillController checkBillControl = new CheckBillController();
 
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
         initComponents();
         DecimalFormat intFM = new DecimalFormat("##0");
-
+        lblTableNo.setText(ThaiUtil.ASCII2Unicode(tableNo));
         setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
         Dimension d = getMaximumSize();
         setSize(1024, 768);
@@ -111,6 +115,7 @@ public class CheckBill extends javax.swing.JDialog {
         jPanel21 = new javax.swing.JPanel();
         Digital_Msg = new javax.swing.JLabel();
         txtTotalAmount = new javax.swing.JLabel();
+        lblTableNo = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         txtCashAmount = new javax.swing.JTextField();
         bntCash = new javax.swing.JButton();
@@ -340,24 +345,35 @@ public class CheckBill extends javax.swing.JDialog {
         txtTotalAmount.setText("0.00");
         txtTotalAmount.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
+        lblTableNo.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTableNo.setForeground(new java.awt.Color(255, 255, 255));
+        lblTableNo.setText("jLabel13");
+
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
         jPanel21Layout.setHorizontalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(Digital_Msg, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(lblTableNo, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Digital_Msg)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTotalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
         );
         jPanel21Layout.setVerticalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(Digital_Msg, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                .addContainerGap())
             .addComponent(txtTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblTableNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(Digital_Msg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
@@ -499,7 +515,7 @@ public class CheckBill extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(44, 44, 44)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addGap(45, 45, 45))
         );
@@ -525,21 +541,21 @@ public class CheckBill extends javax.swing.JDialog {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(130, 130, 130)
-                                .addComponent(txtCreditTrackNo, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreditNo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCredit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtCreditName)
-                            .addComponent(txtCreditAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(130, 130, 130)
+                        .addComponent(txtCreditTrackNo, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCreditNo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCredit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCreditName)
+                    .addComponent(txtCreditAmount))
+                .addGap(10, 10, 10))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -548,7 +564,7 @@ public class CheckBill extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtCreditName, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(btnCredit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1076,9 +1092,8 @@ public class CheckBill extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bntPrintCheckBill1.setBackground(new java.awt.Color(204, 51, 0));
+        bntPrintCheckBill1.setBackground(new java.awt.Color(204, 204, 204));
         bntPrintCheckBill1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntPrintCheckBill1.setForeground(new java.awt.Color(255, 255, 255));
         bntPrintCheckBill1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
         bntPrintCheckBill1.setText("พิมพ์ตรวจสอบ TH");
         bntPrintCheckBill1.setFocusable(false);
@@ -1154,9 +1169,8 @@ public class CheckBill extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        bntPrintCheckBill2.setBackground(new java.awt.Color(255, 51, 51));
+        bntPrintCheckBill2.setBackground(new java.awt.Color(204, 204, 204));
         bntPrintCheckBill2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntPrintCheckBill2.setForeground(new java.awt.Color(255, 255, 255));
         bntPrintCheckBill2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
         bntPrintCheckBill2.setText("พิมพ์ตรวจสอบ EN");
         bntPrintCheckBill2.setFocusable(false);
@@ -1174,50 +1188,54 @@ public class CheckBill extends javax.swing.JDialog {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(bntPrintCheckBill, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(850, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(83, 83, 83)
+                        .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtBillNo))
+                            .addComponent(jPanel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(bntPrintCheckBill1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bntPrintCheckBill2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanelDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(83, 83, 83)
-                                .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtBillNo))
-                                    .addComponent(jPanel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jPanelMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addComponent(bntPrintCheckBill1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(bntPrintCheckBill2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(panelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                                            .addComponent(btnDiscountAll)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtDiscountAmount))
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addComponent(bntPrintCheckBill, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanelDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(panelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(btnDiscountAll)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtDiscountAmount))
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(10, 10, 10))))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1227,23 +1245,17 @@ public class CheckBill extends javax.swing.JDialog {
                                 .addComponent(txtBillNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel6)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(bntPrintCheckBill1)
-                            .addComponent(bntPrintCheckBill2))
-                        .addGap(117, 117, 117)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(bntPrintCheckBill, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(jPanelDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(bntPrintCheckBill2)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1253,7 +1265,13 @@ public class CheckBill extends javax.swing.JDialog {
                             .addComponent(btnDiscountAll, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDiscountAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(panelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(117, 117, 117)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(bntPrintCheckBill, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(89, 89, 89)
+                .addComponent(lbArName, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1261,7 +1279,9 @@ public class CheckBill extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1275,27 +1295,24 @@ public class CheckBill extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDiscountAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiscountAllActionPerformed
-        try {
-            backupTempBalnace();
-            double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
-            DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
-                    txtMember1.getText(), txtMember2.getText());
-            dd.setVisible(true);
-            if (dd.getDiscountBean() != null) {
-                discBean = dd.getDiscountBean();
-                txtDiscountAmount.setText("" + discBean.getTotalDiscount());
-                loadTableBill();
-            } else {
-                restoreTempBalance();
-            }
-            LoadDisc();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+        backupTempBalnace();
+        double totalAmount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
+        DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
+                txtMember1.getText(), txtMember2.getText(), tBean.getServiceAmt());
+        dd.setVisible(true);
+        if (dd.getDiscountBean() != null) {
+            discBean = dd.getDiscountBean();
+            txtDiscountAmount.setText("" + discBean.getTotalDiscount());
+            loadTableBill();
+        } else {
+            restoreTempBalance();
         }
+        LoadDisc();
     }//GEN-LAST:event_btnDiscountAllActionPerformed
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
-        kichenPrintAfterPrintCheck();
+        kichenPrint();
+//        kichenPrintAfterPrintCheck();
         printBillCheck();
     }//GEN-LAST:event_bntPrintCheckBillActionPerformed
 
@@ -1303,7 +1320,7 @@ public class CheckBill extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnAcceptActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtCashAmountKeyPressed
 
@@ -1317,7 +1334,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         clearTempGift();
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void txtCreditNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreditNoKeyPressed
@@ -1332,9 +1349,9 @@ public class CheckBill extends javax.swing.JDialog {
                     txtCreditTrackNo.requestFocus();
                 }
             } else {
-                new Thread(() -> {
-                    processEDC();
-                }).start();
+//                new Thread(() -> {
+                processEDC();
+//                }).start();
             }
         }
     }//GEN-LAST:event_txtCreditNoKeyPressed
@@ -1471,7 +1488,7 @@ public class CheckBill extends javax.swing.JDialog {
                         amount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
                         amount = amount + (amount * (CreditCharge) / 100);
                         if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                            txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(amount)));
+                            txtTotalAmount.setText(dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(amount)));
                         } else {
                             txtTotalAmount.setText(dec.format((amount)));
                         }
@@ -1565,6 +1582,7 @@ public class CheckBill extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCreditAmountMouseClicked
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        PublicVar.countRound = 0;
         if (!txtCreditName.getText().equals("") && txtCreditNo.getText().equals("") && txtCreditTrackNo.getText().equals("")) {
             MSG.WAR("Credit Cannot Be Blank:");
             return;
@@ -1573,24 +1591,16 @@ public class CheckBill extends javax.swing.JDialog {
             txtCreditTrackNo.requestFocus();
             return;
         }
-        new Thread(() -> {
-            String sql = "select * from balance where r_table='" + tableNo + "' and r_type='1'";
-            MySQLConnect mysql = new MySQLConnect();
-            try {
-                mysql.open();
-                final ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-                boolean isTakeOrder = isTakeOrder();
-                if (rs.next() && isTakeOrder == true) {
-                    MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
-                } else {
-                    checkBillOK();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-            } finally {
-                mysql.close();
-            }
-        }).start();
+//        new Thread(() -> {
+        BalanceBean balanceBean = null;
+        balanceBean = checkBillControl.getBalanceByTableNo(tableNo);
+        boolean isTakeOrder = isTakeOrder();
+        if (balanceBean != null && isTakeOrder == true) {
+            MSG.WAR("Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
+        } else {
+            checkBillOK();
+        }
+//        }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void txtCreditTrackNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditTrackNoActionPerformed
@@ -1632,7 +1642,7 @@ public class CheckBill extends javax.swing.JDialog {
         MemberDialog MBD = new MemberDialog(this, true, tableNo);
         MBD.setVisible(true);
         try {
-            this.memberBean = MemberBean.getMember(MBD.getMemCode());
+            this.memberBean = MemmaterController.getMember(MBD.getMemCode());
             updateProSerTable(tableNo, memberBean);
             if (memberBean != null) {
                 txtMember1.setText(memberBean.getMember_NameThai());
@@ -1642,7 +1652,7 @@ public class CheckBill extends javax.swing.JDialog {
                 txtMember2.setText("แต้มสะสม : " + "0.00" + " แต้ม");
             }
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
         loadTableBill();
         LoadDisc();
@@ -1650,13 +1660,15 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void bntPrintCheckBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBill1ActionPerformed
         PublicVar.languagePrint = "TH";
-        kichenPrintAfterPrintCheck();
+        kichenPrint();
+//        kichenPrintAfterPrintCheck();
         printBillCheck();
     }//GEN-LAST:event_bntPrintCheckBill1ActionPerformed
 
     private void bntPrintCheckBill2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBill2ActionPerformed
         PublicVar.languagePrint = "EN";
-        kichenPrintAfterPrintCheck();
+        kichenPrint();
+//        kichenPrintAfterPrintCheck();
         printBillCheck();
     }//GEN-LAST:event_bntPrintCheckBill2ActionPerformed
 
@@ -1803,6 +1815,7 @@ public class CheckBill extends javax.swing.JDialog {
     private javax.swing.JLabel lbCredit;
     private javax.swing.JLabel lbCreditAmt;
     private javax.swing.JLabel lbCreditMoney;
+    private javax.swing.JLabel lblTableNo;
     private javax.swing.JPanel panelNumber;
     private javax.swing.JTable tblShowBalance;
     private javax.swing.JTextField txtArAmount;
@@ -1832,9 +1845,9 @@ public class CheckBill extends javax.swing.JDialog {
         tblShowBalance.setGridColor(Color.gray);
         tblShowBalance.setRowHeight(35);
 
-        JTableControl.alignColumn(tblShowBalance, 2, "right");
-        JTableControl.alignColumn(tblShowBalance, 3, "right");
-        JTableControl.alignColumn(tblShowBalance, 4, "right");
+        JTableUtility.alignColumn(tblShowBalance, 2, "right");
+        JTableUtility.alignColumn(tblShowBalance, 3, "right");
+        JTableUtility.alignColumn(tblShowBalance, 4, "right");
 
         JTableHeader header = tblShowBalance.getTableHeader();
         header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 14));
@@ -1856,19 +1869,19 @@ public class CheckBill extends javax.swing.JDialog {
                 + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
                 + tBean.getSubDiscAmt() + tBean.getDiscBath() + tBean.getItemDiscAmt();
         txtTotalCash.setText(dec.format(tBean.getTAmount() - totalDiscount));
-        txtBillNo.setText(BillControl.getBillIDCurrent());
+        txtBillNo.setText("WAIT");
 
         POSConfigSetup config = PosControl.getData();
         BalanceControl bc = new BalanceControl();
         double NetTotalUpDown = 0;
         if (!config.getP_PayBahtRound().equals("O")) {
-            NetTotalUpDown = NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal() - totalDiscount);
+            NetTotalUpDown = NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal() - totalDiscount);
         } else {
             NetTotalUpDown = tBean.getNetTotal() - totalDiscount;
         }
         if (config.getP_VatType().equals("I")) {
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                txtTotalAmount.setText(dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal())));
+                txtTotalAmount.setText(dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal())));
             } else {
                 txtTotalAmount.setText(dec.format((tBean.getNetTotal())));
             }
@@ -1878,7 +1891,7 @@ public class CheckBill extends javax.swing.JDialog {
             double vat = 0;
             vat = (NetTotalUpDown * 7 / 100);
             NetTotalUpDown = NetTotalUpDown + vat;
-            txtTotalAmount.setText((dec.format(NumberControl.UP_DOWN_NATURAL_BAHT(NetTotalUpDown))));
+            txtTotalAmount.setText((dec.format(NumberUtil.UP_DOWN_NATURAL_BAHT(NetTotalUpDown))));
         }
 
         int size = model.getRowCount();
@@ -1888,10 +1901,11 @@ public class CheckBill extends javax.swing.JDialog {
 
         //ถ้า posconfig PrintSum=Y พิมพืใบเสร็จเป็นยอดรวม
         if (config.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
+//            List<BalanceBean> listBean = bc.getAllBalanceSum(tableNo);
+            List<BalanceBean> listBean = bc.getAllBalanceNoVoidSum(tableNo);
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
-                if (!bean.getR_Void().equals("V")) {
+                if (!"V".equals(bean.getR_Void())) {
                     model.addRow(new Object[]{
                         bean.getR_PluCode(), bean.getR_PName(),
                         dec.format(bean.getR_Quan()), dec.format(bean.getR_Price()), dec.format(bean.getR_Total())
@@ -1937,7 +1951,6 @@ public class CheckBill extends javax.swing.JDialog {
         double tmpNetTotal;
         double totalDiscount = Double.parseDouble(txtDiscountAmount.getText().replace(",", ""));
         double totalItemDisc = Double.parseDouble(txtItemDisc.getText().replace(",", ""));
-
         POSConfigSetup config = PosControl.getData();
         double netTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         if (config.getP_VatType().equals("I")) {
@@ -1949,7 +1962,7 @@ public class CheckBill extends javax.swing.JDialog {
         }
         tmpNetTotal = Double.parseDouble(DecFmt.format(tBean.getNetTotal()));
         if (!config.getP_PayBahtRound().equals("O")) {
-            netTotal = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal);
+            netTotal = NumberUtil.UP_DOWN_NATURAL_BAHT(netTotal);
         } else {
             netTotal = (netTotal);
         }
@@ -1972,12 +1985,12 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
         double totalPayment = returnMoney + returnGift + returnCash;
-        if (totalPayment >= netTotal) {
+        if (totalPayment >= (netTotal)) {
             Digital_Msg.setText("เงินทอน");
             double ton;
 
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
-                ton = NumberControl.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
+                ton = NumberUtil.UP_DOWN_NATURAL_BAHT(netTotal) - totalPayment;
             } else {
                 ton = netTotal - totalPayment;
             }
@@ -2014,7 +2027,8 @@ public class CheckBill extends javax.swing.JDialog {
             } else {
                 billBean.setB_NetDiff(tmpNetTotal - netTotal);
             }
-            billBean.setB_Total(netTotal);
+//            billBean.setB_Total(netTotal);
+            billBean.setB_Total(billBean.getB_Food() + billBean.getB_Drink() + billBean.getB_Product());
             billBean.setB_Cash(returnCash - ton);
 
             billBean.setB_ItemDiscAmt(totalItemDisc);
@@ -2057,12 +2071,18 @@ public class CheckBill extends javax.swing.JDialog {
             }
             BillControl billControl = new BillControl();
             PublicVar.SubTotalOK = true;
-            billControl.saveBillNo(tableNo, billBean);
+            String billNoRef = billControl.saveBillNo(tableNo, billBean);
+            txtBillNo.setText(billNoRef);
+
             //clear tempset
             clearTempSet(tableNo);
             lockScreen1(false);
             UpdateMember("Del");
             txtCashAmount.setEnabled(false);
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
+            }
             return;
         }
         if (saveCredit == netTotal || saveAR == netTotal || (saveCredit + returnCash) == netTotal
@@ -2141,9 +2161,18 @@ public class CheckBill extends javax.swing.JDialog {
                 }
             }
             billControl.saveBillNo(tableNo, billBean);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CheckBill.class.getName()).log(Level.SEVERE, null, ex);
+            }
             Value.MemberAlready = false;
             lockScreen1(false);
             UpdateMember("Del");
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
+            }
             return;
         }
 
@@ -2153,12 +2182,16 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void printBillCheck() {
-        PPrint print = new PPrint();
-        if (Value.useprint) {
-            print.PrintCheckBill(tableNo);
-        } else {
-            print.printCheckBillDriver(tableNo);
-        }
+        new Thread(new Runnable() {
+            public void run() {
+                PPrint print = new PPrint();
+                if (Value.useprint && Value.printdriver == false) {
+                    print.PrintCheckBill(tableNo);
+                } else {
+                    print.printCheckBillDriver(tableNo);
+                }
+            }
+        }).start();
     }
 
     private void lockScreen1(boolean b) {
@@ -2190,54 +2223,29 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void arCodeExits() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select sp_desc,sp_cr,sp_cramt "
-                    + "from custfile "
-                    + "where sp_code='" + txtArCode.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                lbArName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
-                lbCredit.setText("" + rs.getInt("sp_cr"));
-                lbCreditMoney.setText("" + rs.getDouble("sp_cramt"));
-                try {
-                    String sql2 = "select sum(aramount) total "
-                            + "from accr "
-                            + "where arcode='" + txtArCode.getText() + "' "
-                            + "group by arcode";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    ResultSet rs2 = stmt2.executeQuery(sql2);
-                    if (rs2.next()) {
-                        lbCreditAmt.setText("" + rs2.getDouble("total"));
-                    } else {
-                        lbCreditAmt.setText("0.00");
-                    }
+        CustFileBean custFileBean = checkBillControl.getCustFileBySpCode(txtArCode.getText());
+        if (custFileBean != null) {
+            lbArName.setText(custFileBean.getSp_desc());
+            lbCredit.setText("" + custFileBean.getSp_cr());
+            lbCreditMoney.setText("" + custFileBean.getSp_cramt());
 
-                    rs2.close();
-                    stmt2.close();
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-                }
-                txtArAmount.setFocusable(true);
-                txtArAmount.setText(txtTotalAmount.getText());
-                txtArAmount.requestFocus();
-                txtArAmount.selectAll();
+            AccrBean accrBean = checkBillControl.getTotalAccrByArCode(txtArCode.getText());
+            if (accrBean != null) {
+                lbCreditAmt.setText("" + accrBean.getTotal());
             } else {
-                //แจ้งเตือนให้เพิ่มลูกค้าเพื่อเป็นหนี้ใหม่
-                int confirm = JOptionPane.showConfirmDialog(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
-                if (confirm == JOptionPane.YES_OPTION) {
-                    AddNewArCustomer addNew = new AddNewArCustomer(null, true);
-                    addNew.setVisible(true);
-                }
+                lbCreditAmt.setText("0.00");
             }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+            txtArAmount.setFocusable(true);
+            txtArAmount.setText(txtTotalAmount.getText());
+            txtArAmount.requestFocus();
+            txtArAmount.selectAll();
+        } else {
+            //แจ้งเตือนให้เพิ่มลูกค้าเพื่อเป็นหนี้ใหม่
+            int confirm = JOptionPane.showConfirmDialog(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
+            if (confirm == JOptionPane.YES_OPTION) {
+                AddNewArCustomer addNew = new AddNewArCustomer(null, true);
+                addNew.setVisible(true);
+            }
         }
     }
 
@@ -2264,40 +2272,16 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void LoadDisc() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String query = "select sum(FastDiscAmt+EmpDiscAmt+MemDiscAmt+TrainDiscAmt+SubDiscAmt+DiscBath+CuponDiscAmt) AAA from tablefile where Tcode = '" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            if (rs.next()) {
-                String DiscTotal = ThaiUtil.ASCII2Unicode(rs.getString("AAA"));
-                txtDiscountAmount.setText(DiscTotal);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException ex) {
-            MSG.ERR(ex.getMessage());
-        } finally {
-            mysql.close();
+        TableFileBean tableFileBean = checkBillControl.loadDiscByTableNo(tableNo);
+        if (tableFileBean != null) {
+            txtDiscountAmount.setText("" + tableFileBean.getTAmount());
         }
-
     }
 
     private void clearTempSet(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "delete from tempset "
-                    + "where PTableNo='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        String sql = "delete from tempset "
+                + "where PTableNo='" + tableNo + "'";
+        checkBillControl.execUpdate(sql);
     }
 
     private void checkBillOK() {
@@ -2321,70 +2305,33 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
         if (PublicVar.SubTotalOK) {
-            dispose();
+            this.setVisible(false);//dispose();
             jPanel6.setVisible(false);
             return;
         }
 
-        new Thread(() -> {
-            checkBillPayment();
-        }).start();
+        checkBillPayment();
     }
 
-    private void backupTempBalnace() throws SQLException {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+    private void backupTempBalnace() {
         String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
         String sql2 = "insert ignore into temp_balance select * from balance "
                 + "where r_table='" + tableNo + "' order by r_index";
-        try (Statement stmt = mysql.getConnection().createStatement()) {
-            stmt.executeUpdate(sql1);
-            stmt.executeUpdate(sql2);
-        }
-        mysql.close();
+        checkBillControl.execUpdate(sql1);
+        checkBillControl.execUpdate(sql2);
     }
 
     private void restoreTempBalance() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "select * from temp_balance where r_table ='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                try {
-                    String sql1 = "delete from balance where r_table='" + tableNo + "'";
-                    String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
-                    Statement stmt2 = mysql.getConnection().createStatement();
-                    stmt2.executeUpdate(sql1);
-                    stmt2.executeUpdate(sql2);
-                    stmt2.close();
-                } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
-
-                }
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+        if (checkBillControl.restoreTempBalance(tableNo)) {
+            String sql1 = "delete from balance where r_table='" + tableNo + "'";
+            String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
+            checkBillControl.execUpdate(sql1);
+            checkBillControl.execUpdate(sql2);
         }
-
     }
 
     private void clearTempGift() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
-        try {
-            String sql = "delete from tempgift";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
-        }
+        checkBillControl.execUpdate("delete from tempgift");
     }
 
     private boolean checkStatusCreditData() {
@@ -2404,163 +2351,148 @@ public class CheckBill extends javax.swing.JDialog {
         }
     }
 
-    private void kichenPrintAfterPrintCheck() {
-        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-        try {
-            String printerName;
-            String[] kicMaster = BranchControl.getKicData20();
-            // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-            String sqlShowKic = "select r_kic from balance "
-                    + "where r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "group by r_kic "
-                    + "order by r_kic";
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
-            try {
-                Statement stmt1 = mysql.getConnection().createStatement();
-                ResultSet rsKic = stmt1.executeQuery(sqlShowKic);
-                while (rsKic.next()) {
-                    String rKic = rsKic.getString("r_kic");
-                    if (!rKic.equals("")) {
-                        try {
-                            int iKic = Integer.parseInt(rKic);
-                            if (iKic - 1 < 0) {
-                                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
-                            } else {
-                                if (kicMaster[iKic - 1].equals("N")) {
-                                    //NOT PRINT or Print already
-                                } else {
-                                    printerName = "KIC" + rKic;
-                                    String printerForm = BranchControl.getForm(rKic);
-                                    if (printerForm.equals("1") || printerForm.equals("2")) {
-                                        String sql1 = "select * from balance "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_Void <> 'V' "
-                                                + "group by r_plucode";
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs1 = stmt2.executeQuery(sql1);
-                                        while (rs1.next()) {
-                                            String PCode = rs1.getString("R_PluCode");
-                                            if (printerForm.equals("1")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-                                                }
-                                            } else if (printerForm.equals("2")) {
-                                                if (Value.printkic) {
-                                                    printSimpleForm.KIC_FORM_2(printerName, tableNo, new String[]{PCode});
-                                                }
-                                            }
-                                        }
-
-                                        rs1.close();
-                                        stmt2.close();
-                                    } else if (printerForm.equals("6")) {
-                                        String sql2 = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
-                                                + "where r_table='" + tableNo + "' "
-                                                + "and R_PrintOK='Y' "
-                                                + "and R_KicPrint<>'P' "
-                                                + "and R_Kic<>'' "
-                                                + "and R_Void<>'V' and R_KIC='" + rKic + "' "
-                                                + "group by r_plucode order by r_opt1";
-                                        Statement stmt2 = mysql.getConnection().createStatement();
-                                        ResultSet rs2 = stmt2.executeQuery(sql2);
-                                        while (rs2.next()) {
-                                            if (Value.printkic) {
-
-                                                String R_Index = rs2.getString("R_Index");
-                                                String R_Plucode = rs2.getString("R_Plucode");
-                                                double qty = rs2.getDouble("R_Quan");
-                                                double priceTotal = rs2.getDouble("Total");
-                                                printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_Plucode, qty, priceTotal);
-                                            }
-                                        }
-
-                                        rs2.close();
-                                        stmt2.close();
-                                    } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
-                                        if (printerForm.equals("3")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_3("", printerName, tableNo, iKic);
-                                            }
-                                        } else if (printerForm.equals("4")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_4(printerName, tableNo);
-                                            }
-                                        } else if (printerForm.equals("5")) {
-                                            if (Value.printkic) {
-                                                printSimpleForm.KIC_FORM_5(printerName, tableNo);
-                                            }
-                                        }
-                                    } else {
-                                        MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ในระบบที่สามารใช้งานได้ !!!");
-                                    }
-                                }
-                            }
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
-                        }
-                    }
-                }
-
-                rsKic.close();
-                stmt1.close();
-
-                //update r_kicprint
-                try {
-                    String sql = "update balance "
-                            + "set r_kicprint='P',"
-                            + "r_pause='Y' "
-                            + "where r_table='" + tableNo + "' "
-                            + "and r_kicprint<>'P' "
-                            + "and r_printOk='Y' "
-                            + "and r_kic<>'';";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                }
-            } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
-            } finally {
-                mysql.close();
-            }
-        } catch (HeadlessException e) {
-            MSG.ERR(null, e.getMessage());
-        }
-    }
-
     private boolean isTakeOrder() {
         POSHWSetup posHwSetup = PosControl.getData(Value.MACNO);
         return "Y".equals(posHwSetup.getTakeOrderChk());
     }
 
     public void UpdateMember(String choice) {
-        MySQLConnect mysql = new MySQLConnect();
-        try {
-            mysql.open();
-            String sql = "";
-            if (choice.equals("Ins")) {
-            } else {
-                sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
+        String sql = "";
+        if (choice.equals("Ins")) {
+        } else {
+            sql = "Update tablefile "
+                    + "set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount "
+                    + "where tcode='" + tableNo + "'";
+        }
+        switch (choice) {
+            case "Ins":
+                checkBillControl.execUpdate(sql);
+                break;
+            case "Del":
+                checkBillControl.execUpdate(sql);
+                break;
+        }
+    }
+
+    private void kichenPrint() {
+        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
+        String printerName;
+        String[] kicMaster = BranchControl.getKicData20();
+
+        BranchBean branchBean = BranchControl.getData();
+        String config = branchBean.getSaveOrder();
+        if (!config.equals("N")) {
+            PublicVar.Branch_Saveorder = config;
+        }
+
+        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        MainSaleController mainSaleControl = new MainSaleController();
+        if (mainSaleControl.checkCountPrinterTo(tableNo)) {
+            if (!PublicVar.Branch_Saveorder.equals("N")) {
+                printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
             }
-            switch (choice) {
-                case "Ins":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
-                    break;
-                case "Del":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
-                    break;
+        }
+
+        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
+        List<BalanceBean> listToKic = mainSaleControl.getListAllPrintToKic(tableNo);
+        for (BalanceBean balanceBean : listToKic) {
+            String rKic = balanceBean.getR_Kic();
+            if (!rKic.equals("")) {
+                int iKic = Integer.parseInt(rKic);
+                if (iKic - 1 < 0) {
+                    //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                } else {
+                    if (kicMaster[iKic - 1].equals("N")) {
+                        //NOT PRINT or Print already
+                    } else {
+                        printerName = "kic" + rKic;
+                        String printerForm = BranchControl.getForm(rKic);
+                        if (printerForm.equals("1")) {
+                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic);
+                            printerName = "kic" + rKic;
+                            for (BalanceBean balance : listBalanceForm) {
+                                String PCode = balance.getR_PluCode();
+                                if (printerForm.equals("1")) {
+                                    if (Value.printkic) {
+                                        printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
+                                    }
+                                }
+                            }
+                        } else if (printerForm.equals("6")) {
+                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(tableNo, rKic);
+                            for (BalanceBean balance : listBalanceForm) {
+                                if (Value.printkic) {
+                                    String R_Index = balance.getR_Index();
+                                    String R_PLUCODE = balance.getR_PluCode();
+                                    double qty = balance.getR_Quan();
+                                    double priceTotal = balance.getR_Total();
+                                    printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_PLUCODE, qty, priceTotal);
+                                }
+                            }
+                        } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
+                            if (printerForm.equals("3")) {
+                                if (Value.printkic) {
+                                    String retd = balanceBean.getR_ETD();
+                                    printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+                                    String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                                    if (CheckBillBeforeCash.equals("Y")) {
+                                        printBillVoidCheck();
+                                    }
+                                }
+                            } else if (printerForm.equals("4")) {
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_4(printerName, tableNo);
+                                    printBillVoidCheck();
+                                }
+                            } else if (printerForm.equals("5")) {
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_5(printerName, tableNo);
+                                    printBillVoidCheck();
+                                }
+                            }
+
+                        } else if (printerForm.equals("7") || printerForm.equals("2")) {
+                            if (Value.printkic) {
+                                printSimpleForm.KIC_FORM_7(printerName, tableNo);
+                                printBillVoidCheck();
+                            }
+                        } else {
+                            printBillVoidCheck();
+                            MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+                        }
+                    }
+                }
             }
-        } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
-        } finally {
-            mysql.close();
+        }
+
+        CheckKicPrint();
+
+        //update r_kicprint
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + tableNo + "' "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'';";
+        checkBillControl.execUpdate(sql);
+    }
+
+    private void CheckKicPrint() {
+        if (checkBillControl.readyToCheckKic(tableNo)) {
+            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+            if (CheckBillBeforeCash.equals("Y")) {
+                printBillVoidCheck();
+            }
+        }
+    }
+
+    private void printBillVoidCheck() {
+        if (Value.useprint) {
+            if (checkBillControl.readyToPrintVoid(tableNo)) {
+                PPrint print = new PPrint();
+                print.PrintVoidBill(tableNo);
+            }
         }
     }
 

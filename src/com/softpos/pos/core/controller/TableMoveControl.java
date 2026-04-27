@@ -1,14 +1,14 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import util.AppLogUtil;
+import util.MSG;
 
 public class TableMoveControl {
 
@@ -16,7 +16,7 @@ public class TableMoveControl {
 
     private static void updateRLinkIndex(String tableDest) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(TableMoveControl.class);
         try {
             String sql1 = "select R_SPIndex,R_LinkIndex,R_MoveFrom "
                     + "from balance where r_table='" + tableDest + "' "
@@ -35,15 +35,15 @@ public class TableMoveControl {
                         + "and r_movefrom<>'' "
                         + "and r_table='" + tableDest + "'";
                 stmt1.executeUpdate(sql2);
-
                 stmt1.close();
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(TableMoveControl.class);
         }
     }
 

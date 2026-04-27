@@ -1,10 +1,11 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
-import java.awt.Color;
 import database.MySQLConnect;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import soft.virtual.KeyBoardDialog;
-import sun.natee.project.util.ThaiUtil;
+import util.AppLogUtil;
 import util.MSG;
 
 public class OptionMsg extends javax.swing.JDialog {
@@ -104,31 +105,31 @@ public class OptionMsg extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String LoadOption = "select *from optionfile where pgroup='" + bean.getR_Group() + "'";
-            ResultSet rec = stmt.executeQuery(LoadOption);
-            //Clear tblOptionMsg       
-            int RowCount = model1.getRowCount();
-            for (int i = 0; i <= RowCount - 1; i++) {
-                model1.removeRow(0);
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String LoadOption = "select * from optionfile where pgroup='" + bean.getR_Group() + "'";
+                //Clear tblOptionMsg
+                try (ResultSet rs = stmt.executeQuery(LoadOption)) {
+                    //Clear tblOptionMsg
+                    int RowCount = model1.getRowCount();
+                    for (int i = 0; i <= RowCount - 1; i++) {
+                        model1.removeRow(0);
+                    }
+                    while(rs.next()){
+                        Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
+                        model1.addRow(input);
+                        showCell1(0, 0);
+                    }
+                    rs.close();
+                    stmt.close();
+                }
             }
-            rec.first();
-            if (rec.getRow() == 0) {
-            } else {
-                do {
-                    Object[] input = {ThaiUtil.ASCII2Unicode(rec.getString("optionname"))};
-                    model1.addRow(input);
-                } while (rec.next());
-                showCell1(0, 0);
-            }
-            rec.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -160,20 +161,6 @@ public class OptionMsg extends javax.swing.JDialog {
     }
 
     public void InputMsgToSelectedTable(String dataOpt) {
-//        boolean inputData = false;
-//        for (int i = 0; i < 8; i++) {
-//            if (!inputData) {
-//                if (!OptionArray[i].equals(dataOpt)) {
-//                    if (OptionArray[i].equals("")) {
-//                        OptionArray[i] = dataOpt;
-//                        inputData = true;
-//                    }
-//                } else {
-//                    inputData = true;
-//                }
-//            }
-//        }
-
         LoadOptionArray();
     }
 
@@ -193,38 +180,40 @@ public class OptionMsg extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String[] opt = new String[]{"", "", "", "", "", "", "", ""};
-            BalanceBean bBean = new BalanceBean();
-            bBean.setR_Index(index);
-            bBean.setR_Table(tableNo);
-
-            for (int i = 0; i < model2.getRowCount(); i++) {
-                opt[i] = model2.getValueAt(i, 0).toString();
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                String[] opt = new String[]{"", "", "", "", "", "", "", ""};
+                BalanceBean bBean = new BalanceBean();
+                bBean.setR_Index(index);
+                bBean.setR_Table(tableNo);
+                
+                for (int i = 0; i < model2.getRowCount(); i++) {
+                    opt[i] = model2.getValueAt(i, 0).toString();
+                }
+                
+                String SqlQuery = "update balance set "
+                        + "r_opt1='" + ThaiUtil.Unicode2ASCII(opt[0]) + "',"
+                        + "r_opt2='" + ThaiUtil.Unicode2ASCII(opt[1]) + "',"
+                        + "r_opt3='" + ThaiUtil.Unicode2ASCII(opt[2]) + "',"
+                        + "r_opt4='" + ThaiUtil.Unicode2ASCII(opt[3]) + "',"
+                        + "r_opt5='" + ThaiUtil.Unicode2ASCII(opt[4]) + "',"
+                        + "r_opt6='" + ThaiUtil.Unicode2ASCII(opt[5]) + "',"
+                        + "r_opt7='" + ThaiUtil.Unicode2ASCII(opt[6]) + "',"
+                        + "r_opt8='" + ThaiUtil.Unicode2ASCII(opt[7]) + "' "
+                        + "where r_index='" + index + "' "
+                        + "and r_table='" + tableNo + "'";
+                stmt.executeUpdate(SqlQuery);
+                stmt.close();
             }
-
-            String SqlQuery = "update balance set "
-                    + "r_opt1='" + ThaiUtil.Unicode2ASCII(opt[0]) + "',"
-                    + "r_opt2='" + ThaiUtil.Unicode2ASCII(opt[1]) + "',"
-                    + "r_opt3='" + ThaiUtil.Unicode2ASCII(opt[2]) + "',"
-                    + "r_opt4='" + ThaiUtil.Unicode2ASCII(opt[3]) + "',"
-                    + "r_opt5='" + ThaiUtil.Unicode2ASCII(opt[4]) + "',"
-                    + "r_opt6='" + ThaiUtil.Unicode2ASCII(opt[5]) + "',"
-                    + "r_opt7='" + ThaiUtil.Unicode2ASCII(opt[6]) + "',"
-                    + "r_opt8='" + ThaiUtil.Unicode2ASCII(opt[7]) + "' "
-                    + "where r_index='" + index + "' "
-                    + "and r_table='" + tableNo + "'";
-            stmt.executeUpdate(SqlQuery);
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     public void bntAddClick() {
@@ -241,23 +230,25 @@ public class OptionMsg extends javax.swing.JDialog {
                  * * OPEN CONNECTION **
                  */
                 MySQLConnect mysql = new MySQLConnect();
-                mysql.open();
+                mysql.open(this.getClass());
                 try {
                     String sqlDel = "delete from optionfile "
                             + "where PGroup='" + bean.getR_Group() + "' "
                             + "and OptionName='" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sqlDel);
-
-                    String sql = "insert into optionfile(PGroup, OptionName) "
-                            + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
-                    stmt.executeUpdate(sql);
-                    
-                    stmt.close();
+                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                        stmt.executeUpdate(sqlDel);
+                        
+                        String sql = "insert into optionfile(PGroup, OptionName) "
+                                + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
+                        stmt.executeUpdate(sql);
+                        
+                        stmt.close();
+                    }
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                }finally{
-                    mysql.close();
+                    AppLogUtil.log(OptionMsg.class, "error", e);
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
             }
             txtAdd.setFocusable(false);
@@ -541,7 +532,7 @@ private void bntAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
 private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblOptionMsgKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();
@@ -557,7 +548,7 @@ private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
 private void tblSelectedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblSelectedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

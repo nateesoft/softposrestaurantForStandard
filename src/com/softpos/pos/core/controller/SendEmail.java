@@ -89,7 +89,6 @@ public class SendEmail {
                 try {
                     attachPart.attachFile(filePath);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
                 }
 
                 multipart.addBodyPart(attachPart);

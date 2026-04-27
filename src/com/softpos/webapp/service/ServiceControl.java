@@ -1,16 +1,17 @@
 package com.softpos.webapp.service;
 
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.NumberControl;
-import com.softpos.pos.core.controller.POSConfigSetup;
-import com.softpos.pos.core.controller.PosControl;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import util.AppLogUtil;
 import util.MSG;
+import util.NumberUtil;
 
 public class ServiceControl {
 
@@ -21,6 +22,7 @@ public class ServiceControl {
     }
 
     public void updateService(String table) {
+        MySQLConnect mysql = new MySQLConnect();
         try {
             BalanceControl balanceControl = new BalanceControl();
             List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
@@ -84,9 +86,9 @@ public class ServiceControl {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
-            String sql = "select * from tablefile where Tcode='" + table + "'";
+            
+            mysql.open(this.getClass());
+            String sql = "select TAmount,ProDiscAmt,ItemDiscAmt from tablefile where Tcode='" + table + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -109,29 +111,32 @@ public class ServiceControl {
                     + "NetTotal = " + Total_Vat_Amt + " "
                     + "where Tcode = '" + table + "'";
             Statement stmt2 = mysql.getConnection().createStatement();
-            int iUpd = stmt2.executeUpdate(sqlUpd);
-            mysql.close();
+            stmt2.executeUpdate(sqlUpd);
+            stmt2.close();
+            
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            
+            AppLogUtil.log(ServiceControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
     }
 
     public static double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
-            db = NumberControl.UP_BAHT(db);
+            db = NumberUtil.UP_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("D")) {
-            db = NumberControl.DOWN_BAHT(db);
+            db = NumberUtil.DOWN_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("O")) {
             return db;
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("N")) {
-            db = NumberControl.UP_DOWN_NATURAL_BAHT(db);
+            db = NumberUtil.UP_DOWN_NATURAL_BAHT(db);
         }
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("F")) {
-            db = NumberControl.UP_DOWN_25(db);
+            db = NumberUtil.UP_DOWN_25(db);
         } else {
             return db;
         }

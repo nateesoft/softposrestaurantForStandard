@@ -19,8 +19,6 @@ public class KeyBoardControlExample {
             //delay 4ms  
             Thread.sleep(4000);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block   
-            e.printStackTrace();
         }
         //creating a constructor of the Robot class  
         Robot robot = new Robot();

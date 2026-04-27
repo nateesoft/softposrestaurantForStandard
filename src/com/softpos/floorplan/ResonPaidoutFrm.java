@@ -1,10 +1,11 @@
 package com.softpos.floorplan;
 
-import database.MySQLConnect;
-import java.sql.Statement;
+import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
+import database.MySQLConnect;
 import java.sql.SQLException;
-import sun.natee.project.util.ThaiUtil;
+import java.sql.Statement;
+import util.AppLogUtil;
 import util.MSG;
 
 public class ResonPaidoutFrm extends javax.swing.JDialog {
@@ -88,8 +89,8 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
-        SaveResonPaidout();
-        dispose();
+        saveResonPaidout();
+        this.setVisible(false);//dispose();
         
         PaidoutFrm frm = new PaidoutFrm(null, true, txtReson.getText());
         frm.setVisible(true);
@@ -104,12 +105,12 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     private javax.swing.JTextArea txtReson;
     // End of variables declaration//GEN-END:variables
 
-    private void SaveResonPaidout() {
+    private void saveResonPaidout() {
         /**
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open();
+        mysql.open(this.getClass());
         try {
             String reson = ThaiUtil.Unicode2ASCII(txtReson.getText());
 
@@ -123,8 +124,9 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+            AppLogUtil.log(ResonPaidoutFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

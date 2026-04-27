@@ -1,8 +1,9 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PublicVar;
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
+import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
@@ -10,17 +11,18 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import database.MySQLConnect;
-import java.sql.Statement;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import util.AppLogUtil;
 import util.DateChooseDialog;
 import util.MSG;
 
@@ -51,7 +53,7 @@ public class DispInv2 extends javax.swing.JDialog {
 
         JTableHeader header = tblShow.getTableHeader();
         //header.setBackground(Color.yellow);
-        header.setFont(new java.awt.Font("Norasi", java.awt.Font.PLAIN, 16));
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 16));
 
         int[] ColSize = {50, 100, 80, 50, 80, 100, 250, 100, 100, 100, 200, 100, 100};
         for (int i = 0; i < 13; i++) {
@@ -88,66 +90,67 @@ public class DispInv2 extends javax.swing.JDialog {
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
             }
+            
             int RowCount = model2.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model2.removeRow(0);
             }
+            
             int XTotalCnt = 0;
             double XAmt1 = 0.0;
             double XAmt2 = 0.0;
             double XAmt3 = 0.0;
+            
             /**
              * * OPEN CONNECTION **
              */
             MySQLConnect mysql = new MySQLConnect();
-            mysql.open();
+            mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
-                String SQLQuery = "select *from invcashdoc where (invdate>='" + Datefmt.format(TempDate1) + "') and (invdate<='" + Datefmt.format(TempDate2) + "') and substring(invno,1,1)='I' "
+                String sql = "select * from invcashdoc "
+                        + "where (invdate>='" + Datefmt.format(TempDate1) + "') and (invdate<='" + Datefmt.format(TempDate2) + "') "
+                        + "and substring(invno,1,1)='I' "
                         + "order by invno";
-                ResultSet rec = stmt.executeQuery(SQLQuery);
-                rec.first();
-                if (rec.getRow() == 0) {
-                } else {
-                    do {
-                        String VoidDate = "";
+                ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    String VoidDate = "";
                         try {
-                            VoidDate = ShowDatefmt.format(rec.getDate("voiddate"));
-                        } catch (Exception e) {
-
+                            VoidDate = ShowDatefmt.format(rs.getDate("voiddate"));
+                        } catch (SQLException e) {
                         }
                         XTotalCnt++;
-                        Object[] input = {rec.getString("void"),
-                            rec.getString("invno"),
-                            ShowDatefmt.format(rec.getDate("invdate")),
-                            rec.getString("macno"),
-                            rec.getString("refno"),
-                            rec.getString("custcode"),
-                            rec.getString("custname"),
-                            rec.getDouble("subtotal"),
-                            rec.getDouble("vat"),
-                            rec.getDouble("amount"),
-                            rec.getString("voidmessage"),
-                            rec.getString("uservoid"),
+                        Object[] input = {rs.getString("void"),
+                            rs.getString("invno"),
+                            ShowDatefmt.format(rs.getDate("invdate")),
+                            rs.getString("macno"),
+                            rs.getString("refno"),
+                            rs.getString("custcode"),
+                            rs.getString("custname"),
+                            rs.getDouble("subtotal"),
+                            rs.getDouble("vat"),
+                            rs.getDouble("amount"),
+                            rs.getString("voidmessage"),
+                            rs.getString("uservoid"),
                             VoidDate
                         };
-                        XAmt1 = XAmt1 + rec.getDouble("subtotal");
-                        XAmt2 = XAmt2 + rec.getDouble("vat");
-                        XAmt3 = XAmt3 + rec.getDouble("amount");
+                        XAmt1 = XAmt1 + rs.getDouble("subtotal");
+                        XAmt2 = XAmt2 + rs.getDouble("vat");
+                        XAmt3 = XAmt3 + rs.getDouble("amount");
                         model2.addRow(input);
-                    } while (rec.next());
-                    RowCount = model2.getRowCount();
-                    showCell(0, 0);
                 }
-                rec.close();
+                showCell(0, 0);
+                rs.close();
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
+                AppLogUtil.log(DispInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
+            
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));
             TotalAmt2.setText(DecFmt.format(XAmt2));
@@ -240,7 +243,7 @@ public class DispInv2 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("แสดงรายการใบกำกับภาษี/ใบแจ้งหนี้");
-        setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.lightGray, 2));
@@ -408,7 +411,7 @@ public class DispInv2 extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        tblShow.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        tblShow.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -441,35 +444,35 @@ public class DispInv2 extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblShow);
 
-        jLabel5.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("จำนวนรายการทั้งสิ้น");
 
-        TotalCnt.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalCnt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalCnt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalCnt.setFocusable(false);
         TotalCnt.setRequestFocusEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("จำนวนเงินรวม");
 
-        TotalAmt3.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt3.setFocusable(false);
         TotalAmt3.setRequestFocusEnabled(false);
 
-        jLabel7.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("ภาษีมูลค่าเพิ่ม");
 
-        jLabel8.setFont(new java.awt.Font("Norasi", 0, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("มูลค่าสินค้า");
 
-        TotalAmt2.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt2.setFocusable(false);
         TotalAmt2.setRequestFocusEnabled(false);
 
-        TotalAmt1.setFont(new java.awt.Font("Norasi", 1, 14)); // NOI18N
+        TotalAmt1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TotalAmt1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         TotalAmt1.setFocusable(false);
         TotalAmt1.setRequestFocusEnabled(false);

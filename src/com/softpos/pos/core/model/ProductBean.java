@@ -551,19 +551,20 @@ public class ProductBean {
         this.PSelectShow = PSelectShow;
     }
 
-    public void setPPathName(String PPathName) {
-        this.PPathName = PPathName;
+    public String getPEDesc() {
+        return PEDesc;
     }
-    
-    public String getPPathName(){
-        return this.PPathName;
-    }
+
     public void setPEDesc(String PEDesc) {
         this.PEDesc = PEDesc;
     }
-    
-    public String getPEDesc(){
-        return this.PEDesc;
+
+    public String getPPathName() {
+        return PPathName;
+    }
+
+    public void setPPathName(String PPathName) {
+        this.PPathName = PPathName;
     }
 
 }

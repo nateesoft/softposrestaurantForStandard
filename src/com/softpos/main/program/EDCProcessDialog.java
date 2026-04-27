@@ -154,7 +154,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                     outputStream.write(writeStr.getBytes());
                     Thread.sleep(1000);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
                 }
                 chz = (byte) strRead.charAt(0);
                 timeOut++;
@@ -287,7 +286,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         try {
             outputStream.write(ack.getBytes());
         } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -340,7 +338,6 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
         setBackground(java.awt.Color.white);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);
