@@ -45,12 +45,14 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     txtPCode.setText(rs.getString("pcode"));
                     txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         model1 = (DefaultTableModel) tbSideDishFree.getModel();
@@ -786,7 +788,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     }//GEN-LAST:event_chkMSet2MouseClicked
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -1044,13 +1046,14 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         rs.getString("check_extra")
                     });
                 }
-                
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         loadSideDish();
@@ -1075,12 +1078,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'");
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1141,6 +1145,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'" + extraCheck + "')";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -1167,6 +1172,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'" + extraCheck + "')";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -1194,6 +1200,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         + "'" + extraCheck + "')";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
@@ -1201,7 +1208,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             }
         }
 
-        mysql.close();
+        mysql.closeConnection(this.getClass());
     }
 
     private void loadSideDish() {
@@ -1228,12 +1235,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     });
                 }
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1261,12 +1269,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     });
                 }
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1295,12 +1304,13 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                 }
                 
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MGRButtonSetup.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -93,7 +93,7 @@ public class MTDDept extends javax.swing.JDialog {
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void Action() {
@@ -282,7 +282,7 @@ public class MTDDept extends javax.swing.JDialog {
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintGroup(GArray, Found);
@@ -721,7 +721,7 @@ public class MTDDept extends javax.swing.JDialog {
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (Found) {
@@ -1222,9 +1222,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             
+        } finally{
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
 
         return listObj;
     }

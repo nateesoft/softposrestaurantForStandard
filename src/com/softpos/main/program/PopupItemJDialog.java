@@ -12,7 +12,7 @@ public class PopupItemJDialog extends javax.swing.JDialog {
 
         jButton9.setVisible(false);
         btnMoveItem.setVisible(false);
-        
+
         btnClose.requestFocus();
     }
 
@@ -237,39 +237,39 @@ public class PopupItemJDialog extends javax.swing.JDialog {
 
     private void btnOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionActionPerformed
         typeIndex = "ItemOption";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnOptionActionPerformed
 
     private void btnTypeSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeSaleActionPerformed
         typeIndex = "TypeSale";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnTypeSaleActionPerformed
 
     private void btnDiscountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiscountActionPerformed
         typeIndex = "ItemDiscount";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnDiscountActionPerformed
 
     private void btnVoidItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidItemActionPerformed
         typeIndex = "ItemVoid";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnVoidItemActionPerformed
 
     private void btnMoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveItemActionPerformed
         typeIndex = "ItemMove";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnMoveItemActionPerformed
 
     private void btnEditQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQtyActionPerformed
         typeIndex = "EditQty";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnEditQtyActionPerformed
 
     private void btnCloseKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCloseKeyPressed
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
                 typeIndex = "none";
-                dispose();
+                this.setVisible(false);//dispose();
                 break;
             case KeyEvent.VK_NUMPAD1:
                 btnOptionActionPerformed(null);
@@ -295,7 +295,7 @@ public class PopupItemJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseKeyPressed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

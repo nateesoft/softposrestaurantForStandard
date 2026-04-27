@@ -169,7 +169,7 @@ public class DailyRep extends javax.swing.JDialog {
 
 private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FunctionListKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        dispose();
+        this.setVisible(false);//dispose();
     } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         bntOkClick();
     }
@@ -188,7 +188,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
 //        ClearApp();
-        dispose();
+        this.setVisible(false);//dispose();
 
     }//GEN-LAST:event_bntExitActionPerformed
 

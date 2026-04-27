@@ -48,7 +48,7 @@ public class TempCuponController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -87,7 +87,7 @@ public class TempCuponController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -126,7 +126,7 @@ public class TempCuponController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -164,6 +164,7 @@ public class TempCuponController extends DatabaseConnection {
             }
 
             rs.close();
+            stmt.close();
 
             //insert data
             Statement stmt1 = mysql.getConnection().createStatement();
@@ -173,7 +174,7 @@ public class TempCuponController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.jfree.util.Log;
 import util.AppLogUtil;
 import util.DateConvert;
 import util.DateFormat;
@@ -82,7 +83,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BillControl.class);
         }
 
         return ReceNo1;
@@ -130,12 +131,13 @@ public class BillControl {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BillControl.class);
         }
     }
 
@@ -145,6 +147,7 @@ public class BillControl {
         BalanceBean blBean = new BalanceBean();
         mysql.open(BillControl.class);
         DateConvert dc = new DateConvert();
+        String sql = "";
         try {
             String sqlGetLoginTime = "select r_time from balance "
                     + "where r_table='" + bean.getB_Table() + "' "
@@ -153,7 +156,7 @@ public class BillControl {
             if (rs.next()) {
                 blBean.setLoginTime(rs.getString("r_time"));
             }
-            String sql = "insert into billno "
+            sql = "insert into billno "
                     + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,"
                     + "B_PostDate,B_Table,B_MacNo,B_Cashier,B_Cust,"
                     + "B_ETD,B_Total,B_Food,B_Drink,B_Product,"
@@ -192,9 +195,11 @@ public class BillControl {
                     + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
                     + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
                     + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-            }
+            Statement stmt = mysql.getConnection().createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+
+            rs.close();
 
             if (bean.getB_AccrAmt() > 0) {
                 MySQLConnect mysql2 = new MySQLConnect();
@@ -219,14 +224,14 @@ public class BillControl {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(BillControl.class);
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e);
+            AppLogUtil.log(BillControl.class, "error: " + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BillControl.class);
         }
     }
 
@@ -259,7 +264,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BillControl.class);
         }
 
         return q;
@@ -268,8 +273,9 @@ public class BillControl {
     public static void saveTSale(TSaleBean bean) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(BillControl.class);
+        String sqlTSale = "";
         try {
-            String sqlTSale = "insert into t_sale "
+            sqlTSale = "insert into t_sale "
                     + "(R_Index,R_Refno,R_Table,R_Date,R_Time,MacNo,Cashier,R_Emp,R_PluCode,R_PName,R_Unit,"
                     + "R_Group,R_Status,R_Normal,R_Discount,R_Service,R_Stock,R_Set,R_Vat,R_Type,R_ETD,"
                     + "R_Quan,R_Price,R_Total,R_PrType,R_PrCode,R_PrDisc,R_PrBath,R_PrAmt,R_PrCuType,"
@@ -384,23 +390,277 @@ public class BillControl {
             pre.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(BillControl.class, "error", e);
+            AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BillControl.class);
         }
     }
 
     public String saveBillNo(final String table, BillNoBean billBean) {
         //get data from balance, tablefile
-        final String BillNo = BillControl.getBillIDCurrent();
 
-        BalanceControl balanceControl = new BalanceControl();
-        if (!posConfig.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> balance = balanceControl.getAllBalance(table);
+        final String BillNo = BillControl.getBillIDCurrent();
+        try {
+            BalanceControl balanceControl = new BalanceControl();
+            if (!posConfig.getP_PrintSum().equals("Y")) {
+                List<BalanceBean> balance = null;
+                balance = balanceControl.getAllBalance(table);
+
+                //for T_Sale
+                int size = balance.size();
+                double B_Food = 0.0, B_Drink = 0.0, B_Product = 0.0, B_Service = 0.0;
+
+                BranchBean branchBean = BranchControl.getData();
+
+                String etdTypeFromTSale = "";
+
+                int MAX_Que = branchBean.getKicItemNo();
+                for (int i = 0; i < size; i++) {
+                    BalanceBean bean = null;
+                    bean = (BalanceBean) balance.get(i);
+                    TSaleBean tSaleBean = mappingBalanceToTSale(i, size, bean, BillNo, billBean);
+
+                    if (etdTypeFromTSale.equals("")) {
+                        etdTypeFromTSale = tSaleBean.getR_ETD();
+                    }
+
+                    String productType = bean.getR_Type();
+                    if (!bean.getR_Void().equals("V")) {
+                        switch (productType) {
+                            case ProductBean.FOOD:
+                                B_Food += bean.getR_Total();
+                                break;
+                            case ProductBean.DRINK:
+                                B_Drink += bean.getR_Total();
+                                break;
+                            case ProductBean.PRODUCT:
+                                B_Product += bean.getR_Total();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                //for Billno
+                TableFileControl tableControl = new TableFileControl();
+                TableFileBean tableFile = tableControl.getData(table);
+                this.memberBean = MemmaterController.getMember(tableFile.getMemCode());
+
+                BillNoBean billNo = new BillNoBean();
+                double cashPay = billBean.getB_Cash();
+                double creditPay = billBean.getB_CrAmt1();
+                double totalSum = tableFile.getNetTotal();
+                double B_Ton = billBean.getB_Ton();
+//            double B_Total = tableFile.getTAmount();
+                double B_Total = tableFile.getFood() + tableFile.getDrink() + tableFile.getProduct();
+
+                billNo.setB_Earnest(billBean.getB_Earnest());
+
+                //item discount
+                billNo.setB_ItemDiscAmt(billBean.getB_ItemDiscAmt());
+
+                //discount all
+                billNo.setB_FastDiscAmt(billBean.getB_FastDiscAmt());
+                billNo.setB_FastDisc(billBean.getB_FastDisc());
+
+                billNo.setB_CuponDiscAmt(billBean.getB_CuponDiscAmt());
+                billNo.setB_SubDiscBath(billBean.getB_SubDiscBath());
+
+                billNo.setB_EmpDiscAmt(billBean.getB_EmpDiscAmt());
+                billNo.setB_EmpDisc(billBean.getB_EmpDisc());
+
+                billNo.setB_TrainDiscAmt(billBean.getB_TrainDiscAmt());
+                billNo.setB_TrainDisc(billBean.getB_TrainDisc());
+
+                billNo.setB_MemDiscAmt(billBean.getB_MemDiscAmt());
+                billNo.setB_MemDisc(billBean.getB_MemDisc());
+
+                billNo.setB_SubDisc(billBean.getB_SubDisc());
+                billNo.setB_SubDiscAmt(billBean.getB_SubDiscAmt());
+
+                //update credit bean
+                billNo.setB_CrCode1(billBean.getB_CrCode1());
+                billNo.setB_CardNo1(billBean.getB_CardNo1());
+                billNo.setB_AppCode1(billBean.getB_AppCode1());
+                billNo.setB_CrAmt1(billBean.getB_CrAmt1());
+
+                //Add New
+                billNo.setB_ProDiscAmt(tableFile.getProDiscAmt());
+                billNo.setB_KicQue("" + MAX_Que);
+
+                billNo.setB_Total(B_Total);
+                billNo.setB_Food(B_Food);
+                billNo.setB_Drink(B_Drink);
+                billNo.setB_Product(B_Product);
+
+                billNo.setB_Service(B_Service);
+                billNo.setB_ServiceAmt(billBean.getB_ServiceAmt());
+                billNo.setB_NetTotal(billBean.getB_NetTotal());
+                billNo.setB_MemBegin(new Date());
+                billNo.setB_MemEnd(new Date());
+                billNo.setB_Ton(B_Ton);
+
+                billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
+                billNo.setB_CashTime(DateUtil.T1.format(new Date()));
+                billNo.setB_Ontime(DateUtil.T1.format(new Date()));
+
+                billNo.setB_Table(table);
+                billNo.setB_Refno(BillNo);
+                billNo.setB_MacNo(Value.MACNO);
+                billNo.setB_Cashier(tableFile.getCashier());
+                billNo.setB_Cust(tableFile.getTCustomer());
+                billNo.setB_ETD(etdTypeFromTSale);
+                billNo.setB_Cash(cashPay);
+                billNo.setB_Total(B_Total);
+                billNo.setB_MemCode(tableFile.getMemCode());
+
+                billNo.setB_Service(POSConfigSetup.Bean().getP_Service());
+
+                billNo.setB_PayAmt(billBean.getB_PayAmt());
+                billNo.setB_Entertain1(PublicVar.b_entertain);
+                //
+                if (new CompanyConfig().includeVat()) {
+                    billNo.setB_NetVat(totalSum);
+                    //set table billno
+                    billNo.setB_Vat(totalSum * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
+                    billNo.setB_CrAmt1(creditPay);
+                } else if (new CompanyConfig().excludeVat()) {
+                    totalSum = tableFile.getTAmount() + billNo.getB_ServiceAmt();
+                    billNo.setB_NetVat(totalSum);
+                    //set table billno
+                    billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
+                    billNo.setB_CrAmt1(creditPay);
+                }
+
+                // set default cashier test 
+                billNo.setB_OnDate(new Date());
+                billNo.setB_PostDate(new Date());
+                billNo.setB_NetDiff(billBean.getB_NetDiff());
+
+                // set giftvoucher
+                billNo.setB_GiftVoucher(billBean.getB_GiftVoucher());
+
+                // set AR
+                billNo.setB_AccrCode(billBean.getB_AccrCode());
+                billNo.setB_AccrAmt(billBean.getB_AccrAmt());
+                billNo.setB_AccrCr(billBean.getB_AccrCr());
+
+                billNo.setB_InvType("");
+                billNo.setB_Bran("");
+                billNo.setB_ChkBill("Y");
+                billNo.setB_CrBank("");
+                billNo.setB_MemName("");
+                billNo.setB_VoidUser("");
+                billNo.setB_VoidTime("");
+                billNo.setB_PrnTime1("");
+                billNo.setB_PrnTime2("");
+                billNo.setB_InvNo("");
+                billNo.setB_BranName("");
+                billNo.setB_Tel("");
+                billNo.setB_RecTime("");
+
+                //forMember
+                memberBean = MemmaterController.getMember(tableFile.getMemCode());
+                if (memberBean == null) {
+                    billNo.setMScore("");
+                } else {
+                    if (!memberBean.getMember_Code().equals("")) {
+                        double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
+
+                        billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
+                        billNo.setB_MemCurSum(currentMemberScore);
+                        billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
+                        billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
+                        billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
+                    }
+                }
+                billNo.setMStamp("");
+                billNo.setCurStamp("");
+                billNo.setStampRate("");
+                BillControl.saveBillNo(billNo, memberBean);
+                if (Value.useprint) {
+//                new Thread(() -> {
+                    PPrint print = new PPrint();
+                    print.PrintSubTotalBill(BillNo, table);
+//                }).start();
+                }
+
+                //clear transaction for table (balance, tablefile)
+                balanceControl.setDefaultBalance(table);
+                tableControl.setDefaultTableFile(table);
+
+                //move tempgift
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open(BillControl.class);
+                try {
+                    String sql = "select * from tempgift";
+                    Statement stmt = mysql.getConnection().createStatement();
+                    try (ResultSet rs = stmt.executeQuery(sql)) {
+                        while (rs.next()) {
+                            String sqlAdd = "insert into t_gift "
+                                    + "(ondate,macno,refno,"
+                                    + "cashier,giftbarcode,gifttype,"
+                                    + "giftprice,giftmodel,giftlot,"
+                                    + "giftexp,giftcode,giftno,"
+                                    + "giftamt,fat) "
+                                    + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
+                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                    + "'','','',"
+                                    + "'','',"
+                                    + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
+                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                stmt1.executeUpdate(sqlAdd);
+                            }
+                        }
+                        rs.close();
+                        stmt.close();
+                    }
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
+                } finally {
+                    mysql.closeConnection(this.getClass());
+                }
+
+                //save t_cupon
+                TempCuponController tcCon = new TempCuponController();
+                TempCuponBean tcBean = null;
+                tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
+
+                TCuponControl tCon = new TCuponControl();
+                TCuponBean tBean = new TCuponBean();
+                tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
+                tBean.setR_Refno(BillNo);
+                tBean.setTerminal(tcBean.getTerminal());
+                tBean.setCashier(tcBean.getCashier());
+                tBean.setTime(tcBean.getTime());
+                tBean.setCuCode(tcBean.getCuCode());
+                tBean.setCuQuan(tcBean.getCuQuan());
+                tBean.setCuAmt(tcBean.getCuAmt());
+                tBean.setRefund("");
+                tBean.setCuTextCode("");
+                tBean.setCuTextComment("");
+
+                tCon.saveTCupon(tBean);
+                tcCon.clearTempOld(tcBean.getR_Index());
+
+                BillControl.updateNextBill();
+                BranchControl.updateKicItemNo();
+
+                return BillNo;
+            }
+
+            List<BalanceBean> balance = balanceControl.getAllBalanceSum(table);
 
             //for T_Sale
+            DecimalFormat dfFormat = new DecimalFormat("##.00");
+            TSaleBean tSaleBean = new TSaleBean();
             int size = balance.size();
             double B_Food = 0.0, B_Drink = 0.0, B_Product = 0.0, B_Service = 0.0;
+            double R_ServiceAmt, SumR_Nettotal = 0.00, SumR_ServiceAmt = 0.00;
+            double b_netNonVat = 0;
+            String productType;
 
             BranchBean branchBean = BranchControl.getData();
 
@@ -409,14 +669,58 @@ public class BillControl {
             int MAX_Que = branchBean.getKicItemNo();
             for (int i = 0; i < size; i++) {
                 BalanceBean bean = (BalanceBean) balance.get(i);
-                TSaleBean tSaleBean = mappingBalanceToTSale(i, size, bean, BillNo, billBean);
-
-                if (etdTypeFromTSale.equals("")) {
-                    etdTypeFromTSale = tSaleBean.getR_ETD();
+                if (i == size - 1) {
+                    tSaleBean.setR_NetDiff(billBean.getB_NetDiff());
                 }
+                tSaleBean.setR_Index(BillNo + bean.getR_Index());
+                tSaleBean.setR_Refno(BillNo);
+                tSaleBean.setMacNo(bean.getMacno());
+                tSaleBean.setCashier(bean.getCashier());
+                tSaleBean.setR_Price(bean.getR_Price());
+                tSaleBean.setR_Total(bean.getR_Total());
+                tSaleBean.setR_PrType(bean.getR_PrType());
+                tSaleBean.setR_PrDisc(bean.getR_PrDisc());
+                tSaleBean.setR_PrBath(bean.getR_PrBath());
+                tSaleBean.setR_PrAmt(bean.getR_PrAmt());
+                tSaleBean.setR_Table(bean.getR_Table());
+                tSaleBean.setR_PluCode(bean.getR_PluCode());
+                tSaleBean.setStkCode(bean.getR_Stock());
+                tSaleBean.setR_Time(bean.getR_Time());
+                tSaleBean.setR_Emp(bean.getR_Emp());
+                tSaleBean.setR_PrCuType(bean.getR_PrCuType());
+                tSaleBean.setR_PrCuCode(bean.getR_PrCuCode());
+                tSaleBean.setR_Kic(bean.getR_Kic());
+                tSaleBean.setR_KicPrint(bean.getR_KicPrint());
+                tSaleBean.setVoidMsg(ThaiUtil.Unicode2ASCII(bean.getVoidMSG()));
+                tSaleBean.setR_Void(bean.getR_Void());
+                tSaleBean.setR_VoidUser(bean.getR_VoidUser());
+                tSaleBean.setR_VoidTime(bean.getR_VoidTime());
+                tSaleBean.setR_Stock(bean.getR_Stock());
+                tSaleBean.setR_PrChkType(bean.getR_PrChkType());
+                tSaleBean.setR_PrSubType(bean.getR_PrSubType());
+                tSaleBean.setR_PrSubCode(bean.getR_PrSubCode());
 
-                String productType = bean.getR_Type();
-                if (!bean.getR_Void().equals("V")) {
+                tSaleBean.setR_PrCuQuan(bean.getR_PrCuQuan());
+                tSaleBean.setR_PrCuAmt(bean.getR_PrCuAmt());
+                double r_nettotal = bean.getR_Total() - bean.getR_DiscBath() - bean.getR_PrCuAmt();
+                if ("V".equals(bean.getR_Void())) {
+                    r_nettotal = 0;
+                }
+                SumR_Nettotal += r_nettotal;
+                tSaleBean.setR_NetTotal(bean.getR_Total() - bean.getR_DiscBath() - bean.getR_PrCuAmt());
+                tSaleBean.setR_PreDisAmt(bean.getR_Total() - bean.getR_PrCuAmt());
+                tSaleBean.setR_PrCuDisc(bean.getR_PrCuDisc());
+                tSaleBean.setR_SPIndex(bean.getR_SPIndex());
+                tSaleBean.setR_Set(bean.getR_Set());
+
+                tSaleBean.setR_PrChkType2("");
+                tSaleBean.setR_PrType2("");
+                tSaleBean.setR_PrCode2("");
+                tSaleBean.setStkCode(bean.getStkCode());
+
+                productType = bean.getR_Type();
+
+                if (!"V".equals(bean.getR_Void())) {
                     switch (productType) {
                         case ProductBean.FOOD:
                             B_Food += bean.getR_Total();
@@ -431,555 +735,283 @@ public class BillControl {
                             break;
                     }
                 }
+
+                String username = bean.getCashier();
+
+                tSaleBean.setR_PName(ThaiUtil.Unicode2ASCII(bean.getR_PName()));
+                tSaleBean.setR_Unit(ThaiUtil.Unicode2ASCII(bean.getR_Unit()));
+                tSaleBean.setR_Group(bean.getR_Group());
+                tSaleBean.setR_Status(bean.getR_Status());
+                tSaleBean.setR_Normal(bean.getR_Normal());
+                tSaleBean.setR_Discount(bean.getR_Discount());
+                tSaleBean.setR_Service(bean.getR_Service());
+                tSaleBean.setR_Stock(bean.getR_Stock());
+                tSaleBean.setR_Set(bean.getR_Set());
+                tSaleBean.setR_Vat(bean.getR_Vat());
+                if (tSaleBean.getR_Vat().equals("N") && !tSaleBean.getR_Void().equals("V")) {
+                    b_netNonVat += tSaleBean.getR_Total();
+                }
+                tSaleBean.setR_Type(bean.getR_Type());
+                tSaleBean.setR_ETD(bean.getR_ETD());
+                tSaleBean.setR_DiscBath(bean.getR_DiscBath());
+
+                if (posConfig.getP_ServiceType().equals("N")) {
+                    R_ServiceAmt = Double.parseDouble(dfFormat.format(r_nettotal * posConfig.getP_Service() / 100));
+                    tSaleBean.setR_ServiceAmt(R_ServiceAmt);
+                    SumR_ServiceAmt += R_ServiceAmt;
+//                tSaleBean.setR_NetTotal(tSaleBean.getR_NetTotal() + R_ServiceAmt);
+                }
+
+                if (etdTypeFromTSale.equals("")) {
+                    etdTypeFromTSale = tSaleBean.getR_ETD();
+                }
+                tSaleBean.setR_Quan(bean.getR_Quan());
+                tSaleBean.setR_PrCode(bean.getR_PrCode());
+
+                tSaleBean.setR_LinkIndex(bean.getR_LinkIndex());
+                tSaleBean.setR_Pause(bean.getR_Pause());
+                tSaleBean.setR_VoidPause("");
+                tSaleBean.setR_SPIndex("");
+
+                //set default cashier test
+                tSaleBean.setCashier(username);
+
+                //add new
+                tSaleBean.setR_Opt1(bean.getR_Opt1());
+                tSaleBean.setR_Opt2(bean.getR_Opt2());
+                tSaleBean.setR_Opt3(bean.getR_Opt3());
+                tSaleBean.setR_Opt4(bean.getR_Opt4());
+                tSaleBean.setR_Opt5(bean.getR_Opt5());
+                tSaleBean.setR_Opt6(bean.getR_Opt6());
+                tSaleBean.setR_Opt7(bean.getR_Opt7());
+                tSaleBean.setR_Opt8(bean.getR_Opt8());
+                tSaleBean.setR_Opt9(bean.getR_Opt9());
+                tSaleBean.setR_Date(bean.getR_Date());
+
+                BillControl.saveTSale(tSaleBean);
+
+                if (!bean.getR_PrType().equals("") && !bean.getR_PrCode().equals("")) {
+                    //update T_Promotion
+                    TPromotionBean promotionBean = new TPromotionBean();
+                    promotionBean.setR_Index(tSaleBean.getR_Index());
+                    promotionBean.setR_RefNo(tSaleBean.getR_Refno());
+                    promotionBean.setTerminal(tSaleBean.getMacNo());
+                    promotionBean.setCashier(tSaleBean.getCashier());
+                    promotionBean.setPrCode(tSaleBean.getR_PrCode());
+                    promotionBean.setPrType(tSaleBean.getR_PrType());
+                    promotionBean.setPCode(tSaleBean.getR_PluCode());
+                    promotionBean.setPDisc(tSaleBean.getR_PrDisc());
+                    promotionBean.setPDiscBath(tSaleBean.getR_DiscBath());
+                    promotionBean.setPPrice(tSaleBean.getR_Price());
+                    promotionBean.setPQty(tSaleBean.getR_Quan());
+                    promotionBean.setPrAmt(tSaleBean.getR_PrAmt());
+                    promotionBean.setFlage("-");
+
+                    PromotionControl proControl = new PromotionControl();
+                    proControl.saveTPromotion(promotionBean);
+                }
             }
 
             //for Billno
-            TableFileControl tableControl = new TableFileControl();
-            TableFileBean tableFile = tableControl.getData(table);
-            this.memberBean = MemmaterController.getMember(tableFile.getMemCode());
-
-            BillNoBean billNo = new BillNoBean();
-            double cashPay = billBean.getB_Cash();
-            double creditPay = billBean.getB_CrAmt1();
-            double totalSum = tableFile.getNetTotal();
-            double B_Ton = billBean.getB_Ton();
-            double B_Total = tableFile.getTAmount();
-
-            billNo.setB_Earnest(billBean.getB_Earnest());
-
-            //item discount
-            billNo.setB_ItemDiscAmt(billBean.getB_ItemDiscAmt());
-
-            //discount all
-            billNo.setB_FastDiscAmt(billBean.getB_FastDiscAmt());
-            billNo.setB_FastDisc(billBean.getB_FastDisc());
-
-            billNo.setB_CuponDiscAmt(billBean.getB_CuponDiscAmt());
-            billNo.setB_SubDiscBath(billBean.getB_SubDiscBath());
-
-            billNo.setB_EmpDiscAmt(billBean.getB_EmpDiscAmt());
-            billNo.setB_EmpDisc(billBean.getB_EmpDisc());
-
-            billNo.setB_TrainDiscAmt(billBean.getB_TrainDiscAmt());
-            billNo.setB_TrainDisc(billBean.getB_TrainDisc());
-
-            billNo.setB_MemDiscAmt(billBean.getB_MemDiscAmt());
-            billNo.setB_MemDisc(billBean.getB_MemDisc());
-
-            billNo.setB_SubDisc(billBean.getB_SubDisc());
-            billNo.setB_SubDiscAmt(billBean.getB_SubDiscAmt());
-
-            //update credit bean
-            billNo.setB_CrCode1(billBean.getB_CrCode1());
-            billNo.setB_CardNo1(billBean.getB_CardNo1());
-            billNo.setB_AppCode1(billBean.getB_AppCode1());
-            billNo.setB_CrAmt1(billBean.getB_CrAmt1());
-
-            //Add New
-            billNo.setB_ProDiscAmt(tableFile.getProDiscAmt());
-            billNo.setB_KicQue("" + MAX_Que);
-
-            billNo.setB_Total(B_Total);
-            billNo.setB_Food(B_Food);
-            billNo.setB_Drink(B_Drink);
-            billNo.setB_Product(B_Product);
-
-            billNo.setB_Service(B_Service);
-            billNo.setB_ServiceAmt(billBean.getB_ServiceAmt());
-            billNo.setB_NetTotal(billBean.getB_NetTotal());
-            billNo.setB_MemBegin(new Date());
-            billNo.setB_MemEnd(new Date());
-            billNo.setB_Ton(B_Ton);
-
-            billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
-            billNo.setB_CashTime(DateUtil.T1.format(new Date()));
-            billNo.setB_Ontime(DateUtil.T1.format(new Date()));
-
-            billNo.setB_Table(table);
-            billNo.setB_Refno(BillNo);
-            billNo.setB_MacNo(Value.MACNO);
-            billNo.setB_Cashier(tableFile.getCashier());
-            billNo.setB_Cust(tableFile.getTCustomer());
-            billNo.setB_ETD(etdTypeFromTSale);
-            billNo.setB_Cash(cashPay);
-            billNo.setB_Total(B_Total);
-            billNo.setB_MemCode(tableFile.getMemCode());
-
-            billNo.setB_Service(POSConfigSetup.Bean().getP_Service());
-
-            billNo.setB_PayAmt(billBean.getB_PayAmt());
-            billNo.setB_Entertain1(PublicVar.b_entertain);
-            //
-            if (new CompanyConfig().includeVat()) {
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
-                billNo.setB_CrAmt1(creditPay);
-            } else if (new CompanyConfig().excludeVat()) {
-                totalSum = tableFile.getTAmount() + billNo.getB_ServiceAmt();
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
-                billNo.setB_CrAmt1(creditPay);
-            }
-
-            // set default cashier test 
-            billNo.setB_OnDate(new Date());
-            billNo.setB_PostDate(new Date());
-            billNo.setB_NetDiff(billBean.getB_NetDiff());
-
-            // set giftvoucher
-            billNo.setB_GiftVoucher(billBean.getB_GiftVoucher());
-
-            // set AR
-            billNo.setB_AccrCode(billBean.getB_AccrCode());
-            billNo.setB_AccrAmt(billBean.getB_AccrAmt());
-            billNo.setB_AccrCr(billBean.getB_AccrCr());
-
-            billNo.setB_InvType("");
-            billNo.setB_Bran("");
-            billNo.setB_ChkBill("Y");
-            billNo.setB_CrBank("");
-            billNo.setB_MemName("");
-            billNo.setB_VoidUser("");
-            billNo.setB_VoidTime("");
-            billNo.setB_PrnTime1("");
-            billNo.setB_PrnTime2("");
-            billNo.setB_InvNo("");
-            billNo.setB_BranName("");
-            billNo.setB_Tel("");
-            billNo.setB_RecTime("");
-
-            //forMember
-            memberBean = MemmaterController.getMember(tableFile.getMemCode());
-            if (memberBean == null) {
-                billNo.setMScore("");
-            } else {
-                if (!memberBean.getMember_Code().equals("")) {
-                    double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
-
-                    billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
-                    billNo.setB_MemCurSum(currentMemberScore);
-                    billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
-                    billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
-                    billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
-                }
-            }
-            billNo.setMStamp("");
-            billNo.setCurStamp("");
-            billNo.setStampRate("");
-            BillControl.saveBillNo(billNo, memberBean);
-            if (Value.useprint) {
-                new Thread(() -> {
-                    PPrint print = new PPrint();
-                    print.PrintSubTotalBill(BillNo, table);
-                }).start();
-            }
-
-            //clear transaction for table (balance, tablefile)
-            balanceControl.setDefaultBalance(table);
-            tableControl.setDefaultTableFile(table);
-
-            //move tempgift
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(BillControl.class);
             try {
-                String sql = "select * from tempgift";
-                Statement stmt = mysql.getConnection().createStatement();
-                try (ResultSet rs = stmt.executeQuery(sql)) {
-                    while (rs.next()) {
-                        String sqlAdd = "insert into t_gift "
-                                + "(ondate,macno,refno,"
-                                + "cashier,giftbarcode,gifttype,"
-                                + "giftprice,giftmodel,giftlot,"
-                                + "giftexp,giftcode,giftno,"
-                                + "giftamt,fat) "
-                                + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
-                                + "'','','',"
-                                + "'','',"
-                                + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
-                            stmt1.executeUpdate(sqlAdd);
+                TableFileControl tableControl = new TableFileControl();
+                TableFileBean tableFile = tableControl.getData(table);
+
+                BillNoBean billNo = new BillNoBean();
+                double cashPay = billBean.getB_Cash();
+//            double cashPay = billBean.getB_Cash() + billNo.getB_ServiceAmt();
+                double creditPay = 0;
+                if (cashPay > 0) {
+                    creditPay = billBean.getB_CrAmt1();
+                } else {
+                    creditPay = billBean.getB_CrAmt1();
+//                creditPay = billBean.getB_CrAmt1() + billNo.getB_ServiceAmt();
+                }
+                double totalSum = tableFile.getNetTotal();
+                double B_Ton = billBean.getB_Ton();
+                double B_Total = tableFile.getTAmount();
+
+                billNo.setB_Earnest(billBean.getB_Earnest());
+
+                //item discount
+                billNo.setB_ItemDiscAmt(billBean.getB_ItemDiscAmt());
+
+                //discount all
+                billNo.setB_FastDiscAmt(billBean.getB_FastDiscAmt());
+                billNo.setB_FastDisc(billBean.getB_FastDisc());
+
+                billNo.setB_CuponDiscAmt(billBean.getB_CuponDiscAmt());
+                billNo.setB_SubDiscBath(billBean.getB_SubDiscBath());
+
+                billNo.setB_EmpDiscAmt(billBean.getB_EmpDiscAmt());
+                billNo.setB_EmpDisc(billBean.getB_EmpDisc());
+
+                billNo.setB_TrainDiscAmt(billBean.getB_TrainDiscAmt());
+                billNo.setB_TrainDisc(billBean.getB_TrainDisc());
+
+                billNo.setB_MemDiscAmt(billBean.getB_MemDiscAmt());
+                billNo.setB_MemDisc(billBean.getB_MemDisc());
+
+                billNo.setB_SubDisc(billBean.getB_SubDisc());
+                billNo.setB_SubDiscAmt(billBean.getB_SubDiscAmt());
+
+                //update credit bean
+                billNo.setB_CrCode1(billBean.getB_CrCode1());
+                billNo.setB_CardNo1(billBean.getB_CardNo1());
+                billNo.setB_AppCode1(billBean.getB_AppCode1());
+                billNo.setB_CrAmt1(billBean.getB_CrAmt1());
+                billNo.setB_CrChargeAmt1(billBean.getB_CrChargeAmt1());
+                billNo.setB_CrCharge1(billBean.getB_CrCharge1());
+
+                //Add New
+                billNo.setB_ProDiscAmt(tableFile.getProDiscAmt());
+                billNo.setB_KicQue("" + MAX_Que);
+
+                billNo.setB_Total(B_Total);
+                billNo.setB_Food(B_Food);
+                billNo.setB_Drink(B_Drink);
+                billNo.setB_Product(B_Product);
+
+                billNo.setB_Service(B_Service);
+                billNo.setB_ServiceAmt(billBean.getB_ServiceAmt());
+                if (new CompanyConfig().includeVat()) {
+                    billNo.setB_NetVat(totalSum - b_netNonVat);
+                    //set table billno
+                    billNo.setB_Vat((totalSum - b_netNonVat) * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
+                    billNo.setB_CrAmt1(creditPay);
+                } else if (new CompanyConfig().excludeVat()) {
+                    totalSum = tableFile.getTAmount() + billNo.getB_ServiceAmt();
+                    billNo.setB_NetVat(totalSum);
+                    //set table billno
+                    billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
+                    billNo.setB_CrAmt1(creditPay);
+                }
+
+                if (posConfig.getP_VatType().equals("I")) {
+                    billNo.setB_NetVat(totalSum - b_netNonVat);
+                }
+                if (posConfig.getP_VatType().equals("E")) {
+                    billNo.setB_NetVat((totalSum - b_netNonVat + (totalSum - b_netNonVat * 7 / 100)));
+                }
+                billNo.setB_NetNonVat(b_netNonVat);
+
+                billNo.setB_MemBegin(new Date());
+                billNo.setB_MemEnd(new Date());
+                billNo.setB_Ton(B_Ton);
+
+                billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
+                billNo.setB_CashTime(DateUtil.T1.format(new Date()));
+                billNo.setB_Ontime(DateUtil.T1.format(new Date()));
+
+                billNo.setB_Table(table);
+                billNo.setB_Refno(BillNo);
+                billNo.setB_MacNo(Value.MACNO);
+                billNo.setB_Cashier(tableFile.getCashier());
+                billNo.setB_Cust(tableFile.getTCustomer());
+                billNo.setB_ETD(etdTypeFromTSale);
+                billNo.setB_Cash(cashPay);
+                billNo.setB_Total(B_Total);
+                billNo.setB_MemCode(tableFile.getMemCode());
+
+                billNo.setB_Service(POSConfigSetup.Bean().getP_Service());
+
+                billNo.setB_PayAmt(billBean.getB_PayAmt());
+                //
+                if (new CompanyConfig().includeVat()) {
+                    billNo.setB_NetVat((totalSum - b_netNonVat));
+                    //set table billno
+                    billNo.setB_Vat((totalSum - b_netNonVat) * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
+                    billNo.setB_CrAmt1(creditPay);
+                    billNo.setB_NetTotal(totalSum);
+                } else if (new CompanyConfig().excludeVat()) {
+                    totalSum = tableFile.getTAmount() - billNo.getB_SubDiscBath() - billNo.getB_CuponDiscAmt();
+                    billNo.setB_NetVat(totalSum - b_netNonVat);
+                    //set table billno
+                    if(b_netNonVat>0){
+                        billNo.setB_Vat(totalSum - b_netNonVat * posConfig.getP_Vat() / 100); 
+                    }else{
+                        billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);  
+                    }
+                    billNo.setB_CrAmt1(creditPay);
+                    billNo.setB_NetTotal((totalSum) + ((totalSum - b_netNonVat) * posConfig.getP_Vat() / 100));
+                    
+                }
+                billNo.setB_Entertain1(PublicVar.b_entertain);
+                // set default cashier test 
+                billNo.setB_OnDate(new Date());
+                billNo.setB_PostDate(new Date());
+
+                billNo.setB_NetDiff(billBean.getB_NetDiff());
+
+                // set giftvoucher
+                billNo.setB_GiftVoucher(billBean.getB_GiftVoucher());
+
+                // set AR
+                billNo.setB_AccrCode(billBean.getB_AccrCode());
+                billNo.setB_AccrAmt(billBean.getB_AccrAmt());
+                billNo.setB_AccrCr(billBean.getB_AccrCr());
+
+                billNo.setB_InvType("");
+                billNo.setB_Bran("");
+                billNo.setB_ChkBill("Y");
+                billNo.setB_CrBank("");
+                billNo.setB_MemName("");
+                billNo.setB_VoidUser("");
+                billNo.setB_VoidTime("");
+                billNo.setB_PrnTime1("");
+                billNo.setB_PrnTime2("");
+                billNo.setB_InvNo("");
+                billNo.setB_BranName("");
+                billNo.setB_Tel("");
+                billNo.setB_RecTime("");
+
+                //forMember
+                memberBean = MemmaterController.getMember(tableFile.getMemCode());
+                if (memberBean == null) {
+                    billNo.setMScore("");
+                } else {
+                    if (!memberBean.getMember_Code().equals("")) {
+                        double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
+
+                        billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
+                        billNo.setB_MemCurSum(currentMemberScore);
+                        billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
+                        billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
+                        billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
+                    }
+                }
+                billNo.setMStamp("");
+                billNo.setMScore("");
+                billNo.setStampRate("");
+
+                double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
+                double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
+
+                MySQLConnect mysql2 = new MySQLConnect();
+                try {
+                    mysql2.open(BillControl.class);
+                    String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time limit 1;";
+                    Statement stmt = mysql2.getConnection().createStatement();
+                    ResultSet rs = stmt.executeQuery(sqlUpdate);
+                    if (rs.next()) {
+                        String r_index = rs.getString("R_Index");
+                        String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
+                        try (Statement stmt1 = mysql2.getConnection().createStatement()) {
+                            stmt1.executeUpdate(sqlUpdateT_sale);
+                            stmt1.close();
                         }
                     }
+                    rs.close();
+                    stmt.close();
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
+                } finally {
+                    mysql2.closeConnection(this.getClass());
                 }
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                AppLogUtil.log(BillControl.class, "error", e);
-            } finally {
-                mysql.close();
-            }
 
-            //save t_cupon
-            TempCuponController tcCon = new TempCuponController();
-            TempCuponBean tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
-
-            TCuponControl tCon = new TCuponControl();
-            TCuponBean tBean = new TCuponBean();
-            tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
-            tBean.setR_Refno(BillNo);
-            tBean.setTerminal(tcBean.getTerminal());
-            tBean.setCashier(tcBean.getCashier());
-            tBean.setTime(tcBean.getTime());
-            tBean.setCuCode(tcBean.getCuCode());
-            tBean.setCuQuan(tcBean.getCuQuan());
-            tBean.setCuAmt(tcBean.getCuAmt());
-            tBean.setRefund("");
-            tBean.setCuTextCode("");
-            tBean.setCuTextComment("");
-
-            tCon.saveTCupon(tBean);
-            tcCon.clearTempOld(tcBean.getR_Index());
-
-            BillControl.updateNextBill();
-            BranchControl.updateKicItemNo();
-
-            return BillNo;
-        }
-
-        List<BalanceBean> balance = balanceControl.getAllBalanceSum(table);
-
-        //for T_Sale
-        DecimalFormat dfFormat = new DecimalFormat("##.00");
-        TSaleBean tSaleBean = new TSaleBean();
-        int size = balance.size();
-        double B_Food = 0.0, B_Drink = 0.0, B_Product = 0.0, B_Service = 0.0;
-        double R_ServiceAmt, SumR_Nettotal = 0.00, SumR_ServiceAmt = 0.00;
-        String productType;
-
-        BranchBean branchBean = BranchControl.getData();
-
-        String etdTypeFromTSale = "";
-
-        int MAX_Que = branchBean.getKicItemNo();
-        for (int i = 0; i < size; i++) {
-            BalanceBean bean = (BalanceBean) balance.get(i);
-            if (i == size - 1) {
-                tSaleBean.setR_NetDiff(billBean.getB_NetDiff());
-            }
-            tSaleBean.setR_Index(BillNo + bean.getR_Index());
-            tSaleBean.setR_Refno(BillNo);
-            tSaleBean.setMacNo(bean.getMacno());
-            tSaleBean.setCashier(bean.getCashier());
-            tSaleBean.setR_Price(bean.getR_Price());
-            tSaleBean.setR_Total(bean.getR_Total());
-            tSaleBean.setR_PrType(bean.getR_PrType());
-            tSaleBean.setR_PrDisc(bean.getR_PrDisc());
-            tSaleBean.setR_PrBath(bean.getR_PrBath());
-            tSaleBean.setR_PrAmt(bean.getR_PrAmt());
-            tSaleBean.setR_Table(bean.getR_Table());
-            tSaleBean.setR_PluCode(bean.getR_PluCode());
-            tSaleBean.setStkCode(bean.getR_Stock());
-            tSaleBean.setR_Time(bean.getR_Time());
-            tSaleBean.setR_Emp(bean.getR_Emp());
-            tSaleBean.setR_PrCuType(bean.getR_PrCuType());
-            tSaleBean.setR_PrCuCode(bean.getR_PrCuCode());
-            tSaleBean.setR_Kic(bean.getR_Kic());
-            tSaleBean.setR_KicPrint(bean.getR_KicPrint());
-            tSaleBean.setVoidMsg(ThaiUtil.Unicode2ASCII(bean.getVoidMSG()));
-            tSaleBean.setR_Void(bean.getR_Void());
-            tSaleBean.setR_VoidUser(bean.getR_VoidUser());
-            tSaleBean.setR_VoidTime(bean.getR_VoidTime());
-            tSaleBean.setR_Stock(bean.getR_Stock());
-            tSaleBean.setR_PrChkType(bean.getR_PrChkType());
-            tSaleBean.setR_PrSubType(bean.getR_PrSubType());
-            tSaleBean.setR_PrSubCode(bean.getR_PrSubCode());
-
-            tSaleBean.setR_PrCuQuan(bean.getR_PrCuQuan());
-            tSaleBean.setR_PrCuAmt(bean.getR_PrCuAmt());
-            double r_nettotal = bean.getR_Total() - bean.getR_DiscBath() - bean.getR_PrCuAmt();
-            if ("V".equals(bean.getR_Void())) {
-                r_nettotal = 0;
-            }
-            SumR_Nettotal += r_nettotal;
-            tSaleBean.setR_NetTotal(bean.getR_Total() - bean.getR_DiscBath() - bean.getR_PrCuAmt());
-            tSaleBean.setR_PreDisAmt(bean.getR_Total() - bean.getR_PrCuAmt());
-            tSaleBean.setR_PrCuDisc(bean.getR_PrCuDisc());
-            tSaleBean.setR_SPIndex(bean.getR_SPIndex());
-            tSaleBean.setR_Set(bean.getR_Set());
-
-            tSaleBean.setR_PrChkType2("");
-            tSaleBean.setR_PrType2("");
-            tSaleBean.setR_PrCode2("");
-            tSaleBean.setStkCode(bean.getStkCode());
-
-            productType = bean.getR_Type();
-
-            if (!"V".equals(bean.getR_Void())) {
-                switch (productType) {
-                    case ProductBean.FOOD:
-                        B_Food += bean.getR_Total();
-                        break;
-                    case ProductBean.DRINK:
-                        B_Drink += bean.getR_Total();
-                        break;
-                    case ProductBean.PRODUCT:
-                        B_Product += bean.getR_Total();
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            String username = bean.getCashier();
-
-            tSaleBean.setR_PName(ThaiUtil.Unicode2ASCII(bean.getR_PName()));
-            tSaleBean.setR_Unit(ThaiUtil.Unicode2ASCII(bean.getR_Unit()));
-            tSaleBean.setR_Group(bean.getR_Group());
-            tSaleBean.setR_Status(bean.getR_Status());
-            tSaleBean.setR_Normal(bean.getR_Normal());
-            tSaleBean.setR_Discount(bean.getR_Discount());
-            tSaleBean.setR_Service(bean.getR_Service());
-            tSaleBean.setR_Stock(bean.getR_Stock());
-            tSaleBean.setR_Set(bean.getR_Set());
-            tSaleBean.setR_Vat(bean.getR_Vat());
-            tSaleBean.setR_Type(bean.getR_Type());
-            tSaleBean.setR_ETD(bean.getR_ETD());
-            tSaleBean.setR_DiscBath(bean.getR_DiscBath());
-
-            if (posConfig.getP_ServiceType().equals("N")) {
-                R_ServiceAmt = Double.parseDouble(dfFormat.format(r_nettotal * posConfig.getP_Service() / 100));
-                tSaleBean.setR_ServiceAmt(R_ServiceAmt);
-                SumR_ServiceAmt += R_ServiceAmt;
-            }
-
-            if (etdTypeFromTSale.equals("")) {
-                etdTypeFromTSale = tSaleBean.getR_ETD();
-            }
-            tSaleBean.setR_Quan(bean.getR_Quan());
-            tSaleBean.setR_PrCode(bean.getR_PrCode());
-
-            tSaleBean.setR_LinkIndex(bean.getR_LinkIndex());
-            tSaleBean.setR_Pause(bean.getR_Pause());
-            tSaleBean.setR_VoidPause("");
-            tSaleBean.setR_SPIndex("");
-
-            //set default cashier test
-            tSaleBean.setCashier(username);
-
-            //add new
-            tSaleBean.setR_Opt1(bean.getR_Opt1());
-            tSaleBean.setR_Opt2(bean.getR_Opt2());
-            tSaleBean.setR_Opt3(bean.getR_Opt3());
-            tSaleBean.setR_Opt4(bean.getR_Opt4());
-            tSaleBean.setR_Opt5(bean.getR_Opt5());
-            tSaleBean.setR_Opt6(bean.getR_Opt6());
-            tSaleBean.setR_Opt7(bean.getR_Opt7());
-            tSaleBean.setR_Opt8(bean.getR_Opt8());
-            tSaleBean.setR_Opt9(bean.getR_Opt9());
-            tSaleBean.setR_Date(bean.getR_Date());
-
-            BillControl.saveTSale(tSaleBean);
-
-            if (!bean.getR_PrType().equals("") && !bean.getR_PrCode().equals("")) {
-                //update T_Promotion
-                TPromotionBean promotionBean = new TPromotionBean();
-                promotionBean.setR_Index(tSaleBean.getR_Index());
-                promotionBean.setR_RefNo(tSaleBean.getR_Refno());
-                promotionBean.setTerminal(tSaleBean.getMacNo());
-                promotionBean.setCashier(tSaleBean.getCashier());
-                promotionBean.setPrCode(tSaleBean.getR_PrCode());
-                promotionBean.setPrType(tSaleBean.getR_PrType());
-                promotionBean.setPCode(tSaleBean.getR_PluCode());
-                promotionBean.setPDisc(tSaleBean.getR_PrDisc());
-                promotionBean.setPDiscBath(tSaleBean.getR_DiscBath());
-                promotionBean.setPPrice(tSaleBean.getR_Price());
-                promotionBean.setPQty(tSaleBean.getR_Quan());
-                promotionBean.setPrAmt(tSaleBean.getR_PrAmt());
-                promotionBean.setFlage("-");
-
-                PromotionControl proControl = new PromotionControl();
-                proControl.saveTPromotion(promotionBean);
-            }
-        }
-
-        //for Billno
-        try {
-            TableFileControl tableControl = new TableFileControl();
-            TableFileBean tableFile = tableControl.getData(table);
-
-            BillNoBean billNo = new BillNoBean();
-            double cashPay = billBean.getB_Cash();
-            double creditPay = billBean.getB_CrAmt1();
-            double totalSum = tableFile.getNetTotal();
-            double B_Ton = billBean.getB_Ton();
-            double B_Total = tableFile.getTAmount();
-
-            billNo.setB_Earnest(billBean.getB_Earnest());
-
-            //item discount
-            billNo.setB_ItemDiscAmt(billBean.getB_ItemDiscAmt());
-
-            //discount all
-            billNo.setB_FastDiscAmt(billBean.getB_FastDiscAmt());
-            billNo.setB_FastDisc(billBean.getB_FastDisc());
-
-            billNo.setB_CuponDiscAmt(billBean.getB_CuponDiscAmt());
-            billNo.setB_SubDiscBath(billBean.getB_SubDiscBath());
-
-            billNo.setB_EmpDiscAmt(billBean.getB_EmpDiscAmt());
-            billNo.setB_EmpDisc(billBean.getB_EmpDisc());
-
-            billNo.setB_TrainDiscAmt(billBean.getB_TrainDiscAmt());
-            billNo.setB_TrainDisc(billBean.getB_TrainDisc());
-
-            billNo.setB_MemDiscAmt(billBean.getB_MemDiscAmt());
-            billNo.setB_MemDisc(billBean.getB_MemDisc());
-
-            billNo.setB_SubDisc(billBean.getB_SubDisc());
-            billNo.setB_SubDiscAmt(billBean.getB_SubDiscAmt());
-
-            //update credit bean
-            billNo.setB_CrCode1(billBean.getB_CrCode1());
-            billNo.setB_CardNo1(billBean.getB_CardNo1());
-            billNo.setB_AppCode1(billBean.getB_AppCode1());
-            billNo.setB_CrAmt1(billBean.getB_CrAmt1());
-            billNo.setB_CrChargeAmt1(billBean.getB_CrChargeAmt1());
-            billNo.setB_CrCharge1(billBean.getB_CrCharge1());
-
-            //Add New
-            billNo.setB_ProDiscAmt(tableFile.getProDiscAmt());
-            billNo.setB_KicQue("" + MAX_Que);
-
-            billNo.setB_Total(B_Total);
-            billNo.setB_Food(B_Food);
-            billNo.setB_Drink(B_Drink);
-            billNo.setB_Product(B_Product);
-
-            billNo.setB_Service(B_Service);
-            billNo.setB_ServiceAmt(billBean.getB_ServiceAmt());
-            if (new CompanyConfig().includeVat()) {
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
-                billNo.setB_CrAmt1(creditPay);
-            } else if (new CompanyConfig().excludeVat()) {
-                totalSum = tableFile.getTAmount() + billNo.getB_ServiceAmt();
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
-                billNo.setB_CrAmt1(creditPay);
-            }
-
-            if (posConfig.getP_VatType().equals("I")) {
-                billNo.setB_NetVat(totalSum);
-            }
-            if (posConfig.getP_VatType().equals("E")) {
-                billNo.setB_NetVat(totalSum + (totalSum * 7 / 100));
-            }
-
-            billNo.setB_MemBegin(new Date());
-            billNo.setB_MemEnd(new Date());
-            billNo.setB_Ton(B_Ton);
-
-            billNo.setB_ChkBillTime(DateUtil.T1.format(new Date()));
-            billNo.setB_CashTime(DateUtil.T1.format(new Date()));
-            billNo.setB_Ontime(DateUtil.T1.format(new Date()));
-
-            billNo.setB_Table(table);
-            billNo.setB_Refno(BillNo);
-            billNo.setB_MacNo(Value.MACNO);
-            billNo.setB_Cashier(tableFile.getCashier());
-            billNo.setB_Cust(tableFile.getTCustomer());
-            billNo.setB_ETD(etdTypeFromTSale);
-            billNo.setB_Cash(cashPay);
-            billNo.setB_Total(B_Total);
-            billNo.setB_MemCode(tableFile.getMemCode());
-
-            billNo.setB_Service(POSConfigSetup.Bean().getP_Service());
-
-            billNo.setB_PayAmt(billBean.getB_PayAmt());
-            //
-            if (new CompanyConfig().includeVat()) {
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / (100 + posConfig.getP_Vat()));
-                billNo.setB_CrAmt1(creditPay);
-                billNo.setB_NetTotal(totalSum);
-            } else if (new CompanyConfig().excludeVat()) {
-                totalSum = tableFile.getTAmount() - billNo.getB_SubDiscBath() - billNo.getB_CuponDiscAmt() + billNo.getB_ServiceAmt();
-                billNo.setB_NetVat(totalSum);
-                //set table billno
-                billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
-                billNo.setB_CrAmt1(creditPay);
-                billNo.setB_NetTotal(totalSum + (totalSum * posConfig.getP_Vat() / 100));
-            }
-            billNo.setB_Entertain1(PublicVar.b_entertain);
-            // set default cashier test 
-            billNo.setB_OnDate(new Date());
-            billNo.setB_PostDate(new Date());
-
-            billNo.setB_NetDiff(billBean.getB_NetDiff());
-
-            // set giftvoucher
-            billNo.setB_GiftVoucher(billBean.getB_GiftVoucher());
-
-            // set AR
-            billNo.setB_AccrCode(billBean.getB_AccrCode());
-            billNo.setB_AccrAmt(billBean.getB_AccrAmt());
-            billNo.setB_AccrCr(billBean.getB_AccrCr());
-
-            billNo.setB_InvType("");
-            billNo.setB_Bran("");
-            billNo.setB_ChkBill("Y");
-            billNo.setB_CrBank("");
-            billNo.setB_MemName("");
-            billNo.setB_VoidUser("");
-            billNo.setB_VoidTime("");
-            billNo.setB_PrnTime1("");
-            billNo.setB_PrnTime2("");
-            billNo.setB_InvNo("");
-            billNo.setB_BranName("");
-            billNo.setB_Tel("");
-            billNo.setB_RecTime("");
-
-            //forMember
-            memberBean = MemmaterController.getMember(tableFile.getMemCode());
-            if (memberBean == null) {
-                billNo.setMScore("");
-            } else {
-                if (!memberBean.getMember_Code().equals("")) {
-                    double currentMemberScore = memControl.paymentScoreExec(memberBean.getMember_Code(), billNo, memberBean);
-
-                    billNo.setB_MemName(ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()));
-                    billNo.setB_MemCurSum(currentMemberScore);
-                    billNo.setB_SumScore(memberBean.getMember_TotalScore() + currentMemberScore);
-                    billNo.setB_MemBegin(memberBean.getMember_AppliedDate());
-                    billNo.setB_MemEnd(memberBean.getMember_ExpiredDate());
-                }
-            }
-            billNo.setMStamp("");
-            billNo.setMScore("");
-            billNo.setStampRate("");
-
-            double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
-            double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
-
-            MySQLConnect mysql2 = new MySQLConnect();
-            try {
-                mysql2.open(BillControl.class);
-                String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time limit 1;";
-                Statement stmt = mysql2.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sqlUpdate);
-                if (rs.next()) {
-                    String r_index = rs.getString("R_Index");
-                    String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                    try (Statement stmt1 = mysql2.getConnection().createStatement()) {
-                        stmt1.executeUpdate(sqlUpdateT_sale);
-                    }
-                }
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
-                AppLogUtil.log(BillControl.class, "error", e);
-            } finally {
-                mysql2.close();
-            }
-
-            BillControl.saveBillNo(billNo, memberBean);
-            if (Value.useprint) {
+                BillControl.saveBillNo(billNo, memberBean);
+                if (Value.useprint) {
 //                new Thread(() -> {
                     PPrint print = new PPrint();
                     print.PrintSubTotalBill(BillNo, table);
@@ -987,67 +1019,73 @@ public class BillControl {
                         print.PrintSubTotalBill(BillNo, table);
                     }
 //                }).start();
-            }
-
-            //clear transaction for table (balance, tablefile)
-            balanceControl.setDefaultBalance(table);
-            tableControl.setDefaultTableFile(table);
-
-            MySQLConnect mysql3 = new MySQLConnect();
-            try {
-                mysql3.open(BillControl.class);
-                String sql = "select * from tempgift";
-                Statement stmt = mysql3.getConnection().createStatement();
-                try (ResultSet rs = stmt.executeQuery(sql)) {
-                    while (rs.next()) {
-                        String sqlAdd = "insert into t_gift "
-                                + "(ondate,macno,refno,"
-                                + "cashier,giftbarcode,gifttype,"
-                                + "giftprice,giftmodel,giftlot,"
-                                + "giftexp,giftcode,giftno,"
-                                + "giftamt,fat) "
-                                + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
-                                + "'','','',"
-                                + "'','',"
-                                + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                        try (Statement stmt1 = mysql3.getConnection().createStatement()) {
-                            stmt1.executeUpdate(sqlAdd);
-                        }
-                    }
                 }
-            } catch (SQLException e) {
+
+                //clear transaction for table (balance, tablefile)
+                balanceControl.setDefaultBalance(table);
+                tableControl.setDefaultTableFile(table);
+
+                MySQLConnect mysql3 = new MySQLConnect();
+                try {
+                    mysql3.open(BillControl.class);
+                    String sql = "select * from tempgift";
+                    Statement stmt = mysql3.getConnection().createStatement();
+                    try (ResultSet rs = stmt.executeQuery(sql)) {
+                        while (rs.next()) {
+                            String sqlAdd = "insert into t_gift "
+                                    + "(ondate,macno,refno,"
+                                    + "cashier,giftbarcode,gifttype,"
+                                    + "giftprice,giftmodel,giftlot,"
+                                    + "giftexp,giftcode,giftno,"
+                                    + "giftamt,fat) "
+                                    + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
+                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                    + "'','','',"
+                                    + "'','',"
+                                    + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
+                            try (Statement stmt1 = mysql3.getConnection().createStatement()) {
+                                stmt1.executeUpdate(sqlAdd);
+                            }
+                        }
+                        rs.close();
+                        stmt.close();
+                    }
+                } catch (SQLException e) {
+                    MSG.ERR(e.getMessage());
+                    AppLogUtil.log(BillControl.class, "error", e);
+                } finally {
+                    mysql3.closeConnection(this.getClass());
+                }
+
+                //save t_cupon
+                TempCuponController tcCon = new TempCuponController();
+                TempCuponBean tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
+
+                TCuponControl tCon = new TCuponControl();
+                TCuponBean tBean = new TCuponBean();
+                tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
+                tBean.setR_Refno(BillNo);
+                tBean.setTerminal(tcBean.getTerminal());
+                tBean.setCashier(tcBean.getCashier());
+                tBean.setTime(tcBean.getTime());
+                tBean.setCuCode(tcBean.getCuCode());
+                tBean.setCuQuan(tcBean.getCuQuan());
+                tBean.setCuAmt(tcBean.getCuAmt());
+                tBean.setRefund("");
+                tBean.setCuTextCode("");
+                tBean.setCuTextComment("");
+
+                tCon.saveTCupon(tBean);
+                tcCon.clearTempOld(tcBean.getR_Index());
+
+                BillControl.updateNextBill();
+                BranchControl.updateKicItemNo();
+            } catch (NumberFormatException e) {
                 MSG.ERR(e.getMessage());
-                AppLogUtil.log(BillControl.class, "error", e);
-            } finally {
-                mysql3.close();
             }
-
-            //save t_cupon
-            TempCuponController tcCon = new TempCuponController();
-            TempCuponBean tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
-
-            TCuponControl tCon = new TCuponControl();
-            TCuponBean tBean = new TCuponBean();
-            tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
-            tBean.setR_Refno(BillNo);
-            tBean.setTerminal(tcBean.getTerminal());
-            tBean.setCashier(tcBean.getCashier());
-            tBean.setTime(tcBean.getTime());
-            tBean.setCuCode(tcBean.getCuCode());
-            tBean.setCuQuan(tcBean.getCuQuan());
-            tBean.setCuAmt(tcBean.getCuAmt());
-            tBean.setRefund("");
-            tBean.setCuTextCode("");
-            tBean.setCuTextComment("");
-
-            tCon.saveTCupon(tBean);
-            tcCon.clearTempOld(tcBean.getR_Index());
-
-            BillControl.updateNextBill();
-            BranchControl.updateKicItemNo();
-        } catch (NumberFormatException e) {
-            MSG.ERR(e.getMessage());
+            return BillNo;
+        } catch (Exception e) {
+            MSG.CONF(e.getMessage());
         }
 
         return BillNo;
@@ -1089,7 +1127,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return data;
@@ -1192,7 +1230,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return data;
@@ -1292,7 +1330,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return data;
@@ -1496,11 +1534,12 @@ public class BillControl {
 
             rs.close();
             rs1.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return data;
@@ -1607,8 +1646,12 @@ public class BillControl {
                 bean.setB_CrCardAmt(rs.getFloat("B_CrCardAmt"));
                 bean.setB_CrCurPoint(rs.getFloat("B_CrCurPoint"));
                 bean.setB_CrSumPoint(rs.getFloat("B_CrSumPoint"));
-                bean.setB_KicQue(rs.getString("B_KicQue"));
-                bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
+//                bean.setB_KicQue(rs.getString("B_KicQue"));
+                try {
+                    bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
+                } catch (Exception e) {
+                    bean.setB_NetDiff(0);
+                }
 
                 try {
                     bean.setB_OnDate(rs.getDate("B_OnDate"));
@@ -1619,6 +1662,9 @@ public class BillControl {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(BillControl.class, "error", e);
                 }
+
+                rs1.close();
+                stmt2.close();
             }
 
             rs.close();
@@ -1627,7 +1673,7 @@ public class BillControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -1636,7 +1682,12 @@ public class BillControl {
     private TSaleBean mappingBalanceToTSale(int i, int size, BalanceBean bean, String BillNo, BillNoBean billBean) {
         TSaleBean tSaleBean = new TSaleBean();
         if (i == size - 1) {
-            tSaleBean.setR_NetDiff(billBean.getB_NetDiff());
+            try {
+                tSaleBean.setR_NetDiff(billBean.getB_NetDiff());
+            } catch (Exception e) {
+                tSaleBean.setR_NetDiff(0);
+            }
+
         }
         tSaleBean.setR_Index(BillNo + bean.getR_Index());
         tSaleBean.setR_Refno(BillNo);
@@ -1755,12 +1806,13 @@ public class BillControl {
                 if (rs.next()) {
                     isValid = true;
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -1768,7 +1820,7 @@ public class BillControl {
 
     public BillNoBean getLastBillNo() {
         BillNoBean bean = null;
-        
+
         MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
@@ -1783,14 +1835,15 @@ public class BillControl {
                     bean.setB_Refno(b_refno);
                     bean.setB_Cust(b_cust);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
-        
+
         return bean;
     }
 

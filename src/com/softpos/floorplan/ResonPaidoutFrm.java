@@ -90,7 +90,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
         saveResonPaidout();
-        dispose();
+        this.setVisible(false);//dispose();
         
         PaidoutFrm frm = new PaidoutFrm(null, true, txtReson.getText());
         frm.setVisible(true);
@@ -126,7 +126,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ResonPaidoutFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

@@ -1,15 +1,9 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import util.MSG;
 
 public class Value {
 
@@ -31,7 +25,7 @@ public class Value {
     public static String TableSelected = "";
     public static String TEMP_TABLE_REFUND = "999";
     public static String db_member = "";
-    public static boolean printdriver = true;
+    public static boolean printdriver = false;
     public static String printerDriverName = "SoftPrint";
     public static String printerDriverKitChenName = "";
     public static String takeorder = "N";

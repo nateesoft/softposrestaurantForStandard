@@ -116,14 +116,15 @@ public class PaidoutFrm extends javax.swing.JDialog {
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PaidoutFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -493,7 +494,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtAmountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountKeyPressed
@@ -501,7 +502,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
             SaveDataPaidout();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

@@ -9,12 +9,14 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.pos.core.controller.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.RefundBillController;
+import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import convert_utility.text_to_image.TextToImage;
@@ -31,6 +33,7 @@ import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -402,7 +405,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }//GEN-LAST:event_txtBillNoMouseClicked
 
     private void bntOKClick() {
-        if (loadDataFromBillNo() && checkPermit()) {
+        if (loadDataFromBillNo() && checkPermit() || PublicVar.ReturnPermitRefund == true) {
             if (PUtility.ShowConfirmMsg("ยืนยันการยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " Yes/No ?")) {
                 updateDatabaseForRefund();
                 try {
@@ -458,6 +461,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and b_refno='" + BillNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "update t_sale set r_refund='V' "
@@ -465,6 +469,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (r_refno='" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "update t_saleset set r_refund='V' "
@@ -472,6 +477,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (r_refno='" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "update t_cupon set refund='V' "
@@ -479,6 +485,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (r_refno='" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "delete from t_promotion "
@@ -486,16 +493,19 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (r_refno='" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "update t_gift set fat='V'  where (macno='" + macno + "') and (refno='" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             sql = "delete from accr where (arno='" + PublicVar.Branch_Code + "/" + macno + "/" + BillNo + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             if (!memcode.equals("")) {
@@ -506,16 +516,19 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             + "m_sum=m_sum-" + bBean.getB_NetTotal() + " "
                             + "where (m_code='" + memcode + "')";
                     stmt.executeUpdate(SqlQuery);
+                    stmt.close();
                 }
 
                 sql = "delete from mtran where m_billno='" + macno + "/" + BillNo + "'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
 
                 sql = "delete from mtranplu where m_billno='" + macno + "/" + BillNo + "'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             }
 
@@ -528,13 +541,33 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     String DocNo = "R" + rs.getString("r_refno");
                     Date TDate = rs.getDate("r_date");
                     PUtility.ProcessStockOut(DocNo, StkCode, rs.getString("r_plucode"), TDate, StkRemark, -1 * rs.getDouble("r_quan"), -1 * rs.getDouble("r_total"), PublicVar.TUserRec.getUserName(), rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
+                    double quantity = rs.getDouble("r_quan");
+                    String r_plucode = rs.getString("r_plucode");
+                    FloorPlanController floorPlanControl = new FloorPlanController();
+                    List<PIngredientBean> listING = floorPlanControl.listIngredeint(r_plucode);
+                    //ตัดสต็อกสินค้าที่มี Ingredent
+                    for (PIngredientBean ingBean : listING) {
+                        if (ingBean.getPstock().equals("Y") && ingBean.getPactive().equals("Y")) {
+                            String R_PluCode = ingBean.getPingCode();
+                            double PBPack = ingBean.getPBPack();
+                            if (PBPack <= 0) {
+                                PBPack = 1;
+                            }
+                            double R_QuanIng = (ingBean.getPingQty() * quantity);
+                            double R_Total = 0;
+                            PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, -R_QuanIng, R_Total,
+                                    Value.USERCODE, "Y", "", "", "");
+                        }
+                    }
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -546,7 +579,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//this.setVisible(false);//dispose();
     }
 
     private Boolean loadDataFromBillNo() {
@@ -671,7 +704,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -692,7 +725,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         txtMacNo.setText("");
         txtBillNo.setFocusable(true);
         txtBillNo.requestFocus();
-        
+
         Cleartblshowplu();
     }
 
@@ -725,12 +758,14 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 if (rs.next()) {
                     isPermit = true;
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (isPermit) {

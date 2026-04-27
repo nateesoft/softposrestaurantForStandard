@@ -36,12 +36,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean = new MenuListBean();
                     bean.setPlucode(rs.getString("plucode"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -59,12 +61,13 @@ public class MainSaleController extends DatabaseConnection {
                     valid = true;
                 }
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return valid;
@@ -92,14 +95,14 @@ public class MainSaleController extends DatabaseConnection {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listPset;
     }
 
     public String getQueryShowKic(String tableNo) {
-        return "select r_kic,r_etd from balance "
+        return "select r_kic,r_etd,macno from balance "
                 + "where r_table='" + tableNo + "' "
                 + "and R_PrintOK='Y' "
                 + "and R_KicPrint<>'P' "
@@ -118,12 +121,13 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -141,15 +145,16 @@ public class MainSaleController extends DatabaseConnection {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
                     bean.setR_ETD(rs.getString("r_etd"));
-
+                    bean.setMacno(rs.getString("macno"));
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -174,12 +179,13 @@ public class MainSaleController extends DatabaseConnection {
 
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -208,12 +214,13 @@ public class MainSaleController extends DatabaseConnection {
 
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -233,12 +240,13 @@ public class MainSaleController extends DatabaseConnection {
                     bean.setTAmount(rs.getDouble("TAmount"));
                     bean.setTCustomer(rs.getInt("TCustomer"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -257,12 +265,13 @@ public class MainSaleController extends DatabaseConnection {
                     bean.setR_Time(rs.getString("r_time"));
                     bean.setR_Date(rs.getDate("r_date"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -281,12 +290,14 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -304,12 +315,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean = new BalanceBean();
                     bean.setR_Total(rs.getInt("items"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -336,7 +349,7 @@ public class MainSaleController extends DatabaseConnection {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listPset;
@@ -362,7 +375,7 @@ public class MainSaleController extends DatabaseConnection {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -382,12 +395,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean = new BalanceBean();
                     bean.setR_LinkIndex(rs.getString("r_linkindex"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -407,12 +422,14 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -433,12 +450,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean.setHead3(ThaiUtil.ASCII2Unicode(rs.getString("head3")));
                     bean.setHead4(ThaiUtil.ASCII2Unicode(rs.getString("head4")));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -456,12 +475,14 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -483,12 +504,14 @@ public class MainSaleController extends DatabaseConnection {
 
                     listBalance.add(bean);
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -509,12 +532,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean.setPCode(rs.getString("PCode"));
                     bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -537,12 +562,14 @@ public class MainSaleController extends DatabaseConnection {
 
                     listMgrButton.add(bean);
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listMgrButton;
@@ -566,12 +593,14 @@ public class MainSaleController extends DatabaseConnection {
                     bean.setCheck_before(rs.getString("Check_before"));
                     bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -588,12 +617,14 @@ public class MainSaleController extends DatabaseConnection {
                 if (rs.next()) {
                     isFound = true;
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isFound;

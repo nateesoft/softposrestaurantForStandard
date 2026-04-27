@@ -156,7 +156,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     }//GEN-LAST:event_bntOKActionPerformed
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntOKClick() {
@@ -169,7 +169,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
          * * OPEN CONNECTION **
          */
         MySQLConnect mysql = new MySQLConnect();
-        mysql.close();
+        mysql.closeConnection(this.getClass());
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -185,9 +185,13 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
             }
+            rsGetEntertain.close();
+            
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
+            rsGetSumBillno.close();
+            
             while (rs.next()) {
                 frec.StBill = rs.getString("b_refno");
 
@@ -374,7 +378,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TerminalRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         prn.PrintTerminalEngForm(frec, CrArray, txtMacNo.getText());

@@ -355,12 +355,13 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             if (stmt.executeUpdate(sql) > 0) {
                 MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
             }
+            stmt.close();
         }
     } catch (SQLException e) {
         MSG.ERR(this, e.getMessage());
         AppLogUtil.log(SetHeaderMenu.class, "error", e);
     } finally {
-        mysql.close();
+        mysql.closeConnection(this.getClass());
     }
     
     PosControl.resetDataCompany();
@@ -543,7 +544,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetHeaderMenu.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

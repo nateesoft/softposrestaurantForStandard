@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.main.program.PrintToKic;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ public class PrintToKicController extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
-            String sql = "select r_table,"
+            String sql = "select r_table,macno,"
                     + "sum(b.r_quan) qty,sum(b.r_total) total from balance b "
                     + "where trantype='PDA' "
                     + "and r_kicprint<>'P' and r_void<>'V' "
@@ -30,49 +31,56 @@ public class PrintToKicController extends DatabaseConnection {
             System.out.println(sql);
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
+                    PrintToKic.kicPrintting = true;
                     bean = new BalanceBean();
                     bean.setR_Table(rs.getString("r_table"));
                     bean.setR_Total(rs.getDouble("total"));
+                    bean.setMacno(rs.getString("macno"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintToKicController.class, "error", e);
+            AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
     }
 
-    public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo) {
-        List<BalanceBean> listBalance = new ArrayList<>();
-
+    public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo, String macno) {
+        List<BalanceBean> listBalance = listBalance = null;
+        listBalance = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select r_kic,r_etd from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
+                    + "and TranType='PDA' "
                     + "and R_KicPrint<>'P' "
                     + "and R_Kic<>'0' "
                     + "and R_Void<>'V' "
+                    + "and R_Pause='P' "
+                    + "and macno='" + macno + "' "
                     + "group by r_kic,r_etd "
                     + "order by r_kic, r_etd";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
-                if (rs.next()) {
+                while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
                     bean.setR_ETD(rs.getString("r_etd"));
 
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -85,7 +93,8 @@ public class PrintToKicController extends DatabaseConnection {
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select * from balance "
-                    + "where r_table='" + tableNo + "' "
+                    + "where trantype='PDA' "
+                    + "and r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_Kic<>'' "
@@ -99,12 +108,13 @@ public class PrintToKicController extends DatabaseConnection {
 
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PrintToKicController.class, "error", e);
+            AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -133,12 +143,13 @@ public class PrintToKicController extends DatabaseConnection {
 
                     listBalance.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;

@@ -22,7 +22,7 @@ public class MySQLConnectWebOnline {
     private static String Password = null;
     private static String PortNumber = null;
     private static String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
-    
+
     static {
         getDbVar();
     }
@@ -120,7 +120,7 @@ public class MySQLConnectWebOnline {
                         Password = data[1];
                     } else if (data[0].equalsIgnoreCase("port")) {
 //                        PortNumber = data[1];
-                        PortNumber = "3307";
+                        PortNumber = data[1];
                     } else if (data[0].equalsIgnoreCase("macno")) {
                         Value.MACNO = data[1];
                     } else if (data[0].equalsIgnoreCase("language")) {
@@ -164,7 +164,7 @@ public class MySQLConnectWebOnline {
                 fs.close();
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-                
+
             }
         }
     }

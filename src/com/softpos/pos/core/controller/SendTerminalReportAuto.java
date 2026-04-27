@@ -457,7 +457,7 @@ public class SendTerminalReportAuto {
                 }
                 rs.close();
             } catch (SQLException e) {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================") + "_";
@@ -540,7 +540,7 @@ public class SendTerminalReportAuto {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================") + "_";
@@ -722,7 +722,7 @@ public class SendTerminalReportAuto {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return listObj;
@@ -760,7 +760,7 @@ public class SendTerminalReportAuto {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return list;
@@ -800,7 +800,7 @@ public class SendTerminalReportAuto {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return credit;
@@ -908,7 +908,7 @@ public class SendTerminalReportAuto {
         } catch (InterruptedException | SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
     

@@ -8,11 +8,10 @@ import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 import printReport.PrintSimpleForm;
 import util.MSG;
 
@@ -23,8 +22,8 @@ import util.MSG;
 public class PrintToKic extends javax.swing.JFrame {
 
     private String tableNo = "";
-    private int refresh = 10;
-    private boolean kicPrintting = false;
+    private int refresh = 15;
+    public static boolean kicPrintting = false;
     private boolean printkic = false;
     private final PrintToKicController control = new PrintToKicController();
 
@@ -36,7 +35,9 @@ public class PrintToKic extends javax.swing.JFrame {
      */
     public PrintToKic(java.awt.Frame parent, boolean modal) {
         initComponents();
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
         BranchBean branchBean = BranchControl.getData();
         String config = branchBean.getSaveOrder();
         lblProcessLog.setText("Log! : ");
@@ -49,19 +50,50 @@ public class PrintToKic extends javax.swing.JFrame {
         setState(JFrame.ICONIFIED);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-        ActionListener timerListener = (ActionEvent e) -> {
-            if (printkic == true) {
-                System.out.println("PROCESS " + refresh + "sec");
-                new Thread(() -> {
-                    kicPrintFromPDA();
-                }).start();
-            }
-        };
-        if (refresh < 0) {
-            refresh = 10;
+//        ActionListener timerListener = (ActionEvent e) -> {
+//        for (int i = 0; i < 1;) {
+//        new Thread(() -> {
+        try {
+                    Thread.sleep(5000);
+//            Thread.sleep(1000);
+        } catch (Exception e) {
         }
-        Timer timer = new Timer(refresh * 1000, timerListener);
-        timer.start();
+        if (printkic == true) {
+            System.out.println("PROCESS " + refresh + "sec");
+//                new Thread(() -> {
+            while (kicPrintting != true) {
+                System.out.println("kicPrintFromPDA");
+
+                kicPrintFromPDA();
+
+                try {
+                    Thread.sleep(3 * 1000);
+                } catch (Exception e) {
+                }
+            }
+        }
+            }
+
+//        }).start();
+        }).start();
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//            }
+//            if (refresh < 0) {
+//                refresh = 1000;
+//            }
+//        Timer timer = new Timer(10, timerListener);
+//            try {
+//                Thread.sleep(3000);
+//            } catch (Exception e) {
+//            }
+//        if (kicPrintting != true) {
+//            Timer timer = new Timer(refresh * 1000, timerListener);
+//            timer.start();
+//        } 
+//        }
+//        };
     }
 
     private void loadStatus() {
@@ -74,18 +106,18 @@ public class PrintToKic extends javax.swing.JFrame {
                 pbCheckUpdate.setValue(i);
                 pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(2);
                 } catch (InterruptedException e) {
                 }
             }
 
             pbCheckUpdate.setString("Load data Complete ");
-            Thread.sleep(25);
+            Thread.sleep(2);
             for (int i = 100; i >= 0; i--) {
                 pbCheckUpdate.setValue(i);
                 pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(2);
                 } catch (InterruptedException e) {
                 }
             }
@@ -121,7 +153,7 @@ public class PrintToKic extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print_Button.jpg"))); // NOI18N
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 0));
+        jPanel2.setBackground(new java.awt.Color(102, 102, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -250,35 +282,46 @@ public class PrintToKic extends javax.swing.JFrame {
         if (kicPrintting == false) {
             BalanceBean balanceBean = control.getBalaneForPDA();
             if (balanceBean != null) {
-                System.out.println("Found data to print");
+                kicPrintting = true;
+                System.out.println("Found data to print kicPrintFromPDA() ");
                 lblProcessLog.setText("Total Bill: " + balanceBean.getR_Total());
-                if (kicPrintting == false) {
-                    kicPrintting = true;
-                    tableNo = balanceBean.getR_Table();
-                    lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + balanceBean.getR_Table());
+//                if (kicPrintting == false) {
+//                    kicPrintting = true;
+                tableNo = balanceBean.getR_Table();
+                lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + balanceBean.getR_Table() + " สั่งจากเครื่อง : " + balanceBean.getMacno());
 
-                    kichenPrint(balanceBean.getR_Table());
+                kichenPrint(balanceBean.getR_Table(), balanceBean.getMacno());
+                try {
+                     Thread.sleep(10 * 1000);
+                } catch (Exception e) {
                 }
-            } else {
                 kicPrintting = false;
+//                kicPrintFromPDA();
+//                }
+            } else {
+//                try {
+//                    Thread.sleep(30*1000);
+//                } catch (Exception e) {
+//                }
+//                kicPrintting = false;
+//                kicPrintFromPDA();
             }
         }
     }
 
-    private void kichenPrint(String tableNo) {
+    private void kichenPrint(String tableNo, String macno) {
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
         String printerName;
         String[] kicMaster = BranchControl.getKicData20();
         // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-        List<BalanceBean> listBalance = control.getBalaneForPDAByTableNo(tableNo);
-        if (!PublicVar.Branch_Saveorder.equals("N")) {
-            printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-        }
+        List<BalanceBean> listBalance = control.getBalaneForPDAByTableNo(tableNo, macno);
+
         //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
         for (BalanceBean balanceBean : listBalance) {
             kicPrintting = true;
             loadStatus();
             String rKic = balanceBean.getR_Kic();
+            lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + tableNo + " KIC : " + rKic + " สั่งจากเครื่อง : " + macno);
             if (!rKic.equals("")) {
                 int iKic = Integer.parseInt(rKic);
                 if (iKic - 1 < 0) {
@@ -297,6 +340,7 @@ public class PrintToKic extends javax.swing.JFrame {
                                     String PCode = bean.getR_PluCode();
                                     if (printerForm.equals("1")) {
                                         if (Value.printkic) {
+                                            kicPrintting = true;
                                             printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
                                         }
                                     }
@@ -320,8 +364,9 @@ public class PrintToKic extends javax.swing.JFrame {
                             case "5":
                                 if (printerForm.equals("3")) {
                                     if (Value.printkic) {
+                                        kicPrintting = true;
                                         String retd = balanceBean.getR_ETD();
-                                        printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA");
+                                        printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA", macno);
                                     }
                                 } else if (printerForm.equals("4")) {
                                     if (Value.printkic) {
@@ -334,28 +379,48 @@ public class PrintToKic extends javax.swing.JFrame {
                                 }
                                 break;
                             case "7":
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
+                                }
+                            case "8":
+                                if (Value.printkic) {
+                                    printSimpleForm.KIC_FORM_8Qrcode(printerName, tableNo, balanceBean.getR_ETD());//print new Jasperfile
+                                }
+                                break;
                             case "2":
                                 if (Value.printkic) {
-                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);
+//                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);//OldVersion print html 
+
+                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
                                 }
                                 break;
                             default:
-                                MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+                                MSG.ERR(null, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
                                 break;
                         }
                     }
                 }
             }
         }
+        if (!PublicVar.Branch_Saveorder.equals("N")) {
+            printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+        }
         //update r_kicprint
-        String sql = "update balance "
-                + "set r_kicprint='P',"
-                + "r_pause='Y' "
-                + "where r_table='" + tableNo + "' "
-                + "and r_kicprint<>'P' "
-                + "and r_printOk='Y' "
-                + "and r_kic<>'';";
-        control.execUpdate(sql);
+//        String sql = "update balance "
+//                + "set r_kicprint='P',"
+//                + "r_pause='Y' "
+//                + "where r_table='" + tableNo + "' "
+//                + "and r_kicprint<>'P' "
+//                + "and r_printOk='Y' "
+//                + "and r_kic<>'' "
+//                + "and macno='" + macno + "' "
+//                + "and trantype = 'PDA';";
+//
+//        control.execUpdate(sql);
+        try {
+            Thread.sleep(900 * 5);
+        } catch (Exception e) {
+        }
         kicPrintting = false;
     }
 

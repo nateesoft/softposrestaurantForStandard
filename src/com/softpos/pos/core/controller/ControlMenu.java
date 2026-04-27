@@ -91,7 +91,7 @@ public class ControlMenu {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -130,7 +130,7 @@ public class ControlMenu {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -161,7 +161,7 @@ public class ControlMenu {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return menuAll;
@@ -196,6 +196,7 @@ public class ControlMenu {
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
@@ -230,7 +231,7 @@ public class ControlMenu {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return menuAll;
@@ -303,7 +304,7 @@ public class ControlMenu {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return companyMenu;
@@ -403,7 +404,7 @@ public class ControlMenu {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return menuAt;

@@ -193,6 +193,7 @@ public class CustomerName extends javax.swing.JDialog {
                             + "WHERE Tcode = '" + TABLE_NO + "'";
                     try (Statement stmt = mysql.getConnection().createStatement()) {
                         stmt.executeUpdate(sql);
+                        stmt.close();
                     }
                 }
             } else {
@@ -201,13 +202,14 @@ public class CustomerName extends javax.swing.JDialog {
                         + "WHERE Tcode = '" + TABLE_NO + "'";
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         dispose();
@@ -229,11 +231,13 @@ public class CustomerName extends javax.swing.JDialog {
             } else {
                 txtCustomerName.setText("");
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

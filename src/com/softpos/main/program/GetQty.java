@@ -803,7 +803,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(GetQty.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

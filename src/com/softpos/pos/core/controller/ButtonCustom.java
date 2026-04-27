@@ -1,6 +1,7 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MenuMGR;
+import com.softpos.crm.pos.core.modal.PublicVar;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Font;
@@ -60,7 +61,7 @@ public class ButtonCustom {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return menuMGR;
@@ -81,7 +82,12 @@ public class ButtonCustom {
                 bean.setMenuType(rs.getInt("MenuType"));
                 bean.setPCode(rs.getString("PCode"));
                 bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                bean.setIMG(rs.getString("IMG"));
+                if (PublicVar.loadFromDelphiBOR == true) {
+                    bean.setIMG(PublicVar.picturePath + rs.getString("IMG"));
+                } else {
+                    bean.setIMG(rs.getString("IMG"));
+                }
+
                 bean.setFontColor(rs.getString("FontColor"));
                 bean.setBGColor(rs.getString("BGColor"));
                 bean.setLayout(rs.getInt("Layout"));
@@ -100,7 +106,7 @@ public class ButtonCustom {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listMenu;

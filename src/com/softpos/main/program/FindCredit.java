@@ -196,7 +196,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         TCharge = 0.00;
     }
 
-    dispose();
+    this.setVisible(false);//dispose();
 }//GEN-LAST:event_bntOKActionPerformed
 
 private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowKeyPressed
@@ -219,7 +219,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void bntExitClick() {
         PublicVar.ReturnString = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntShowAllClick() {
@@ -250,7 +250,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnValues;
@@ -292,7 +292,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();

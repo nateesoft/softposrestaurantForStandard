@@ -1,0 +1,274 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.SoftwareAutoRun;
+
+import database.MySQLConnect;
+import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import util.DateConvert;
+import util.MSG;
+
+/**
+ *
+ * @author Administrator
+ */
+public class preOrderLoop extends javax.swing.JFrame {
+
+    /**
+     * Creates new form preOrderLoop
+     */
+    DateConvert dc = new DateConvert();
+
+    public void preOrderLoop() {
+        initComponents();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                preOrderTime();
+            }
+        }).start();
+    }
+
+    private void preOrderTime() {
+        MySQLConnect mc = new MySQLConnect();
+        String[] time1 = dc.GetCurrentTime().split(":");
+        String hh1 = "";
+        String mm1 = "";
+        DecimalFormat df = new DecimalFormat("#0");
+        String timecompare = "";
+
+        for (String data : time1) {
+            hh1 = time1[0].toString();
+            mm1 = time1[1].toString();
+        }
+        timecompare = hh1 + "." + mm1;
+//                System.out.println(df.format(hh1) + "." + mm1);
+        try {
+            mc.open();
+            loadStatus();
+            String sql = "select * from PreorderTime "
+                    + "where "
+                    + "flage_print='N' "
+                    + "and r_timeprint='" + timecompare + "' and r_date='" + dc.GetCurrentDate() + "';";
+            ResultSet rs = mc.getConnection().createStatement().executeQuery(sql);
+            lblShowGetTime.setText("ดำเนินการค้นหาเวลาพิมพ์ : " + timecompare);
+            System.out.println(sql);
+            int i = 0;
+            while (rs.next()) {
+                i++;
+                String r_table = rs.getString("R_Table");
+                String r_plucode = rs.getString("R_Plucode");
+                String r_timePrint = rs.getString("R_TimePrint");
+                String sqlUpdateFlagePreorderPrint = "update PreorderTime "
+                        + "set Flage_Print='Y' "
+                        + "where r_table='" + r_table + "' and r_plucode='" + r_plucode + "' and r_timePrint='" + r_timePrint + "' and Flage_Print='N' and r_date='" + dc.GetCurrentDate() + "';";
+                String sqlUpdate = "update balance set r_kicPrint=''"
+                        + " where r_table='" + r_table + "' and r_plucode='" + r_plucode + "' and r_void<>'V' and TranType='PDA';";
+                mc.getConnection().createStatement().executeUpdate(sqlUpdateFlagePreorderPrint);
+                mc.getConnection().createStatement().executeUpdate(sqlUpdate);
+                System.out.println(sqlUpdate);
+                System.out.println(sqlUpdateFlagePreorderPrint + "Round to sql = " + i);
+
+            }
+            rs.close();
+            Thread.sleep(1000);
+            System.out.println("Thread sleep 1000");
+            preOrderLoop();
+        } catch (Exception e) {
+            MSG.ERR(e.toString());
+        } finally {
+            mc.close();
+        }
+    }
+
+    private void loadStatus() {
+        //check ftp file date
+        try {
+            pbCheckUpdate.setStringPainted(true);
+            pbCheckUpdate.setMinimum(0);
+            pbCheckUpdate.setMaximum(100);
+            for (int i = 1; i <= 100; i++) {
+                pbCheckUpdate.setValue(i);
+                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                }
+            }
+
+            pbCheckUpdate.setString("Load data Complete ");
+            Thread.sleep(2);
+            for (int i = 100; i >= 0; i--) {
+                pbCheckUpdate.setValue(i);
+                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                }
+            }
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void setDisplay() {
+        setState(JFrame.ICONIFIED);
+    }
+
+    public void loopTime() {
+        int i = 1;
+        int round = 0;
+        while (i > 0) {
+            long time = 60 * 1000;
+            try {
+                System.out.println("Print time " + time + " MS = " + round);
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+            round++;
+            if (round == 60) {
+                break;
+            }
+
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        pbCheckUpdate = new javax.swing.JProgressBar();
+        lblShowGetTime = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jToggleButton1 = new javax.swing.JToggleButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Ge tData Reserved");
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+
+        lblShowGetTime.setText("jLabel1");
+
+        jButton1.setText("ออก (Exit)");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reserved1.png"))); // NOI18N
+        jToggleButton1.setLabel("");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblShowGetTime, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pbCheckUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jToggleButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblShowGetTime, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pbCheckUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 9, Short.MAX_VALUE))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(preOrderLoop.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(preOrderLoop.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(preOrderLoop.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(preOrderLoop.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                preOrderLoop pd = new preOrderLoop();
+                pd.setVisible(true);
+                pd.preOrderLoop();
+//                pd.setDisplay();
+
+//                pd.loopTime();
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JLabel lblShowGetTime;
+    private javax.swing.JProgressBar pbCheckUpdate;
+    // End of variables declaration//GEN-END:variables
+}

@@ -675,7 +675,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             MSG.ERR(e.getMessage());
                             AppLogUtil.log(ArHistory.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                         prn.print("----------------------------------------");
@@ -774,7 +774,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1()).trim() + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2()).trim() + "_";
@@ -860,7 +860,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

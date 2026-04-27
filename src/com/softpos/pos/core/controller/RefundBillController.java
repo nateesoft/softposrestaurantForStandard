@@ -30,11 +30,13 @@ public class RefundBillController extends DatabaseConnection {
                 bean.setB_MacNo(rs.getString("b_macno"));
                 bean.setB_MemCode(rs.getString("b_memcode"));
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(RefundBillController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return bean;

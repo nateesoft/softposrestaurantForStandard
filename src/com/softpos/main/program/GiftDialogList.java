@@ -149,12 +149,14 @@ public class GiftDialogList extends javax.swing.JDialog {
                 while (rs.next()) {
                     model.addRow(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.WAR(e.getMessage());
             AppLogUtil.log(GiftDialogList.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -304,7 +304,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckProductNotEnough.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -332,7 +332,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckProductNotEnough.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         loadData();
@@ -369,7 +369,7 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckProductNotEnough.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         txtPCode.setText("");
@@ -393,11 +393,12 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
                 if (i > 0) {
                     System.out.println("Delete success.");
                 }
+                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CheckProductNotEnough.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
 

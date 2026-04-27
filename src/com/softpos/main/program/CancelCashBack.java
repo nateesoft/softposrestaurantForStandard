@@ -193,7 +193,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -222,7 +222,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -1170,7 +1170,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!DisplayClick) {
@@ -1214,7 +1214,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!InvNo.isFocusable()) {
@@ -1254,7 +1254,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv2.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1332,7 +1332,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e2.getMessage());
                 AppLogUtil.log(PrintInv2.class, "error", e2);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1515,7 +1515,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1547,7 +1547,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1610,7 +1610,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1633,7 +1633,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1654,7 +1654,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -1726,7 +1726,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1792,7 +1792,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1814,7 +1814,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1838,7 +1838,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1879,7 +1879,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1922,7 +1922,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 MSG.ERR(e2.getMessage());
                                 AppLogUtil.log(PrintInv2.class, "error", e2);
                             } finally {
-                                mysql.close();
+                                mysql.closeConnection(this.getClass());
                             }
                             TCancel.setText("เอกสารยกเลิกโดย : " + PublicVar._User + "/" + DateFmt.format(date));
                             TCancelMsg.setText("  " + VoidMessage);
@@ -1990,7 +1990,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

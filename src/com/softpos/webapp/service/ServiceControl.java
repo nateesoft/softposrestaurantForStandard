@@ -112,11 +112,13 @@ public class ServiceControl {
                     + "where Tcode = '" + table + "'";
             Statement stmt2 = mysql.getConnection().createStatement();
             stmt2.executeUpdate(sqlUpd);
+            stmt2.close();
+            
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

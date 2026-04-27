@@ -477,7 +477,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     } catch (SQLException e) {
                         PUtility.showError(e.getMessage());
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -560,7 +560,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");
@@ -580,7 +580,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

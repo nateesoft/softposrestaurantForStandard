@@ -407,10 +407,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 t += "colspan=2 align=left><font face=Angsana New size=1>" + "เครดิต" + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + DecFmt.format(credit) + "_";
                 t += "colspan=3 align=right><font face=Angsana New size=1>" + "รับชำระ Ar." + TAB + bill + Space + "บิล" + "_";
             }
+            rs.close();
         } catch (SQLException e) {
             MSG.NOTICE(e.toString());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();
@@ -439,7 +440,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

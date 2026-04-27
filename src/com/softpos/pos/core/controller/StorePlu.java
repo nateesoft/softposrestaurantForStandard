@@ -29,7 +29,7 @@ public class StorePlu {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -57,7 +57,7 @@ public class StorePlu {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

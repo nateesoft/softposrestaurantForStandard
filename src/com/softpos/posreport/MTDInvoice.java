@@ -492,7 +492,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");

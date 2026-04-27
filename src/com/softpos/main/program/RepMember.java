@@ -661,7 +661,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(RepMember.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

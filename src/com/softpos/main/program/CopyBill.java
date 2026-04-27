@@ -48,7 +48,7 @@ public class CopyBill extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         txtCopy.setText(Integer.toString(CONFIG.getP_BillCopy()));
@@ -258,7 +258,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (validCopy) {
@@ -366,15 +366,17 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         billcopy = rs.getInt("b_billcopy");
                     } else {
                         MSG.WAR("ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
-                        this.dispose();
+                        this.setVisible(false);//dispose();
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         MySQLConnect mysql2 = new MySQLConnect();
@@ -434,6 +436,8 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         ArraySize = MyArray.length;
                         MyArray[ArraySize - 1] = TranRec;
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
 
@@ -441,7 +445,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql2.close();
+            mysql2.closeConnection(this.getClass());
         }
 
         if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
@@ -465,20 +469,21 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             + "where (b_refno='" + BillNo + "') "
                             + "and (b_macno='" + Value.MACNO + "')";
                     stmt.executeUpdate(SqlQuery);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(CopyBill.class, "error", e);
             } finally {
-                mysql3.close();
+                mysql3.closeConnection(this.getClass());
             }
             
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }
 
     private void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

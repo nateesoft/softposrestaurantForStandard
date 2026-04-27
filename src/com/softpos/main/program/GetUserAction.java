@@ -192,7 +192,7 @@ public class GetUserAction extends javax.swing.JDialog {
 
     private void c_bntlogincancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntlogincancelActionPerformed
         PublicVar.ReturnString = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_c_bntlogincancelActionPerformed
 
     private void c_loginnameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_c_loginnameKeyPressed
@@ -227,7 +227,7 @@ public class GetUserAction extends javax.swing.JDialog {
         } else {
             if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 PublicVar.ReturnString = "";
-                this.dispose();
+                this.setVisible(false);//dispose();
             }
         }
     }
@@ -275,25 +275,30 @@ public class GetUserAction extends javax.swing.JDialog {
         boolean isClose = false;
         try {
             Statement stmt = mysql.getConnection().createStatement();
-            String SQLQuery = "select username from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
+            String SQLQuery = "select username,sale2 from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 PublicVar.ReturnString = loginname;
+                if(rs.getString("sale2").equals("Y")){
+                    PublicVar.ReturnPermitRefund = true;
+                }
                 isClose = true;
             } else {
                 MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
                 clearlogin();
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GetUserAction.class, "error", e);
             clearlogin();
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if(isClose){
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }
 

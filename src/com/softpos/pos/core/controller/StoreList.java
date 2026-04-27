@@ -21,6 +21,7 @@ public class StoreList {
             int i;
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 i = stmt.executeUpdate(sql);
+                stmt.close();
             }
             return i > 0;
         } catch (SQLException e) {
@@ -29,7 +30,7 @@ public class StoreList {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -51,6 +52,7 @@ public class StoreList {
             int i;
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 i = stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             return i > 0;
@@ -60,7 +62,7 @@ public class StoreList {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

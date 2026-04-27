@@ -655,10 +655,10 @@ if (First) {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally{
+            mysql.closeConnection(this.getClass());
         }
-
-        mysql.close();
-
+        
         PrintCashier(frec, CrArray);
     }
 
@@ -812,9 +812,10 @@ if (First) {
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
-
-                mysql.close();
+                
                 prn.print("----------------------------------------");
                 prn.print("");
                 prn.print("");

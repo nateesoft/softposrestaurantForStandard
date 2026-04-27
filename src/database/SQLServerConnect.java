@@ -14,16 +14,16 @@ public class SQLServerConnect {
     private final String PASS;
     public static String DATABASE;
     public static Connection conn;
-    private String PORT = "3307";
+    private String PORT = "3326";
     private final String CHARSET="tis-620";
 
     public SQLServerConnect() throws ClassNotFoundException, SQLException {
-        //CLASS_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+//        CLASS_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         CLASS_NAME = "com.mysql.jdbc.Driver";
-        SERVER = ConfigFile.getProperties("sql_server_host");
-        USER = ConfigFile.getProperties("sql_server_user");
-        PASS = ConfigFile.getProperties("sql_server_pass");
-        DATABASE = ConfigFile.getProperties("sql_server_database");
+        SERVER = ConfigFileServer.getProperties("sql_server_host");
+        USER = ConfigFileServer.getProperties("sql_server_user");
+        PASS = ConfigFileServer.getProperties("sql_server_pass");
+        DATABASE = ConfigFileServer.getProperties("sql_server_database");
         connect();
     }
 

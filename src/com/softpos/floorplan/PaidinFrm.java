@@ -112,14 +112,15 @@ public class PaidinFrm extends javax.swing.JDialog {
                     + "'" + Value.MACNO + "','I','" + PaidinAmt + "','" + PaidoutAmt + "')";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PaidinFrm.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
 
@@ -494,7 +495,7 @@ public class PaidinFrm extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCancelActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntCancelActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -571,7 +572,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             SaveDataPaidin();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

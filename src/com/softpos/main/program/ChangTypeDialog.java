@@ -103,12 +103,13 @@ public class ChangTypeDialog extends javax.swing.JDialog {
                     + "where R_Index='" + R_Index + "' and R_Table='" + tableNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ChangTypeDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -215,12 +216,12 @@ public class ChangTypeDialog extends javax.swing.JDialog {
 
     public void bntOKClick() {
         PublicVar.ChangTypeOK = true;
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     public void bntCancelClick() {
         PublicVar.ChangTypeOK = false;
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -438,7 +439,7 @@ private void bntWholeSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void tblshowpluKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblshowpluKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

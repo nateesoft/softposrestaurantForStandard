@@ -121,10 +121,11 @@ public class ProductControl {
 
                     listAll.add(bean);
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
 
@@ -203,7 +204,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return productBean;
@@ -283,7 +284,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -328,7 +329,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return arrList;
@@ -377,7 +378,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return arrList;
@@ -453,7 +454,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -474,7 +475,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isExist;
@@ -498,7 +499,7 @@ public class ProductControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isExist;
@@ -515,12 +516,13 @@ public class ProductControl {
                 if (rs.next()) {
                     isProduct = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(ProductControl.class);
         }
 
         return isProduct;

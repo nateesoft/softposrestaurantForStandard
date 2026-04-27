@@ -42,7 +42,7 @@ public class TCuponControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -80,7 +80,7 @@ public class TCuponControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -117,7 +117,7 @@ public class TCuponControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;

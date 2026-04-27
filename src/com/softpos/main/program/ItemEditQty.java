@@ -87,7 +87,7 @@ public class ItemEditQty extends javax.swing.JDialog {
             String sql = "INSERT INTO tempeditqty (OnDate, Time, Emp, Pcode, Pdesc, OldQty, OldPrice, NewQty, NewPrice) "
                     + "VALUES ("
                     + "'" + balanceBean.getR_Date() + "', '" + Datefmt.format(dateP) + "', '" + balanceBean.getR_Emp() + "/" + balanceBean.getR_Table() + "',"
-                    + " '" + balanceBean.getR_PluCode() + "', '" + ThaiUtil.Unicode2ASCII(balanceBean.getR_ETD() + "-" + balanceBean.getR_PName() + "-" + balanceBean.getR_Opt1()) + "','" + XQty + "',"
+                    + " '" + balanceBean.getR_PluCode() + "', '" + ThaiUtil.Unicode2ASCII(balanceBean.getR_ETD() + "-" + balanceBean.getR_PName().replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", "") + "-" + balanceBean.getR_Opt1()) + "','" + XQty + "',"
                     + " '" + XPrice + "','" + XNewQty + "','" + newAmount + "');";
 
             if (balanceBean != null) {
@@ -97,8 +97,8 @@ public class ItemEditQty extends javax.swing.JDialog {
                     balanceBean.setR_Quan(XNewQty);
                     balanceBean.setR_Price(newAmount);
                     balanceBean.setR_Total(XNewAmount);
-                    NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-"));
-                    
+                    NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-").replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", ""));
+
                     Statement stmt = mysql.getConnection().createStatement();
                     if (!txtNewPDesc.getText().replace("null", "").equals("")) {
                         this.XNewAmount = XNewQty * newAmount;
@@ -106,7 +106,7 @@ public class ItemEditQty extends javax.swing.JDialog {
                         if (balanceBean.getR_Price() != 0) {
                             newAmount = balanceBean.getR_Price();
                         }
-                        
+
                         sqlUpdateBalance = "update balance set "
                                 + "r_total='" + balanceBean.getR_Total() + "'"
                                 + ",r_quan='" + balanceBean.getR_Quan() + "' "
@@ -130,20 +130,21 @@ public class ItemEditQty extends javax.swing.JDialog {
                     }
 
                     stmt.executeUpdate(sqlUpdateBalance);
-                    
+
                     String sqlUpdateTableFile = "update tablefile set TAmount= TAmount+" + (XNewAmount) + " where tcode='" + tableNo + "';";
                     stmt.executeUpdate(sqlUpdateTableFile);
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(ItemEditQty.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
-            
+
             BalanceControl.updateProSerTable(tableNo, memberBean);
-            this.dispose();
+            this.setVisible(false);//dispose();
         } else {
             txtPQuanEdit.selectAll();
             txtPQuanEdit.requestFocus();
@@ -416,11 +417,11 @@ public class ItemEditQty extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_CancelActionPerformed
 
     private void txtPQuanEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPQuanEditActionPerformed
-        boolean strCheck = checkStringOrNumberlic(txtPQuanEdit.getText().trim().replace(",", ""));
+        boolean strCheck = checkStringOrNumberlic(txtPQuanEdit.getText().trim().replace(",", "").replace("", "1"));
 
         if (!strCheck == false) {
             double newQty = Double.parseDouble(txtPQuanEdit.getText().trim().replace(",", ""));
@@ -444,11 +445,22 @@ public class ItemEditQty extends javax.swing.JDialog {
     }//GEN-LAST:event_OKActionPerformed
 
     private void txtPAmountEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPAmountEditActionPerformed
+
         if (!txtPAmountEdit.getText().equals("")) {
-            txtNewPDesc.requestFocus();
-            txtNewPDesc.selectAll();
+            boolean strCheck = checkStringOrNumberlic(txtPAmountEdit.getText());
+            if (strCheck != true) {
+                MSG.NOTICE("กรุณาป้อนเฉพาะตัวเลขเท่านั้น");
+                txtPAmountEdit.setText("1.00");
+                txtPAmountEdit.requestFocus();
+                txtPAmountEdit.selectAll();
+            } else {
+                txtNewPDesc.requestFocus();
+                txtNewPDesc.selectAll();
+            }
         } else {
             txtPAmountEdit.setText("1.00");
+            txtNewPDesc.requestFocus();
+            txtNewPDesc.selectAll();
         }
     }//GEN-LAST:event_txtPAmountEditActionPerformed
     public boolean checkStringOrNumberlic(String text) {

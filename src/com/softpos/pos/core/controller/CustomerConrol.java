@@ -32,12 +32,12 @@ public class CustomerConrol {
                 bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
                 bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
             }
-            mysql.close();
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CustomerConrol.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return bean;

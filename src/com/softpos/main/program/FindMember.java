@@ -120,7 +120,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR_MSG(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -176,7 +176,7 @@ public class FindMember extends javax.swing.JDialog {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(FindMember.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
         } else {
@@ -232,7 +232,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -283,7 +283,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

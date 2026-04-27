@@ -525,7 +525,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void UpdateOperation() {
@@ -558,12 +558,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             PreparedStatement prm = mysql.getConnection().prepareStatement(UpdatePromotion);
             prm.setString(1, Datefmt.format(PublicVar.SaleDate));
             prm.executeUpdate();
+            
+            prm.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -666,7 +668,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -690,7 +692,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -722,7 +724,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -746,7 +748,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -943,7 +945,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintTerminal(frec, CrArray);
@@ -1115,7 +1117,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         prn.print("----------------------------------------");
@@ -1149,7 +1151,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1302,7 +1304,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         try {
@@ -1349,7 +1351,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintCashier(frec, CrArray, false);
@@ -1542,7 +1544,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AutoSumXRep.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");
@@ -1751,7 +1753,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintGroup(GArray);
@@ -2027,7 +2029,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintPlu(GArray);
@@ -2333,7 +2335,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         int ArraySize = 0;
@@ -2637,7 +2639,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         prn.print("----------------------------------------");
@@ -2696,7 +2698,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         prn.print("----------------------------------------");
@@ -2800,7 +2802,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (SumCard > 0) {
@@ -2839,12 +2841,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             prm.setString(4, TCrApp);
             prm.setDouble(5, TCrAmt);
             prm.executeUpdate();
+            
+            prm.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -2888,7 +2892,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         prn.print("----------------------------------------");
@@ -2968,7 +2972,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(AutoSumXRep.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 prn.print("----------------------------------------");

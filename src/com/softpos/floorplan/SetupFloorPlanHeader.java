@@ -248,7 +248,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void btnOk1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOk1ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnOk1ActionPerformed
 
     private void txtTab1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTab1MouseClicked
@@ -295,7 +295,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
 
     private void txtTab1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTab1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtTab1KeyPressed
 
@@ -333,17 +333,18 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
                     + "FloorTab7='" + ThaiUtil.Unicode2ASCII(txtTab7.getText()) + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SetupFloorPlanHeader.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         PosControl.resetDataCompany();
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
     private void loadDefaultTab() {

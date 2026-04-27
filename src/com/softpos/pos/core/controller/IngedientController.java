@@ -40,7 +40,7 @@ public class IngedientController {
             stmt.close();
         } catch (SQLException e) {
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return listIng;

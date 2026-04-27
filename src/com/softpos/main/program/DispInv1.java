@@ -147,7 +147,7 @@ public class DispInv1 extends javax.swing.JDialog {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(DispInv1.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));

@@ -90,6 +90,7 @@ public final class ViewReport {
                     if (rs.next()) {
                         branchName = rs.getString("Name");
                     }
+                    rs.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(ViewReport.class, "error", e);
@@ -171,16 +172,16 @@ public final class ViewReport {
                     j.setLocationRelativeTo(null);
                     j.setVisible(true);
                     v.setTitle("Report...");
-                    mysql.close();
                 } catch (HeadlessException | NumberFormatException | JRException e) {
                     MSG.ERR(e.getMessage());
                 }
             } else {
                 MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
             }
-            mysql.close();
         } catch (Exception e) {
             MSG.NOTICE(e.toString());
+        } finally{
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -268,6 +269,7 @@ public final class ViewReport {
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ViewReport.class, "error", e);
@@ -337,7 +339,7 @@ public final class ViewReport {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
         }
 
-        mysql.close();
+        mysql.closeConnection(this.getClass());
     }
 
     public void printReportPVatDaily(String str, String end) {
@@ -398,14 +400,14 @@ public final class ViewReport {
                     MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
                 }
 
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             } catch (HeadlessException | JRException e) {
                 MSG.ERR(e.getMessage());
             }
         } catch (Exception e) {
             MSG.ERR(e.toString());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -470,7 +472,7 @@ public final class ViewReport {
         } catch (HeadlessException | JRException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -506,7 +508,7 @@ public final class ViewReport {
         } catch (JRException e) {
             AppLogUtil.log(ViewReport.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

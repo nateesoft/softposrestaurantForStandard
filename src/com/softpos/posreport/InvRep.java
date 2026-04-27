@@ -283,7 +283,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(InvRep.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -377,7 +377,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(InvRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
@@ -395,7 +395,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

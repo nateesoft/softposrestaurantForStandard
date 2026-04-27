@@ -37,12 +37,13 @@ public class BalanceControl extends DatabaseConnection {
                 } else {
                     tempIndex = "";
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return tempIndex;
@@ -254,16 +255,18 @@ public class BalanceControl extends DatabaseConnection {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     public List<BalanceBean> getAllBalance(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
+        beanData.clear();
         MySQLConnect mysql = new MySQLConnect();
+        String sql = "";
         try {
             mysql.open(this.getClass());
-            String sql = "select * from balance "
+            sql = "select * from balance "
                     + "where R_Table='" + table + "' "
                     + "order by R_Index";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
@@ -366,9 +369,9 @@ public class BalanceControl extends DatabaseConnection {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BalanceControl.class, "error", e);
+            AppLogUtil.log(BalanceControl.class, "error" + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return beanData;
@@ -376,6 +379,7 @@ public class BalanceControl extends DatabaseConnection {
 
     public List<BalanceBean> getAllBalanceSum(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
+        beanData.clear();
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
@@ -391,8 +395,9 @@ public class BalanceControl extends DatabaseConnection {
                     + "from balance b "
                     + "where r_table='" + table + "' "
                     + "and r_plucode<>'8899' "
-                    + "group by r_plucode,r_etd,r_Pname "
-                    + "order by r_time, r_index";
+                    + "group by r_plucode,r_et"
+                    + "d,r_Pname,r_void,VoidMsg "
+                    + "order by  r_index,r_time";
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -595,7 +600,7 @@ public class BalanceControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return beanData;
@@ -603,6 +608,7 @@ public class BalanceControl extends DatabaseConnection {
 
     public List<BalanceBean> getAllBalanceNoVoid(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
+        beanData.clear();
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
@@ -705,12 +711,13 @@ public class BalanceControl extends DatabaseConnection {
 
                     beanData.add(balanceBean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return beanData;
@@ -718,15 +725,20 @@ public class BalanceControl extends DatabaseConnection {
 
     public List<BalanceBean> getAllBalanceNoVoidSum(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
+        beanData.clear();
         MySQLConnect mysql = new MySQLConnect();
+        String sql = "";
         try {
             mysql.open(this.getClass());
-            String sql = "";
+
             for (int i = 0; i <= 2; i++) {
                 if (i == 0) {
                     sql = "select "
                             + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total,r_etd,"
+                            + "sum(b.r_total) sumr_total,"
+                            + "sum(b.r_pramt) sumr_pramt,"
+                            + "sum(b.R_PrCuAmt) sumr_prcuamt,"
+                            + "r_etd,"
                             + "b.* "
                             + "from balance b "
                             + "where r_table='" + table + "' "
@@ -740,7 +752,10 @@ public class BalanceControl extends DatabaseConnection {
                 if (i == 1) {
                     sql = "select "
                             + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total,r_etd,"
+                            + "sum(b.r_total) sumr_total,"
+                            + "sum(b.r_pramt) sumr_pramt,"
+                            + "sum(b.R_PrCuAmt) sumr_prcuamt,"
+                            + "r_etd,"
                             + "b.* "
                             + "from balance b "
                             + "where r_table='" + table + "' "
@@ -754,7 +769,10 @@ public class BalanceControl extends DatabaseConnection {
                 if (i == 2) {
                     sql = "select "
                             + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total,r_etd,"
+                            + "sum(b.r_total) sumr_total"
+                            + ",sum(b.r_pramt) sumr_pramt,"
+                            + "sum(b.R_PrCuAmt) sumr_prcuamt"
+                            + ",r_etd,"
                             + "b.* "
                             + "from balance b "
                             + "where r_table='" + table + "' "
@@ -766,6 +784,7 @@ public class BalanceControl extends DatabaseConnection {
                             + "r_time";
                 }
                 ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                double totalVat = 0;
                 while (rs.next()) {
                     BalanceBean balanceBean = new BalanceBean();
                     balanceBean.setR_Index(rs.getString("R_Index"));
@@ -789,11 +808,16 @@ public class BalanceControl extends DatabaseConnection {
                     balanceBean.setR_Stock(rs.getString("R_Stock"));
                     balanceBean.setR_Set(rs.getString("R_Set"));
                     balanceBean.setR_Vat(rs.getString("R_Vat"));
+                    balanceBean.setR_Total(rs.getFloat("sumr_total"));
+                    if (balanceBean.getR_Vat().equals("V")) {
+                        totalVat += balanceBean.getR_Total();
+                        balanceBean.setR_totalVAT(totalVat);
+                    }
                     balanceBean.setR_Type(rs.getString("R_Type"));
                     balanceBean.setR_ETD(rs.getString("R_ETD"));
                     balanceBean.setR_Quan(rs.getFloat("sumr_quan"));
                     balanceBean.setR_Price(rs.getFloat("R_Price"));
-                    balanceBean.setR_Total(rs.getFloat("sumr_total"));
+
                     String R_PrType = rs.getString("R_PrType");
                     if (R_PrType == null) {
                         R_PrType = "";
@@ -802,11 +826,11 @@ public class BalanceControl extends DatabaseConnection {
                     balanceBean.setR_PrCode(rs.getString("R_PrCode"));
                     balanceBean.setR_PrDisc(rs.getFloat("R_PrDisc"));
                     balanceBean.setR_PrBath(rs.getFloat("R_PrBath"));
-                    balanceBean.setR_PrAmt(rs.getFloat("R_PrAmt"));
+                    balanceBean.setR_PrAmt(rs.getFloat("sumr_pramt"));
                     balanceBean.setR_DiscBath(rs.getFloat("R_DiscBath"));
                     balanceBean.setR_PrCuType(rs.getString("R_PrCuType"));
                     balanceBean.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
-                    balanceBean.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
+                    balanceBean.setR_PrCuAmt(rs.getFloat("sumr_prcuamt"));
                     balanceBean.setR_Redule(rs.getFloat("R_Redule"));
                     balanceBean.setR_Kic(rs.getString("R_Kic"));
                     balanceBean.setR_KicPrint(rs.getString("R_KicPrint"));
@@ -868,9 +892,9 @@ public class BalanceControl extends DatabaseConnection {
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(BalanceControl.class, "error", e);
+            AppLogUtil.log(BalanceControl.class, "error" + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         MySQLConnect mysql2 = new MySQLConnect();
@@ -981,11 +1005,12 @@ public class BalanceControl extends DatabaseConnection {
                 }
                 beanData.add(balanceBean);
             }
+            rs1.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql2.close();
+            mysql2.closeConnection(BalanceControl.class);
         }
 
         return beanData;
@@ -1090,13 +1115,14 @@ public class BalanceControl extends DatabaseConnection {
 
                     beanData.add(balanceBean);
                 }
+                rs.close();
 //            stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return beanData;
@@ -1212,6 +1238,8 @@ public class BalanceControl extends DatabaseConnection {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
 
         return beanData;
@@ -1236,7 +1264,7 @@ public class BalanceControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1274,6 +1302,7 @@ public class BalanceControl extends DatabaseConnection {
                         index = R_Table + "/" + id;
                     }
                 }
+                rs.close();
                 if (!notfound) {
                     index = R_Table + "/001";
                 }
@@ -1284,7 +1313,7 @@ public class BalanceControl extends DatabaseConnection {
 
             index = R_Table + "/001";
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return index;
@@ -1299,7 +1328,7 @@ public class BalanceControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1320,6 +1349,7 @@ public class BalanceControl extends DatabaseConnection {
                     quan = rs.getDouble("R_Quan");
                     quan += R_Quan;
                 }
+                rs.close();
             }
             return quan >= 0;
         } catch (SQLException e) {
@@ -1328,7 +1358,7 @@ public class BalanceControl extends DatabaseConnection {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1423,12 +1453,14 @@ public class BalanceControl extends DatabaseConnection {
                     balanceBean.setR_MovePrint(rs.getString("R_MovePrint"));
                     balanceBean.setR_Pause(rs.getString("R_Pause"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return balanceBean;
@@ -1529,6 +1561,7 @@ public class BalanceControl extends DatabaseConnection {
                     balanceBean.setR_LinkIndex(rs.getString("R_LinkIndex"));
                     balanceBean.setR_SPIndex(rs.getString("R_SPIndex"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1536,7 +1569,7 @@ public class BalanceControl extends DatabaseConnection {
 
             return null;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return balanceBean;
@@ -1639,6 +1672,7 @@ public class BalanceControl extends DatabaseConnection {
 
                     list.add(balanceBean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
@@ -1646,7 +1680,7 @@ public class BalanceControl extends DatabaseConnection {
 
             return null;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return list;
@@ -1662,12 +1696,13 @@ public class BalanceControl extends DatabaseConnection {
                     + "and R_Index = '" + r_Index + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1680,12 +1715,13 @@ public class BalanceControl extends DatabaseConnection {
                     + "and R_Table='" + table + "' ";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1699,6 +1735,7 @@ public class BalanceControl extends DatabaseConnection {
 
                 sql = "insert into temp_balance select * from balance where R_Table='" + tableNo + "';";
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             return true;
@@ -1710,13 +1747,14 @@ public class BalanceControl extends DatabaseConnection {
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate("drop table if exists temp_balance;");
                     stmt.executeUpdate("create table temp_balance select * from balance limit 0,0;");
+                    stmt.close();
                 }
             } catch (SQLException e1) {
                 MSG.ERR(e1.getMessage());
                 AppLogUtil.log(BalanceControl.class, "error", e1);
             }
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return false;
@@ -1736,13 +1774,13 @@ public class BalanceControl extends DatabaseConnection {
             stmt.executeUpdate("delete from balance where R_Table='" + table2 + "'");
             stmt.executeUpdate("insert into balance select * from temp_balance where R_Table='" + tableNo + "';");
             stmt.executeUpdate("delete from temp_balance");
-
+            stmt.close();
             return true;
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return false;
@@ -1780,12 +1818,13 @@ public class BalanceControl extends DatabaseConnection {
                         proControl.updatePromotion(table);
                     }
                 }
+                rs.close();
             }
         } catch (NumberFormatException | SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BalanceControl.class);
         }
 
         if (memberBean != null) {
@@ -1832,12 +1871,13 @@ public class BalanceControl extends DatabaseConnection {
                 } else {
                     return 0.00 + "";
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BalanceControl.class);
         }
 
         return df.format(discount);
@@ -1858,11 +1898,12 @@ public class BalanceControl extends DatabaseConnection {
 
                 listBalance.add(bean);
             }
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BalanceControl.class);
         }
 
         return listBalance;
@@ -1878,12 +1919,13 @@ public class BalanceControl extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BalanceControl.class);
         }
     }
 
     public List<BalanceBean> loadTableBalance(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
+        listBalance.clear();
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
@@ -1909,22 +1951,23 @@ public class BalanceControl extends DatabaseConnection {
                 bean.setR_Emp(rs.getString("r_emp"));
                 bean.setR_Time(rs.getString("r_time"));
                 bean.setR_Opt1(rs.getString("R_Opt1"));
-                bean.setR_Opt1(rs.getString("R_Opt2"));
-                bean.setR_Opt1(rs.getString("R_Opt3"));
-                bean.setR_Opt1(rs.getString("R_Opt4"));
-                bean.setR_Opt1(rs.getString("R_Opt5"));
-                bean.setR_Opt1(rs.getString("R_Opt6"));
-                bean.setR_Opt1(rs.getString("R_Opt7"));
-                bean.setR_Opt1(rs.getString("R_Opt8"));
-                bean.setR_Opt1(rs.getString("R_Opt9"));
+                bean.setR_Opt2(rs.getString("R_Opt2"));
+                bean.setR_Opt3(rs.getString("R_Opt3"));
+                bean.setR_Opt4(rs.getString("R_Opt4"));
+                bean.setR_Opt5(rs.getString("R_Opt5"));
+                bean.setR_Opt6(rs.getString("R_Opt6"));
+                bean.setR_Opt7(rs.getString("R_Opt7"));
+                bean.setR_Opt8(rs.getString("R_Opt8"));
+                bean.setR_Opt9(rs.getString("R_Opt9"));
 
                 listBalance.add(bean);
             }
+            rs.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -1932,7 +1975,7 @@ public class BalanceControl extends DatabaseConnection {
 
     public List<BalanceBean> getBalanceByRLinkIndex(String R_Index) {
         List<BalanceBean> listBalance = new ArrayList<>();
-
+        listBalance.clear();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(BalanceControl.class);
         try {
@@ -1948,6 +1991,7 @@ public class BalanceControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (Exception e) {
+            System.out.println(e);
         }
 
         return listBalance;

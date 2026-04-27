@@ -1,17 +1,15 @@
 package com.softpos.pos.core.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-/**
- *
- * @author nathee
- */
-@Getter
-@Setter
-@ToString
 public class AccrBean {
     
     private double total;
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+    
 }

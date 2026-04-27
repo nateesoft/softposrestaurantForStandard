@@ -831,7 +831,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 ClearVariable();
@@ -883,7 +883,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         MSG.ERR_MSG(this, e.getMessage());
                             AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     ClearVariable();
@@ -940,7 +940,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         MSG.ERR_MSG(this, e.getMessage());
                         AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     
                     ClearVariable();
@@ -1050,7 +1050,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally{
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
             } else {
@@ -1080,7 +1080,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AddNewMember.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         return RetVal;

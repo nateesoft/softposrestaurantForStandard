@@ -215,7 +215,7 @@ public class UpdateData extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
     public void btnUpdate() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -244,6 +244,7 @@ public class UpdateData extends javax.swing.JDialog {
                                 model.addRow(new Object[]{sql});
 
                                 stmt.executeUpdate(sql);
+                                stmt.close();
                                 lblCount.setText("Update Complete >>> " + df.format(i) + " : Item");
                             }
                         }
@@ -251,7 +252,7 @@ public class UpdateData extends javax.swing.JDialog {
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(UpdateData.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     setFlag(true);
@@ -289,12 +290,14 @@ public class UpdateData extends javax.swing.JDialog {
                     String sqlUpdate = rs.getString("qforbranch");
                     ListObj.add(new Object[]{sqlUpdate});
                 }
+                rs.close();
             }
+            rsGetBtype.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(UpdateData.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -311,7 +314,7 @@ public class UpdateData extends javax.swing.JDialog {
                 PanelStatus.setBackground(Color.green);
             }
             rs.close();
-            SV.close();
+            
         } catch (Exception e) {
             lblStatus.setText("OFFLINE");
             PanelStatus.setBackground(Color.red);

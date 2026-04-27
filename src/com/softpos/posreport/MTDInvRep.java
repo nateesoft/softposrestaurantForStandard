@@ -458,7 +458,7 @@ public class MTDInvRep extends javax.swing.JDialog {
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print(" ");
@@ -551,7 +551,7 @@ public class MTDInvRep extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("-----------------------------------------------" + "_");
         PrintDriver pd = new PrintDriver();
@@ -568,7 +568,7 @@ public class MTDInvRep extends javax.swing.JDialog {
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

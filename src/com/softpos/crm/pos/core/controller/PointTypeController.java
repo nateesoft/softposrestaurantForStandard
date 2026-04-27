@@ -29,13 +29,14 @@ public class PointTypeController {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PointTypeController.class, "error", e);
 
         } finally {
-            mysql.close();
+            mysql.closeConnection(PointTypeController.class);
         }
 
         return bean;
@@ -55,12 +56,13 @@ public class PointTypeController {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PointTypeController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PointTypeController.class);
         }
 
         return bean;

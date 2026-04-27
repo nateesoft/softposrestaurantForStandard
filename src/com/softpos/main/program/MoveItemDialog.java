@@ -423,12 +423,12 @@ public class MoveItemDialog extends javax.swing.JDialog {
         TABLE_2 = "";
         Value.TableSelected = TABLE_NO;
         restoreData();
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTable1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             loadTable1();
         }
@@ -438,7 +438,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             checkLoadTable2();
         } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtTable2KeyPressed
 
@@ -491,7 +491,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 tableFileControl.execUpdate(sql);
 
                 Value.TableSelected = TABLE_2;
-                dispose();
+                this.setVisible(false);//dispose();
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -706,7 +706,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MoveItemDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -726,12 +726,14 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
                 stmt.executeUpdate("insert into balance select * from temp_balance "
                         + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
+                
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MoveItemDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

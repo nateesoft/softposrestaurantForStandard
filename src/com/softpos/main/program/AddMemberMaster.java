@@ -1256,16 +1256,16 @@ public class AddMemberMaster extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void txtMemCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMemCodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_txtMemCodeKeyPressed
 

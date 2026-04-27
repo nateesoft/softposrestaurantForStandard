@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fsck *)",
+      "Bash(timeout 5 git cat-file -p 50a6b801959822b8569bdef681a721178acc4dd9)",
+      "Bash(gtimeout 5 git cat-file -p 50a6b801959822b8569bdef681a721178acc4dd9)",
+      "Bash(git commit *)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git stash *)",
+      "Bash(git update-ref *)",
+      "Bash(git ls-tree *)",
+      "Bash(git fetch *)",
+      "Bash(git clone *)"
+    ]
+  }
+}

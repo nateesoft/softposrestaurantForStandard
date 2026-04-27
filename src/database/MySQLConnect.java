@@ -38,6 +38,7 @@ public class MySQLConnect {
                     HostName = data[1];
                 } else if (data[0].equalsIgnoreCase("database")) {
                     DbName = data[1];
+                    System.out.println("Database Name = "+DbName);
                     Value.DATABASE = data[1];
                 } else if (data[0].equalsIgnoreCase("user")) {
                     UserName = data[1];
@@ -103,16 +104,49 @@ public class MySQLConnect {
     }
 
     public void open(Class clazz) {
+//        try {
+//            close();
+//            Thread.sleep(1);
+//        } catch (Exception e) {
+//        }
         this.clazz = clazz;
         if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
-            System.out.println(this.clazz + "(not close)");
+//            System.out.println(this.clazz + "(not close) CON CODE >> " + MySQLConstants.MYSQL_CONNECT.toString());
+            closeConnection(clazz);
         }
-        
+
         if (con == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
 //                System.out.println(this.clazz + "Connection:" + con.hashCode());
+//                System.out.println(this.clazz + "(new connected) CON CODE >> " + con.hashCode());
+                MySQLConstants.MYSQL_CONNECT.put(con.hashCode(), this.clazz);
+            } catch (ClassNotFoundException | SQLException e) {
+                MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
+                AppLogUtil.log(MySQLConnect.class, "error", e);
+                System.exit(0);
+            }
+        }
+    }
+    public void open() {
+        try {
+            close();
+            Thread.sleep(2);
+        } catch (Exception e) {
+        }
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+//            System.out.println(this.clazz + "(not close) CON CODE >> " + MySQLConstants.MYSQL_CONNECT.toString());
+            closeConnection(clazz);
+        }
+
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
+//                System.out.println(this.clazz + "Connection:" + con.hashCode());
+//                System.out.println(this.clazz + "(new connected) CON CODE >> " + con.hashCode());
                 MySQLConstants.MYSQL_CONNECT.put(con.hashCode(), this.clazz);
             } catch (ClassNotFoundException | SQLException e) {
                 MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
@@ -137,6 +171,26 @@ public class MySQLConnect {
                 AppLogUtil.log(MySQLConnect.class, "error", ex);
             }
 
+        }
+
+    }
+
+    public void closeConnection(Class clazz) {
+        this.clazz = clazz;
+        if (MySQLConstants.MYSQL_CONNECT.size() > 0) {
+
+            if (con != null) {
+                try {
+//                     System.out.println(this.clazz + "(close) CON CODE >> " + con.hashCode());
+                    con.close();
+//                System.out.println(this.clazz + "Connection_Close:" + con.hashCode());
+                    MySQLConstants.MYSQL_CONNECT.remove(con.hashCode());
+                } catch (SQLException ex) {
+                    Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+                    AppLogUtil.log(MySQLConnect.class, "error", ex);
+                }
+
+            }
         }
     }
 

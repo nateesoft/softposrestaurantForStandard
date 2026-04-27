@@ -36,7 +36,7 @@ public class CuponListControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -67,7 +67,7 @@ public class CuponListControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -93,7 +93,7 @@ public class CuponListControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -121,7 +121,7 @@ public class CuponListControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -137,11 +137,12 @@ public class CuponListControl {
                     + "where CuCode='" + bean.getCuCode() + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

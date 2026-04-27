@@ -21,6 +21,8 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.login.Login;
+import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.IngedientController;
@@ -69,6 +71,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import util.AppLogUtil;
@@ -101,68 +104,86 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private FloorPlanController floorPlanControl = new FloorPlanController();
 
     public FloorPlanDialog() {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                MSG.ERR(null, e.getMessage());
-            }
-        }
-
         setUndecorated(true);
         initComponents();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
-        posUser = PosControl.getPosUser(PublicVar.ReturnString);
-
-        refresh = PosControl.getRefreshTime();
-        if (refresh < 1) {
-            refresh = 10;
-        }
-
-        Value.TableSelected = "";
-
-        new Thread(() -> {
-            for (int a = 0; a < 10; a++) {
-                if (a == 9) {
-                    a = 0;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (OSValidator.isWindows()) {
+                    try {
+                        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                        MSG.ERR(null, e.getMessage());
+                    }
                 }
-                showTime();
+
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                POSHW = POSHWSetup.Bean(Value.MACNO);
+                CONFIG = POSConfigSetup.Bean();
+                posUser = PosControl.getPosUser(PublicVar.ReturnString);
+                loadHeaderTab();
+                refresh = PosControl.getRefreshTime();
+                if (refresh < 1) {
+                    refresh = 10;
+                }
+
+                Value.TableSelected = "";
+
+//           new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    for (int a = 0; a < 10; a++) {
+//                        if (a == 9) {
+//                            a = 0;
+//                        }
+//                        showTime();
+//                    }
+//                }
+//            }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        jMenu9.setVisible(false);
+                        loadHeaderTab();
+                        for (int i = 0; i < 10; i++) {
+                            initLoadButtons();
+                            loadZone(zoneSelected);//load header for tab
+                            PublicVar.countRound++;
+                            if (PublicVar.countRound > (120 * 6)) {
+                                clearTemp();
+                                PosControl.logout();
+                                System.exit(0);
+                            }
+                            System.out.println("loadHeaderTab()");
+                            addButton();
+                            if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+                                printCheckBillFromPDA();
+                            }
+                            if (i == 9) {
+                                i = 0;
+                            }
+                            try {
+                                System.out.println("Thread.sleep(" + refresh + " * 1000)");
+                                Thread.sleep(refresh * 1000);
+                            } catch (InterruptedException ex) {
+                            }
+                        }
+                    }
+                }).start();
+
+                jMenu1.setVisible(true);
+                jMenu2.setVisible(false);
+                jMenu3.setVisible(true);
+                jMenu4.setVisible(false);
+//            jMenu7.setVisible(false);
+                MShowDailyEJ1.setVisible(false);
+                jMenuItem38.setVisible(false);
+                // init product list data
+                productControl.initLoadProductActive();
             }
-        }).start();
-
-        //load header for tab
-        loadHeaderTab();
-
-        new Thread(() -> {
-            for (int i = 0; i < 10; i++) {
-                addButton();
-                if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-                    printCheckBillFromPDA();
-                }
-                if (i == 9) {
-                    i = 0;
-                }
-                try {
-                    Thread.sleep(refresh * 1000);
-                } catch (InterruptedException ex) {
-                }
-            }
-        }).start();
-
-        jMenu1.setVisible(true);
-        jMenu2.setVisible(false);
-        jMenu3.setVisible(true);
-        jMenu4.setVisible(false);
-        jMenu7.setVisible(false);
-        MShowDailyEJ1.setVisible(false);
-        jMenuItem38.setVisible(false);
-
-        // init product list data
-        productControl.initLoadProductActive();
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -306,6 +327,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenu7 = new javax.swing.JMenu();
         jMenuItem35 = new javax.swing.JMenuItem();
         jMenuItem36 = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem13 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -429,7 +452,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
         jPanel1.add(btnZone7);
 
-        panelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 51), 3));
+        panelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 3));
         panelMain.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
 
         btn1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
@@ -741,8 +764,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
 
         jMenu1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu1.setText("โปรแกรม (Program)");
+        jMenu1.setText("   โปรแกรม  (Program)");
+        jMenu1.setFocusable(false);
         jMenu1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jMenu1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jMenu1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
 
         jMenuItem4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem4.setText("กำหนดชื่อแต่ละ Tab");
@@ -820,7 +846,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu4.setText("การขาย (Sale System)");
+        jMenu4.setText("    ระบบขาย (Sale System)");
         jMenu4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jMenuItem6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -853,7 +879,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenuBar1.add(jMenu4);
 
         jMenu2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu2.setText("รายงาน (Report)");
+        jMenu2.setText("   รายงาน (Report)");
         jMenu2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jMenuItem19.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -897,7 +923,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu7.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu7.setText("กำหนดข้อมูลระบบ (System Config)");
+        jMenu7.setText("   กำหนดข้อมูลระบบ (System Config)");
         jMenu7.setToolTipText("");
         jMenu7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
@@ -918,11 +944,21 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
         });
         jMenu7.add(jMenuItem36);
+        jMenu7.add(jSeparator8);
+
+        jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem3.setText("ส่งเมนูเข้า BOR");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem3);
 
         jMenuBar1.add(jMenu7);
 
         jMenu3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu3.setText("เกี่ยวกับโปรแกรม (About)");
+        jMenu3.setText("   เกี่ยวกับโปรแกรม (About)");
         jMenu3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jMenuItem13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1082,7 +1118,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jMenu8.setBackground(new java.awt.Color(51, 255, 204));
         jMenu8.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jMenu8.setText("ออกจากระบบ (Logout)");
+        jMenu8.setText("   ออกจากระบบ (Logout)");
         jMenu8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jMenuItem32.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1099,7 +1135,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenu9.setBackground(new java.awt.Color(255, 153, 51));
         jMenu9.setForeground(new java.awt.Color(0, 0, 255));
         jMenu9.setText("Show Time");
-        jMenu9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jMenu9.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 14)); // NOI18N
         jMenuBar1.add(jMenu9);
 
         setJMenuBar(jMenuBar1);
@@ -1197,7 +1233,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             setVisible(false);
             MainSale mainSale = new MainSale(null, true, Value.TableSelected);
             mainSale.setVisible(true);
-            dispose();
+            //dispose();
+            this.setVisible(false);
         }
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
@@ -1306,7 +1343,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        MSG.NOTICE(this, "SoftPOS Update:V8.2 22/04/2022 12:42");
+        MSG.NOTICE(this, "Software Restaurant SOFTPOS©2024 V.9");
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
@@ -1398,6 +1435,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void btnZone7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZone7ActionPerformed
         loadZone("F");
     }//GEN-LAST:event_btnZone7ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        SaveMenuIntoBOR sendToBor = new SaveMenuIntoBOR(null, true);
+        sendToBor.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void saveToBalance(String tableNo, String pcode, String r_etd, double r_quan) {
         String PCode = pcode;
@@ -1686,6 +1728,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem27;
     private javax.swing.JMenuItem jMenuItem28;
     private javax.swing.JMenuItem jMenuItem29;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem30;
     private javax.swing.JMenuItem jMenuItem31;
     private javax.swing.JMenuItem jMenuItem32;
@@ -1709,6 +1752,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPanel panelMain;
     // End of variables declaration//GEN-END:variables
 
@@ -1725,7 +1769,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     continue;
                 }
                 if (bean.getLoginTime() != null) {
-                    String r_time = bean.getRTime();
+                    String r_time = bean.getrTime();
                     if (r_time == null) {
                         r_time = "";
                     } else {
@@ -1739,9 +1783,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     if (bean.isIsActive()) {
                         btn.setOpaque(false);
                         btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
-                        btn.setForeground(Color.RED);
+                        btn.setForeground(Color.blue);
                         btn.setFont(fontB);
-                        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
+                        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Menu.jpg")));
                         btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1759,7 +1803,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                            btn.setBackground(Color.PINK);
+                            btn.setBackground(Color.orange);
                         } else {
                             btn.setOpaque(true);
                             btn.setFont(fontB);
@@ -1789,6 +1833,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void loadHeaderTab() {
+
         btnZone1.setBackground(Color.green);
 
         CompanyBean companyBean = PosControl.getDataCompany();
@@ -1865,7 +1910,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             Value.CASHIER = "";
             clearTemp();
             PosControl.logout();
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+            }
             System.exit(0);
+        } else {
+            PublicVar.countRound = 0;
         }
     }
 
@@ -1937,7 +1988,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
 
             // close this window
-            dispose();
+            this.setVisible(false);
+            //dispose();
         }
 
     }
@@ -1954,12 +2006,19 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
             if (!PublicVar.ReturnString.equals("")) {
                 if (posUser.getUserName() != null) {
-                    if (posUser.getSale2().equals("Y")) {
+                    if (!PublicVar.ReturnString.equals(posUser.getUserName()) && PublicVar.ReturnPermitRefund == true) {
                         RefundBill refund = new RefundBill(null, true);
                         refund.setVisible(true);
+//                        PublicVar.ReturnPermitRefund = false;
                     } else {
-                        MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        if (posUser.getSale2().equals("Y")) {
+                            RefundBill refund = new RefundBill(null, true);
+                            refund.setVisible(true);
+                        } else {
+                            MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        }
                     }
+
                 } else {
                     MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
@@ -2150,6 +2209,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         addButton();
     }
 
+    public void exit() {
+        this.setVisible(false);
+    }
+
     private class MouseFocusAction implements ActionListener {
 
         private JButton button;
@@ -2172,17 +2235,19 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             sql = "delete from tempset where ptableno='" + tableNo + "';";
             FloorPlanController floorPlanControl = new FloorPlanController();
             floorPlanControl.execUpdate(sql);
-
-            dispose();
+            exit();
+//            dispose();
 
             MainSale mainSale = new MainSale(null, true, tableNo);
             mainSale.setVisible(true);
+
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String tableNo = button.getText().trim();
             if (!tableNo.equals("")) {
+                PublicVar.countRound = 0;
                 if (tableNo.contains("(")) {
                     tableNo = button.getText().substring(0, tableNo.indexOf("("));
                 }
@@ -2270,8 +2335,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         btnIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_void.png")));
         btnIcon.setSize(70, 70);
-        btnIcon.addActionListener((ActionEvent e) -> {
-            MSG.ERR(null, lbTable.getText());
+        btnIcon.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MSG.ERR(null, lbTable.getText());
+            }
         });
 
         pnButton.add(btnIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 80));

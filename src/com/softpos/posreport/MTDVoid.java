@@ -404,7 +404,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntOKClick() {
@@ -481,7 +481,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     } catch (SQLException e) {
                         PUtility.showError(e.getMessage());
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     
                     prn.print("----------------------------------------");
@@ -562,7 +562,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             PUtility.showError(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------" + "_");

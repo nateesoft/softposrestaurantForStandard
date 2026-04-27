@@ -250,12 +250,13 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             prm.setString(1, Value.MACNO);
             prm.executeUpdate();
 
+            prm.close();
             clearGrid();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         txtGiftNo.setText("");
@@ -334,11 +335,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                     prm11.setString(9, giftNo);
                                     prm11.setDouble(10, giftAmt);
                                     prm11.executeUpdate();
+                                    prm11.close();
                                 } catch (SQLException e) {
                                     MSG.ERR(e.getMessage());
                                     AppLogUtil.log(Giftvoucher.class, "error", e);
                                 } finally {
-                                    mysql.close();
+                                    mysql.closeConnection(this.getClass());
                                 }
                             }
                         } else {
@@ -363,11 +365,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                 prm11.setDouble(10, giftAmt);
 
                                 prm11.executeUpdate();
+                                prm11.close();
                             } catch (SQLException e) {
                                 MSG.ERR(e.getMessage());
                                 AppLogUtil.log(Giftvoucher.class, "error", e);
                             } finally {
-                                mysql.close();
+                                mysql.closeConnection(this.getClass());
                             }
                         }
                     }
@@ -398,11 +401,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             prm11.setDouble(10, giftAmt);
 
                             prm11.executeUpdate();
+                            prm11.close();
                         } catch (SQLException e) {
                             MSG.ERR(e.getMessage());
                             AppLogUtil.log(Giftvoucher.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                 } else {
@@ -427,11 +431,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         prm11.setDouble(10, giftAmt);
 
                         prm11.executeUpdate();
+                        prm11.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(Giftvoucher.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                 }
             }
@@ -463,7 +468,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -493,7 +498,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -544,7 +549,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

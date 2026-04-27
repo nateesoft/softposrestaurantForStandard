@@ -676,7 +676,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             MSG.ERR(e.getMessage());
                             AppLogUtil.log(ArNotPay.class, "error", e);
                         } finally {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
 
                         prn.print("----------------------------------------");
@@ -758,7 +758,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ArNotPay.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();
@@ -831,7 +831,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ArNotPay.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

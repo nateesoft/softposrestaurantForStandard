@@ -163,7 +163,7 @@ public class MTDRep extends javax.swing.JDialog {
 
     private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FunctionListKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             bntOkClick();
@@ -171,8 +171,8 @@ public class MTDRep extends javax.swing.JDialog {
     }//GEN-LAST:event_FunctionListKeyPressed
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-        ClearApp();
-        dispose();
+//        ClearApp();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
@@ -453,31 +453,31 @@ public class MTDRep extends javax.swing.JDialog {
         }
     }
 
-    public void ClearApp() {
-        MTDTerminal frm0 = new MTDTerminal(null, true);
-        MTDCashier frm1 = new MTDCashier(null, true);
-        MTDDept frm2 = new MTDDept(null, true);
-        MTDPLU frm3 = new MTDPLU(null, true);
-        MTDHourlyOpenTB frm4 = new MTDHourlyOpenTB(null, true);
-        MTDSubDiscount frm5 = new MTDSubDiscount(null, true);
-        MTDVoid frm6 = new MTDVoid(null, true);
-        MTDCredit frm7 = new MTDCredit(null, true);
-        MTDTopSale frm8 = new MTDTopSale(null, true);
-        MTDArPayment frm9 = new MTDArPayment(null, true);
-        DiarySale frm10 = new DiarySale(null, true);
-        frm0.setVisible(false);
-        frm1.setVisible(false);
-        frm2.setVisible(false);
-        frm3.setVisible(false);
-        frm4.setVisible(false);
-        frm5.setVisible(false);
-        frm6.setVisible(false);
-        frm7.setVisible(false);
-        frm8.setVisible(false);
-        frm9.setVisible(false);
-        frm10.setVisible(false);
-        
-    }
+//    public void ClearApp() {
+//        MTDTerminal frm0 = new MTDTerminal(null, true);
+//        MTDCashier frm1 = new MTDCashier(null, true);
+//        MTDDept frm2 = new MTDDept(null, true);
+//        MTDPLU frm3 = new MTDPLU(null, true);
+//        MTDHourlyOpenTB frm4 = new MTDHourlyOpenTB(null, true);
+//        MTDSubDiscount frm5 = new MTDSubDiscount(null, true);
+//        MTDVoid frm6 = new MTDVoid(null, true);
+//        MTDCredit frm7 = new MTDCredit(null, true);
+//        MTDTopSale frm8 = new MTDTopSale(null, true);
+//        MTDArPayment frm9 = new MTDArPayment(null, true);
+//        DiarySale frm10 = new DiarySale(null, true);
+//        frm0.setVisible(false);
+//        frm1.setVisible(false);
+//        frm2.setVisible(false);
+//        frm3.setVisible(false);
+//        frm4.setVisible(false);
+//        frm5.setVisible(false);
+//        frm6.setVisible(false);
+//        frm7.setVisible(false);
+//        frm8.setVisible(false);
+//        frm9.setVisible(false);
+//        frm10.setVisible(false);
+//        
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList FunctionList;

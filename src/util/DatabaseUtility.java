@@ -35,7 +35,7 @@ public class DatabaseUtility {
             
             return -1;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -54,7 +54,7 @@ public class DatabaseUtility {
             
             return -1;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -90,7 +90,7 @@ public class DatabaseUtility {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return map;
@@ -136,7 +136,7 @@ public class DatabaseUtility {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return list;

@@ -121,13 +121,15 @@ public class OptionMsg extends javax.swing.JDialog {
                         model1.addRow(input);
                         showCell1(0, 0);
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -202,15 +204,16 @@ public class OptionMsg extends javax.swing.JDialog {
                         + "where r_index='" + index + "' "
                         + "and r_table='" + tableNo + "'";
                 stmt.executeUpdate(SqlQuery);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
 
     public void bntAddClick() {
@@ -238,12 +241,14 @@ public class OptionMsg extends javax.swing.JDialog {
                         String sql = "insert into optionfile(PGroup, OptionName) "
                                 + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
                         stmt.executeUpdate(sql);
+                        
+                        stmt.close();
                     }
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(OptionMsg.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
             }
             txtAdd.setFocusable(false);
@@ -527,7 +532,7 @@ private void bntAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
 private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblOptionMsgKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();
@@ -543,7 +548,7 @@ private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
 private void tblSelectedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblSelectedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.dispose();
+        this.setVisible(false);//this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

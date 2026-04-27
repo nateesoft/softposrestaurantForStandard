@@ -468,7 +468,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntOKClick() {
@@ -576,6 +576,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally {
+                     mysql.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
@@ -588,8 +590,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 //                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
             }
         }
-
-        mysql.close();
+       
         InitScreen();
     }
 
@@ -681,8 +682,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
+        } finally {
+            mysql.closeConnection(this.getClass());
         }
-        mysql.close();
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
 
@@ -714,7 +716,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

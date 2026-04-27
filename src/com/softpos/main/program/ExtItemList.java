@@ -217,7 +217,7 @@ public class ExtItemList extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ExtItemList.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -292,11 +292,12 @@ public class ExtItemList extends javax.swing.JDialog {
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());AppLogUtil.log(ExtItemList.class, "error", e);
             AppLogUtil.log(ExtItemList.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

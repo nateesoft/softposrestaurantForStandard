@@ -397,7 +397,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void Action() {
@@ -453,9 +453,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
             }
+            rsGetEntertain.close();
+            
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
+            rsGetSumBillno.close();
             
             while(rs.next()){
                 frec.StBill = rs.getString("b_refno");
@@ -859,9 +862,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally {
+                    mysql.closeConnection(this.getClass());
                 }
-
-                mysql.close();
+                
                 prn.print("----------------------------------------");
                 prn.print("");
                 prn.print("");
@@ -1012,9 +1016,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                                 double quan = rs.getDouble("cuquan");
                                 prn.print(PUtility.DataFullR("Special  Coupon              ", 20) + PUtility.DataFull(IntFmt.format(quan), 6) + PUtility.DataFull(DecFmt.format(cuamt), 13));
                             }
-
+                            rs.close();
                         } catch (SQLException e) {
-                            mysql.close();
+                            mysql.closeConnection(this.getClass());
                         }
                     }
                     //prn.print(PUtility.DataFullR("หักคืนเงินมัดจำ            ", 20) + PUtility.DataFull(IntFmt.format(frec.EarnestCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Earnest), 13));
@@ -1078,7 +1082,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     
                     prn.print("----------------------------------------");
@@ -1290,9 +1294,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     double quan = rs.getDouble("cuquan");
                     t += ("align=left><font face=Angsana New size=1>" + "Special Coupon" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(quan), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(cuamt), 13)) + "_";
                 }
-
+                rs.close();
             } catch (SQLException e) {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
@@ -1374,7 +1378,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
@@ -1559,7 +1563,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             
         }
 
-        mysql.close();
+        mysql.closeConnection(this.getClass());
 
         return listObj;
     }
@@ -1598,7 +1602,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException ex) {
             MSG.ERR(ex.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return list;
@@ -1643,7 +1647,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException ex) {
             MSG.ERR(ex.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return credit;

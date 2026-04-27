@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="1008" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0c0fffc2-1cb6-4595-9888-a4105f7ab82e">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="tableNo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="custTomer" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="printerName" class="java.lang.String"/>
+	<parameter name="etd" class="java.lang.String"/>
+	<parameter name="R_PluCode" class="java.lang.String"/>
+	<parameter name="etdThai" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select TOnact,TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName,R_Normal, sum(R_Quan) qty,sum(R_Total) total,r_price,r_type,r_time, b.Macno,R_Date, R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_Kic,emp.name from tablefile t left join balance b on t.tcode = b.r_table inner join employ emp on b.r_emp = emp.code where tcode=($P{tableNo}) and r_etd=($P{etd})  and r_plucode=($P{R_PluCode})  and R_PrintOK='Y' and R_KicPrint<>'P' and R_Kic<>'' and R_Kic='1'and TOnact='N' group by r_plucode]]>
+	</queryString>
+	<field name="r_pname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="r_normal" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qty" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="r_price" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="r_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="R_ETD" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="r_time" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="R_Index" class="java.lang.String"/>
+	<field name="R_Date" class="java.lang.String"/>
+	<field name="Macno" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="76" splitType="Immediate">
+			<textField>
+				<reportElement x="18" y="0" width="73" height="43" uuid="11f61957-0130-4a16-8cf1-cc4d4dc9ec4c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="26" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tableNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-9" y="0" width="27" height="43" uuid="4419b1ec-2f03-4c26-af81-c4d778606d8b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="26" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[โต๊ะ : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="56" y="0" width="52" height="43" uuid="7e0d40ce-8ad5-46d2-98bf-62a2bf925ab9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="26" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["C"+$P{custTomer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-4" y="33" width="168" height="14" uuid="0e468c85-d6a0-4612-93b3-7c13d4dd4d86"/>
+				<text><![CDATA[---------------------------------------------------]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="137" y="0" width="28" height="43" uuid="a5c83d47-8ff6-4836-87c2-25cfaa70ae15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="26" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tableNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="0" width="55" height="43" uuid="ea7339a5-6d51-457d-baf8-186402f56d55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="26" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[T:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="-9" y="37" width="43" height="24" uuid="0ae0f315-133e-456b-acfc-5d236e1a4820"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[จำนวน]]></text>
+			</staticText>
+			<textField pattern="###0">
+				<reportElement x="34" y="37" width="41" height="24" uuid="5f537f3c-5fb6-4ca2-a0c0-b0f375f63317"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="75" y="37" width="37" height="24" uuid="d61c76b6-9313-4d35-9db4-9ec66c499db1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[ราคา]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="112" y="37" width="52" height="24" uuid="c63be1c8-ad77-4b00-8e86-0118dbf56d32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{r_price}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-4" y="64" width="164" height="1" uuid="d568edfb-0747-4875-8c01-8e653d4e3fb1"/>
+			</line>
+			<componentElement>
+				<reportElement stretchType="RelativeToTallestObject" x="18" y="67" width="94" height="34" uuid="df2dc2fb-8b2f-48da-9ea0-85695be3a56b"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barHeight="80">
+					<jr:codeExpression><![CDATA[$F{R_Index}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="-4" y="-33" width="168" height="30" uuid="94275a8b-3338-44a5-839e-dd1b5f4505e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{etdThai}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="-10" y="1" width="173" height="36" uuid="b3159825-bc0f-4ee1-a4bb-64ba6ccbb05d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="22" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[sun.natee.project.util.ThaiUtil.ASCII2Unicode($F{r_pname})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="49">
+			<textField>
+				<reportElement x="18" y="1" width="57" height="29" uuid="ae9e4a41-4734-4e4e-b3f5-1271ac3e21f3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tableNo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="91" y="18" width="73" height="29" forecolor="#000000" backcolor="#FFFFFF" uuid="ae02f4ca-1c01-4cf5-bb38-b4df0123f13c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="TH Sarabun New" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[sun.natee.project.util.ThaiUtil.ASCII2Unicode($F{name})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-9" y="1" width="27" height="29" uuid="8223261c-4f6b-4c82-b88b-554b2ee42428"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[โต๊ะ : ]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="65" y="1" width="100" height="29" uuid="0982c6b6-58ab-4a50-8d44-a555f4072fdf"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{R_Date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="106" y="1" width="58" height="29" forecolor="#000000" backcolor="#FFFFFF" uuid="ad8f37b3-3035-4616-84c3-9eb180ab9871"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="TH Sarabun New" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{r_time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="-9" y="18" width="100" height="29" forecolor="#000000" backcolor="#FFFFFF" uuid="e388498e-2679-4aee-b141-ce7befacfe7c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="TH Sarabun New" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Macno / " + $F{Macno}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

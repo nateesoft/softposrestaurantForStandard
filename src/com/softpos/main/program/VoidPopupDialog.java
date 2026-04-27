@@ -205,7 +205,7 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(VoidPopupDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

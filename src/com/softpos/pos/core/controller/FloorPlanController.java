@@ -43,7 +43,7 @@ public class FloorPlanController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listSpTempRefund;
@@ -59,7 +59,7 @@ public class FloorPlanController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -83,7 +83,7 @@ public class FloorPlanController extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -102,12 +102,13 @@ public class FloorPlanController extends DatabaseConnection {
                     bean.setPCode(rs.getString("PCode"));
                     listTempset.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listTempset;
@@ -133,14 +134,16 @@ public class FloorPlanController extends DatabaseConnection {
                 bean.setPingQty(rs.getDouble("PingQty"));
                 bean.setPstock(rs.getString("pstock"));
                 bean.setPactive(rs.getString("pstock"));
+                listPing.add(bean);
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
-        
         return listPing;
     }
 }

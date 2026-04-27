@@ -307,12 +307,12 @@ public class CouponDiscount extends javax.swing.JDialog {
 
 private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
     cuponBean = null;
-    dispose();
+    this.setVisible(false);//dispose();
 }//GEN-LAST:event_bntExitActionPerformed
 
 private void txtCuQtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCuQtyKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        dispose();
+        this.setVisible(false);//dispose();
     } else {
         int row = ShowTable.getSelectedRow();
         String CuQty = txtCuQty.getText();
@@ -359,12 +359,12 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         if (!txtCucode.getText().equals("") || txtCucode.getText().equals(null)) {
             process();
         } else {
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntOKKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bntOKKeyPressed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntOKKeyPressed
 
     private void bntOKMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bntOKMouseClicked
@@ -377,7 +377,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         cuponBean = new CuponBean();
         cuponBean.setCuCode(txtCucode.getText());
 
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntOKMouseClicked
 
     private void txtCucodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCucodeActionPerformed
@@ -391,7 +391,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }//GEN-LAST:event_txtCuQtyMouseClicked
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     private void loadDataToGrid() {
@@ -432,7 +432,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -495,7 +495,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -534,13 +534,15 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     if (rs.next()) {
                         RetValue = rs.getInt("cuquan");
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetValue;
@@ -561,13 +563,15 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     if (rs.next()) {
                         RetValue = rs.getString("sms_code");
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         if (RetValue == null) {
             RetValue = "";
@@ -590,13 +594,15 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     if (rs.next()) {
                         RetValue = rs.getString("m_code");
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         if (RetValue == null) {
             RetValue = "";
@@ -682,13 +688,15 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 if (rs.next()) {
                     itemForDisc = rs.getInt("itemCount");//จำนวนสินค้าที่ให้คูปองได้
                 }
+                rs.close();
+                stmt.close();
             } //เช็คว่าสินค้าไหนใช้คูปองได้บ้าง
             //เช็คว่าสินค้าไหนใช้คูปองได้บ้าง
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (itemForDisc < cuponQty) {
@@ -1009,7 +1017,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         temp.saveTempCupon(bean);
         //end update tempcupon
 
-        dispose();
+        this.setVisible(false);//dispose();
     }
 
     private void updatePercentCupon(double itemDisc, String cuCode, double percent, BalanceBean balanceBean) {
@@ -1032,12 +1040,13 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and R_Table='" + tableNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql3);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1071,11 +1080,12 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and R_Table='" + tableNo + "'";
             Statement stmt = mysql.getConnection().createStatement();
             stmt.executeUpdate(sql3);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1096,11 +1106,12 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return count;

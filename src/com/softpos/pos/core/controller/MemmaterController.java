@@ -139,11 +139,12 @@ public class MemmaterController {
                 bean = null;
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MemmaterController.class);
         }
 
         return bean;
@@ -160,12 +161,13 @@ public class MemmaterController {
                     + "where Member_Code='" + memberCode + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -285,12 +287,13 @@ public class MemmaterController {
                     + "where Member_Code='" + memberCode + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

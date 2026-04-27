@@ -413,9 +413,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
+                } finally{
+                    mysql.closeConnection(this.getClass());
                 }
-
-                mysql.close();
+              
                 prn.print("----------------------------------------");
                 prn.print(" ");
                 prn.print(" ");

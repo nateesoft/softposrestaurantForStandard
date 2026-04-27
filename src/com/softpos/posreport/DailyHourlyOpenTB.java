@@ -117,6 +117,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         cc = rs.getDouble("cc");
                         amount = rs.getDouble("amount");
                     }
+                    rs.close();
+                    
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumB_custE += cc;
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
@@ -127,6 +129,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                     sumNet += sumNettotalE;
                     sumBill += sumBillE;
                 }
+                rsTypeE.close();
+                
                 ResultSet rsTypeT = mysql.getConnection().createStatement().executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
@@ -136,6 +140,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                     sumNet += sumNettotalT;
                     sumBill += sumBillT;
                 }
+                rsTypeT.close();
+                
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
                 model.addRow(new Object[]{
@@ -165,7 +171,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         return ListObj;
     }
@@ -336,7 +342,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void btnExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void PrintHourlyByCust() {

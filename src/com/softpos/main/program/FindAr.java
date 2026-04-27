@@ -199,7 +199,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindAr.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();

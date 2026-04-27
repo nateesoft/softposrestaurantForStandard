@@ -34,12 +34,14 @@ public class LoginController {
                     loginBean.setMacno(rs.getString("macno"));
                     loginBean.setName(rs.getString("name"));
                 }
+                stmt.close();
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(Login.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return loginBean;
@@ -64,10 +66,11 @@ public class LoginController {
                     + "where username<>'" + UserCode + "' "
                     + "and macno='" + Value.MACNO + "';";
             mysql.getConnection().createStatement().executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

@@ -28,7 +28,7 @@ public class StoreDept {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -57,7 +57,7 @@ public class StoreDept {
 
             return false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

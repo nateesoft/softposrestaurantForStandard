@@ -41,11 +41,13 @@ import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.SoftMenuSetup;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TempsetBean;
+import database.ConfigFile;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -94,7 +96,8 @@ public class MainSale extends javax.swing.JDialog {
     private String SALE_Pinto = "ส่งประจำ";
     private String SALE_WholeSale = "ขายส่ง";
     private boolean btnClickPrintKic = false;
-
+    private TableFileControl TableFileControl = new TableFileControl();
+    private TableFileBean TableFileBean = null;
     // init bean list
     private final EmployeeControl empControl = new EmployeeControl();
     private final ProductControl productControl = new ProductControl();
@@ -112,7 +115,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
-
+        PublicVar.countRound = 0;
         posUser = PosControl.getPosUser(PublicVar.ReturnString);
 
         if (btnLangTH.isSelected()) {
@@ -125,6 +128,7 @@ public class MainSale extends javax.swing.JDialog {
             String T1 = tableNo.substring(0, tableNo.indexOf("("));
             tableNo = T1;
         }
+
         TableFileControl tbControl = new TableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
         this.memberBean = MemmaterController.getMember(tbBean.getMemCode());
@@ -405,7 +409,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        btnCancel.setBackground(new java.awt.Color(204, 51, 0));
+        btnCancel.setBackground(new java.awt.Color(255, 0, 153));
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
         btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
@@ -420,7 +424,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnCancel);
 
-        btnHold.setBackground(new java.awt.Color(204, 51, 0));
+        btnHold.setBackground(new java.awt.Color(255, 0, 153));
         btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnHold.setForeground(new java.awt.Color(255, 255, 255));
         btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
@@ -438,7 +442,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnHold);
 
-        bntPrintCheckBill.setBackground(new java.awt.Color(204, 51, 0));
+        bntPrintCheckBill.setBackground(new java.awt.Color(255, 0, 153));
         bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bntPrintCheckBill.setForeground(new java.awt.Color(255, 255, 255));
         bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
@@ -454,7 +458,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(bntPrintCheckBill);
 
-        btnSplit.setBackground(new java.awt.Color(204, 51, 0));
+        btnSplit.setBackground(new java.awt.Color(255, 0, 153));
         btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSplit.setForeground(new java.awt.Color(255, 255, 255));
         btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
@@ -472,7 +476,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnSplit);
 
-        btnPayment.setBackground(new java.awt.Color(204, 51, 0));
+        btnPayment.setBackground(new java.awt.Color(255, 0, 153));
         btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnPayment.setForeground(new java.awt.Color(255, 255, 255));
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
@@ -490,7 +494,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 629, 580, 100));
 
-        jPanel3.setBackground(new java.awt.Color(204, 51, 0));
+        jPanel3.setBackground(new java.awt.Color(255, 102, 0));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -587,11 +591,11 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel4.add(tbpMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 103, 580, 520));
 
-        jPanel1.setBackground(new java.awt.Color(204, 51, 0));
+        jPanel1.setBackground(new java.awt.Color(255, 153, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         txtTable.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        txtTable.setForeground(new java.awt.Color(255, 0, 0));
+        txtTable.setForeground(new java.awt.Color(51, 51, 51));
         txtTable.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         txtTable.setDisabledTextColor(java.awt.Color.red);
@@ -625,17 +629,15 @@ public class MainSale extends javax.swing.JDialog {
         });
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("ลูกค้า");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("โต๊ะ");
 
         txtCust.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        txtCust.setForeground(new java.awt.Color(255, 0, 0));
+        txtCust.setForeground(new java.awt.Color(51, 51, 51));
         txtCust.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCust.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         txtCust.setDisabledTextColor(java.awt.Color.black);
@@ -662,7 +664,6 @@ public class MainSale extends javax.swing.JDialog {
         txtTypeDesc.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         txtTypeDesc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTypeDesc.setText("DINE IN");
-        txtTypeDesc.setBorder(null);
         txtTypeDesc.setCaretColor(new java.awt.Color(255, 255, 255));
         txtTypeDesc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -706,11 +707,10 @@ public class MainSale extends javax.swing.JDialog {
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtDisplayDiscount.setEditable(false);
-        txtDisplayDiscount.setBackground(new java.awt.Color(255, 153, 153));
+        txtDisplayDiscount.setBackground(new java.awt.Color(204, 153, 0));
         txtDisplayDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         txtDisplayDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDisplayDiscount.setText("Discount");
-        txtDisplayDiscount.setBorder(null);
         txtDisplayDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
         jPanel6.add(txtDisplayDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 153, 170, 40));
 
@@ -732,6 +732,11 @@ public class MainSale extends javax.swing.JDialog {
                 txtPluCodeFocusGained(evt);
             }
         });
+        txtPluCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPluCodeActionPerformed(evt);
+            }
+        });
         txtPluCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPluCodeKeyPressed(evt);
@@ -740,11 +745,10 @@ public class MainSale extends javax.swing.JDialog {
         jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 170, 30));
 
         txtDiscount.setEditable(false);
-        txtDiscount.setBackground(new java.awt.Color(255, 153, 153));
+        txtDiscount.setBackground(new java.awt.Color(204, 153, 0));
         txtDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         txtDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDiscount.setText("0.00");
-        txtDiscount.setBorder(null);
         txtDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
         jPanel6.add(txtDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 153, 240, 40));
 
@@ -1215,6 +1219,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         /**
          * * OPEN CONNECTION **
          */
+        PublicVar.countRound = 0;
         List<BalanceBean> listBalance = balanceControl.loadTableBalance(tableNo);
         int rowCount = model.getRowCount();
         for (int i = 0; i < rowCount; i++) {
@@ -1725,7 +1730,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
-                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and mcno='" + PublicVar.MacNo + "';";
+                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
                 balanceControl.execUpdate(sql);
             }
             balanceControl.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
@@ -1843,6 +1848,10 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void txtPluCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPluCodeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPluCodeActionPerformed
+
     private void cancelArPaymentClick() {
         PublicVar.TempUserRec = PublicVar.TUserRec;
 
@@ -1885,8 +1894,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             bntHoldTableClick();
             clearTable();
             tbpMain.setSelectedIndex(0);
-
-            dispose();
+            this.setVisible(false);
+//            dispose();
 
             // show floorplan
             showFloorPlan();
@@ -1926,6 +1935,24 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void bntVoidClick() {
         try {
+            try {
+//                MySQLConnect mysql = new MySQLConnect();
+                String sqlUpdatePro = "update balance set "
+                        //                    + "R_PrCode='',"
+                        + "R_PrType='-P',"
+                        + "R_PRDisc='0',"
+                        + "R_PRAmt='0',"
+                        + "R_PrQuan='0',"
+                        + "R_PrChkType='',"
+                        + "R_QuanCanDisc=R_Quan "
+                        + "where R_Table='" + tableNo + "' "
+                        + "and r_PrCode<>'' ";
+                mainSaleControl.execUpdate(sqlUpdatePro);
+                String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+                mainSaleControl.execUpdate(sqlUpdateTable);
+            } catch (Exception e) {
+                MSG.NOTICE(e.toString());
+            }
             int row = getSelectedRowIndex();
             if (row == -1) {
                 return;
@@ -1957,10 +1984,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 if (!PublicVar.TableRec_PrintChkBill.equals("Y")) {
                     GetUserAction getuser = new GetUserAction(null, true);
                     getuser.setVisible(true);
-
+                    PosUserBean voidposUser = PosControl.getPosUserToVoid(PublicVar.ReturnString);
                     if (!PublicVar.ReturnString.equals("")) {
-                        if (posUser.getUserName() != null) {
-                            if (posUser.getSale3().equals("Y")) {
+                        if (voidposUser != null) {
+//                        if (posUser.getUserName() != null) {
+                            if (voidposUser.getSale3().equals("Y")) {
+//                            if (posUser.getSale3().equals("Y")) {
                                 PublicVar.TUserRec = posUser;
                                 VoidPopupDialog voidD = new VoidPopupDialog(null, true, txtTable.getText(), memberBean);
                                 voidD.setVisible(true);
@@ -1970,12 +1999,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     List<BalanceBean> listBalance = balanceControl.getBalanceByRLinkIndex(R_Index);
                                     for (BalanceBean balanceBean : listBalance) {
                                         hasValue = true;
-                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
+                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
+//                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
                                         txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
                                     }
 
                                     if (!hasValue) {
-                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
                                         txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
                                     }
                                     showCell(row, 0);
@@ -2326,7 +2356,13 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     txtPluCode.setText("");
                     txtPluCode.requestFocus();
                 }
-                Qty = Double.parseDouble(StrQty);
+                boolean checkNumberlic = util.CheckStringOrNumberlic.CheckStringOrNumberlic(StrQty);
+                if (checkNumberlic == true) {
+                    Qty = Double.parseDouble(StrQty);
+                } else {
+                    Qty = 0;
+                }
+
             } else {
                 Qty = 1;
                 PluCode = TempCode;
@@ -2377,6 +2413,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         }
         return found;
+
     }
 
     private boolean checkPSetSelect(String PCode) {
@@ -2618,7 +2655,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             switch (printerForm) {
                 case "1": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
-                    printerName = "kic" + rKic;
+//                    printerName = "kic" + rKic;
                     for (BalanceBean balance : listBalanceForm) {
                         String PCode = balance.getR_PluCode();
                         if (printerForm.equals("1")) {
@@ -2649,7 +2686,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         case "3":
                             if (Value.printkic) {
                                 String retd = balanceBean.getR_ETD();
-                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "");
+                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
                                 String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
                                 if (CheckBillBeforeCash.equals("Y")) {
                                     printBillVoidCheck();
@@ -2675,13 +2712,16 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 case "7":
                 case "2":
                     if (Value.printkic) {
-                        printSimpleForm.KIC_FORM_7(printerName, txtTable.getText());
-                        printBillVoidCheck();
+
+                        String retd = balanceBean.getR_ETD();
+                        printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+//                        printSimpleForm.KIC_FORM_7(printerName, txtTable.getText());
+//                        printBillVoidCheck();
                     }
                     break;
                 default:
                     printBillVoidCheck();
-                    MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+                    MSG.ERR(null, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
                     break;
             }
         }
@@ -2693,10 +2733,12 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 + "set r_kicprint='P',"
                 + "r_pause='Y' "
                 + "where r_table='" + txtTable.getText() + "' "
+                + "and trantype is null "
                 + "and r_kicprint<>'P' "
                 + "and r_printOk='Y' "
-                + "and r_kic<>'';";
+                + "and r_kic<>'' ";
         balanceControl.execUpdate(sql);
+
     }
 
     private void changeSaleType(String SaleType) {
@@ -2801,14 +2843,22 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
             String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
             mainSaleControl.execUpdate(sql);
+            try {
+                Thread.sleep(100);
+                kichenPrint();
+            } catch (Exception e) {
+            }
 
-            kichenPrint();
             holdTableAndSave();
             PublicVar.ErrorColect = false;
             initScreen();
             return;
         }
         String sql = "update tablefile set tonact ='N' where tcode='" + txtTable.getText() + "';";
+        if (lbTotalAmount.getText().equals("0.00")) {
+            sql = "update tablefile set tonact ='N' , TCustomer='0'"
+                    + " where tcode='" + txtTable.getText() + "';";
+        }
         mainSaleControl.execUpdate(sql);
     }
 
@@ -2825,6 +2875,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String UpdateTableFile = "update tablefile "
                 + "set tonact='N', macno='" + Value.MACNO + "', tpause='Y' "
                 + "where tcode='" + txtTable.getText() + "'";
+
         mainSaleControl.execUpdate(UpdateTableFile);
 
         showSum();
@@ -3186,6 +3237,9 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void showHoldTable() {
+        if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
+            printBillCheck();
+        }
         tbpMain.setSelectedIndex(0);
 
         bntHoldTableClick();
@@ -3196,7 +3250,8 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         clearHistory();
         Value.TableSelected = "";
 
-        dispose();
+        this.setVisible(false);
+//        dispose();
 
         // show floorplan
         showFloorPlan();
@@ -3305,11 +3360,15 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         if (!PCode.equals("") && !PVoid.equals("V")) {
                             bntVoidClick();
                             double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
+                            TableFileBean = TableFileControl.getData(tableNo);
                             DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
-                                    txtMember1.getText(), txtMember2.getText());
+                                    txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
                             dd.clearMemberDiscount();
                         }
+
                     }
+                    //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
+
                 } else if (typeIndex.equals("ItemMove")) {
                     MoveItemDialog m = new MoveItemDialog(null, true, txtTable.getText());
                     m.setVisible(true);
@@ -3446,7 +3505,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (poshwSetup.getTakeOrderChk().equals("Y")) {
             btnPayment.setVisible(false);
             btnSplit.setVisible(false);
-            bntPrintCheckBill.setVisible(false);
+//            bntPrintCheckBill.setVisible(false);
             isTakeOrder = true;
         }
 
@@ -3602,6 +3661,23 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void cancelItemBeforeHold() {
+        try {
+            String sqlUpdatePro = "update balance set "
+                    //                    + "R_PrCode='',"
+                    + "R_PrType='-P',"
+                    + "R_PRDisc='0',"
+                    + "R_PRAmt='0',"
+                    + "R_PrQuan='0',"
+                    + "R_PrChkType='',"
+                    + "R_QuanCanDisc=R_Quan "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and r_PrCode<>'' ";
+            mainSaleControl.execUpdate(sqlUpdatePro);
+            String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+            mainSaleControl.execUpdate(sqlUpdateTable);
+        } catch (Exception e) {
+            MSG.NOTICE(e.toString());
+        }
         int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
@@ -3784,14 +3860,17 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             addMouseEvent(btn, i);
         }
         for (int i = 0; i < listMenu.size(); i++) {
-            MenuMGR menu = listMenu.get(i);
+            final MenuMGR menu = listMenu.get(i);
             btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
-            btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
-                JButton btnMenu = (JButton) e.getSource();
-                if (menu.getPCode().equals("")) {
-                    loadButtonProductMenu(menu.getMenuCode());
-                } else if (!txtCust.getText().trim().equals("")) {
-                    addProductFromButtonMenu(menu.getPCode(), btnMenu.getName());
+            btnGrid[menu.getMIndex()].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton btnMenu = (JButton) e.getSource();
+                    if (menu.getPCode().equals("")) {
+                        loadButtonProductMenu(menu.getMenuCode());
+                    } else if (!txtCust.getText().trim().equals("")) {
+                        addProductFromButtonMenu(menu.getPCode(), btnMenu.getName());
+                    }
                 }
             });
         }
@@ -3801,14 +3880,17 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         btnGrid[15].setName(menuCode);
         btnGrid[15].setFocusable(false);
         btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-        btnGrid[15].setBackground(Color.RED);
-        btnGrid[15].addActionListener((ActionEvent e) -> {
-            JButton btn = (JButton) e.getSource();
-            if (btn.getName() != null) {
-                String btnName = btn.getName();
-                if (btnName.length() >= 3) {
-                    String backMenu = btnName.substring(0, btnName.length() - 2);
-                    loadButtonProductMenu(backMenu);
+        btnGrid[15].setBackground(Color.GRAY);
+        btnGrid[15].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton btn = (JButton) e.getSource();
+                if (btn.getName() != null) {
+                    String btnName = btn.getName();
+                    if (btnName.length() >= 3) {
+                        String backMenu = btnName.substring(0, btnName.length() - 2);
+                        loadButtonProductMenu(backMenu);
+                    }
                 }
             }
         });

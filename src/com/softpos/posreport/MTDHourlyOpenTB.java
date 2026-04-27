@@ -130,6 +130,8 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumNet += sumNettotalE;
                     sumBill += sumBillE;
                 }
+                rsTypeE.close();
+                
                 ResultSet rsTypeT = mysql.getConnection().createStatement().executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
@@ -139,6 +141,8 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumNet += sumNettotalT;
                     sumBill += sumBillT;
                 }
+                rsTypeT.close();
+                
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
                 model.addRow(new Object[]{
@@ -165,9 +169,10 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 IntFmt.format(sumBill),
                 IntFmt.format(sumNet)
             });
-            mysql.close();
         } catch (Exception e) {
             MSG.ERR(e.getMessage());
+        } finally{
+            mysql.closeConnection(this.getClass());
         }
         return ListObj;
     }
@@ -420,7 +425,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
 
     private void txtDate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDate1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.dispose();
+            this.setVisible(false);//dispose();
         }
         if (evt.getKeyCode() == KeyEvent.VK_F5) {
             //bntOKClick();
@@ -506,7 +511,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void btnExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void PrintHourlyByCust() {

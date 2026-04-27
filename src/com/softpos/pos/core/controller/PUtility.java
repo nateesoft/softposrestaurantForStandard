@@ -42,7 +42,7 @@ public class PUtility extends DatabaseConnection {
         mysql.open(PUtility.class);
         try {
             String sql = "select * from pset where pcode='" + TempCode + "'";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     PSetBean bean = new PSetBean();
                     bean.setPcode(rs.getString("PCode"));
@@ -51,12 +51,13 @@ public class PUtility extends DatabaseConnection {
 
                     listBean.add(bean);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return listBean;
@@ -71,7 +72,7 @@ public class PUtility extends DatabaseConnection {
             String sql = "select * from balanceset "
                     + "where r_plucode='" + XCode + "' "
                     + "and r_index='" + r_index + "' ";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceSetBean bean = new BalanceSetBean();
                     bean.setR_psubcode(rs.getString("r_psubcode"));
@@ -79,12 +80,14 @@ public class PUtility extends DatabaseConnection {
 
                     listBean.add(bean);
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return listBean;
@@ -159,30 +162,32 @@ public class PUtility extends DatabaseConnection {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open(PUtility.class);
             try {
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try ( Statement stmt = mysql.getConnection().createStatement()) {
                     String SqlQuery = "select pdesc,pstock,pset from product where pcode='" + TempCode + "' limit 1";
-                    try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
+                    try ( ResultSet rs = stmt.executeQuery(SqlQuery)) {
                         if (rs.next()) {
                             PName = rs.getString("pdesc");
                             StkProc = rs.getString("pstock").equals("Y");
                             SetProc = rs.getString("pset").equals("Y");
                         }
+                        rs.close();
+                        stmt.close();
                     }
                 }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(PUtility.class);
             }
 
             if (StkProc) {
                 MySQLConnect mysql2 = new MySQLConnect();
                 mysql2.open(PUtility.class);
                 try {
-                    try (Statement stmt2 = mysql2.getConnection().createStatement()) {
+                    try ( Statement stmt2 = mysql2.getConnection().createStatement()) {
                         String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
-                        try (ResultSet rec2 = stmt2.executeQuery(LoadTableFile)) {
+                        try ( ResultSet rec2 = stmt2.executeQuery(LoadTableFile)) {
                             if (rec2.next()) {
                                 double OnHand = rec2.getDouble(T_Mon);
                                 if (OnHand >= TempQty) {
@@ -195,13 +200,15 @@ public class PUtility extends DatabaseConnection {
                                 ShowMsg("(" + PName + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = 0");
                                 RetVal = false;
                             }
+                            rec2.close();
+                            stmt2.close();
                         }
                     }
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
             }
             if (SetProc) {
@@ -216,9 +223,9 @@ public class PUtility extends DatabaseConnection {
                         MySQLConnect mysql2 = new MySQLConnect();
                         mysql2.open(PUtility.class);
                         try {
-                            try (Statement stmt = mysql2.getConnection().createStatement()) {
+                            try ( Statement stmt = mysql2.getConnection().createStatement()) {
                                 String sql = "select 1 from stkfile where (bpcode='" + psetBean.getPsubcode() + "') and (bstk='" + T_Stk + "') limit 1";
-                                try (ResultSet rs = stmt.executeQuery(sql)) {
+                                try ( ResultSet rs = stmt.executeQuery(sql)) {
                                     if (rs.next()) {
                                         double OnHand = rs.getDouble(T_Mon);
                                         if (OnHand >= TempQty) {
@@ -233,13 +240,15 @@ public class PUtility extends DatabaseConnection {
                                         RetVal = false;
                                         break;
                                     }
+                                    rs.close();
+                                    stmt.close();
                                 }
                             }
                         } catch (SQLException e) {
                             MSG.ERR(null, e.getMessage());
                             AppLogUtil.log(PUtility.class, "error", e);
                         } finally {
-                            mysql2.close();
+                            mysql2.closeConnection(PUtility.class);
                         }
                     }
                 }
@@ -256,17 +265,19 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
-                try (ResultSet rs = stmt.executeQuery(LoadTableFile)) {
+                try ( ResultSet rs = stmt.executeQuery(LoadTableFile)) {
                     RetVal = rs.next();
+                    rs.close();
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return RetVal;
@@ -316,11 +327,12 @@ public class PUtility extends DatabaseConnection {
                 prm.setString(12, SqlDateFmt.format(date));
                 prm.setString(13, TimeFmt.format(date));
                 prm.executeUpdate();
+                prm.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(PUtility.class);
             }
 
             int TempAct = GetActionMon(TDate);
@@ -332,11 +344,12 @@ public class PUtility extends DatabaseConnection {
                     prm4.setString(1, TempCode);
                     prm4.setString(2, StkCode);
                     prm4.executeUpdate();
+                    prm4.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
 
             }
@@ -351,11 +364,12 @@ public class PUtility extends DatabaseConnection {
                     prm4.setString(2, TempCode);
                     prm4.setString(3, StkCode);
                     prm4.executeUpdate();
+                    prm4.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
             }
         }
@@ -416,11 +430,12 @@ public class PUtility extends DatabaseConnection {
                 prm.setString(12, SqlDateFmt.format(date));
                 prm.setString(13, TimeFmt.format(date));
                 prm.executeUpdate();
+                prm.close();
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(PUtility.class);
             }
 
             int TempAct = GetActionMon(TDate);
@@ -433,11 +448,12 @@ public class PUtility extends DatabaseConnection {
                     prm4.setString(1, TempCode);
                     prm4.setString(2, StkCode);
                     prm4.executeUpdate();
+                    prm4.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
             }
             for (int i = TempAct; i <= 24; i++) {
@@ -451,11 +467,12 @@ public class PUtility extends DatabaseConnection {
                     prm4.setString(2, TempCode);
                     prm4.setString(3, StkCode);
                     prm4.executeUpdate();
+                    prm4.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
             }
         }
@@ -478,17 +495,19 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String sql = "select pcode from product where pcode='" + PublicVar.P_Code + "' and pactive='Y' limit 1";
-                try (ResultSet rs = stmt.executeQuery(sql)) {
+                try ( ResultSet rs = stmt.executeQuery(sql)) {
                     RetValue = rs.next();
+                    rs.close();
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return RetValue;
@@ -532,11 +551,12 @@ public class PUtility extends DatabaseConnection {
                     prm.setString(12, SqlDateFmt.format(date));
                     prm.setString(13, TimeFmt.format(date));
                     prm.executeUpdate();
+                    prm.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(PUtility.class);
                 }
 
                 int TempAct = GetActionMon(TDate);
@@ -549,11 +569,12 @@ public class PUtility extends DatabaseConnection {
                         prm4.setString(1, TempCode);
                         prm4.setString(2, StkCode);
                         prm4.executeUpdate();
+                        prm4.close();
                     } catch (SQLException e) {
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql2.close();
+                        mysql2.closeConnection(PUtility.class);
                     }
                 }
 
@@ -572,11 +593,12 @@ public class PUtility extends DatabaseConnection {
                         prmt.addBatch();
                     }
                     prmt.executeUpdate();
+                    prmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(PUtility.class);
                 }
             }
         }
@@ -620,11 +642,12 @@ public class PUtility extends DatabaseConnection {
                     prm.setString(12, SqlDateFmt.format(date));
                     prm.setString(13, TimeFmt.format(date));
                     prm.executeUpdate();
+                    prm.close();
                 } catch (SQLException e) {
                     MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(PUtility.class);
                 }
 
                 int TempAct = GetActionMon(TDate);
@@ -637,11 +660,12 @@ public class PUtility extends DatabaseConnection {
                         prmt.setString(1, TempCode);
                         prmt.setString(2, StkCode);
                         prmt.executeUpdate();
+                        prmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(null, e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql2.close();
+                        mysql2.closeConnection(PUtility.class);
                     }
 
                     MySQLConnect mysql3 = new MySQLConnect();
@@ -659,17 +683,18 @@ public class PUtility extends DatabaseConnection {
                             prmt.addBatch();
                         }
                         prmt.executeUpdate();
+                        prmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(null, e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql3.close();
+                        mysql3.closeConnection(PUtility.class);
                     }
                 }
             }
         }
     }
-    
+
     public static void ProcessSelectSetUpdateStockOutRefund(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost, String r_index) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
@@ -718,6 +743,7 @@ public class PUtility extends DatabaseConnection {
                     prm.setString(12, SqlDateFmt.format(date));
                     prm.setString(13, TimeFmt.format(date));
                     prm.executeUpdate();
+                    prm.close();
                     stmt2.close();
                     int TempAct = GetActionMon(TDate);
                     if (!SeekStkFile(TempCode, StkCode)) {
@@ -726,6 +752,7 @@ public class PUtility extends DatabaseConnection {
                         prm4.setString(1, TempCode);
                         prm4.setString(2, StkCode);
                         prm4.executeUpdate();
+                        prm4.close();
                     }
                     for (int i = TempAct; i <= 24; i++) {
                         String T_Mon = "bqty" + String.valueOf(i);
@@ -735,6 +762,7 @@ public class PUtility extends DatabaseConnection {
                         prm4.setString(2, TempCode);
                         prm4.setString(3, StkCode);
                         prm4.executeUpdate();
+                        prm4.close();
                     }
                 }
             }
@@ -744,7 +772,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
     }
 
@@ -826,11 +854,13 @@ public class PUtility extends DatabaseConnection {
             } else {
                 ReturnVal = false;
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnVal;
@@ -858,13 +888,15 @@ public class PUtility extends DatabaseConnection {
                     ReturnVal = i;
                     break;
                 }
+                rs.close();
+                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             }
         }
 
-        mysql.close();
+        mysql.closeConnection(PUtility.class);
 
         return ReturnVal;
 
@@ -883,11 +915,13 @@ public class PUtility extends DatabaseConnection {
             } else {
                 ReturnVal = false;
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnVal;
@@ -1233,11 +1267,12 @@ public class PUtility extends DatabaseConnection {
                 showError("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return PublicVar.Branch_Code + PUtility.Addzero(StrRefBillNo, 7);
@@ -1279,11 +1314,12 @@ public class PUtility extends DatabaseConnection {
                     MSG.WAR("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
                 }
                 rs.close();
+                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(PUtility.class);
             }
 
             if ((SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate1)) >= 0) && (SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate2)) <= 0)) {
@@ -1369,13 +1405,14 @@ public class PUtility extends DatabaseConnection {
                 ReturnVal = false;
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
 
             ReturnVal = false;
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnVal;
@@ -1385,15 +1422,16 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String UpdateQry = "delete from temppromotion where tableonno=" + "'" + Table + "'";
                 stmt.executeUpdate(UpdateQry);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
     }
@@ -1508,7 +1546,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1533,7 +1571,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1559,7 +1597,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1596,7 +1634,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1621,7 +1659,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1646,7 +1684,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1671,7 +1709,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1701,7 +1739,7 @@ public class PUtility extends DatabaseConnection {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return ReturnValues;
@@ -1712,17 +1750,19 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try ( Statement stmt = mysql.getConnection().createStatement()) {
                 String SeekPromotion2 = "select pcode from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "') limit 1";
-                try (ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
+                try ( ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
                     foundData = rs.next();
+                    rs.close();
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PUtility.class);
         }
 
         return foundData;

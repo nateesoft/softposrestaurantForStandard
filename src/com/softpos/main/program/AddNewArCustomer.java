@@ -605,7 +605,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
                 
                 ClearVariable();
@@ -645,7 +645,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
                 
                 ClearVariable();
@@ -664,7 +664,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
                 
                 ClearVariable();
@@ -730,7 +730,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AddNewArCustomer.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             GetDataValue();
@@ -755,7 +755,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AddNewArCustomer.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -777,7 +777,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

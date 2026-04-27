@@ -1,8 +1,6 @@
 package util;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -91,22 +89,6 @@ public class DateConvert {
 //        System.out.println("GetCurrentTime:"+TimeString);
         //txtDate1.setText(dateString);
         return TimeString;
-    }
-
-    public int compareDateMonthYear(String date) {
-        //คำนวนเวลาการทำงานของพนักงานทั้งปี
-        date = date.replace("-", "");
-        int dd = Integer.parseInt(date.substring(6, 8));
-        int MM = Integer.parseInt(date.substring(4, 6));
-        int yyyy = Integer.parseInt(date.substring(0, 4));
-        LocalDate today = LocalDate.now();                          //Today's date
-        LocalDate birthday = LocalDate.of(yyyy, MM, dd);  //Birth date
-
-        Period p = Period.between(birthday, today);
-        return p.getDays();
-//        System.out.println("Day : " +p.getDays());
-//        System.out.println("Month : " +p.getMonths());
-//        System.out.println("Year : " +p.getYears());
     }
 
     public int getCheckExpireDate(String date) {

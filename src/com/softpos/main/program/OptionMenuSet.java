@@ -329,7 +329,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(OptionMenuSet.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             txtOptionName.setText("");
@@ -393,12 +393,13 @@ public class OptionMenuSet extends javax.swing.JDialog {
                     + "'" + ThaiUtil.Unicode2ASCII(opname) + "');";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         LoadOpt();
@@ -443,7 +444,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

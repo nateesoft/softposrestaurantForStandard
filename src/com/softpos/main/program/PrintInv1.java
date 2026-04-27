@@ -1092,7 +1092,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             txtCode.requestFocus();
@@ -1234,7 +1234,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!DisplayClick) {
@@ -1273,12 +1273,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         txtMacNo.requestFocus();
                     }
                     rs.close();
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             if (!txtDocNo.isFocusable()) {
@@ -1314,12 +1315,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         txtRemark2.setText(rs.getString("remark2"));
                     }
                     rs.close();
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1398,12 +1400,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         txtMacNo.requestFocus();
                     }
                     rs.close();
+                    stmt.close();
                 }
             } catch (SQLException e2) {
                 MSG.ERR(e2.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e2);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
     }
@@ -1583,12 +1586,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "'" + bean.getRemark2() + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1607,12 +1611,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     + "where sp_code='" + bean.getSp_code() + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1634,6 +1639,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             try (PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery)) {
                 prm.setString(1, InvNo);
                 prm.executeUpdate();
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
@@ -1659,17 +1665,21 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 prm.setString(8, rs.getString("r_unit"));
                                 prm.setString(9, rs.getString("r_group"));
                                 prm.executeUpdate();
+                                
+                                prm.close();
                             }
                         } catch (SQLException e2) {
                             MSG.ERR(e2.getMessage());
                         }
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1687,12 +1697,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(3, MacNo);
                 prm.setString(4, RefNo);
                 prm.executeUpdate();
+                
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1708,12 +1720,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(1, InvNo);
                 prm.setString(2, BillNo);
                 prm.executeUpdate();
+                
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1779,12 +1793,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(38, "");
                 prm.setString(39, "N");
                 prm.executeUpdate();
+                
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1845,12 +1861,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(33, SqlDateFmt.format(date));
                 prm.setString(34, InvNo);
                 prm.executeUpdate();
+                
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1866,13 +1884,16 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
                 try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
                     RetVal = rs.next();
+                    
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1890,13 +1911,16 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String SQLQuery = "Select sp_code from customer where sp_code='" + CustCode + "' limit 1";
                 try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
                     RetVal = rs.next();
+                    
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1921,6 +1945,8 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         TempInv = 1;
                         RetVal = 'P' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
                     }
+                    rs.close();
+                    stmt.close();
                 }
             }
         } catch (SQLException e2) {
@@ -1933,12 +1959,13 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 String SQLQuery = "update branch set invcashno=" + UpdateInvNo;
                 stmt.executeUpdate(SQLQuery);
+                stmt.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -1976,12 +2003,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     prm.setString(4, PUtility.DataFull(VoidMessage, 30));
                                     prm.setString(5, TempInvNo);
                                     prm.executeUpdate();
+                                    
+                                    prm.close();
                                 }
                             } catch (SQLException e2) {
                                 MSG.ERR(e2.getMessage());
                                 AppLogUtil.log(PrintInv1.class, "error", e2);
                             } finally {
-                                mysql.close();
+                                mysql.closeConnection(this.getClass());
                             }
                             TCancel.setText("เอกสารยกเลิกโดย : " + PublicVar._User + "/" + DateFmt.format(date));
                             TCancelMsg.setText("  " + VoidMessage);
@@ -2051,12 +2080,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(1, PublicVar._User);
                 prm.setString(2, InvNo);
                 prm.executeUpdate();
+                
+                prm.close();
             }
         } catch (SQLException e2) {
             MSG.ERR(e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

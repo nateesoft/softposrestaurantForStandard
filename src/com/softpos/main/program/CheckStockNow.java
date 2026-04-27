@@ -160,7 +160,7 @@ public class CheckStockNow extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CheckStockNow.class, "error", e);
         } finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

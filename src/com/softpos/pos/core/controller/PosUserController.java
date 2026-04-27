@@ -19,7 +19,7 @@ public class PosUserController {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PosUserController.class);
         try {
-            String sql = "select * from posuser where username='" + Value.USERCODE + "' limit 1";
+            String sql = "select Username, Sale2, Sale3 from posuser where username='" + Value.USERCODE + "' limit 1";
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new PosUserBean();
@@ -27,12 +27,14 @@ public class PosUserController {
                     bean.setSale3(rs.getString("Sale3"));
                     bean.setUserName(rs.getString("Username"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PosUserController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;

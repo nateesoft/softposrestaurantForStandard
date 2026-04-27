@@ -11,7 +11,7 @@ package util;
  */
 public class CheckStringOrNumberlic {
 
-    public boolean CheckStringOrNumberlic(String text) {
+    public static boolean CheckStringOrNumberlic(String text) {
         boolean numeric = true;
         try {
             Double.parseDouble(text);

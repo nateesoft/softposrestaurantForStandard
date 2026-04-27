@@ -225,12 +225,13 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 try (Statement stmt = mysql.getConnection().createStatement()) {
                     String QryUpdatetable = "update tablefile set TonAct='N' where (TCode='" + TableSelected + "')";
                     stmt.executeUpdate(QryUpdatetable);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(ShowTable.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
             
             loadDataToGrid();
@@ -238,7 +239,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
 
     } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         PublicVar.ReturnString = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
     } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
         loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
@@ -252,7 +253,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
                 } else {
-                    dispose();
+                    this.setVisible(false);//dispose();
                 }
             }
         }
@@ -266,7 +267,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         PublicVar.ReturnString = "";
         Value.TableSelected = "";
-        this.dispose();
+        this.setVisible(false);//dispose();
         FloorPlanDialog fl = new FloorPlanDialog();
         fl.setVisible(true);
     }//GEN-LAST:event_bntExitActionPerformed
@@ -283,7 +284,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
                 } else {
-                    dispose();
+                    this.setVisible(false);//dispose();
                 }
             }
         }
@@ -304,7 +305,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                         MSG.WAR("มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                         Value.TableSelected = "";
                     } else {
-                        dispose();
+                        this.setVisible(false);//dispose();
                     }
                 }
             }
@@ -354,7 +355,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             MSG.ERR(e.getMessage());
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

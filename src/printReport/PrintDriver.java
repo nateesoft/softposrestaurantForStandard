@@ -32,6 +32,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
 import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import util.AppLogUtil;
@@ -71,11 +72,18 @@ public class PrintDriver {
         Value.printerDriverName = printerName;
     }
 
-    public void addImage(String path) {
-        textAll += "<img src=\"" + path + "\" width=200 height=200></img>";
-        textNormal += "...";
-    }
-
+//    public void addImage(String path) {
+//        textAll += "<img src=\"" + path + "\" width=200 height=200></img>";
+//        textNormal += "...";
+//    }
+//    public void addImageQR() {
+//        textAll += "\n";
+//        textAll += "testPrint QRCode";
+//        textAll += "\n";
+//        textAll += "<tr><td><img src=\"../QRPayment.png\" width=100 height=100></img></td></tr>";
+//        textAll += "<tr><td><img src=\"https://www.w3schools.com/images/picture.jpg\" width=100 height=100></img></td></tr>";
+//        textNormal += "...";
+//    }
     public void addText(String str, String size) {
         textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font>";
         textNormal += str;
@@ -154,14 +162,15 @@ public class PrintDriver {
                         + "set r_kicprint='P' "
                         + "where r_index='" + bean.getR_Index() + "' "
                         + "and r_table='" + bean.getR_Table() + "'";
-                try ( Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysql.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
+                    stmt.close();
                 }
             } catch (SQLException e) {
                 MSG.ERR(null, e.getMessage());
                 AppLogUtil.log(PrintDriver.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
 
@@ -184,17 +193,30 @@ public class PrintDriver {
             if (printService != null) {
                 editor.print(null, null, false, printService, attr, false);
             }
+            printService = null;
         } catch (PrinterException ex) {
             MSG.ERR("printHTML=>PrinterException: " + ex.getMessage());
         }
         close();
     }
 
+
     public void printHTMLIntoFile() throws FileNotFoundException, UnsupportedEncodingException {
         //Print Cashier
         String header1 = "<html><head><meta charset=\"UTF-8\"></head><body><table align='center' border=0 cellpadding=0 cellspaceing=0 width=180 height=50>";
         String footer1 = "</table></body></html>";
-        String text = header1 + textAll + footer1;
+
+        String barcode = " <div style='padding-top:8px; text-align:center; font-size:15px; font-family: Source Sans Pro, Arial, sans-serif;'>\n"
+                + "            <!-- back-linking to www.tec-it.com is required -->\n"
+                + "            <a href='https://www.tec-it.com' title='Barcode Software by TEC-IT' target='_blank'>\n"
+                + "                TEC-IT Barcode Generator<br/>\n"
+                + "                <!-- logos are optional -->\n"
+                + "                <img alt='TEC-IT Barcode Software' border='0'\n"
+                + "                     src='http://www.tec-it.com/pics/banner/web/TEC-IT_Logo_75x75.gif'>\n"
+                + "            </a>\n"
+                + "        </div>";
+
+        String text = header1 + textAll + barcode + footer1;
         BufferedWriter output = null;
         DateConvert dc = new DateConvert();
         try {
@@ -218,9 +240,10 @@ public class PrintDriver {
         }
     }
 
-    public void printHTMLKitChen() {
+    public void printHTMLKitChen(String printerName) {
         //Print Cashier
         String text = header + textAll + footer;
+//        String printer = "";
         try {
             JEditorPane editor = new JEditorPane();
             editor.setContentType("text/html");
@@ -234,9 +257,47 @@ public class PrintDriver {
                 editor.print(null, null, false, printService, attr, false);
             } else {
                 AppLogUtil.htmlFile(text);
+                System.out.println("Process Print kic No.:...>>>  " + printerName);
+                try {
+                    Thread.sleep(90 * 3);
+                } catch (Exception e) {
+                }
             }
         } catch (PrinterException ex) {
-            MSG.ERR("printHTMLKitChen=>PrinterException:" + ex.getMessage());
+            AppLogUtil.htmlFile(ex.toString());
+            MSG.ERR(ex.getMessage());
+            MSG.ERR(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
+        }
+        close();
+    }
+
+    public void printHTMLKitChenByKictran(String printerName) {
+        //Print Cashier
+        String text = header + textAll + footer;
+//        String printer = "";
+        try {
+            JEditorPane editor = new JEditorPane();
+            editor.setContentType("text/html");
+            editor.setText(text);
+
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
+
+            PrintService printService = getPrinterKitchenKictran(printerName);
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.htmlFile(text);
+                System.out.println("Process Print kic No.:...>>>  " + printerName);
+                try {
+                    Thread.sleep(90 * 3);
+                } catch (Exception e) {
+                }
+            }
+        } catch (PrinterException ex) {
+            AppLogUtil.htmlFile(ex.toString());
+            MSG.ERR(ex.getMessage());
+            MSG.ERR(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -259,7 +320,7 @@ public class PrintDriver {
                 AppLogUtil.htmlFile(text);
             }
         } catch (PrinterException ex) {
-             MSG.ERR("printHTMLOrder=>PrinterException:" + ex.getMessage());
+            MSG.ERR("printHTMLOrder=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -305,8 +366,38 @@ public class PrintDriver {
         PrintService[] printService = PrinterJob.lookupPrintServices();
 
         for (PrintService printService1 : printService) {
-            if (printService1.getName().equals(Value.printerDriverName)) {
-                return printService1;
+            if (PublicVar.printerCheckBill == true) {
+                if (printService1.getName().equals(PublicVar.printerCheckBillName)) {
+                    PublicVar.printerCheckBill = false;
+                    return printService1;
+                }
+            } else {
+                if (printService1.getName().equals(Value.printerDriverName)) {
+                    return printService1;
+                }
+            }
+        }
+
+        if (printService.length > 0) {
+            return printService[0];
+        } else {
+            return null;
+        }
+    }
+
+    private PrintService getPrinterKitchen(String printer) {
+        PrintService[] printService = PrinterJob.lookupPrintServices();
+//        printer = "Snagit 9";
+        for (PrintService printService1 : printService) {
+            if (PublicVar.printerCheckBill == true) {
+                if (printService1.getName().equals(printer)) {
+                    PublicVar.printerCheckBill = false;
+                    return printService1;
+                }
+            } else {
+                if (printService1.getName().equals(printer)) {
+                    return printService1;
+                }
             }
         }
 
@@ -319,7 +410,6 @@ public class PrintDriver {
 
     private PrintService getPrinterKitchen() {
         PrintService[] printService = PrinterJob.lookupPrintServices();
-
         for (PrintService printService1 : printService) {
             if (printService1.getName().equals(Value.printerDriverKitChenName)) {
                 return printService1;
@@ -333,16 +423,37 @@ public class PrintDriver {
         return null;
     }
 
-    public void close() {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                        "Tahoma", java.awt.Font.PLAIN, 14)));
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                MSG.ERR(null, e.getMessage());
+    private PrintService getPrinterKitchenKictran(String printer) {
+        PrintService[] printService = PrinterJob.lookupPrintServices();
+
+        for (PrintService printService1 : printService) {
+            if (printService1.getName().equals(printer)) {
+                return printService1;
             }
         }
+
+        if (printService.length > 0) {
+            return printService[0];
+        }
+
+        return null;
+    }
+
+    public void close() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (OSValidator.isWindows()) {
+                    try {
+//                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                        UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
+                                "Tahoma", java.awt.Font.PLAIN, 14)));
+                    } catch (Exception e) {
+                        MSG.ERR(null, e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     public Image addTextToImage(BufferedImage bufferImage, String[] text) {

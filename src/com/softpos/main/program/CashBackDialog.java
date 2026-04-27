@@ -223,7 +223,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CashBackDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         PrintReturnMoney(refStr);

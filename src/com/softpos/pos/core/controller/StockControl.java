@@ -37,7 +37,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isActive;
@@ -55,12 +55,14 @@ public class StockControl {
                 if (rs.next()) {
                     qty = rs.getDouble(1);
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return qty;
@@ -111,7 +113,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -147,7 +149,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -175,7 +177,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -229,7 +231,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -281,7 +283,9 @@ public class StockControl {
                 }
                 stmt1.close();
             }
-
+            rs.close();
+            stmt.close();
+            
             if (!isIntoSub) {
                 iSubCheck = 1;
             }
@@ -289,7 +293,7 @@ public class StockControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

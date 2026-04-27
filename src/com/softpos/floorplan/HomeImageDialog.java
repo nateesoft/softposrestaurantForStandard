@@ -203,7 +203,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -248,12 +248,12 @@ public class HomeImageDialog extends javax.swing.JDialog {
             if (stmt.executeUpdate(sql) > 0) {
                 MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
             }
-
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

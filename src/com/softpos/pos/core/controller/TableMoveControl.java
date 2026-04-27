@@ -43,7 +43,7 @@ public class TableMoveControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(TableMoveControl.class);
         }
     }
 

@@ -308,15 +308,16 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                         setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
                     }
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(GiftVoucherDialog.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
 
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -358,7 +359,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         PublicVar.VoucherType = "";
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -425,13 +426,14 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             String sql = "delete from tempgift";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
             PublicVar.VoucherType = "";
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         int size = model.getRowCount();
@@ -494,12 +496,13 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 }
                 
                 rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

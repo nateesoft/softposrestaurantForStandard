@@ -33,10 +33,11 @@ public class TSaleController {
 
                 listTsale.add(bean);
             }
+            rs.close();
         } catch (SQLException e) {
 
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listTsale;

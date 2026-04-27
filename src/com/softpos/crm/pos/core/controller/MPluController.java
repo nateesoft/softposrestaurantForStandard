@@ -29,12 +29,13 @@ public class MPluController {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
 
         return bean;
@@ -62,7 +63,7 @@ public class MPluController {
     public int create(List<MPluBean> listMPlu) {
         int[] resultCreate = new int[0];
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysql.open(MPluController.class);
         try {
             String sql = "insert into " + Value.db_member + ".mplu "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, PLU_Group, Sale_Type, "
@@ -88,11 +89,12 @@ public class MPluController {
 
             prm.clearParameters();
             resultCreate = prm.executeBatch();
+            prm.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
 
         return resultCreate.length;
@@ -100,19 +102,20 @@ public class MPluController {
 
     public void refundBill(String receiptNo) {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysql.open(MPluController.class);
 
         try {
             String sql = "delete from " + Value.db_member + ".mplu "
                     + "where receipt_no='" + receiptNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MPluController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(MPluController.class);
         }
     }
 }

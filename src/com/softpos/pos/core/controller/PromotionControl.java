@@ -38,12 +38,13 @@ public class PromotionControl {
                     + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "')";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -149,7 +150,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -248,11 +249,12 @@ public class PromotionControl {
                 proTab.setPQBath34(rs.getFloat("PQBath34"));
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -354,11 +356,12 @@ public class PromotionControl {
                 proTab = null;
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -411,6 +414,7 @@ public class PromotionControl {
                 ProtabBean protab1 = getDataSql(sql);
                 if (protab1 != null) {
                     try {
+
                         /*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P ก่อน หมายถึงเข้าข่ายโปรโมชัน */
                         String sqlUpdatePro = "update balance set "
                                 + "R_PrType='-P',"
@@ -589,7 +593,7 @@ public class PromotionControl {
                                     + "and R_PrCode='" + protab1.getProCode() + "' "
                                     + "and R_QuanCandisc>'0' "
                                     + "and R_PRType='-P'"
-                                    + "and R_Void <> 'V' ";
+                                    + "and R_Void <> 'V' limit " + protab1.getPSum1();
                             Statement stmt = mysql.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sqlCheck);
                             double Sum_Total_Qty = 0;
@@ -636,6 +640,7 @@ public class PromotionControl {
 
                                 //R_PrDisc = ส่วนลด/ยอดเงินที่ซื้อทุกรายการ*100
                                 BigDecimal R_PrDisc = aTotal_Disc_Amt.divide(aSum_Total_Price, 6, 6);//ทศนิยม 6 ตำแหน่ง
+//                                R_PrDisc = R_PrDisc/Sum_Total_Qty;
                                 double R_PrDisc_Total = R_PrDisc.doubleValue();
 
                                 for (int j = round; j > 0; j--) {
@@ -978,7 +983,9 @@ public class PromotionControl {
         }// END LOOP ALL BALANCE
 
         try {
-            String sqlTotal = "select sum(R_Price*R_Quan) TAmount,sum(R_PRAmt) R_PRAmt from balance where r_void<>'V';";
+            String sqlTotal = "select sum(R_Price*R_Quan) TAmount,sum(R_PRAmt) R_PRAmt "
+                    + "from balance "
+                    + "where r_table='" + table + "' and r_void<>'V';";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rsTotal = stmt.executeQuery(sqlTotal);
             if (rsTotal.next()) {
@@ -1004,7 +1011,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1014,8 +1021,9 @@ public class PromotionControl {
          */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
+        String sqlGetProtype = "";
         try {
-            String sqlGetProtype = "select ptype from protab where procode='" + bean.getPrCode() + "' limit 1;";
+            sqlGetProtype = "select ptype from protab where procode='" + bean.getPrCode() + "' limit 1;";
             Statement stmtGetPro = mysql.getConnection().createStatement();
             ResultSet rs = stmtGetPro.executeQuery(sqlGetProtype);
             if (rs.next()) {
@@ -1025,11 +1033,12 @@ public class PromotionControl {
             stmtGetPro.close();
         } catch (SQLException e) {
             MSG.ERR(e.toString());
-            AppLogUtil.log(PromotionControl.class, "error", e);
+            AppLogUtil.log(PromotionControl.class, "error" + sqlGetProtype, e);
         }
-
+        String sql = "";
         try {
-            String sql = "insert into t_promotion "
+
+             sql = "insert into t_promotion "
                     + "(R_Index,R_RefNo,Terminal,Cashier,PrCode,PrType,PCode,PDisc,PDiscBath,PPrice,PQty,PrTotalAmt,PrAmt,Flage) "
                     + "values('" + bean.getR_Index() + "','" + bean.getR_RefNo() + "','" + bean.getTerminal() + "','" + bean.getCashier()
                     + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','" + bean.getPCode() + "','" + bean.getPDisc() + "','" + bean.getPDiscBath()
@@ -1039,9 +1048,9 @@ public class PromotionControl {
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
-            AppLogUtil.log(PromotionControl.class, "error", e);
+            AppLogUtil.log(PromotionControl.class, "error"+sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1063,7 +1072,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1081,7 +1090,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1103,7 +1112,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1122,7 +1131,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1144,7 +1153,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1163,7 +1172,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1191,7 +1200,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1210,7 +1219,7 @@ public class PromotionControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1239,12 +1248,13 @@ public class PromotionControl {
                     procode = rs.getString("procode");
                     prodesc = rs.getString("prodesc");
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return procode + ":" + prodesc;

@@ -33,10 +33,11 @@ public class EmployeeControl extends DatabaseConnection {
 
                     listAll.add(bean);
                 }
+                rs.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         }
 
@@ -68,10 +69,12 @@ public class EmployeeControl extends DatabaseConnection {
             if (rs.next()) {
                 isValid = true;
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;

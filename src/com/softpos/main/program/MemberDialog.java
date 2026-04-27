@@ -278,7 +278,7 @@ public class MemberDialog extends javax.swing.JDialog {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         setMemCode("");
         setMemName("");
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -297,7 +297,7 @@ public class MemberDialog extends javax.swing.JDialog {
 
     private void txtCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
             jButton5ActionPerformed(null);
         }
@@ -325,7 +325,7 @@ public class MemberDialog extends javax.swing.JDialog {
 //        selectMember();
         UpdateMember("Del");
         clearMemberDiscount();
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnCancelMemberActionPerformed
 
     private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
@@ -339,11 +339,11 @@ public class MemberDialog extends javax.swing.JDialog {
             String mName = model.getValueAt(row, 1).toString();
             setMemCode(mCode);
             setMemName(mName);
-            dispose();
+            this.setVisible(false);//dispose();
         } else {
             setMemCode("");
             setMemName("");
-            dispose();
+            this.setVisible(false);//dispose();
         }
     }
 
@@ -398,12 +398,14 @@ public class MemberDialog extends javax.swing.JDialog {
                         rs.getString("Member_Fax")
                     });
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tbMember.requestFocus();
@@ -451,12 +453,14 @@ public class MemberDialog extends javax.swing.JDialog {
 
                     });
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tbMember.requestFocus();
@@ -474,6 +478,7 @@ public class MemberDialog extends javax.swing.JDialog {
                     + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
 
             String sqlUpdate = "update balance "
@@ -489,7 +494,7 @@ public class MemberDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -519,7 +524,7 @@ public class MemberDialog extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

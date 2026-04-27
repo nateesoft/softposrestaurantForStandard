@@ -488,7 +488,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSelectAllActionPerformed
@@ -508,7 +508,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void bntOKClick() {
@@ -607,7 +607,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -630,7 +630,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -828,7 +828,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         if (Value.printdriver) {
@@ -991,7 +991,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         prn.print("----------------------------------------");
@@ -1025,7 +1025,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -1222,7 +1222,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         PrintCashier(frec, CrArray, false);
@@ -1430,7 +1430,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("REG ID :" + Value.MACNO);
         prn.CutPaper();
 
-        mysql.close();
+        mysql.closeConnection(this.getClass());
     }
 
     public void ProcessGroup() {
@@ -1624,7 +1624,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         if (Value.printdriver) {
@@ -1905,7 +1905,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
         
         if (Value.printdriver) {
@@ -2098,7 +2098,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");
@@ -2162,7 +2162,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");
@@ -2273,7 +2273,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
             
             if (SumCard > 0) {
@@ -2314,12 +2314,14 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prm.setString(4, TCrApp);
             prm.setDouble(5, TCrAmt);
             prm.executeUpdate();
+            
+            prm.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -2367,7 +2369,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");

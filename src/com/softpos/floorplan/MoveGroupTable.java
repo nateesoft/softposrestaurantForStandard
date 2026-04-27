@@ -498,12 +498,12 @@ public class MoveGroupTable extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTable1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            dispose();
+            this.setVisible(false);//dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtTable1.getText().trim().equals("")) {
                 txtTable1.setText(txtTable1.getText().toUpperCase());
@@ -651,7 +651,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
-                    mysql.close();
+                    mysql.closeConnection(this.getClass());
                 }
 
                 // backup tmp
@@ -680,7 +680,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
-                    mysql2.close();
+                    mysql2.closeConnection(this.getClass());
                 }
 
                 //แยกปริ้นเตอร์ สำหรับพิมพ์ออกจากระบบ
@@ -690,7 +690,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 }
 
                 // clear tmp
-                dispose();
+                this.setVisible(false);//dispose();
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -893,11 +893,12 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 }
 
                 rs.close();
+                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(MoveGroupTable.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
         } else {
             txtUser.requestFocus();
@@ -941,7 +942,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -959,12 +960,13 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 for (String sql1 : sql) {
                     stmt.executeUpdate(sql1);
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

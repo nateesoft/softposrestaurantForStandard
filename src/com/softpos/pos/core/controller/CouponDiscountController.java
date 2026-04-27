@@ -37,11 +37,13 @@ public class CouponDiscountController extends DatabaseConnection {
 
                 listBalance.add(bean);
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -69,11 +71,13 @@ public class CouponDiscountController extends DatabaseConnection {
 
                 listBalance.add(bean);
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return listBalance;

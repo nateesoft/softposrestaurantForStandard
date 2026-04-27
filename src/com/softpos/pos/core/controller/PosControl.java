@@ -6,6 +6,7 @@ import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.PosUserBean;
+import com.sun.security.auth.login.ConfigFile;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,6 @@ public class PosControl {
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
     private static PosUserBean posUser = null;
-
     public static void resetPosHwSetup() {
         poshwsetup = null;
     }
@@ -41,21 +41,22 @@ public class PosControl {
         mysql.open(PosControl.class);
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
-                String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._User + "')";
+                String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._RealUser + "')";
                 stmt.executeUpdate(sql1);
-                
-                String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
+
+                String sql2 = "update poshwsetup set onact='N' where (terminal='" + Value.MACNO + "')";
                 if (stmt.executeUpdate(sql2) > 0) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
                 }
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
             System.exit(0);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
         }
     }
 
@@ -242,12 +243,45 @@ public class PosControl {
                     posUser.setStock73(rs.getString("Stock73"));
                     posUser.setStock74(rs.getString("Stock74"));
                 }
+                rs.close();
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
+        }
+
+        return posUser;
+    }
+
+    public static PosUserBean getPosUserToVoid(String username) {
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(PosControl.class);
+        try {
+            String sql = "select * from posuser where username='" + username + "' limit 1";
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    posUser = new PosUserBean();
+                    posUser.setUserName(rs.getString("username"));
+                    posUser.setPassword(rs.getString("password"));
+                    posUser.setName(rs.getString("name"));
+                    posUser.setUserGroup(rs.getString("UserGroup"));
+                    posUser.setOnACT(rs.getString("OnACT"));
+                    posUser.setMacNo(rs.getString("MacNo"));
+                    posUser.setSale1(rs.getString("sale1"));
+                    posUser.setSale2(rs.getString("sale2"));
+                    posUser.setSale3(rs.getString("sale3"));
+                }
+                rs.close();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            MSG.ERR(e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(PosControl.class);
         }
 
         return posUser;
@@ -317,7 +351,7 @@ public class PosControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
         }
 
         return companyBean;
@@ -387,7 +421,8 @@ public class PosControl {
                     posConfigSetup.setWTime(rs.getString("WTime"));
                     posConfigSetup.setLTime(rs.getString("LTime"));
                     posConfigSetup.setP_PrintProductValue(rs.getString("P_PrintProductValue"));
-                    posConfigSetup.setP_LimitTime(rs.getInt("P_LimitTime"));
+//                    posConfigSetup.setP_LimitTime(rs.getInt("P_LimitTime"));
+                    
                     posConfigSetup.setP_RefreshTime(rs.getInt("P_RefreshTime"));
                     posConfigSetup.setP_SaleDecimal(rs.getString("P_SaleDecimal"));
                     posConfigSetup.setP_PayBahtRound(rs.getString("P_PayBahtRound"));
@@ -400,7 +435,7 @@ public class PosControl {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
         }
 
         return posConfigSetup;
@@ -476,7 +511,7 @@ public class PosControl {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
         }
 
         return poshwsetup;
@@ -530,11 +565,12 @@ public class PosControl {
                 // reset load poshwsetup
                 PosControl.resetPosHwSetup();
             }
+            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(PosControl.class);
         }
     }
 

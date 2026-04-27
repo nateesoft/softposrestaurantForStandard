@@ -43,7 +43,8 @@ public class ServiceControl extends DatabaseConnection {
             if ("V".equals(balance.getR_Void())) {
                 continue;
             }
-            totalDiscount += balance.getR_PrAmt()
+            totalDiscount 
+                    += balance.getR_PrAmt()
                     + balance.getR_PrSubAmt()
                     + balance.getR_PrSubBath()
                     + balance.getR_PrCuAmt()
@@ -140,7 +141,7 @@ public class ServiceControl extends DatabaseConnection {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

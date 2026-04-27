@@ -523,7 +523,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         Jdi_dailyReport_Topsale top = new Jdi_dailyReport_Topsale(new Frame(), true);
@@ -629,7 +629,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(TopSaleRep.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -748,7 +748,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
@@ -783,12 +783,12 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
     public void bntExitClick() {
-        this.dispose();
+        this.setVisible(false);//dispose();
     }
 
     public void inputfrombnt(String str) {

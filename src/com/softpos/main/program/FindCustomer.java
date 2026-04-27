@@ -114,7 +114,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }
@@ -154,7 +154,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -193,7 +193,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -230,7 +230,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

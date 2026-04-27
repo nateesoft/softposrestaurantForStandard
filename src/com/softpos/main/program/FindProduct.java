@@ -251,7 +251,7 @@ public class FindProduct extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FindProduct.class, "error", e);
         }finally{
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 }

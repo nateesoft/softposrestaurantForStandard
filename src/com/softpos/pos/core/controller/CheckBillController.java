@@ -20,21 +20,23 @@ public class CheckBillController extends DatabaseConnection {
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
+        String sql = "";
         try {
             mysql.open(CheckBillController.class);
-            String sql = "select r_index from balance "
+            sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' and r_type='1' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BalanceBean();
                     bean.setR_Index(rs.getString("r_index"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CheckBillController.class, "error", e);
+            AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -54,12 +56,13 @@ public class CheckBillController extends DatabaseConnection {
                     bean.setSp_cr(rs.getInt("sp_cr"));
                     bean.setSp_cramt(rs.getDouble("sp_cramt"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -68,9 +71,10 @@ public class CheckBillController extends DatabaseConnection {
     public AccrBean getTotalAccrByArCode(String arCode) {
         AccrBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
+        String sql = "";
         try {
             mysql.open(CheckBillController.class);
-            String sql = "select sum(aramount) total "
+            sql = "select sum(aramount) total "
                     + "from accr "
                     + "where arcode='" + arCode + "' "
                     + "group by arcode";
@@ -79,12 +83,13 @@ public class CheckBillController extends DatabaseConnection {
                     bean = new AccrBean();
                     bean.setTotal(rs.getDouble("total"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CheckBillController.class, "error", e);
+            AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return bean;
@@ -93,21 +98,23 @@ public class CheckBillController extends DatabaseConnection {
     public boolean readyToPrintVoid(String tableNo) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
+        String sql="";
         try {
             mysql.open(CheckBillController.class);
-            String sql = "select r_index from balance "
+             sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_void='V' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CheckBillController.class, "error", e);
+            AppLogUtil.log(CheckBillController.class, "error" +sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -116,29 +123,31 @@ public class CheckBillController extends DatabaseConnection {
     public boolean readyToCheckKic(String tableNo) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
+        String sql="";
         try {
             mysql.open(CheckBillController.class);
-            String sql = "select r_kicprint "
+             sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
                     + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
-            AppLogUtil.log(CheckBillController.class, "error", e);
+            AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;
     }
-    
+
     public TableFileBean loadDiscByTableNo(String tableNo) {
         TableFileBean bean = null;
-        
+
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
@@ -149,17 +158,18 @@ public class CheckBillController extends DatabaseConnection {
                     bean = new TableFileBean();
                     bean.setTAmount(rs.getDouble("AAA"));
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
-        
+
         return bean;
     }
-    
+
     public boolean restoreTempBalance(String tableNo) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
@@ -171,12 +181,13 @@ public class CheckBillController extends DatabaseConnection {
                 if (rs.next()) {
                     isValid = true;
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         return isValid;

@@ -234,12 +234,13 @@ public class SetupButtonTable extends javax.swing.JDialog {
             String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
             try (Statement stmt = mysql.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
+                stmt.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
             setActionButton(true);
             dispose();
         }
@@ -289,13 +290,14 @@ public class SetupButtonTable extends javax.swing.JDialog {
                     txtTable.setText("");
                     txtTable.requestFocus();
                 }
+                rChk.close();
             }
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
             setActionButton(true);
         }
     }
@@ -329,7 +331,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 

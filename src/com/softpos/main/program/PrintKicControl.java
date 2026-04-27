@@ -181,7 +181,7 @@ public class PrintKicControl extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        this.dispose();
+        this.setVisible(false);//dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -218,7 +218,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -240,7 +240,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
     }

@@ -26,12 +26,13 @@ public class BranchFileController {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BranchFileController.class);
         }
 
         return bean;
@@ -55,12 +56,13 @@ public class BranchFileController {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
+                rs.close();
             }
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(BranchFileController.class);
         }
 
         return bean;

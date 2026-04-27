@@ -107,7 +107,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();
@@ -160,7 +160,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
-            mysql.close();
+            mysql.closeConnection(this.getClass());
         }
     }
 
@@ -201,7 +201,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                         MSG.ERR(e.getMessage());
                         AppLogUtil.log(CancelArPayment.class, "error", e);
                     } finally {
-                        mysql.close();
+                        mysql.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print("Sub-Total................." + DecFmt.format(SumAmount));
@@ -264,7 +264,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 MSG.ERR(e.getMessage());
                 AppLogUtil.log(CancelArPayment.class, "error", e);
             } finally {
-                mysql.close();
+                mysql.closeConnection(this.getClass());
             }
 
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
