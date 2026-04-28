@@ -10,3 +10,5 @@ connect.ini
 *.htm*
 /connect.ini
 *.running
+connect.ini
+webconnect.ini
