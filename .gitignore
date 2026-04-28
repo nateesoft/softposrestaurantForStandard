@@ -3,7 +3,6 @@
 /lib/*
 connect.ini
 *.log*
-*.xml
 *.properties
 *.ini*
 *.htm*
