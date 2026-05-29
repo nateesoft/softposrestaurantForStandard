@@ -1737,27 +1737,24 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
     }
 
     private void loadStatus() {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                //check ftp file date
-                try {
-                    pbCheckUpdate.setStringPainted(true);
-                    pbCheckUpdate.setMinimum(0);
-                    pbCheckUpdate.setMaximum(100);
-                    for (int i = 1; i <= 100; i++) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (Exception e) {
-                        }
+        new Thread(() -> {
+            try {
+                pbCheckUpdate.setStringPainted(true);
+                pbCheckUpdate.setMinimum(0);
+                pbCheckUpdate.setMaximum(100);
+                for (int i = 1; i <= 100; i++) {
+                    pbCheckUpdate.setValue(i);
+                    pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
                     }
-
-                    pbCheckUpdate.setString("Load data Complete ");
-                } catch (Exception e) {
                 }
+                pbCheckUpdate.setString("Load data Complete ");
+            } catch (Exception e) {
+                System.err.println("loadStatus error: " + e.getMessage());
             }
         }).start();
     }

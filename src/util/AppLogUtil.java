@@ -122,7 +122,8 @@ public class AppLogUtil {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter(LOG_DIR + "/app-" + date + ".log", true))) {
             bw.write(msg);
-        } catch (IOException ignore) {
+        } catch (IOException e) {
+            System.err.println("AppLogUtil.shutdown: failed to write stop marker: " + e.getMessage());
         }
 
         if (allHandler != null) {

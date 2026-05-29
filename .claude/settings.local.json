@@ -21,7 +21,14 @@
       "Bash(curl -sL \"https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar\" -o slf4j-api-1.7.36.jar)",
       "Bash(curl -sL \"https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar\" -o slf4j-simple-1.7.36.jar)",
       "Bash(grep \"\\\\.java$\")",
-      "Bash(awk -F'\"' '{print $2}')"
+      "Bash(awk -F'\"' '{print $2}')",
+      "Bash(grep -E \"}\\\\s*$\")",
+      "Bash([ ! -f \"/Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/images/$img\" ])",
+      "Bash(java -version)",
+      "Bash(javac -version)",
+      "Bash(curl -s \"https://repo1.maven.org/maven2/com/formdev/flatlaf/maven-metadata.xml\")",
+      "Bash(curl -L -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/flatlaf-3.7.1.jar https://repo1.maven.org/maven2/com/formdev/flatlaf/3.7.1/flatlaf-3.7.1.jar --progress-bar)",
+      "Bash(unzip -p dist/SoftPOSRestaurantForStandart.jar META-INF/MANIFEST.MF)"
     ]
   }
 }

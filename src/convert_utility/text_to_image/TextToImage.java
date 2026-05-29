@@ -172,11 +172,16 @@ public class TextToImage {
                 success = true;
             } catch (Exception e) {
                 success = false;
-            }finally{
-                if(imageOut != null)
-                    try { imageOut.close(); } catch(Exception ex){}
-                return success;
+            } finally {
+                if (imageOut != null) {
+                    try {
+                        imageOut.close();
+                    } catch (Exception ex) {
+                        System.err.println("TextToImage: failed to close stream: " + ex.getMessage());
+                    }
+                }
             }
+            return success;
         }
     }
 }

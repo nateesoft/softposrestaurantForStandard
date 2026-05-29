@@ -830,6 +830,7 @@ public class MainSale extends javax.swing.JDialog {
         txtMember1.setEditable(false);
         txtMember1.setBackground(new java.awt.Color(0, 102, 204));
         txtMember1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember1.setForeground(new java.awt.Color(255, 255, 255));
         txtMember1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMember1.setText(" <ค้นหาสมาชิก> ");
         txtMember1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -850,6 +851,7 @@ public class MainSale extends javax.swing.JDialog {
         txtMember2.setEditable(false);
         txtMember2.setBackground(new java.awt.Color(0, 102, 204));
         txtMember2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember2.setForeground(new java.awt.Color(255, 255, 255));
         txtMember2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMember2.setText(": แต้มสะสม");
         txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));

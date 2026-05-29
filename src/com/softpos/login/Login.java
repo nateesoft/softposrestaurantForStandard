@@ -388,13 +388,7 @@ public class Login extends javax.swing.JDialog {
                 }
             }
 
-            if (OSValidator.isWindows()) {
-                try {
-                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                    MSG.ERR(null, e.getMessage());
-                }
-            }
+            com.formdev.flatlaf.FlatIntelliJLaf.setup();
 
             /* Create and display the dialog */
             java.awt.EventQueue.invokeLater(new Runnable() {

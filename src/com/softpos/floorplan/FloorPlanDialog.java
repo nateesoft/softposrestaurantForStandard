@@ -107,13 +107,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         initComponents();
 
         SwingUtilities.invokeLater(() -> {
-            if (OSValidator.isWindows()) {
-                try {
-                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                    MSG.ERR(null, e.getMessage());
-                }
-            }
+            com.formdev.flatlaf.FlatIntelliJLaf.setup();
 
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             POSHW = POSHWSetup.Bean(Value.MACNO);
@@ -136,26 +130,26 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             loadHeaderTab();
             productControl.initLoadProductActive();
 
-            new Thread(() -> {
-                while (true) {
-                    PublicVar.countRound++;
-                    if (PublicVar.countRound > (120 * 6)) {
-                        clearTemp();
-                        PosControl.logout();
-                        System.exit(0);
-                    }
-                    SwingUtilities.invokeLater(() -> loadZone(zoneSelected));
-                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-                        printCheckBillFromPDA();
-                    }
-                    try {
-                        Thread.sleep(refresh * 1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                }
-            }).start();
+//            new Thread(() -> {
+//                while (true) {
+//                    PublicVar.countRound++;
+//                    if (PublicVar.countRound > (120 * 6)) {
+//                        clearTemp();
+//                        PosControl.logout();
+//                        System.exit(0);
+//                    }
+//                    SwingUtilities.invokeLater(() -> loadZone(zoneSelected));
+//                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+//                        printCheckBillFromPDA();
+//                    }
+//                    try {
+//                        Thread.sleep(refresh * 1000);
+//                    } catch (InterruptedException ex) {
+//                        Thread.currentThread().interrupt();
+//                        break;
+//                    }
+//                }
+//            }).start();
         });
     }
 
@@ -1732,6 +1726,15 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final TableSetupControl tableSetupControl = new TableSetupControl();
     List<FloorPlanBean> listFloorPlan = new ArrayList<>();
 
+    private ImageIcon loadIcon(String path) {
+        java.net.URL url = getClass().getResource(path);
+        if (url == null) {
+            AppLogUtil.log(FloorPlanDialog.class, "warn", new Exception("Image resource not found: " + path));
+            return null;
+        }
+        return new ImageIcon(url);
+    }
+
     private void addButton() {
         try {
             resetButton();
@@ -1758,32 +1761,40 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
                         btn.setForeground(Color.blue);
                         btn.setFont(fontB);
-                        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Menu.jpg")));
+                        btn.setIcon(loadIcon("/images/Menu.jpg"));
                         btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                        btn.setBorderPainted(true);
+                        btn.setBorder(javax.swing.BorderFactory.createLineBorder(Color.blue, 2));
                     } else {
                         if (bean.getPrintChkBill().equals("N") && bean.getCustomer() > 0) {
                             btn.setFont(fontB);
-                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Teble2.png")));
+                            btn.setIcon(loadIcon("/images/Teble2.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                            btn.setBorderPainted(true);
+                            btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 150, 0), 2));
                         } else if (bean.getPrintChkBill().equals("Y")) {
                             btn.setOpaque(true);
                             btn.setFont(fontB);
-                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkbill.png")));
+                            btn.setIcon(loadIcon("/images/checkbill.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                             btn.setBackground(Color.orange);
+                            btn.setBorderPainted(true);
+                            btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(200, 100, 0), 2));
                         } else {
                             btn.setOpaque(true);
                             btn.setFont(fontB);
-                            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
+                            btn.setIcon(loadIcon("/images/table_1.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                            btn.setBorderPainted(true);
+                            btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(255, 180, 0), 2));
                         }
                     }
                 } else {
@@ -1791,10 +1802,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
                     btn.setBackground(null);
                     btn.setFont(fontB);
-                    btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_1.png")));
+                    btn.setIcon(loadIcon("/images/table_1.png"));
                     btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                     btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                     btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                    btn.setBorderPainted(true);
+                    btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(100, 180, 100), 2));
                 }
 
             }
@@ -2139,10 +2152,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.setFocusPainted(false);
             button.setMargin(new Insets(0, 0, 0, 0));
             button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
+            button.setBorderPainted(true);
             button.setOpaque(false);
             button.setFont(fontA);
-            button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            button.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(180, 180, 180), 1));
             button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
             button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
         }
