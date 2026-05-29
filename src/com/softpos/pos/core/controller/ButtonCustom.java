@@ -149,7 +149,7 @@ public class ButtonCustom {
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 button.setVerticalAlignment(SwingConstants.TOP);
                 button.setVerticalTextPosition(SwingConstants.BOTTOM);
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 break;
             case 1:
                 button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
@@ -160,11 +160,11 @@ public class ButtonCustom {
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 button.setVerticalAlignment(SwingConstants.BOTTOM);
                 button.setVerticalTextPosition(SwingConstants.TOP);
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 break;
             case 2:
                 button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
                 }
@@ -173,7 +173,7 @@ public class ButtonCustom {
                 break;
             case 3:
                 button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 button.setText("<html><center>" + m.getMenuShowText() + "</center></html>");
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 if (!m.getIMG().equals("")) {
@@ -183,7 +183,7 @@ public class ButtonCustom {
             case 4:
                 button.setBackground(getColorFormat(m.getBGColor()));
                 button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 button.setText("<html>" + m.getMenuShowText() + "</html>");
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 break;
@@ -205,7 +205,7 @@ public class ButtonCustom {
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 button.setVerticalAlignment(SwingConstants.TOP);
                 button.setVerticalTextPosition(SwingConstants.BOTTOM);
-                button.setForeground(getColorFormat(m.getFontColor()));
+                button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 break;
             default:
                 break;
@@ -269,5 +269,22 @@ public class ButtonCustom {
         }
 
         return new Color(red, green, blue);
+    }
+
+    public Color getColorFormat(String colorStr, Color defaultColor) {
+        if (colorStr != null) {
+            String[] color = colorStr.split(",");
+            if (color.length == 3) {
+                try {
+                    int red = Integer.parseInt(color[0]);
+                    int green = Integer.parseInt(color[1]);
+                    int blue = Integer.parseInt(color[2]);
+                    return new Color(red, green, blue);
+                } catch (NumberFormatException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return defaultColor;
     }
 }

@@ -166,7 +166,8 @@ public class MainSale extends javax.swing.JDialog {
 
         historyBack = new ArrayList<>();
 
-//        setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+        java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(0, 0, screen.width, screen.height);
         sumSplit();
         txtPluCode.setEditable(true);
         txtPluCode.setFocusable(true);
@@ -396,8 +397,6 @@ public class MainSale extends javax.swing.JDialog {
         setTitle("โปรแกรมร้านอาหาร");
         setBackground(new java.awt.Color(255, 204, 204));
         setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        setUndecorated(true);
-        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -409,9 +408,7 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        btnCancel.setBackground(new java.awt.Color(255, 0, 153));
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnCancel.setForeground(new java.awt.Color(255, 255, 255));
         btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
         btnCancel.setFocusable(false);
         btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -424,9 +421,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnCancel);
 
-        btnHold.setBackground(new java.awt.Color(255, 0, 153));
         btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnHold.setForeground(new java.awt.Color(255, 255, 255));
         btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
         btnHold.setText("ส่งครัว/พักบิล");
         btnHold.setActionCommand("พักบิล/พักโต๊ะ (F3)");
@@ -442,9 +437,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnHold);
 
-        bntPrintCheckBill.setBackground(new java.awt.Color(255, 0, 153));
         bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntPrintCheckBill.setForeground(new java.awt.Color(255, 255, 255));
         bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
         bntPrintCheckBill.setText("พิมพ์ตรวจสอบ");
         bntPrintCheckBill.setFocusable(false);
@@ -458,9 +451,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(bntPrintCheckBill);
 
-        btnSplit.setBackground(new java.awt.Color(255, 0, 153));
         btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnSplit.setForeground(new java.awt.Color(255, 255, 255));
         btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
         btnSplit.setText("แยกชำระ");
         btnSplit.setFocusable(false);
@@ -476,9 +467,7 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(btnSplit);
 
-        btnPayment.setBackground(new java.awt.Color(255, 0, 153));
         btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnPayment.setForeground(new java.awt.Color(255, 255, 255));
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
         btnPayment.setText("ชำระเงิน");
         btnPayment.setFocusable(false);
@@ -968,8 +957,8 @@ public class MainSale extends javax.swing.JDialog {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1688,7 +1677,28 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         loadButtonProductMenu(refreshMenuButtonGroup(buttonName));
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void adjustFullScreenLayout() {
+        int rightW = jPanel4.getWidth() - 4;
+        int rightH = jPanel4.getHeight();
+        if (rightW <= 0 || rightH <= 0) {
+            return;
+        }
+        // jPanel4 ใช้ AbsoluteLayout — ต้อง setBounds เองเพื่อให้ขยายตามจอ
+        jPanel3.setBounds(2, 2, rightW, 90);
+        tbpMain.setBounds(2, 103, rightW, rightH - 213);
+        jPanel2.setBounds(2, rightH - 102, rightW, 100);
+        jPanel4.revalidate();
+
+        // jPanel9 ฝั่งซ้าย — ขยาย jScrollPane1 ให้ใช้ความสูงที่เหลือ
+        int scrollH = getContentPane().getHeight() - jPanel1.getHeight() - jPanel6.getHeight() - 10;
+        if (scrollH > 100) {
+            jScrollPane1.setPreferredSize(new java.awt.Dimension(jScrollPane1.getWidth(), scrollH));
+            jPanel9.revalidate();
+        }
+    }
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        adjustFullScreenLayout();
         if (tableNo.contains("T")) {
             txtShowETD.setText("T");
             changeSaleType("T");

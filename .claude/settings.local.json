@@ -11,7 +11,12 @@
       "Bash(git update-ref *)",
       "Bash(git ls-tree *)",
       "Bash(git fetch *)",
-      "Bash(git clone *)"
+      "Bash(git clone *)",
+      "Bash(cat)",
+      "Bash(chmod +x /tmp/analyze.sh)",
+      "Bash(bash /tmp/analyze.sh)",
+      "Bash(bash /tmp/leak_analysis.sh)",
+      "Bash(bash /tmp/final_summary.sh)"
     ]
   }
 }
