@@ -45,7 +45,7 @@ public class DlgBrowseProduct extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("แสดงรายการรหัสสินค้า (PLU List)");
-        setUndecorated(true);
+        setAlwaysOnTop(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -276,7 +276,7 @@ public class DlgBrowseProduct extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1008, 659));
+        setSize(new java.awt.Dimension(1008, 687));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

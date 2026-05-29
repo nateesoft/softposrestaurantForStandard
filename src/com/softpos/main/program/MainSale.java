@@ -17,7 +17,6 @@ import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
-//import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
@@ -96,18 +95,20 @@ public class MainSale extends javax.swing.JDialog {
     private String SALE_Pinto = "ส่งประจำ";
     private String SALE_WholeSale = "ขายส่ง";
     private boolean btnClickPrintKic = false;
-    private TableFileControl TableFileControl = new TableFileControl();
-    private TableFileBean TableFileBean = null;
-    // init bean list
+    
+    private final TableFileControl tableFileControl = new TableFileControl();
     private final EmployeeControl empControl = new EmployeeControl();
     private final ProductControl productControl = new ProductControl();
     private final BalanceControl balanceControl = new BalanceControl();
     private final FloorPlanController floorPlanControl = new FloorPlanController();
     private final MainSaleController mainSaleControl = new MainSaleController();
+    
+    private TableFileBean TableFileBean = null;
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
+        
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
         txtDisplayDiscount.setVisible(true);
@@ -115,6 +116,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
+        
         PublicVar.countRound = 0;
         posUser = PosControl.getPosUser(PublicVar.ReturnString);
 
@@ -129,8 +131,7 @@ public class MainSale extends javax.swing.JDialog {
             tableNo = T1;
         }
 
-        TableFileControl tbControl = new TableFileControl();
-        TableFileBean tbBean = tbControl.getData(tableNo);
+        TableFileBean tbBean = tableFileControl.getData(tableNo);
         this.memberBean = MemmaterController.getMember(tbBean.getMemCode());
         if (memberBean == null) {
             BalanceControl.updateProSerTable(tableNo, memberBean);
@@ -144,7 +145,9 @@ public class MainSale extends javax.swing.JDialog {
             }
         }
         txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
+        
         loadButtonProductMenu("A");
+        
         Value.MemberAlready = false;
 
         POSHW = POSHWSetup.Bean(Value.MACNO);
@@ -1305,8 +1308,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
 
     private void showSum() { //คำสั่งกำหนดให้ไปโชว์ค่ายอดเงินในส่วนต่างๆ
         //show sum
-        TableFileControl tCon = new TableFileControl();
-        TableFileBean tfBean = tCon.getData(tableNo);
+        TableFileBean tfBean = tableFileControl.getData(tableNo);
         double totalDiscount;
         totalDiscount = tfBean.getProDiscAmt() + tfBean.getSpaDiscAmt() + tfBean.getCuponDiscAmt()
                 + tfBean.getFastDiscAmt() + tfBean.getEmpDiscAmt() + tfBean.getTrainDiscAmt()
@@ -1325,7 +1327,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
             );
         }
 
-        jLabel1.setText("จำนวนรายการสินค้า: " + tCon.getItemCount(tableNo) + " รายการ");
+        jLabel1.setText("จำนวนรายการสินค้า: " + tableFileControl.getItemCount(tableNo) + " รายการ");
         txtCust.setText("" + tfBean.getTCustomer());
 
         // for member
@@ -1808,27 +1810,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }//GEN-LAST:event_tbpMainMouseClicked
 
     private void txtTypeDescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTypeDescMouseClicked
-        if (txtTypeDesc.getText().equals(SALE_DINE_IN)) {
-            txtShowETD.setText("T");
-            changeSaleType("T");
-            txtTypeDesc.setText(SALE_TAKE_AWAY);
-        } else if (txtTypeDesc.getText().equals(SALE_TAKE_AWAY)) {
-            txtShowETD.setText("D");
-            changeSaleType("D");
-            txtTypeDesc.setText(SALE_Delivery);
-        } else if (txtTypeDesc.getText().equals(SALE_Delivery)) {
-            txtShowETD.setText("P");
-            changeSaleType("P");
-            txtTypeDesc.setText(SALE_Pinto);
-        } else if (txtTypeDesc.getText().equals(SALE_Pinto)) {
-            txtShowETD.setText("W");
-            changeSaleType("W");
-            txtTypeDesc.setText(SALE_WholeSale);
-        } else if (txtTypeDesc.getText().equals(SALE_WholeSale)) {
-            txtShowETD.setText("E");
-            changeSaleType("E");
-            txtTypeDesc.setText(SALE_DINE_IN);
-        }
+        changeOrderType();
     }//GEN-LAST:event_txtTypeDescMouseClicked
 
     private void btnPrintKicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintKicActionPerformed
@@ -3382,7 +3364,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         if (!PCode.equals("") && !PVoid.equals("V")) {
                             bntVoidClick();
                             double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
-                            TableFileBean = TableFileControl.getData(tableNo);
+                            TableFileBean = tableFileControl.getData(tableNo);
                             DiscountDialog dd = new DiscountDialog(null, true, tableNo, totalAmount, memberBean,
                                     txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
                             dd.clearMemberDiscount();
@@ -3553,8 +3535,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String[] data = Option.splitPrice(PCode);
                     double R_Quan = Double.parseDouble(data[0]);
                     PCode = data[1];
-                    ProductControl pCon = new ProductControl();
-                    ProductBean productBean = pCon.getData(PCode);
+                    ProductBean productBean = productControl.getData(PCode);
 
                     BalanceBean balance = new BalanceBean();
                     balance.setStkCode(StkCode);
@@ -3850,6 +3831,30 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     }
 
+    private void changeOrderType() {
+        if (txtTypeDesc.getText().equals(SALE_DINE_IN)) {
+            txtShowETD.setText("T");
+            changeSaleType("T");
+            txtTypeDesc.setText(SALE_TAKE_AWAY);
+        } else if (txtTypeDesc.getText().equals(SALE_TAKE_AWAY)) {
+            txtShowETD.setText("D");
+            changeSaleType("D");
+            txtTypeDesc.setText(SALE_Delivery);
+        } else if (txtTypeDesc.getText().equals(SALE_Delivery)) {
+            txtShowETD.setText("P");
+            changeSaleType("P");
+            txtTypeDesc.setText(SALE_Pinto);
+        } else if (txtTypeDesc.getText().equals(SALE_Pinto)) {
+            txtShowETD.setText("W");
+            changeSaleType("W");
+            txtTypeDesc.setText(SALE_WholeSale);
+        } else if (txtTypeDesc.getText().equals(SALE_WholeSale)) {
+            txtShowETD.setText("E");
+            changeSaleType("E");
+            txtTypeDesc.setText(SALE_DINE_IN);
+        }
+    }
+
     public class TableTestFormatRenderer extends DefaultTableCellRenderer {
 
         private Format formatter;
@@ -3874,6 +3879,7 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
             btnP9, btnP10, btnP11, btnP12, btnP13, btnP14, btnP15, btnP16
         };
+        
         for (int i = 0; i < btnGrid.length; i++) {
             JButton btn = btnGrid[i];
             btn = buttonCustom.buttonDefault(btn);
@@ -3881,18 +3887,16 @@ private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             btn.setName(menuCode + btnIndex);
             addMouseEvent(btn, i);
         }
+        
         for (int i = 0; i < listMenu.size(); i++) {
             final MenuMGR menu = listMenu.get(i);
             btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
-            btnGrid[menu.getMIndex()].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JButton btnMenu = (JButton) e.getSource();
-                    if (menu.getPCode().equals("")) {
-                        loadButtonProductMenu(menu.getMenuCode());
-                    } else if (!txtCust.getText().trim().equals("")) {
-                        addProductFromButtonMenu(menu.getPCode(), btnMenu.getName());
-                    }
+            btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
+                JButton btnMenu = (JButton) e.getSource();
+                if (menu.getPCode().equals("")) {
+                    loadButtonProductMenu(menu.getMenuCode());
+                } else if (!txtCust.getText().trim().equals("")) {
+                    addProductFromButtonMenu(menu.getPCode(), btnMenu.getName());
                 }
             });
         }

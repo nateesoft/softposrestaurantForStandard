@@ -71,12 +71,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import util.AppLogUtil;
 import util.DateConvert;
 import util.MSG;
-import util.OSValidator;
 import util.Option;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
@@ -95,12 +92,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private String zoneSelected = "T";
     private int buttonStyle = 0;
-
-    private final ProductControl productControl = new ProductControl();
     private JButton[] buttons = new JButton[100];
     private PosUserBean posUser = null;
     private PPrint pPrint = new PPrint();
-    private FloorPlanController floorPlanControl = new FloorPlanController();
+    
+    private final ProductControl productControl = new ProductControl();
+    private final FloorPlanController floorPlanControl = new FloorPlanController();
 
     public FloorPlanDialog() {
         setUndecorated(true);
@@ -1914,9 +1911,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String tableTemp = Value.TEMP_TABLE_REFUND;
         boolean checkExistTempRefund = false;
 
-        FloorPlanController floorPlanControl = new FloorPlanController();
         List<SPTempRefundBean> listRefund = floorPlanControl.getSpTempRefund();
-        if (listRefund.size() > 0) {
+        if (!listRefund.isEmpty()) {
             //create temp table
             TableFileControl tableFileControl = new TableFileControl();
             tableFileControl.createNewTable(tableTemp);
@@ -2219,10 +2215,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             floorPlanControl.execUpdate(sql);
 
             sql = "delete from tempset where ptableno='" + tableNo + "';";
-            FloorPlanController floorPlanControl = new FloorPlanController();
             floorPlanControl.execUpdate(sql);
+            
             exit();
-//            dispose();
 
             MainSale mainSale = new MainSale(null, true, tableNo);
             mainSale.setVisible(true);
@@ -2512,8 +2507,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
-        FloorPlanController floorplanControl = new FloorPlanController();
-        TempsetBean tempsetBean = floorplanControl.getPOptionFromTempSet(R_Index, PCode);
+        TempsetBean tempsetBean = floorPlanControl.getPOptionFromTempSet(R_Index, PCode);
         if (tempsetBean != null) {
             String sqlUpdate = "update balance "
                     + "set R_Opt1='" + tempsetBean.getPOption() + "',"
@@ -2521,7 +2515,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "where R_Table='" + TableNo + "' "
                     + "and R_PluCode='" + PCode + "' "
                     + "and R_LinkIndex=''";
-            floorplanControl.execUpdate(sqlUpdate);
+            floorPlanControl.execUpdate(sqlUpdate);
         }
     }
 
