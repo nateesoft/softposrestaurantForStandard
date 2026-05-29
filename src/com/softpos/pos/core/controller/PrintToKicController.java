@@ -29,7 +29,7 @@ public class PrintToKicController extends DatabaseConnection {
                     + "and r_kic<>'0' and r_printOK='Y' and r_pause='P' "
                     + "group by r_table order by r_etd,r_index;";
             System.out.println(sql);
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     PrintToKic.kicPrintting = true;
                     bean = new BalanceBean();
@@ -66,7 +66,7 @@ public class PrintToKicController extends DatabaseConnection {
                     + "and macno='" + macno + "' "
                     + "group by r_kic,r_etd "
                     + "order by r_kic, r_etd";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
@@ -101,7 +101,7 @@ public class PrintToKicController extends DatabaseConnection {
                     + "and R_Void<>'V' "
                     + "and R_kic='" + rKic + "' "
                     + "group by r_plucode";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
@@ -133,7 +133,7 @@ public class PrintToKicController extends DatabaseConnection {
                     + "and R_Kic<>'' "
                     + "and R_Void<>'V' "
                     + "and R_Kic='" + rKic + "'";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));

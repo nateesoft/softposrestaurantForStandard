@@ -106,9 +106,9 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         + "and tamount<>'0' "
                         + "and tlogintime between '" + time1 + "' and '" + time2 + "'";
 
-                ResultSet rsTypeE = mysql.getConnection().createStatement().executeQuery(sqlE);
+                ResultSet rsTypeE = mysql.executeQuery(sqlE);
                 if (rsTypeE.next()) {
-                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlTableFile);
+                    ResultSet rs = mysql.executeQuery(sqlTableFile);
                     double bill = 0;
                     double cc = 0;
                     double amount = 0;
@@ -131,7 +131,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                 }
                 rsTypeE.close();
                 
-                ResultSet rsTypeT = mysql.getConnection().createStatement().executeQuery(sqlT);
+                ResultSet rsTypeT = mysql.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
                     sumBillT = rsTypeT.getInt("sumBillT");

@@ -2275,7 +2275,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 try {
                     String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "' limit 1";
                     mysql2.open(this.getClass());
-                    ResultSet rsCustfile = mysql2.getConnection().createStatement().executeQuery(sqlGetCustFile);
+                    ResultSet rsCustfile = mysql2.executeQuery(sqlGetCustFile);
                     if (rsCustfile.next()) {
                         ArName = ThaiUtil.ASCII2Unicode(rsCustfile.getString("sp_desc"));
                         t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (ArName) + "_";

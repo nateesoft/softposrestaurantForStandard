@@ -19,8 +19,8 @@ public class BranchControl {
         try {
             mysql.open(BranchControl.class);
             String sql = "update branch set KicItemNo=KicItemNo+1";
-            mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
+            mysql.executeUpdate(sql);
+        } catch (Exception e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
@@ -37,7 +37,7 @@ public class BranchControl {
         try {
             mysql.open(BranchControl.class);
             String sql = "select * from branch limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     branchBean = new BranchBean();
                     String bCheck = "";
@@ -233,7 +233,7 @@ public class BranchControl {
             mysql.open(BranchControl.class);
             String sql = "select KICCopy" + kicNo + " from branch limit 1";
             try (//            Statement stmt = mysql.getConnection().createStatement();
-                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                    ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     form = rs.getString(1);
                 }

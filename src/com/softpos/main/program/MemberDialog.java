@@ -489,7 +489,7 @@ public class MemberDialog extends javax.swing.JDialog {
                     + "r_prsubdisc='0',"
                     + "r_prsubamt='0'"
                     + " where r_table='" + tableNo + "'";
-            mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
+            mysql.executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
@@ -514,13 +514,13 @@ public class MemberDialog extends javax.swing.JDialog {
             }
             switch (choice) {
                 case "Ins":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
+                    mysql.executeUpdate(sql);
                     break;
                 case "Del":
-                    mysql.getConnection().createStatement().executeUpdate(sql);
+                    mysql.executeUpdate(sql);
                     break;
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {

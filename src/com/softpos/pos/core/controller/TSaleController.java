@@ -21,7 +21,7 @@ public class TSaleController {
             String sql = "select * from t_sale "
                     + "where r_refno='" + b_refno + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean bean = new TSaleBean();
                 String pcode = rs.getString("r_plucode");

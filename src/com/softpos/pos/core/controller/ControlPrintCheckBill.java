@@ -28,8 +28,8 @@ public class ControlPrintCheckBill {
                         + "where r_table='" + tableNO.toUpperCase() + "' "
                         + "and trantype ='PDA';";
 //                String sql11 = "update tablefile set chkbill='Y' where tcode='" + tableNO + "'";
-                mysql.getConnection().createStatement().executeUpdate(sql);
-//                mysql.getConnection().createStatement().executeUpdate(sql11);
+                mysql.executeUpdate(sql);
+//                mysql.executeUpdate(sql11);
 //                printKicReport print = new printKicReport();
 //                print.printKicReport(tableNO, PrinterName, Macno);
 
@@ -47,7 +47,7 @@ public class ControlPrintCheckBill {
             String sql = "update balance set PDAPrintChekItemStation='Y' "
                     + "where PDAPrintChekItemStation='N' and r_table='" + tableNO + "'";
             mysql.open();
-            mysql.getConnection().createStatement().executeUpdate(sql);
+            mysql.executeUpdate(sql);
         } catch (Exception e) {
             System.out.println(e.toString());
         } finally {
@@ -60,7 +60,7 @@ public class ControlPrintCheckBill {
         try {
             String sql = "update kictran set R_FoodUrgent='Y',R_AlertKitChen='Y' where PTable='" + tableNO + "' and PFlage='N';";
             mysql.open();
-            mysql.getConnection().createStatement().executeUpdate(sql);
+            mysql.executeUpdate(sql);
         } catch (Exception e) {
             MSG.NOTICE(e.toString());
             System.out.println(e.toString());

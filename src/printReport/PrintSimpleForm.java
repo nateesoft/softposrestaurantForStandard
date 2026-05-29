@@ -3510,7 +3510,7 @@ public class PrintSimpleForm {
                                     + "and r_kic='" + printerName.replace("kic", "") + "' "
                                     + "and R_KicPrint<>'P' "
                                     + "and r_pause='P';";
-                            mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
+                            mysql.executeUpdate(sqlUpdateBalance);
                         }
 
                         rs.close();
@@ -3606,7 +3606,7 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + " "
                                     + "and r_etd='" + r_etd + "' "
                                     + "and r_index='" + r_index + "' ;";
-                            mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
+                            mysql.executeUpdate(sqlUpdateBalance);
                         }
                     } else {
                         sqlUpdateBalance = "update balance set R_KicPrint='P' "
@@ -3617,7 +3617,7 @@ public class PrintSimpleForm {
                                 + "and r_plucode='" + r_plucode + "' "
                                 + "and r_etd='" + r_etd + "' "
                                 + "and r_index='" + r_index + "' ;";
-                        mysql.getConnection().createStatement().executeUpdate(sqlUpdateBalance);
+                        mysql.executeUpdate(sqlUpdateBalance);
                     }
                     Thread.sleep(200);
                 } catch (Exception e) {

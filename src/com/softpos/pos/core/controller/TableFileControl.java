@@ -775,7 +775,7 @@ public class TableFileControl extends DatabaseConnection {
             mysql.open(TableFileControl.class);
             String checkTablefile = "select titem from tablefile "
                     + "where tcode = '" + tableNo + "' and titem>'0' limit 1 ";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(checkTablefile)) {
+            try (ResultSet rs = mysql.executeQuery(checkTablefile)) {
                 if (rs.next()) {
                     isValid = true;
                 }

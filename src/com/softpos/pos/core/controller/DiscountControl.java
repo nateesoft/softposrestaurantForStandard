@@ -30,7 +30,7 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 String sqlUpd = "update tablefile set "
                         + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
@@ -67,7 +67,7 @@ public class DiscountControl {
                             + "CuponDiscAmt='" + (rs.getDouble("SUM_R_PrCuAmt")) + "' "
                             + "where Tcode = '" + tableNo + "'";
                 }
-                mysql.getConnection().createStatement().executeUpdate(sqlUpd);
+                mysql.executeUpdate(sqlUpd);
             }
 
             rs.close();

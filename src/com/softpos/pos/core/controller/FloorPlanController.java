@@ -54,8 +54,8 @@ public class FloorPlanController extends DatabaseConnection {
         mysql.open(this.getClass());
         try {
             String sql = "delete from sp_temp_refund";
-            mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
+            mysql.executeUpdate(sql);
+        } catch (Exception e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
@@ -96,7 +96,7 @@ public class FloorPlanController extends DatabaseConnection {
         mysql.open(FloorPlanController.class);
         try {
             String sql = "select * from tempset where PIndex='" + rIndex + "' ";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     TempsetBean bean = new TempsetBean();
                     bean.setPCode(rs.getString("PCode"));

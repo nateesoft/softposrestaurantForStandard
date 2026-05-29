@@ -206,7 +206,7 @@ public class PrintKicControl extends javax.swing.JDialog {
                     + "where pfix='F' "
                     + "and pgroup <'12' "
                     + "order by pgroup,pcode";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             while (rs.next()) {
                 String pcode = rs.getString("pcode");
                 String pdesc = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
@@ -231,12 +231,12 @@ public class PrintKicControl extends javax.swing.JDialog {
                 String code = model.getValueAt(i, 0).toString();
                 String kic = model.getValueAt(i, 2).toString();
                 String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
-                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.executeUpdate(sql);
             }
             MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
 
             loadData();
-        } catch (HeadlessException | SQLException e) {
+        } catch (Exception e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {

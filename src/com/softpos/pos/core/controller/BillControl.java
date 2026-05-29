@@ -152,7 +152,7 @@ public class BillControl {
             String sqlGetLoginTime = "select r_time from balance "
                     + "where r_table='" + bean.getB_Table() + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetLoginTime);
+            ResultSet rs = mysql.executeQuery(sqlGetLoginTime);
             if (rs.next()) {
                 blBean.setLoginTime(rs.getString("r_time"));
             }
@@ -219,8 +219,8 @@ public class BillControl {
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
                     mysql2.open(BillControl.class);
-                    mysql2.getConnection().createStatement().executeUpdate(sqlInsAccr);
-                } catch (SQLException e) {
+                    mysql2.executeUpdate(sqlInsAccr);
+                } catch (Exception e) {
                     MSG.ERR(e.getMessage());
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
@@ -1243,7 +1243,7 @@ public class BillControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(BillControl.class);
         try {
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
                 tsale.setR_Index(rs.getString("R_Index"));
@@ -1441,7 +1441,7 @@ public class BillControl {
                     + "and r_void<>'V' "
                     + "and r_plucode='8899' "
                     + "order by R_Index";
-            ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(sql1);
+            ResultSet rs1 = mysql.executeQuery(sql1);
             while (rs1.next()) {
                 TSaleBean tsale = new TSaleBean();
                 tsale.setR_Index(rs1.getString("R_Index"));
@@ -1825,7 +1825,7 @@ public class BillControl {
         try {
             String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
             mysql.open(BillControl.class);
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BillNoBean();
                     String tableNo = ThaiUtil.Unicode2ASCII(rs.getString("b_table"));

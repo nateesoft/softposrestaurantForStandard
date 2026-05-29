@@ -178,9 +178,9 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                     + "order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT ,sum(B_NetDiff) B_NetDiff from billno where b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
-            ResultSet rsGetEntertain = mysql.getConnection().createStatement().executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from billno where b_entertain<>'0' and b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
-            ResultSet rsGetSumBillno = mysql.getConnection().createStatement().executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");

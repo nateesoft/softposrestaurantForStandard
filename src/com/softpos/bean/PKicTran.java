@@ -48,7 +48,7 @@ public class PKicTran {
                             + " '00:00:00', '', '" + bill.get(i).getR_ETD() + "', '" + bill.get(i).getR_Quan() + "', 'N',"
                             + " 'N', '00:00:00', '00:00:00', 'N', '',"
                             + " '00:00:00', '00:00:00', ''); ";
-                    mysql.getConnection().createStatement().executeUpdate(sqlINSKictran);
+                    mysql.executeUpdate(sqlINSKictran);
                     updateKicItemNo();
                 }
             }
@@ -71,7 +71,7 @@ public class PKicTran {
                     + "where ptable='" + tableNo + "' "
                     + "and pflage='N' "
                     + "order by pitemno,petd;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
 
             ProductControl ProductControl = new ProductControl();
             while (rs.next()) {
@@ -145,13 +145,13 @@ public class PKicTran {
                 if (status.equals("Y")) {
                     sql = "update kictran set R_ShowDisplayAlert='" + status + "',R_AlertKitchen='Y' where ptable='" + tableNo + "';";
                 }
-                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.executeUpdate(sql);
             } else {
                 sql = "update kictran set R_ShowDisplayAlert='" + status + "' where ptable='" + tableNo + "'and pcode='" + pcode + "' and pindex='" + pindex + "';";
                 if (status.equals("Y")) {
                     sql = "update kictran set R_ShowDisplayAlert='" + status + "',R_AlertKitchen='Y' where ptable='" + tableNo + "' and pcode='" + pcode + "' and pindex='" + pindex + "';";
                 }
-                mysql.getConnection().createStatement().executeUpdate(sql);
+                mysql.executeUpdate(sql);
             }
 
             mysql.close();

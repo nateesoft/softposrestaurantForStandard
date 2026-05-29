@@ -372,7 +372,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
             String sql = "select * from billar order by Ref_No,fat limit 1;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 double total = 0.00;
                 double amount = 0.00;

@@ -21,7 +21,6 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.login.Login;
 import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.EmployeeControl;
@@ -107,82 +106,56 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (OSValidator.isWindows()) {
-                    try {
-                        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                        MSG.ERR(null, e.getMessage());
-                    }
+        SwingUtilities.invokeLater(() -> {
+            if (OSValidator.isWindows()) {
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                    MSG.ERR(null, e.getMessage());
                 }
-
-                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
-                setExtendedState(JFrame.MAXIMIZED_BOTH);
-                POSHW = POSHWSetup.Bean(Value.MACNO);
-                CONFIG = POSConfigSetup.Bean();
-                posUser = PosControl.getPosUser(PublicVar.ReturnString);
-                loadHeaderTab();
-                refresh = PosControl.getRefreshTime();
-                if (refresh < 1) {
-                    refresh = 10;
-                }
-
-                Value.TableSelected = "";
-
-//           new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    for (int a = 0; a < 10; a++) {
-//                        if (a == 9) {
-//                            a = 0;
-//                        }
-//                        showTime();
-//                    }
-//                }
-//            }).start();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        jMenu9.setVisible(false);
-                        loadHeaderTab();
-                        for (int i = 0; i < 10; i++) {
-                            initLoadButtons();
-                            loadZone(zoneSelected);//load header for tab
-                            PublicVar.countRound++;
-                            if (PublicVar.countRound > (120 * 6)) {
-                                clearTemp();
-                                PosControl.logout();
-                                System.exit(0);
-                            }
-                            System.out.println("loadHeaderTab()");
-                            addButton();
-                            if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-                                printCheckBillFromPDA();
-                            }
-                            if (i == 9) {
-                                i = 0;
-                            }
-                            try {
-                                System.out.println("Thread.sleep(" + refresh + " * 1000)");
-                                Thread.sleep(refresh * 1000);
-                            } catch (InterruptedException ex) {
-                            }
-                        }
-                    }
-                }).start();
-
-                jMenu1.setVisible(true);
-                jMenu2.setVisible(false);
-                jMenu3.setVisible(true);
-                jMenu4.setVisible(false);
-//            jMenu7.setVisible(false);
-                MShowDailyEJ1.setVisible(false);
-                jMenuItem38.setVisible(false);
-                // init product list data
-                productControl.initLoadProductActive();
             }
+
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            POSHW = POSHWSetup.Bean(Value.MACNO);
+            CONFIG = POSConfigSetup.Bean();
+            posUser = PosControl.getPosUser(PublicVar.ReturnString);
+            refresh = PosControl.getRefreshTime();
+            if (refresh < 1) {
+                refresh = 10;
+            }
+            Value.TableSelected = "";
+
+            jMenu9.setVisible(false);
+            jMenu1.setVisible(true);
+            jMenu2.setVisible(false);
+            jMenu3.setVisible(true);
+            jMenu4.setVisible(false);
+            MShowDailyEJ1.setVisible(false);
+            jMenuItem38.setVisible(false);
+
+            loadHeaderTab();
+            productControl.initLoadProductActive();
+
+            new Thread(() -> {
+                while (true) {
+                    PublicVar.countRound++;
+                    if (PublicVar.countRound > (120 * 6)) {
+                        clearTemp();
+                        PosControl.logout();
+                        System.exit(0);
+                    }
+                    SwingUtilities.invokeLater(() -> loadZone(zoneSelected));
+                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+                        printCheckBillFromPDA();
+                    }
+                    try {
+                        Thread.sleep(refresh * 1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }).start();
         });
     }
 

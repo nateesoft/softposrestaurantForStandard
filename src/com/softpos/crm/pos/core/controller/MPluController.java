@@ -25,7 +25,7 @@ public class MPluController {
         try {
             mysql.open(MPluController.class);
             String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }

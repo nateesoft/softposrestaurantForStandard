@@ -1243,7 +1243,7 @@ public class PromotionControl {
                     + "on p.ppromotion1 = pt.procode "
                     + "where pcode='" + pcode + "' limit 1";
             mysql.open(this.getClass());
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     procode = rs.getString("procode");
                     prodesc = rs.getString("prodesc");

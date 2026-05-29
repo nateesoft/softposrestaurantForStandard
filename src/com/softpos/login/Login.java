@@ -32,6 +32,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
 import util.CheckApplication;
 import util.MSG;
 import util.OSValidator;
@@ -360,6 +361,8 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
+        AppLogUtil.startup("SoftPOS Restaurant", "1.0");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> AppLogUtil.shutdown()));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -634,10 +637,10 @@ public class Login extends javax.swing.JDialog {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(Login.class);
         String sql = "select * from balance limit 1";
-        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+        ResultSet rs = mysql.executeQuery(sql);
         if (!rs.next()) {
             String sqlTablefile = "update tablefile set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
-            mysql.getConnection().createStatement().executeUpdate(sqlTablefile);
+            mysql.executeUpdate(sqlTablefile);
             System.out.println(sqlTablefile);
         }
 

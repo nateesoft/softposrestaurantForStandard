@@ -280,7 +280,7 @@ public class UpdateData extends javax.swing.JDialog {
         try {
             mysql.open(this.getClass());
             String sqlGetBType = "Select btype btype from tranconfig limit 1";
-            ResultSet rsGetBtype = mysql.getConnection().createStatement().executeQuery(sqlGetBType);
+            ResultSet rsGetBtype = mysql.executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {
                 BType = rsGetBtype.getString("btype");
             }

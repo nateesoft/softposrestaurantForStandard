@@ -1160,7 +1160,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.getConnection().createStatement().executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");

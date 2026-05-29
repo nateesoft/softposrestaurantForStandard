@@ -296,7 +296,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             mysql.open(this.getClass());
             try {
                 String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlCheckTempGiftf);
+                ResultSet rs = mysql.executeQuery(sqlCheckTempGiftf);
                 if (netTotalAmount > 0) {
                     if (!rs.next()) {
                         String sqlAdd = "insert into tempgift"

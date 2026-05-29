@@ -22,7 +22,7 @@ public class BranchFileController {
             mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -52,7 +52,7 @@ public class BranchFileController {
                     + "or PointCode_Type3 <> '' "
                     + "or PointCode_Type4 <> '' "
                     + "or PointCode_Type5 <> '') limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }

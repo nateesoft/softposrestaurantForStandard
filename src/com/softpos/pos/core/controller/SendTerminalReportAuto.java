@@ -63,10 +63,10 @@ public class SendTerminalReportAuto {
             ResultSet rs = stmt.executeQuery(sql);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + dc.GetCurrentDate() + "' and '" + dc.GetCurrentDate() + "';";
-            ResultSet rsGetEntertain = mysql.getConnection().createStatement().executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
                     + "and s_date between '" + dc.GetCurrentDate() + "' and '" + dc.GetCurrentDate() + "';";
-            ResultSet rsGetSumBillno = mysql.getConnection().createStatement().executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
@@ -449,7 +449,7 @@ public class SendTerminalReportAuto {
                         + "where s_date between'" + dc.GetCurrentDate() + "' "
                         + "and '" + dc.GetCurrentDate() + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
@@ -660,7 +660,7 @@ public class SendTerminalReportAuto {
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.getConnection().createStatement().executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");
@@ -865,7 +865,7 @@ public class SendTerminalReportAuto {
             DateConvert dc1 = new DateConvert();
             mysql.open(this.getClass());
             String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig limit 1; ";
-            ResultSet rsConfig = mysql.getConnection().createStatement().executeQuery(sqlGetEmailFromTranconfig);
+            ResultSet rsConfig = mysql.executeQuery(sqlGetEmailFromTranconfig);
             if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
                 String TimeSend = rsConfig.getString("TimeSend1");
@@ -873,7 +873,7 @@ public class SendTerminalReportAuto {
                     Thread.sleep(3600 * 3);
                     try {
                         String sqlAddress = "select address from company limit 1";
-                        ResultSet rsAddress = mysql.getConnection().createStatement().executeQuery(sqlAddress);
+                        ResultSet rsAddress = mysql.executeQuery(sqlAddress);
                         if (rsAddress.next()) {
                             String data[] = rsAddress.getString("Address").split("/");
                             String username = data[0];

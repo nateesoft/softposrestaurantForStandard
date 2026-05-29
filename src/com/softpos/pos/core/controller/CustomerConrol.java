@@ -19,7 +19,7 @@ public class CustomerConrol {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 bean.setSp_code(rs.getString("sp_code"));
                 bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));

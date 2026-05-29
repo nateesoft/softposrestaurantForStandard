@@ -25,7 +25,7 @@ public class CheckBillController extends DatabaseConnection {
             mysql.open(CheckBillController.class);
             sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' and r_type='1' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BalanceBean();
                     bean.setR_Index(rs.getString("r_index"));
@@ -49,7 +49,7 @@ public class CheckBillController extends DatabaseConnection {
             mysql.open(CheckBillController.class);
             String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
                     + "where sp_code='" + arCode + "' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new CustFileBean();
                     bean.setSp_desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
@@ -78,7 +78,7 @@ public class CheckBillController extends DatabaseConnection {
                     + "from accr "
                     + "where arcode='" + arCode + "' "
                     + "group by arcode";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new AccrBean();
                     bean.setTotal(rs.getDouble("total"));
@@ -104,7 +104,7 @@ public class CheckBillController extends DatabaseConnection {
              sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_void='V' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -129,7 +129,7 @@ public class CheckBillController extends DatabaseConnection {
              sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
                     + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -177,7 +177,7 @@ public class CheckBillController extends DatabaseConnection {
             mysql.open(CheckBillController.class);
             String sql = "select r_table from temp_balance "
                     + "where r_table ='" + tableNo + "' limit 1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }

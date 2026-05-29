@@ -36,7 +36,7 @@ public class MathDiscountFromDb {
 //                sql = "select * from s_tran where r_total<>r_nettotal and s_date between'" + dateFrom + "' and '" + dateTo + "';";
             }
 
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             while (rs.next()) {
                 S_TranT_SaleBean sbean = new S_TranT_SaleBean();
                 sbean.setR_Refno(rs.getString("R_Refno"));
@@ -64,7 +64,7 @@ public class MathDiscountFromDb {
                             + "where s_date='" + list.get(i).getR_Date() + "' and s_no='" + list.get(i).getMacno() + "-" + list.get(i).getR_Time() + "' "
                             + "and s_pcode='" + list.get(i).getR_PluCode() + "' and s_user='" + list.get(i).getCashier() + "' and s_rem='SAL' "
                             + "and s_bran='" + branch + "' ";
-                    mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
+                    mysql.executeUpdate(sqlUpdate);
                     System.out.println("round List =" + i);
                     System.out.println(list.get(i).getR_Refno() + " Discount = " + list.get(i).getDiscount() + " S_NO = " + list.get(i).getMacno() + "-" + list.get(i).getR_Time());
 //                    System.out.println(sqlUpdate);

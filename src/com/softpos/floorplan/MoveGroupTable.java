@@ -937,8 +937,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
         try {
             String sql = "update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'";
             mysql.open(this.getClass());
-            mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
+            mysql.executeUpdate(sql);
+        } catch (Exception e) {
             MSG.ERR(e.getMessage());
             AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {

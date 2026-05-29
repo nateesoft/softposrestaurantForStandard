@@ -23,7 +23,7 @@ public class EmployeeControl extends DatabaseConnection {
             MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open(this.getClass());
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from employ");
+                ResultSet rs = mysql.executeQuery("select * from employ");
                 while (rs.next()) {
                     EmployeeBean bean = new EmployeeBean();
                     bean.setCode(rs.getString("code"));

@@ -56,7 +56,7 @@ public class preOrderLoop extends javax.swing.JFrame {
                     + "where "
                     + "flage_print='N' "
                     + "and r_timeprint='" + timecompare + "' and r_date='" + dc.GetCurrentDate() + "';";
-            ResultSet rs = mc.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mc.executeQuery(sql);
             lblShowGetTime.setText("ดำเนินการค้นหาเวลาพิมพ์ : " + timecompare);
             System.out.println(sql);
             int i = 0;
@@ -70,8 +70,8 @@ public class preOrderLoop extends javax.swing.JFrame {
                         + "where r_table='" + r_table + "' and r_plucode='" + r_plucode + "' and r_timePrint='" + r_timePrint + "' and Flage_Print='N' and r_date='" + dc.GetCurrentDate() + "';";
                 String sqlUpdate = "update balance set r_kicPrint=''"
                         + " where r_table='" + r_table + "' and r_plucode='" + r_plucode + "' and r_void<>'V' and TranType='PDA';";
-                mc.getConnection().createStatement().executeUpdate(sqlUpdateFlagePreorderPrint);
-                mc.getConnection().createStatement().executeUpdate(sqlUpdate);
+                mc.executeUpdate(sqlUpdateFlagePreorderPrint);
+                mc.executeUpdate(sqlUpdate);
                 System.out.println(sqlUpdate);
                 System.out.println(sqlUpdateFlagePreorderPrint + "Round to sql = " + i);
 

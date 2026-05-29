@@ -379,7 +379,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
                 try {
                     mysql.open();
                     String sqlDel = "delete from preordertime where r_table='" + tableNo + "';";
-                    mysql.getConnection().createStatement().executeUpdate(sqlDel);
+                    mysql.executeUpdate(sqlDel);
                     for (int i = 0; i < model1.getRowCount(); i++) {
                         if (model.getValueAt(i, 5) == null) {
                             System.out.println("line is null");
@@ -396,7 +396,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
 
                             try {
 
-                                mysql.getConnection().createStatement().executeUpdate(sql);
+                                mysql.executeUpdate(sql);
                                 System.out.println(time);
                             } catch (Exception e) {
                                 MSG.ERR(e.toString());

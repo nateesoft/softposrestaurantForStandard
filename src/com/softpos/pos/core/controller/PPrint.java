@@ -699,7 +699,7 @@ public class PPrint {
                     try {
                         mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysql.executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         int Q = 0;
                         if (rs.next()) {
@@ -1049,7 +1049,7 @@ public class PPrint {
                     try {
                         mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysql.executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         if (rs.next()) {
                             queue = rs.getInt("cbillno");
@@ -1630,7 +1630,7 @@ public class PPrint {
                             mysql.open(this.getClass());
                             String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
                             String giffno;
-                            ResultSet rsGetGiftno = mysql.getConnection().createStatement().executeQuery(sqlGetGiffNo);
+                            ResultSet rsGetGiftno = mysql.executeQuery(sqlGetGiffNo);
                             if (rsGetGiftno.next()) {
                                 giffno = rsGetGiftno.getString("giftno");
                                 print("Gift-No.    " + PUtility.DataFullR(giffno, 30));
@@ -2593,7 +2593,7 @@ public class PPrint {
                                     MySQLConnect mysql = new MySQLConnect();
                                     try {
                                         mysql.open(this.getClass());
-                                        ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
+                                        ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
                                         if (rsNameVoid.next()) {
                                             NameVoid = (rsNameVoid.getString("name"));
                                         }
@@ -2734,7 +2734,7 @@ public class PPrint {
                     MySQLConnect mysql = new MySQLConnect();
                     try {
                         mysql.open(this.getClass());
-                        ResultSet rsNameVoid = mysql.getConnection().createStatement().executeQuery(sqlNameVoid);
+                        ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
                         if (rsNameVoid.next()) {
                             NameVoid = (rsNameVoid.getString("name"));
                         }
@@ -3239,7 +3239,7 @@ public class PPrint {
                                     + "where t_cupon.cuquan<>'0' "
                                     + "and t_cupon.refund<>'V' "
                                     + "group by t_cupon.cucode";
-                            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                            ResultSet rs = mysql.executeQuery(sql);
                             while (rs.next()) {
                                 double amt = rs.getDouble("amt");
                                 String quan = rs.getString("quan");
@@ -3509,7 +3509,7 @@ public class PPrint {
                             + "where t_cupon.cuquan<>'0' "
                             + "and t_cupon.refund<>'V' "
                             + "group by t_cupon.cucode";
-                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                    ResultSet rs = mysql.executeQuery(sql);
                     while (rs.next()) {
                         double amt = rs.getDouble("amt");
                         String quan = rs.getString("quan");
@@ -5857,7 +5857,7 @@ public class PPrint {
                 String[] CreName = new String[]{"", "", ""};
                 String name = rs.getString("B_CrCode1");
                 String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "' limit 1";
-                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlGetCreditName);
+                ResultSet rs2 = mysql.executeQuery(sqlGetCreditName);
                 String creditName;
                 if (rs2.next()) {
                     creditName = ThaiUtil.ASCII2Unicode(rs2.getString("crname"));
@@ -6233,7 +6233,7 @@ public class PPrint {
                 R_EMP = rs.getString(ThaiUtil.ASCII2Unicode("r_emp"));
             }
             String sqlGetEmpName = "select code,name name from employ where code='" + R_EMP + "'";
-            ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(sqlGetEmpName);
+            ResultSet rs1 = mysql.executeQuery(sqlGetEmpName);
             if (rs1.next()) {
                 R_EMP = ThaiUtil.ASCII2Unicode(rs1.getString("name").replace("<", "").replace("<", "").replace(" ", ""));
             }
@@ -6276,7 +6276,7 @@ public class PPrint {
                     + "on t_cupon.cucode = cupon.cucode "
                     + "where r_refno='" + r_refno + "' group by r_refno";
             mysql.open(this.getClass());
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 cuname = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
                 total = rs.getDouble("total");
@@ -6376,7 +6376,7 @@ public class PPrint {
         try {
             mysql.open(this.getClass());
             String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 cuName = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
             }

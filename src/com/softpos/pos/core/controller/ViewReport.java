@@ -39,7 +39,7 @@ public final class ViewReport {
         try {
             mysql.open(this.getClass());
             try {
-                rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
+                rs1 = mysql.executeQuery(sqlCompany);
                 if (rs1.next()) {
                     comName = rs1.getString("c.Name");
                     address = rs1.getString("c.Address");
@@ -65,7 +65,7 @@ public final class ViewReport {
             String onDate = "";
             try {
                 String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
-                rs = mysql.getConnection().createStatement().executeQuery(sql);
+                rs = mysql.executeQuery(sql);
                 if (rs.next()) {
                     onDate = rs.getString("InvDate");
                     amount = rs.getString("Amount");
@@ -86,7 +86,7 @@ public final class ViewReport {
                 String sqlBranch = "SELECT * FROM branch limit 1";
                 String branchName = "";
                 try {
-                    rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                    rs = mysql.executeQuery(sqlBranch);
                     if (rs.next()) {
                         branchName = rs.getString("Name");
                     }
@@ -195,7 +195,7 @@ public final class ViewReport {
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            rs1 = mysql.getConnection().createStatement().executeQuery(sqlCompany);
+            rs1 = mysql.executeQuery(sqlCompany);
             if (rs1.next()) {
                 comName = rs1.getString("c.Name");
                 address = rs1.getString("c.Address");
@@ -232,7 +232,7 @@ public final class ViewReport {
         String ramark = "";
         try {
             String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
-            rs = mysql.getConnection().createStatement().executeQuery(sql);
+            rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 onDate = rs.getString("InvDate");
                 CustCode = rs.getString("CustCode");
@@ -265,7 +265,7 @@ public final class ViewReport {
             String sqlBranch = "SELECT Name FROM branch limit 1 ";
             String branchName = "";
             try {
-                rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                rs = mysql.executeQuery(sqlBranch);
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
@@ -353,7 +353,7 @@ public final class ViewReport {
             mysql.open(this.getClass());
             try {
                 String sqlBranch = "SELECT * FROM branch limit 1";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+                ResultSet rs = mysql.executeQuery(sqlBranch);
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
@@ -422,7 +422,7 @@ public final class ViewReport {
 
         MySQLConnect mysql = new MySQLConnect();
         try {
-            rs = mysql.getConnection().createStatement().executeQuery(sqlBranch);
+            rs = mysql.executeQuery(sqlBranch);
             if (rs.next()) {
                 branchName = rs.getString("Name");
             }

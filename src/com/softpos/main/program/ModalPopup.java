@@ -287,7 +287,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + Main + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                mysql.getConnection().createStatement().executeUpdate(tempset);
+                                mysql.executeUpdate(tempset);
                             } else {
                                 String pcode = PCode;
                                 String tempset = "INSERT INTO tempset (PTableNo, PIndex, PCode, PDesc, "
@@ -295,7 +295,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                mysql.getConnection().createStatement().executeUpdate(tempset);
+                                mysql.executeUpdate(tempset);
                             }
                             rss.close();
                             stmt1.close();
@@ -398,7 +398,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCodeSet + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PNameSet) + "', '" + pstock + "','" + free + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProFree) + "', CURTIME())";
-                                mysql.getConnection().createStatement().executeUpdate(tempset);
+                                mysql.executeUpdate(tempset);
                             }
                             rs.close();
                             stmt1.close();

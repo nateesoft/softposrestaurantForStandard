@@ -7,8 +7,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.MSG;
@@ -16,70 +17,33 @@ import util.MSG;
 public class MySQLConnectWebOnline {
 
     private Connection con = null;
+    private Statement currentStatement = null;
+
     private static String HostName = null;
     private static String DbName = null;
     private static String UserName = null;
     private static String Password = null;
     private static String PortNumber = null;
-    private static String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
 
     static {
         getDbVar();
     }
 
-    public String getHostName() {
-        return HostName;
-    }
-
-    public void setHostName(String HostName) {
-        this.HostName = HostName;
-    }
-
-    public String getDbName() {
-        return DbName;
-    }
-
-    public void setDbName(String DbName) {
-        this.DbName = DbName;
-    }
-
-    public String getUserName() {
-        return UserName;
-    }
-
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String Password) {
-        this.Password = Password;
-    }
-
-    public String getPortNumber() {
-        return PortNumber;
-    }
-
-    public void setPortNumber(String PortNumber) {
-        this.PortNumber = PortNumber;
-    }
-
-    public String getMsgError() {
-        return msgError;
-    }
-
-    public void setMsgError(String msgError) {
-        this.msgError = msgError;
-    }
+    public String getHostName() { return HostName; }
+    public void setHostName(String HostName) { MySQLConnectWebOnline.HostName = HostName; }
+    public String getDbName() { return DbName; }
+    public void setDbName(String DbName) { MySQLConnectWebOnline.DbName = DbName; }
+    public String getUserName() { return UserName; }
+    public void setUserName(String UserName) { MySQLConnectWebOnline.UserName = UserName; }
+    public String getPassword() { return Password; }
+    public void setPassword(String Password) { MySQLConnectWebOnline.Password = Password; }
+    public String getPortNumber() { return PortNumber; }
+    public void setPortNumber(String PortNumber) { MySQLConnectWebOnline.PortNumber = PortNumber; }
 
     public void open() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://" + HostName + ":" + PortNumber + "/" + DbName + "?characterEncoding=utf-8", UserName, Password);
-        } catch (ClassNotFoundException | SQLException e) {
+            con = DatabasePoolOnline.getConnection();
+        } catch (SQLException e) {
             MSG.ERR(e.getMessage());
         }
     }
@@ -88,14 +52,51 @@ public class MySQLConnectWebOnline {
         return con;
     }
 
+    /**
+     * Execute an UPDATE/INSERT/DELETE safely — Statement is closed automatically.
+     */
+    public int executeUpdate(String sql) {
+        try (Statement stmt = con.createStatement()) {
+            return stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, e);
+            return 0;
+        }
+    }
+
+    /**
+     * Execute a SELECT query. Statement is stored and closed when close() is called.
+     */
+    public ResultSet executeQuery(String sql) {
+        closeCurrentStatement();
+        try {
+            currentStatement = con.createStatement();
+            return currentStatement.executeQuery(sql);
+        } catch (SQLException e) {
+            Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, e);
+            return null;
+        }
+    }
+
     public void close() {
+        closeCurrentStatement();
         if (con != null) {
             try {
                 con.close();
-                //System.out.println("Database Closed.");
             } catch (SQLException ex) {
-                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, ex);
             }
+            con = null;
+        }
+    }
+
+    private void closeCurrentStatement() {
+        if (currentStatement != null) {
+            try {
+                currentStatement.close();
+            } catch (SQLException ignore) {
+            }
+            currentStatement = null;
         }
     }
 
@@ -115,11 +116,9 @@ public class MySQLConnectWebOnline {
                         Value.DATABASE = data[1];
                     } else if (data[0].equalsIgnoreCase("user")) {
                         UserName = data[1];
-//                        UserName = "root";
                     } else if (data[0].equalsIgnoreCase("pass")) {
                         Password = data[1];
                     } else if (data[0].equalsIgnoreCase("port")) {
-//                        PortNumber = data[1];
                         PortNumber = data[1];
                     } else if (data[0].equalsIgnoreCase("macno")) {
                         Value.MACNO = data[1];
@@ -131,28 +130,24 @@ public class MySQLConnectWebOnline {
                         try {
                             Value.useprint = Boolean.parseBoolean(data[1]);
                         } catch (Exception e) {
-                            System.err.println(e.getMessage());
                             Value.useprint = false;
                         }
                     } else if (data[0].equalsIgnoreCase("printkic")) {
                         try {
                             Value.printkic = Boolean.parseBoolean(data[1]);
                         } catch (Exception e) {
-                            System.err.println(e.getMessage());
                             Value.printkic = false;
                         }
                     } else if (data[0].equalsIgnoreCase("autoqty")) {
                         try {
                             Value.autoqty = Boolean.parseBoolean(data[1]);
                         } catch (Exception e) {
-                            System.err.println(e.getMessage());
                             Value.autoqty = false;
                         }
                     } else if (data[0].equalsIgnoreCase("printdriver")) {
                         try {
                             Value.printdriver = Boolean.parseBoolean(data[1]);
                         } catch (Exception e) {
-                            System.err.println(e.getMessage());
                             Value.printdriver = false;
                         }
                     } else if (data[0].equalsIgnoreCase("printerName")) {
@@ -162,9 +157,9 @@ public class MySQLConnectWebOnline {
                 br.close();
                 ds.close();
                 fs.close();
+                DatabasePoolOnline.init(HostName, PortNumber, DbName, UserName, Password);
             } catch (IOException e) {
                 MSG.ERR(e.getMessage());
-
             }
         }
     }

@@ -121,7 +121,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 MySQLConnect mysql = new MySQLConnect();
                 try {
                     mysql.open(this.getClass());
-                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                    ResultSet rs = mysql.executeQuery(sql);
                     if (rs.next() && !rs.wasNull()) {
                         trickSound = true;
                         String tableNo = rs.getString(ThaiUtil.ASCII2Unicode("PTable"));
@@ -195,7 +195,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
             mysql.open(this.getClass());
             countTime1++;
             jLabel2.setText("getDataFromKictran : Loop LEVEL " + countTime1);
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 String textToPrint = "";
                 String pTable = "";
                 String pIndex = "";
@@ -257,7 +257,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                                     + "and pindex='" + pIndex + "' "
                                     + "and pcode='" + pcode + "' "
                                     + "and R_PrintCheckOut='N' ;";
-                            mysql.getConnection().createStatement().executeUpdate(sqlUpdate);
+                            mysql.executeUpdate(sqlUpdate);
                             Thread.sleep(100);
                         } catch (Exception e) {
                             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
@@ -273,7 +273,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                                     + "and ptable='" + pTable + "' "
                                     + "and pcode='" + pcode + "';";
                             System.out.println(sqlBalanceisNull);
-                            mysql.getConnection().createStatement().executeUpdate(sqlBalanceisNull);
+                            mysql.executeUpdate(sqlBalanceisNull);
                         } catch (Exception e) {
                             System.out.println(e.toString());
                             MSG.NOTICE(e.toString());
@@ -304,7 +304,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     String textToPrint = "";
                     String sql = "select * from kictran_urgentClick where pdate='" + dc.GetCurrentDate() + "';";
                     mysql.open(this.getClass());
-                    ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                    ResultSet rs = mysql.executeQuery(sql);
                     int i = 0;
                     while (rs.next()) {
                         textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + rs.getString("pTable") + " # " + dc.dateGetToShow(rs.getString("pDate")) + " เวลา " + rs.getString("pTime") + "_";

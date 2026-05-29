@@ -121,7 +121,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                         + "from s_invoice  "
                         + "where s_date between '" + dateFrom + "' and '" + dateTo + "' "
                         + "and b_logintime between'" + time1 + "' and '" + time2 + "' and b_void<>'V' and b_etd='T';";
-                ResultSet rsTypeE = mysql.getConnection().createStatement().executeQuery(sqlE);
+                ResultSet rsTypeE = mysql.executeQuery(sqlE);
                 if (rsTypeE.next()) {
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
@@ -132,7 +132,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 }
                 rsTypeE.close();
                 
-                ResultSet rsTypeT = mysql.getConnection().createStatement().executeQuery(sqlT);
+                ResultSet rsTypeT = mysql.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
                     sumBillT = rsTypeT.getInt("sumBillT");

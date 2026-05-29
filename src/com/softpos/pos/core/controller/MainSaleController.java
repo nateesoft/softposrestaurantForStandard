@@ -117,7 +117,7 @@ public class MainSaleController extends DatabaseConnection {
         mysql.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlShowKic)) {
+            try (ResultSet rs = mysql.executeQuery(sqlShowKic)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -140,7 +140,7 @@ public class MainSaleController extends DatabaseConnection {
         mysql.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlShowKic)) {
+            try (ResultSet rs = mysql.executeQuery(sqlShowKic)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
@@ -172,7 +172,7 @@ public class MainSaleController extends DatabaseConnection {
                     + "and R_KicPrint<>'P' "
                     + "and R_kic='" + rKic + "' "
                     + "group by r_plucode";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
@@ -204,7 +204,7 @@ public class MainSaleController extends DatabaseConnection {
                     + "and R_Kic<>'' "
                     + "and R_KIC='" + rKic + "' "
                     + "group by r_plucode,r_void order by r_opt1";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Index(rs.getString("R_Index"));

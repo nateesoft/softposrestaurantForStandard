@@ -65,7 +65,7 @@ public class LoginController {
                     + "onact='N' "
                     + "where username<>'" + UserCode + "' "
                     + "and macno='" + Value.MACNO + "';";
-            mysql.getConnection().createStatement().executeUpdate(sql);
+            mysql.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());

@@ -61,7 +61,7 @@ public class ProductControl {
             MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open(ProductControl.class);
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery("select * from product where pactive='Y'");
+                ResultSet rs = mysql.executeQuery("select * from product where pactive='Y'");
                 while (rs.next()) {
                     ProductBean bean = new ProductBean();
                     bean.setPCode(rs.getString("PCode"));
@@ -141,7 +141,7 @@ public class ProductControl {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(ProductControl.class);
         try {
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 productBean.setPCode(rs.getString("PCode"));
                 productBean.setPFix(rs.getString("PFix"));
@@ -218,7 +218,7 @@ public class ProductControl {
             String sql = "select * from product "
                     + "where PCode like '%" + PCode + "%' "
                     + "or PDesc like '%" + PCode + "%'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
                 p = new ProductBean();
@@ -307,7 +307,7 @@ public class ProductControl {
                     + "and PActive='Y' and PFix='F' "
                     + "group by PCode "
                     + "limit 0, 20";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
                 product.setPCode(rs.getString("PCode"));
@@ -389,7 +389,7 @@ public class ProductControl {
         mysql.open(ProductControl.class);
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
                 p = new ProductBean();
@@ -466,7 +466,7 @@ public class ProductControl {
         mysql.open(ProductControl.class);
         try {
             String sql = "select PCode from product where PCode='" + PCode + "' limit 1";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
@@ -490,7 +490,7 @@ public class ProductControl {
         mysql.open(ProductControl.class);
         try {
             String sql = "select PCode from outstocklist where PCode='" + PCode + "' limit 1";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
@@ -512,7 +512,7 @@ public class ProductControl {
         try {
             String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     isProduct = true;
                 }

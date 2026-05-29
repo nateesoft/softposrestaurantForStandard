@@ -961,7 +961,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
             String sql = "select * from stcard where s_send<>'Y' limit 500";
             ArrayList<stcardBean> list;
             mysql.open(this.getClass());
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 list = new ArrayList();
                 //loop 1
                 while (rs.next()) {
@@ -1064,7 +1064,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                                 + "and s_user='" + list.get(i).getS_User() + "' "
                                 + "and s_send='N' "
                                 + "and s_no='" + list.get(i).getS_No() + "' ;";
-                        mysql1a.getConnection().createStatement().executeUpdate(sqlLocalUpdateY);
+                        mysql1a.executeUpdate(sqlLocalUpdateY);
                     } else {
                         mysql1a.open();
                         String sqlInsServerSTCard = "insert into stcard ("
@@ -1079,7 +1079,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                                 + "'" + list.get(i).getS_User() + "','" + list.get(i).getS_EntryDate() + "','" + list.get(i).getS_EntryTime() + "','" + list.get(i).getS_Link() + "','" + branchBean.getCode() + "',"
                                 + "'" + discount + "','" + nettotal + "','" + refund + "','" + refno + "','" + cashier + "',"
                                 + "'" + emp + "');";
-                        myOnline.getConnection().createStatement().executeUpdate(sqlInsServerSTCard);
+                        myOnline.executeUpdate(sqlInsServerSTCard);
                         System.out.println("SQL Server: " + sqlInsServerSTCard);
                         tempText += sqlInsServerSTCard;
                         txtSql.setText(tempText + logTab);
@@ -1095,7 +1095,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                                 + "and s_user='" + list.get(i).getS_User() + "' "
                                 + "and s_send='N' "
                                 + "and s_no='" + list.get(i).getS_No() + "' ;";
-                        mysql1a.getConnection().createStatement().executeUpdate(sqlLocalUpdateY);
+                        mysql1a.executeUpdate(sqlLocalUpdateY);
                         System.out.println(sqlLocalUpdateY);
                         String pcode = list.get(i).getS_PCode();
                         try {
@@ -1146,7 +1146,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
             if (!bpcode.equals("")) {
                 try {
                     sql = "select * from stkfile where bpcode='" + bpcode + "' limit 1;";
-                    try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                    try (ResultSet rs = mysql.executeQuery(sql)) {
                         if (rs.next()) {
                             stkfileBean bean = new stkfileBean();
                             bean.setbPcode(rs.getString("BPCode"));
@@ -1184,7 +1184,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                         } else {
                             try {
                                 String sqlInsStkfile = "insert ignore into stkfile (bpcode,branch) values('" + bpcode + "','" + branchBean.getCode() + "');";
-                                mysql.getConnection().createStatement().executeUpdate(sqlInsStkfile);
+                                mysql.executeUpdate(sqlInsStkfile);
                                 stkfileBean bean = new stkfileBean();
                                 bean.setbPcode(bpcode);
                                 bean.setbStk("A1");
@@ -1251,12 +1251,12 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                         try {
                             String sqlCheckSTKServer = "select bpcode,branch from stkfile "
                                     + "where branch='" + list.get(i).getBranch() + "' and bpcode='" + bpcode + "' limit 1;";
-                            ResultSet rsSV = myOnline.getConnection().createStatement().executeQuery(sqlCheckSTKServer);
+                            ResultSet rsSV = myOnline.executeQuery(sqlCheckSTKServer);
                             if (rsSV.next() && !rsSV.wasNull()) {
                                 System.out.println(rsSV.getString("bpcode"));
                             } else {
                                 String sqlInsStkfile = "insert ignore into stkfile (bpcode,branch) values('" + bpcode + "','" + list.get(i).getBranch() + "');";
-                                myOnline.getConnection().createStatement().executeUpdate(sqlInsStkfile);
+                                myOnline.executeUpdate(sqlInsStkfile);
                             }
                             rsSV.close();
                         } catch (Exception e) {
@@ -1280,14 +1280,14 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                             lblDisplayStcard1.setText("Update STKFile : " + i);
                             try {
                                 myOnlineNext.open();
-                                myOnlineNext.getConnection().createStatement().executeUpdate(sqlUpdateStkfile);
+                                myOnlineNext.executeUpdate(sqlUpdateStkfile);
                                 System.out.println("Loop SQL = :  " + i);
                                 tempText += sqlUpdateStkfile;
                                 txtSql.setText(tempText + "\r\n");
                                 System.out.println(sqlUpdateStkfile);
                                 System.out.println("Loop Sql = : " + i + ";");
 
-                            } catch (SQLException e) {
+                            } catch (Exception e) {
                                 System.out.println(e.toString());
                                 AppLogUtil.log(this.getClass(), "error", e);
                                 MSG.NOTICE(e.toString() + "ERROR SQL" + sqlUpdateStkfile);
@@ -1311,7 +1311,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                 mysql1.open(this.getClass());
 //                sql = "select * from stkfile where LastUpdate<>'" + dc.GetCurrentDate() + "';";
                 sql = "select * from stkfile;";
-                try (ResultSet rs1 = mysql1.getConnection().createStatement().executeQuery(sql)) {
+                try (ResultSet rs1 = mysql1.executeQuery(sql)) {
                     while (rs1.next()) {
                         loadStatus();
                         stkfileBean bean = new stkfileBean();
@@ -1357,12 +1357,12 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                             loadStatus();
                             try {
                                 String sqlCheckSTKServer = "select bpcode,branch from stkfile where branch='" + list.get(i).getBranch() + "' and bpcode='" + list.get(i).getbPcode() + "' limit 1;";
-                                try (ResultSet rsSV = myOnline.getConnection().createStatement().executeQuery(sqlCheckSTKServer)) {
+                                try (ResultSet rsSV = myOnline.executeQuery(sqlCheckSTKServer)) {
                                     if (rsSV.next()) {
 
                                     } else {
                                         String sqlInsStkfile = "insert ignore into stkfile (bpcode,branch) values('" + list.get(i).getbPcode() + "','" + list.get(i).getBranch() + "');";
-                                        myOnline.getConnection().createStatement().executeUpdate(sqlInsStkfile);
+                                        myOnline.executeUpdate(sqlInsStkfile);
                                     }
                                 }
                             } catch (SQLException e) {
@@ -1383,7 +1383,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                             try {
                                 final MySQLConnectWebOnline myOnlineNext = new MySQLConnectWebOnline();
                                 myOnlineNext.open();
-                                myOnlineNext.getConnection().createStatement().executeUpdate(sqlUpdateStkfile);
+                                myOnlineNext.executeUpdate(sqlUpdateStkfile);
                                 tempText += sqlUpdateStkfile;
                                 txtSql.setText(tempText + "\r\n");
                                 System.out.println(sqlUpdateStkfile);
@@ -1392,7 +1392,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                                 try {
                                     mc.open();
                                     String sqlUpdateSendWeb = "update stkfile set Lastupdate='" + dc.GetCurrentDate() + "',LastTimeUpdate='" + dc.GetCurrentTime() + "' where bpcode='" + list.get(i).getbPcode() + "';";
-                                    mc.getConnection().createStatement().executeUpdate(sqlUpdateSendWeb);
+                                    mc.executeUpdate(sqlUpdateSendWeb);
                                 } catch (Exception e) {
                                     AppLogUtil.log(this.getClass(), "error", e);
 //                                    MSG.NOTICE(e.toString());
@@ -1487,7 +1487,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                             + "and r_plucode='" + s_PCode + "' and r_date='" + s_Date + "' limit 1;";
                 }
                 mysql.open();
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.executeQuery(sql);
                 if (rs.next()) {
                     if (rs.getDouble("R_Total") < 0) {
                         bean.setDiscount((rs.getDouble("R_Total") + rs.getDouble("R_Nettotal")));
@@ -1532,7 +1532,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                     try {
                         MySQLConnect mysqlNew = new MySQLConnect();
                         mysqlNew.open();
-                        ResultSet rsNew = mysqlNew.getConnection().createStatement().executeQuery(sql);
+                        ResultSet rsNew = mysqlNew.executeQuery(sql);
                         if (rsNew.next()) {
                             if (rsNew.getDouble("R_Total") < 0) {
                                 bean.setDiscount((rsNew.getDouble("R_Total") + rsNew.getDouble("R_Nettotal")));
@@ -1581,7 +1581,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                             + "and r_plucode='" + s_PCode + "' and r_date='" + s_Date + "' limit 1;";
                 }
                 mysql1.open();
-                ResultSet rs1 = mysql1.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs1 = mysql1.executeQuery(sql);
                 if (rs1.next()) {
                     if (rs1.getDouble("R_Total") != rs1.getDouble("R_Nettotal")) {
                         bean.setDiscount((rs1.getDouble("R_Total") - rs1.getDouble("R_Nettotal")));
@@ -1622,7 +1622,7 @@ public class Api_RealTimeSalesToColoServer extends javax.swing.JFrame {
                     try {
                         MySQLConnect mysqlNew1 = new MySQLConnect();
                         mysqlNew1.open();
-                        ResultSet rsNew1 = mysqlNew1.getConnection().createStatement().executeQuery(sql);
+                        ResultSet rsNew1 = mysqlNew1.executeQuery(sql);
                         if (rsNew1.next()) {
                             if (rsNew1.getDouble("R_Total") < 0) {
                                 bean.setDiscount((rsNew1.getDouble("R_Total") + rsNew1.getDouble("R_Nettotal")));

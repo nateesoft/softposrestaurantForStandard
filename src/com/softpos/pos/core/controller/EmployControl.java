@@ -12,7 +12,7 @@ public class EmployControl {
         try {
             mysql.open();
             String sql = "select P_EmpUse from posconfigsetup where P_EmpUse='Y';";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 return true;
             }
@@ -31,7 +31,7 @@ public class EmployControl {
         try {
             mysql.open();
             String sql = "select * from employ where code='" + empCode + "'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 return true;
             }
@@ -51,7 +51,7 @@ public class EmployControl {
         try {
             mysql.open();
             String sql = "select name from employ where code='" + empCode + "'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next() && !rs.wasNull()) {
                 empName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
             } else {

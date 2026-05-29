@@ -16,7 +16,12 @@
       "Bash(chmod +x /tmp/analyze.sh)",
       "Bash(bash /tmp/analyze.sh)",
       "Bash(bash /tmp/leak_analysis.sh)",
-      "Bash(bash /tmp/final_summary.sh)"
+      "Bash(bash /tmp/final_summary.sh)",
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/com/zaxxer/HikariCP/4.0.3/HikariCP-4.0.3.jar\" -o HikariCP-4.0.3.jar)",
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar\" -o slf4j-api-1.7.36.jar)",
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar\" -o slf4j-simple-1.7.36.jar)",
+      "Bash(grep \"\\\\.java$\")",
+      "Bash(awk -F'\"' '{print $2}')"
     ]
   }
 }

@@ -42,7 +42,7 @@ public class PUtility extends DatabaseConnection {
         mysql.open(PUtility.class);
         try {
             String sql = "select * from pset where pcode='" + TempCode + "'";
-            try ( ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+            try ( ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     PSetBean bean = new PSetBean();
                     bean.setPcode(rs.getString("PCode"));

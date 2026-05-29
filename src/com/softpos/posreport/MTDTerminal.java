@@ -445,10 +445,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             ResultSet rs = stmt.executeQuery(SqlQuery);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
-            ResultSet rsGetEntertain = mysql.getConnection().createStatement().executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
                     + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
-            ResultSet rsGetSumBillno = mysql.getConnection().createStatement().executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
@@ -1010,7 +1010,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                                     + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                                     + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                                     + "and cuquan<>'0' and cuamt<>'0'";
-                            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                            ResultSet rs = mysql.executeQuery(sql);
                             while (rs.next()) {
                                 double cuamt = rs.getDouble("cuamt");
                                 double quan = rs.getDouble("cuquan");
@@ -1288,7 +1288,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                         + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+                ResultSet rs = mysql.executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
@@ -1499,7 +1499,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.getConnection().createStatement().executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");

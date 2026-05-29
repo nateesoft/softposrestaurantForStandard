@@ -323,7 +323,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "left join protab pt on tp.prcode = pt.ProCode "
                     + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
                     + "group by tp.prcode";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = mysql.executeQuery(sql);
             if (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("PrCode") + Space + rs.getString("ProDesc") + "_";
                 t += "colspan=1 align=right><font face=Angsana New size=1>" + Space + rs.getString("PQty") + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + rs.getString("PrAmt") + "_";
