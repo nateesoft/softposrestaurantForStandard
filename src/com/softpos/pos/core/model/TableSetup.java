@@ -1,6 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class TableSetup {
+
     private String Code_ID;
     private String TCode;
 
@@ -19,6 +20,5 @@ public class TableSetup {
     public void setTCode(String TCode) {
         this.TCode = TCode;
     }
-    
-    
+
 }

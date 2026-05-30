@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.crm.pos.core.controller.BranchFileController;
 import com.softpos.crm.pos.core.controller.MPluController;
@@ -19,18 +20,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.DateUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 
 /**
  *
  * @author nathee
  */
 public class MemmaterController {
-    
-    
+
     public static MemberBean getMember(String MemberCode) {
         MemberBean bean = null;
         /**
@@ -141,7 +140,7 @@ public class MemmaterController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
             mysql.closeConnection(MemmaterController.class);
@@ -164,7 +163,7 @@ public class MemmaterController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -192,7 +191,7 @@ public class MemmaterController {
             mTranBean.setService_Time(billBean.getB_Ontime());
             mTranBean.setScore(pointTotal);
             mTranBean.setTranferFlag("N");
-            
+
             mTranCon.create(mTranBean);
 
             // Mplu VS T_Sale
@@ -290,7 +289,7 @@ public class MemmaterController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

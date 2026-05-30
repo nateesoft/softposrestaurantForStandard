@@ -8,8 +8,8 @@ import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFileChooser;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class HomeImageDialog extends javax.swing.JDialog {
 

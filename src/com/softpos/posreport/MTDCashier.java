@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDCashier extends javax.swing.JDialog {
 
@@ -620,45 +620,45 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             Boolean First = true;
             while (rs.next()) {
                 CrArray = new CreditRec[1];
-XFound = false;
+                XFound = false;
 
-if (First) {
+                if (First) {
+                    CreditRec CrRec = new CreditRec();
+                    CrRec.CrCode = rs.getString("b_crcode1");
+                    CrRec.CrCnt++;
+                    CrRec.CrAmt = rs.getDouble("b_cramt1");
+                    CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
+                    First = false;
+                    CrArray[ArraySize - 1] = CrRec;
+
+                } else {
+                    for (int i = 0; i < ArraySize; i++) {
+                        if (rs.getString("b_crcode1").equals(CrArray[i].CrCode)) {
+                            CrArray[i].CrCnt++;
+                            CrArray[i].CrAmt = CrArray[i].CrAmt + rs.getDouble("b_cramt1");
+                            XFound = true;
+                        }
+                    }
+                    if (!XFound) {
+                        CrArray = PUtility.addCrArray(CrArray);
                         CreditRec CrRec = new CreditRec();
+                        ArraySize = CrArray.length;
                         CrRec.CrCode = rs.getString("b_crcode1");
                         CrRec.CrCnt++;
                         CrRec.CrAmt = rs.getDouble("b_cramt1");
                         CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
-                        First = false;
                         CrArray[ArraySize - 1] = CrRec;
-
-                    } else {
-                        for (int i = 0; i < ArraySize; i++) {
-                            if (rs.getString("b_crcode1").equals(CrArray[i].CrCode)) {
-                                CrArray[i].CrCnt++;
-                                CrArray[i].CrAmt = CrArray[i].CrAmt + rs.getDouble("b_cramt1");
-                                XFound = true;
-                            }
-                        }
-                        if (!XFound) {
-                            CrArray = PUtility.addCrArray(CrArray);
-                            CreditRec CrRec = new CreditRec();
-                            ArraySize = CrArray.length;
-                            CrRec.CrCode = rs.getString("b_crcode1");
-                            CrRec.CrCnt++;
-                            CrRec.CrAmt = rs.getDouble("b_cramt1");
-                            CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
-                            CrArray[ArraySize - 1] = CrRec;
-                        }
                     }
+                }
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         PrintCashier(frec, CrArray);
     }
 
@@ -750,9 +750,9 @@ if (First) {
                     String SqlQuery = "select * from s_tar where (fat<>'V') and (cashier>='" + txtMacNo1.getText() + "') "
                             + "and (cashier<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rs.getDouble("amount");
+                        SumAmt = SumAmt + rs.getDouble("amount");
                     }
                     rs.close();
                     stmt.close();
@@ -770,10 +770,10 @@ if (First) {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from s_billar where (fat<>'V') and (cashier>='" + txtMacNo1.getText() + "') and (cashier<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         CntBill++;
-                            SumCash = SumCash + rs.getDouble("cash");
-                            SumCupon = SumCupon + rs.getDouble("cupon");
+                        SumCash = SumCash + rs.getDouble("cash");
+                        SumCupon = SumCupon + rs.getDouble("cupon");
                     }
                     rs.close();
                     stmt.close();
@@ -787,7 +787,7 @@ if (First) {
                     String SqlQuery = "select * from s_tcrar where (fat<>'V') and (cashier>='" + txtMacNo1.getText() + "') "
                             + "and (cashier<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
                     rs.close();
@@ -805,7 +805,7 @@ if (First) {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from s_billar where (fat='V') and (cashier>='" + txtMacNo1.getText() + "') and (cashier<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
                     rs.close();
@@ -815,7 +815,7 @@ if (First) {
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
-                
+
                 prn.print("----------------------------------------");
                 prn.print("");
                 prn.print("");

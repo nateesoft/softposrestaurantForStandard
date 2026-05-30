@@ -9,9 +9,8 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.NumberUtil;
 
 public class ItemDisControl {
 
@@ -106,7 +105,8 @@ public class ItemDisControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();mysql.closeConnection(this.getClass());
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.closeConnection(this.getClass());
         mysql.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
@@ -138,7 +138,7 @@ public class ItemDisControl {
                 rs.close();
                 stmt1.close();
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(ItemDisControl.class, "error", e);
             }
 
@@ -152,7 +152,6 @@ public class ItemDisControl {
             stmt1.executeUpdate(sql);
             stmt1.close();
         } catch (SQLException e) {
-            
 
         } finally {
             mysql.closeConnection(this.getClass());

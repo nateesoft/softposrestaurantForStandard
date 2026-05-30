@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class OptionSetBean {
-    
+
     private String OptionName;
     private String pcode;
     private String pdesc;
@@ -29,6 +29,5 @@ public class OptionSetBean {
     public void setPdesc(String pdesc) {
         this.pdesc = pdesc;
     }
-    
-    
+
 }

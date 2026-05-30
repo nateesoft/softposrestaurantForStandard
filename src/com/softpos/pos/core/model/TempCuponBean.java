@@ -128,6 +128,5 @@ public class TempCuponBean {
     public void setCuTextComment(String CuTextComment) {
         this.CuTextComment = CuTextComment;
     }
-    
-    
+
 }

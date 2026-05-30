@@ -706,6 +706,5 @@ public class ProtabBean {
     public void setP6SaleCode3(String P6SaleCode3) {
         this.P6SaleCode3 = P6SaleCode3;
     }
-    
-    
+
 }

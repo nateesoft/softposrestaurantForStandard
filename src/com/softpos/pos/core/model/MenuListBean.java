@@ -11,6 +11,5 @@ public class MenuListBean {
     public void setPlucode(String plucode) {
         this.plucode = plucode;
     }
-    
-    
+
 }

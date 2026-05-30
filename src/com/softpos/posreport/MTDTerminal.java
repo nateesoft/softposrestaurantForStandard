@@ -23,9 +23,9 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 public class MTDTerminal extends javax.swing.JDialog {
 
@@ -453,142 +453,142 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
             }
             rsGetEntertain.close();
-            
+
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
             rsGetSumBillno.close();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 frec.StBill = rs.getString("b_refno");
-                
-             frec.SpBill = rs.getString("b_refno");
-                    if (!rs.getString("b_void").equals("V")) {
-                        frec.Dept_Sum = frec.Dept_Sum + rs.getDouble("b_total");
-                        if (rs.getDouble("b_serviceamt") != 0.0) {
-                            frec.Service = frec.Service + rs.getDouble("b_serviceamt");
-                            frec.ServiceCnt++;
-                        }
-                        if (rs.getDouble("b_crchargeamt1") != 0.0) {
-                            frec.Charge = frec.Charge + rs.getDouble("b_crchargeamt1");
-                            frec.ChargeCnt++;
-                        }
-                        if (rs.getDouble("b_memdiscamt") != 0.0) {
-                            frec.Vip_Disc = frec.Vip_Disc + rs.getDouble("b_memdiscamt");
-                            frec.Vip_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_empdiscamt") != 0.0) {
-                            frec.Emp_Disc = frec.Emp_Disc + rs.getDouble("b_empdiscamt");
-                            frec.Emp_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_fastdiscamt") != 0.0) {
-                            frec.Fast_Disc = frec.Fast_Disc + rs.getDouble("b_fastdiscamt");
-                            frec.Fast_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_Traindiscamt") != 0.0) {
-                            frec.Train_Disc = frec.Train_Disc + rs.getDouble("b_traindiscamt");
-                            frec.Train_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_subdiscamt") != 0.0) {
-                            frec.Sub_Disc = frec.Sub_Disc + rs.getDouble("b_subdiscamt");
-                            frec.Sub_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_subdiscbath") != 0.0) {
-                            frec.Gen_Refund = frec.Gen_Refund + rs.getDouble("b_subdiscbath");
-                            frec.Gen_RefundCnt++;
-                        }
-                        if (rs.getDouble("b_cupondiscamt") != 0.0) {
-                            frec.Cupon_Disc = frec.Cupon_Disc + rs.getDouble("b_cupondiscamt");
-                            frec.Cupon_DiscCnt++;
-                        }
-                        if (rs.getDouble("b_prodiscamt") != 0.0) {
-                            frec.Promotion = frec.Promotion + rs.getDouble("b_prodiscamt");
-                            frec.PromotionCnt++;
-                        }
-                        if (rs.getDouble("b_spadiscamt") != 0.0) {
-                            frec.Spacial = frec.Spacial + rs.getDouble("b_spadiscamt");
-                            frec.SpacialCnt++;
-                        }
-                        if (rs.getDouble("b_itemdiscamt") != 0.0) {
-                            frec.Item_Disc = frec.Item_Disc + rs.getDouble("b_itemdiscamt");
-                            frec.Item_DiscCnt++;
-                        }
-                        frec.Net_Sale = frec.Net_Sale + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
-                        if (rs.getDouble("b_cash") != 0.0) {
-                            frec.Cash = frec.Cash + rs.getDouble("b_cash");
-                            frec.CashCnt++;
-                        }
-                        if (rs.getDouble("b_giftvoucher") != 0.0) {
-                            frec.Gift = frec.Gift + rs.getDouble("b_giftvoucher");
-                            frec.GiftCnt++;
-                        }
-                        if (rs.getDouble("b_earnest") != 0.0) {
-                            frec.Earnest = frec.Earnest + rs.getDouble("b_earnest");
-                            frec.EarnestCnt++;
-                        }
-                        if (rs.getDouble("b_accramt") != 0.0) {
-                            frec.ArPayment = frec.ArPayment + rs.getDouble("b_accramt");
-                            frec.ArPaymentCnt++;
-                        }
-                        if (rs.getDouble("b_cramt1") != 0.0) {
-                            frec.Credit_Card = frec.Credit_Card + rs.getDouble("b_cramt1");
-                            frec.Credit_CardCnt++;
-                        }
-                        frec.SaleVat = frec.SaleVat + rs.getDouble("b_netvat");
-                        frec.SaleNonVat = frec.SaleNonVat + rs.getDouble("b_netnonvat");
-                        frec.VatAmt = frec.VatAmt + rs.getDouble("b_vat");
-                        frec.CntBill++;
-                        if (rs.getDouble("b_food") != 0.0) {
-                            frec.Food = frec.Food + rs.getDouble("b_food");
-                        }
-                        if (rs.getDouble("b_drink") != 0.0) {
-                            frec.Drink = frec.Drink + rs.getDouble("b_drink");
-                        }
-                        if (rs.getDouble("b_product") != 0.0) {
-                            frec.Product = frec.Product + rs.getDouble("b_product");
-                        }
-                        if (rs.getInt("b_cust") != 0) {
-                            frec.Customer = frec.Customer + rs.getInt("b_cust");
-                        }
-                        if (rs.getString("b_etd").equals("E")) {
-                            frec.Eat_In_Cnt++;
-                            frec.Eat_In_Amt = frec.Eat_In_Amt + rs.getDouble("b_total");
-                            frec.Eat_In_Cust = frec.Eat_In_Cust + rs.getInt("b_cust");
-                            frec.Eat_In_Net = frec.Eat_In_Net + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("T")) {
-                            frec.Take_AwayCnt++;
-                            frec.Take_AwayAmt = frec.Take_AwayAmt + rs.getDouble("b_total");
-                            frec.Take_AwayCust = frec.Take_AwayCust + rs.getInt("b_cust");
-                            frec.Take_AwayNet = frec.Take_AwayNet + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("D")) {
-                            frec.DeliveryCnt++;
-                            frec.DeliveryAmt = frec.DeliveryAmt + rs.getDouble("b_total");
-                            frec.DeliveryCust = frec.DeliveryCust + rs.getInt("b_cust");
-                            frec.DeliveryNet = frec.DeliveryNet + rs.getDouble("b_nettotal");
-                            String amt = frec.DeliveryAmt + "";
-                            String cust = frec.DeliveryCust + "";
-                            String net = frec.DeliveryNet + "";
-                            System.out.println(amt + ":" + cust + ":" + net);
-                        }
-                        if (rs.getString("b_etd").equals("P")) {
-                            frec.PintoCnt++;
-                            frec.PintoAmt = frec.PintoAmt + rs.getDouble("b_total");
-                            frec.PintoCust = frec.PintoCust + rs.getInt("b_cust");
-                            frec.PintoNet = frec.PintoNet + rs.getDouble("b_nettotal");
-                        }
-                        if (rs.getString("b_etd").equals("W")) {
-                            frec.WholeCnt++;
-                            frec.WholeAmt = frec.WholeAmt + rs.getDouble("b_total");
-                            frec.WholeCust = frec.WholeCust + rs.getInt("b_cust");
-                            frec.WholeNet = frec.WholeNet + rs.getDouble("b_nettotal");
-                        }
-                    } else {
-                        frec.AmtBillVoid = frec.AmtBillVoid + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
-                        frec.CntBillVoid++;
-                        frec.CntBill++;
-                    }   
+
+                frec.SpBill = rs.getString("b_refno");
+                if (!rs.getString("b_void").equals("V")) {
+                    frec.Dept_Sum = frec.Dept_Sum + rs.getDouble("b_total");
+                    if (rs.getDouble("b_serviceamt") != 0.0) {
+                        frec.Service = frec.Service + rs.getDouble("b_serviceamt");
+                        frec.ServiceCnt++;
+                    }
+                    if (rs.getDouble("b_crchargeamt1") != 0.0) {
+                        frec.Charge = frec.Charge + rs.getDouble("b_crchargeamt1");
+                        frec.ChargeCnt++;
+                    }
+                    if (rs.getDouble("b_memdiscamt") != 0.0) {
+                        frec.Vip_Disc = frec.Vip_Disc + rs.getDouble("b_memdiscamt");
+                        frec.Vip_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_empdiscamt") != 0.0) {
+                        frec.Emp_Disc = frec.Emp_Disc + rs.getDouble("b_empdiscamt");
+                        frec.Emp_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_fastdiscamt") != 0.0) {
+                        frec.Fast_Disc = frec.Fast_Disc + rs.getDouble("b_fastdiscamt");
+                        frec.Fast_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_Traindiscamt") != 0.0) {
+                        frec.Train_Disc = frec.Train_Disc + rs.getDouble("b_traindiscamt");
+                        frec.Train_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_subdiscamt") != 0.0) {
+                        frec.Sub_Disc = frec.Sub_Disc + rs.getDouble("b_subdiscamt");
+                        frec.Sub_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_subdiscbath") != 0.0) {
+                        frec.Gen_Refund = frec.Gen_Refund + rs.getDouble("b_subdiscbath");
+                        frec.Gen_RefundCnt++;
+                    }
+                    if (rs.getDouble("b_cupondiscamt") != 0.0) {
+                        frec.Cupon_Disc = frec.Cupon_Disc + rs.getDouble("b_cupondiscamt");
+                        frec.Cupon_DiscCnt++;
+                    }
+                    if (rs.getDouble("b_prodiscamt") != 0.0) {
+                        frec.Promotion = frec.Promotion + rs.getDouble("b_prodiscamt");
+                        frec.PromotionCnt++;
+                    }
+                    if (rs.getDouble("b_spadiscamt") != 0.0) {
+                        frec.Spacial = frec.Spacial + rs.getDouble("b_spadiscamt");
+                        frec.SpacialCnt++;
+                    }
+                    if (rs.getDouble("b_itemdiscamt") != 0.0) {
+                        frec.Item_Disc = frec.Item_Disc + rs.getDouble("b_itemdiscamt");
+                        frec.Item_DiscCnt++;
+                    }
+                    frec.Net_Sale = frec.Net_Sale + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
+                    if (rs.getDouble("b_cash") != 0.0) {
+                        frec.Cash = frec.Cash + rs.getDouble("b_cash");
+                        frec.CashCnt++;
+                    }
+                    if (rs.getDouble("b_giftvoucher") != 0.0) {
+                        frec.Gift = frec.Gift + rs.getDouble("b_giftvoucher");
+                        frec.GiftCnt++;
+                    }
+                    if (rs.getDouble("b_earnest") != 0.0) {
+                        frec.Earnest = frec.Earnest + rs.getDouble("b_earnest");
+                        frec.EarnestCnt++;
+                    }
+                    if (rs.getDouble("b_accramt") != 0.0) {
+                        frec.ArPayment = frec.ArPayment + rs.getDouble("b_accramt");
+                        frec.ArPaymentCnt++;
+                    }
+                    if (rs.getDouble("b_cramt1") != 0.0) {
+                        frec.Credit_Card = frec.Credit_Card + rs.getDouble("b_cramt1");
+                        frec.Credit_CardCnt++;
+                    }
+                    frec.SaleVat = frec.SaleVat + rs.getDouble("b_netvat");
+                    frec.SaleNonVat = frec.SaleNonVat + rs.getDouble("b_netnonvat");
+                    frec.VatAmt = frec.VatAmt + rs.getDouble("b_vat");
+                    frec.CntBill++;
+                    if (rs.getDouble("b_food") != 0.0) {
+                        frec.Food = frec.Food + rs.getDouble("b_food");
+                    }
+                    if (rs.getDouble("b_drink") != 0.0) {
+                        frec.Drink = frec.Drink + rs.getDouble("b_drink");
+                    }
+                    if (rs.getDouble("b_product") != 0.0) {
+                        frec.Product = frec.Product + rs.getDouble("b_product");
+                    }
+                    if (rs.getInt("b_cust") != 0) {
+                        frec.Customer = frec.Customer + rs.getInt("b_cust");
+                    }
+                    if (rs.getString("b_etd").equals("E")) {
+                        frec.Eat_In_Cnt++;
+                        frec.Eat_In_Amt = frec.Eat_In_Amt + rs.getDouble("b_total");
+                        frec.Eat_In_Cust = frec.Eat_In_Cust + rs.getInt("b_cust");
+                        frec.Eat_In_Net = frec.Eat_In_Net + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("T")) {
+                        frec.Take_AwayCnt++;
+                        frec.Take_AwayAmt = frec.Take_AwayAmt + rs.getDouble("b_total");
+                        frec.Take_AwayCust = frec.Take_AwayCust + rs.getInt("b_cust");
+                        frec.Take_AwayNet = frec.Take_AwayNet + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("D")) {
+                        frec.DeliveryCnt++;
+                        frec.DeliveryAmt = frec.DeliveryAmt + rs.getDouble("b_total");
+                        frec.DeliveryCust = frec.DeliveryCust + rs.getInt("b_cust");
+                        frec.DeliveryNet = frec.DeliveryNet + rs.getDouble("b_nettotal");
+                        String amt = frec.DeliveryAmt + "";
+                        String cust = frec.DeliveryCust + "";
+                        String net = frec.DeliveryNet + "";
+                        System.out.println(amt + ":" + cust + ":" + net);
+                    }
+                    if (rs.getString("b_etd").equals("P")) {
+                        frec.PintoCnt++;
+                        frec.PintoAmt = frec.PintoAmt + rs.getDouble("b_total");
+                        frec.PintoCust = frec.PintoCust + rs.getInt("b_cust");
+                        frec.PintoNet = frec.PintoNet + rs.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("W")) {
+                        frec.WholeCnt++;
+                        frec.WholeAmt = frec.WholeAmt + rs.getDouble("b_total");
+                        frec.WholeCust = frec.WholeCust + rs.getInt("b_cust");
+                        frec.WholeNet = frec.WholeNet + rs.getDouble("b_nettotal");
+                    }
+                } else {
+                    frec.AmtBillVoid = frec.AmtBillVoid + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
+                    frec.CntBillVoid++;
+                    frec.CntBill++;
+                }
             }
             rs.close();
             stmt.close();
@@ -601,9 +601,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             String SqlQuery = "select * from s_paidio where (flage='I') and (terminal>='" + txtMacNo1.getText() + "') "
                     + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.Paid_InCnt++;
-                    frec.Paid_In = frec.Paid_In + rs.getDouble("paidamt");
+                frec.Paid_In = frec.Paid_In + rs.getDouble("paidamt");
             }
             rs.close();
             stmt.close();
@@ -615,9 +615,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             String SqlQuery = "select * from s_paidio where (flage='O') and (terminal>='" + txtMacNo1.getText() + "') "
                     + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.Paid_OutCnt++;
-                    frec.Paid_Out = frec.Paid_Out + rs.getDouble("paidamt");
+                frec.Paid_Out = frec.Paid_Out + rs.getDouble("paidamt");
             }
             rs.close();
             stmt.close();
@@ -629,16 +629,16 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             String SqlQuery = "select *from s_void where (macno>='" + txtMacNo1.getText() + "') and (macno<='" + txtMacNo2.getText() + "') "
                     + "and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 frec.CntVoid++;
-                    frec.VoidValue = frec.VoidValue + rs.getDouble("amt");
+                frec.VoidValue = frec.VoidValue + rs.getDouble("amt");
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         }
-        
+
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from s_invoice where (b_macno>='" + txtMacNo1.getText() + "') and (b_macno<='" + txtMacNo2.getText() + "') "
@@ -647,38 +647,38 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             Boolean XFound;
             Boolean First = true;
             CrArray = new CreditRec[1];
-            while(rs.next()){
+            while (rs.next()) {
                 XFound = false;
-                    ArraySize = CrArray.length;
-                    if (First) {
+                ArraySize = CrArray.length;
+                if (First) {
+                    CreditRec CrRec = new CreditRec();
+                    CrRec.CrCode = rs.getString("b_crcode1");
+                    CrRec.CrCnt++;
+                    CrRec.CrAmt = rs.getDouble("b_cramt1");
+                    CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
+                    First = false;
+                    CrArray[ArraySize - 1] = CrRec;
+
+                } else {
+                    for (int i = 0; i < ArraySize; i++) {
+                        if (rs.getString("b_crcode1").equals(CrArray[i].CrCode)) {
+                            CrArray[i].CrCnt++;
+                            CrArray[i].CrAmt = CrArray[i].CrAmt + rs.getDouble("b_cramt1");
+                            XFound = true;
+                        }
+                    }
+                    if (!XFound) {
+                        CrArray = PUtility.addCrArray(CrArray);
+
                         CreditRec CrRec = new CreditRec();
+                        ArraySize = CrArray.length;
                         CrRec.CrCode = rs.getString("b_crcode1");
                         CrRec.CrCnt++;
                         CrRec.CrAmt = rs.getDouble("b_cramt1");
                         CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
-                        First = false;
                         CrArray[ArraySize - 1] = CrRec;
-
-                    } else {
-                        for (int i = 0; i < ArraySize; i++) {
-                            if (rs.getString("b_crcode1").equals(CrArray[i].CrCode)) {
-                                CrArray[i].CrCnt++;
-                                CrArray[i].CrAmt = CrArray[i].CrAmt + rs.getDouble("b_cramt1");
-                                XFound = true;
-                            }
-                        }
-                        if (!XFound) {
-                            CrArray = PUtility.addCrArray(CrArray);
-
-                            CreditRec CrRec = new CreditRec();
-                            ArraySize = CrArray.length;
-                            CrRec.CrCode = rs.getString("b_crcode1");
-                            CrRec.CrCnt++;
-                            CrRec.CrAmt = rs.getDouble("b_cramt1");
-                            CrRec.CrName = PUtility.SeekCreditName(rs.getString("b_crcode1"));
-                            CrArray[ArraySize - 1] = CrRec;
-                        }
                     }
+                }
             }
             rs.close();
             stmt.close();
@@ -757,7 +757,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             + "and (b_macno>='" + txtMacNo1.getText() + "') and (b_macno<='" + txtMacNo2.getText() + "') "
                             + " group by b_macno order by b_macno";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print("MacNo " + rs.getString("b_macno") + " เลขที่เริ่มต้น " + rs.getString("min(b_refno)") + " ถึง " + rs.getString("max(b_refno)"));
                     }
                     rs.close();
@@ -788,22 +788,22 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("----------------------------------------");
                 prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                 prn.print("----------------------------------------");
-                
+
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select * from s_tar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
-                            SumAmt = SumAmt + rs.getDouble("amount");
+                        SumAmt = SumAmt + rs.getDouble("amount");
                     }
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 }
-                
+
                 prn.print("----------------------------------------");
                 prn.print(PUtility.DataFullR("Total Amount  ", 26) + PUtility.DataFull(DecFmt.format(SumAmt), 13));
                 prn.print("----------------------------------------");
@@ -811,22 +811,22 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Double SumCash = 0.0;
                 Double SumCupon = 0.0;
                 int CntBill = 0;
-                
+
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from s_billar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         CntBill++;
-                            SumCash = SumCash + rs.getDouble("cash");
-                            SumCupon = SumCupon + rs.getDouble("cupon");
+                        SumCash = SumCash + rs.getDouble("cash");
+                        SumCupon = SumCupon + rs.getDouble("cupon");
                     }
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 }
-                
+
                 prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
@@ -834,7 +834,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     String SqlQuery = "select * from s_tcrar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
                     }
                     rs.close();
@@ -842,7 +842,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 }
-                
+
                 prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
                 prn.print("----------------------------------------");
                 prn.print(" ");
@@ -854,7 +854,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     String SqlQuery = "select * from s_billar where (fat='V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
                     }
                     rs.close();
@@ -864,7 +864,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
-                
+
                 prn.print("----------------------------------------");
                 prn.print("");
                 prn.print("");
@@ -1073,7 +1073,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                                 + "and (b_macno<='" + txtMacNo2.getText() + "') "
                                 + " group by b_macno order by b_macno";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(" Start Docket    " + rs.getString("min(b_refno)") + " To    " + rs.getString("max(b_refno)"));
                         }
                         rs.close();
@@ -1083,7 +1083,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
-                    
+
                     prn.print("----------------------------------------");
                     prn.print("SaleType   Docket        CC       Amount");
                     prn.print("----------------------------------------");
@@ -1248,7 +1248,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
         t += ("colspan=2 align=left><font face=Angsana New size=1>" + "TOTAL-SALES" + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(frec.Dept_Sum)) + "_";
         //prn.print(PUtility.DataFullR("ค่าบริการ Service       ", 20) + PUtility.DataFull(IntFmt.format(frec.ServiceCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Service), 13));
-            if (frec.ChargeCnt > 0) {
+        if (frec.ChargeCnt > 0) {
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + PUtility.DataFullR("Charge  Credit", 20) + PUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + PUtility.DataFullR(DecFmt.format(frec.Charge), 13)) + "_";
         }
         if (frec.Vip_DiscCnt > 0) {
@@ -1369,7 +1369,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "and (b_macno<='" + txtMacNo2.getText() + "') "
                     + " group by b_macno order by b_macno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Start Docket" + Space + rs.getString("min(b_refno)") + TAB + " To" + Space + rs.getString("max(b_refno)")) + "_";
             }
             rs.close();
@@ -1405,7 +1405,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += ("align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFullSpace(DecFmt.format(AVG_CCE), 13) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCT) + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(AVG_CCD)) + "_";
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "-----------------------------------------------") + "_";
         t = changeReportLanguage(t);
-        
+
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
 
@@ -1418,7 +1418,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
         pd.printHTML();
     }
-    
+
     private ArrayList<Object[]> DocAnalyse(String date1, String date2) {
         ArrayList<Object[]> listObj = new ArrayList<>();
         String sqlSelectDocTypeE = "select count(b_refno)b_refno,"
@@ -1559,7 +1559,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             listObj.add(new Object[]{countb_refnoD});
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+
         }
 
         mysql.closeConnection(this.getClass());

@@ -10,16 +10,12 @@ package printReport;
  * @author User
  */
 import com.softpos.pos.core.controller.ControlPrintCheckBill;
-import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.model.POSConfigSetup;
-import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableFileBean;
 import database.ConfigFile;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.DecimalFormat;
@@ -42,7 +38,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import util.DateConvert;
+import com.softpos.util.DateConvert;
 
 public class PrintKicFormReport {
 
@@ -64,7 +60,7 @@ public class PrintKicFormReport {
     private final DecimalFormat intFM = new DecimalFormat("#,##0");
 
     public void PrintKicForm7_Report(
-            final String tableNo,final String printerName, final String Macno, final String R_ETD, final String R_PluCode) throws Exception {
+            final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_PluCode) throws Exception {
 //        printerName = "Snagit 9";
 //        new Thread(new Runnable() {
 //
@@ -195,8 +191,9 @@ public class PrintKicFormReport {
 //        }).start();
 
     }
+
     public void PrintKicForm8_Report(
-            final String tableNo,final String printerName, final String Macno, final String R_ETD, final String R_Index) throws Exception {
+            final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_Index) throws Exception {
 //        printerName = "Snagit 9";
 //        new Thread(new Runnable() {
 //

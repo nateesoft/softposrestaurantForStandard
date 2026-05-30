@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import util.MSG;
 
 public class SendEmail {
 
@@ -20,11 +19,11 @@ public class SendEmail {
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
 
         try {
             Message message = new MimeMessage(session);

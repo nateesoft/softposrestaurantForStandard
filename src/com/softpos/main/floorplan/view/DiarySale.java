@@ -8,8 +8,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class DiarySale extends javax.swing.JDialog {
 
@@ -247,7 +247,7 @@ public class DiarySale extends javax.swing.JDialog {
             } else {
                 TS = 0.00;
             }
-            
+
             String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1.next()) {

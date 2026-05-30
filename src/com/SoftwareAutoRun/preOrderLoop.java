@@ -9,9 +9,8 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 /**
  *

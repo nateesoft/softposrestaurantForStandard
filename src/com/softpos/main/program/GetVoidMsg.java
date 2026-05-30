@@ -1,9 +1,10 @@
 package com.softpos.main.program;
+
 import java.awt.event.KeyEvent;
 
-
 public class GetVoidMsg extends javax.swing.JDialog {
-    static String VoidMsg ;
+
+    static String VoidMsg;
 
     public GetVoidMsg(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -59,14 +60,14 @@ public class GetVoidMsg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void txtVoidKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtVoidKeyPressed
-   if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
-      VoidMsg = txtVoid.getText() ;
-      this.dispose();
-   }
-   if (evt.getKeyCode()==KeyEvent.VK_ESCAPE) {
-      VoidMsg = "" ;
-      this.dispose();
-   }
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        VoidMsg = txtVoid.getText();
+        this.dispose();
+    }
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        VoidMsg = "";
+        this.dispose();
+    }
 }//GEN-LAST:event_txtVoidKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

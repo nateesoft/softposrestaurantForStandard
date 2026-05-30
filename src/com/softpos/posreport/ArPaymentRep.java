@@ -16,9 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 public class ArPaymentRep extends javax.swing.JDialog {
 

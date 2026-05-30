@@ -22,9 +22,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import util.AppLogUtil;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class DispInv2 extends javax.swing.JDialog {
 
@@ -92,17 +92,17 @@ public class DispInv2 extends javax.swing.JDialog {
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
             } catch (ParseException e) {
             }
-            
+
             int RowCount = model2.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model2.removeRow(0);
             }
-            
+
             int XTotalCnt = 0;
             double XAmt1 = 0.0;
             double XAmt2 = 0.0;
             double XAmt3 = 0.0;
-            
+
             /**
              * * OPEN CONNECTION **
              */
@@ -115,31 +115,31 @@ public class DispInv2 extends javax.swing.JDialog {
                         + "and substring(invno,1,1)='I' "
                         + "order by invno";
                 ResultSet rs = stmt.executeQuery(sql);
-                while(rs.next()){
+                while (rs.next()) {
                     String VoidDate = "";
-                        try {
-                            VoidDate = ShowDatefmt.format(rs.getDate("voiddate"));
-                        } catch (SQLException e) {
-                        }
-                        XTotalCnt++;
-                        Object[] input = {rs.getString("void"),
-                            rs.getString("invno"),
-                            ShowDatefmt.format(rs.getDate("invdate")),
-                            rs.getString("macno"),
-                            rs.getString("refno"),
-                            rs.getString("custcode"),
-                            rs.getString("custname"),
-                            rs.getDouble("subtotal"),
-                            rs.getDouble("vat"),
-                            rs.getDouble("amount"),
-                            rs.getString("voidmessage"),
-                            rs.getString("uservoid"),
-                            VoidDate
-                        };
-                        XAmt1 = XAmt1 + rs.getDouble("subtotal");
-                        XAmt2 = XAmt2 + rs.getDouble("vat");
-                        XAmt3 = XAmt3 + rs.getDouble("amount");
-                        model2.addRow(input);
+                    try {
+                        VoidDate = ShowDatefmt.format(rs.getDate("voiddate"));
+                    } catch (SQLException e) {
+                    }
+                    XTotalCnt++;
+                    Object[] input = {rs.getString("void"),
+                        rs.getString("invno"),
+                        ShowDatefmt.format(rs.getDate("invdate")),
+                        rs.getString("macno"),
+                        rs.getString("refno"),
+                        rs.getString("custcode"),
+                        rs.getString("custname"),
+                        rs.getDouble("subtotal"),
+                        rs.getDouble("vat"),
+                        rs.getDouble("amount"),
+                        rs.getString("voidmessage"),
+                        rs.getString("uservoid"),
+                        VoidDate
+                    };
+                    XAmt1 = XAmt1 + rs.getDouble("subtotal");
+                    XAmt2 = XAmt2 + rs.getDouble("vat");
+                    XAmt3 = XAmt3 + rs.getDouble("amount");
+                    model2.addRow(input);
                 }
                 showCell(0, 0);
                 rs.close();
@@ -150,7 +150,7 @@ public class DispInv2 extends javax.swing.JDialog {
             } finally {
                 mysql.closeConnection(this.getClass());
             }
-            
+
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));
             TotalAmt2.setText(DecFmt.format(XAmt2));

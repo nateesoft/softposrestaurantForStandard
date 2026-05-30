@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class BalanceSetBean {
-    
+
     private String r_psubcode;
     private double r_setqty;
 
@@ -20,6 +20,5 @@ public class BalanceSetBean {
     public void setR_setqty(double r_setqty) {
         this.r_setqty = r_setqty;
     }
-    
-    
+
 }

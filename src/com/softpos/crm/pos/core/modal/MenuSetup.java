@@ -4,15 +4,16 @@ import com.softpos.pos.core.model.ProductBean;
 import java.util.ArrayList;
 
 public class MenuSetup {
-    
+
     private String Code_ID;
     private String Code_Type;
     private String PCode;
     private String ShortName;
     private String PPathName;
     private ArrayList<ProductBean> productList = new ArrayList<>();
-    
-    public MenuSetup(){}
+
+    public MenuSetup() {
+    }
 
     public MenuSetup(String Code_ID, String Code_Type, String PCode, String ShortName, String PPathName) {
         this.Code_ID = Code_ID;
@@ -69,9 +70,8 @@ public class MenuSetup {
     public void setProductList(ArrayList<ProductBean> productList) {
         this.productList = productList;
     }
-    
-    
-    public void addProduct(ProductBean product){
+
+    public void addProduct(ProductBean product) {
         productList.add(product);
     }
 }

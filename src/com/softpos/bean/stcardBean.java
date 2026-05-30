@@ -9,7 +9,6 @@ package com.softpos.bean;
  *
  * @author Administrator
  */
-
 public class stcardBean {
 
     private String s_Date = "";

@@ -22,9 +22,9 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 public class MTDGiftVoucher extends javax.swing.JDialog {
 
@@ -468,10 +468,10 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                                 + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                                 + "order by giftbarcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("giftno"), 27) + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9));
-                                Sumtotal++;
-                                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
+                            Sumtotal++;
+                            SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
                         }
                         rs.close();
                         stmt.close();
@@ -551,10 +551,10 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                     + "order by giftbarcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "align=right><font face=Angsana New size=1>" + Space + (PUtility.DataFull(rs.getString("giftno"), 27) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), 9) + "_");
-                    Sumtotal++;
-                    SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
+                Sumtotal++;
+                SumtotalAmount = SumtotalAmount + rs.getDouble("giftamt");
             }
             rs.close();
             stmt.close();

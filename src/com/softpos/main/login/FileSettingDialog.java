@@ -1,21 +1,21 @@
 package com.softpos.main.login;
 
 import database.MySQLConnect;
-import util.FileManager;
+import com.softpos.util.FileManager;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.softpos.pos.core.controller.Value;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class FileSettingDialog extends javax.swing.JDialog {
 
     public FileSettingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         loadConfig();
     }
 
@@ -384,7 +384,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtServerKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtServerKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             dispose();
         }
     }//GEN-LAST:event_txtServerKeyPressed
@@ -491,10 +491,10 @@ public class FileSettingDialog extends javax.swing.JDialog {
         txtCharSet.setText(MySQLConnect.CharSet);
         txtLang.setText(Value.LANG);
         txtMacno.setText(Value.MACNO);
-        cbPrint.setSelectedItem(""+Value.useprint);
-        cbKicPrint.setSelectedItem(""+Value.printkic);
-        cbPopup.setSelectedItem(""+Value.autoqty);
-        cbDriver.setSelectedItem(""+Value.printdriver);
+        cbPrint.setSelectedItem("" + Value.useprint);
+        cbKicPrint.setSelectedItem("" + Value.printkic);
+        cbPopup.setSelectedItem("" + Value.autoqty);
+        cbDriver.setSelectedItem("" + Value.printdriver);
         txtMember.setText(Value.db_member);
         txtPrinterDriverName.setText(Value.printerDriverName);
     }

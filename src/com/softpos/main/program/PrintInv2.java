@@ -13,8 +13,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class PrintInv2 extends javax.swing.JDialog {
 
@@ -1084,7 +1084,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from invcashdoc where invno='" + TempInvNo + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
-                if(rs.next()){
+                if (rs.next()) {
                     InvDate.setText(DateFmt.format(rs.getDate("invdate")));
                     CustCode.setText(rs.getString("custcode"));
                     CustName.setText(rs.getString("custname"));
@@ -1142,7 +1142,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         String SQLQuery2 = "Select b_refno from billno where (b_refno='" + RefNo.getText() + "') and "
                                 + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V')";
                         ResultSet rec2 = stmt2.executeQuery(SQLQuery2);
-                        if(rec2.next()){
+                        if (rec2.next()) {
                             NoEdit = true;
                             MacNo.setFocusable(false);
                             RefNo.setFocusable(false);
@@ -1153,14 +1153,14 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         MSG.ERR(this, e2.getMessage());
                         AppLogUtil.log(PrintInv1.class, "error", e2);
                     }
-                    
+
                     InvNo.setFocusable(true);
                     if (!CustCode.getText().equals("")) {
                         CustName.requestFocus();
                     } else {
                         CustCode.requestFocus();
                     }
-                }else{
+                } else {
                     MSG.ERR(this, "ไม่พบใบกำกับภาษี/ใบแจ้งหนี้ที่ต้องการ...");
                     ClearVariable();
                 }
@@ -1196,7 +1196,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from custfile where sp_code='" + CustCode.getText() + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
-                if(rs.next()){
+                if (rs.next()) {
                     CustCode.setText(rs.getString("sp_code"));
                     CustName.setText(rs.getString("sp_desc"));
                     CustAddr1.setText(rs.getString("sp_addr1"));
@@ -1238,7 +1238,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from custfile where sp_desc='" + CustName.getText() + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
-                if(rs.next()){
+                if (rs.next()) {
                     CustCode.setText(rs.getString("sp_code"));
                     CustName.setText(rs.getString("sp_desc"));
                     CustAddr1.setText(rs.getString("sp_addr1"));
@@ -1273,7 +1273,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String SQLQuery = "Select * from billno where (b_refno='" + RefNo.getText() + "') and "
                         + "(b_macno='" + MacNo.getText() + "') and (b_void<>'V') limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
-                if(rs.next()){
+                if (rs.next()) {
                     TempInv = rs.getString("b_invno");
                     TempType = rs.getString("b_invtype");
                     if (((TempInv.equals("")) & (TempType.equals(""))) | (TempInv.equals(InvNo.getText()))) {
@@ -1320,7 +1320,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         RefNo.setText("");
                         MacNo.requestFocus();
                     }
-                }else{
+                } else {
                     MSG.ERR(this, "ไม่พบรายการขายของใบกำกับภาษีอย่างย่อเลขที่ " + RefNo.getText() + " ที่เครื่อง " + MacNo.getText() + " กรุณาตรวจสอบ...");
                     MacNo.setText("");
                     RefNo.setText("");
@@ -1576,33 +1576,33 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         }
-        
+
         try {
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select * from t_sale where (macno='" + MacNo + "') and (r_refno='" + RefNo + "')";
             ResultSet rs = stmt.executeQuery(SQLQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 try {
-                        Statement stmt2 = mysql.getConnection().createStatement();
-                        String SqlQuery = "insert into invdetail (invno,invdate,pcode,pname,price,pqty,"
-                                + "pamount,punit,pgroup) values (?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
-                        prm.setString(1, InvNo);
-                        prm.setString(2, SqlDateFmt.format(TempInvDate));
-                        prm.setString(3, rs.getString("r_plucode"));
-                        prm.setString(4, rs.getString("r_pname"));
-                        prm.setDouble(5, rs.getDouble("r_price"));
-                        prm.setDouble(6, rs.getDouble("r_quan"));
-                        prm.setDouble(7, rs.getDouble("r_total"));
-                        prm.setString(8, rs.getString("r_unit"));
-                        prm.setString(9, rs.getString("r_group"));
-                        prm.executeUpdate();
-                        prm.close();
-                        stmt2.close();
-                    } catch (SQLException e2) {
-                        MSG.ERR(this, e2.getMessage());
-                        AppLogUtil.log(PrintInv2.class, "error", e2);
-                    }
+                    Statement stmt2 = mysql.getConnection().createStatement();
+                    String SqlQuery = "insert into invdetail (invno,invdate,pcode,pname,price,pqty,"
+                            + "pamount,punit,pgroup) values (?,?,?,?,?,?,?,?,?)";
+                    PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+                    prm.setString(1, InvNo);
+                    prm.setString(2, SqlDateFmt.format(TempInvDate));
+                    prm.setString(3, rs.getString("r_plucode"));
+                    prm.setString(4, rs.getString("r_pname"));
+                    prm.setDouble(5, rs.getDouble("r_price"));
+                    prm.setDouble(6, rs.getDouble("r_quan"));
+                    prm.setDouble(7, rs.getDouble("r_total"));
+                    prm.setString(8, rs.getString("r_unit"));
+                    prm.setString(9, rs.getString("r_group"));
+                    prm.executeUpdate();
+                    prm.close();
+                    stmt2.close();
+                } catch (SQLException e2) {
+                    MSG.ERR(this, e2.getMessage());
+                    AppLogUtil.log(PrintInv2.class, "error", e2);
+                }
             }
             rs.close();
             stmt.close();
@@ -1856,10 +1856,10 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Statement stmt = mysql.getConnection().createStatement();
             String SQLQuery = "Select invno from branch limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
-            if(rs.next()){
+            if (rs.next()) {
                 TempInv = rs.getInt("invno");
                 RetVal = 'I' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
-            }else {
+            } else {
                 TempInv = 1;
                 RetVal = 'I' + PublicVar.Branch_Code + PUtility.Addzero(Integer.toString(TempInv), 6);
             }
@@ -1869,7 +1869,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv2.class, "error", e2);
         }
-        
+
         int UpdateInvNo = TempInv + 1;
         try {
             Statement stmt = mysql.getConnection().createStatement();

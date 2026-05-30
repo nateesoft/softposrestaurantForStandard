@@ -12,8 +12,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import util.DirectoryUtility;
-import util.MSG;
+import com.softpos.util.DirectoryUtility;
 
 public class FTPUtility {
 
@@ -124,7 +123,7 @@ public class FTPUtility {
             return success;
 
         } catch (IOException e) {
-            
+
             return false;
         }
     }

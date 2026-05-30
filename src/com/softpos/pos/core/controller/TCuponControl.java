@@ -7,8 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class TCuponControl extends DatabaseConnection {
 
@@ -39,7 +38,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -77,7 +76,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -114,7 +113,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

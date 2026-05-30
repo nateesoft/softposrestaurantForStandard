@@ -7,8 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -40,7 +39,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -77,7 +76,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -111,7 +110,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -146,7 +145,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -7,8 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class TableMoveControl {
 
@@ -40,7 +39,7 @@ public class TableMoveControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableMoveControl.class);

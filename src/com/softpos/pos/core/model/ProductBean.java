@@ -68,7 +68,7 @@ public class ProductBean {
     public static final String FOOD = "1";
     public static final String DRINK = "2";
     public static final String PRODUCT = "3";
-    
+
     public String PPathName;
 
     public String getPCode() {

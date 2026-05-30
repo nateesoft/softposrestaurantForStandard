@@ -137,6 +137,5 @@ public class MenuMGR {
     public void setImgSize(int ImgSize) {
         this.ImgSize = ImgSize;
     }
-    
-    
+
 }

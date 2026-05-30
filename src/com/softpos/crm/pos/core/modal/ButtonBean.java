@@ -1,6 +1,7 @@
 package com.softpos.crm.pos.core.modal;
 
 public class ButtonBean {
+
     protected String buttonName;
     protected String buttonType;
     protected String shortDesc;
@@ -55,6 +56,5 @@ public class ButtonBean {
     public void setIsInsert(boolean isInsert) {
         this.isInsert = isInsert;
     }
-    
-    
+
 }

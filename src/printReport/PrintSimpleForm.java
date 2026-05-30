@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.PrintToKicController;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
@@ -31,12 +31,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintService;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
 
 public class PrintSimpleForm {
 
@@ -191,7 +188,7 @@ public class PrintSimpleForm {
                         rsOpt.close();
                         stmt2.close();
                     } catch (SQLException e) {
-                        
+
                     }
 
                     //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -282,7 +279,7 @@ public class PrintSimpleForm {
                             }
                         }
                     } catch (SQLException e) {
-                        
+
                     }
                     PrintDriver pd = new PrintDriver();
                     String[] strs = t.split("_");
@@ -299,7 +296,7 @@ public class PrintSimpleForm {
 
             }
         } catch (SQLException e) {
-            
+
         }
 
         ItemVoidPrint(printerName, tableNo, PCode, "T");
@@ -367,7 +364,7 @@ public class PrintSimpleForm {
                     rsOpt.close();
                     stmt2.close();
                 } catch (SQLException e) {
-                    
+
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -455,13 +452,13 @@ public class PrintSimpleForm {
                         }
                     }
                 } catch (SQLException e) {
-                    
+
                 }
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         }
 
         PrintDriver pd2 = new PrintDriver();
@@ -540,7 +537,7 @@ public class PrintSimpleForm {
                     rsOpt.close();
                     stmt2.close();
                 } catch (SQLException e) {
-                    
+
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -622,13 +619,13 @@ public class PrintSimpleForm {
                         }
                     }
                 } catch (SQLException e) {
-                    
+
                 }
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -1325,7 +1322,7 @@ public class PrintSimpleForm {
                     }
                 }
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -1388,7 +1385,7 @@ public class PrintSimpleForm {
                         }
                         control.execUpdate(sql);
                     } catch (Exception e) {
-                        
+
                     }
 //                
                 }
@@ -1433,7 +1430,7 @@ public class PrintSimpleForm {
                         control.execUpdate(sql);
                     }
                 } catch (Exception e) {
-                    
+
                 }
 
             }
@@ -1477,7 +1474,7 @@ public class PrintSimpleForm {
                         control.execUpdate(sql);
                     }
                 } catch (Exception e) {
-                    
+
                 }
 
             }
@@ -1521,7 +1518,7 @@ public class PrintSimpleForm {
                         control.execUpdate(sql);
                     }
                 } catch (Exception e) {
-                    
+
                 }
 
             }
@@ -1565,7 +1562,7 @@ public class PrintSimpleForm {
                         control.execUpdate(sql);
                     }
                 } catch (Exception e) {
-                    
+
                 }
 
             }
@@ -1889,7 +1886,7 @@ public class PrintSimpleForm {
                 }
                 rs.close();
             } catch (SQLException e) {
-                
+
             } finally {
                 mysql.closeConnection(this.getClass());
             }
@@ -1904,7 +1901,7 @@ public class PrintSimpleForm {
             try {
                 pd1.printHTMLKitChen(Value.printerDriverKitChenName);
             } catch (Exception e) {
-                
+
             }
             try {
                 String sql = "update balance "
@@ -2285,7 +2282,7 @@ public class PrintSimpleForm {
                     }
                 }
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -2303,7 +2300,7 @@ public class PrintSimpleForm {
         try {
             printDriver.printHTMLKitChen(Value.printerDriverKitChenName);
         } catch (Exception e) {
-            
+
         }
 
         //Loop Void
@@ -2621,7 +2618,7 @@ public class PrintSimpleForm {
                 }
                 rs.close();
             } catch (SQLException e) {
-                
+
             } finally {
                 mysql.closeConnection(this.getClass());
             }
@@ -2636,7 +2633,7 @@ public class PrintSimpleForm {
             try {
                 pd1.printHTMLKitChen(Value.printerDriverKitChenName);
             } catch (Exception e) {
-                
+
             }
             String sql = "update balance "
                     + "set r_kicprint='P',"
@@ -2704,7 +2701,7 @@ public class PrintSimpleForm {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -2819,7 +2816,7 @@ public class PrintSimpleForm {
                                                     rsOpt.close();
                                                 }
                                             } catch (SQLException e) {
-                                                
+
                                             }
 
                                             //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -2891,7 +2888,7 @@ public class PrintSimpleForm {
                                                     stmt2.close();
                                                 }
                                             } catch (SQLException e) {
-                                                
+
                                             }
                                         }
 
@@ -2902,7 +2899,7 @@ public class PrintSimpleForm {
                                         rs.close();
                                     }
                                 } catch (SQLException e) {
-                                    
+
                                 } finally {
                                     mysql.closeConnection(this.getClass());
                                 }
@@ -3029,7 +3026,7 @@ public class PrintSimpleForm {
                                                 rsOpt.close();
                                                 stmt1.close();
                                             } catch (SQLException e) {
-                                                
+
                                             }
 
                                             //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -3099,7 +3096,7 @@ public class PrintSimpleForm {
                                                     }
                                                 }
                                             } catch (SQLException e) {
-                                                
+
                                             }
                                         }
 
@@ -3115,7 +3112,7 @@ public class PrintSimpleForm {
                                         rs.close();
                                     }
                                 } catch (SQLException e) {
-                                    
+
                                 } finally {
                                     mysql.closeConnection(this.getClass());
                                 }
@@ -3203,7 +3200,7 @@ public class PrintSimpleForm {
                                 rsOpt.close();
                                 stmt1.close();
                             } catch (SQLException e) {
-                                
+
                             }
 
                             //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -3276,7 +3273,7 @@ public class PrintSimpleForm {
                                     }
                                 }
                             } catch (SQLException e) {
-                                
+
                             }
                         }
                         try {
@@ -3290,12 +3287,12 @@ public class PrintSimpleForm {
                                 stmtUpdate.close();
                             }
                         } catch (SQLException e) {
-                            
+
                         }
                         rs.close();
                     }
                 } catch (SQLException e) {
-                    
+
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
@@ -3404,7 +3401,7 @@ public class PrintSimpleForm {
                                     rsOpt.close();
                                     stmt1.close();
                                 } catch (SQLException e) {
-                                    
+
                                 }
 
                                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -3502,7 +3499,7 @@ public class PrintSimpleForm {
                                         }
                                     }
                                 } catch (SQLException e) {
-                                    
+
                                 }
                             }
                             String sqlUpdateBalance = "update balance set R_KicPrint='P' "
@@ -3516,7 +3513,7 @@ public class PrintSimpleForm {
                         rs.close();
                     }
                 } catch (SQLException e) {
-                    
+
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
@@ -3657,7 +3654,7 @@ public class PrintSimpleForm {
             }
             printerDriver.printHTMLKitChen("kic" + kicName);
         } catch (Exception e) {
-            
+
         }
 
     }
@@ -3736,7 +3733,7 @@ public class PrintSimpleForm {
                     rsOpt.close();
                     stmt1.close();
                 } catch (SQLException e) {
-                    
+
                 }
 //                                    *********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                 if (!printHeader) {
@@ -3820,7 +3817,7 @@ public class PrintSimpleForm {
                         }
                     }
                 } catch (SQLException e) {
-                    
+
                 }
                 //END TEMP UPDATE
             }
@@ -3829,7 +3826,7 @@ public class PrintSimpleForm {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -3916,7 +3913,7 @@ public class PrintSimpleForm {
                     rsOpt.close();
                     stmt2.close();
                 } catch (SQLException e) {
-                    
+
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -4006,13 +4003,13 @@ public class PrintSimpleForm {
                         }
                     }
                 } catch (SQLException e) {
-                    
+
                 }
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -4066,7 +4063,7 @@ public class PrintSimpleForm {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
         }
 
         mysql.closeConnection(this.getClass());
@@ -4108,7 +4105,7 @@ public class PrintSimpleForm {
                                 g2.drawString(data, space, line);
                             }
                         } catch (Exception e) {
-                            
+
                         }
                         return PAGE_EXISTS;
                     } else {
@@ -4158,7 +4155,7 @@ public class PrintSimpleForm {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }

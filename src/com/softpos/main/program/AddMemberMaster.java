@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 
@@ -1328,13 +1328,13 @@ public class AddMemberMaster extends javax.swing.JDialog {
         Insert(mem, ThaiUtil.Unicode2ASCII(type), ThaiUtil.Unicode2ASCII(namecrm), ThaiUtil.Unicode2ASCII(branch),
                 ThaiUtil.Unicode2ASCII(branchname), ThaiUtil.Unicode2ASCII(tit), ThaiUtil.Unicode2ASCII(namecus),
                 ThaiUtil.Unicode2ASCII(sername), ThaiUtil.Unicode2ASCII(nickname), ThaiUtil.Unicode2ASCII(cardname),
-                ThaiUtil.Unicode2ASCII(sex), ThaiUtil.Unicode2ASCII(status),ThaiUtil.Unicode2ASCII(nationality), brith, age, 
-                ThaiUtil.Unicode2ASCII(add1),ThaiUtil.Unicode2ASCII(add2), ThaiUtil.Unicode2ASCII(add3), ThaiUtil.Unicode2ASCII(add4),
+                ThaiUtil.Unicode2ASCII(sex), ThaiUtil.Unicode2ASCII(status), ThaiUtil.Unicode2ASCII(nationality), brith, age,
+                ThaiUtil.Unicode2ASCII(add1), ThaiUtil.Unicode2ASCII(add2), ThaiUtil.Unicode2ASCII(add3), ThaiUtil.Unicode2ASCII(add4),
                 ThaiUtil.Unicode2ASCII(add5), ThaiUtil.Unicode2ASCII(add6), ThaiUtil.Unicode2ASCII(add7), add8, phone1,
                 phone2, fax1, email, ThaiUtil.Unicode2ASCII(adde1), ThaiUtil.Unicode2ASCII(adde2), ThaiUtil.Unicode2ASCII(adde3),
                 ThaiUtil.Unicode2ASCII(adde4), ThaiUtil.Unicode2ASCII(adde5), ThaiUtil.Unicode2ASCII(adde6),
                 ThaiUtil.Unicode2ASCII(adde7), ThaiUtil.Unicode2ASCII(adde8), adde9, phone3, fax2,
-                 ThaiUtil.Unicode2ASCII(vocation), ThaiUtil.Unicode2ASCII(earning),
+                ThaiUtil.Unicode2ASCII(vocation), ThaiUtil.Unicode2ASCII(earning),
                 ThaiUtil.Unicode2ASCII(education), ThaiUtil.Unicode2ASCII(message1), ThaiUtil.Unicode2ASCII(message2),
                 ThaiUtil.Unicode2ASCII(hobby), ThaiUtil.Unicode2ASCII(detail), ThaiUtil.Unicode2ASCII(maker),
                 date1, date2, pice, date3, date4, sale, point, total);
@@ -1508,13 +1508,13 @@ public class AddMemberMaster extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void Insert(String mem, String type, String namecrm, String branch, String branchname, String title, String namecus,
-                        String sername, String nickname, String cardename, String sex, String status, String national,  String brith,
-                        String age, String add1, String add2, String add3, String add4, String add5, String add6, String add7, 
-                        String add8, String phone1, String phone2, String fax1, String email, String Adde1, String adde2,
-                        String adde3, String adde4, String adde5, String adde6, String adde7, String adde8, String adde9, 
-                        String phone3, String fax2, String vocation, String eaning, String education, String message1, 
-                        String message2, String hobby, String detail, String maker, String date1, String date2, String pice, 
-                        String date3, String date4, String sale, String point, String total) {
-        
+            String sername, String nickname, String cardename, String sex, String status, String national, String brith,
+            String age, String add1, String add2, String add3, String add4, String add5, String add6, String add7,
+            String add8, String phone1, String phone2, String fax1, String email, String Adde1, String adde2,
+            String adde3, String adde4, String adde5, String adde6, String adde7, String adde8, String adde9,
+            String phone3, String fax2, String vocation, String eaning, String education, String message1,
+            String message2, String hobby, String detail, String maker, String date1, String date2, String pice,
+            String date3, String date4, String sale, String point, String total) {
+
     }
 }

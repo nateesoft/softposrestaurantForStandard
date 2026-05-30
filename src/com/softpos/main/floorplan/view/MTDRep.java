@@ -2,12 +2,9 @@ package com.softpos.main.floorplan.view;
 
 import java.awt.event.KeyEvent;
 import com.softpos.main.program.GetUserAction;
-import com.softpos.posreport.MTDArPayment;
-import com.softpos.posreport.MTDCashier;
 import com.softpos.posreport.MTDCredit;
 import com.softpos.posreport.MTDDept;
 import com.softpos.posreport.MTDPLU;
-import com.softpos.posreport.MTDSubDiscount;
 import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
@@ -18,9 +15,10 @@ import com.softpos.posreport.MTDCoupon;
 import com.softpos.posreport.MTDGiftVoucher;
 import com.softpos.posreport.MTDHourlyOpenTB;
 import com.softpos.posreport.MTDInvRep;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class MTDRep extends javax.swing.JDialog {
+
     private PosUserBean posUser = null;
 
     public MTDRep(java.awt.Frame parent, boolean modal) {
@@ -29,7 +27,7 @@ public class MTDRep extends javax.swing.JDialog {
         setUndecorated(true);
         setSize(1024, 768);
         setLocationRelativeTo(null);
-        
+
         posUser = PosControl.getPosUser(PublicVar.ReturnString);
     }
 
@@ -190,7 +188,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale23().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDTerminal frm = new MTDTerminal(null, true);
@@ -218,7 +216,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale25().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDDept frm = new MTDDept(null, true);
@@ -245,7 +243,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale26().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDPLU frm = new MTDPLU(null, true);
@@ -272,7 +270,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale27().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDHourlyOpenTB frm = new MTDHourlyOpenTB(null, true);
@@ -299,7 +297,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale27().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDInvRep frm = new MTDInvRep(null, true);
@@ -327,7 +325,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale29().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDVoid frm = new MTDVoid(null, true);
@@ -354,7 +352,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale30().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDCredit frm = new MTDCredit(null, true);
@@ -381,7 +379,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale30().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDGiftVoucher frm = new MTDGiftVoucher(null, true);
@@ -408,7 +406,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale31().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDTopSale frm = new MTDTopSale(null, true);
@@ -435,7 +433,7 @@ public class MTDRep extends javax.swing.JDialog {
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale18().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             MTDCoupon frm = new MTDCoupon(null, true);

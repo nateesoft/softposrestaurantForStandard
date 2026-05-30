@@ -7,8 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -29,8 +28,7 @@ public class TableSetupControl {
                     + "left join balance b on t2.tcode=b.r_table "
                     + "where code_id like '" + zone + "%' "
                     + "order by code_id;";
-            try (Statement stmt = mysql.getConnection().createStatement();
-                    ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     FloorPlanBean bean = new FloorPlanBean();
                     bean.setCodeId(rs.getString("code_id"));
@@ -52,7 +50,7 @@ public class TableSetupControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableSetupControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

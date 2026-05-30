@@ -157,6 +157,5 @@ public class PointTypeBean {
     public void setPoint_TypeName(String Point_TypeName) {
         this.Point_TypeName = Point_TypeName;
     }
-    
-    
+
 }

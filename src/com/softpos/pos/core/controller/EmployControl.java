@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 

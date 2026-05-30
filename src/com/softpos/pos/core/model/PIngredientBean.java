@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class PIngredientBean {
-    
+
     private String pstock;
     private String pactive;
     private String PingCode;
@@ -47,6 +47,5 @@ public class PIngredientBean {
     public void setPingQty(double PingQty) {
         this.PingQty = PingQty;
     }
-    
-    
+
 }

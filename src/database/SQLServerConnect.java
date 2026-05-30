@@ -15,7 +15,7 @@ public class SQLServerConnect {
     public static String DATABASE;
     public static Connection conn;
     private String PORT = "3326";
-    private final String CHARSET="tis-620";
+    private final String CHARSET = "tis-620";
 
     public SQLServerConnect() throws ClassNotFoundException, SQLException {
 //        CLASS_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
@@ -43,7 +43,7 @@ public class SQLServerConnect {
 
         //String jdbcUrl = "jdbc:sqlserver://" + SERVER + ";database=" + DATABASE + ";user=" + USER + ";password=" + PASS;
         String jdbcUrl = "jdbc:mysql://" + SERVER + ":" + PORT + "/" + DATABASE + "?charset=" + CHARSET;
-        conn = DriverManager.getConnection(jdbcUrl,USER,PASS);
+        conn = DriverManager.getConnection(jdbcUrl, USER, PASS);
         System.out.println("Connected.");
 
         return conn;

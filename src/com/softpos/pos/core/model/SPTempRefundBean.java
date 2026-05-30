@@ -43,6 +43,5 @@ public class SPTempRefundBean {
     public void setR_Price(Double R_Price) {
         this.R_Price = R_Price;
     }
-    
-    
+
 }

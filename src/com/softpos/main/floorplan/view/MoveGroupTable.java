@@ -12,8 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class MoveGroupTable extends javax.swing.JDialog {
 

@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -14,8 +14,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class FindAr extends javax.swing.JDialog {
 

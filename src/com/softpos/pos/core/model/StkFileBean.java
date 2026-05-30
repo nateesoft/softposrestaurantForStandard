@@ -272,6 +272,5 @@ public class StkFileBean {
     public void setBQty24(double BQty24) {
         this.BQty24 = BQty24;
     }
-    
-    
+
 }

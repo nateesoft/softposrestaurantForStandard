@@ -13,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class CopyBill extends javax.swing.JDialog {
 
@@ -477,7 +477,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             } finally {
                 mysql3.closeConnection(this.getClass());
             }
-            
+
             this.setVisible(false);//dispose();
         }
     }

@@ -1,18 +1,17 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.floorplan.view.ShowTable;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.PosUserBean;
-import com.sun.security.auth.login.ConfigFile;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class PosControl {
 
@@ -20,6 +19,7 @@ public class PosControl {
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
     private static PosUserBean posUser = null;
+
     public static void resetPosHwSetup() {
         poshwsetup = null;
     }
@@ -52,7 +52,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PosControl.class, "error", e);
             System.exit(0);
         } finally {
@@ -247,7 +247,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -278,7 +278,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -348,7 +348,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -422,7 +422,7 @@ public class PosControl {
                     posConfigSetup.setLTime(rs.getString("LTime"));
                     posConfigSetup.setP_PrintProductValue(rs.getString("P_PrintProductValue"));
 //                    posConfigSetup.setP_LimitTime(rs.getInt("P_LimitTime"));
-                    
+
                     posConfigSetup.setP_RefreshTime(rs.getInt("P_RefreshTime"));
                     posConfigSetup.setP_SaleDecimal(rs.getString("P_SaleDecimal"));
                     posConfigSetup.setP_PayBahtRound(rs.getString("P_PayBahtRound"));
@@ -507,7 +507,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);

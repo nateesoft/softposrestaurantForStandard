@@ -14,8 +14,8 @@ import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -33,11 +33,11 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
             @Override
             public void run() {
                 try {
-                jTextField1.setText("");
-                processSendToBor();
-            } catch (Exception e) {
-                MSG.ERR(new JFrame(), e.getMessage());
-            }
+                    jTextField1.setText("");
+                    processSendToBor();
+                } catch (Exception e) {
+                    MSG.ERR(new JFrame(), e.getMessage());
+                }
             }
         }).start();
     }
@@ -100,7 +100,7 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            
+
         }
 
     }
@@ -109,24 +109,24 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                 //check ftp file date
-            try {
-                pbCheckUpdate.setStringPainted(true);
-                pbCheckUpdate.setMinimum(0);
-                pbCheckUpdate.setMaximum(100);
+                //check ftp file date
+                try {
+                    pbCheckUpdate.setStringPainted(true);
+                    pbCheckUpdate.setMinimum(0);
+                    pbCheckUpdate.setMaximum(100);
 
-                for (int i = 1; i <= 100; i++) {
-                    pbCheckUpdate.setValue(i);
-                    pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                    try {
-                        Thread.sleep(25);
-                    } catch (InterruptedException e) {
+                    for (int i = 1; i <= 100; i++) {
+                        pbCheckUpdate.setValue(i);
+                        pbCheckUpdate.setString("Check Update: (" + i + " %)");
+                        try {
+                            Thread.sleep(25);
+                        } catch (InterruptedException e) {
+                        }
                     }
+                    pbCheckUpdate.setString("Update Menu To BOR Complete!");
+                } catch (Exception e) {
+                    MSG.ERR(new JFrame(), e.getMessage());
                 }
-                pbCheckUpdate.setString("Update Menu To BOR Complete!");
-            } catch (Exception e) {
-                MSG.ERR(new JFrame(), e.getMessage());
-            }
             }
         }).start();
     }

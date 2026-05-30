@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
 import printReport.PrintDriver;
-import util.MSG;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -118,7 +118,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         amount = rs.getDouble("amount");
                     }
                     rs.close();
-                    
+
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumB_custE += cc;
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
@@ -130,7 +130,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                     sumBill += sumBillE;
                 }
                 rsTypeE.close();
-                
+
                 ResultSet rsTypeT = mysql.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
@@ -141,7 +141,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                     sumBill += sumBillT;
                 }
                 rsTypeT.close();
-                
+
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
                 model.addRow(new Object[]{

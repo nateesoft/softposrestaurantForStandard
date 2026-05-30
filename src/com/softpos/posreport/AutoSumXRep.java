@@ -19,8 +19,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class AutoSumXRep extends javax.swing.JDialog {
 
@@ -558,7 +558,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             PreparedStatement prm = mysql.getConnection().prepareStatement(UpdatePromotion);
             prm.setString(1, Datefmt.format(PublicVar.SaleDate));
             prm.executeUpdate();
-            
+
             prm.close();
             stmt.close();
         } catch (SQLException e) {
@@ -2841,7 +2841,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             prm.setString(4, TCrApp);
             prm.setDouble(5, TCrAmt);
             prm.executeUpdate();
-            
+
             prm.close();
             stmt.close();
         } catch (SQLException e) {

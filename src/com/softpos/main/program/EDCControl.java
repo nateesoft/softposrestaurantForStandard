@@ -14,7 +14,7 @@ import javax.comm.SerialPortEvent;
 import javax.comm.SerialPortEventListener;
 import javax.comm.UnsupportedCommOperationException;
 import javax.swing.JDialog;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class EDCControl extends JDialog implements SerialPortEventListener {
 
@@ -46,7 +46,7 @@ public class EDCControl extends JDialog implements SerialPortEventListener {
         CardType = "";
         ProcessError = false;
         ProcessFinish = false;
-        CrMsg.setText("กรุณารูดบัติเครดิต..ที่เครื่องอนุมัติบัตรเครดิต") ;
+        CrMsg.setText("กรุณารูดบัติเครดิต..ที่เครื่องอนุมัติบัตรเครดิต");
         ProcessEDC(PortName, Amount);
     }
 

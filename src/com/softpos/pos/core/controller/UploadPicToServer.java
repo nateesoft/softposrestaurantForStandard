@@ -20,11 +20,11 @@ public class UploadPicToServer {
                 ftp.upload(server + filename, localFile);
                 System.out.println("Upload file " + localFile + "/" + server + "/" + filename + "success");
             } catch (Exception e) {
-                
+
             }
 
         } catch (Exception e) {
-            
+
 //            MSG.ERR(e.toString());
         }
         return sqlUpdate;
@@ -43,10 +43,10 @@ public class UploadPicToServer {
                 ftp.upload(localFile, "ftp://" + server + "/test.sql");
                 System.out.println("Upload file " + localFile + "/" + server + "/" + filename + "success");
             } catch (Exception e) {
-                
+
             }
         } catch (Exception e) {
-            
+
 //            MSG.ERR(e.toString());
         }
         return sqlUpdate;
@@ -59,11 +59,11 @@ public class UploadPicToServer {
         for (String data : strs) {
             try {
                 i++;
-                System.out.println(strs[i-1]);
-                 FileName = strs[i];  
-                
+                System.out.println(strs[i - 1]);
+                FileName = strs[i];
+
             } catch (Exception e) {
-                
+
             }
 
         }

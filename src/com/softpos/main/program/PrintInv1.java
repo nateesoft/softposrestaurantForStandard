@@ -7,7 +7,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.CompanyBean;
@@ -24,9 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberToString;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberToString;
 
 public class PrintInv1 extends javax.swing.JDialog {
 
@@ -1666,7 +1666,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 prm.setString(8, rs.getString("r_unit"));
                                 prm.setString(9, rs.getString("r_group"));
                                 prm.executeUpdate();
-                                
+
                                 prm.close();
                             }
                         } catch (SQLException e2) {
@@ -1698,7 +1698,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(3, MacNo);
                 prm.setString(4, RefNo);
                 prm.executeUpdate();
-                
+
                 prm.close();
             }
         } catch (SQLException e2) {
@@ -1721,7 +1721,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(1, InvNo);
                 prm.setString(2, BillNo);
                 prm.executeUpdate();
-                
+
                 prm.close();
             }
         } catch (SQLException e2) {
@@ -1794,7 +1794,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(38, "");
                 prm.setString(39, "N");
                 prm.executeUpdate();
-                
+
                 prm.close();
             }
         } catch (SQLException e2) {
@@ -1862,7 +1862,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(33, SqlDateFmt.format(date));
                 prm.setString(34, InvNo);
                 prm.executeUpdate();
-                
+
                 prm.close();
             }
         } catch (SQLException e2) {
@@ -1885,7 +1885,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String SQLQuery = "Select invno from invcashdoc where invno='" + InvNo + "' limit 1";
                 try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
                     RetVal = rs.next();
-                    
+
                     rs.close();
                     stmt.close();
                 }
@@ -1912,7 +1912,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String SQLQuery = "Select sp_code from customer where sp_code='" + CustCode + "' limit 1";
                 try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
                     RetVal = rs.next();
-                    
+
                     rs.close();
                     stmt.close();
                 }
@@ -2004,7 +2004,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     prm.setString(4, PUtility.DataFull(VoidMessage, 30));
                                     prm.setString(5, TempInvNo);
                                     prm.executeUpdate();
-                                    
+
                                     prm.close();
                                 }
                             } catch (SQLException e2) {
@@ -2081,7 +2081,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.setString(1, PublicVar._User);
                 prm.setString(2, InvNo);
                 prm.executeUpdate();
-                
+
                 prm.close();
             }
         } catch (SQLException e2) {

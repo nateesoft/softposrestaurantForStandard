@@ -1,13 +1,13 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.main.login.Login;
 import com.softpos.pos.core.model.LoginBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -45,7 +45,7 @@ public class LoginController {
 
         return loginBean;
     }
-    
+
     public void updateLogin(String UserCode) {
         /**
          * * OPEN CONNECTION **

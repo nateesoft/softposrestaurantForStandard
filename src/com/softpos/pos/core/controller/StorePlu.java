@@ -1,12 +1,11 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.PluButtonBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class StorePlu {
 
@@ -24,7 +23,7 @@ public class StorePlu {
             }
             return i > 0;
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(StorePlu.class, "error", e);
 
             return false;
@@ -52,7 +51,7 @@ public class StorePlu {
             stmt.close();
             return i > 0;
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(StorePlu.class, "error", e);
 
             return false;

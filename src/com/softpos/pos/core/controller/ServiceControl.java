@@ -10,10 +10,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.NumberUtil;
 
 public class ServiceControl extends DatabaseConnection {
 
@@ -43,7 +42,7 @@ public class ServiceControl extends DatabaseConnection {
             if ("V".equals(balance.getR_Void())) {
                 continue;
             }
-            totalDiscount 
+            totalDiscount
                     += balance.getR_PrAmt()
                     + balance.getR_PrSubAmt()
                     + balance.getR_PrSubBath()
@@ -120,7 +119,7 @@ public class ServiceControl extends DatabaseConnection {
             ServiceAmt = getDouble(ServiceAmt, "SERVICE");
             totalDiscount = getDouble(totalDiscount, "DISCOUNT");
             double NetTotal = tAmount - totalDiscount + ServiceAmt;
-             String sqlUpd = "update tablefile "
+            String sqlUpd = "update tablefile "
                     + "set ServiceAmt = '" + ServiceAmt + "',"
                     + "TAmount='" + tAmount + "',"
                     + "NetTotal = " + NetTotal + " "
@@ -138,7 +137,7 @@ public class ServiceControl extends DatabaseConnection {
                 stmt5.executeUpdate(sqlUpdateDate);
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.CustFileBean;
@@ -8,8 +9,7 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -33,7 +33,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -59,7 +59,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -86,7 +86,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -98,10 +98,10 @@ public class CheckBillController extends DatabaseConnection {
     public boolean readyToPrintVoid(String tableNo) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
-        String sql="";
+        String sql = "";
         try {
             mysql.open(CheckBillController.class);
-             sql = "select r_index from balance "
+            sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_void='V' limit 1";
             try (ResultSet rs = mysql.executeQuery(sql)) {
@@ -111,8 +111,8 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
-            AppLogUtil.log(CheckBillController.class, "error" +sql, e);
+
+            AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -123,10 +123,10 @@ public class CheckBillController extends DatabaseConnection {
     public boolean readyToCheckKic(String tableNo) {
         boolean isValid = false;
         MySQLConnect mysql = new MySQLConnect();
-        String sql="";
+        String sql = "";
         try {
             mysql.open(CheckBillController.class);
-             sql = "select r_kicprint "
+            sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
                     + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
             try (ResultSet rs = mysql.executeQuery(sql)) {
@@ -136,7 +136,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -161,7 +161,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -184,7 +184,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

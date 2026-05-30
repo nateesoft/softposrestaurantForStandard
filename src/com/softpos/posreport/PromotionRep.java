@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class PromotionRep extends javax.swing.JDialog {
 
@@ -286,7 +286,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
-            
+
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -316,7 +316,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("โปรโมชั่น" + TAB + "จำนวน" + TAB + "ส่วนลด ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-            
+
             String sql = "select "
                     + "tp.PrCode PrCode,pt.ProDesc ProDesc,sum(tp.PQty) PQty, sum(tp.PrAmt) PrAmt "
                     + "from t_promotion tp "

@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class GetUserAction extends javax.swing.JDialog {
 
@@ -279,7 +279,7 @@ public class GetUserAction extends javax.swing.JDialog {
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
                 PublicVar.ReturnString = loginname;
-                if(rs.getString("sale2").equals("Y")){
+                if (rs.getString("sale2").equals("Y")) {
                     PublicVar.ReturnPermitRefund = true;
                 }
                 isClose = true;
@@ -297,7 +297,7 @@ public class GetUserAction extends javax.swing.JDialog {
             mysql.closeConnection(this.getClass());
         }
 
-        if(isClose){
+        if (isClose) {
             this.setVisible(false);//dispose();
         }
     }

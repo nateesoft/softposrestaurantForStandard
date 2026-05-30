@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class AccrBean {
-    
+
     private double total;
 
     public double getTotal() {
@@ -11,5 +11,5 @@ public class AccrBean {
     public void setTotal(double total) {
         this.total = total;
     }
-    
+
 }

@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Frame;
@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDVoid extends javax.swing.JDialog {
 
@@ -465,16 +465,16 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         String SqlQuery = "select *from s_void left join product on s_void.pcode=product.pcode where (s_date>='" + Datefmt.format(TDate1) + "') "
                                 + "and (s_date<='" + Datefmt.format(TDate2) + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while(rs.next()){
+                        while (rs.next()) {
                             if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
-                                    TempDate = DatefmtShow.format(rs.getDate("s_date"));
-                                    prn.print("***DATE : " + TempDate);
-                                }
-                                prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("vtable"), 5) + " " + PUtility.DataFullR(rs.getString("time"), 6) + "  " + PUtility.DataFullR(rs.getString("voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("voidtime"), 6));
-                                prn.print("     " + PUtility.DataFullR(rs.getString("pdesc"), 35));
-                                prn.print("     " + rs.getString("ref_no") + " " + PUtility.DataFull(rs.getString("pcode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("qty")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("amt")), 8));
-                                SumVoid++;
-                                SumAmount = SumAmount + rs.getDouble("amt");
+                                TempDate = DatefmtShow.format(rs.getDate("s_date"));
+                                prn.print("***DATE : " + TempDate);
+                            }
+                            prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("vtable"), 5) + " " + PUtility.DataFullR(rs.getString("time"), 6) + "  " + PUtility.DataFullR(rs.getString("voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("voidtime"), 6));
+                            prn.print("     " + PUtility.DataFullR(rs.getString("pdesc"), 35));
+                            prn.print("     " + rs.getString("ref_no") + " " + PUtility.DataFull(rs.getString("pcode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("qty")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("amt")), 8));
+                            SumVoid++;
+                            SumAmount = SumAmount + rs.getDouble("amt");
                         }
                         rs.close();
                         stmt.close();
@@ -483,7 +483,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
-                    
+
                     prn.print("----------------------------------------");
                     prn.print("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "  จำนวนเงิน :" + PUtility.DataFull(DecFmt.format(SumAmount), 11));
                     prn.print("----------------------------------------");
@@ -546,16 +546,16 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') order by s_date,cashier,time";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()) {
+            while (rs.next()) {
                 if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
-                        TempDate = DatefmtShow.format(rs.getDate("s_date"));
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***DATE : " + Space + TempDate) + "_";
-                    }
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("macno") + Space + PUtility.DataFull(rs.getString("cashier"), 6) + Space + PUtility.DataFull(rs.getString("vtable"), 5) + Space + PUtility.DataFull(rs.getString("time"), 6) + Space + PUtility.DataFull(rs.getString("voiduser"), 10) + Space + PUtility.DataFull(rs.getString("voidtime"), 6)) + "_";
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")), 35)) + "_";
-                    t += "align=center><font face=Angsana New size=1>" + (rs.getString("ref_no") + Space + PUtility.DataFullSpace(rs.getString("pcode"), 13) + Space + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rs.getDouble("qty")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("amt")), 8)) + "_";
-                    SumVoid++;
-                    SumAmount = SumAmount + rs.getDouble("amt");
+                    TempDate = DatefmtShow.format(rs.getDate("s_date"));
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***DATE : " + Space + TempDate) + "_";
+                }
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("macno") + Space + PUtility.DataFull(rs.getString("cashier"), 6) + Space + PUtility.DataFull(rs.getString("vtable"), 5) + Space + PUtility.DataFull(rs.getString("time"), 6) + Space + PUtility.DataFull(rs.getString("voiduser"), 10) + Space + PUtility.DataFull(rs.getString("voidtime"), 6)) + "_";
+                t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")), 35)) + "_";
+                t += "align=center><font face=Angsana New size=1>" + (rs.getString("ref_no") + Space + PUtility.DataFullSpace(rs.getString("pcode"), 13) + Space + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(rs.getDouble("qty")), 4) + Space + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("amt")), 8)) + "_";
+                SumVoid++;
+                SumAmount = SumAmount + rs.getDouble("amt");
             }
             rs.close();
             stmt.close();

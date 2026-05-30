@@ -2,7 +2,7 @@ package com.SoftwareAutoRun;
 
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.TSaleBean;
@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateConvert;
 
 /**
  *
@@ -44,9 +43,9 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
         branchBean = new BranchBean();
         this.dispose();
         try {
-             System.out.println("Thread.sleep(5 * (60 * 1000));");
+            System.out.println("Thread.sleep(5 * (60 * 1000));");
             Thread.sleep(5 * (60 * 1000));
-           
+
         } catch (InterruptedException ex) {
         }
         branchBean = BranchControl.getData();
@@ -840,7 +839,7 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
 //    }
 //    public void stkfileUpdate(String pcode) {
 //        try {
-////            c.open();
+    ////            c.open();
 ////            myOnline.open();
 //            String sqlIns = "INSERT INTO stkfile "
 //                    + "(BPCode, BStk, BQty, BAmt, BTotalAmt, BQty0, BQty1, BQty2, BQty3, BQty4, BQty5, BQty6, BQty7, BQty8, BQty9, BQty10, BQty11, BQty12, BQty13, BQty14, BQty15, BQty16, BQty17, BQty18, BQty19, BQty20, BQty21, BQty22, BQty23, BQty24) "

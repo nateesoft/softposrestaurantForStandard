@@ -1,15 +1,15 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class SetHeaderMenu extends javax.swing.JDialog {
 
@@ -363,7 +363,7 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     } finally {
         mysql.closeConnection(this.getClass());
     }
-    
+
     PosControl.resetDataCompany();
 
     dispose();
@@ -543,7 +543,7 @@ private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetHeaderMenu.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
     }

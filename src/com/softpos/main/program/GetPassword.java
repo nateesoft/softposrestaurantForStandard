@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class GetPassword extends javax.swing.JDialog {
 
@@ -227,7 +227,7 @@ private void XPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         int TempPro = (Integer.parseInt(TempDate) + Integer.parseInt(TempMonth) + Integer.parseInt(TempYear)) * DayOfWeek(TempDay);
         String TempPro2 = PassFmt.format(TempPro).trim();
         RetVal = password.equals(TempPro2);
-        System.out.println("TempPro:"+TempPro);
+        System.out.println("TempPro:" + TempPro);
 
         return RetVal;
     }

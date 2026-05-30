@@ -6,17 +6,10 @@
 package com.softpos.main.program;
 
 import com.softpos.bean.PKicTran;
-import com.softpos.bean.PKicTranBean;
-import com.softpos.pos.core.controller.ThaiUtil;
-import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.util.ThaiUtil;
 import database.ConfigFile;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Toolkit;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import util.MSG;
 
 /**
  *

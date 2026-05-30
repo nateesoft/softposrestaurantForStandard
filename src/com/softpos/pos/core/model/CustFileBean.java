@@ -1,6 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class CustFileBean {
+
     private String sp_desc;
     private int sp_cr;
     private double sp_cramt;
@@ -28,6 +29,5 @@ public class CustFileBean {
     public void setSp_cramt(double sp_cramt) {
         this.sp_cramt = sp_cramt;
     }
-    
-    
+
 }

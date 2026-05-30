@@ -9,11 +9,9 @@ import com.softpos.pos.core.model.BranchBean;
 import database.ConfigFile;
 import java.awt.Cursor;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import printReport.PrintSimpleForm;
-import util.MSG;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -38,32 +36,32 @@ public class PrintToKic extends javax.swing.JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-        BranchBean branchBean = BranchControl.getData();
-        String config = branchBean.getSaveOrder();
-        lblProcessLog.setText("Log! : ");
-        if (!config.equals("N")) {
-            PublicVar.Branch_Saveorder = config;
-        }
-
-        printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
-        lblProcessShow.setText("สถานะการพิมพ์");
-        setState(JFrame.ICONIFIED);
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-        if (printkic == true) {
-            System.out.println("PROCESS " + refresh + "sec");
-//                new Thread(() -> {
-            while (kicPrintting != true) {
-                System.out.println("kicPrintFromPDA");
-
-                kicPrintFromPDA();
-
-                try {
-                    Thread.sleep(3 * 1000);
-                } catch (Exception e) {
+                BranchBean branchBean = BranchControl.getData();
+                String config = branchBean.getSaveOrder();
+                lblProcessLog.setText("Log! : ");
+                if (!config.equals("N")) {
+                    PublicVar.Branch_Saveorder = config;
                 }
-            }
-        }
+
+                printkic = Boolean.parseBoolean(ConfigFile.getProperties("printkic"));
+                lblProcessShow.setText("สถานะการพิมพ์");
+                setState(JFrame.ICONIFIED);
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                if (printkic == true) {
+                    System.out.println("PROCESS " + refresh + "sec");
+//                new Thread(() -> {
+                    while (kicPrintting != true) {
+                        System.out.println("kicPrintFromPDA");
+
+                        kicPrintFromPDA();
+
+                        try {
+                            Thread.sleep(3 * 1000);
+                        } catch (Exception e) {
+                        }
+                    }
+                }
             }
 
 //        }).start();
@@ -284,7 +282,7 @@ public class PrintToKic extends javax.swing.JFrame {
 
                 kichenPrint(balanceBean.getR_Table(), balanceBean.getMacno());
                 try {
-                     Thread.sleep(10 * 1000);
+                    Thread.sleep(10 * 1000);
                 } catch (Exception e) {
                 }
                 kicPrintting = false;

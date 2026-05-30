@@ -6,7 +6,7 @@ import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMe
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -18,10 +18,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberFormat;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberFormat;
+import com.softpos.util.NumberUtil;
 
 public class DiscountDialog extends javax.swing.JDialog {
 
@@ -756,7 +756,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double BahtDiscount = Double.parseDouble(txtBahtAmt.getText().replace(",", ""));
         double CuponSpecialDiscount = Double.parseDouble(txtCuponDiscount.getText().replace(",", ""));
         double totalDiscAll = FestDiscount + EmpDiscount + MemDiscount + TrainDiscount + CuponDiscount + BahtDiscount + CuponSpecialDiscount;
-        if(CuponSpecialDiscount>0){
+        if (CuponSpecialDiscount > 0) {
             btnCuponSpecial.setEnabled(false);
         }
         if (totalDiscAll > totalAmount && totalAmount > 0) {
@@ -2169,7 +2169,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         txtMemAmt.setText(NumberFormat.showDouble2(tBean.getMemDiscAmt()));
         txtTrainAmt.setText(NumberFormat.showDouble2(tBean.getTrainDiscAmt()));
         txtCuponDiscount.setText(NumberFormat.showDouble2(tBean.getCuponDiscAmt()));
-        if(tBean.getCuponDiscAmt()>0){
+        if (tBean.getCuponDiscAmt() > 0) {
             btnCuponSpecial.setEnabled(false);
             txtCuponDiscount.setEnabled(false);
             btnSave.setEnabled(false);

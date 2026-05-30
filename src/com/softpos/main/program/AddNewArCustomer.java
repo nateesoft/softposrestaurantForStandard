@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -11,8 +11,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class AddNewArCustomer extends javax.swing.JDialog {
 
@@ -590,7 +590,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         /**
          * * OPEN CONNECTION **
          */
-        
+
         if (!TempCode.equals("")) {
             if (MSG.CONF(this, "ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
                 MySQLConnect mysql = new MySQLConnect();
@@ -606,12 +606,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
-                
+
                 ClearVariable();
             }
         }
 
-        
     }
 
     public void bntSaveClick() {
@@ -646,7 +645,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
-                
+
                 ClearVariable();
             } else {
                 try {
@@ -665,7 +664,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
-                
+
                 ClearVariable();
             }
         }
@@ -711,7 +710,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 Statement stmt = mysql.getConnection().createStatement();
                 String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
-                if(rs.next()){
+                if (rs.next()) {
                     sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
                     sp_address1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
                     sp_address2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));

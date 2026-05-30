@@ -7,16 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.DateFormat;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateFormat;
 
 public class CuponControl {
 
     public List<CuponBean> listCupon() {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        
+
         List<CuponBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cupon";
@@ -60,13 +59,13 @@ public class CuponControl {
 
                 listBean.add(bean);
             }
-            
+
             stmt.close();
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CuponControl.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
 
@@ -76,7 +75,7 @@ public class CuponControl {
     public List<CuponBean> listCupon(String CuCode) {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        
+
         List<CuponBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cupon where CuCode='" + CuCode + "'";
@@ -120,13 +119,13 @@ public class CuponControl {
 
                 listBean.add(bean);
             }
-            
+
             stmt.close();
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CuponControl.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
 
@@ -134,10 +133,12 @@ public class CuponControl {
     }
 
     public CuponBean getCupon(String CuCode) {
-        /*** OPEN CONNECTION ***/
+        /**
+         * * OPEN CONNECTION **
+         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        
+
         CuponBean bean = new CuponBean();
         try {
             String sql = "select * from cupon where CuCode='" + CuCode + "' limit 1";
@@ -181,9 +182,9 @@ public class CuponControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CuponControl.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
 
@@ -191,7 +192,9 @@ public class CuponControl {
     }
 
     public void saveCupon(CuponBean bean) {
-        /*** OPEN CONNECTION ***/
+        /**
+         * * OPEN CONNECTION **
+         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
@@ -219,22 +222,24 @@ public class CuponControl {
             } else {
                 stmt.executeUpdate(sql);
             }
-            
+
             stmt.close();
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CuponControl.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
     }
 
     public void updateCupon(CuponBean bean) {
-        /*** OPEN CONNECTION ***/
+        /**
+         * * OPEN CONNECTION **
+         */
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
-        
+
         try {
             String sql = "update cupon set CuCode='" + bean.getCuCode() + "', "
                     + "CuName='" + bean.getCuName() + "', "
@@ -260,9 +265,9 @@ public class CuponControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(CuponControl.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
     }

@@ -9,9 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.NumberUtil;
 
 public class ServiceControl {
 
@@ -86,7 +85,6 @@ public class ServiceControl {
             /**
              * * OPEN CONNECTION **
              */
-            
             mysql.open(this.getClass());
             String sql = "select TAmount,ProDiscAmt,ItemDiscAmt from tablefile where Tcode='" + table + "' limit 1";
             Statement stmt = mysql.getConnection().createStatement();
@@ -105,7 +103,7 @@ public class ServiceControl {
             }
             rs.close();
             stmt.close();
-            
+
             String sqlUpd = "update tablefile "
                     + "set ServiceAmt = '" + ServiceAmt + "',"
                     + "NetTotal = " + Total_Vat_Amt + " "
@@ -113,9 +111,9 @@ public class ServiceControl {
             Statement stmt2 = mysql.getConnection().createStatement();
             stmt2.executeUpdate(sqlUpd);
             stmt2.close();
-            
+
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

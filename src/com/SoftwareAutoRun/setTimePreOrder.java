@@ -16,9 +16,9 @@ import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import util.DateConvert;
-import util.JTableUtility;
-import util.MSG;
+import com.softpos.util.DateConvert;
+import com.softpos.util.JTableUtility;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -403,7 +403,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
                         }
 
                     }
-                    
+
                     MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย");
                     setNewScreen();
                 } catch (Exception e) {

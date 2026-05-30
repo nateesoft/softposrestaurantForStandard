@@ -1,6 +1,6 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import javax.swing.table.DefaultTableModel;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class MemberDialog extends javax.swing.JDialog {
 
@@ -339,7 +339,7 @@ public class MemberDialog extends javax.swing.JDialog {
             String mName = model.getValueAt(row, 1).toString();
             setMemCode(mCode);
             setMemName(mName);
-            
+
             this.MemCode = mCode;
             this.MemName = mName;
             this.setVisible(false);//dispose();

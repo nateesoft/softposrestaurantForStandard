@@ -19,8 +19,8 @@ import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -131,7 +131,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumBill += sumBillE;
                 }
                 rsTypeE.close();
-                
+
                 ResultSet rsTypeT = mysql.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
@@ -142,7 +142,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                     sumBill += sumBillT;
                 }
                 rsTypeT.close();
-                
+
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
                 model.addRow(new Object[]{
@@ -171,7 +171,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
             });
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
         return ListObj;

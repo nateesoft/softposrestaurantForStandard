@@ -2,21 +2,21 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.DbGroupfile;
 import com.softpos.pos.core.controller.DbProduct;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import util.JTableUtility;
+import com.softpos.util.JTableUtility;
 
 public class DlgBrowseProduct extends javax.swing.JDialog {
 
     public DlgBrowseProduct(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         initTblGroup();
         initTblPlu();
         loadTblGroup();
@@ -490,7 +490,7 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
         }
     }
-    
+
     public static void main(String[] args) {
         DlgBrowseProduct dlg = new DlgBrowseProduct(null, true);
         dlg.setVisible(true);

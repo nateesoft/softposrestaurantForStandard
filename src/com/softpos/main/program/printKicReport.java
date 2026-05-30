@@ -9,7 +9,6 @@ import printReport.PrintKicFormReport;
 import database.ConfigFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import util.MSG;
 
 /**
  *
@@ -30,7 +29,7 @@ public class printKicReport {
 //
 //                @Override
 //                public void run() {
-                    printProcess(r_etd, plucode);
+            printProcess(r_etd, plucode);
 //                }
 //            }).start();
         } else {

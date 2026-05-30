@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.crm.pos.core.modal.MenuSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.ProductBean;
@@ -9,8 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class ControlMenu {
 

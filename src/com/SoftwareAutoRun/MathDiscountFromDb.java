@@ -9,8 +9,7 @@ import com.softpos.bean.S_TranT_SaleBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateConvert;
 
 /**
  *
@@ -30,7 +29,8 @@ public class MathDiscountFromDb {
             //ค้นหาจาก S_Tran ว่ามีส่วนลด
             if (dateFrom.equals(dc.GetCurrentDate())) {
                 sql = "select * from t_sale;";
-////                sql = "select * from t_sale where r_total<>r_nettotal;";
+              
+                ////                sql = "select * from t_sale where r_total<>r_nettotal;";
             } else {
                 sql = "select * from s_tran where s_date between'" + dateFrom + "' and '" + dateTo + "';";
 //                sql = "select * from s_tran where r_total<>r_nettotal and s_date between'" + dateFrom + "' and '" + dateTo + "';";

@@ -9,17 +9,18 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
 public class FineText extends javax.swing.JDialog {
+
     DisplayEJ g;
     String txtinput, txtold;
     String txtMain;
     int index = 0;
-    Color blue = new java.awt.Color(121,252,246);
-    private final DefaultHighlighter.DefaultHighlightPainter BOX_HighlightPainter = 
-            new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+    Color blue = new java.awt.Color(121, 252, 246);
+    private final DefaultHighlighter.DefaultHighlightPainter BOX_HighlightPainter
+            = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
     public FineText(DisplayEJ g, boolean modal) {
         super(g, modal);
-       
+
         initComponents();
         this.setVisible(true);
         this.g = g;
@@ -43,15 +44,15 @@ public class FineText extends javax.swing.JDialog {
                 index = txtMain.indexOf(txtold, index);
                 //  System.out.println("txt >"+index);
                 if (index != -1) {
-                    
-                        g.TextArea.select(index, index + txtold.length());
-                        
-                        h.removeAllHighlights();
-                        h.addHighlight(index, index + txtold.length(), BOX_HighlightPainter);
-                    
-                }else{
+
+                    g.TextArea.select(index, index + txtold.length());
+
                     h.removeAllHighlights();
-                    
+                    h.addHighlight(index, index + txtold.length(), BOX_HighlightPainter);
+
+                } else {
+                    h.removeAllHighlights();
+
                     tf_txt.requestFocus();
                 }
             } catch (BadLocationException ex) {
@@ -141,16 +142,16 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_jButton1ActionPerformed
 
 private void jButton1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyReleased
-    if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         findData();
     }
 }//GEN-LAST:event_jButton1KeyReleased
 
 private void tf_txtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_txtKeyReleased
-   
-    if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         dispose();
-    }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+    } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         findData();
     }
 }//GEN-LAST:event_tf_txtKeyReleased

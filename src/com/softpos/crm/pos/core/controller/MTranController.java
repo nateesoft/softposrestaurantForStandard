@@ -6,9 +6,8 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.DateUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 
 /**
  *
@@ -58,7 +57,7 @@ public class MTranController {
         }
         return isNoExist;
     }
-    
+
     private static MTranBean mappingBean(ResultSet rs) throws SQLException {
         MTranBean bean = new MTranBean();
         bean.setService_Date(rs.getDate("Service_Date"));

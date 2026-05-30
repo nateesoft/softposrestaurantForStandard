@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.crm.pos.core.modal.HourlyRec;
@@ -27,7 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import util.AppLogUtil;
+import com.softpos.util.AppLogUtil;
 
 public class PUtility extends DatabaseConnection {
 
@@ -40,7 +41,7 @@ public class PUtility extends DatabaseConnection {
         mysql.open(PUtility.class);
         try {
             String sql = "select * from pset where pcode='" + TempCode + "'";
-            try ( ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysql.executeQuery(sql)) {
                 while (rs.next()) {
                     PSetBean bean = new PSetBean();
                     bean.setPcode(rs.getString("PCode"));
@@ -70,7 +71,7 @@ public class PUtility extends DatabaseConnection {
             String sql = "select * from balanceset "
                     + "where r_plucode='" + XCode + "' "
                     + "and r_index='" + r_index + "' ";
-            try ( Statement stmt = mysql.getConnection().createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceSetBean bean = new BalanceSetBean();
                     bean.setR_psubcode(rs.getString("r_psubcode"));
@@ -160,9 +161,9 @@ public class PUtility extends DatabaseConnection {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open(PUtility.class);
             try {
-                try ( Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysql.getConnection().createStatement()) {
                     String SqlQuery = "select pdesc,pstock,pset from product where pcode='" + TempCode + "' limit 1";
-                    try ( ResultSet rs = stmt.executeQuery(SqlQuery)) {
+                    try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
                         if (rs.next()) {
                             PName = rs.getString("pdesc");
                             StkProc = rs.getString("pstock").equals("Y");
@@ -183,9 +184,9 @@ public class PUtility extends DatabaseConnection {
                 MySQLConnect mysql2 = new MySQLConnect();
                 mysql2.open(PUtility.class);
                 try {
-                    try ( Statement stmt2 = mysql2.getConnection().createStatement()) {
+                    try (Statement stmt2 = mysql2.getConnection().createStatement()) {
                         String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
-                        try ( ResultSet rec2 = stmt2.executeQuery(LoadTableFile)) {
+                        try (ResultSet rec2 = stmt2.executeQuery(LoadTableFile)) {
                             if (rec2.next()) {
                                 double OnHand = rec2.getDouble(T_Mon);
                                 if (OnHand >= TempQty) {
@@ -220,9 +221,9 @@ public class PUtility extends DatabaseConnection {
                         MySQLConnect mysql2 = new MySQLConnect();
                         mysql2.open(PUtility.class);
                         try {
-                            try ( Statement stmt = mysql2.getConnection().createStatement()) {
+                            try (Statement stmt = mysql2.getConnection().createStatement()) {
                                 String sql = "select 1 from stkfile where (bpcode='" + psetBean.getPsubcode() + "') and (bstk='" + T_Stk + "') limit 1";
-                                try ( ResultSet rs = stmt.executeQuery(sql)) {
+                                try (ResultSet rs = stmt.executeQuery(sql)) {
                                     if (rs.next()) {
                                         double OnHand = rs.getDouble(T_Mon);
                                         if (OnHand >= TempQty) {
@@ -261,9 +262,9 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
-                try ( ResultSet rs = stmt.executeQuery(LoadTableFile)) {
+                try (ResultSet rs = stmt.executeQuery(LoadTableFile)) {
                     RetVal = rs.next();
                     rs.close();
                 }
@@ -491,9 +492,9 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String sql = "select pcode from product where pcode='" + PublicVar.P_Code + "' and pactive='Y' limit 1";
-                try ( ResultSet rs = stmt.executeQuery(sql)) {
+                try (ResultSet rs = stmt.executeQuery(sql)) {
                     RetValue = rs.next();
                     rs.close();
                 }
@@ -1396,7 +1397,7 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String UpdateQry = "delete from temppromotion where tableonno=" + "'" + Table + "'";
                 stmt.executeUpdate(UpdateQry);
                 stmt.close();
@@ -1724,9 +1725,9 @@ public class PUtility extends DatabaseConnection {
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PUtility.class);
         try {
-            try ( Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
                 String SeekPromotion2 = "select pcode from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "') limit 1";
-                try ( ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
+                try (ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
                     foundData = rs.next();
                     rs.close();
                 }

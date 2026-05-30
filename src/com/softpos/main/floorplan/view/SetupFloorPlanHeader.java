@@ -1,15 +1,15 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CompanyBean;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class SetupFloorPlanHeader extends javax.swing.JDialog {
 
@@ -341,7 +341,7 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         PosControl.resetDataCompany();
 
         this.setVisible(false);//dispose();

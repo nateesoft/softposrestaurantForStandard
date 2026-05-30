@@ -5,40 +5,40 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class PropControl {
-    
+
     public static String PATH_CONFIG = "softpos/";
     public static String FILE_CONFIG = "softpos/config.properties";
-    
-    public void sampleSaveProp(){
+
+    public void sampleSaveProp() {
         Properties prop = new Properties();
         prop.setProperty("DB_SERVER", "localhost");
         prop.setProperty("DB_ROOT", "root");
         prop.setProperty("DB_PASS", "");
         prop.setProperty("DB_PORT", "3306");
-    	try (FileOutputStream fos = new FileOutputStream("test.properties")) {
-    		prop.store(fos, null);
-    	} catch (IOException ex) {
+        try (FileOutputStream fos = new FileOutputStream("test.properties")) {
+            prop.store(fos, null);
+        } catch (IOException ex) {
             MSG.ERR(null, ex.getMessage());
         }
     }
 
-    public void sampleLoadProp(){
+    public void sampleLoadProp() {
         Properties prop = new Properties();
-    	try (FileInputStream fis = new FileInputStream("test.properties")) {
+        try (FileInputStream fis = new FileInputStream("test.properties")) {
             prop.load(fis);
-    	} catch (IOException ex) {
+        } catch (IOException ex) {
             MSG.ERR(null, ex.getMessage());
         }
     }
-    
-    public String getMacNo(){
+
+    public String getMacNo() {
         return Value.MACNO;
     }
-    
-    public ConnectBean connectServer(){
+
+    public ConnectBean connectServer() {
         Properties prop = new Properties();
         ConnectBean bean = new ConnectBean();
         try (FileInputStream fis = new FileInputStream(PropControl.FILE_CONFIG)) {
@@ -50,12 +50,12 @@ public class PropControl {
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT")));
             bean.setCharset(prop.getProperty("DB_CHARSET"));
         } catch (IOException | NumberFormatException e) {
-            
+
         }
         return bean;
     }
 
-    public ConnectBean connectClient(){
+    public ConnectBean connectClient() {
         Properties prop = new Properties();
         ConnectBean bean = new ConnectBean();
         try (FileInputStream fis = new FileInputStream(PropControl.FILE_CONFIG)) {
@@ -67,9 +67,9 @@ public class PropControl {
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT_CLIENT")));
             bean.setCharset(prop.getProperty("DB_CHARSET_CLIENT"));
         } catch (IOException | NumberFormatException e) {
-            
+
         }
         return bean;
     }
-    
+
 }

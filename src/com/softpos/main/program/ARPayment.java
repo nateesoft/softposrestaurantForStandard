@@ -8,7 +8,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.SmpCoupon;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -28,8 +28,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class ARPayment extends javax.swing.JDialog {
 

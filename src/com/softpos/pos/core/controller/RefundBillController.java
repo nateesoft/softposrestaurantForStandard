@@ -5,15 +5,14 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
  * @author nathee
  */
 public class RefundBillController extends DatabaseConnection {
-    
+
     public BillNoBean checkBillByRefno(String macno, String billNo) {
         BillNoBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
@@ -23,7 +22,7 @@ public class RefundBillController extends DatabaseConnection {
                     + "where (b_macno='" + macno + "') and (b_refno='" + billNo + "')";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next()){
+            if (rs.next()) {
                 bean = new BillNoBean();
                 bean.setB_Void(rs.getString("b_void"));
                 bean.setB_InvNo(rs.getString("b_invno"));
@@ -37,7 +36,7 @@ public class RefundBillController extends DatabaseConnection {
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         return bean;
     }
 }

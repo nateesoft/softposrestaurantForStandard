@@ -1,12 +1,13 @@
 package com.softpos.pos.core.model;
 
 public class MgrButtonSetupBean {
+
     private String autu_pcode;
     private String auto_pdesc;
     private String PCode;
     private String Check_before;
     private String PDesc;
-    
+
     private String sd_pcode;
     private String sd_pdesc;
     private String ex_pcode;
@@ -83,6 +84,5 @@ public class MgrButtonSetupBean {
     public void setEx_pdesc(String ex_pdesc) {
         this.ex_pdesc = ex_pdesc;
     }
-    
-    
+
 }

@@ -14,17 +14,17 @@ import java.util.logging.SimpleFormatter;
  * @author nathee
  */
 public class LoggerController {
-    
+
     private static final String DATE_FORMAT = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH).format(new Date());
     private static final String FILE_NAME = "app_" + DATE_FORMAT + ".log";
     private static final String FILE_NAME_HTML = "app_" + DATE_FORMAT + ".html";
-    
+
     private static FileHandler fh = null;
     private static final String LOG_TYPE = "html";
 
     public static void inital(Logger logger) {
         if (fh == null) {
-            fh = LOG_TYPE.equals("html") ? initHtmlFile():initFile();
+            fh = LOG_TYPE.equals("html") ? initHtmlFile() : initFile();
         }
         logger.addHandler(fh);
     }
@@ -39,7 +39,7 @@ public class LoggerController {
 
         return fh;
     }
-    
+
     private static FileHandler initHtmlFile() {
         try {
             Formatter formatterTxt = new MyHtmlFormatter();

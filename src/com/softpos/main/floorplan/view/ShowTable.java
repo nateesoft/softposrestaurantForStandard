@@ -1,6 +1,5 @@
 package com.softpos.main.floorplan.view;
 
-import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.Value;
@@ -24,8 +23,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
 
@@ -234,7 +233,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             } finally {
                 mysql.closeConnection(this.getClass());
             }
-            
+
             loadDataToGrid();
         }
 

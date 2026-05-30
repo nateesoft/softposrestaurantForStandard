@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableSetup;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.TableFileBean;
@@ -9,8 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class TableFileControl extends DatabaseConnection {
 
@@ -70,7 +70,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -113,7 +113,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -163,7 +163,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
             result = TABLE_NOT_SETUP;
         } finally {
@@ -241,7 +241,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -319,7 +319,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -350,7 +350,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -422,7 +422,7 @@ public class TableFileControl extends DatabaseConnection {
                     bean.setTDesk(rs.getInt("TDesk"));
                     bean.setTUser(rs.getString("TUser"));
                     bean.setTPause(rs.getString("TPause"));
-                }else{
+                } else {
                     bean.setTcode("null");
                 }
                 stmt.close();
@@ -430,7 +430,7 @@ public class TableFileControl extends DatabaseConnection {
             }
 
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -466,7 +466,7 @@ public class TableFileControl extends DatabaseConnection {
             }
 
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -499,7 +499,7 @@ public class TableFileControl extends DatabaseConnection {
             ServiceControl serviceControl = new ServiceControl();
             serviceControl.updateService(table);
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -520,7 +520,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -556,7 +556,7 @@ public class TableFileControl extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -591,7 +591,7 @@ public class TableFileControl extends DatabaseConnection {
 
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -633,7 +633,7 @@ public class TableFileControl extends DatabaseConnection {
             serviceControl.updateService(tableNo);
 
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -654,7 +654,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -676,7 +676,7 @@ public class TableFileControl extends DatabaseConnection {
 
             setDefaultTableFile(tableTemp);
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -694,7 +694,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -712,7 +712,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -758,7 +758,7 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);
@@ -781,7 +781,7 @@ public class TableFileControl extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);

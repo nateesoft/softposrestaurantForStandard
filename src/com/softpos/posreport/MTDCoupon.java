@@ -18,9 +18,9 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -392,17 +392,17 @@ public class MTDCoupon extends javax.swing.JDialog {
                                 + " group by s_cupon.cucode order by s_cupon.cucode";
                         Statement stmt = mysql.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
-                        while(rs.next()){
+                        while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("cucode"), 3) + "  " + PUtility.DataFullR(rs.getString("cuname"), 30));
-                                prn.print("                    " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11));
-                                SumQty = SumQty + rs.getDouble("sum(cuquan)");
-                                SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
+                            prn.print("                    " + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11));
+                            SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                            SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
                         }
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                        
+
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -467,17 +467,17 @@ public class MTDCoupon extends javax.swing.JDialog {
                     + " group by s_cupon.cucode order by s_cupon.cucode";
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullR(rs.getString("cucode"), 3) + Space + PUtility.DataFullR(rs.getString("cuname"), 30)) + "_";
-                    t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11)) + "_";
-                    SumQty = SumQty + rs.getDouble("sum(cuquan)");
-                    SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
+                t += "align=right><font face=Angsana New size=1>" + (TAB + PUtility.DataFull(IntFmt.format(rs.getDouble("sum(cuquan)")), 8) + "</td><td colspan=2 align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(cuamt)")), 11)) + "_";
+                SumQty = SumQty + rs.getDouble("sum(cuquan)");
+                SumAmt = SumAmt + rs.getDouble("sum(cuamt)");
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }

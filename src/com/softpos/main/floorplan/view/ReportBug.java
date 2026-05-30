@@ -3,7 +3,7 @@ package com.softpos.main.floorplan.view;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import com.softpos.pos.core.controller.SendEmail;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class ReportBug extends javax.swing.JDialog {
 
@@ -287,7 +287,7 @@ public class ReportBug extends javax.swing.JDialog {
     private void sendMessageToSupportBug() {
         String header = "รายงาน/แจ้งปัญหา/Bug/โปรแกรมขายหน้าร้าน (SP-POS)\n";
         String footer = "\n\n";
-        boolean isSendMail = SendEmail.SendEmailBug(txtEmail.getText(),txtPass.getText(),txtSubject.getText(), header + txtMSG.getText() + footer + txtFrom.getText());
+        boolean isSendMail = SendEmail.SendEmailBug(txtEmail.getText(), txtPass.getText(), txtSubject.getText(), header + txtMSG.getText() + footer + txtFrom.getText());
         if (isSendMail) {
             dispose();
         }

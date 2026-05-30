@@ -74,6 +74,5 @@ public class ConnectBean {
     public void setHostName(String hostName) {
         this.hostName = hostName;
     }
-    
-    
+
 }

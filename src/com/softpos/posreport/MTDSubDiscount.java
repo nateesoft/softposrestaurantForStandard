@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDSubDiscount extends javax.swing.JDialog {
 
@@ -334,36 +334,36 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     private void txtDate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDate1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        bntExitClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        bntOKClick();
-    }
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        txtDate2.requestFocus();
-    }
+            bntExitClick();
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_F5) {
+            bntOKClick();
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtDate2.requestFocus();
+        }
     }//GEN-LAST:event_txtDate1KeyPressed
 
     private void txtDate1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDate1MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtDate1);
         }
     }//GEN-LAST:event_txtDate1MouseClicked
 
     private void txtDate2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDate2MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtDate2);
         }
     }//GEN-LAST:event_txtDate2MouseClicked
 
     private void txtMacNo1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMacNo1MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtMacNo1);
         }
     }//GEN-LAST:event_txtMacNo1MouseClicked
 
     private void txtMacNo2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMacNo2MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             KeyBoardDialog.get(txtMacNo2);
         }
     }//GEN-LAST:event_txtMacNo2MouseClicked
@@ -428,9 +428,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
 
-        if(Value.printdriver){
+        if (Value.printdriver) {
             MSG.WAR(this, Value.driverNotSupport);
-        }else if (!Value.getComPort().equals("NONE")) {
+        } else if (!Value.getComPort().equals("NONE")) {
             if (prn.OpenPrint(Value.getComPort())) {
                 prn.InitPrinter();
                 prn.print(POSHW.getHeading1());
@@ -450,60 +450,60 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 String TempDate = "";
                 String TempMacNo = "";
                 /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+                 * * OPEN CONNECTION **
+                 */
+                MySQLConnect mysql = new MySQLConnect();
+                mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') "
                             + "and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                             + "order by s_date,b_macno,b_refno";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         if (!TempDate.equals(DatefmtShow.format(rs.getDate("s_date")))) {
-                                TempDate = DatefmtShow.format(rs.getDate("s_date"));
-                                TempMacNo = rs.getString("b_macno");
-                                prn.print("***DATE : " + TempDate);
-                                prn.print("***MacNo : " + TempMacNo);
-                            }
-                            if (!TempMacNo.equals(rs.getString("b_macno"))) {
-                                TempMacNo = rs.getString("b_macno");
-                                prn.print("***MacNo : " + TempMacNo);
-                            }
-                            if (rs.getString("b_void").equals("V")) {
-                                prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
-                            }
-                            prn.print(rs.getString("b_refno") + " " + rs.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_vat")), 10));
-                            if (rs.getDouble("b_cash") != 0) {
-                                prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cash")), 12));
-                            }
-                            if (rs.getDouble("b_giftvoucher") != 0) {
-                                prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_giftvoucher")), 12));
-                            }
-                            if (rs.getDouble("b_earnest") != 0) {
-                                prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_earnest")), 12));
-                            }
-                            if (rs.getDouble("b_cramt1") != 0) {
-                                prn.print("       " + "***" + PUtility.DataFullR(rs.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cramt1")), 12));
-                            }
-                            if (rs.getDouble("b_accramt") != 0) {
-                                prn.print("       " + "AR-" + PUtility.DataFullR(rs.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_accramt")), 12));
-                                prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rs.getString("b_accrcode")), 30));
-                            }
+                            TempDate = DatefmtShow.format(rs.getDate("s_date"));
+                            TempMacNo = rs.getString("b_macno");
+                            prn.print("***DATE : " + TempDate);
+                            prn.print("***MacNo : " + TempMacNo);
+                        }
+                        if (!TempMacNo.equals(rs.getString("b_macno"))) {
+                            TempMacNo = rs.getString("b_macno");
+                            prn.print("***MacNo : " + TempMacNo);
+                        }
+                        if (rs.getString("b_void").equals("V")) {
+                            prn.print("***Void โดย :" + rs.getString("b_voiduser") + "  " + rs.getString("b_voidtime"));
+                        }
+                        prn.print(rs.getString("b_refno") + " " + rs.getString("b_ontime") + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("b_nettotal")), 12) + PUtility.DataFull(DecFmt.format(rs.getDouble("b_vat")), 10));
+                        if (rs.getDouble("b_cash") != 0) {
+                            prn.print("       " + "Cash...............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cash")), 12));
+                        }
+                        if (rs.getDouble("b_giftvoucher") != 0) {
+                            prn.print("       " + "Gift Voucher.......:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_giftvoucher")), 12));
+                        }
+                        if (rs.getDouble("b_earnest") != 0) {
+                            prn.print("       " + "Earnest............:" + PUtility.DataFull(DecFmt.format(rs.getDouble("b_earnest")), 12));
+                        }
+                        if (rs.getDouble("b_cramt1") != 0) {
+                            prn.print("       " + "***" + PUtility.DataFullR(rs.getString("b_crcode1"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_cramt1")), 12));
+                        }
+                        if (rs.getDouble("b_accramt") != 0) {
+                            prn.print("       " + "AR-" + PUtility.DataFullR(rs.getString("b_accrcode"), 8) + "........." + PUtility.DataFull(DecFmt.format(rs.getDouble("b_accramt")), 12));
+                            prn.print("       " + PUtility.DataFullR(PUtility.SeekArName(rs.getString("b_accrcode")), 30));
+                        }
                     }
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                } finally{
+                } finally {
                     mysql.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
                 prn.print(" ");
                 prn.print(" ");
-                
+
                 prn.CutPaper();
                 prn.closePrint();
             }

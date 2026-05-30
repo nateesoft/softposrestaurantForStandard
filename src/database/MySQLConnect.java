@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class MySQLConnect {
 
@@ -124,7 +123,8 @@ public class MySQLConnect {
     }
 
     /**
-     * Execute an UPDATE/INSERT/DELETE safely — Statement is closed automatically.
+     * Execute an UPDATE/INSERT/DELETE safely — Statement is closed
+     * automatically.
      */
     public int executeUpdate(String sql) {
         try (Statement stmt = con.createStatement()) {
@@ -137,8 +137,8 @@ public class MySQLConnect {
     }
 
     /**
-     * Execute a SELECT query. Statement is stored and closed when close() is called.
-     * Caller must still close the returned ResultSet when done.
+     * Execute a SELECT query. Statement is stored and closed when close() is
+     * called. Caller must still close the returned ResultSet when done.
      */
     public ResultSet executeQuery(String sql) {
         closeCurrentStatement();
@@ -153,8 +153,9 @@ public class MySQLConnect {
     }
 
     /**
-     * Prepare a statement safely. Caller is responsible for closing the PreparedStatement.
-     * Use try-with-resources: try (PreparedStatement p = mysql.prepare(sql)) { ... }
+     * Prepare a statement safely. Caller is responsible for closing the
+     * PreparedStatement. Use try-with-resources: try (PreparedStatement p =
+     * mysql.prepare(sql)) { ... }
      */
     public PreparedStatement prepare(String sql) throws SQLException {
         return con.prepareStatement(sql);

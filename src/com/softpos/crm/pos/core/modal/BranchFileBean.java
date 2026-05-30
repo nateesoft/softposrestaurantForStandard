@@ -299,6 +299,5 @@ public class BranchFileBean {
     public void setPointCode_Type5(String PointCode_Type5) {
         this.PointCode_Type5 = PointCode_Type5;
     }
-    
-    
+
 }

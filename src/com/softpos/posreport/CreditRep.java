@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class CreditRep extends javax.swing.JDialog {
 
@@ -529,7 +529,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             prm.setString(4, TCrApp);
             prm.setDouble(5, TCrAmt);
             prm.executeUpdate();
-            
+
             prm.close();
             stmt.close();
         } catch (SQLException e) {

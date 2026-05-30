@@ -15,9 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import util.AppLogUtil;
-import util.DateUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
+import com.softpos.util.MSG;
 
 public class AddNewMember extends javax.swing.JDialog {
 
@@ -648,7 +648,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     Point point = M_Begin.getLocationOnScreen();
     point.setLocation(point.getX(), point.getY());
-    util.DateChooseDialog dcd = new util.DateChooseDialog(new java.awt.Frame(), true, point);
+    com.softpos.util.DateChooseDialog dcd = new com.softpos.util.DateChooseDialog(new java.awt.Frame(), true, point);
     dcd.setVisible(true);
     //dcd.showDialog(new LookAndFeelFrame(), true, point);
     M_Begin.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
@@ -661,7 +661,7 @@ private void cmdDateChoose1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     // TODO add your handling code here:
     Point point = M_Brithday.getLocationOnScreen();
     point.setLocation(point.getX(), point.getY());
-    util.DateChooseDialog dcd = new util.DateChooseDialog(new java.awt.Frame(), true, point);
+    com.softpos.util.DateChooseDialog dcd = new com.softpos.util.DateChooseDialog(new java.awt.Frame(), true, point);
     dcd.setVisible(true);
     //dcd.showDialog(new LookAndFeelFrame(), true, point);
     M_Brithday.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
@@ -881,7 +881,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(AddNewMember.class, "error", e);
+                        AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -942,7 +942,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
-                    
+
                     ClearVariable();
                 }
             }
@@ -1049,7 +1049,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewMember.class, "error", e);
-                } finally{
+                } finally {
                     mysql.closeConnection(this.getClass());
                 }
 
@@ -1079,10 +1079,10 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AddNewMember.class, "error", e);
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         return RetVal;
     }
 

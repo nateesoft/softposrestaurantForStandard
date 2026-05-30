@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class SoftMenuSetup {
-    
+
     private String PCode;
     private String MenuShowText;
 
@@ -20,6 +20,5 @@ public class SoftMenuSetup {
     public void setMenuShowText(String MenuShowText) {
         this.MenuShowText = MenuShowText;
     }
-    
-    
+
 }

@@ -1496,6 +1496,5 @@ public class PosUserBean {
     public void setCont47(String Cont47) {
         this.Cont47 = Cont47;
     }
-    
-    
+
 }

@@ -409,6 +409,5 @@ public class CompanyBean {
     public void setPdahead4(String pdahead4) {
         this.pdahead4 = pdahead4;
     }
-    
-    
+
 }

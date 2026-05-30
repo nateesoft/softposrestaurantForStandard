@@ -1,7 +1,7 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.main.pos.view.FindProduct;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
@@ -10,9 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.JTableUtility;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.JTableUtility;
+import com.softpos.util.MSG;
 
 public class CheckProductNotEnough extends javax.swing.JDialog {
 

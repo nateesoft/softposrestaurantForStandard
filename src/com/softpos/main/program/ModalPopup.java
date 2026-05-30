@@ -2,8 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.ModalPopupController;
 import com.softpos.pos.core.controller.PUtility;
-//import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.MgrButtonSetupBean;
 import com.softpos.pos.core.model.OptionSetBean;
 import com.softpos.pos.core.model.SoftMenuSetup;
@@ -18,8 +17,8 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 // Panel Option ข้อความพิเศษ สำหรับสินค้าแต่ละรายการ
 public class ModalPopup extends javax.swing.JDialog {
@@ -275,7 +274,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                 private void updateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
                     String pstock = PUtility.GetStkCode();
-                    
+
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open(this.getClass());
                     try {
@@ -461,7 +460,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
         button[24].setText("SKIP");
         button[24].setBackground(Color.GREEN);
-        
+
         button[24].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -756,7 +755,7 @@ public class ModalPopup extends javax.swing.JDialog {
 
                 private void updateTempmenusetProduct(String Index, String PCode, String ProMain, String Main) {
                     String pstock = PUtility.GetStkCode();
-                    
+
                     MySQLConnect mysql = new MySQLConnect();
                     mysql.open(this.getClass());
                     try {

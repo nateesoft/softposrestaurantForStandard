@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import util.MSG;
 
 public class MySQLConnectWebOnline {
 
@@ -29,16 +28,45 @@ public class MySQLConnectWebOnline {
         getDbVar();
     }
 
-    public String getHostName() { return HostName; }
-    public void setHostName(String HostName) { MySQLConnectWebOnline.HostName = HostName; }
-    public String getDbName() { return DbName; }
-    public void setDbName(String DbName) { MySQLConnectWebOnline.DbName = DbName; }
-    public String getUserName() { return UserName; }
-    public void setUserName(String UserName) { MySQLConnectWebOnline.UserName = UserName; }
-    public String getPassword() { return Password; }
-    public void setPassword(String Password) { MySQLConnectWebOnline.Password = Password; }
-    public String getPortNumber() { return PortNumber; }
-    public void setPortNumber(String PortNumber) { MySQLConnectWebOnline.PortNumber = PortNumber; }
+    public String getHostName() {
+        return HostName;
+    }
+
+    public void setHostName(String HostName) {
+        MySQLConnectWebOnline.HostName = HostName;
+    }
+
+    public String getDbName() {
+        return DbName;
+    }
+
+    public void setDbName(String DbName) {
+        MySQLConnectWebOnline.DbName = DbName;
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String UserName) {
+        MySQLConnectWebOnline.UserName = UserName;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        MySQLConnectWebOnline.Password = Password;
+    }
+
+    public String getPortNumber() {
+        return PortNumber;
+    }
+
+    public void setPortNumber(String PortNumber) {
+        MySQLConnectWebOnline.PortNumber = PortNumber;
+    }
 
     public void open() {
         try {
@@ -52,7 +80,8 @@ public class MySQLConnectWebOnline {
     }
 
     /**
-     * Execute an UPDATE/INSERT/DELETE safely — Statement is closed automatically.
+     * Execute an UPDATE/INSERT/DELETE safely — Statement is closed
+     * automatically.
      */
     public int executeUpdate(String sql) {
         try (Statement stmt = con.createStatement()) {
@@ -64,7 +93,8 @@ public class MySQLConnectWebOnline {
     }
 
     /**
-     * Execute a SELECT query. Statement is stored and closed when close() is called.
+     * Execute a SELECT query. Statement is stored and closed when close() is
+     * called.
      */
     public ResultSet executeQuery(String sql) {
         closeCurrentStatement();

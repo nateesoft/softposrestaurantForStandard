@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDInvoice extends javax.swing.JDialog {
 

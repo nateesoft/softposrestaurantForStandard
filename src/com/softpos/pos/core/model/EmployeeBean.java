@@ -6,8 +6,9 @@ public class EmployeeBean {
     private String name;
     private double salary;
     private String position;
-    
-    public EmployeeBean() {}
+
+    public EmployeeBean() {
+    }
 
     public EmployeeBean(String code, String name) {
         this.code = code;
@@ -45,6 +46,5 @@ public class EmployeeBean {
     public void setPosition(String position) {
         this.position = position;
     }
-    
-    
+
 }

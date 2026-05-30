@@ -111,5 +111,4 @@ public class PKicTranBean {
         this.pWaitTime = pWaitTime;
     }
 
-    
 }

@@ -17,7 +17,7 @@ import com.softpos.main.pos.view.MemberDialog;
 import com.softpos.pos.core.controller.CheckBillController;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
@@ -40,10 +40,10 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
-import util.JTableUtility;
-import util.MSG;
-import util.NumberFormat;
-import util.NumberUtil;
+import com.softpos.util.JTableUtility;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberFormat;
+import com.softpos.util.NumberUtil;
 
 public class CheckBill extends javax.swing.JDialog {
 
@@ -92,7 +92,7 @@ public class CheckBill extends javax.swing.JDialog {
         bntPrintCheckBill.setVisible(false);
         BalanceControl.updateProSerTable(tableNo, memberBean);
         initTable();
-        
+
         java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, screen.width, screen.height);
     }

@@ -562,8 +562,8 @@ public class POSConfigSetup {
     public void setP_BillLang(String P_BillLang) {
         this.P_BillLang = P_BillLang;
     }
-    
-    public static POSConfigSetup Bean(){
+
+    public static POSConfigSetup Bean() {
         return PosControl.getData();
     }
 }

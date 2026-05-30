@@ -42,16 +42,16 @@ public class convertToChar {
                 vert[i] = "";
             }
         }
-        int size = vert.length - 2;       
+        int size = vert.length - 2;
         for (int i = 0; i < vert.length - 1; i++) {
-            if (!vert[i].equals("")) {  
-                String chs = b.substring(b.length()-2,b.length()-1);
-                if(i == len-2 && chs.equals("1")){ 
-                  //  System.err.println(chs);
-                }else{
-                    vert[i] += ch[size]; 
+            if (!vert[i].equals("")) {
+                String chs = b.substring(b.length() - 2, b.length() - 1);
+                if (i == len - 2 && chs.equals("1")) {
+                    //  System.err.println(chs);
+                } else {
+                    vert[i] += ch[size];
                 }
-                               
+
             }
             size--;
         }

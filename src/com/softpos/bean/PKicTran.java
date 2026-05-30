@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.softpos.bean;
+
 ////
 
 import com.softpos.pos.core.controller.ProductControl;
@@ -16,8 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateConvert;
 
 /**
  *

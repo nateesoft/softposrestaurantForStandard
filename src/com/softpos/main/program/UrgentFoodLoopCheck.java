@@ -6,7 +6,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import database.ConfigFile;
 import database.MySQLConnect;
@@ -15,9 +15,9 @@ import java.awt.Toolkit;
 import java.sql.ResultSet;
 import javax.swing.JFrame;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 /**
  *

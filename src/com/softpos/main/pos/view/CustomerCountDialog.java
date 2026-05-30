@@ -1,13 +1,13 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class CustomerCountDialog extends javax.swing.JDialog {
 
@@ -29,8 +29,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
         } else {
             txtAmount.selectAll();
         }
-      
-       
+
     }
 
     public int getCountCustomer() {

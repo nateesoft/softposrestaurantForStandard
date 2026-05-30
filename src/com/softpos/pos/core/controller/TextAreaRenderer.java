@@ -8,9 +8,11 @@ import java.util.*;
 public class TextAreaRenderer extends JTextArea
         implements TableCellRenderer {
 
-    private final DefaultTableCellRenderer adaptee =
-            new DefaultTableCellRenderer();
-    /** map from table to map of rows to map of column heights */
+    private final DefaultTableCellRenderer adaptee
+            = new DefaultTableCellRenderer();
+    /**
+     * map from table to map of rows to map of column heights
+     */
     private final Map cellSizes = new HashMap();
 
     public TextAreaRenderer() {
@@ -90,4 +92,3 @@ public class TextAreaRenderer extends JTextArea
         return maximum_height;
     }
 }
-

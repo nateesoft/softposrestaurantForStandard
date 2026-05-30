@@ -21,9 +21,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import util.AppLogUtil;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class RepMember extends javax.swing.JDialog {
 
@@ -562,7 +562,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     Point point = cmdDateChoose2.getLocationOnScreen();
     point.setLocation(point.getX(), point.getY());
-    util.DateChooseDialog dcd = new util.DateChooseDialog(new java.awt.Frame(), true, point);
+    com.softpos.util.DateChooseDialog dcd = new com.softpos.util.DateChooseDialog(new java.awt.Frame(), true, point);
     dcd.setVisible(true);
     //dcd.showDialog(new LookAndFeelFrame(), true, point);
     ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));

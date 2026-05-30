@@ -74,6 +74,5 @@ public class TempsetBean {
     public void setPTime(String PTime) {
         this.PTime = PTime;
     }
-    
-    
+
 }

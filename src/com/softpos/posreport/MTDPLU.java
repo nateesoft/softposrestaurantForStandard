@@ -21,9 +21,9 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.DateConvert;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
 
 public class MTDPLU extends javax.swing.JDialog {
 

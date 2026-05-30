@@ -24,21 +24,21 @@ public class KeyBoardDialog extends javax.swing.JDialog {
         loadData();
         tbControl.setSelectedIndex(index);
     }
-    
-    public void get(JTextField txtField, int index){
+
+    public void get(JTextField txtField, int index) {
         KeyBoardDialog key = new KeyBoardDialog(null, true, index);
         key.setVisible(true);
         String temp = KeyBoardDialog.TEXT_INPUT;
-        if(!temp.equals("")){
+        if (!temp.equals("")) {
             txtField.setText(temp);
         }
     }
-    
-    public static void get(JTextField txtField){
+
+    public static void get(JTextField txtField) {
         KeyBoardDialog key = new KeyBoardDialog(null, true, 0);
         key.setVisible(true);
         String temp = KeyBoardDialog.TEXT_INPUT;
-        if(!temp.equals("")){
+        if (!temp.equals("")) {
             txtField.setText(temp);
         }
     }
@@ -680,8 +680,8 @@ public class KeyBoardDialog extends javax.swing.JDialog {
                 tbControl.setSelectedIndex(0);
             } else if (tbSelected == 3) {
                 tbControl.setSelectedIndex(2);
-            } else if(tbSelected==4){
-                
+            } else if (tbSelected == 4) {
+
             } else {
                 tbControl.setSelectedIndex(0);
             }

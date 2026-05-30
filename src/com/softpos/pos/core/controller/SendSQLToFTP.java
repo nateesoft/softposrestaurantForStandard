@@ -48,8 +48,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The first file is uploaded successfully.");
             }
-            
-            
+
             branchLocalFile = new File("D:/Backup/Data/company.sql");
             fileName = setFileName("D:/Backup/Data/company.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -72,7 +71,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The company file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/costfile.sql");
             fileName = setFileName("D:/Backup/Data/costfile.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -95,7 +94,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The costfile file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/menusetup.sql");
             fileName = setFileName("D:/Backup/Data/menusetup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -118,7 +117,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The menusetup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/posconfigsetup.sql");
             fileName = setFileName("D:/Backup/Data/posconfigsetup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -141,7 +140,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The posconfigsetup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/poshwsetup.sql");
             fileName = setFileName("D:/Backup/Data/poshwsetup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -164,7 +163,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The poshwsetup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/posconfigsetup.sql");
             fileName = setFileName("D:/Backup/Data/posconfigsetup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -187,7 +186,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The posconfigsetup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/poshwsetup.sql");
             fileName = setFileName("D:/Backup/Data/poshwsetup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -210,7 +209,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The poshwsetup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/posuser.sql");
             fileName = setFileName("D:/Backup/Data/posuser.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -233,7 +232,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The posuser file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/product.sql");
             fileName = setFileName("D:/Backup/Data/product.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -256,7 +255,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The product file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/pset.sql");
             fileName = setFileName("D:/Backup/Data/pset.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -279,7 +278,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The pset file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/stkfile.sql");
             fileName = setFileName("D:/Backup/Data/stkfile.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -302,7 +301,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The stkfile file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/usergroup.sql");
             fileName = setFileName("D:/Backup/Data/usergroup.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -325,7 +324,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The usergroup file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/creditfile.sql");
             fileName = setFileName("D:/Backup/Data/creditfile.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -348,7 +347,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The creditfile file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/groupfile.sql");
             fileName = setFileName("D:/Backup/Data/groupfile.sql");
             inputStream = new FileInputStream(branchLocalFile);
@@ -371,7 +370,7 @@ public class SendSQLToFTP {
             if (completed) {
                 System.out.println("The groupfile file is uploaded successfully.");
             }
-            
+
             branchLocalFile = new File("D:/Backup/Data/protab.sql");
             fileName = setFileName("D:/Backup/Data/protab.sql");
             inputStream = new FileInputStream(branchLocalFile);

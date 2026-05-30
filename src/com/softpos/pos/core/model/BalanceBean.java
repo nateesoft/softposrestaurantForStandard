@@ -934,7 +934,6 @@ public class BalanceBean {
 //    public void setR_ServiceAmt(double R_ServiceAmt) {
 //        this.R_ServiceAmt = R_ServiceAmt;
 //    }
-
     public String getR_Indulgent() {
         return R_Indulgent;
     }

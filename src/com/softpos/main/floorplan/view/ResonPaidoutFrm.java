@@ -1,12 +1,12 @@
 package com.softpos.main.floorplan.view;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class ResonPaidoutFrm extends javax.swing.JDialog {
 
@@ -91,7 +91,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
         saveResonPaidout();
         this.setVisible(false);//dispose();
-        
+
         PaidoutFrm frm = new PaidoutFrm(null, true, txtReson.getText());
         frm.setVisible(true);
 

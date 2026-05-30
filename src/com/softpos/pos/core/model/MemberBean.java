@@ -661,6 +661,5 @@ public class MemberBean {
     public void setMember_CurPoint(int Member_CurPoint) {
         this.Member_CurPoint = Member_CurPoint;
     }
-    
-    
+
 }

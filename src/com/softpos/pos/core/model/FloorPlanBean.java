@@ -110,6 +110,5 @@ public class FloorPlanBean {
     public void setItem(int item) {
         this.item = item;
     }
-    
-    
+
 }

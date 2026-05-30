@@ -28,7 +28,7 @@ import com.softpos.pos.core.controller.PosUserController;
 import com.softpos.pos.core.controller.TSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableSetupControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
@@ -70,11 +70,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
-import util.Option;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.MSG;
+import com.softpos.util.Option;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
 
@@ -83,7 +84,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
     private ImageIcon image;
-    private int refresh = 10;
     private Font fontA = new Font("Tahoma", Font.PLAIN, 14);
     private Font fontB = new Font("Tahoma", Font.BOLD, 11);
     private Font fontC = new Font("Tahoma", Font.BOLD, 16);
@@ -99,53 +99,53 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final ProductControl productControl = new ProductControl();
     private final FloorPlanController floorPlanControl = new FloorPlanController();
 
+    private static class FloorInitData {
+
+        POSHWSetup poshw;
+        POSConfigSetup config;
+        PosUserBean posUser;
+    }
+
     public FloorPlanDialog() {
         setUndecorated(true);
         initComponents();
 
-        SwingUtilities.invokeLater(() -> {
-            setExtendedState(JFrame.MAXIMIZED_BOTH);
-            POSHW = POSHWSetup.Bean(Value.MACNO);
-            CONFIG = POSConfigSetup.Bean();
-            posUser = PosControl.getPosUser(PublicVar.ReturnString);
-            refresh = PosControl.getRefreshTime();
-            if (refresh < 1) {
-                refresh = 10;
+        // Pure UI setup — no DB calls
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        Value.TableSelected = "";
+        jMenu9.setVisible(false);
+        jMenu1.setVisible(true);
+        jMenu2.setVisible(false);
+        jMenu3.setVisible(true);
+        jMenu4.setVisible(false);
+        MShowDailyEJ1.setVisible(false);
+        jMenuItem38.setVisible(false);
+
+        // Load DB data off the EDT
+        new SwingWorker<FloorInitData, Void>() {
+            @Override
+            protected FloorInitData doInBackground() {
+                FloorInitData d = new FloorInitData();
+                d.poshw = POSHWSetup.Bean(Value.MACNO);
+                d.config = POSConfigSetup.Bean();
+                d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
+                productControl.initLoadProductActive();
+                return d;
             }
-            Value.TableSelected = "";
 
-            jMenu9.setVisible(false);
-            jMenu1.setVisible(true);
-            jMenu2.setVisible(false);
-            jMenu3.setVisible(true);
-            jMenu4.setVisible(false);
-            MShowDailyEJ1.setVisible(false);
-            jMenuItem38.setVisible(false);
-
-            loadHeaderTab();
-            productControl.initLoadProductActive();
-
-//            new Thread(() -> {
-//                while (true) {
-//                    PublicVar.countRound++;
-//                    if (PublicVar.countRound > (120 * 6)) {
-//                        clearTemp();
-//                        PosControl.logout();
-//                        System.exit(0);
-//                    }
-//                    SwingUtilities.invokeLater(() -> loadZone(zoneSelected));
-//                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-//                        printCheckBillFromPDA();
-//                    }
-//                    try {
-//                        Thread.sleep(refresh * 1000);
-//                    } catch (InterruptedException ex) {
-//                        Thread.currentThread().interrupt();
-//                        break;
-//                    }
-//                }
-//            }).start();
-        });
+            @Override
+            protected void done() {
+                try {
+                    FloorInitData d = get();
+                    POSHW = d.poshw;
+                    CONFIG = d.config;
+                    posUser = d.posUser;
+                    loadHeaderTab();
+                } catch (InterruptedException | ExecutionException ex) {
+                    AppLogUtil.log(FloorPlanDialog.class, "error", ex);
+                }
+            }
+        }.execute();
     }
 
     @SuppressWarnings("unchecked")
@@ -2113,8 +2113,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private String formatIndex(int n) {
-        if (n < 10) return "00" + n;
-        if (n < 100) return "0" + n;
+        if (n < 10) {
+            return "00" + n;
+        }
+        if (n < 100) {
+            return "0" + n;
+        }
         return "" + n;
     }
 

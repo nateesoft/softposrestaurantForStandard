@@ -12,7 +12,6 @@ import com.softpos.posreport.GiftVoucherRep;
 import com.softpos.posreport.InvRep;
 import com.softpos.posreport.PLURep;
 import com.softpos.pos.core.controller.PPrint;
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.posreport.PromotionRep;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.PosControl;
@@ -21,7 +20,7 @@ import com.softpos.posreport.TopSaleRep;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.VoidRep;
-import util.MSG;
+import com.softpos.util.MSG;
 import com.softpos.posreport.DailyHourlyOpenTB;
 
 public class DailyRep extends javax.swing.JDialog {
@@ -209,7 +208,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale10().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             TerminalRep frm = new TerminalRep(null, true);
@@ -236,7 +235,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale12().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             DeptRep frm = new DeptRep(null, true);
@@ -263,7 +262,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale13().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             PLURep frm = new PLURep(null, true);
@@ -290,7 +289,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale14().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             DailyHourlyOpenTB frm = new DailyHourlyOpenTB(null, true);
@@ -317,7 +316,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale15().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             InvRep frm = new InvRep(null, true);
@@ -344,7 +343,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale16().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             VoidRep frm = new VoidRep(null, true);
@@ -371,7 +370,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale17().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             CreditRep frm = new CreditRep(null, true);
@@ -398,7 +397,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale17().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             GiftVoucherRep frm = new GiftVoucherRep(null, true);
@@ -425,7 +424,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale18().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             TopSaleRep frm = new TopSaleRep(null, true);
@@ -452,7 +451,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale18().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             CouponRep frm = new CouponRep(null, true);
@@ -484,7 +483,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale19().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             ArPaymentRep frm = new ArPaymentRep(null, true);
@@ -512,7 +511,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale21().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             AutoXRep frm = new AutoXRep(null, true);
@@ -543,7 +542,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 getuser.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
-                    if (posUser.getUserName()!=null) {
+                    if (posUser.getUserName() != null) {
                         if (posUser.getSale22().equals("Y")) {
                             PublicVar.TUserRec = posUser;
                             AutoSumXRep frm = new AutoSumXRep(null, true);

@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
@@ -22,12 +23,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jfree.util.Log;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.DateFormat;
-import util.DateUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.DateFormat;
+import com.softpos.util.DateUtil;
 
 public class BillControl {
 
@@ -80,7 +79,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -134,7 +133,7 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -221,14 +220,14 @@ public class BillControl {
                     mysql2.open(BillControl.class);
                     mysql2.executeUpdate(sqlInsAccr);
                 } catch (Exception e) {
-                    
+
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql2.closeConnection(BillControl.class);
                 }
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error: " + sql, e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -261,7 +260,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -389,7 +388,7 @@ public class BillControl {
             pre.executeUpdate();
             pre.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -617,7 +616,7 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    
+
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -927,14 +926,14 @@ public class BillControl {
                     totalSum = tableFile.getTAmount() - billNo.getB_SubDiscBath() - billNo.getB_CuponDiscAmt();
                     billNo.setB_NetVat(totalSum - b_netNonVat);
                     //set table billno
-                    if(b_netNonVat>0){
-                        billNo.setB_Vat(totalSum - b_netNonVat * posConfig.getP_Vat() / 100); 
-                    }else{
-                        billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);  
+                    if (b_netNonVat > 0) {
+                        billNo.setB_Vat(totalSum - b_netNonVat * posConfig.getP_Vat() / 100);
+                    } else {
+                        billNo.setB_Vat(totalSum * posConfig.getP_Vat() / 100);
                     }
                     billNo.setB_CrAmt1(creditPay);
                     billNo.setB_NetTotal((totalSum) + ((totalSum - b_netNonVat) * posConfig.getP_Vat() / 100));
-                    
+
                 }
                 billNo.setB_Entertain1(PublicVar.b_entertain);
                 // set default cashier test 
@@ -1004,7 +1003,7 @@ public class BillControl {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    
+
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql2.closeConnection(this.getClass());
@@ -1051,7 +1050,7 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    
+
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql3.closeConnection(this.getClass());
@@ -1081,7 +1080,7 @@ public class BillControl {
                 BillControl.updateNextBill();
                 BranchControl.updateKicItemNo();
             } catch (NumberFormatException e) {
-                
+
             }
             return BillNo;
         } catch (Exception e) {
@@ -1124,7 +1123,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1227,7 +1226,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1327,7 +1326,7 @@ public class BillControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1536,7 +1535,7 @@ public class BillControl {
             rs1.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1659,7 +1658,7 @@ public class BillControl {
                     bean.setB_MemBegin(rs.getDate("B_MemBegin"));
                     bean.setB_MemEnd(rs.getDate("B_MemEnd"));
                 } catch (SQLException e) {
-                    
+
                     AppLogUtil.log(BillControl.class, "error", e);
                 }
 
@@ -1670,7 +1669,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1809,7 +1808,7 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1838,7 +1837,7 @@ public class BillControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

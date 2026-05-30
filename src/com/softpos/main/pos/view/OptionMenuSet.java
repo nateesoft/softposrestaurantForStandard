@@ -1,7 +1,7 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -11,8 +11,8 @@ import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class OptionMenuSet extends javax.swing.JDialog {
 

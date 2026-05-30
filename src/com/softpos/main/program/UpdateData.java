@@ -5,7 +5,7 @@
  */
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import database.SQLServerConnect;
 import java.awt.Color;
@@ -17,8 +17,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 /**
  *
@@ -269,7 +269,7 @@ public class UpdateData extends javax.swing.JDialog {
             }
             if (SQLServerConnect.conn != null) {
                 String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
-                try ( ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
+                try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
                     while (rs.next()) {
                         String sqlUpdate = rs.getString("qforbranch");
                         ListObj.add(new Object[]{sqlUpdate});
@@ -298,7 +298,7 @@ public class UpdateData extends javax.swing.JDialog {
                 PanelStatus.setBackground(Color.green);
             }
             rs.close();
-            
+
         } catch (Exception e) {
             lblStatus.setText("OFFLINE");
             PanelStatus.setBackground(Color.red);

@@ -2,7 +2,7 @@ package com.softpos.pos.core.controller;
 
 import java.util.List;
 import java.util.Map;
-import util.DatabaseUtility;
+import com.softpos.util.DatabaseUtility;
 
 public class DbProduct {
 

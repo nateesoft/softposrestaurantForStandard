@@ -1,11 +1,11 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BranchBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class BranchControl {
 
@@ -21,7 +21,7 @@ public class BranchControl {
             String sql = "update branch set KicItemNo=KicItemNo+1";
             mysql.executeUpdate(sql);
         } catch (Exception e) {
-            
+
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);
@@ -203,7 +203,7 @@ public class BranchControl {
             }
 
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);
@@ -240,7 +240,7 @@ public class BranchControl {
 //            stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);

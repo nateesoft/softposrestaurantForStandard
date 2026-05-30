@@ -25,8 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
@@ -35,10 +33,9 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import util.AppLogUtil;
-import util.DateConvert;
-import util.MSG;
-import util.OSValidator;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateConvert;
+import com.softpos.util.OSValidator;
 
 public class PrintDriver {
 
@@ -167,7 +164,7 @@ public class PrintDriver {
                     stmt.close();
                 }
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(PrintDriver.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -199,7 +196,6 @@ public class PrintDriver {
         }
         close();
     }
-
 
     public void printHTMLIntoFile() throws FileNotFoundException, UnsupportedEncodingException {
         //Print Cashier
@@ -447,7 +443,7 @@ public class PrintDriver {
                         UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
                                 "Tahoma", java.awt.Font.PLAIN, 14)));
                     } catch (Exception e) {
-                        
+
                     }
                 }
             }

@@ -3,7 +3,7 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.ButtonCustom;
 import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.main.program.DlgBrowseProduct;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Font;
@@ -20,8 +20,8 @@ import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class MGRButtonMenu extends javax.swing.JDialog {
 

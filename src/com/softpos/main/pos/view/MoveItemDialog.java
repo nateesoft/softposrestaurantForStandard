@@ -15,8 +15,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class MoveItemDialog extends javax.swing.JDialog {
 
@@ -724,7 +724,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
                 stmt.executeUpdate("insert into balance select * from temp_balance "
                         + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-                
+
                 stmt.close();
             }
         } catch (SQLException e) {

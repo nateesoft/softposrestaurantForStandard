@@ -1,7 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class PSetBean {
-    
+
     private String pcode;
     private String psubcode;
     private Double psubQTY;
@@ -29,6 +29,5 @@ public class PSetBean {
     public void setPsubQTY(Double psubQTY) {
         this.psubQTY = psubQTY;
     }
-    
-    
+
 }

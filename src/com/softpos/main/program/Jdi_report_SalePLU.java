@@ -18,7 +18,9 @@ import javax.swing.table.TableColumnModel;
 
 public class Jdi_report_SalePLU extends javax.swing.JDialog {
 
-    /** Creates new form Jdi_report_SalePLU */
+    /**
+     * Creates new form Jdi_report_SalePLU
+     */
     public Jdi_report_SalePLU(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
@@ -441,13 +443,13 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JTextField txtSumQty;
     // End of variables declaration//GEN-END:variables
     private DefaultTableModel model;
-    SimpleDateFormat dateFmtShow = new SimpleDateFormat("dd/MM/yyyy" ,Locale.ENGLISH);
-    SimpleDateFormat dateFmtSql = new SimpleDateFormat("yyyy-MM-dd" ,Locale.ENGLISH);
-    SimpleDateFormat timeFmtShow = new SimpleDateFormat("hh:mm:ss" ,Locale.ENGLISH);
+    SimpleDateFormat dateFmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    SimpleDateFormat dateFmtSql = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    SimpleDateFormat timeFmtShow = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
     DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat intFmt = new DecimalFormat("##,###,##0");
-    
-    public void setData(PluRec[] GArray){
+
+    public void setData(PluRec[] GArray) {
         txt1.setText(GArray[0].MacNo1);
         txt2.setText(GArray[0].MacNo2);
         txt3.setText(GArray[0].Cashier1);
@@ -459,26 +461,26 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         String[] row = new String[tblShow.getColumnCount()];
         BigDecimal sumQty = new BigDecimal("0");
         BigDecimal sumAmt = new BigDecimal("0");
-        for(int i=0; i<GArray.length; i++){
-            
+        for (int i = 0; i < GArray.length; i++) {
+
             row[0] = GArray[i].GroupCode;
             row[1] = GArray[i].PCode;
             row[2] = GArray[i].PName;
             row[3] = intFmt.format(GArray[i].S_Qty);
             row[4] = doubleFmt.format(GArray[i].S_Amt);
-            
+
             model.addRow(row);
             BigDecimal qty = new BigDecimal(String.valueOf(GArray[i].S_Qty));
             sumQty = sumQty.add(qty);
             BigDecimal amt = new BigDecimal(String.valueOf(GArray[i].S_Amt));
             sumAmt = sumAmt.add(amt);
-           // System.out.println("DD "+sumQty);
-          //  System.out.println("AA "+sumAmt);
+            // System.out.println("DD "+sumQty);
+            //  System.out.println("AA "+sumAmt);
         }
-        
+
         txtSumQty.setText(intFmt.format(sumQty.doubleValue()));
         txtSumAmt.setText(doubleFmt.format(sumAmt.doubleValue()));
-  
+
     }
 
     private void setTableShow() {
@@ -507,22 +509,20 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         DecimalFormat PersentFmt = new DecimalFormat("#,##0.00%");
 
         TableColumnModel tcm = tblShow.getColumnModel();
-        
+
         DefaultTableCellRenderer d;
-             
+
         d = new DefaultTableCellRenderer();
         d.setHorizontalAlignment(SwingConstants.LEADING);
         tcm.getColumn(0).setCellRenderer(d);
         tcm.getColumn(1).setCellRenderer(d);
         tcm.getColumn(2).setCellRenderer(d);
-        
+
         d = new DefaultTableCellRenderer();
         d.setHorizontalAlignment(SwingConstants.RIGHT);
         tcm.getColumn(3).setCellRenderer(d);
         tcm.getColumn(4).setCellRenderer(d);
 
-
     }
-    
-    
+
 }

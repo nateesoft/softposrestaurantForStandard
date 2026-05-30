@@ -33,7 +33,7 @@ public class IngedientController {
                 bean.setPingCode(rs.getString("PingCode"));
                 bean.setPingQty(rs.getDouble("PingQty"));
                 bean.setPstock(rs.getString("Pstock"));
-                
+
                 listIng.add(bean);
             }
             rs.close();
@@ -42,7 +42,7 @@ public class IngedientController {
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         return listIng;
     }
 }

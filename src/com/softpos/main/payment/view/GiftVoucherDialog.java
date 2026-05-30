@@ -10,9 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberFormat;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberFormat;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
 
@@ -494,7 +494,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                         NumberFormat.showDouble2(rs.getDouble("giftamt"))
                     });
                 }
-                
+
                 rs.close();
                 stmt.close();
             }

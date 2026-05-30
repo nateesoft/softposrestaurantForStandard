@@ -148,6 +148,5 @@ public class STCardBean {
     public void setS_Link(String S_Link) {
         this.S_Link = S_Link;
     }
-    
-    
+
 }

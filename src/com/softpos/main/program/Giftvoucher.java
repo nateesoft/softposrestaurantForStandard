@@ -18,8 +18,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public final class Giftvoucher extends javax.swing.JDialog {
 
@@ -539,7 +539,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 };
                 model.addRow(input);
                 lineCount++;
-                
+
                 showCell(0, 0);
             }
 

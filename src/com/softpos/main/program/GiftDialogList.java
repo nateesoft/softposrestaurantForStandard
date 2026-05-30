@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
@@ -9,13 +9,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class GiftDialogList extends javax.swing.JDialog {
 
     private String giftCode;
     private String giftTypeCode;
+
     public GiftDialogList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -31,6 +32,7 @@ public class GiftDialogList extends javax.swing.JDialog {
     public void setGiftCode(String giftCode) {
         this.giftCode = giftCode;
     }
+
     public void setGiftTypeCode(String giftTypeCode) {
         this.giftTypeCode = giftTypeCode;
     }

@@ -20,8 +20,8 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import printReport.convertToChar;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public final class ViewReport {
 
@@ -49,7 +49,7 @@ public final class ViewReport {
                 }
                 rs1.close();
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(ViewReport.class, "error", e);
             }
 
@@ -78,7 +78,7 @@ public final class ViewReport {
 
                 rs.close();
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(ViewReport.class, "error", e);
             }
 
@@ -92,7 +92,7 @@ public final class ViewReport {
                     }
                     rs.close();
                 } catch (SQLException e) {
-                    
+
                     AppLogUtil.log(ViewReport.class, "error", e);
                 }
                 try {
@@ -160,7 +160,7 @@ public final class ViewReport {
                     try {
                         jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/inVat.jasper"));
                     } catch (JRException e) {
-                        
+
                     }
 
                     JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
@@ -173,13 +173,13 @@ public final class ViewReport {
                     j.setVisible(true);
                     v.setTitle("Report...");
                 } catch (HeadlessException | NumberFormatException | JRException e) {
-                    
+
                 }
             } else {
                 MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
             }
         } catch (Exception e) {
-        } finally{
+        } finally {
             mysql.closeConnection(this.getClass());
         }
 
@@ -204,7 +204,7 @@ public final class ViewReport {
             }
             rs1.close();
         } catch (SQLException e) {
-            
+
         }
 
         ResultSet rs;
@@ -257,7 +257,7 @@ public final class ViewReport {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
         }
 
         if (check > 0) {
@@ -270,7 +270,7 @@ public final class ViewReport {
                 }
                 rs.close();
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(ViewReport.class, "error", e);
             }
 
@@ -331,7 +331,7 @@ public final class ViewReport {
                 j.setVisible(true);
                 v.setTitle("Report...");
             } catch (HeadlessException | NumberFormatException | JRException e) {
-                
+
                 AppLogUtil.log(ViewReport.class, "error", e);
             }
         } else {
@@ -357,7 +357,7 @@ public final class ViewReport {
                     branchName = rs.getString("Name");
                 }
             } catch (SQLException e) {
-                
+
                 AppLogUtil.log(ViewReport.class, "error", e);
             }
 
@@ -380,7 +380,7 @@ public final class ViewReport {
                 try {
                     jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/PVatDaily.jasper"));
                 } catch (JRException e) {
-                    
+
                 }
 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
@@ -401,7 +401,7 @@ public final class ViewReport {
 
                 mysql.closeConnection(this.getClass());
             } catch (HeadlessException | JRException e) {
-                
+
             }
         } catch (Exception e) {
             System.err.println(e.toString());
@@ -450,7 +450,7 @@ public final class ViewReport {
             try {
                 jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/IVatDaily.jasper"));
             } catch (JRException e) {
-                
+
             }
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
@@ -469,7 +469,7 @@ public final class ViewReport {
                 MSG.WAR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
             }
         } catch (HeadlessException | JRException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }

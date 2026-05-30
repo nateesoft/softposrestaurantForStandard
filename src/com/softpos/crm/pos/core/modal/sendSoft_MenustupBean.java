@@ -7,21 +7,21 @@ package com.softpos.crm.pos.core.modal;
 
 public class sendSoft_MenustupBean {
 
-     private String menuCode;
-     private String menuType;
-     private String optSet;
-     private String pSet;
-     private String pCode;
-     private String menuShowText;
-     private String img;
-     private String fontColor;
-     private String bgColor;
-     private int layout;
-     private int fontSize;
-     private String fontName;
-     private String fontAttr;
-     private int m_Index;
-     private int iMG_Size;
+    private String menuCode;
+    private String menuType;
+    private String optSet;
+    private String pSet;
+    private String pCode;
+    private String menuShowText;
+    private String img;
+    private String fontColor;
+    private String bgColor;
+    private int layout;
+    private int fontSize;
+    private String fontName;
+    private String fontAttr;
+    private int m_Index;
+    private int iMG_Size;
 
     public String getMenuCode() {
         return menuCode;
@@ -142,6 +142,5 @@ public class sendSoft_MenustupBean {
     public void setiMG_Size(int iMG_Size) {
         this.iMG_Size = iMG_Size;
     }
-     
-     
+
 }

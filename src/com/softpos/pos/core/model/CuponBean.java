@@ -319,8 +319,6 @@ public class CuponBean {
     public void setListBean(ArrayList<CuponlistBean> listBean) {
         this.listBean = listBean;
     }
-    
-    
 
     private ArrayList<CuponlistBean> listBean = new ArrayList<>();
 }

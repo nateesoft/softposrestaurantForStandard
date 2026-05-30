@@ -3,6 +3,7 @@ package com.softpos.pos.core.model;
 import java.util.Date;
 
 public class TSaleBean {
+
     private String R_Index = "0";
     private String R_Refno;
     private String R_Table;
@@ -950,6 +951,5 @@ public class TSaleBean {
     public void setR_Cost(double R_Cost) {
         this.R_Cost = R_Cost;
     }
-    
-    
+
 }

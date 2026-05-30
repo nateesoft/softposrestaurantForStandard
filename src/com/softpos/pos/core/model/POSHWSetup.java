@@ -472,8 +472,8 @@ public class POSHWSetup {
     public void setRFIDPort(String RFIDPort) {
         this.RFIDPort = RFIDPort;
     }
-    
-    public static POSHWSetup Bean(String MacNo){
+
+    public static POSHWSetup Bean(String MacNo) {
         return PosControl.getData(MacNo);
     }
 }

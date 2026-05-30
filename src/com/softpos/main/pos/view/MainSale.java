@@ -39,7 +39,7 @@ import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosUserController;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
@@ -79,12 +79,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.JTableUtility;
-import util.MSG;
-import util.NumberUtil;
-import util.Option;
-import util.ValidateValue;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.JTableUtility;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberUtil;
+import com.softpos.util.Option;
+import com.softpos.util.ValidateValue;
 
 public class MainSale extends javax.swing.JDialog {
 
@@ -586,9 +586,9 @@ public class MainSale extends javax.swing.JDialog {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
-            .addComponent(tbpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tbpMain, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2310,7 +2310,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     txtPluCode.setText("");
                     txtPluCode.requestFocus();
                 }
-                boolean checkNumberlic = util.CheckStringOrNumberlic.CheckStringOrNumberlic(StrQty);
+                boolean checkNumberlic = com.softpos.util.CheckStringOrNumberlic.CheckStringOrNumberlic(StrQty);
                 if (checkNumberlic == true) {
                     Qty = Double.parseDouble(StrQty);
                 } else {
@@ -3003,7 +3003,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 }
             }
         }
-        
+
         PublicVar.TUserRec = PublicVar.TempUserRec;
     }
 
@@ -3815,7 +3815,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         for (int i = 0; i < listMenu.size(); i++) {
             final MenuMGR menu = listMenu.get(i);
-            if (menu.getMIndex() >= 15) continue; // slot 15 reserved for back button
+            if (menu.getMIndex() >= 15) {
+                continue; // slot 15 reserved for back button
+            }
             btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
             btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
                 JButton btnMenu = (JButton) e.getSource();
@@ -3869,12 +3871,12 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (!txtPluCode.getText().trim().equals("")) {
                 if (qtySet > 0) {
                     txtPluCode.setText("" + qtySet + "*" + PCode);
-                    if (seekPluCode()) {
-                        if (PublicVar.P_Status.equals("S")) {
-                            txtPluCode.setEditable(false);
-                        } else {
-                            txtPluCodeOnExit();
-                        }
+                    // ใช้ข้อมูลจาก findPluCode() ที่ query ไปแล้ว ไม่ต้อง query ซ้ำผ่าน seekPluCode()
+                    PublicVar.P_Qty = qtySet;
+                    if (PublicVar.P_Status.equals("S")) {
+                        txtPluCode.setEditable(false);
+                    } else {
+                        txtPluCodeOnExit();
                     }
                 } else {
                     txtPluCode.setText("");
@@ -3947,6 +3949,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 boolean isAutoAdd = false;
                 String pstock = PUtility.GetStkCode();
                 List<MgrButtonSetupBean> listMgr = mainSaleControl.getAllMgrButtonSetup(PCode);
+                List<String> batchSqls = new ArrayList<>();
                 for (MgrButtonSetupBean mgrBean : listMgr) {
                     isAutoAdd = true;
 
@@ -3959,8 +3962,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             + "'" + ThaiUtil.Unicode2ASCII(autoPDesc) + "', '" + pstock + "',"
                             + "'auto', '', "
                             + "CURTIME())";
-                    mainSaleControl.execUpdate(tempset);
+                    batchSqls.add(tempset);
                 }
+                mainSaleControl.execBatch(batchSqls);
 
                 //end loop autoadd
                 pname = ThaiUtil.Unicode2ASCII(mgrButtonBean.getPDesc());

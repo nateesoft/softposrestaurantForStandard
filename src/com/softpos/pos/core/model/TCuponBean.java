@@ -101,6 +101,5 @@ public class TCuponBean {
     public void setCuTextComment(String CuTextComment) {
         this.CuTextComment = CuTextComment;
     }
-    
-    
+
 }

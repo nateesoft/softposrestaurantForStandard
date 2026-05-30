@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.ProductBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -7,8 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 public class ProductControl {
 
@@ -17,7 +17,7 @@ public class ProductControl {
     public static final int PRODUCT_ACTIVE = 1;
     public static final int PRODUCT_NOT_ACTIVE = 2;
 
-    private List<ProductBean> listAll = null;
+    private static List<ProductBean> listAll = null;
 
     public ProductControl() {
         dataProduct = new ArrayList<>();
@@ -123,7 +123,7 @@ public class ProductControl {
                 }
                 rs.close();
             } catch (SQLException e) {
-                
+
             } finally {
                 mysql.closeConnection(this.getClass());
             }
@@ -201,7 +201,7 @@ public class ProductControl {
             rs.close();
 //            stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -281,7 +281,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -326,7 +326,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -375,7 +375,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -451,7 +451,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -472,7 +472,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -496,7 +496,7 @@ public class ProductControl {
             }
             rs.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -519,7 +519,7 @@ public class ProductControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysql.closeConnection(ProductControl.class);

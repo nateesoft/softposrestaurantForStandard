@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.MgrButtonSetupBean;
 import com.softpos.pos.core.model.OptionSetBean;
 import com.softpos.pos.core.model.SoftMenuSetup;
@@ -9,8 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -37,7 +37,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -73,7 +73,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -81,7 +81,7 @@ public class ModalPopupController extends DatabaseConnection {
 
         return listOption;
     }
-    
+
     public List<SoftMenuSetup> loadSoftMenuSetupByMenuCode(String menuSub) {
         List<SoftMenuSetup> listOption = new ArrayList<>();
 
@@ -102,7 +102,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

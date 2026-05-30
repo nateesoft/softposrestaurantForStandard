@@ -121,6 +121,5 @@ public class MTranBean {
     public void setTranferFlag(String TranferFlag) {
         this.TranferFlag = TranferFlag;
     }
-    
-    
+
 }

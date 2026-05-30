@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.CreditRec;
@@ -48,9 +49,9 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.DateUtil;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
+import com.softpos.util.NumberUtil;
 
 public class PPrint {
 

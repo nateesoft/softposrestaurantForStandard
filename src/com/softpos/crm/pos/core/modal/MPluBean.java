@@ -121,6 +121,5 @@ public class MPluBean {
     public void setTranferFlag(String TranferFlag) {
         this.TranferFlag = TranferFlag;
     }
-    
-    
+
 }

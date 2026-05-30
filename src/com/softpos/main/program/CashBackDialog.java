@@ -13,8 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class CashBackDialog extends javax.swing.JDialog {
 
@@ -187,7 +187,8 @@ public class CashBackDialog extends javax.swing.JDialog {
                     if (ref != null) {
                         refNo = Integer.parseInt(ref);
                     }
-                }   rs.close();
+                }
+                rs.close();
             }
 
             if (refNo < 10) {
@@ -224,7 +225,7 @@ public class CashBackDialog extends javax.swing.JDialog {
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         PrintReturnMoney(refStr);
     }
 

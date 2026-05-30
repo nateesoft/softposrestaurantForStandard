@@ -41,7 +41,7 @@ public class PublicVar {
     public static double P_Qty = 0;
     public static Boolean ErrorColect = false;
     public static String ReturnString = "";
-    public static Boolean ReturnPermitRefund =false;
+    public static Boolean ReturnPermitRefund = false;
     public static int ReturnQty = 0;
     public static String TempIndexKey = "";
     public static int RowSelected = 0;
@@ -550,7 +550,7 @@ public class PublicVar {
     public static String PrintCheckBillFromPDA = "";
     public static String PrintCopyAuto = "";
     public static String printerCheckBillName = "";
-    
+
     public static boolean printerCheckBill = false;
     public static boolean loadFromDelphiBOR = false;
     public static String picturePath = "";

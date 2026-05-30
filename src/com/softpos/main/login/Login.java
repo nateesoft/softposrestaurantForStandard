@@ -25,13 +25,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.CheckApplication;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.CheckApplication;
+import com.softpos.util.MSG;
 
 public class Login extends javax.swing.JDialog {
 
@@ -366,7 +368,7 @@ public class Login extends javax.swing.JDialog {
     public static void main(String args[]) {
         AppLogUtil.startup("SoftPOS Restaurant", "1.0");
         com.formdev.flatlaf.FlatIntelliJLaf.setup();
-        
+
         applyThaiFont();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> AppLogUtil.shutdown()));
@@ -376,17 +378,14 @@ public class Login extends javax.swing.JDialog {
                 System.exit(0);
             }
 
-            /* Create and display the dialog */
-            java.awt.EventQueue.invokeLater(() -> {
-                Login dialog = new Login(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+            Login dialog = new Login(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
             });
+            dialog.setVisible(true);
         });
     }
 
@@ -408,11 +407,19 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 
+    private static class LoginFetchData {
+
+        LoginBean loginBean;
+        boolean hasPendingBills;
+        PosUserBean posUserBean;
+        POSHWSetup posHwSetup;
+        String currentDate;
+        String branchCode;
+    }
+
     private void checkUserLogin() {
-        String OnAct;
-        String MacNoOnAct;
-        String loginname = txtUser.getText();
-        String password = txtPass.getText();
+        final String loginname = txtUser.getText();
+        final String password = txtPass.getText();
 
         PublicVar.printerStation = ConfigFile.getProperties("printerStation");
         PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
@@ -428,121 +435,134 @@ public class Login extends javax.swing.JDialog {
             return;
         }
 
-        LoginController loginController = new LoginController();
-        LoginBean loginBean = loginController.validateLogin(loginname, password);
-        if (loginBean.isValidLogin()) {
-            PublicVar._RealUser = loginBean.getUsername();
-            PublicVar._Password = loginBean.getPassword();
-            PublicVar._UserName = loginBean.getName();
-            OnAct = loginBean.getOnact();
-            MacNoOnAct = loginBean.getMacno();
+        btnLogin.setEnabled(false);
 
-            SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            String St = tf.format(new Date());
-            txtShowDate.setText(St);
-
-            BillControl billControl = new BillControl();
-            if (billControl.checkBillNoValid(St)) {
-                POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
-                String POSOnActCheck = poshwSetup.getOnAct();
-                if (POSOnActCheck.equals("Y")) {
-                    MSG.WAR(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
-                            + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
-                            + "กรุณาตรวจสอบฐานข้อมูล");
-                    System.exit(0);
+        new SwingWorker<LoginFetchData, Void>() {
+            @Override
+            protected LoginFetchData doInBackground() {
+                LoginFetchData data = new LoginFetchData();
+                data.loginBean = new LoginController().validateLogin(loginname, password);
+                if (!data.loginBean.isValidLogin()) {
+                    return data;
                 }
-                MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
-                if (ConfigFile.getProperties("checkCurdate").equals("true")) {
-                    GetPassword frm = new GetPassword(null, true);
-                    frm.setVisible(true);
-                    if (frm.ValidPassword) {
-                        if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                            MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
-                            clearlogin();
-                        } else {
-                            PosUserBean posUserBean = PosControl.getPosUser(loginname);
-                            if (posUserBean.getUserName() != null) {
-                                if (posUserBean.getSale1().equals("Y")) {
-                                    PublicVar.TUserRec = posUserBean;
-                                    loginController.updateLogin(loginname);
-                                    posControl.posHwSetupOnAct("Y");
-                                    Value.USERCODE = txtUser.getText();
-                                    PublicVar.Branch_Code = BranchControl.getData().getCode();
-                                    this.setVisible(false);//dispose();
+                data.currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
+                data.hasPendingBills = new BillControl().checkBillNoValid(data.currentDate);
+                data.posHwSetup = PosControl.getData(Value.MACNO);
+                data.posUserBean = PosControl.getPosUser(loginname);
+                data.branchCode = BranchControl.getData().getCode();
+                return data;
+            }
 
-                                    FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
-                                    floorPlanDialog.setVisible(true);
-                                } else {
-                                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
-                                    clearlogin();
-                                }
-                            } else {
-                                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-                                clearlogin();
-                            }
-                        }
-                    } else {
-                        System.exit(0);
-                    }
-                } else {
+            @Override
+            protected void done() {
+                btnLogin.setEnabled(true);
+                try {
+                    applyLoginResult(get(), loginname);
+                } catch (InterruptedException | ExecutionException ex) {
+                    Throwable cause = ex.getCause();
+                    MSG.ERR(Login.this, cause != null ? cause.getMessage() : ex.getMessage());
+                    clearlogin();
+                }
+            }
+        }.execute();
+    }
+
+    private void applyLoginResult(LoginFetchData data, String loginname) {
+        if (!data.loginBean.isValidLogin()) {
+            MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+            clearlogin();
+            return;
+        }
+
+        PublicVar._RealUser = data.loginBean.getUsername();
+        PublicVar._Password = data.loginBean.getPassword();
+        PublicVar._UserName = data.loginBean.getName();
+        String OnAct = data.loginBean.getOnact();
+        String MacNoOnAct = data.loginBean.getMacno();
+
+        txtShowDate.setText(data.currentDate);
+
+        if (data.hasPendingBills) {
+            String POSOnActCheck = data.posHwSetup.getOnAct();
+            if (POSOnActCheck.equals("Y")) {
+                MSG.WAR(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                        + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
+                        + "กรุณาตรวจสอบฐานข้อมูล");
+                System.exit(0);
+            }
+            MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
+            if (ConfigFile.getProperties("checkCurdate").equals("true")) {
+                GetPassword frm = new GetPassword(null, true);
+                frm.setVisible(true);
+                if (frm.ValidPassword) {
                     if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
                         MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                         clearlogin();
                     } else {
-                        PosUserBean posUserBean = PosControl.getPosUser(loginname);
-                        if (posUserBean.getUserName() != null) {
-                            if (posUserBean.getSale1().equals("Y")) {
-                                PublicVar.TUserRec = posUserBean;
-                                loginController.updateLogin(loginname);
-                                posControl.posHwSetupOnAct("Y");
-                                Value.USERCODE = txtUser.getText();
-                                PublicVar.Branch_Code = BranchControl.getData().getCode();
-                                this.setVisible(false);//dispose();
-
-                                FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
-                                floorPlanDialog.setVisible(true);
-                            } else {
-                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
-                                clearlogin();
-                            }
-                        } else {
-                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-                            clearlogin();
-                        }
+                        tryNavigateToMain(data, loginname, true);
                     }
+                } else {
+                    System.exit(0);
                 }
-
             } else {
                 if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
-                    MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                    MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                     clearlogin();
                 } else {
-                    PosUserBean posUserBean = PosControl.getPosUser(loginname);
-                    if (posUserBean.getUserName() != null) {
-                        if (posUserBean.getSale1().equals("Y")) {
-                            PublicVar.TUserRec = posUserBean;
-                            loginController.updateLogin(loginname);
-                            posControl.posHwSetupOnAct("Y");
-                            Value.USERCODE = txtUser.getText();
-                            PublicVar.Branch_Code = BranchControl.getData().getCode();
-                            this.setVisible(false);//dispose();
-
-                            FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
-                            floorPlanDialog.setVisible(true);
-                        } else {
-                            MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
-                            clearlogin();
-                        }
-                    } else {
-                        MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
-                        clearlogin();
-                    }
+                    tryNavigateToMain(data, loginname, true);
                 }
             }
         } else {
-            MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-            clearlogin();
+            if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                clearlogin();
+            } else {
+                tryNavigateToMain(data, loginname, false);
+            }
         }
+    }
+
+    private void tryNavigateToMain(LoginFetchData data, String loginname, boolean useErrMsg) {
+        PosUserBean posUserBean = data.posUserBean;
+        if (posUserBean.getUserName() == null) {
+            if (useErrMsg) {
+                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+            } else {
+                MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+            }
+            clearlogin();
+            return;
+        }
+        if (!posUserBean.getSale1().equals("Y")) {
+            if (useErrMsg) {
+                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+            } else {
+                MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+            }
+            clearlogin();
+            return;
+        }
+
+        PublicVar.TUserRec = posUserBean;
+        Value.USERCODE = loginname;
+        PublicVar.Branch_Code = data.branchCode;
+
+        btnLogin.setEnabled(false);
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                new LoginController().updateLogin(loginname);
+                posControl.posHwSetupOnAct("Y");
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                Login.this.setVisible(false);
+                FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                floorPlanDialog.setVisible(true);
+            }
+        }.execute();
     }
 
     private void clearlogin() {
@@ -571,29 +591,27 @@ public class Login extends javax.swing.JDialog {
     }
 
     private void checkUpdate() {
+        SwingUtilities.invokeLater(() -> {
+            pbCheckUpdate.setStringPainted(true);
+            pbCheckUpdate.setMinimum(0);
+            pbCheckUpdate.setMaximum(100);
+        });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //check ftp file date
+        new Thread(() -> {
+            for (int i = 1; i <= 100; i++) {
+                final int progress = i;
+                SwingUtilities.invokeLater(() -> {
+                    pbCheckUpdate.setValue(progress);
+                    pbCheckUpdate.setString("Check Update: (" + progress + " %)");
+                });
                 try {
-                    pbCheckUpdate.setStringPainted(true);
-                    pbCheckUpdate.setMinimum(0);
-                    pbCheckUpdate.setMaximum(100);
-
-                    for (int i = 1; i <= 100; i++) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (InterruptedException e) {
-                        }
-                    }
-                    pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00");
-                } catch (Exception e) {
-                    MSG.ERR(new JFrame(), e.getMessage());
+                    Thread.sleep(25);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
                 }
             }
+            SwingUtilities.invokeLater(() -> pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00"));
         }).start();
     }
 

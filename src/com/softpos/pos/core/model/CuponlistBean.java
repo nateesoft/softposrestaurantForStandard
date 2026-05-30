@@ -1,6 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class CuponlistBean {
+
     private String CuCode;
     private String PCode;
 
@@ -19,6 +20,5 @@ public class CuponlistBean {
     public void setPCode(String PCode) {
         this.PCode = PCode;
     }
-    
-    
+
 }

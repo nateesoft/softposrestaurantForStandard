@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.EmployeeBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -7,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.MSG;
 
 /**
  *
@@ -35,7 +35,7 @@ public class EmployeeControl extends DatabaseConnection {
                 }
                 rs.close();
             } catch (SQLException e) {
-                
+
             } finally {
                 mysql.closeConnection(this.getClass());
             }
@@ -72,7 +72,7 @@ public class EmployeeControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
         } finally {
             mysql.closeConnection(this.getClass());
         }

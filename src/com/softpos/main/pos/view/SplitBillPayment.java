@@ -3,7 +3,7 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -18,8 +18,8 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class SplitBillPayment extends javax.swing.JDialog {
 

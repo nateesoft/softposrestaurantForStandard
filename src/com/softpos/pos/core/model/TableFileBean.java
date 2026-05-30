@@ -6,7 +6,7 @@ import java.util.Date;
 public class TableFileBean {
 
     private String Tcode;
-    private String SoneCode="";
+    private String SoneCode = "";
     private Date TLoginDate;
     private String MacNo;
     private String Cashier;
@@ -35,7 +35,7 @@ public class TableFileBean {
     private double ItemDiscAmt = 0.00;
     private String MemCode;
     private double MemCurAmt = 0.00;
-    private String MemName="";
+    private String MemName = "";
     private Date MemBegin;
     private Date MemEnd;
     private double Food = 0.00;
@@ -49,8 +49,8 @@ public class TableFileBean {
     private String PrintTime2;
     private String ChkBill = "N";
     private String ChkBillTime = "00:00:00";
-    private String StkCode1="";
-    private String StkCode2="";
+    private String StkCode1 = "";
+    private String StkCode2 = "";
     private int TDesk = 0;
     private String TUser;
     private String TPause = "N";
@@ -500,6 +500,5 @@ public class TableFileBean {
     public void setDataBalance(ArrayList<BalanceBean> dataBalance) {
         this.dataBalance = dataBalance;
     }
-    
-    
+
 }

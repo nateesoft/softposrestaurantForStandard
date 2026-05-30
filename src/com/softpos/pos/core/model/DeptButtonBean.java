@@ -3,6 +3,7 @@ package com.softpos.pos.core.model;
 import com.softpos.crm.pos.core.modal.ButtonBean;
 
 public class DeptButtonBean extends ButtonBean {
+
     protected String groupcode;
     protected String groupname;
 
@@ -21,6 +22,5 @@ public class DeptButtonBean extends ButtonBean {
     public void setGroupname(String groupname) {
         this.groupname = groupname;
     }
-    
-    
+
 }

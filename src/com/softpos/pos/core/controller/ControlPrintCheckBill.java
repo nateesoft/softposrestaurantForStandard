@@ -5,10 +5,8 @@
  */
 package com.softpos.pos.core.controller;
 
-import com.softpos.main.program.printKicReport;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
-import java.sql.Statement;
-import util.MSG;
 
 /**
  *

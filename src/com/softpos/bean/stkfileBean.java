@@ -9,7 +9,6 @@ package com.softpos.bean;
  *
  * @author Administrator
  */
-
 public class stkfileBean {
 
     private String bPcode = "";

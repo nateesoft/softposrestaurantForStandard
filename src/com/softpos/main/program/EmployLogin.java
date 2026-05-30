@@ -3,13 +3,13 @@ package com.softpos.main.program;
 import java.awt.event.KeyEvent;
 
 public class EmployLogin extends javax.swing.JDialog {
-    
+
     private String loginPWD;
 
     public EmployLogin(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         txtPassword.requestFocus();
     }
 
@@ -384,10 +384,10 @@ public class EmployLogin extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPasswordFocusGained
 
     private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             setLoginPWD("");
             dispose();
-        }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setLoginPWD(txtPassword.getText());
             dispose();
         }
@@ -417,7 +417,7 @@ public class EmployLogin extends javax.swing.JDialog {
 
     private void input(String text) {
         String temp = txtPassword.getText();
-        txtPassword.setText(temp+text);
+        txtPassword.setText(temp + text);
         txtPassword.requestFocus();
     }
 }

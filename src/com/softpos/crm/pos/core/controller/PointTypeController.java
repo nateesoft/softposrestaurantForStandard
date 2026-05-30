@@ -1,15 +1,14 @@
 package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.PointTypeBean;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import util.AppLogUtil;
-import util.DateUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 
 /**
  *
@@ -40,7 +39,7 @@ public class PointTypeController {
 
         return bean;
     }
-    
+
     public static PointTypeBean getDataBranchPoint() {
         PointTypeBean bean = null;
         MySQLConnect mysql = new MySQLConnect();
@@ -48,9 +47,9 @@ public class PointTypeController {
             mysql.open(PointTypeController.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
             String sql = "SELECT * FROM " + Value.db_member + ".pointtype WHERE 1=1 "
-                        + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
-                        + "AND (point1>0 or point2>0 or point3>0) "
-                        + "AND Point_TypeDateService like '%" + EEE + "%' limit 1";
+                    + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
+                    + "AND (point1>0 or point2>0 or point3>0) "
+                    + "AND Point_TypeDateService like '%" + EEE + "%' limit 1";
             try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);

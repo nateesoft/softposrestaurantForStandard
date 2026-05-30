@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.awt.Color;
@@ -17,8 +17,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class OptionMsg extends javax.swing.JDialog {
 
@@ -115,7 +115,7 @@ public class OptionMsg extends javax.swing.JDialog {
                     for (int i = 0; i <= RowCount - 1; i++) {
                         model1.removeRow(0);
                     }
-                    while(rs.next()){
+                    while (rs.next()) {
                         Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
                         model1.addRow(input);
                         showCell1(0, 0);
@@ -186,11 +186,11 @@ public class OptionMsg extends javax.swing.JDialog {
                 BalanceBean bBean = new BalanceBean();
                 bBean.setR_Index(index);
                 bBean.setR_Table(tableNo);
-                
+
                 for (int i = 0; i < model2.getRowCount(); i++) {
                     opt[i] = model2.getValueAt(i, 0).toString();
                 }
-                
+
                 String SqlQuery = "update balance set "
                         + "r_opt1='" + ThaiUtil.Unicode2ASCII(opt[0]) + "',"
                         + "r_opt2='" + ThaiUtil.Unicode2ASCII(opt[1]) + "',"
@@ -236,11 +236,11 @@ public class OptionMsg extends javax.swing.JDialog {
                             + "and OptionName='" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "'";
                     try (Statement stmt = mysql.getConnection().createStatement()) {
                         stmt.executeUpdate(sqlDel);
-                        
+
                         String sql = "insert into optionfile(PGroup, OptionName) "
                                 + "values('" + bean.getR_Group() + "','" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "');";
                         stmt.executeUpdate(sql);
-                        
+
                         stmt.close();
                     }
                 } catch (SQLException e) {

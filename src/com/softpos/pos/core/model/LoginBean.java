@@ -1,6 +1,7 @@
 package com.softpos.pos.core.model;
 
 public class LoginBean {
+
     private String username;
     private String password;
     private String onact;
@@ -55,6 +56,5 @@ public class LoginBean {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
 }

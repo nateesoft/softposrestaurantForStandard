@@ -9,7 +9,6 @@ package com.softpos.bean;
  *
  * @author Administrator
  */
-
 public class S_TranT_SaleBean {
 
     private String R_Refno = "";

@@ -5,14 +5,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import javax.swing.table.JTableHeader;
 
-
 public class ShortKeyDialog extends javax.swing.JDialog {
 
     public ShortKeyDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
-        
+
         loadTableDefault();
         tb1.requestFocus();
     }
@@ -159,7 +158,7 @@ public class ShortKeyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tb1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tb1KeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ESCAPE){
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             dispose();
         }
     }//GEN-LAST:event_tb1KeyPressed
@@ -176,10 +175,10 @@ public class ShortKeyDialog extends javax.swing.JDialog {
 
     private void loadTableDefault() {
         JTableHeader tbH1 = tb1.getTableHeader();
-        tbH1.setFont(new Font("Tahoma", Font.BOLD, 14));        
+        tbH1.setFont(new Font("Tahoma", Font.BOLD, 14));
         tb1.setRowHeight(25);
         tb1.setShowGrid(true);
-        
+
         JTableHeader tbH2 = tb2.getTableHeader();
         tbH2.setFont(new Font("Tahoma", Font.BOLD, 14));
         tb2.setRowHeight(25);

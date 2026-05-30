@@ -1,8 +1,8 @@
 package com.softpos.pos.core.controller;
 
 import java.io.FileWriter;
-import util.AppLogUtil;
-import util.DirectoryUtility;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.DirectoryUtility;
 
 public class TextWriter {
 

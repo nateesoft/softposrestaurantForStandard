@@ -56,6 +56,5 @@ public class TPromotion2 {
     public void setMacNo(String MacNo) {
         this.MacNo = MacNo;
     }
-    
-    
+
 }

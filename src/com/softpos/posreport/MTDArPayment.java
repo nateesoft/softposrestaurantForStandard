@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDArPayment extends javax.swing.JDialog {
 
@@ -412,10 +412,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
-                } finally{
+                } finally {
                     mysql.closeConnection(this.getClass());
                 }
-              
+
                 prn.print("----------------------------------------");
                 prn.print(" ");
                 prn.print(" ");

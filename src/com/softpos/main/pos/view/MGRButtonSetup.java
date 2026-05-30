@@ -1,7 +1,7 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class MGRButtonSetup extends javax.swing.JDialog {
 
@@ -1023,14 +1023,14 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     if (rs.getString("check_autoadd").equals("Y")) {
                         isAutoAdd = true;
                     }
-                    
+
                     //เพิ่มใหม่
                     if (rs.getString("check_extra").equals("Y")) {
                         isExtraNoLimit = true;
                     }
-                    
+
                     qtyAmt = rs.getInt("qty");
-                    
+
                     model4.addRow(new Object[]{
                         rs.getString("pcode"),
                         ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
@@ -1303,7 +1303,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                         ThaiUtil.ASCII2Unicode(rs.getString(2))
                     });
                 }
-                
+
                 rs.close();
                 stmt.close();
             }

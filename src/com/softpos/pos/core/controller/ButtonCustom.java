@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import database.MySQLConnect;
@@ -16,8 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -58,7 +58,7 @@ public class ButtonCustom {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -103,7 +103,7 @@ public class ButtonCustom {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

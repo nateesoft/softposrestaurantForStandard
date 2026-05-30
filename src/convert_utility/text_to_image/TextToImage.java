@@ -20,40 +20,44 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import util.DirectoryUtility;
+import com.softpos.util.DirectoryUtility;
 
 public class TextToImage {
+
     private int charecter = 50;
-    public void setCharecter(int i){
+
+    public void setCharecter(int i) {
         this.charecter = i;
     }
-    public int getCharecter(){
+
+    public int getCharecter() {
         return charecter;
     }
 
     private String formatImage;
     private String font;
-    
-    public TextToImage(){
+
+    public TextToImage() {
         this.formatImage = "png";
         this.font = "Monospaced";
     }
-    public TextToImage(String font, String formatImage){
+
+    public TextToImage(String font, String formatImage) {
         this.font = font;
         this.formatImage = formatImage;
     }
 
-    public String[] getAvailableFontFamilyNames(){
+    public String[] getAvailableFontFamilyNames() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         return ge.getAvailableFontFamilyNames();
     }
-    
-    public boolean textToImage(String txtPath, String savePath){
+
+    public boolean textToImage(String txtPath, String savePath) {
         InnerImageWriter writer = new InnerImageWriter(txtPath, savePath, formatImage, font);
         return writer.create();
     }
 
-    public boolean textToImage(String txtPath, String savePath, String formatImage, String font){
+    public boolean textToImage(String txtPath, String savePath, String formatImage, String font) {
         this.formatImage = formatImage;
         this.font = font;
         InnerImageWriter writer = new InnerImageWriter(txtPath, savePath, formatImage, font);
@@ -65,7 +69,7 @@ public class TextToImage {
         ImageWriter writer;
         Iterator<ImageWriter> iter;
         BufferedImage txtImg;
-        
+
         String txtPath;
         String savePath;
         String formatImage;
@@ -73,15 +77,12 @@ public class TextToImage {
 
         final int fontSize = 14;
 
-
-
         InnerImageWriter(String txtPath, String savePath, String formatImage, String font) {
             this.txtPath = txtPath;
             this.savePath = savePath;
             this.formatImage = formatImage;
             this.font = font;
         }
-
 
         public List<String> readTextFile(File file) throws FileNotFoundException, IOException {
             List text = new ArrayList<>();
@@ -106,48 +107,48 @@ public class TextToImage {
         public boolean create() {
             boolean success = false;
 
-                //check path of file
+            //check path of file
             File txtFile = new File(txtPath);
-            if(!txtFile.exists()){
-               return false;
+            if (!txtFile.exists()) {
+                return false;
             }
             DirectoryUtility du = new DirectoryUtility();
             File saveFile;
-            try{
+            try {
                 saveFile = du.getFileAndCreateDir(savePath);
-                if(saveFile == null){
+                if (saveFile == null) {
                     return false;
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 return false;
             }
 
             ImageOutputStream imageOut = null;
             List<String> text;
             try {
-                    //read text file
+                //read text file
                 text = readTextFile(txtFile);
-                    //set width of 40 character
-                int width = (int)(charecter*8.6);
+                //set width of 40 character
+                int width = (int) (charecter * 8.6);
 
-                    //set height 20 pixel per line
+                //set height 20 pixel per line
                 int height;
-                if(text.size() <=40)
-                    height = (text.size() * 18)+5;
-                else if(text.size() <= 200)
+                if (text.size() <= 40) {
+                    height = (text.size() * 18) + 5;
+                } else if (text.size() <= 200) {
                     height = (text.size() * 18);
-                else
+                } else {
                     height = (text.size() * 17);
-                
-                //System.out.println(width+" X "+height);
+                }
 
+                //System.out.println(width+" X "+height);
                 iter = ImageIO.getImageWritersByFormatName(formatImage);
                 if (iter.hasNext()) {
                     writer = iter.next();
                 }
 
                 imageOut = ImageIO.createImageOutputStream(saveFile);
-                
+
                 txtImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                 Graphics2D gImage = txtImg.createGraphics();
                 gImage.setBackground(Color.WHITE);
@@ -160,8 +161,8 @@ public class TextToImage {
 
                 gImage.setFont(new Font(font, 0, fontSize));
 
-                int x=13, y=16;
-                for(int i=0; i<text.size(); i++){
+                int x = 13, y = 16;
+                for (int i = 0; i < text.size(); i++) {
                     gImage.drawString(text.get(i), x, y);
                     y += 18;
                 }

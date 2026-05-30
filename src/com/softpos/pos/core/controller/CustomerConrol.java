@@ -1,11 +1,11 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CustomerBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -38,7 +38,7 @@ public class CustomerConrol {
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        
+
         return bean;
 
     }

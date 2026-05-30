@@ -2,7 +2,6 @@ package com.softpos.pos.core.model;
 
 import java.util.Date;
 
-
 public class BillNoBean {
 
     private String B_Refno = "0";
@@ -878,7 +877,5 @@ public class BillNoBean {
     public void setB_CuponName(String B_CuponName) {
         this.B_CuponName = B_CuponName;
     }
-    
-    
-    
+
 }

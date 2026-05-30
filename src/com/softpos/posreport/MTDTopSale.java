@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.awt.Frame;
@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
-import util.DateChooseDialog;
-import util.MSG;
+import com.softpos.util.DateChooseDialog;
+import com.softpos.util.MSG;
 
 public class MTDTopSale extends javax.swing.JDialog {
 
@@ -515,13 +515,13 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                     + "and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 String TGroup = rs.getString("s_dept");
-                    String TCode = rs.getString("s_pcode");
-                    String TName = rs.getString("pdesc");
-                    Double TQuan = rs.getDouble("sum(s_qty)");
-                    Double Tamount = rs.getDouble("sum(s_amt)");
-                    InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
+                String TCode = rs.getString("s_pcode");
+                String TName = rs.getString("pdesc");
+                Double TQuan = rs.getDouble("sum(s_qty)");
+                Double Tamount = rs.getDouble("sum(s_amt)");
+                InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
             }
             rs.close();
             stmt.close();
@@ -557,27 +557,27 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     Statement stmt = mysql.getConnection().createStatement();
                     String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
-                    while(rs.next()){
+                    while (rs.next()) {
                         prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
                         TempGroup = rs.getString("r_group");
-                        
+
                         if (!rs.getString("r_group").equals(TempGroup)) {
-                                prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
-                                TempGroup = rs.getString("r_group");
-                                Cnt = 1;
-                            }
-                            if (Cnt <= CntOrder) {
-                                prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rs.getString("r_pname"), 30));
-                                prn.print("     " + PUtility.DataFullR(rs.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13));
-                                Cnt++;
-                            }
+                            prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
+                            TempGroup = rs.getString("r_group");
+                            Cnt = 1;
+                        }
+                        if (Cnt <= CntOrder) {
+                            prn.print(PUtility.DataFull(IntFmt.format(Cnt), 3) + "  " + PUtility.DataFullR(rs.getString("r_pname"), 30));
+                            prn.print("     " + PUtility.DataFullR(rs.getString("r_plucode"), 13) + "  " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13));
+                            Cnt++;
+                        }
                     }
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 } finally {
-                     mysql.closeConnection(this.getClass());
+                    mysql.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
@@ -590,7 +590,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 //                MSG.ERR("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
             }
         }
-       
+
         InitScreen();
     }
 
@@ -613,13 +613,13 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') "
                     + "and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 String TGroup = rs.getString("s_dept");
-                    String TCode = rs.getString("s_pcode");
-                    String TName = rs.getString("pdesc");
-                    Double TQuan = rs.getDouble("sum(s_qty)");
-                    Double Tamount = rs.getDouble("sum(s_amt)");
-                    InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
+                String TCode = rs.getString("s_pcode");
+                String TName = rs.getString("pdesc");
+                Double TQuan = rs.getDouble("sum(s_qty)");
+                Double Tamount = rs.getDouble("sum(s_amt)");
+                InsertTemp(TGroup, TCode, TName, TQuan, Tamount);
             }
             rs.close();
             stmt.close();
@@ -663,20 +663,20 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             Statement stmt = mysql.getConnection().createStatement();
             String SqlQuery = "select * from temptopsale order by r_group,r_quan DESC";
             ResultSet rs = stmt.executeQuery(SqlQuery);
-            while(rs.next()){
+            while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
                 TempGroup = rs.getString("r_group");
-                
+
                 if (!rs.getString("r_group").equals(TempGroup)) {
-                        t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
-                        TempGroup = rs.getString("r_group");
-                        Cnt = 1;
-                    }
-                    if (Cnt <= CntOrder) {
-                        t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 28)) + "_";
-                        t += "align=left><font face=Angsana New size=1>" + (Space + PUtility.DataFull(rs.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13)) + "_";
-                        Cnt++;
-                    }
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
+                    TempGroup = rs.getString("r_group");
+                    Cnt = 1;
+                }
+                if (Cnt <= CntOrder) {
+                    t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(Cnt), 3) + Space + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("r_pname")), 28)) + "_";
+                    t += "align=left><font face=Angsana New size=1>" + (Space + PUtility.DataFull(rs.getString("r_plucode"), 13) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 6) + Space + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 13)) + "_";
+                    Cnt++;
+                }
             }
             rs.close();
             stmt.close();

@@ -9,7 +9,7 @@ import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.CouponDiscountController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TempCuponController;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.model.CuponlistBean;
@@ -34,9 +34,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
-import util.NumberUtil;
+import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
+import com.softpos.util.NumberUtil;
 
 public class CouponDiscount extends javax.swing.JDialog {
 

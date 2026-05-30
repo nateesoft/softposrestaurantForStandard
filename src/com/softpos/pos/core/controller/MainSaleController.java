@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.MenuListBean;
@@ -14,8 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.AppLogUtil;
 
 /**
  *
@@ -40,7 +40,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -64,7 +64,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -92,7 +92,7 @@ public class MainSaleController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -124,7 +124,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -151,7 +151,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -182,7 +182,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -217,7 +217,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -243,7 +243,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -268,7 +268,7 @@ public class MainSaleController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -294,7 +294,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -319,7 +319,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -346,7 +346,7 @@ public class MainSaleController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -372,7 +372,7 @@ public class MainSaleController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -399,7 +399,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -426,7 +426,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -454,7 +454,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -479,7 +479,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -508,7 +508,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -536,7 +536,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -566,7 +566,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -597,7 +597,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -621,7 +621,7 @@ public class MainSaleController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            
+
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

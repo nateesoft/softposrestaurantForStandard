@@ -4,15 +4,14 @@ import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
-import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import util.AppLogUtil;
-import util.MSG;
+import com.softpos.util.MSG;
 
 public class PLURep extends javax.swing.JDialog {
 
@@ -1242,7 +1241,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //        prn.PrintPlu(GArray);
 //        txtMacNo1.requestFocus();
 //    }
-      public void bntOKClick() {
+    public void bntOKClick() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
         String CashNo1 = txtCashNo1.getText();
@@ -1272,7 +1271,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
-//                    + "and (r_plucode>='" + Plu1 + "') and (r_plucode<='" + Plu2 + "') "
+                    //                    + "and (r_plucode>='" + Plu1 + "') and (r_plucode<='" + Plu2 + "') "
                     + "and (r_void<>'V') and (r_refund<>'V') "
                     //                    + "and r_date=curdate() "
                     + "Order by r_group,r_plucode";
