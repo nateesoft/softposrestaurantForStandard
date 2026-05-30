@@ -28,7 +28,7 @@ public class DatabaseUtility {
             }
             return -1;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(DatabaseUtility.class, "error", e);
             return -1;
         } finally {
@@ -45,7 +45,7 @@ public class DatabaseUtility {
             }
             return pstmt.executeUpdate();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(DatabaseUtility.class, "error", e);
             return -1;
         } finally {
@@ -80,7 +80,7 @@ public class DatabaseUtility {
                 }
             }
         } catch (SQLException | RuntimeException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
             mysql.close();
@@ -117,7 +117,7 @@ public class DatabaseUtility {
                 }
             }
         } catch (SQLException | RuntimeException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
             mysql.close();

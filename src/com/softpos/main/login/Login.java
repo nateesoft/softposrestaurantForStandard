@@ -1,0 +1,642 @@
+package com.softpos.main.login;
+
+import com.softpos.main.floorplan.view.FloorPlanDialog;
+import com.softpos.main.program.GetPassword;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.LoginController;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.LoginBean;
+import com.softpos.pos.core.model.PosUserBean;
+import database.ConfigFile;
+import database.MySQLConnect;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
+import util.CheckApplication;
+import util.MSG;
+
+public class Login extends javax.swing.JDialog {
+
+    private Timer timer;
+    private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private DecimalFormat IntFmt = new DecimalFormat("#,##0");
+    private PosControl posControl = new PosControl();
+
+    public Login(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        txtUser.setText("");
+        txtPass.setText("");
+        txtMacNo.setText("MAC NO. " + ConfigFile.getProperties("macno"));
+        txtUser.requestFocus();
+        TimeOfDay time = new TimeOfDay();
+        timer = new Timer(1000, time);
+        timer.start();
+        checkUpdate();
+        PublicVar.loadFromDelphiBOR = Boolean.parseBoolean(ConfigFile.getProperties("loadFromDelphiBOR"));
+        PublicVar.picturePath = ConfigFile.getProperties("picturePath");
+        try {
+            ClearTablefileNotUse();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        lbUser = new javax.swing.JLabel();
+        lbPass = new javax.swing.JLabel();
+        txtUser = new javax.swing.JTextField();
+        txtPass = new javax.swing.JPasswordField();
+        btnLogin = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        txtMacNo = new javax.swing.JTextField();
+        txtShowDate = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        pbCheckUpdate = new javax.swing.JProgressBar();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Login Sale System www.softpos.co.th tel.02-116-6615 Hotline: 086-320-3877");
+        setUndecorated(true);
+        setResizable(false);
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+
+        jButton1.setBackground(new java.awt.Color(255, 102, 0));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unlock2.jpg"))); // NOI18N
+        jButton1.setBorderPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lbUser.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        lbUser.setForeground(new java.awt.Color(255, 255, 255));
+        lbUser.setText("ชื่อผู้ใช้งาน (User name):");
+
+        lbPass.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        lbPass.setForeground(new java.awt.Color(255, 255, 255));
+        lbPass.setText("รหัสผ่าน (Password)  :");
+
+        txtUser.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        txtUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtUserMouseClicked(evt);
+            }
+        });
+        txtUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUserKeyPressed(evt);
+            }
+        });
+
+        txtPass.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        txtPass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtPassMouseClicked(evt);
+            }
+        });
+        txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPassKeyPressed(evt);
+            }
+        });
+
+        btnLogin.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+        btnLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnLoginKeyPressed(evt);
+            }
+        });
+
+        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(159, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lbUser)
+                        .addGap(15, 15, 15)
+                        .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(lbPass)
+                        .addGap(16, 16, 16)
+                        .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(85, 85, 85)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(lbUser))
+                            .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(lbPass, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 1010, 110));
+
+        txtMacNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtMacNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtMacNo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtMacNo.setFocusable(false);
+        txtMacNo.setRequestFocusEnabled(false);
+        txtMacNo.setVerifyInputWhenFocusTarget(false);
+        txtMacNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMacNoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtMacNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 590, 260, 30));
+
+        txtShowDate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtShowDate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtShowDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtShowDate.setFocusable(false);
+        txtShowDate.setRequestFocusEnabled(false);
+        txtShowDate.setVerifyInputWhenFocusTarget(false);
+        txtShowDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtShowDateActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtShowDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 590, 181, 30));
+
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/BackGround8.jpg"))); // NOI18N
+        jLabel2.setLabelFor(pbCheckUpdate);
+        jLabel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, -140, 1010, 760));
+
+        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel2.setForeground(java.awt.Color.white);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Software Restaurant SOFTPOS©2024 V.9");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 60, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 946, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
+        );
+
+        pbCheckUpdate.setBackground(new java.awt.Color(204, 153, 0));
+        pbCheckUpdate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        pbCheckUpdate.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1014, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(pbCheckUpdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pbCheckUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtShowDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtShowDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtShowDateActionPerformed
+
+    private void txtMacNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMacNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMacNoActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        clearTemp();
+        System.exit(0);
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            clearTemp();
+            System.exit(0);
+        } else {
+            if (!txtUser.getText().equals("")) {
+                keyboardcheck(evt, "txtUser");
+            } else {
+                txtUser.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txtUserKeyPressed
+
+    private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
+        if (!txtPass.getText().equals("")) {
+            keyboardcheck(evt, "txtPass");
+        } else {
+            txtPass.requestFocus();
+        }
+    }//GEN-LAST:event_txtPassKeyPressed
+
+    private void btnLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnLoginKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            checkUserLogin();
+        }
+    }//GEN-LAST:event_btnLoginKeyPressed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        checkUserLogin();
+        
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMouseClicked
+        new KeyBoardDialog(null, true, 4).get(txtUser, 4);
+    }//GEN-LAST:event_txtUserMouseClicked
+
+    private void txtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPassMouseClicked
+        new KeyBoardDialog(null, true, 4).get(txtPass, 4);
+    }//GEN-LAST:event_txtPassMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        posControl.posHwSetupOnAct("N");
+        JOptionPane.showMessageDialog(this, "ปลดล้อกโปรแกรมเรียบร้อยกรุณากรอก Username : Password");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public static void main(String args[]) {
+        AppLogUtil.startup("SoftPOS Restaurant", "1.0");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> AppLogUtil.shutdown()));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (CheckApplication.isRunning()) {
+                JOptionPane.showMessageDialog(new JFrame(), "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            }
+            File f = new File("softrestaurant.running");
+            if (f.exists()) {
+                int confirm = JOptionPane.showConfirmDialog(null, "โปรแกรมถูกปิดไม่สมบูรณ์ ท่านต้องการเปิดใช้งานต่อหรือไม่ ?",
+                        "เปิดใช้งานโปรแกรม", JOptionPane.OK_CANCEL_OPTION);
+                if (confirm == JOptionPane.OK_OPTION) {
+                    new File("softrestaurant.running").delete();
+                } else {
+                    new File("softrestaurant.running").delete();
+                    System.exit(0);
+                }
+            } else {
+                try {
+                    f.createNewFile();
+                } catch (IOException ex) {
+                }
+            }
+
+            com.formdev.flatlaf.FlatIntelliJLaf.setup();
+
+            /* Create and display the dialog */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    Login dialog = new Login(new javax.swing.JFrame(), true);
+                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosing(java.awt.event.WindowEvent e) {
+                            System.exit(0);
+                        }
+                    });
+                    dialog.setVisible(true);
+                }
+            });
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnLogin;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lbPass;
+    private javax.swing.JLabel lbUser;
+    private javax.swing.JProgressBar pbCheckUpdate;
+    private javax.swing.JTextField txtMacNo;
+    private javax.swing.JPasswordField txtPass;
+    private javax.swing.JTextField txtShowDate;
+    private javax.swing.JTextField txtUser;
+    // End of variables declaration//GEN-END:variables
+
+    private void checkUserLogin() {
+        String OnAct;
+        String MacNoOnAct;
+        String loginname = txtUser.getText();
+        String password = txtPass.getText();
+
+        PublicVar.printerStation = ConfigFile.getProperties("printerStation");
+        PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
+        PublicVar.defaultCustomerQty = ConfigFile.getProperties("defaultCustomerQty");
+        PublicVar.PrintCheckBillFromPDA = ConfigFile.getProperties("PrintCheckBillFromPDA");
+        PublicVar.PrintCopyAuto = ConfigFile.getProperties("PrintCopyAuto");
+        PublicVar.printerCheckBillName = ConfigFile.getProperties("printerCheckBillName");
+        Value.printdriver = Boolean.parseBoolean(ConfigFile.getProperties("printdriver"));
+
+        if ((loginname.length() == 0) || (password.length() == 0)) {
+            MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
+            clearlogin();
+            return;
+        }
+
+        LoginController loginController = new LoginController();
+        LoginBean loginBean = loginController.validateLogin(loginname, password);
+        if (loginBean.isValidLogin()) {
+            PublicVar._RealUser = loginBean.getUsername();
+            PublicVar._Password = loginBean.getPassword();
+            PublicVar._UserName = loginBean.getName();
+            OnAct = loginBean.getOnact();
+            MacNoOnAct = loginBean.getMacno();
+
+            SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            String St = tf.format(new Date());
+            txtShowDate.setText(St);
+
+            BillControl billControl = new BillControl();
+            if (billControl.checkBillNoValid(St)) {
+                POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+                String POSOnActCheck = poshwSetup.getOnAct();
+                if (POSOnActCheck.equals("Y")) {
+                    JOptionPane.showMessageDialog(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                            + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
+                            + "กรุณาตรวจสอบฐานข้อมูล", "สถานะเครื่อง POS", JOptionPane.WARNING_MESSAGE);
+                    System.exit(0);
+                }
+                MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
+                if (ConfigFile.getProperties("checkCurdate").equals("true")) {
+                    GetPassword frm = new GetPassword(null, true);
+                    frm.setVisible(true);
+                    if (frm.ValidPassword) {
+                        if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                            MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                            clearlogin();
+                        } else {
+                            PosUserBean posUserBean = PosControl.getPosUser(loginname);
+                            if (posUserBean.getUserName() != null) {
+                                if (posUserBean.getSale1().equals("Y")) {
+                                    PublicVar.TUserRec = posUserBean;
+                                    loginController.updateLogin(loginname);
+                                    posControl.posHwSetupOnAct("Y");
+                                    Value.USERCODE = txtUser.getText();
+                                    PublicVar.Branch_Code = BranchControl.getData().getCode();
+                                    this.setVisible(false);//dispose();
+
+                                    FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                                    floorPlanDialog.setVisible(true);
+                                } else {
+                                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                    clearlogin();
+                                }
+                            } else {
+                                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                                clearlogin();
+                            }
+                        }
+                    } else {
+                        System.exit(0);
+                    }
+                } else {
+                    if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                        MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                        clearlogin();
+                    } else {
+                        PosUserBean posUserBean = PosControl.getPosUser(loginname);
+                        if (posUserBean.getUserName() != null) {
+                            if (posUserBean.getSale1().equals("Y")) {
+                                PublicVar.TUserRec = posUserBean;
+                                loginController.updateLogin(loginname);
+                                posControl.posHwSetupOnAct("Y");
+                                Value.USERCODE = txtUser.getText();
+                                PublicVar.Branch_Code = BranchControl.getData().getCode();
+                                this.setVisible(false);//dispose();
+
+                                FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                                floorPlanDialog.setVisible(true);
+                            } else {
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                                clearlogin();
+                            }
+                        } else {
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                            clearlogin();
+                        }
+                    }
+                }
+
+            } else {
+                if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                    MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
+                    clearlogin();
+                } else {
+                    PosUserBean posUserBean = PosControl.getPosUser(loginname);
+                    if (posUserBean.getUserName() != null) {
+                        if (posUserBean.getSale1().equals("Y")) {
+                            PublicVar.TUserRec = posUserBean;
+                            loginController.updateLogin(loginname);
+                            posControl.posHwSetupOnAct("Y");
+                            Value.USERCODE = txtUser.getText();
+                            PublicVar.Branch_Code = BranchControl.getData().getCode();
+                            this.setVisible(false);//dispose();
+
+                            FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
+                            floorPlanDialog.setVisible(true);
+                        } else {
+                            MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...ระบบการขายได้...!!!");
+                            clearlogin();
+                        }
+                    } else {
+                        MSG.WAR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                        clearlogin();
+                    }
+                }
+            }
+        } else {
+            MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+            clearlogin();
+        }
+    }
+
+    private void clearlogin() {
+        txtUser.setText("");
+        txtPass.setText("");
+        txtUser.requestFocus();
+    }
+
+    private void keyboardcheck(KeyEvent evt, String c_loginname) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (c_loginname.equals("txtUser")) {
+                txtPass.requestFocus();
+            } else if (c_loginname.equals("txtPass")) {
+                btnLogin.requestFocus();
+            }
+        } else {
+            if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                clearTemp();
+                System.exit(0);
+            }
+        }
+    }
+
+    private void clearTemp() {
+        new File("softrestaurant.running").delete();
+    }
+
+    private void checkUpdate() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //check ftp file date
+            try {
+                pbCheckUpdate.setStringPainted(true);
+                pbCheckUpdate.setMinimum(0);
+                pbCheckUpdate.setMaximum(100);
+
+                for (int i = 1; i <= 100; i++) {
+                    pbCheckUpdate.setValue(i);
+                    pbCheckUpdate.setString("Check Update: (" + i + " %)");
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException e) {
+                    }
+                }
+                pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00");
+            } catch (Exception e) {
+                MSG.ERR(new JFrame(), e.getMessage());
+            }
+            }
+        }).start();
+    }
+
+    class TimeOfDay implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            SimpleDateFormat tf = new SimpleDateFormat("dd/MM/yyyy (HH:mm:ss)", Locale.ENGLISH);
+            String St = tf.format(new Date());
+            txtShowDate.setText(St);
+        }
+    }
+
+    private void ClearTablefileNotUse() throws SQLException {
+        MySQLConnect mysql = new MySQLConnect();
+        mysql.open(Login.class);
+        String sql = "select * from balance limit 1";
+        ResultSet rs = mysql.executeQuery(sql);
+        if (!rs.next()) {
+            String sqlTablefile = "update tablefile set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
+            mysql.executeUpdate(sqlTablefile);
+            System.out.println(sqlTablefile);
+        }
+
+        rs.close();
+        mysql.closeConnection(this.getClass());
+
+    }
+
+}

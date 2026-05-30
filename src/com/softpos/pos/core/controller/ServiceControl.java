@@ -138,7 +138,7 @@ public class ServiceControl extends DatabaseConnection {
                 stmt5.executeUpdate(sqlUpdateDate);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

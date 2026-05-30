@@ -40,7 +40,6 @@ public class CouponDiscountController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -74,7 +73,6 @@ public class CouponDiscountController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

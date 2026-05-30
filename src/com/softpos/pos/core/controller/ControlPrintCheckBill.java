@@ -49,7 +49,7 @@ public class ControlPrintCheckBill {
             mysql.open();
             mysql.executeUpdate(sql);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.err.println(e.toString());
         } finally {
             mysql.close();
         }
@@ -62,8 +62,7 @@ public class ControlPrintCheckBill {
             mysql.open();
             mysql.executeUpdate(sql);
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
         } finally {
             mysql.close();
         }

@@ -42,7 +42,7 @@ public class DiscountControl {
 
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(DiscountControl.class, "error", e);
         }
         
@@ -73,7 +73,7 @@ public class DiscountControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
         } finally {
             mysql.closeConnection(this.getClass());
         }

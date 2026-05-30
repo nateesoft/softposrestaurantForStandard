@@ -55,7 +55,7 @@ public class PKicTran {
 
             mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -156,7 +156,7 @@ public class PKicTran {
 
             mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            System.err.println(e.getMessage());
         }
 
     }

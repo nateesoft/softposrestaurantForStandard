@@ -33,7 +33,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -59,7 +59,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -86,7 +86,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -111,7 +111,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error" +sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -136,7 +136,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -161,7 +161,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -184,7 +184,7 @@ public class CheckBillController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -40,7 +40,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -77,7 +77,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -111,7 +111,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -146,7 +146,7 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

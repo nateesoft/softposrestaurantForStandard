@@ -8,11 +8,12 @@ package com.softpos.main.program;
 import com.softpos.crm.pos.core.controller.sendMenuButttonToBorController;
 import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
 import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
-import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.main.floorplan.view.FloorPlanDialog;
 import database.SQLServerConnect;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -35,7 +36,7 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
                 jTextField1.setText("");
                 processSendToBor();
             } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(new JFrame(), e.getMessage());
             }
             }
         }).start();
@@ -93,10 +94,10 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
             }
 
             pbCheckUpdate.setForeground(Color.green);
-            MSG.NOTICE("รับส่งข้อมูลเมนูไปยัง BOR เรียบร้อย");
+            MSG.NOTICE(this, "รับส่งข้อมูลเมนูไปยัง BOR เรียบร้อย");
             this.setVisible(false);
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             
@@ -120,12 +121,11 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
                     try {
                         Thread.sleep(25);
                     } catch (InterruptedException e) {
-                        MSG.NOTICE(e.toString());
                     }
                 }
                 pbCheckUpdate.setString("Update Menu To BOR Complete!");
             } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+                MSG.ERR(new JFrame(), e.getMessage());
             }
             }
         }).start();

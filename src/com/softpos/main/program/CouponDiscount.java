@@ -429,7 +429,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
             ShowTable.setToolTipText("");
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -492,7 +492,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -539,7 +539,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -568,7 +568,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -599,7 +599,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -693,14 +693,14 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             } //เช็คว่าสินค้าไหนใช้คูปองได้บ้าง
             //เช็คว่าสินค้าไหนใช้คูปองได้บ้าง
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
         }
 
         if (itemForDisc < cuponQty) {
-            MSG.WAR(msgError);
+            MSG.WAR(this, msgError);
             txtCuQty.setText("0");
             txtCuQty.selectAll();
             txtCuQty.requestFocus();
@@ -711,7 +711,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             CuponBean cBean = cc.getCupon(cuCode);
             if (cBean.getCuType().equals("A") || cBean.getCuType().equals("C")) {
                 if (cuponQty > 1 && cBean.getCuType().equals("C")) {
-                    MSG.WAR("บัตรคูปองที่ร่วมรายการนี้ รับได้สูงสุดแค่ 1 บัตรเท่านั้น");
+                    MSG.WAR(this, "บัตรคูปองที่ร่วมรายการนี้ รับได้สูงสุดแค่ 1 บัตรเท่านั้น");
                     txtCuQty.setText("1");
                     txtCuQty.selectAll();
                     txtCuQty.requestFocus();
@@ -723,7 +723,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 List<CuponlistBean> listBean = lc.listCuponlist(cuCode);
                 //******* START ******//
                 if (listBean.isEmpty()) {
-                    MSG.WAR(msgError);
+                    MSG.WAR(this, msgError);
                     txtCuQty.setText("0");
                     txtCuQty.selectAll();
                     txtCuQty.requestFocus();
@@ -831,7 +831,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                     }
                                 }
                             } else {
-                                MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
+                                MSG.WAR(this, "ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
                                 txtCuQty.setText("0");
                                 txtCuQty.selectAll();
                                 txtCuQty.requestFocus();
@@ -840,7 +840,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     }
 
                     if (countCheck == 0) {
-                        MSG.WAR(msgError);
+                        MSG.WAR(this, msgError);
                         txtCuQty.setText("0");
                         txtCuQty.selectAll();
                         txtCuQty.requestFocus();
@@ -963,14 +963,14 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             }
                         }
                     } else {
-                        MSG.WAR("ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
+                        MSG.WAR(this, "ไม่พบประเภทการให้คูปองส่วนลดสำหรับคูปองนี้ !");
                         txtCuQty.setText("0");
                         txtCuQty.selectAll();
                         txtCuQty.requestFocus();
                     }
                 }
             } else {
-                MSG.WAR("ไม่พบข้อมูลบัตรคูปองที่ท่านต้องการใช้งาน !");
+                MSG.WAR(this, "ไม่พบข้อมูลบัตรคูปองที่ท่านต้องการใช้งาน !");
                 txtCuQty.setText("0");
                 txtCuQty.selectAll();
                 txtCuQty.requestFocus();
@@ -1043,7 +1043,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1082,7 +1082,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.executeUpdate(sql3);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1108,7 +1108,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

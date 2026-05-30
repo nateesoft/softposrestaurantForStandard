@@ -29,7 +29,6 @@ public class BranchFileController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
             mysql.closeConnection(BranchFileController.class);
@@ -59,7 +58,6 @@ public class BranchFileController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
             mysql.closeConnection(BranchFileController.class);

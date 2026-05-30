@@ -48,7 +48,7 @@ public class JTableUtility {
             table.setRowHeight(25);
 
         } catch (Exception e) {
-            MSG.ERR(null, e.getMessage());
+            
         }
 
     }

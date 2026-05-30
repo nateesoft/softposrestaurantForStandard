@@ -566,7 +566,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
 
         try {
@@ -581,7 +581,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -595,7 +595,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -609,7 +609,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -654,7 +654,7 @@ if (First) {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally{
             mysql.closeConnection(this.getClass());
         }
@@ -757,7 +757,7 @@ if (First) {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print("----------------------------------------");
                 prn.print(PUtility.DataFullR("Total Amount  ", 26) + PUtility.DataFull(DecFmt.format(SumAmt), 13));
@@ -778,7 +778,7 @@ if (First) {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -793,7 +793,7 @@ if (First) {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
                 prn.print("----------------------------------------");
@@ -811,7 +811,7 @@ if (First) {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }

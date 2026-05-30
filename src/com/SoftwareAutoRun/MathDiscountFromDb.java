@@ -52,7 +52,7 @@ public class MathDiscountFromDb {
                 sbean.setDiscount(sbean.getR_Total() - sbean.getR_Nettotal());
                 list.add(sbean);
             }
-            MSG.NOTICE("ListSize= " + list.size());
+            System.out.println("ListSize= " + list.size());
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     String sqlUpdate = "update stcard_tocolo set "
@@ -72,8 +72,7 @@ public class MathDiscountFromDb {
             }
             rs.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
-            System.out.println(e.toString());
+            System.err.println(e.toString());
         } finally {
             mysql.close();
         }

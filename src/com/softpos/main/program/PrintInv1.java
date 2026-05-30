@@ -156,6 +156,7 @@ public class PrintInv1 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("โปรแกรมพิมพ์ใบกำกับภาษี/ใบเสร็จรับเงิน");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jPanel1.setBackground(new java.awt.Color(247, 242, 188));
@@ -767,7 +768,7 @@ public class PrintInv1 extends javax.swing.JDialog {
         jMenu1.setText("Function");
         jMenu1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem1.setText("เพิ่มเอกสารใหม่&Clear");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -777,7 +778,7 @@ public class PrintInv1 extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem5.setText("ยกเลิกเอกสาร");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -787,7 +788,7 @@ public class PrintInv1 extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem5);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem2.setText("บันทึกข้อมูล (Save/Update)");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -797,7 +798,7 @@ public class PrintInv1 extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem3.setText("แสดงรายการ");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -808,7 +809,7 @@ public class PrintInv1 extends javax.swing.JDialog {
         jMenu1.add(jMenuItem3);
         jMenu1.add(jSeparator1);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jMenuItem4.setText("ออกจากการทำงาน (Exit)");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -1231,7 +1232,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -1276,7 +1277,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -1318,7 +1319,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -1403,7 +1404,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     stmt.close();
                 }
             } catch (SQLException e2) {
-                MSG.ERR(e2.getMessage());
+                MSG.ERR(this, e2.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e2);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -1589,7 +1590,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1614,7 +1615,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1642,7 +1643,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         }
 
@@ -1669,7 +1670,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                 prm.close();
                             }
                         } catch (SQLException e2) {
-                            MSG.ERR(e2.getMessage());
+                            MSG.ERR(this, e2.getMessage());
                         }
                     }
                     rs.close();
@@ -1677,7 +1678,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -1701,7 +1702,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1724,7 +1725,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1797,7 +1798,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1811,7 +1812,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             TempInvDate = DateFmt.parse(txtDate.getText());
             TempOnDate = DateFmt.parse(txtDateRef.getText());
         } catch (ParseException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
 
         /**
@@ -1865,7 +1866,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1890,7 +1891,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1917,7 +1918,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1950,7 +1951,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         }
 
@@ -1962,7 +1963,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 stmt.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1987,7 +1988,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     if (VoidMessage.equals("")) {
                         MSG.ERR(this, "กรุณาป้อนสาเหตุการยกเลิก...");
                     } else {
-                        if (PUtility.ShowConfirmMsg("คุณต้องการยกเลิกใบกำกับภาษี/ใบเสร็จรับเงินนี้หรือไม่ ?")) {
+                        if (MSG.CONF(this, "คุณต้องการยกเลิกใบกำกับภาษี/ใบเสร็จรับเงินนี้หรือไม่ ?")) {
                             /**
                              * * OPEN CONNECTION **
                              */
@@ -2007,7 +2008,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                                     prm.close();
                                 }
                             } catch (SQLException e2) {
-                                MSG.ERR(e2.getMessage());
+                                MSG.ERR(this, e2.getMessage());
                                 AppLogUtil.log(PrintInv1.class, "error", e2);
                             } finally {
                                 mysql.closeConnection(this.getClass());
@@ -2058,7 +2059,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
                 UpdatePrintFlage(txtDocNo.getText());
             } catch (ParseException e) {
-                MSG.ERR(e.toString());
+                MSG.ERR(this, e.getMessage());
             }
 
             ClearVariable();
@@ -2084,7 +2085,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 prm.close();
             }
         } catch (SQLException e2) {
-            MSG.ERR(e2.getMessage());
+            MSG.ERR(this, e2.getMessage());
             AppLogUtil.log(PrintInv1.class, "error", e2);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -33,7 +33,6 @@ public class RefundBillController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(RefundBillController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -34,8 +34,7 @@ public class printKicReport {
 //                }
 //            }).start();
         } else {
-            MSG.NOTICE("ไม่ได้กำหนดให้ printerStation ใช้งาน");
-            System.out.print("ไม่ได้กำหนดให้ printerStation ใช้งาน \nกรุณาชำระเงินที่แคชเชียร์");
+            System.err.print("ไม่ได้กำหนดให้ printerStation ใช้งาน \nกรุณาชำระเงินที่แคชเชียร์");
         }
 
     }

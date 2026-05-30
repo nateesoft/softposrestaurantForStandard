@@ -144,7 +144,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                    MSG.NOTICE(e.toString());
+                    MSG.NOTICE(this, e.getMessage());
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }
@@ -248,7 +248,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 
                         } catch (Exception e) {
                             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                         }
                         try {
                             String sqlUpdate = "update kictran set "
@@ -261,7 +261,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                             Thread.sleep(100);
                         } catch (Exception e) {
                             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                            MSG.NOTICE(e.toString());
+                            MSG.NOTICE(this, e.getMessage());
                         }
 
                     } else {
@@ -276,7 +276,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                             mysql.executeUpdate(sqlBalanceisNull);
                         } catch (Exception e) {
                             System.out.println(e.toString());
-                            MSG.NOTICE(e.toString());
+                            MSG.NOTICE(this, e.getMessage());
                             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                         }
 
@@ -287,7 +287,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 //                Thread.sleep(900);
             }
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.NOTICE(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -327,15 +327,13 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                         }
 
                     } catch (Exception e) {
-                        System.err.println(e.toString());
                         AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                        MSG.ERR(e.toString());
                     }
                     rs.close();
                     mysql.close();
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                    MSG.NOTICE(e.toString());
+                    MSG.ERR(new JFrame(), e.getMessage());
                 } finally {
                     mysql.closeConnection(this.getClass());
                 }

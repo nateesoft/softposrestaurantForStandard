@@ -251,7 +251,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
         bean = tb.getData(txtTable.getText());
 
         if (txtTable.getText().equals("") || txtTable.getText().isEmpty() || txtTable.getText().equals("null")) {
-            MSG.NOTICE("กรุณากรอก เบอร์โต๊ะอีกครั้ง");
+            MSG.ERR(this, "กรุณากรอก เบอร์โต๊ะอีกครั้ง");
             txtTable.selectAll();
             txtTable.requestFocus();
         }
@@ -299,7 +299,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
         bean = tb.getData(txtTable.getText());
         if (bean.getTcode().equals("null")) {
 
-            MSG.NOTICE("ไม่พบเบอร์โต๊ะ กรุณากรอกใหม่");
+            MSG.ERR(this, "ไม่พบเบอร์โต๊ะ กรุณากรอกใหม่");
         } else {
             txtCustomer.setText(bean.getTCustomer() + " คน ");
             model = (DefaultTableModel) tbShowBalance.getModel();
@@ -382,8 +382,7 @@ public class setTimePreOrder extends javax.swing.JFrame {
                     mysql.executeUpdate(sqlDel);
                     for (int i = 0; i < model1.getRowCount(); i++) {
                         if (model.getValueAt(i, 5) == null) {
-                            System.out.println("line is null");
-                            MSG.NOTICE("ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบช่องกำหนดเวลา");
+                            MSG.ERR(this, "ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบช่องกำหนดเวลา");
                             break;
                         } else {
                             String time = model1.getValueAt(i, 5).toString().replace("NULL", "");
@@ -399,15 +398,16 @@ public class setTimePreOrder extends javax.swing.JFrame {
                                 mysql.executeUpdate(sql);
                                 System.out.println(time);
                             } catch (Exception e) {
-                                MSG.ERR(e.toString());
+                                MSG.ERR(this, e.getMessage());
                             }
                         }
 
                     }
-                    MSG.NOTICE("บันทึกข้อมูลเรียบร้อย");
+                    
+                    MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย");
                     setNewScreen();
                 } catch (Exception e) {
-                    MSG.ERR(e.toString());
+                    MSG.ERR(this, e.getMessage());
                 } finally {
                     mysql.close();
                 }

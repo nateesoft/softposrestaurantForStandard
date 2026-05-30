@@ -102,20 +102,20 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            MSG.WAR("Can not Open Port...1");
+                            System.err.println("Can not Open Port...1");
                         } catch (RuntimeException re) {
-                            MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName());
+                            System.err.println("Com Port ไม่สามารถใช้งานได้ " + portId.getName());
                         }
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            MSG.WAR("Can not Open Port...2");
+                            System.err.println("Can not Open Port...2");
                         }
                         try {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                MSG.ERR("Can not Open Port...2");
+                                System.err.println("Can not Open Port...2");
                             }
                             serialPort.setSerialPortParams(9600, //boardrate
                                     SerialPort.DATABITS_8,
@@ -124,7 +124,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            MSG.WAR("Can not Open Port...3");
+                            System.err.println("Can not Open Port...3");
                         }
                     }
                 }
@@ -142,22 +142,22 @@ public class PPrint {
                         try {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
-                            MSG.ERR("Can not Open Port...1\n" + e.getMessage());
+                            System.err.println("Can not Open Port...1\n" + e.getMessage());
 
                         } catch (RuntimeException re) {
-                            MSG.ERR("Com Port ไม่สามารถใช้งานได้ " + portId.getName() + "\n" + re.getMessage());
+                            System.err.println("Com Port ไม่สามารถใช้งานได้ " + portId.getName() + "\n" + re.getMessage());
                         }
                         try {
                             outputStream = serialPort.getOutputStream();
                         } catch (IOException e) {
-                            MSG.ERR("Can not Open Port...2\n" + e.getMessage());
+                            System.err.println("Can not Open Port...2\n" + e.getMessage());
 
                         }
                         try {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                MSG.ERR("Can not Open Port...2\n" + ex.getMessage());
+                                System.err.println("Can not Open Port...2\n" + ex.getMessage());
                             }
                             serialPort.setSerialPortParams(9600, //boardrate
                                     SerialPort.DATABITS_8,
@@ -166,7 +166,7 @@ public class PPrint {
                             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
                             OpenStatus = true;
                         } catch (UnsupportedCommOperationException e) {
-                            MSG.ERR("Can not Open Port...3\n" + e.getMessage());
+                            System.err.println("Can not Open Port...3\n" + e.getMessage());
 
                         }
                     }
@@ -195,7 +195,7 @@ public class PPrint {
                 outputStream.write(Str);
                 LineCount = 0;
             } catch (IOException ex) {
-                MSG.ERR(ex.getMessage());
+                System.err.println(ex.getMessage());
             }
         }
 
@@ -210,7 +210,7 @@ public class PPrint {
         printserviceattributeset.add(new PrinterName(printer, null));
         PrintService[] printservice = PrintServiceLookup.lookupPrintServices(null, printserviceattributeset);
         if (printservice.length == 0) {
-            MSG.ERR("Printer not found");
+            System.err.println("Printer not found");
             return;
         }
         PrintService pservice = printservice[0];
@@ -221,7 +221,7 @@ public class PPrint {
         try {
             job.print(doc, aset);
         } catch (PrintException ex) {
-            MSG.ERR(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -239,7 +239,7 @@ public class PPrint {
             if (ex.getMessage().contains("nativeDrain")) {
                 //System.err.println(ex.getMessage());
             } else {
-                MSG.ERR(ex.getMessage());
+                System.err.println(ex.getMessage());
             }
         }
     }
@@ -253,7 +253,7 @@ public class PPrint {
                 outputStream.flush();
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
-                //MSG.ERR(ex.getMessage());
+                //System.err.println(ex.getMessage());
             }
         }
         if (Stye == 2) {
@@ -263,7 +263,7 @@ public class PPrint {
                 outputStream.flush();
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
-                //MSG.ERR(ex.getMessage());
+                //System.err.println(ex.getMessage());
             }
         }
         if (Stye == 3) {
@@ -453,9 +453,9 @@ public class PPrint {
                 Thread.sleep(50);
                 outputStream.write(XLine1.getBytes("tis-620"));
             } catch (InterruptedException ex) {
-                MSG.ERR(ex.getMessage());
+                System.err.println(ex.getMessage());
             } catch (IOException ex) {
-                MSG.ERR(ex.getMessage());
+                System.err.println(ex.getMessage());
             }
         } else {
             Get_Line(ThaiUtil.Unicode2ASCII(PrintMsg));
@@ -507,10 +507,10 @@ public class PPrint {
                         LineCount = LineCount + 1;
                     }
                 } catch (IOException ex) {
-                    MSG.ERR(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
             } catch (InterruptedException ex) {
-                MSG.ERR(ex.getMessage());
+                System.err.println(ex.getMessage());
             }
         }
         POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
@@ -545,7 +545,7 @@ public class PPrint {
                     //
                     //System.err.println(e.getMessage());
                 } else {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
             }
             serialPort.close();
@@ -560,7 +560,7 @@ public class PPrint {
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException e) {
-                MSG.ERR(e.getMessage());
+                System.err.println(e.getMessage());
             }
             serialPort.close();
         }
@@ -581,7 +581,7 @@ public class PPrint {
                 closePrint();
             }
         } else {
-            MSG.ERR("Printer Header Error...");
+            System.err.println("Printer Header Error...");
         }
     }
 
@@ -710,7 +710,7 @@ public class PPrint {
                         rs.close();
 
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -928,7 +928,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -955,7 +955,6 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -1060,7 +1059,7 @@ public class PPrint {
 
                         rs.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -1367,7 +1366,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -1392,7 +1391,6 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -1464,7 +1462,6 @@ public class PPrint {
 //                    try {
 //                        Thread.sleep(50);
 //                    } catch (InterruptedException e) {
-//                        MSG.NOTICE(e.toString());
 //                    }
                 }
                 pd1.printHTML();
@@ -1637,7 +1634,7 @@ public class PPrint {
                                 rsGetGiftno.close();
                             }
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -1658,7 +1655,7 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -1713,7 +1710,6 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -2599,7 +2595,7 @@ public class PPrint {
                                         }
                                         rsNameVoid.close();
                                     } catch (SQLException e) {
-                                        MSG.ERR(e.getMessage());
+                                        System.err.println(e.getMessage());
                                         AppLogUtil.log(PPrint.class, "error", e);
                                     } finally {
                                         mysql.closeConnection(this.getClass());
@@ -2740,7 +2736,7 @@ public class PPrint {
                         }
                         rsNameVoid.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -2843,7 +2839,7 @@ public class PPrint {
             byte Str[] = {29, 86, 1}; //init Printer
             outputStream.write(Str);
         } catch (IOException ex) {
-            MSG.ERR(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -2852,7 +2848,7 @@ public class PPrint {
             byte Str[] = {27, 105, 0}; //init Printer
             outputStream.write(Str);
         } catch (IOException ex) {
-            MSG.ERR(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -2898,7 +2894,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -3024,7 +3020,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -3049,7 +3045,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
                 print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -3063,7 +3059,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
                 print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
                 print("----------------------------------------");
@@ -3081,7 +3077,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
                 print("----------------------------------------");
                 print("");
@@ -3248,7 +3244,7 @@ public class PPrint {
                             }
                             rs.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -3517,7 +3513,7 @@ public class PPrint {
                         t += (Space + "align=left><font face=Angsana New size=2>" + PUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
                     }
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -3733,7 +3729,7 @@ public class PPrint {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     }
 
@@ -3756,7 +3752,7 @@ public class PPrint {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                     }
                     print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                     print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -3770,7 +3766,7 @@ public class PPrint {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                     }
                     print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
                     print("----------------------------------------");
@@ -3788,7 +3784,7 @@ public class PPrint {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                     }
                     print("----------------------------------------");
                     print("");
@@ -3819,7 +3815,7 @@ public class PPrint {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -3847,7 +3843,7 @@ public class PPrint {
     }
 
     public void PrintCashierDriver(FinalcialRec frec, CreditRec[] CrArray) {
-        JOptionPane.showMessageDialog(null, Value.driverNotSupport);
+        System.err.println(Value.driverNotSupport);
     }
 
     public void PrintGroup(PluRec[] GArray) {
@@ -4765,7 +4761,7 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -4806,7 +4802,7 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -4831,7 +4827,6 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -4876,7 +4871,7 @@ public class PPrint {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException ex) {
-                        MSG.ERR(ex.getMessage());
+                        System.err.println(ex.getMessage());
                     }
                     closePrint();
                 }
@@ -5089,7 +5084,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -5126,7 +5121,7 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -5151,7 +5146,6 @@ public class PPrint {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -5354,7 +5348,7 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -5398,7 +5392,7 @@ public class PPrint {
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -5630,7 +5624,7 @@ public class PPrint {
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PPrint.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -5677,7 +5671,7 @@ public class PPrint {
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PPrint.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -5780,7 +5774,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -5820,7 +5814,7 @@ public class PPrint {
     }
 
     private void printHeaderBillDriver() {
-        JOptionPane.showMessageDialog(null, Value.driverNotSupport);
+        System.err.println(Value.driverNotSupport);
     }
 
     private void UpdatePrintCheckBill(String table) {
@@ -5832,7 +5826,7 @@ public class PPrint {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -5914,7 +5908,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -5955,7 +5949,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6124,7 +6118,7 @@ public class PPrint {
             rs.close();
 
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6148,7 +6142,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6185,7 +6179,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6211,7 +6205,7 @@ public class PPrint {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6241,7 +6235,7 @@ public class PPrint {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6283,7 +6277,7 @@ public class PPrint {
                 listObj.add(new Object[]{cuname, total});
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -6382,7 +6376,7 @@ public class PPrint {
             }
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

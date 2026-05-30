@@ -325,7 +325,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void ProcessProc() {
 
         if (Value.printdriver) {
-            JOptionPane.showMessageDialog(null, Value.driverNotSupport);
+            JOptionPane.showMessageDialog(this, Value.driverNotSupport);
         } else if (!Value.getComPort().equals("NONE")) {
             if (prn.OpenPrint(Value.getComPort())) {
                 Double SumAmt = 0.0;
@@ -359,7 +359,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print("----------------------------------------");
                 prn.print(PUtility.DataFullR("Total Amount  ", 26) + PUtility.DataFull(DecFmt.format(SumAmt), 13));
@@ -380,7 +380,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -394,7 +394,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 }
                 prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
                 prn.print("----------------------------------------");
@@ -412,7 +412,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 } finally{
                     mysql.closeConnection(this.getClass());
                 }

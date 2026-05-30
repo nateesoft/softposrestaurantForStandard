@@ -167,7 +167,7 @@ public class PrintDriver {
                     stmt.close();
                 }
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                
                 AppLogUtil.log(PrintDriver.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -195,7 +195,7 @@ public class PrintDriver {
             }
             printService = null;
         } catch (PrinterException ex) {
-            MSG.ERR("printHTML=>PrinterException: " + ex.getMessage());
+            System.err.println("printHTML=>PrinterException: " + ex.getMessage());
         }
         close();
     }
@@ -265,8 +265,7 @@ public class PrintDriver {
             }
         } catch (PrinterException ex) {
             AppLogUtil.htmlFile(ex.toString());
-            MSG.ERR(ex.getMessage());
-            MSG.ERR(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
+            System.err.println(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -296,8 +295,7 @@ public class PrintDriver {
             }
         } catch (PrinterException ex) {
             AppLogUtil.htmlFile(ex.toString());
-            MSG.ERR(ex.getMessage());
-            MSG.ERR(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
+            System.err.println(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -320,7 +318,7 @@ public class PrintDriver {
                 AppLogUtil.htmlFile(text);
             }
         } catch (PrinterException ex) {
-            MSG.ERR("printHTMLOrder=>PrinterException:" + ex.getMessage());
+            System.err.println("printHTMLOrder=>PrinterException:" + ex.getMessage());
         }
         close();
     }
@@ -338,7 +336,7 @@ public class PrintDriver {
                 textArea.print(null, null, false, printService, attr, false);
             }
         } catch (PrinterException ex) {
-            MSG.ERR("printNormal=>PrinterException:" + ex.getMessage());
+            System.err.println("printNormal=>PrinterException:" + ex.getMessage());
         }
 
         close();
@@ -356,7 +354,7 @@ public class PrintDriver {
                 textArea.print(null, null, false, printService, attr, false);
             }
         } catch (PrinterException ex) {
-            MSG.ERR("printKichen=>PrinterException:" + ex.getMessage());
+            System.err.println("printKichen=>PrinterException:" + ex.getMessage());
         }
 
         close();
@@ -449,7 +447,7 @@ public class PrintDriver {
                         UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
                                 "Tahoma", java.awt.Font.PLAIN, 14)));
                     } catch (Exception e) {
-                        MSG.ERR(null, e.getMessage());
+                        
                     }
                 }
             }

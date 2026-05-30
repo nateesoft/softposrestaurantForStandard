@@ -32,7 +32,6 @@ public class PointTypeController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(PointTypeController.class, "error", e);
 
         } finally {
@@ -59,7 +58,6 @@ public class PointTypeController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(PointTypeController.class, "error", e);
         } finally {
             mysql.closeConnection(PointTypeController.class);

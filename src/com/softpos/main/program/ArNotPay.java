@@ -117,8 +117,8 @@ public class ArNotPay extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการลูกหนี้ค้างชำระ");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -484,7 +484,7 @@ public class ArNotPay extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1008, 692));
+        setSize(new java.awt.Dimension(1008, 720));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -673,7 +673,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(ArNotPay.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -708,7 +708,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             TempDate2 = ShowDatefmt.parse(ardate2.getText());
             TempDate1 = ShowDatefmt.parse(ardate1.getText());
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(this, e.getMessage());
         }
 
         if (arcode2.getText().equals("")) {
@@ -755,7 +755,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ArNotPay.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -828,7 +828,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArNotPay.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());

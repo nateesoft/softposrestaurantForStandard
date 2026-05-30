@@ -24,6 +24,7 @@ import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
 import util.DateConvert;
+import util.MSG;
 
 public class MTDGiftVoucher extends javax.swing.JDialog {
 
@@ -475,7 +476,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        PUtility.showError(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -558,7 +559,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

@@ -488,7 +488,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
@@ -520,7 +520,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -551,7 +551,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.executeUpdate("delete from temptopsale where terminal='" + Value.MACNO + "'");
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
@@ -576,7 +576,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
@@ -626,7 +626,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(TopSaleRep.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -662,7 +662,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
@@ -687,7 +687,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
@@ -745,7 +745,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -780,7 +780,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

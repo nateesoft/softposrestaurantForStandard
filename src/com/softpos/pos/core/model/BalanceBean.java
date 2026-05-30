@@ -106,7 +106,7 @@ public class BalanceBean {
     private String R_CashCard;
     private String VoidMSG = "";
     private String R_PEName;
-    private double R_ServiceAmt;
+//    private double R_ServiceAmt;
     private String R_Indulgent;
     private double R_totalVAT = 0;
     private double R_totalNonVAT = 0;
@@ -927,13 +927,13 @@ public class BalanceBean {
         this.R_PEName = R_PEName;
     }
 
-    public double getR_ServiceAmt() {
-        return R_ServiceAmt;
-    }
-
-    public void setR_ServiceAmt(double R_ServiceAmt) {
-        this.R_ServiceAmt = R_ServiceAmt;
-    }
+//    public double getR_ServiceAmt() {
+//        return R_ServiceAmt;
+//    }
+//
+//    public void setR_ServiceAmt(double R_ServiceAmt) {
+//        this.R_ServiceAmt = R_ServiceAmt;
+//    }
 
     public String getR_Indulgent() {
         return R_Indulgent;

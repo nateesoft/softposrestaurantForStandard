@@ -800,7 +800,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GetQty.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -395,7 +395,7 @@ public class PrintToKic extends javax.swing.JFrame {
                                 }
                                 break;
                             default:
-                                MSG.ERR(null, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารใช้งานได้ !!!");
+                                MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");
                                 break;
                         }
                     }

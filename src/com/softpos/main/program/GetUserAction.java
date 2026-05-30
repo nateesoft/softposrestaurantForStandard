@@ -42,8 +42,8 @@ public class GetUserAction extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("กรุณาป้อนรหัสผู้ใช้งาน/รหัสผ่าน");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -176,7 +176,7 @@ public class GetUserAction extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(432, 174));
+        setSize(new java.awt.Dimension(432, 202));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

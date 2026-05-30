@@ -88,7 +88,7 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -127,7 +127,7 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -158,7 +158,7 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -198,7 +198,7 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         }
 
@@ -228,7 +228,7 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -301,7 +301,7 @@ public class ControlMenu {
                 index++;
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -401,7 +401,6 @@ public class ControlMenu {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

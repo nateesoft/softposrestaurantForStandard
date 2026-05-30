@@ -690,7 +690,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //            rs.close();
 //            stmt.close();
 //        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
+//            MSG.ERR(this, e.getMessage());
 //            AppLogUtil.log(PLURep.class, "error", e);
 //        } finally {
 //            mysql.closeConnection(this.getClass());
@@ -920,7 +920,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -1233,7 +1233,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //            rs.close();
 //            stmt.close();
 //        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
+//            MSG.ERR(this, e.getMessage());
 //            AppLogUtil.log(PLURep.class, "error", e);
 //        } finally {
 //            mysql.closeConnection(this.getClass());
@@ -1457,7 +1457,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

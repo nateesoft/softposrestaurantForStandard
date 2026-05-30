@@ -110,8 +110,8 @@ public class RepMember extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการซื้อของสมาชิก");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -591,12 +591,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public Boolean ChkValidDate() {
         Boolean RetVal = true;
         if (!PUtility.ChkDate(ardate1.getText())) {
-            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR(this, "กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate1.requestFocus();
             RetVal = false;
         }
         if (!PUtility.ChkDate(ardate2.getText())) {
-            MSG.WAR("กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
+            MSG.WAR(this, "กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
             ardate2.requestFocus();
             RetVal = false;
         }
@@ -658,7 +658,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(RepMember.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());

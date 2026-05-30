@@ -138,7 +138,7 @@ public class ItemDisControl {
                 rs.close();
                 stmt1.close();
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                
                 AppLogUtil.log(ItemDisControl.class, "error", e);
             }
 
@@ -152,7 +152,7 @@ public class ItemDisControl {
             stmt1.executeUpdate(sql);
             stmt1.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
 
         } finally {
             mysql.closeConnection(this.getClass());

@@ -35,7 +35,7 @@ public class EmployeeControl extends DatabaseConnection {
                 }
                 rs.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                
             } finally {
                 mysql.closeConnection(this.getClass());
             }
@@ -72,7 +72,7 @@ public class EmployeeControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
         } finally {
             mysql.closeConnection(this.getClass());
         }

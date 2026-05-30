@@ -44,7 +44,6 @@ public class MySQLConnectWebOnline {
         try {
             con = DatabasePoolOnline.getConnection();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
         }
     }
 
@@ -159,7 +158,6 @@ public class MySQLConnectWebOnline {
                 fs.close();
                 DatabasePoolOnline.init(HostName, PortNumber, DbName, UserName, Password);
             } catch (IOException e) {
-                MSG.ERR(e.getMessage());
             }
         }
     }

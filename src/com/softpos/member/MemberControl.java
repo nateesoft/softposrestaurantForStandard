@@ -48,7 +48,6 @@ public class MemberControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -122,7 +121,6 @@ public class MemberControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -206,7 +204,6 @@ public class MemberControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

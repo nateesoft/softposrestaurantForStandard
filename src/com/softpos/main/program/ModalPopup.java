@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import util.AppLogUtil;
 import util.MSG;
 
@@ -301,7 +302,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt1.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(null, e.getMessage());
+                        MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -404,7 +405,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt1.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(null, e.getMessage());
+                        MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -524,7 +525,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -611,7 +612,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -636,7 +637,7 @@ public class ModalPopup extends javax.swing.JDialog {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -669,7 +670,7 @@ public class ModalPopup extends javax.swing.JDialog {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -692,7 +693,7 @@ public class ModalPopup extends javax.swing.JDialog {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -777,7 +778,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             stmt.close();
                         }
                     } catch (SQLException e) {
-                        MSG.ERR(null, e.getMessage());
+                        MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());

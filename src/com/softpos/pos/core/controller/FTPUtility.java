@@ -47,7 +47,6 @@ public class FTPUtility {
                 return false;
             }
         } catch (IOException e) {
-            MSG.ERR(null, e.getMessage());
             return false;
         }
         return true;

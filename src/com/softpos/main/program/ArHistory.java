@@ -118,8 +118,8 @@ public class ArHistory extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ประวัติการซื้อของลูกหนี้ภายนอก");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -672,7 +672,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             rs.close();
                             stmt.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(ArHistory.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -686,7 +686,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         prn.CutPaper();
                         prn.closePrint();
                     } else {
-                        PUtility.showError("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
+                        MSG.ERR(this, "เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
                     }
                 }
 
@@ -771,7 +771,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -781,7 +781,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting3()).trim() + "_";
 
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(this, e.getMessage());
         }
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
@@ -857,7 +857,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());

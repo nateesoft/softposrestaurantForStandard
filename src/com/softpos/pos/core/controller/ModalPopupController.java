@@ -37,7 +37,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -73,7 +73,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -102,7 +102,7 @@ public class ModalPopupController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -50,7 +50,7 @@ public class PropControl {
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT")));
             bean.setCharset(prop.getProperty("DB_CHARSET"));
         } catch (IOException | NumberFormatException e) {
-            MSG.ERR(null, e.getMessage());
+            
         }
         return bean;
     }
@@ -67,7 +67,7 @@ public class PropControl {
             bean.setPort(Integer.parseInt(prop.getProperty("DB_PORT_CLIENT")));
             bean.setCharset(prop.getProperty("DB_CHARSET_CLIENT"));
         } catch (IOException | NumberFormatException e) {
-            MSG.ERR(null, e.getMessage());
+            
         }
         return bean;
     }

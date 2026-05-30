@@ -401,7 +401,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -476,7 +476,7 @@ public class MTDCoupon extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             
         } finally {
             mysql.closeConnection(this.getClass());

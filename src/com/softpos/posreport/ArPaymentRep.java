@@ -210,7 +210,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         if (Value.useprint) {
             if (Value.printdriver) {
                 ArPaymentPrintDriver(MacNo1, MacNo2);
-//                JOptionPane.showMessageDialog(null, Value.driverNotSupport);
             } else if (!Value.getComPort().equals("NONE")) {
                 if (prn.OpenPrint(Value.getComPort())) {
                     Double SumAmt = 0.0;
@@ -245,7 +244,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(ArPaymentRep.class, "error", e);
                     }
 
@@ -271,7 +270,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(MemmaterController.class, "error", e);
                     }
                     prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
@@ -289,7 +288,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(MemmaterController.class, "error", e);
                     }
 
@@ -312,7 +311,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(MemmaterController.class, "error", e);
                     }
 
@@ -409,7 +408,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
             rs.close();
         } catch (SQLException e) {
-            MSG.NOTICE(e.toString());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.main.payment.view.FindCredit;
 import com.softpos.crm.pos.core.modal.CreditPaymentRec;
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -205,7 +206,7 @@ public class ARPayment extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รับชำระจากลูกหนี้ภายนอก");
-        setUndecorated(true);
+        setAlwaysOnTop(true);
 
         jPanel1.setBackground(java.awt.Color.black);
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(5, 5, 5, 5, java.awt.Color.lightGray));
@@ -612,7 +613,6 @@ public class ARPayment extends javax.swing.JDialog {
         _CreditAmt.setFocusable(false);
         _CreditAmt.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         _CreditAmt.setNextFocusableComponent(_CrCardNo);
-        _CreditAmt.setOpaque(false);
         _CreditAmt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 _CreditAmtActionPerformed(evt);
@@ -673,7 +673,6 @@ public class ARPayment extends javax.swing.JDialog {
         jTextField5.setText("Amount");
         jTextField5.setDisabledTextColor(java.awt.Color.black);
         jTextField5.setEnabled(false);
-        jTextField5.setOpaque(false);
 
         _CrName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         _CrName.setText("Card Name");
@@ -1135,7 +1134,7 @@ public class ARPayment extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, 103, Short.MAX_VALUE)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1158,7 +1157,7 @@ public class ARPayment extends javax.swing.JDialog {
                 .addGap(27, 27, 27))
         );
 
-        setSize(new java.awt.Dimension(1002, 737));
+        setSize(new java.awt.Dimension(1002, 765));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1237,7 +1236,7 @@ private void _CreditAmtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         if (!DecFmt.format(Double.parseDouble(_CreditAmt.getText())).equals(DecFmt.format(_CurAmount))) {
-            MSG.WAR_MSG(this, "ยอดรับชำระด้วยบัตรเครดิต ไม่เท่ากับยอดที่ต้องจ่ายจริง...");
+            MSG.WAR(this, "ยอดรับชำระด้วยบัตรเครดิต ไม่เท่ากับยอดที่ต้องจ่ายจริง...");
             _CreditAmt.setValue(_CurAmount);
             _CreditAmt.requestFocus(true);
             _CreditAmt.selectAll();
@@ -1286,7 +1285,7 @@ private void _CrCardNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 _CrAppNo.setFocusable(true);
                 _CrAppNo.requestFocus();
             } else {
-                MSG.WAR_MSG(this, "รหัสบัตรเครดิต ป้อนได้ไม่เกิน 16 ตัวอักษร...");
+                MSG.WAR(this, "รหัสบัตรเครดิต ป้อนได้ไม่เกิน 16 ตัวอักษร...");
                 _CrCardNo.requestFocus();
             }
         } else {
@@ -1322,7 +1321,7 @@ private void _CrAppNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 _CreditAmt.selectAll();
 
             } else {
-                MSG.WAR_MSG(this, "รหัสอนุมัติบัตรเครดิต ป้อนได้ไม่เกิน 6 ตัวอักษร...");
+                MSG.WAR(this, "รหัสอนุมัติบัตรเครดิต ป้อนได้ไม่เกิน 6 ตัวอักษร...");
                 _CrAppNo.requestFocus();
 
             }
@@ -1550,7 +1549,7 @@ private void c_bntenterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                MSG.ERR_MSG(this, e.getMessage());
+                MSG.ERR(this, e.getMessage());
             }
             _TCashExit();
         } else {
@@ -1763,12 +1762,12 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     LoadArMark(txtArCode.getText());
                     tblAr.requestFocus();
                 } else {
-                    MSG.WAR_MSG(this, "รหัสลูกหนี้ " + txtArName.getText() + " ไม่มีรายการค้างชำระ...");
+                    MSG.WAR(this, "รหัสลูกหนี้ " + txtArName.getText() + " ไม่มีรายการค้างชำระ...");
                     ClearAr();
                     txtArCode.requestFocus();
                 }
             } else {
-                MSG.WAR_MSG(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในฐานข้อมูลลูกหนี้ภายนออก...");
+                MSG.WAR(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในฐานข้อมูลลูกหนี้ภายนออก...");
                 ClearAr();
                 txtArCode.setText("");
             }
@@ -1779,7 +1778,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {
-            MSG.ERR_MSG(this, e.getMessage());
         }
         if (_TCash.hasFocus()) {
             String tempstr;
@@ -1903,7 +1901,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1928,7 +1926,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             _Cr_Code1 = CrRec.CrCode;
             _Cr_Bank = CrRec.CrBank;
         } else {
-            MSG.WAR_MSG(this, "ไม่พบข้อมูลบัตรเครดิตที่ต้องการ...");
+            MSG.WAR(this, "ไม่พบข้อมูลบัตรเครดิตที่ต้องการ...");
         }
     }
 
@@ -1937,7 +1935,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         CurValue = Double.parseDouble(PUtility.ConvertReal(_TGiftvoucher.getText()));
         _Gift_Voucher = CurValue;
         if (_Gift_Voucher > _NetTotal) {
-            if (PUtility.ShowConfirmMsg("*** ยอดการชำระด้วยบัตรกำนัล/บัตรของขวัญ มากกว่ายอดที่ต้องจ่ายจริง ยืนยันการทำรายการหรือไม่ ? ")) {
+            if (MSG.CONF(this, "*** ยอดการชำระด้วยบัตรกำนัล/บัตรของขวัญ มากกว่ายอดที่ต้องจ่ายจริง ยืนยันการทำรายการหรือไม่ ? ")) {
             } else {
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
@@ -1948,7 +1946,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
-                    MSG.ERR_MSG(this, e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -2012,7 +2010,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 stmt1.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -2051,7 +2049,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 prm.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ARPayment.class, "error", e);
             }
             try {
@@ -2079,7 +2077,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ARPayment.class, "error", e);
             }
 
@@ -2104,7 +2102,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         prm.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(ARPayment.class, "error", e);
                     }
                 }
@@ -2129,7 +2127,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 prm.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ARPayment.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -2176,7 +2174,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -2282,7 +2280,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
                     rsCustfile.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
                     mysql2.closeConnection(this.getClass());
@@ -2300,7 +2298,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -2370,14 +2368,14 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     public void _CrAppNoExit() {
         if (!ESCKEY) {
             if (_CrAppNo.getText().equals("")) {
-                MSG.WAR("กรุณาป้อนรหัสอนุมัติ...");
+                MSG.WAR(this, "กรุณาป้อนรหัสอนุมัติ...");
                 _CrAppNo.requestFocus();
             }
             if (!_CrAppNo.getText().equals("")) {
                 if (_CrAppNo.getText().length() <= 6) {
                     ProcessCreditOK();
                 } else {
-                    MSG.WAR_MSG(this, "รหัสอนุมัติบัตรเครดิต ป้อนได้ไม่เกิน 6 ตัวอักษร...");
+                    MSG.WAR(this, "รหัสอนุมัติบัตรเครดิต ป้อนได้ไม่เกิน 6 ตัวอักษร...");
                     _CrAppNo.requestFocus();
                 }
             }
@@ -2391,7 +2389,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     _CrAppNo.setFocusable(true);
                     _CrAppNo.requestFocus();
                 } else {
-                    MSG.WAR_MSG(this, "รหัสบัตรเครดิต ป้อนได้ไม่เกิน 16 ตัวอักษร...");
+                    MSG.WAR(this, "รหัสบัตรเครดิต ป้อนได้ไม่เกิน 16 ตัวอักษร...");
                     _CrCardNo.requestFocus();
                 }
             } else {

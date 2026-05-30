@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.pos.core.model.SPTempRefundBean;
 import com.softpos.pos.core.model.TempsetBean;
@@ -40,7 +40,7 @@ public class FloorPlanController extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -56,7 +56,7 @@ public class FloorPlanController extends DatabaseConnection {
             String sql = "delete from sp_temp_refund";
             mysql.executeUpdate(sql);
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -80,7 +80,7 @@ public class FloorPlanController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -105,7 +105,7 @@ public class FloorPlanController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -139,7 +139,7 @@ public class FloorPlanController extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

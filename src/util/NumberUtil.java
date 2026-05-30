@@ -69,7 +69,7 @@ public class NumberUtil {
             try {
                 total = Double.parseDouble(money);
             } catch (NumberFormatException e) {
-                MSG.ERR(e.getMessage());
+                
             }
 
             return total;
@@ -126,7 +126,7 @@ public class NumberUtil {
             try {
                 total = Double.parseDouble(money);
             } catch (NumberFormatException e) {
-                MSG.ERR(e.getMessage());
+                
             }
 
             return total;

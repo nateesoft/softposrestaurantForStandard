@@ -31,7 +31,6 @@ public class PosUserController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(PosUserController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

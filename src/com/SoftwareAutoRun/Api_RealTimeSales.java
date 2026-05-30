@@ -580,7 +580,6 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
                     stmtServer.executeUpdate(sqlUploadTSaleOnline);
                     System.out.println(sqlUploadTSaleOnline);
                 } catch (Exception e) {
-//                    MSG.NOTICE(e.toString());
                     ErrorText += e.toString();
                     txtLogErr.setText(logTab + ErrorText);
                     System.out.println(e.toString());
@@ -612,8 +611,6 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
             mysql.close();
 //            uploadCheckConfig();
         } catch (InterruptedException | SQLException e) {
-            MSG.NOTICE(e.toString());
-            System.out.println(e);
             ErrorText += e.toString();
             txtLogErr.setText(logTab + ErrorText);
         }
@@ -728,8 +725,6 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
                     stmtServer.executeUpdate(sqlUploadCreditFile);
                     System.out.println(sqlUploadCreditFile);
                 } catch (SQLException e) {
-                    System.out.println(e);
-                    MSG.NOTICE(e.toString());
                     ErrorText += e.toString();
                     txtLogErr.setText(logTab + ErrorText);
                 }
@@ -841,7 +836,6 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
 //            sendFtp.SendSQLToFTP();
 //            exim.uploadSQL();
 //        } catch (Exception e) {
-//            MSG.NOTICE(e.toString());
 //        }
 //    }
 //    public void stkfileUpdate(String pcode) {
@@ -873,7 +867,6 @@ public class Api_RealTimeSales extends javax.swing.JFrame {
 ////            c.close();
 ////            myOnline.close();
 //        } catch (Exception e) {
-////            MSG.NOTICE(e.toString());
 //        }
 //    }
     /**

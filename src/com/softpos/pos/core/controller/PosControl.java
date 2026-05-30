@@ -1,7 +1,7 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.floorplan.ShowTable;
+import com.softpos.main.floorplan.view.ShowTable;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.CompanyBean;
@@ -52,7 +52,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PosControl.class, "error", e);
             System.exit(0);
         } finally {
@@ -247,7 +247,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -278,7 +278,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -348,7 +348,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -432,7 +432,6 @@ public class PosControl {
             }
 
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -508,7 +507,7 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);
@@ -567,7 +566,6 @@ public class PosControl {
             }
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
             mysql.closeConnection(PosControl.class);

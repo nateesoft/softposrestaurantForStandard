@@ -47,7 +47,7 @@ public class convertToChar {
             if (!vert[i].equals("")) {  
                 String chs = b.substring(b.length()-2,b.length()-1);
                 if(i == len-2 && chs.equals("1")){ 
-                  //  JOptionPane.showMessageDialog(null, chs);
+                  //  System.err.println(chs);
                 }else{
                     vert[i] += ch[size]; 
                 }

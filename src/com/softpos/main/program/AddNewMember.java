@@ -770,12 +770,12 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         if (M_Name.getText().length() == 0) {
-            MSG.WAR("กรุณาป้อนชื่อสมาชิก...");
+            MSG.WAR(this, "กรุณาป้อนชื่อสมาชิก...");
             M_Name.requestFocus();
             RetVal = false;
         }
         if (M_HomeTel.getText().length() == 0 && M_OfficeTel.getText().length() == 0 && M_Mobile.getText().length() == 0) {
-            MSG.WAR("กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
+            MSG.WAR(this, "กรุณาป้อนเบอร์โทรศัพท์สมาชิกอย่างน้อย 1 หมายเลข...");
             M_HomeTel.requestFocus();
             RetVal = false;
         }
@@ -790,12 +790,12 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 String TMemCode = TempBarCode.substring(5, 12);
                 if (TMemCode.equals(M_Code.getText())) {
                     if (!PUtility.CheckEAN13Format(TempCode)) {
-                        MSG.WAR_MSG(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
+                        MSG.WAR(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
                         M_Barcode.requestFocus();
                         RetVal = false;
                     }
                 } else {
-                    MSG.WAR_MSG(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
+                    MSG.WAR(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
                     M_Barcode.requestFocus();
                     RetVal = false;
                 }
@@ -805,7 +805,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 RetVal = false;
             }
         } else {
-            MSG.WAR_MSG(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
+            MSG.WAR(this, "รูปแบบรหัสบาร์โค๊ดไม่ถูกต้อง...");
             M_Barcode.requestFocus();
             RetVal = false;
 
@@ -816,7 +816,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     public void bntRemoveClick() {
         String TempCode = M_Code.getText();
         if (!TempCode.equals("")) {
-            if (PUtility.ShowConfirmMsg("ยืนยันการลบข้อมูลสมาชิก รายการนี้ ?")) {
+            if (MSG.CONF(this, "ยืนยันการลบข้อมูลสมาชิก รายการนี้ ?")) {
                 /**
                  * * OPEN CONNECTION **
                  */
@@ -828,7 +828,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewMember.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -880,7 +880,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.executeUpdate(SQLQuery);
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR_MSG(this, e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -937,7 +937,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.executeUpdate(SQLQuery);
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR_MSG(this, e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(AddNewMember.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -1040,7 +1040,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             GetDataValue();
                             M_Name.requestFocus();
                         } else {
-                            MSG.WAR("รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
+                            MSG.WAR(this, "รหัสสมาชิกท่านนี้ได้ถูกยกเลิกการใช้งานแล้ว...โดยฝ่ายประชาสัมพันธ์ !!!");
                             ClearVariable();
                         }
                     }
@@ -1054,7 +1054,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
 
             } else {
-                MSG.WAR_MSG(this, "รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
+                MSG.WAR(this, "รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
                 ClearVariable();
             }
 
@@ -1077,7 +1077,7 @@ private void M_BarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AddNewMember.class, "error", e);
         } finally{
             mysql.closeConnection(this.getClass());

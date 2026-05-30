@@ -35,10 +35,10 @@ public class SendEmail {
 
             Transport.send(message);
 
-            MSG.NOTICE("ส่งข้อมูลการแจ้งปัญหาของท่านไปยังทีมงาน Support โปรแกรมเรียบร้อยแล้ว");
+            System.out.println("ส่งข้อมูลการแจ้งปัญหาของท่านไปยังทีมงาน Support โปรแกรมเรียบร้อยแล้ว");
             return true;
         } catch (MessagingException e) {
-            MSG.ERR(null, "พบข้อผิดพลาดในการส่งข้อมูล\n" + e.getMessage());
+            System.err.println("พบข้อผิดพลาดในการส่งข้อมูล\n" + e.getMessage());
             return false;
         }
     }

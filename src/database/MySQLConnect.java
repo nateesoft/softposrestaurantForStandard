@@ -92,7 +92,6 @@ public class MySQLConnect {
             fs.close();
             DatabasePool.init(HostName, PortNumber, DbName, UserName, Password, CharSet);
         } catch (IOException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MySQLConnect.class, "error", e);
         }
     }
@@ -111,7 +110,6 @@ public class MySQLConnect {
             con = DatabasePool.getConnection();
             MySQLConstants.MYSQL_CONNECT.put(System.identityHashCode(con), clazz);
         } catch (SQLException e) {
-            MSG.ERR("Database Connection Error !!!\n" + e.getMessage());
             AppLogUtil.log(MySQLConnect.class, "error", e);
             System.exit(0);
         }

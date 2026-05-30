@@ -34,7 +34,7 @@ public class StockControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -59,7 +59,7 @@ public class StockControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -110,7 +110,7 @@ public class StockControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -146,7 +146,7 @@ public class StockControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -174,7 +174,7 @@ public class StockControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -228,7 +228,7 @@ public class StockControl {
                 //saveSubTCard(bean, ETD);
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -290,7 +290,7 @@ public class StockControl {
                 iSubCheck = 1;
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -322,7 +322,7 @@ public class StockControl {
             }
 
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            
             price = 0.00;
         }
 

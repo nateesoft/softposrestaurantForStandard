@@ -185,7 +185,7 @@ public class CustomerName extends javax.swing.JDialog {
         try {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
-                    MSG.ERR("กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
+                    MSG.ERR(this, "กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
                     txtCustomerName.requestFocus();
                 } else {
                     String sql = "UPDATE tablefile SET "
@@ -206,7 +206,7 @@ public class CustomerName extends javax.swing.JDialog {
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -234,7 +234,7 @@ public class CustomerName extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

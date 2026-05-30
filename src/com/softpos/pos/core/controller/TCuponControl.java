@@ -39,7 +39,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -77,7 +77,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -114,7 +114,7 @@ public class TCuponControl extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

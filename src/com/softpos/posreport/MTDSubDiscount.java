@@ -430,7 +430,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String MacNo2 = txtMacNo2.getText();
 
         if(Value.printdriver){
-            JOptionPane.showMessageDialog(null, Value.driverNotSupport);
+            JOptionPane.showMessageDialog(this, Value.driverNotSupport);
         }else if (!Value.getComPort().equals("NONE")) {
             if (prn.OpenPrint(Value.getComPort())) {
                 prn.InitPrinter();
@@ -496,7 +496,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                 } finally{
                     mysql.closeConnection(this.getClass());
                 }

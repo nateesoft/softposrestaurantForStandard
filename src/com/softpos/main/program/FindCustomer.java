@@ -105,13 +105,13 @@ public class FindCustomer extends javax.swing.JDialog {
             }
             showCell(0, 0);
             if (LineCnt == 0) {
-                PUtility.showError("ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
+                MSG.WAR(this, "ไม่พบข้อมูลลูกค้า ตามที่ต้องการ...");
             }
             rs.close();
             stmt.close();
             tblShowMember.requestFocus();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -151,7 +151,7 @@ public class FindCustomer extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -190,7 +190,7 @@ public class FindCustomer extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -227,7 +227,7 @@ public class FindCustomer extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

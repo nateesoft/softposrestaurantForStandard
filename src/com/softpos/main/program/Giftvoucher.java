@@ -253,7 +253,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             prm.close();
             clearGrid();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -283,7 +283,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 txtGiftNo.setText("");
                 txtGiftNo.requestFocus();
             } else {
-                MSG.ERR("Barcode บัตรกำนัล/บัตรของขวัญ ไม่ถูกต้อง...");
+                MSG.ERR(this, "Barcode บัตรกำนัล/บัตรของขวัญ ไม่ถูกต้อง...");
                 txtGiftNo.setText("");
                 txtGiftNo.requestFocus();
             }
@@ -337,7 +337,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                     prm11.executeUpdate();
                                     prm11.close();
                                 } catch (SQLException e) {
-                                    MSG.ERR(e.getMessage());
+                                    MSG.ERR(this, e.getMessage());
                                     AppLogUtil.log(Giftvoucher.class, "error", e);
                                 } finally {
                                     mysql.closeConnection(this.getClass());
@@ -367,7 +367,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                 prm11.executeUpdate();
                                 prm11.close();
                             } catch (SQLException e) {
-                                MSG.ERR(e.getMessage());
+                                MSG.ERR(this, e.getMessage());
                                 AppLogUtil.log(Giftvoucher.class, "error", e);
                             } finally {
                                 mysql.closeConnection(this.getClass());
@@ -403,7 +403,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             prm11.executeUpdate();
                             prm11.close();
                         } catch (SQLException e) {
-                            MSG.ERR(e.getMessage());
+                            MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(Giftvoucher.class, "error", e);
                         } finally {
                             mysql.closeConnection(this.getClass());
@@ -433,7 +433,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         prm11.executeUpdate();
                         prm11.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(Giftvoucher.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -458,14 +458,14 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             if (rs.next()) {
                 isValid = true;
             } else {
-                MSG.ERR("บัตรของขวัญนี้ยังไม่มีการลงทะเบียบจากสำนักงานใหญ่...ไม่สามารถนำมาใช้บริการได้...");
+                MSG.ERR(this, "บัตรของขวัญนี้ยังไม่มีการลงทะเบียบจากสำนักงานใหญ่...ไม่สามารถนำมาใช้บริการได้...");
                 isValid = false;
             }
 
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -488,14 +488,14 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 giftAmt = rs.getDouble("priceamt");
                 isValid = true;
             } else {
-                MSG.ERR("รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
+                MSG.ERR(this, "รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
                 giftAmt = 0.0;
                 isValid = false;
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -546,7 +546,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

@@ -115,7 +115,7 @@ public class ServiceControl {
             stmt2.close();
             
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

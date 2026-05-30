@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.login.Login;
+import com.softpos.main.login.Login;
 import com.softpos.pos.core.model.LoginBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -38,7 +38,6 @@ public class LoginController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(Login.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -68,7 +67,6 @@ public class LoginController {
             mysql.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

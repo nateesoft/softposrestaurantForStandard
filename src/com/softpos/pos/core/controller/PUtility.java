@@ -54,7 +54,7 @@ public class PUtility extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -84,7 +84,7 @@ public class PUtility extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -175,7 +175,7 @@ public class PUtility extends DatabaseConnection {
                     }
                 }
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.closeConnection(PUtility.class);
@@ -193,11 +193,11 @@ public class PUtility extends DatabaseConnection {
                                 if (OnHand >= TempQty) {
                                     RetVal = true;
                                 } else {
-                                    ShowMsg("(" + PName + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = " + OnHand);
+                                    System.err.println("(" + PName + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = " + OnHand);
                                     RetVal = false;
                                 }
                             } else {
-                                ShowMsg("(" + PName + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = 0");
+                                System.err.println("(" + PName + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = 0");
                                 RetVal = false;
                             }
                             rec2.close();
@@ -205,7 +205,6 @@ public class PUtility extends DatabaseConnection {
                         }
                     }
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -231,12 +230,12 @@ public class PUtility extends DatabaseConnection {
                                         if (OnHand >= TempQty) {
                                             RetVal = true;
                                         } else {
-                                            ShowMsg("(" + proBean.getPDesc() + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = " + OnHand);
+                                            System.err.println("(" + proBean.getPDesc() + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = " + OnHand);
                                             RetVal = false;
                                             break;
                                         }
                                     } else {
-                                        ShowMsg("(" + proBean.getPDesc() + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = 0");
+                                        System.err.println("(" + proBean.getPDesc() + ") ปริมาณสินค้าคงเหลือในคลังสินค้าน้อยกว่าจำนวนที่ทำการขาย !!!" + "\n...ปริมาณคงเหลือ = 0");
                                         RetVal = false;
                                         break;
                                     }
@@ -245,7 +244,6 @@ public class PUtility extends DatabaseConnection {
                                 }
                             }
                         } catch (SQLException e) {
-                            MSG.ERR(null, e.getMessage());
                             AppLogUtil.log(PUtility.class, "error", e);
                         } finally {
                             mysql2.closeConnection(PUtility.class);
@@ -274,7 +272,7 @@ public class PUtility extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -329,7 +327,7 @@ public class PUtility extends DatabaseConnection {
                 prm.executeUpdate();
                 prm.close();
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.closeConnection(PUtility.class);
@@ -346,7 +344,7 @@ public class PUtility extends DatabaseConnection {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -366,7 +364,7 @@ public class PUtility extends DatabaseConnection {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -432,7 +430,7 @@ public class PUtility extends DatabaseConnection {
                 prm.executeUpdate();
                 prm.close();
             } catch (SQLException e) {
-                MSG.ERR(null, e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.closeConnection(PUtility.class);
@@ -450,7 +448,7 @@ public class PUtility extends DatabaseConnection {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -469,7 +467,7 @@ public class PUtility extends DatabaseConnection {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -504,7 +502,7 @@ public class PUtility extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -553,7 +551,7 @@ public class PUtility extends DatabaseConnection {
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql.closeConnection(PUtility.class);
@@ -571,7 +569,7 @@ public class PUtility extends DatabaseConnection {
                         prm4.executeUpdate();
                         prm4.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysql2.closeConnection(PUtility.class);
@@ -595,7 +593,7 @@ public class PUtility extends DatabaseConnection {
                     prmt.executeUpdate();
                     prmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql2.closeConnection(PUtility.class);
@@ -644,7 +642,7 @@ public class PUtility extends DatabaseConnection {
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysql.closeConnection(PUtility.class);
@@ -662,7 +660,7 @@ public class PUtility extends DatabaseConnection {
                         prmt.executeUpdate();
                         prmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(null, e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysql2.closeConnection(PUtility.class);
@@ -685,7 +683,7 @@ public class PUtility extends DatabaseConnection {
                         prmt.executeUpdate();
                         prmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(null, e.getMessage());
+                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysql3.closeConnection(PUtility.class);
@@ -769,7 +767,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -857,7 +855,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -891,7 +889,7 @@ public class PUtility extends DatabaseConnection {
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             }
         }
@@ -918,7 +916,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -964,13 +962,13 @@ public class PUtility extends DatabaseConnection {
         try {
             TempDate = DateFmt.parse(tdate);
             if (TempDate.getYear() > 2200) {
-                MSG.ERR(null, "กรุณาป้อนวันที่ให้ถูกต้อง...EXP(dd/MM/yyyy) โดยป้อนปีเป็นปี คศ.เท่านั้น...");
+                System.err.println("กรุณาป้อนวันที่ให้ถูกต้อง...EXP(dd/MM/yyyy) โดยป้อนปีเป็นปี คศ.เท่านั้น...");
                 ReturnValue = false;
             } else {
                 ReturnValue = true;
             }
         } catch (ParseException ex) {
-            MSG.ERR(null, "กรุณาป้อนวันที่ให้ถูกต้อง...EXP(dd/MM/yyyy)");
+            System.err.println("กรุณาป้อนวันที่ให้ถูกต้อง...EXP(dd/MM/yyyy)");
             ReturnValue = false;
         }
 
@@ -1007,11 +1005,6 @@ public class PUtility extends DatabaseConnection {
             } while (d1.get(java.util.Calendar.YEAR) != y2);
         }
         return days;
-    }
-
-    public static Boolean ShowConfirmMsg(String ConfirmMsg) {
-        int option = JOptionPane.showConfirmDialog(null, ConfirmMsg, "Confirm Dialog ....", JOptionPane.YES_NO_OPTION);
-        return option == JOptionPane.YES_OPTION;
     }
 
     public static String Addzero(String Str, int Len) {
@@ -1150,22 +1143,6 @@ public class PUtility extends DatabaseConnection {
         return Dateft.format(new Date());
     }
 
-    public static void ShowMsg(String StrMsg) {
-        MSG.NOTICE(null, StrMsg);
-    }
-
-    public static void showError(String StrMsg) {
-        MSG.ERR(JOptionPane.getRootFrame(), StrMsg);
-    }
-
-    public static void ShowMyMsg(java.awt.Component TComponent, String StrMsg) {
-        MSG.NOTICE(TComponent, StrMsg);
-    }
-
-    public static void ShowWaring(String StrMsg) {
-        MSG.WAR(null, StrMsg);
-    }
-
     public static TranRecord[] addArray(TranRecord[] MyArray) {
         int aSize = MyArray.length;
         TranRecord[] NewArray;
@@ -1264,12 +1241,12 @@ public class PUtility extends DatabaseConnection {
                 int Refbillno = rs.getInt("Chargeno1");
                 StrRefBillNo = Integer.toString(Refbillno);
             } else {
-                showError("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
+                System.err.println("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1311,12 +1288,11 @@ public class PUtility extends DatabaseConnection {
                     PublicVar.PTime3E = rs.getString("ptendtime3");
                     PublicVar.PDisc3 = rs.getDouble("ptrate3");
                 } else {
-                    MSG.WAR("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
+                    System.err.println("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
                 }
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysql.closeConnection(PUtility.class);
@@ -1407,7 +1383,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
 
             ReturnVal = false;
@@ -1428,7 +1404,7 @@ public class PUtility extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1543,7 +1519,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1568,7 +1544,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1594,7 +1570,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1631,7 +1607,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1656,7 +1632,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1681,7 +1657,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1706,7 +1682,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1736,7 +1712,7 @@ public class PUtility extends DatabaseConnection {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1759,7 +1735,7 @@ public class PUtility extends DatabaseConnection {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysql.closeConnection(PUtility.class);
@@ -1835,7 +1811,7 @@ public class PUtility extends DatabaseConnection {
                     }
                 }
             } else {
-                MSG.ERR("ไม่พบรายการโปรโมชั่น " + XPro1 + " ในแฟ้มข้อมูลโปรโมชั่น !!!");
+                System.err.println("ไม่พบรายการโปรโมชั่น " + XPro1 + " ในแฟ้มข้อมูลโปรโมชั่น !!!");
                 ReturnVal = false;
             }
         }

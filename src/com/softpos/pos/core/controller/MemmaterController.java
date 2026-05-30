@@ -141,7 +141,7 @@ public class MemmaterController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
             mysql.closeConnection(MemmaterController.class);
@@ -164,7 +164,7 @@ public class MemmaterController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -290,7 +290,7 @@ public class MemmaterController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

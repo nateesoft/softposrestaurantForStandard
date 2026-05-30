@@ -45,7 +45,7 @@ public class CopyBill extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -255,7 +255,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -365,7 +365,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         PublicVar.TableRec_BranTime = rs.getString("b_rectime");
                         billcopy = rs.getInt("b_billcopy");
                     } else {
-                        MSG.WAR("ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
+                        MSG.WAR(this, "ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
                         this.setVisible(false);//dispose();
                     }
                     rs.close();
@@ -373,7 +373,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -442,14 +442,14 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             }
 
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
             mysql2.closeConnection(this.getClass());
         }
 
         if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
-            MSG.WAR("บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
+            MSG.WAR(this, "บิลเลขที่ " + BillNo + "  ได้มีการพิมพ์สำเนาไปแล้ว...ไม่สามารถพิมพ์ได้อีก");
             txtBillNo.requestFocus();
         } else {
             if (CopyPrn > CONFIG.getP_BillCopy()) {
@@ -472,7 +472,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     stmt.close();
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CopyBill.class, "error", e);
             } finally {
                 mysql3.closeConnection(this.getClass());

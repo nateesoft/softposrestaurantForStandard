@@ -104,7 +104,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -118,13 +118,13 @@ public class CancelArPayment extends javax.swing.JDialog {
         String TempBillNo = GetSelectedRow();
         if (!TempBillNo.equals("")) {
             if (!Fat.equals("V")) {
-                if (PUtility.ShowConfirmMsg("ต้องการยกเลิกการรับชำระจากลูกหนี้ภายนอก เลขที่ " + TempBillNo + " หรือไม่ ?  ")) {
+                if (MSG.CONF(this, "ต้องการยกเลิกการรับชำระจากลูกหนี้ภายนอก เลขที่ " + TempBillNo + " หรือไม่ ?  ")) {
                     PrintCancelArPayment(TempBillNo);
                     SaveDataCancelArPayment(TempBillNo);
                     this.dispose();
                 }
             } else {
-                MSG.WAR("รายการนี้ได้ทำการยกเลิกไปแล้ว...");
+                MSG.WAR(this, "รายการนี้ได้ทำการยกเลิกไปแล้ว...");
             }
         }
 
@@ -157,7 +157,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             stmt.executeUpdate(SQLQuery);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -198,7 +198,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(CancelArPayment.class, "error", e);
                     } finally {
                         mysql.closeConnection(this.getClass());
@@ -261,7 +261,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CancelArPayment.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -271,7 +271,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(SumAmount * -1) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         }
 
@@ -338,8 +338,8 @@ public class CancelArPayment extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ยกเลิกการรับชำระจากลูกหนี้ภายนอก");
+        setAlwaysOnTop(true);
         setLocationByPlatform(true);
-        setUndecorated(true);
 
         tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(
@@ -428,7 +428,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(1178, 608));
+        setSize(new java.awt.Dimension(1178, 636));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

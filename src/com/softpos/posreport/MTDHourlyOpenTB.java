@@ -170,7 +170,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 IntFmt.format(sumNet)
             });
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally{
             mysql.closeConnection(this.getClass());
         }

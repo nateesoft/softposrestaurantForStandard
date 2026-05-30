@@ -30,9 +30,9 @@ public class CancelCashBack extends javax.swing.JDialog {
         btnExit = new javax.swing.JButton();
         txtCode = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการยกเลิกการคืนเงินมัดจำ...");
-        setUndecorated(true);
+        setAlwaysOnTop(true);
         setResizable(false);
 
         table.setModel(new javax.swing.table.DefaultTableModel(

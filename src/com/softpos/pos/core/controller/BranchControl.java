@@ -21,7 +21,7 @@ public class BranchControl {
             String sql = "update branch set KicItemNo=KicItemNo+1";
             mysql.executeUpdate(sql);
         } catch (Exception e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);
@@ -203,7 +203,7 @@ public class BranchControl {
             }
 
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);
@@ -240,7 +240,7 @@ public class BranchControl {
 //            stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
             mysql.closeConnection(BranchControl.class);

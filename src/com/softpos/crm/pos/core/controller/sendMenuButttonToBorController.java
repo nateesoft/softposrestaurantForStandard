@@ -7,7 +7,7 @@ package com.softpos.crm.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
 import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
-import com.softpos.floorplan.FloorPlanDialog;
+import com.softpos.main.floorplan.view.FloorPlanDialog;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +39,6 @@ public class sendMenuButttonToBorController {
             stmt.close();
             mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
         return listMGRButtonSetup;
@@ -82,7 +81,6 @@ public class sendMenuButttonToBorController {
             stmt1.close();
             mysql.close();
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
         return listSoft_menusetupSetup;
@@ -117,7 +115,6 @@ public class sendMenuButttonToBorController {
             System.out.println(list.size());
             System.out.println(list1.size());
         } catch (Exception e) {
-            MSG.NOTICE(e.toString());
         }
     }
 }

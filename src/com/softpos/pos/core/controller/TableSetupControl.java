@@ -52,7 +52,7 @@ public class TableSetupControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(TableSetupControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

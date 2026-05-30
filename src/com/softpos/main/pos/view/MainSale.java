@@ -1,0 +1,4045 @@
+package com.softpos.main.pos.view;
+
+import com.softpos.main.floorplan.view.FloorPlanDialog;
+import com.softpos.main.floorplan.view.PaidinFrm;
+import com.softpos.main.floorplan.view.RefundBill;
+import com.softpos.main.floorplan.view.ShowTable;
+import com.softpos.member.MemberControl;
+import com.softpos.pos.core.controller.BalanceControl;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
+import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
+import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.ButtonCustom;
+import com.softpos.pos.core.controller.EmployeeControl;
+import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.crm.pos.core.modal.MenuMGR;
+import com.softpos.pos.core.model.POSConfigSetup;
+import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.PPrint;
+import com.softpos.pos.core.controller.PosControl;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.main.program.ARPayment;
+import com.softpos.main.program.AddNewArCustomer;
+import com.softpos.main.program.ArHistory;
+import com.softpos.main.program.ArNotPay;
+import com.softpos.main.program.CancelArPayment;
+import com.softpos.main.program.CancelCashBack;
+import com.softpos.main.program.CashBackDialog;
+import com.softpos.main.payment.view.CheckBill;
+import com.softpos.main.program.CopyBill;
+import com.softpos.main.program.CustomerName;
+import com.softpos.main.program.GetQty;
+import com.softpos.main.program.GetUserAction;
+import com.softpos.main.program.ModalPopup;
+import com.softpos.main.program.PrintInv1;
+import com.softpos.main.program.RepMember;
+import com.softpos.pos.core.controller.FloorPlanController;
+import com.softpos.pos.core.controller.MainSaleController;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.PosUserController;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.ThaiUtil;
+import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.BranchBean;
+import com.softpos.pos.core.model.CompanyBean;
+import com.softpos.pos.core.model.MemberBean;
+import com.softpos.pos.core.model.MenuListBean;
+import com.softpos.pos.core.model.MgrButtonSetupBean;
+import com.softpos.pos.core.model.PIngredientBean;
+import com.softpos.pos.core.model.PSetBean;
+import com.softpos.pos.core.model.PosUserBean;
+import com.softpos.pos.core.model.ProductBean;
+import com.softpos.pos.core.model.SoftMenuSetup;
+import com.softpos.pos.core.model.TableFileBean;
+import com.softpos.pos.core.model.TempsetBean;
+import database.ConfigFile;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import printReport.PrintSimpleForm;
+import soft.virtual.KeyBoardDialog;
+import util.AppLogUtil;
+import util.JTableUtility;
+import util.MSG;
+import util.NumberUtil;
+import util.Option;
+import util.ValidateValue;
+
+public class MainSale extends javax.swing.JDialog {
+
+    private PosUserBean posUser = null;
+    private PPrint Prn = new PPrint();
+    private DefaultTableModel model;
+    private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
+    private boolean TableOpenStatus;
+    private DecimalFormat QtyIntFmt = new DecimalFormat("###########0");
+    private String TempStatus = "";
+    private POSHWSetup POSHW;
+    private POSConfigSetup CONFIG;
+    public static String INDEX_NAME = "";
+    private List<Integer> historyBack;
+    private DecimalFormat dc1 = new DecimalFormat("#,##0.00");
+    private MemberBean memberBean;
+    private String tableNo;
+    private String SALE_DINE_IN = "นั่งทาน";
+    private String SALE_TAKE_AWAY = "ห่อกลับ";
+    private String SALE_Delivery = "เดลิเวอรี่";
+    private String SALE_Pinto = "ส่งประจำ";
+    private String SALE_WholeSale = "ขายส่ง";
+    private boolean btnClickPrintKic = false;
+
+    private final TableFileControl tableFileControl = new TableFileControl();
+    private final EmployeeControl empControl = new EmployeeControl();
+    private final ProductControl productControl = new ProductControl();
+    private final BalanceControl balanceControl = new BalanceControl();
+    private final FloorPlanController floorPlanControl = new FloorPlanController();
+    private final MainSaleController mainSaleControl = new MainSaleController();
+
+    private TableFileBean TableFileBean = null;
+
+    public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
+        super(parent, modal);
+        initComponents();
+
+        MMainMenu1.setVisible(true);
+        jMenu2.setVisible(true);
+        txtDisplayDiscount.setVisible(true);
+        txtDiscount.setVisible(true);
+        jPanel5.setVisible(false);
+        txtDisplayDiscount.setVisible(false);
+        txtDiscount.setVisible(false);
+
+        PublicVar.countRound = 0;
+        posUser = PosControl.getPosUser(PublicVar.ReturnString);
+
+        if (btnLangTH.isSelected()) {
+            PublicVar.languagePrint = "TH";
+        }
+        if (btnLangEN.isSelected()) {
+            PublicVar.languagePrint = "EN";
+        }
+        if (tableNo.contains("(")) {
+            String T1 = tableNo.substring(0, tableNo.indexOf("("));
+            tableNo = T1;
+        }
+
+        TableFileBean tbBean = tableFileControl.getData(tableNo);
+        this.memberBean = MemmaterController.getMember(tbBean.getMemCode());
+        if (memberBean == null) {
+            BalanceControl.updateProSerTable(tableNo, memberBean);
+        } else {
+            if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
+                BalanceControl.updateProSerTable(tableNo, memberBean);
+                txtMember1.setText(memberBean.getMember_NameThai());
+                txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
+            } else if (tbBean.getMemDiscAmt() != 0) {
+                updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
+            }
+        }
+        txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
+
+        loadButtonProductMenu("A");
+
+        Value.MemberAlready = false;
+
+        POSHW = POSHWSetup.Bean(Value.MACNO);
+        CONFIG = POSConfigSetup.Bean();
+
+        initScreen();
+        BranchBean branchBean = BranchControl.getData();
+        if (branchBean.getLocation_Area().equals("02")) {
+            txtShowETD.setText("T");
+        }
+
+        this.tableNo = tableNo;
+        txtTable.setText(tableNo);
+
+        empControl.initLoadEmployeeList();
+        productControl.initLoadProductActive();
+        loadTableBalance(txtTable.getText());
+
+        historyBack = new ArrayList<>();
+
+        java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(0, 0, screen.width, screen.height);
+        sumSplit();
+        txtPluCode.setEditable(true);
+        txtPluCode.setFocusable(true);
+        txtPluCode.requestFocus();
+        upDateTableFile();
+        showCustomerInput();
+    }
+
+    @SuppressWarnings("static-access")
+    private boolean chkEJPath() {
+        if (POSHW.getEJounal().equals("Y")) {
+            try {
+                String TempFile = POSHW.getEJDailyPath();
+                File fObject = new File(TempFile);
+                return fObject.exists();
+            } catch (HeadlessException e) {
+                MSG.ERR(this, "ไม่สามารถสร้าง Log File/EJFile ตามตำแหน่งที่เก็บข้อมูล Log File/EJ ได้ กรุณาติดต่อเจ้าหน้าที่ Support...");
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    private void loadLoginForm() {
+        this.setVisible(false);
+        showTableOpen();
+    }
+
+    void showTableOpen() {
+        this.setVisible(false);
+    }
+
+    private void showSaleType(String SaleType) {
+        txtShowETD.setVisible(false);
+        txtShowETD.setText(SaleType);
+    }
+
+    private void initScreen() {
+        model = (DefaultTableModel) tbShowBalance.getModel();
+
+        tbShowBalance.setShowGrid(true);
+        tbShowBalance.setGridColor(Color.gray);
+        tbShowBalance.setRowHeight(45);
+
+        JTableHeader header = tbShowBalance.getTableHeader();
+        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 12));
+
+        JTableUtility.alignColumn(tbShowBalance, 2, "right");
+        JTableUtility.alignColumn(tbShowBalance, 3, "right");
+        JTableUtility.alignColumn(tbShowBalance, 4, "right");
+
+        PublicVar.CheckStockOnLine = PUtility.GetStockOnLine();
+
+        TableOpenStatus = false;
+        PublicVar.ErrorColect = false;
+
+        showSaleType(POSHW.getSaleType());
+        PublicVar.P_LogoffOK = false;
+
+        PublicVar.CouponCnt = 0;
+        PublicVar.P_ItemCount = 0;
+        PublicVar.P_TotalAmt = 0.00;
+        PublicVar.P_TotService = 0.00;
+        PublicVar.P_TotDiscount = 0.00;
+        PublicVar.P_NetAmt = 0.00;
+
+        txtTable.setText("");
+        txtCust.setText("");
+        txtPluCode.setText("");
+        txtTable.setEditable(true);
+        txtCust.setEditable(false);
+        txtPluCode.setEditable(false);
+
+        txtTable.requestFocus();
+
+        lbTotalAmount.setText("0.00");
+        jLabel1.setText("จำนวนรายการสินค้า: 0 รายการ");
+
+        changeSaleType("E");
+        getTableAction();
+    }
+
+    private void getTableAction() {
+        txtTable.setEditable(true);
+        txtTable.requestFocus();
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        btnCancel = new javax.swing.JButton();
+        btnHold = new javax.swing.JButton();
+        bntPrintCheckBill = new javax.swing.JButton();
+        btnSplit = new javax.swing.JButton();
+        btnPayment = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        lbTotalAmount = new javax.swing.JLabel();
+        tbpMain = new javax.swing.JTabbedPane();
+        pMenu1 = new javax.swing.JPanel();
+        btnP1 = new javax.swing.JButton();
+        btnP2 = new javax.swing.JButton();
+        btnP3 = new javax.swing.JButton();
+        btnP4 = new javax.swing.JButton();
+        btnP5 = new javax.swing.JButton();
+        btnP6 = new javax.swing.JButton();
+        btnP7 = new javax.swing.JButton();
+        btnP8 = new javax.swing.JButton();
+        btnP9 = new javax.swing.JButton();
+        btnP10 = new javax.swing.JButton();
+        btnP11 = new javax.swing.JButton();
+        btnP12 = new javax.swing.JButton();
+        btnP13 = new javax.swing.JButton();
+        btnP14 = new javax.swing.JButton();
+        btnP15 = new javax.swing.JButton();
+        btnP16 = new javax.swing.JButton();
+        pMenu2 = new javax.swing.JPanel();
+        btnP17 = new javax.swing.JButton();
+        btnP18 = new javax.swing.JButton();
+        btnP19 = new javax.swing.JButton();
+        btnP20 = new javax.swing.JButton();
+        btnP21 = new javax.swing.JButton();
+        btnP22 = new javax.swing.JButton();
+        btnP23 = new javax.swing.JButton();
+        btnP24 = new javax.swing.JButton();
+        btnP25 = new javax.swing.JButton();
+        btnP26 = new javax.swing.JButton();
+        btnP27 = new javax.swing.JButton();
+        btnP28 = new javax.swing.JButton();
+        btnP29 = new javax.swing.JButton();
+        btnP30 = new javax.swing.JButton();
+        btnP31 = new javax.swing.JButton();
+        btnP32 = new javax.swing.JButton();
+        pMenu3 = new javax.swing.JPanel();
+        pMenu4 = new javax.swing.JPanel();
+        pMenu5 = new javax.swing.JPanel();
+        pMenu6 = new javax.swing.JPanel();
+        pMenu7 = new javax.swing.JPanel();
+        pMenu8 = new javax.swing.JPanel();
+        pMenu9 = new javax.swing.JPanel();
+        pSubMenu1 = new javax.swing.JPanel();
+        pSubMenu2 = new javax.swing.JPanel();
+        pSubMenu3 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        txtTable = new javax.swing.JTextField();
+        txtShowETD = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtCust = new javax.swing.JTextField();
+        txtTypeDesc = new javax.swing.JTextField();
+        jPanel6 = new javax.swing.JPanel();
+        txtDisplayDiscount = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        txtPluCode = new javax.swing.JTextField();
+        txtDiscount = new javax.swing.JTextField();
+        btnPrintKic = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        lbCredit = new javax.swing.JLabel();
+        lbCreditMoney = new javax.swing.JLabel();
+        lbCreditAmt = new javax.swing.JLabel();
+        txtMember1 = new javax.swing.JTextField();
+        txtMember2 = new javax.swing.JTextField();
+        jPanel7 = new javax.swing.JPanel();
+        btnLangTH = new javax.swing.JRadioButton();
+        btnLangEN = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbShowBalance = new javax.swing.JTable();
+        jMenuBar11 = new javax.swing.JMenuBar();
+        MMainMenu1 = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        MCancelArPayment2 = new javax.swing.JMenuItem();
+        MCancelArPayment1 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        MAddNewAccr1 = new javax.swing.JMenuItem();
+        MRepArNotPayment1 = new javax.swing.JMenuItem();
+        MRepArHistory1 = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JSeparator();
+        MRepMemberHistory1 = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JSeparator();
+        MRepInvCash1 = new javax.swing.JMenuItem();
+        MHeaderBill1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
+
+        jPopupMenu1.setBackground(new java.awt.Color(102, 153, 0));
+        jPopupMenu1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jPopupMenu1.setForeground(new java.awt.Color(255, 255, 255));
+
+        jMenuItem1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem1.setText("แก้ไขรายการ");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
+
+        jMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem2.setText("กำหนดประเภทปุ่ม");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem2);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("โปรแกรมร้านอาหาร");
+        setBackground(new java.awt.Color(255, 204, 204));
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
+
+        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
+        btnCancel.setFocusable(false);
+        btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCancel.setRequestFocusEnabled(false);
+        btnCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnCancel);
+
+        btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
+        btnHold.setText("ส่งครัว/พักบิล");
+        btnHold.setActionCommand("พักบิล/พักโต๊ะ (F3)");
+        btnHold.setFocusable(false);
+        btnHold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnHold.setPreferredSize(new java.awt.Dimension(70, 61));
+        btnHold.setRequestFocusEnabled(false);
+        btnHold.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnHold.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHoldActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnHold);
+
+        bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        bntPrintCheckBill.setText("พิมพ์ตรวจสอบ");
+        bntPrintCheckBill.setFocusable(false);
+        bntPrintCheckBill.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bntPrintCheckBill.setRequestFocusEnabled(false);
+        bntPrintCheckBill.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bntPrintCheckBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntPrintCheckBillActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bntPrintCheckBill);
+
+        btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
+        btnSplit.setText("แยกชำระ");
+        btnSplit.setFocusable(false);
+        btnSplit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSplit.setPreferredSize(new java.awt.Dimension(70, 61));
+        btnSplit.setRequestFocusEnabled(false);
+        btnSplit.setRolloverEnabled(false);
+        btnSplit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSplit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSplitActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnSplit);
+
+        btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
+        btnPayment.setText("ชำระเงิน");
+        btnPayment.setFocusable(false);
+        btnPayment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnPayment.setRequestFocusEnabled(false);
+        btnPayment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPaymentActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPayment);
+
+        jPanel3.setBackground(new java.awt.Color(255, 102, 0));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbTotalAmount.setBackground(new java.awt.Color(153, 255, 153));
+        lbTotalAmount.setFont(new java.awt.Font("Tahoma", 1, 60)); // NOI18N
+        lbTotalAmount.setForeground(new java.awt.Color(255, 255, 255));
+        lbTotalAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbTotalAmount.setText("0.00");
+        jPanel3.add(lbTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 570, 80));
+
+        tbpMain.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        tbpMain.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        tbpMain.setFocusable(false);
+        tbpMain.setFont(new java.awt.Font("Tahoma", 0, 1)); // NOI18N
+        tbpMain.setPreferredSize(new java.awt.Dimension(0, 0));
+        tbpMain.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbpMainMouseClicked(evt);
+            }
+        });
+
+        pMenu1.setBackground(new java.awt.Color(255, 255, 255));
+        pMenu1.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu1.add(btnP1);
+        pMenu1.add(btnP2);
+        pMenu1.add(btnP3);
+        pMenu1.add(btnP4);
+        pMenu1.add(btnP5);
+        pMenu1.add(btnP6);
+        pMenu1.add(btnP7);
+        pMenu1.add(btnP8);
+        pMenu1.add(btnP9);
+        pMenu1.add(btnP10);
+        pMenu1.add(btnP11);
+        pMenu1.add(btnP12);
+        pMenu1.add(btnP13);
+        pMenu1.add(btnP14);
+        pMenu1.add(btnP15);
+        pMenu1.add(btnP16);
+
+        tbpMain.addTab("", pMenu1);
+
+        pMenu2.setLayout(new java.awt.GridLayout(4, 4));
+        pMenu2.add(btnP17);
+        pMenu2.add(btnP18);
+        pMenu2.add(btnP19);
+        pMenu2.add(btnP20);
+        pMenu2.add(btnP21);
+        pMenu2.add(btnP22);
+        pMenu2.add(btnP23);
+        pMenu2.add(btnP24);
+        pMenu2.add(btnP25);
+        pMenu2.add(btnP26);
+        pMenu2.add(btnP27);
+        pMenu2.add(btnP28);
+        pMenu2.add(btnP29);
+        pMenu2.add(btnP30);
+        pMenu2.add(btnP31);
+        pMenu2.add(btnP32);
+
+        tbpMain.addTab("", pMenu2);
+
+        pMenu3.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu3);
+
+        pMenu4.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu4);
+
+        pMenu5.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu5);
+
+        pMenu6.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu6);
+
+        pMenu7.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu7);
+
+        pMenu8.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu8);
+
+        pMenu9.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pMenu9);
+
+        pSubMenu1.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pSubMenu1);
+
+        pSubMenu2.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pSubMenu2);
+
+        pSubMenu3.setLayout(new java.awt.GridLayout(4, 4));
+        tbpMain.addTab("", pSubMenu3);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+            .addComponent(tbpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(tbpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel1.setBackground(new java.awt.Color(255, 153, 102));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtTable.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        txtTable.setForeground(new java.awt.Color(51, 51, 51));
+        txtTable.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtTable.setDisabledTextColor(java.awt.Color.red);
+        txtTable.setFocusable(false);
+        txtTable.setMargin(new java.awt.Insets(2, 10, 2, 2));
+        txtTable.setRequestFocusEnabled(false);
+        txtTable.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTableFocusGained(evt);
+            }
+        });
+        txtTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTableKeyPressed(evt);
+            }
+        });
+
+        txtShowETD.setEditable(false);
+        txtShowETD.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+        txtShowETD.setForeground(new java.awt.Color(255, 255, 255));
+        txtShowETD.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtShowETD.setText("E");
+        txtShowETD.setDisabledTextColor(java.awt.Color.black);
+        txtShowETD.setEnabled(false);
+        txtShowETD.setFocusable(false);
+        txtShowETD.setRequestFocusEnabled(false);
+        txtShowETD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtShowETDMouseClicked(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("ลูกค้า");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("โต๊ะ");
+
+        txtCust.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        txtCust.setForeground(new java.awt.Color(51, 51, 51));
+        txtCust.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCust.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txtCust.setDisabledTextColor(java.awt.Color.black);
+        txtCust.setFocusable(false);
+        txtCust.setRequestFocusEnabled(false);
+        txtCust.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCustFocusGained(evt);
+            }
+        });
+        txtCust.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtCustMouseClicked(evt);
+            }
+        });
+        txtCust.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCustKeyPressed(evt);
+            }
+        });
+
+        txtTypeDesc.setEditable(false);
+        txtTypeDesc.setBackground(new java.awt.Color(204, 204, 255));
+        txtTypeDesc.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtTypeDesc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTypeDesc.setText("DINE IN");
+        txtTypeDesc.setCaretColor(new java.awt.Color(255, 255, 255));
+        txtTypeDesc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtTypeDescMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtCust, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
+                    .addComponent(txtTable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtTypeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtShowETD, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtDisplayDiscount.setEditable(false);
+        txtDisplayDiscount.setBackground(new java.awt.Color(204, 153, 0));
+        txtDisplayDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtDisplayDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDisplayDiscount.setText("Discount");
+        txtDisplayDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPanel6.add(txtDisplayDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 153, 170, 40));
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButton1.setText("แป้นพิมพ์");
+        jButton1.setRequestFocusEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 35, 97, 30));
+
+        txtPluCode.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtPluCode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtPluCode.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        txtPluCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPluCodeFocusGained(evt);
+            }
+        });
+        txtPluCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPluCodeActionPerformed(evt);
+            }
+        });
+        txtPluCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPluCodeKeyPressed(evt);
+            }
+        });
+        jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 170, 30));
+
+        txtDiscount.setEditable(false);
+        txtDiscount.setBackground(new java.awt.Color(204, 153, 0));
+        txtDiscount.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtDiscount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDiscount.setText("0.00");
+        txtDiscount.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPanel6.add(txtDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 153, 240, 40));
+
+        btnPrintKic.setBackground(new java.awt.Color(0, 0, 204));
+        btnPrintKic.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnPrintKic.setForeground(new java.awt.Color(255, 255, 255));
+        btnPrintKic.setText("Print - ON");
+        btnPrintKic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintKicActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnPrintKic, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 35, 139, 30));
+
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("ค้างชำระ");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("เครดิต");
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("วงเงิน");
+
+        lbCredit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbCredit.setForeground(new java.awt.Color(255, 255, 255));
+        lbCredit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCredit.setText("0");
+
+        lbCreditMoney.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbCreditMoney.setForeground(new java.awt.Color(255, 255, 255));
+        lbCreditMoney.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCreditMoney.setText("0.00");
+
+        lbCreditAmt.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbCreditAmt.setForeground(new java.awt.Color(255, 255, 255));
+        lbCreditAmt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCreditAmt.setText("0.00");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel13)
+                .addGap(18, 18, 18)
+                .addComponent(lbCreditMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbCreditAmt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel11)
+                    .addComponent(lbCredit)
+                    .addComponent(lbCreditMoney)
+                    .addComponent(lbCreditAmt))
+                .addContainerGap())
+        );
+
+        jPanel6.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 108, 420, 40));
+
+        txtMember1.setEditable(false);
+        txtMember1.setBackground(new java.awt.Color(0, 102, 204));
+        txtMember1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember1.setForeground(new java.awt.Color(255, 255, 255));
+        txtMember1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtMember1.setText(" <ค้นหาสมาชิก> ");
+        txtMember1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtMember1.setFocusable(false);
+        txtMember1.setRequestFocusEnabled(false);
+        txtMember1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtMember1MouseClicked(evt);
+            }
+        });
+        txtMember1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMember1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(txtMember1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 280, 36));
+
+        txtMember2.setEditable(false);
+        txtMember2.setBackground(new java.awt.Color(0, 102, 204));
+        txtMember2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMember2.setForeground(new java.awt.Color(255, 255, 255));
+        txtMember2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtMember2.setText(": แต้มสะสม");
+        txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel6.add(txtMember2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 140, 36));
+
+        jPanel7.setBackground(new java.awt.Color(204, 255, 204));
+
+        btnLangTH.setBackground(new java.awt.Color(204, 255, 204));
+        buttonGroup1.add(btnLangTH);
+        btnLangTH.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnLangTH.setSelected(true);
+        btnLangTH.setText("TH");
+        btnLangTH.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnLangTHItemStateChanged(evt);
+            }
+        });
+
+        btnLangEN.setBackground(new java.awt.Color(204, 255, 204));
+        buttonGroup1.add(btnLangEN);
+        btnLangEN.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnLangEN.setText("EN");
+        btnLangEN.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnLangENItemStateChanged(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setText(" 0  รายการ");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLangTH)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLangEN)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel1)
+                    .addComponent(btnLangTH)
+                    .addComponent(btnLangEN))
+                .addContainerGap())
+        );
+
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, -1));
+
+        tbShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tbShowBalance.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "Product Name", "QTY.", "Price", "Total", "Void Flag", "Type Sale", "Print to Kic", "Order Send", "Promotion", "RIndex", "Pause", "Employ", "Time"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbShowBalance.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbShowBalance.setFocusable(false);
+        tbShowBalance.setRequestFocusEnabled(false);
+        tbShowBalance.setRowHeight(25);
+        tbShowBalance.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        tbShowBalance.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tbShowBalance.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbShowBalanceMouseClicked(evt);
+            }
+        });
+        tbShowBalance.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tbShowBalanceKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbShowBalance);
+        if (tbShowBalance.getColumnModel().getColumnCount() > 0) {
+            tbShowBalance.getColumnModel().getColumn(0).setMinWidth(0);
+            tbShowBalance.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tbShowBalance.getColumnModel().getColumn(0).setMaxWidth(0);
+            tbShowBalance.getColumnModel().getColumn(1).setPreferredWidth(290);
+            tbShowBalance.getColumnModel().getColumn(2).setPreferredWidth(45);
+        }
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jMenuBar11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuBar11MouseClicked(evt);
+            }
+        });
+
+        MMainMenu1.setText("เมนูหลักระบบ (Main Menu)         ");
+        MMainMenu1.setDelay(100);
+        MMainMenu1.setDoubleBuffered(true);
+        MMainMenu1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        MMainMenu1.setRequestFocusEnabled(false);
+
+        jMenuItem7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem7.setText("คืนเงินมัดจำเป็นเงินสด");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(jMenuItem7);
+
+        jMenuItem8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem8.setText("ยกเลิกการคืนเงินมัดจำ");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(jMenuItem8);
+        MMainMenu1.add(jSeparator1);
+
+        MCancelArPayment2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MCancelArPayment2.setText("รับชำระจากลูกหนี้ภายนอก");
+        MCancelArPayment2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MCancelArPayment2ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MCancelArPayment2);
+
+        MCancelArPayment1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MCancelArPayment1.setText("ยกเลิกการรับชำระจากลูกหนี้ภายนอก");
+        MCancelArPayment1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MCancelArPayment1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MCancelArPayment1);
+        MMainMenu1.add(jSeparator2);
+
+        MAddNewAccr1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MAddNewAccr1.setText("ปรับปรุงรายละเอียดลูกหนี้ภายนอก");
+        MAddNewAccr1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MAddNewAccr1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MAddNewAccr1);
+
+        MRepArNotPayment1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MRepArNotPayment1.setText("รายงานลูกหนี้ภายนอกค้างชำระ");
+        MRepArNotPayment1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MRepArNotPayment1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MRepArNotPayment1);
+
+        MRepArHistory1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MRepArHistory1.setText("ประวัติการซื้อของลูกหนี้ภายนอก");
+        MRepArHistory1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MRepArHistory1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MRepArHistory1);
+        MMainMenu1.add(jSeparator10);
+
+        MRepMemberHistory1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MRepMemberHistory1.setText("ประวัติการซื้อของสมาชิก");
+        MRepMemberHistory1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MRepMemberHistory1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MRepMemberHistory1);
+        MMainMenu1.add(jSeparator11);
+
+        MRepInvCash1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MRepInvCash1.setText("พิมพ์ใบกำกับภาษี/ใบเสร็จรับเงิน");
+        MRepInvCash1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MRepInvCash1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MRepInvCash1);
+
+        MHeaderBill1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        MHeaderBill1.setText("พิมพ์หัวกระดาษ/ท้ายกระดาษ");
+        MHeaderBill1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MHeaderBill1ActionPerformed(evt);
+            }
+        });
+        MMainMenu1.add(MHeaderBill1);
+
+        jMenuBar11.add(MMainMenu1);
+
+        jMenu2.setText("กำหนดรายละเอียดสินค้า     ");
+        jMenu2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jCheckBoxMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PAGE_DOWN, 0));
+        jCheckBoxMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jCheckBoxMenuItem3.setSelected(true);
+        jCheckBoxMenuItem3.setText("การกำหนดรายละเอียด Option");
+        jCheckBoxMenuItem3.setActionCommand("การกำหนดรายละเอียด Option\nปลดล็อกการวอย Void Unlock");
+        jCheckBoxMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jCheckBoxMenuItem3);
+
+        jMenuBar11.add(jMenu2);
+
+        setJMenuBar(jMenuBar11);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+    private void tableOpened() {
+        if (!txtTable.getText().trim().equals("")) {
+            txtTableOnExit();
+            showSum();
+            if (!CONFIG.getP_EmpUse().equals("Y")) {
+                if (PublicVar.TableRec_TCustomer == 0) {
+                    txtCust.setEditable(true);
+                    txtCust.requestFocus();
+                    txtCust.selectAll();
+                } else {
+                    txtPluCode.setEditable(true);
+                    txtPluCode.setBackground(Color.WHITE);
+                    txtPluCode.requestFocus();
+                }
+            }
+            return;
+        }
+        if (txtTable.getText().trim().length() > 5) {
+            MSG.ERR(this, "หมายเลขโต๊ะต้องกำหนดเป็นตัวเลข 0-9 เท่านั้น และกำหนดได้ไม่เกิน 5 ตัวอักษร...");
+            txtTable.selectAll();
+            txtTable.requestFocus();
+        }
+    }
+
+private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_ENTER:
+            tableOpened();
+            break;
+        case KeyEvent.VK_ESCAPE:
+            txtTable.setText("");
+            bntlogoffuserClick();
+            break;
+        case KeyEvent.VK_F5:
+            showTableAvialble();
+            break;
+        case KeyEvent.VK_F8:
+            showPaidIn();
+            break;
+        case KeyEvent.VK_F9:
+            showPaidOut();
+            break;
+        case KeyEvent.VK_F6:
+            showBillDuplicate();
+            break;
+        case KeyEvent.VK_F7:
+            showRefundBill();
+            break;
+        case KeyEvent.VK_F12:
+            showPayAR();
+            break;
+        default:
+            break;
+    }
+
+}//GEN-LAST:event_txtTableKeyPressed
+
+    private void loadTableBalance(String tableNo) {
+        /**
+         * * OPEN CONNECTION **
+         */
+        PublicVar.countRound = 0;
+        List<BalanceBean> listBalance = balanceControl.loadTableBalance(tableNo);
+        int rowCount = model.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            model.removeRow(0);
+        }
+
+        for (BalanceBean balanceBean : listBalance) {
+            String r_linkindex = balanceBean.getR_LinkIndex();
+            String r_index = balanceBean.getR_Index();
+            String voidStr = balanceBean.getR_Void();
+            String rEtd = balanceBean.getR_ETD();
+
+            String PName = rEtd + " " + balanceBean.getR_PName();
+            String newName = getNewPNameWrap(PName);
+
+            if (voidStr.equals("V")) {
+                PName = "<html><div align= 'left'><strike><font color=red>" + newName + "</font></strike></div></html>";
+            } else if (r_index.equals(r_linkindex)) {
+                PName = "<html><b><font color=blue>" + newName + "</font></b></html>";
+            } else {
+                PName = "<html>" + newName + "</html>";
+            }
+
+            Object[] input = {
+                balanceBean.getR_PluCode(),
+                PName,
+                dc1.format(balanceBean.getR_Quan()),
+                dc1.format(balanceBean.getR_Price()),
+                dc1.format(balanceBean.getR_Total()),
+                balanceBean.getR_Void(),
+                balanceBean.getR_ETD(),
+                balanceBean.getR_KicPrint(),
+                balanceBean.getR_KicOK(),
+                balanceBean.getR_PrType(),
+                balanceBean.getR_Index(),
+                balanceBean.getR_Pause(),
+                empControl.getEmployeeArray(balanceBean.getR_Emp()).getName(),
+                balanceBean.getR_Time()
+            };
+            model.addRow(input);
+
+            //วนหาข้อความพิเศษ
+            String[] optList = new String[]{
+                balanceBean.getR_Opt1(),
+                balanceBean.getR_Opt2(),
+                balanceBean.getR_Opt3(),
+                balanceBean.getR_Opt4(),
+                balanceBean.getR_Opt5(),
+                balanceBean.getR_Opt6(),
+                balanceBean.getR_Opt7(),
+                balanceBean.getR_Opt8(),
+                balanceBean.getR_Opt9(),};
+            String str = "";
+            for (String R_Opt : optList) {
+                if (R_Opt == null) {
+                    R_Opt = "";
+                }
+                if (!R_Opt.equals("")) {
+                    if (str.equals("")) {
+                        if (voidStr.equals("V")) {
+                            str += "  - ";
+                        } else {
+                            str += "  + ";
+                        }
+                    }
+                    str += ThaiUtil.ASCII2Unicode(R_Opt) + ",";
+                }
+            }
+
+            if (!str.equals("")) {
+                if (str.contains("-")) {
+                    str = "<html><font color=red>" + str + "</font></html>";
+                }
+                model.addRow(new Object[]{"", str});
+            }
+        }
+
+        rowCount = model.getRowCount();
+        showCell(rowCount - 1, 0);
+        showSum();
+    }
+
+    private void showSum() { //คำสั่งกำหนดให้ไปโชว์ค่ายอดเงินในส่วนต่างๆ
+        //show sum
+        TableFileBean tfBean = tableFileControl.getData(tableNo);
+        double totalDiscount;
+        totalDiscount = tfBean.getProDiscAmt() + tfBean.getSpaDiscAmt() + tfBean.getCuponDiscAmt()
+                + tfBean.getFastDiscAmt() + tfBean.getEmpDiscAmt() + tfBean.getTrainDiscAmt()
+                + tfBean.getSubDiscAmt() + tfBean.getDiscBath() + tfBean.getItemDiscAmt();
+        if (CONFIG.getP_VatType().equals("I")) {
+            if (!CONFIG.getP_PayBahtRound().equals("O")) {
+                lbTotalAmount.setText("" + dc1.format(NumberUtil.UP_DOWN_NATURAL_BAHT((tfBean.getNetTotal()))));
+            } else {
+                lbTotalAmount.setText("" + dc1.format((tfBean.getNetTotal())));
+            }
+        }
+        if (CONFIG.getP_VatType().equals("E")) {
+            double vat = (tfBean.getTAmount() - totalDiscount + tfBean.getServiceAmt()) * 7 / 100;
+            lbTotalAmount.setText(
+                    dc1.format(((tfBean.getTAmount() - totalDiscount + tfBean.getServiceAmt()) + vat))
+            );
+        }
+
+        jLabel1.setText("จำนวนรายการสินค้า: " + tableFileControl.getItemCount(tableNo) + " รายการ");
+        txtCust.setText("" + tfBean.getTCustomer());
+
+        // for member
+        String MemberCode = tfBean.getMemCode();
+        if (ValidateValue.isNotEmpty(MemberCode)) {
+            Value.MemberAlready = true;
+            memberBean = MemmaterController.getMember(MemberCode);
+            txtMember1.setText(memberBean.getMember_NameThai());
+            txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
+        }
+    }
+
+private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        txtPluCode.setEditable(true);
+        txtPluCode.requestFocus();
+
+        txtCustOnExit();
+    }
+}//GEN-LAST:event_txtCustKeyPressed
+    //คำสั่งกำหนดจำนวนลูกค้า
+    private void txtCustOnExit() {
+        try {
+            int customerInTable = Integer.parseInt(txtCust.getText());
+            if (customerInTable > 999) {
+                MSG.ERR(this, "จำนวนลูกค้าป้อนได้ไม่เกิน 999 คน...");
+                txtCust.requestFocus();
+                return;
+            }
+            if (txtCust.getText().equals("0")) {
+                updateCustomerCount(customerInTable = 1);
+                txtCust.setText("1");
+            }
+            updateCustomerCount(customerInTable);
+            txtCust.setEditable(false);
+            txtPluCode.setEditable(true);
+            txtPluCode.requestFocus();
+        } catch (NumberFormatException e) {
+            MSG.ERR(this, "กรุณาป้อนจำนวนลูกค้า เป็นตัวเลขเท่านั้น...");
+            PublicVar.TableRec_TCustomer = 1;
+            txtCust.requestFocus();
+        }
+    }
+
+private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPluCodeKeyPressed
+    //คำสั่ง Enter,ESCAPE
+    if (!isTakeOrder()) {
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                pCodeEnter();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                break;
+            case KeyEvent.VK_F1:
+                FindProduct find = new FindProduct(new JFrame(), true);
+                find.setVisible(true);
+                if (!find.getPCode().equals("")) {
+                    txtPluCode.setText(txtPluCode.getText() + find.getPCode());
+
+                }
+                break;
+            case KeyEvent.VK_F3:
+                showHoldTable();
+                break;
+            case KeyEvent.VK_F4:
+                showCheckBill();
+                break;
+            case KeyEvent.VK_F6:
+                showBillCheck();
+                break;
+            case KeyEvent.VK_F9:
+                showCustomerInput();
+                break;
+            case KeyEvent.VK_UP:
+                selectedTableBalance();
+                break;
+            case KeyEvent.VK_F11:
+                showMember();
+                break;
+            default:
+                break;
+        }
+    }
+
+}//GEN-LAST:event_txtPluCodeKeyPressed
+
+private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
+    //คำสั่ง Enter,ESCAPE
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        txtPluCode.requestFocus();
+    } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        int row = tbShowBalance.getSelectedRow();
+        if (row != -1) {
+            Object r_index = model.getValueAt(row, 10);
+            Object voidMsg = model.getValueAt(row, 5);
+            String strVoid;
+            if (voidMsg != null) {
+                strVoid = voidMsg.toString();
+            } else {
+                strVoid = "";
+            }
+
+            if (r_index != null && !strVoid.equalsIgnoreCase("V")) {
+                selectedOptionBill();
+                txtPluCode.requestFocus();
+            }
+        }
+    }
+
+}//GEN-LAST:event_tbShowBalanceKeyPressed
+
+private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
+    PublicVar.TempUserRec = PublicVar.TUserRec;
+    if (posUser.getSale7().equals("Y")) {
+        AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
+        fmt.setVisible(true);
+    } else {
+        GetUserAction getuser = new GetUserAction(new JFrame(), true);
+        getuser.setVisible(true);
+
+        if (!PublicVar.ReturnString.equals("")) {
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale7().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
+                    AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
+                    fmt.setVisible(true);
+                } else {
+                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                }
+            } else {
+                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+            }
+        }
+    }
+    PublicVar.TUserRec = PublicVar.TempUserRec;
+}//GEN-LAST:event_MAddNewAccr1ActionPerformed
+
+private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArNotPayment1ActionPerformed
+    PublicVar.TempUserRec = PublicVar.TUserRec;
+
+    if (posUser.getSale8().equals("Y")) {
+        ArNotPay frm = new ArNotPay(new JFrame(), true);
+        frm.setVisible(true);
+    } else {
+        GetUserAction getuser = new GetUserAction(new JFrame(), true);
+        getuser.setVisible(true);
+
+        if (!PublicVar.ReturnString.equals("")) {
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale8().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
+                    ArNotPay frm = new ArNotPay(new JFrame(), true);
+                    frm.setVisible(true);
+                } else {
+                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                }
+            } else {
+                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+            }
+        }
+    }
+
+    PublicVar.TUserRec = PublicVar.TempUserRec;
+
+}//GEN-LAST:event_MRepArNotPayment1ActionPerformed
+
+private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArHistory1ActionPerformed
+    PublicVar.TempUserRec = PublicVar.TUserRec;
+    if (posUser.getSale9().equals("Y")) {
+        ArHistory frm = new ArHistory(new JFrame(), true);
+        frm.setVisible(true);
+    } else {
+        GetUserAction getuser = new GetUserAction(new JFrame(), true);
+        getuser.setVisible(true);
+
+        if (!PublicVar.ReturnString.equals("")) {
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale9().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
+                    ArHistory frm = new ArHistory(new JFrame(), true);
+                    frm.setVisible(true);
+                } else {
+                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                }
+            } else {
+                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+            }
+        }
+    }
+    PublicVar.TUserRec = PublicVar.TempUserRec;
+}//GEN-LAST:event_MRepArHistory1ActionPerformed
+
+private void MRepMemberHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepMemberHistory1ActionPerformed
+    RepMember frm = new RepMember(new JFrame(), true);
+    frm.setVisible(true);
+}//GEN-LAST:event_MRepMemberHistory1ActionPerformed
+
+private void MHeaderBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHeaderBill1ActionPerformed
+    if (Value.useprint) {
+        PPrint prn = new PPrint();
+        prn.printHeaderBill();
+    }
+}//GEN-LAST:event_MHeaderBill1ActionPerformed
+
+private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepInvCash1ActionPerformed
+    PrintInv1 frm = new PrintInv1(new JFrame(), true);
+    frm.setVisible(true);
+}//GEN-LAST:event_MRepInvCash1ActionPerformed
+
+    private void clearTable() {
+        tbShowBalance.setBackground(null);
+        txtTableOnEnter();
+        changeSaleType("E");
+        txtTable.setText("");
+        txtTable.requestFocus();
+    }
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        CancelCashBack c = new CancelCashBack(new JFrame(), true);
+        c.setVisible(true);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        CashBackDialog c = new CashBackDialog(new JFrame(), true);
+        c.setVisible(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void MCancelArPayment2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCancelArPayment2ActionPerformed
+        ARPayment Ar = new ARPayment(new JFrame(), true);
+        Ar.setVisible(true);
+
+    }//GEN-LAST:event_MCancelArPayment2ActionPerformed
+
+    private void MCancelArPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCancelArPayment1ActionPerformed
+        if (posUser.getSale7().equals("Y")) {
+            if (PUtility.CheckSaleDateOK()) {
+                cancelArPaymentClick();
+            }
+            return;
+        }
+        GetUserAction getuser = new GetUserAction(new JFrame(), true);
+        getuser.setVisible(true);
+
+        if (!PublicVar.ReturnString.equals("")) {
+            if (posUser.getUserName() != null) {
+                if (posUser.getSale7().equals("Y")) {
+                    PublicVar.TUserRec = posUser;
+                    if (PUtility.CheckSaleDateOK()) {
+                        cancelArPaymentClick();
+                    }
+                } else {
+                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                }
+                return;
+            }
+            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+        }
+    }//GEN-LAST:event_MCancelArPayment1ActionPerformed
+
+    private void txtShowETDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtShowETDMouseClicked
+        switch (txtShowETD.getText()) {
+            case "E":
+                txtShowETD.setText("T");
+                changeSaleType("T");
+                break;
+            case "T":
+                txtShowETD.setText("D");
+                changeSaleType("D");
+                break;
+            case "D":
+                txtShowETD.setText("E");
+                changeSaleType("E");
+                break;
+            default:
+                break;
+        }
+    }//GEN-LAST:event_txtShowETDMouseClicked
+
+    private void tbShowBalanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbShowBalanceMouseClicked
+        if (evt.getClickCount() == 2) {
+            selectedOptionBill();
+        }
+    }//GEN-LAST:event_tbShowBalanceMouseClicked
+
+    private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
+        showHoldTable();
+    }//GEN-LAST:event_btnHoldActionPerformed
+
+    private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
+        if (btnClickPrintKic == true) {
+            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
+            balanceControl.execUpdate(sqlTurnPrintKicOff);
+        }
+        if (lbTotalAmount.getText().equals("0.00")) {
+            JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
+        } else {
+            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+            balanceControl.execUpdate(sql);
+            kichenPrint();
+            sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
+            balanceControl.execUpdate(sql);
+
+            showCheckBill();
+        }
+    }//GEN-LAST:event_btnPaymentActionPerformed
+
+    private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
+        showSplitBill();
+    }//GEN-LAST:event_btnSplitActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        cancelItemBeforeHold();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtTableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTableFocusGained
+        if (!Value.TableSelected.equals("")) {
+            txtTable.setText(tableNo);
+            Value.TableSelected = "";
+        }
+    }//GEN-LAST:event_txtTableFocusGained
+
+    private void txtPluCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPluCodeFocusGained
+        txtPluCode.setEditable(true);
+        txtPluCode.requestFocus();
+    }//GEN-LAST:event_txtPluCodeFocusGained
+
+    boolean isSelected = false;
+
+    private void txtCustFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustFocusGained
+        isSelected = true;
+    }//GEN-LAST:event_txtCustFocusGained
+
+    private void txtCustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCustMouseClicked
+        CustomerCountDialog ccd = new CustomerCountDialog(this, true, txtTable.getText(), txtShowETD.getText());
+        ccd.setVisible(true);
+
+        showSum();
+    }//GEN-LAST:event_txtCustMouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        MGRButtonMenu mgr = new MGRButtonMenu(new JFrame(), true, buttonName, buttonIndex);
+        mgr.setVisible(true);
+
+        loadButtonProductMenu(refreshMenuButtonGroup(buttonName));
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void adjustFullScreenLayout() {
+        int rightW = jPanel4.getWidth() - 4;
+        int rightH = jPanel4.getHeight();
+        if (rightW <= 0 || rightH <= 0) {
+            return;
+        }
+        // jPanel4 ใช้ AbsoluteLayout — ต้อง setBounds เองเพื่อให้ขยายตามจอ
+        jPanel3.setBounds(2, 2, rightW, 90);
+        tbpMain.setBounds(2, 103, rightW, rightH - 213);
+        jPanel2.setBounds(2, rightH - 102, rightW, 100);
+        jPanel4.revalidate();
+
+        // jPanel9 ฝั่งซ้าย — ขยาย jScrollPane1 ให้ใช้ความสูงที่เหลือ
+        int scrollH = getContentPane().getHeight() - jPanel1.getHeight() - jPanel6.getHeight() - 10;
+        if (scrollH > 100) {
+            jScrollPane1.setPreferredSize(new java.awt.Dimension(jScrollPane1.getWidth(), scrollH));
+            jPanel9.revalidate();
+        }
+    }
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        adjustFullScreenLayout();
+        if (tableNo.contains("T")) {
+            txtShowETD.setText("T");
+            changeSaleType("T");
+            txtTypeDesc.setText(SALE_TAKE_AWAY);
+        } else if (tableNo.contains("DE")) {
+            txtShowETD.setText("D");
+            changeSaleType("D");
+            txtTypeDesc.setText(SALE_Delivery);
+        } else if (tableNo.contains("E")) {
+            txtShowETD.setText("E");
+            changeSaleType("E");
+            txtTypeDesc.setText(SALE_DINE_IN);
+        }
+        pMenu2.setVisible(false);
+        pMenu3.setVisible(false);
+        pMenu4.setVisible(false);
+        pMenu5.setVisible(false);
+        pMenu6.setVisible(false);
+
+        isTakeOrder();
+
+        if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
+            CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+            ccd.setVisible(true);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jMenuBar11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuBar11MouseClicked
+        if (MMainMenu1.isVisible() == false && jMenu2.isVisible() == false) {
+            MMainMenu1.setVisible(true);
+            jMenu2.setVisible(true);
+        } else {
+            MMainMenu1.setVisible(false);
+            jMenu2.setVisible(false);
+        }
+    }//GEN-LAST:event_jMenuBar11MouseClicked
+
+    private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
+        double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
+        if (totalCheck > 0) {
+            if (btnClickPrintKic == true) {
+                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
+                balanceControl.execUpdate(sql);
+            }
+            balanceControl.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
+            kichenPrint();
+            balanceControl.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
+            printBillCheck();
+        } else {
+            MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
+        }
+    }//GEN-LAST:event_bntPrintCheckBillActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        MGRButtonSetup mgr = new MGRButtonSetup(new JFrame(), true, buttonName, buttonIndex);
+        mgr.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jCheckBoxMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem3ActionPerformed
+        OptionMenuSet browse = new OptionMenuSet(new JFrame(), true);
+        browse.setVisible(true);
+    }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new KeyBoardDialog(new JFrame(), true, 4).get(txtPluCode, 4);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtMember1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMember1MouseClicked
+        MemberDialog MBD = new MemberDialog(this, true, tableNo);
+        MBD.setVisible(true);
+
+        this.memberBean = MemmaterController.getMember(MBD.getMemCode());
+        if (memberBean == null) {
+            memberBean = null;
+            txtMember1.setText(" <ค้นหาสมาชิก> ");
+            txtMember2.setText(": แต้มสะสม");
+        } else {
+            updateProSerTable(tableNo, memberBean);
+            try {
+                if (ValidateValue.isNotEmpty(memberBean.getMember_Code()) && memberBean != null) {
+                    txtMember1.setText(memberBean.getMember_NameThai());
+                    txtMember2.setText(QtyIntFmt.format(memberBean.getMember_TotalScore()));
+                    loadTableBalance(txtTable.getText());
+                }
+            } catch (Exception e) {
+                MSG.ERR(this, e.getMessage());
+            }
+        }
+
+    }//GEN-LAST:event_txtMember1MouseClicked
+
+    private void tbpMainMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbpMainMouseClicked
+        clearHistory();
+        addHistory(tbpMain.getSelectedIndex());
+    }//GEN-LAST:event_tbpMainMouseClicked
+
+    private void txtTypeDescMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTypeDescMouseClicked
+        changeOrderType();
+    }//GEN-LAST:event_txtTypeDescMouseClicked
+
+    private void btnPrintKicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintKicActionPerformed
+        String Check = btnPrintKic.getText();
+        if (Check.equals("Print - OFF")) {
+            btnClickPrintKic = false;
+            btnPrintKic.setText("Print - ON");
+            btnPrintKic.setBackground(Color.blue);
+        }
+        if (Check.equals("Print - ON")) {
+            btnClickPrintKic = true;
+            btnPrintKic.setText("Print - OFF");
+            btnPrintKic.setBackground(Color.red);
+        }
+    }//GEN-LAST:event_btnPrintKicActionPerformed
+
+    private void txtMember1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMember1ActionPerformed
+        MemberDialog MBD = new MemberDialog(this, true, tableNo);
+        MBD.setVisible(true);
+        String memberCode = MBD.getMemCode();
+        if (memberCode.equals("")) {
+            txtMember1.setText(" <ค้นหาสมาชิก> ");
+            txtMember2.setText(": แต้มสะสม");
+        }
+    }//GEN-LAST:event_txtMember1ActionPerformed
+
+    private void btnLangTHItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnLangTHItemStateChanged
+        PublicVar.languagePrint = "TH";
+    }//GEN-LAST:event_btnLangTHItemStateChanged
+
+    private void btnLangENItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnLangENItemStateChanged
+        PublicVar.languagePrint = "EN";
+    }//GEN-LAST:event_btnLangENItemStateChanged
+
+    private void txtPluCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPluCodeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPluCodeActionPerformed
+
+    private void cancelArPaymentClick() {
+        PublicVar.TempUserRec = PublicVar.TUserRec;
+
+        if (posUser.getSale6().equals("Y")) {
+            CancelArPayment frm = new CancelArPayment(new JFrame(), true);
+            frm.setVisible(true);
+        } else {
+            GetUserAction getuser = new GetUserAction(new JFrame(), true);
+            getuser.setVisible(true);
+
+            if (!PublicVar.ReturnString.equals("")) {
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale6().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
+                        CancelArPayment frm = new CancelArPayment(new JFrame(), true);
+                        frm.setVisible(true);
+                    } else {
+                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    }
+                } else {
+                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                }
+            }
+        }
+        PublicVar.TUserRec = PublicVar.TempUserRec;
+
+    }
+
+    private void bntcheckbillClick() {
+        if (!chkEJPath()) {
+            return;
+        }
+        PublicVar.ErrorColect = false;
+        PublicVar.ProcessType = "1"; //For Check Bill
+
+        CheckBill frm = new CheckBill(this, true, txtTable.getText(), memberBean, "", "");
+        frm.setVisible(true);
+
+        if (PublicVar.SubTotalOK) {
+            bntHoldTableClick();
+            clearTable();
+            tbpMain.setSelectedIndex(0);
+            this.setVisible(false);
+//            dispose();
+
+            // show floorplan
+            showFloorPlan();
+        }
+    }
+
+    private void btnPaymentClick() {
+        try {
+            if (!chkEJPath()) {
+                return;
+            }
+
+            PublicVar.SubTotalOK = false;
+
+            //visible MainSale
+            setVisible(false);
+            CheckBill frm = new CheckBill(this, true, txtTable.getText(), memberBean, "", "");
+            frm.setVisible(true);
+            if (PublicVar.SubTotalOK) {
+                initScreen();
+                clearTable();
+                txtTable.setText("");
+                tbpMain.setSelectedIndex(0);
+                Value.TableSelected = "";
+                showFloorPlan();
+            } else {
+                loadTableBalance(txtTable.getText());
+                showSum();
+                setVisible(true);
+            }
+        } catch (Exception e) {
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
+        }
+
+    }
+
+    private void bntVoidClick() {
+        try {
+            try {
+//                MySQLConnect mysql = new MySQLConnect();
+                String sqlUpdatePro = "update balance set "
+                        //                    + "R_PrCode='',"
+                        + "R_PrType='-P',"
+                        + "R_PRDisc='0',"
+                        + "R_PRAmt='0',"
+                        + "R_PrQuan='0',"
+                        + "R_PrChkType='',"
+                        + "R_QuanCanDisc=R_Quan "
+                        + "where R_Table='" + tableNo + "' "
+                        + "and r_PrCode<>'' ";
+                mainSaleControl.execUpdate(sqlUpdatePro);
+                String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+                mainSaleControl.execUpdate(sqlUpdateTable);
+            } catch (Exception e) {
+                MSG.ERR(this, e.getMessage());
+            }
+            int row = getSelectedRowIndex();
+            if (row == -1) {
+                return;
+            }
+            String R_Index = model.getValueAt(row, 10).toString();
+
+            PosUserController posUserControl = new PosUserController();
+            PosUserBean posUserbean = posUserControl.getPosUser();
+            boolean isPermit = posUserbean.getSale3().equals("Y");
+            if (isPermit) {//มีสิทธิ์ Void
+                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                voidD.setVisible(true);
+                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+
+                    //check link r (26/02/2016 15:12)
+                    boolean hasValue = false;
+                    List<BalanceBean> listBalance = balanceControl.getBalanceByRLinkIndex(R_Index);
+                    for (BalanceBean balanceBean : listBalance) {
+                        hasValue = true;
+                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
+                    }
+
+                    if (!hasValue) {
+                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
+                    }
+                    showCell(row, 0);
+                }
+            } else {
+                if (!PublicVar.TableRec_PrintChkBill.equals("Y")) {
+                    GetUserAction getuser = new GetUserAction(new JFrame(), true);
+                    getuser.setVisible(true);
+                    PosUserBean voidposUser = PosControl.getPosUserToVoid(PublicVar.ReturnString);
+                    if (!PublicVar.ReturnString.equals("")) {
+                        if (voidposUser != null) {
+//                        if (posUser.getUserName() != null) {
+                            if (voidposUser.getSale3().equals("Y")) {
+//                            if (posUser.getSale3().equals("Y")) {
+                                PublicVar.TUserRec = posUser;
+                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                                voidD.setVisible(true);
+                                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+                                    //check link r (28/02/2016 15:12)
+                                    boolean hasValue = false;
+                                    List<BalanceBean> listBalance = balanceControl.getBalanceByRLinkIndex(R_Index);
+                                    for (BalanceBean balanceBean : listBalance) {
+                                        hasValue = true;
+                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
+//                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
+                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                    }
+
+                                    if (!hasValue) {
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
+                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                    }
+                                    showCell(row, 0);
+                                }
+                            } else {
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                            }
+                        } else {
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                        }
+                    }
+                } else {
+                    GetUserAction getuser = new GetUserAction(new JFrame(), true);
+                    getuser.setVisible(true);
+
+                    if (!PublicVar.ReturnString.equals("")) {
+                        if (posUser.getUserName() != null) {
+                            if (posUser.getSale4().equals("Y")) {
+                                PublicVar.TUserRec = posUser;
+                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                                voidD.setVisible(true);
+                                if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
+
+                                    //check link r (28/02/2016 15:12)
+                                    boolean hasValue = false;
+                                    List<BalanceBean> listBalance = balanceControl.getBalanceByRLinkIndex(R_Index);
+                                    for (BalanceBean balanceBean : listBalance) {
+                                        hasValue = true;
+                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
+                                    }
+
+                                    if (!hasValue) {
+                                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
+                                    }
+                                    showCell(row, 0);
+                                }
+                            } else {
+                                MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                            }
+                        } else {
+                            MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
+        }
+
+    }
+
+    private void procVoid(String RIndex, String voidMsg, String LoginName) {
+        BalanceControl branchControl = new BalanceControl();
+        BalanceBean bean = branchControl.getBalanceIndex(txtTable.getText(), RIndex);
+
+        if (bean.getR_Void().equals("V")) {
+            bean.setR_Void("");
+            bean.setR_VoidUser("");
+            bean.setR_VoidTime("");
+            bean.setR_DiscBath(0.00);
+
+            String StkRemark;
+            String DocNo;
+            String StkCode = PUtility.GetStkCode();
+            if (PublicVar.ChargeCode.equals("")) {
+                StkRemark = "SAL";
+                DocNo = "EV" + txtTable.getText() + "/" + Timefmt.format(new Date());
+            } else {
+                StkRemark = "FRE";
+                if (PublicVar.ChargeDocNo.equals("")) {
+                    DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    PublicVar.ChargeDocNo = DocNo;
+                } else {
+                    DocNo = PublicVar.ChargeDocNo;
+                }
+            }
+
+            Date TDate = new Date();
+            PUtility.ProcessStockOut(DocNo, StkCode, bean.getR_PluCode(), TDate,
+                    StkRemark, bean.getR_Quan(), bean.getR_Total(), bean.getCashier(),
+                    bean.getR_Stock(), bean.getR_Set(), bean.getR_Index(), "1");
+
+            List<PIngredientBean> listING = floorPlanControl.listIngredeint(bean.getR_PluCode());
+            //ตัดสต็อกสินค้าที่มี Ingredent
+            for (PIngredientBean ingBean : listING) {
+                String R_PluCode = ingBean.getPingCode();
+                double PBPack = ingBean.getPBPack();
+                if (PBPack <= 0) {
+                    PBPack = 1;
+                }
+                double R_QuanIng = (ingBean.getPingQty() * bean.getR_Quan());
+                double R_Total = 0;
+                PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate,
+                        StkRemark, R_QuanIng, R_Total, bean.getCashier(),
+                        "Y", "", "", "");//edit by  nathee 30/10/2016
+            }
+        } else {
+            bean.setR_Void("V");
+            bean.setR_VoidUser(LoginName);
+            bean.setR_VoidTime(Timefmt.format(new Date()));
+            bean.setR_DiscBath(0.00);
+
+            String StkCode = PUtility.GetStkCode();
+            String StkRemark;
+            String DocNo;
+            if (PublicVar.ChargeCode.equals("")) {
+                StkRemark = "SAL";
+                DocNo = "V" + txtTable.getText() + "/" + Timefmt.format(new Date());
+            } else {
+                StkRemark = "FRE";
+                if (PublicVar.ChargeDocNo.equals("")) {
+                    DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    PublicVar.ChargeDocNo = DocNo;
+                } else {
+                    DocNo = PublicVar.ChargeDocNo;
+                }
+            }
+
+            Date TDate = new Date();
+            PUtility.ProcessStockOut(DocNo, StkCode, bean.getR_PluCode(), TDate, StkRemark, -1 * bean.getR_Quan(), -1 * bean.getR_Total(),
+                    posUser.getUserName(), bean.getR_Stock(), bean.getR_Set(), bean.getR_Index(), "1");
+
+            //ตัดสต็อกสินค้าที่มี Ingredent
+            List<PIngredientBean> listING = floorPlanControl.listIngredeint(bean.getR_PluCode());
+            for (PIngredientBean ingBean : listING) {
+                String R_PluCode = ingBean.getPingCode();
+                double PBPack = ingBean.getPBPack();
+                if (PBPack <= 0) {
+                    PBPack = 1;
+                }
+                double R_QuanIng = (ingBean.getPingQty() * bean.getR_Quan());
+                double R_Total = 0;
+                PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, TDate, StkRemark, -1 * R_QuanIng, R_Total,
+                        posUser.getUserName(), "Y", "", "", "");
+            }
+        }
+
+        //Update  Balance File For Void
+        String updBalance = "update balance "
+                + "set r_void='" + bean.getR_Void() + "',"
+                + "cashier='" + Value.USERCODE + "',"
+                + "r_emp='" + bean.getR_Emp() + "',"
+                + "r_voiduser='" + bean.getR_VoidUser() + "',"
+                + "r_voidtime='" + bean.getR_VoidTime() + "',"
+                + "r_discbath='" + bean.getR_DiscBath() + "',"
+                + "r_kicprint='',"
+                + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
+                + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
+                + "where r_index='" + bean.getR_Index() + "' "
+                + "and r_table='" + bean.getR_Table() + "'";
+        balanceControl.execUpdate(updBalance);
+
+        if ((bean.getR_Set().equals("Y")) && checkPSetSelect(bean.getR_PluCode())) {
+            String updateBalance = "update balance "
+                    + "set r_void='" + bean.getR_Void() + "',"
+                    + "cashier='" + Value.USERCODE + "',"
+                    + "r_emp='" + bean.getR_Emp() + "',"
+                    + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
+                    + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
+                    + "r_kicprint='' "
+                    + "where r_index='" + bean.getR_Index() + "' "
+                    + "and r_table='" + bean.getR_Table() + "'";
+            balanceControl.execUpdate(updateBalance);
+        }
+
+        //update promotion, discount
+        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+        PublicVar.ErrorColect = false;
+        PublicVar.TableRec_DiscBath = 0.0;
+
+        loadTableBalance(txtTable.getText());
+    }
+
+    private void showCell(int row, int column) {
+        int sizeTable = tbShowBalance.getRowCount();
+        if (row > 0) {
+            if (row > sizeTable - 1) {
+                row = sizeTable - 1;
+            }
+            Rectangle rect = tbShowBalance.getCellRect(row, column, true);
+            tbShowBalance.scrollRectToVisible(rect);
+            tbShowBalance.clearSelection();
+            tbShowBalance.setRowSelectionInterval(row, row);
+        }
+    }
+
+    private void bntoptionClick() {
+        int row = tbShowBalance.getSelectedRow();
+        if (row != -1) {
+            String RKicPrint = model.getValueAt(row, 8).toString();
+            String RVoid = model.getValueAt(row, 5).toString();
+            String RIndex = model.getValueAt(row, 10).toString();
+            if (!RKicPrint.equals("P")) {
+                if (!RVoid.equals("V")) {
+                    OptionMsg frm = new OptionMsg(new JFrame(), true, txtTable.getText(), RIndex);
+                    frm.setVisible(true);
+                } else {
+                    MSG.WAR(this, "รายการนี้ได้ยกเลิกออกจากบิลแล้ว ไม่สามารถใส่ข้อความพิเศษได้ !");
+                }
+
+            } else {
+                MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...ไม่สามารถกำหนด Option เพิ่มเติมได้...");
+                txtPluCode.requestFocus();
+            }
+        }
+    }
+
+    private int getSelectedRowIndex() {
+        int row = tbShowBalance.getSelectedRow();
+        if (row != -1) {
+            return row;
+        } else {
+            return -1;
+        }
+    }
+
+    boolean seekPluCode() {
+        String PluCode;
+        String StrQty;
+        String TempCode = txtPluCode.getText();
+        PublicVar.P_Code = "";
+        PublicVar.P_Status = "";
+        PublicVar.P_Qty = 0.0;
+        boolean found = false;
+        double Qty;
+        if (TempCode.length() > 0) {
+            int index = TempCode.indexOf("*");
+            if (index != -1) {
+                StrQty = TempCode.substring(0, index);
+                PluCode = TempCode.substring(index + 1);
+                if (!PUtility.ChkNumValue(StrQty)) {
+                    MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                }
+                Qty = Double.parseDouble(StrQty);
+            } else {
+                Qty = 1;
+                PluCode = TempCode;
+            }
+            /**
+             * * OPEN CONNECTION **
+             */
+            MenuListBean menuListBean = mainSaleControl.getMenuListByMenuItem(PluCode);
+            if (Qty > 0) {
+                if (POSHW.getMenuItemList().equals("Y")) {
+                    if (PluCode.length() <= 3) {
+                        if (menuListBean != null) {
+                            PluCode = menuListBean.getPlucode();
+                        } else {
+                            MSG.ERR(this, "ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
+                            txtPluCode.setText("");
+                            txtPluCode.selectAll();
+                            txtPluCode.requestFocus();
+                            return false;
+                        }
+                    }
+                }
+
+                ProductBean productBean = productControl.getData(PluCode);
+                if (productBean != null && productBean.getPActive().equals("Y")) {
+                    found = true;
+                    PublicVar.P_Code = PluCode;
+                    PublicVar.P_Status = productBean.getPStatus();
+                    PublicVar.P_Qty = Qty;
+                } else {
+                    TempStatus = "";
+                    String TempCode2 = seekBarCode(PluCode);
+                    if (TempCode2.equals("")) {
+                        MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
+                        txtPluCode.setText("");
+                    } else {
+                        PluCode = TempCode2;
+                        found = true;
+                        PublicVar.P_Code = PluCode;
+                        PublicVar.P_Status = TempStatus;
+                        PublicVar.P_Qty = Qty;
+                    }
+                    txtPluCode.selectAll();
+                    txtPluCode.requestFocus();
+                }
+            } else {
+                MSG.WAR(this, "จำนวนขายต้องมากกว่า 0...");
+                txtPluCode.requestFocus();
+            }
+        }
+
+        return found;
+    }
+
+    private void changTypeClick() {
+        boolean ChangOk = false;
+        int row = tbShowBalance.getSelectedRow();
+        if (row != -1) {
+            if (!txtTable.getText().trim().equals("")) {
+                PublicVar.ChangTypeOK = false;
+                ChangTypeDialog frm = new ChangTypeDialog(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+                frm.setVisible(true);
+                if (PublicVar.ChangTypeOK) {
+                    if (ChangOk) {
+                        clearDataMem();
+                        loadTableBalance(txtTable.getText());
+                        txtPluCode.requestFocus();
+                    }
+                }
+            }
+        }
+    }
+
+    private void clearDataMem() {
+        Calendar ca = Calendar.getInstance();
+        ca.add(Calendar.DAY_OF_MONTH, -30);
+    }
+
+    private boolean findPluCode() {
+        String PluCode;
+        String StrQty;
+        String TempCode = txtPluCode.getText();
+        if (TempCode != null) {
+            if (TempCode.substring(0, 1).equals("*")) {
+                TempCode = TempCode.replace("*", "");
+            }
+        }
+        PublicVar.P_Code = "";
+        PublicVar.P_Status = "";
+        PublicVar.P_Qty = 0.0;
+        boolean found = false;
+        double Qty;
+
+        boolean checkOutStockList = mainSaleControl.checkOutstockList(TempCode);
+
+        //check outofstock
+        if (checkOutStockList) {
+            MSG.WAR(this, "สินค้ามีไม่ในสต๊อก หรือถูกยกเลิกการขายไปแล้ว กรุณาตรวจสอบ !!!");
+            txtPluCode.setText("");
+            txtPluCode.requestFocus();
+            return false;
+        }
+
+        if (TempCode != null && TempCode.length() > 0) {
+            int index = TempCode.indexOf("*");
+            if (index != -1) {
+                StrQty = TempCode.substring(0, index);
+                PluCode = TempCode.substring(index + 1);
+                if (!PUtility.ChkNumValue(StrQty)) {
+                    MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                }
+                boolean checkNumberlic = util.CheckStringOrNumberlic.CheckStringOrNumberlic(StrQty);
+                if (checkNumberlic == true) {
+                    Qty = Double.parseDouble(StrQty);
+                } else {
+                    Qty = 0;
+                }
+
+            } else {
+                Qty = 1;
+                PluCode = TempCode;
+            }
+            if (Qty > 0) {
+
+                //for menuitem
+                if (PluCode.length() <= 3) {
+                    MenuListBean menuListBean = mainSaleControl.getMenuListByMenuItem(PluCode);
+                    if (POSHW.getMenuItemList().equals("Y")) {
+                        if (menuListBean != null) {
+                            PluCode = menuListBean.getPlucode();
+                        } else {
+                            MSG.WAR(this, "ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
+                            txtPluCode.setText("");
+                            txtPluCode.selectAll();
+                            txtPluCode.requestFocus();
+                            return false;
+                        }
+                    }
+                }
+
+                ProductBean productBean = productControl.getProductCodeArray(PluCode);
+                if (productBean.getPCode() != null) {
+                    found = true;
+                    PublicVar.P_Code = PluCode;
+                    PublicVar.P_Status = productBean.getPStatus();
+                    PublicVar.P_Qty = Qty;
+                } else {
+                    TempStatus = "";
+                    String TempCode2 = seekBarCode(PluCode);
+                    if (TempCode2.equals("")) {
+                        MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
+                        txtPluCode.setText("");
+                    } else {
+                        PluCode = TempCode2;
+                        found = true;
+                        PublicVar.P_Code = PluCode;
+                        PublicVar.P_Status = TempStatus;
+                        PublicVar.P_Qty = Qty;
+                    }
+                    txtPluCode.selectAll();
+                    txtPluCode.requestFocus();
+                }
+            } else {
+                MSG.WAR(this, "จำนวนขายต้องมากกว่า 0...");
+                txtPluCode.requestFocus();
+            }
+        }
+        return found;
+
+    }
+
+    private boolean checkPSetSelect(String PCode) {
+        return productControl.getProductCodeArray(PCode).getPCode() != null;
+    }
+
+    private String seekBarCode(String BarCode) {
+        String RetVal;
+        ProductBean productBean = productControl.getProductBarCodeArray(BarCode);
+        if (productBean.getPCode() != null) {
+            RetVal = productBean.getPCode();
+            TempStatus = productBean.getPStatus();
+        } else {
+            RetVal = "";
+            TempStatus = "";
+        }
+        return RetVal;
+    }
+
+    private void saveToBalance() {
+        String PCode = txtPluCode.getText();
+        String StkCode = PUtility.GetStkCode();
+        String emp = Value.EMP_CODE;
+        String etd = txtShowETD.getText();
+        String[] data = Option.splitPrice(PCode);
+        double R_Quan = Double.parseDouble(data[0]);
+        PCode = data[1];
+
+        BalanceBean balance = new BalanceBean();
+        balance.setStkCode(StkCode);
+
+        double Price = 0.00;
+        ProductBean productBean = productControl.getProductCodeArray(PCode);
+        if (productBean.getPStatus().equals("S")) {
+            txtPluCode.setEditable(false);
+        }
+
+        if (productBean.getPCode() == null) {
+            MSG.WAR(this, "ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
+            txtPluCode.setText("");
+            txtPluCode.selectAll();
+            txtPluCode.requestFocus();
+            return;
+        }
+
+        if (!PUtility.CheckStockOK(PCode, R_Quan)) {
+            txtPluCode.setText("");
+            txtPluCode.selectAll();
+            txtPluCode.requestFocus();
+            return;
+        }
+
+        balance.setR_Opt1(GetQty.OPTION_TEXT[0]);
+        balance.setR_Opt2(GetQty.OPTION_TEXT[1]);
+        balance.setR_Opt3(GetQty.OPTION_TEXT[2]);
+        balance.setR_Opt4(GetQty.OPTION_TEXT[3]);
+        balance.setR_Opt5(GetQty.OPTION_TEXT[4]);
+        balance.setR_Opt6(GetQty.OPTION_TEXT[5]);
+        balance.setR_Opt7(GetQty.OPTION_TEXT[6]);
+        balance.setR_Opt8(GetQty.OPTION_TEXT[7]);
+        balance.setR_Opt9(GetQty.OPTION_TEXT[8]);
+
+        GetQty.clear();//clear temp option
+        balance.setR_PrintOK(PublicVar.PrintOK);
+        balance.setMacno(Value.MACNO);
+        balance.setCashier(Value.USERCODE);
+        balance.setR_ETD(etd);
+        balance.setR_Quan(R_Quan);
+        balance.setR_Table(txtTable.getText());
+        balance.setR_Emp(emp);
+
+        balance.setR_PrCuType("");
+        balance.setR_PrCuQuan(0.00);
+        balance.setR_PrCuAmt(0.00);
+
+        balance.setR_PluCode(productBean.getPCode());
+        balance.setR_Group(productBean.getPGroup());
+        balance.setR_Status(productBean.getPStatus());
+        balance.setR_Normal(productBean.getPNormal());
+        balance.setR_Discount(productBean.getPDiscount());
+        balance.setR_Service(productBean.getPService());
+        balance.setR_Vat(productBean.getPVat());
+        balance.setR_Type(productBean.getPType());
+        balance.setR_Stock(productBean.getPStock());
+        balance.setR_PName(productBean.getPDesc());
+        balance.setR_PEName(productBean.getPEDesc());
+        balance.setR_Unit(productBean.getPUnit1());
+        balance.setR_Set(productBean.getPSet());
+
+        if (balance.getR_Status().equals("P")) {
+            switch (etd) {
+                case "E":
+                    balance.setR_Price(productBean.getPPrice11());
+                    break;
+                case "T":
+                    balance.setR_Price(productBean.getPPrice12());
+                    break;
+                case "D":
+                    balance.setR_Price(productBean.getPPrice13());
+                    break;
+                case "P":
+                    balance.setR_Price(productBean.getPPrice14());
+                    break;
+                case "W":
+                    balance.setR_Price(productBean.getPPrice15());
+                    break;
+                default:
+                    txtShowETD.setText("E");
+                    break;
+            }
+        } else {
+            balance.setR_Price(Price);
+        }
+
+        balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
+        balance.setR_PrChkType("");
+
+        String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
+        balance.setR_Index(R_Index);
+
+        // for member discount
+        if (Value.MemberAlready && balance.getR_Discount().equals("Y")) {
+            balance.setR_PrSubType("-M");
+            balance.setR_PrSubCode("MEM");
+            balance.setR_PrSubQuan(balance.getR_Quan());
+
+            // คำนวณหาว่าลดเท่าไหร่
+            String[] subPercent = memberBean.getMember_DiscountRate().split("/");
+            int Percent = 0;
+            if (subPercent.length == 3) {
+                switch (balance.getR_Normal()) {
+                    case "N":
+                        Percent = Integer.parseInt(subPercent[0].trim());
+                        break;
+                    case "C":
+                        Percent = Integer.parseInt(subPercent[1].trim());
+                        break;
+                    case "S":
+                        Percent = Integer.parseInt(subPercent[2].trim());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            balance.setR_PrSubDisc(Percent);
+            balance.setR_PrSubBath(0);
+            balance.setR_PrSubAmt((balance.getR_Total() * Percent) / 100);
+            balance.setR_QuanCanDisc(0);// if member default 0
+        } else {
+            memberBean = null;
+            // for not member
+            balance.setR_PrSubType("");
+            balance.setR_PrSubCode("");
+            balance.setR_PrSubQuan(0);// not member default 0
+            balance.setR_PrSubDisc(0);
+            balance.setR_PrSubBath(0);
+            balance.setR_PrSubAmt(0);
+            balance.setR_QuanCanDisc(balance.getR_Quan());
+        }
+
+        balance.setR_Pause("P");
+
+        balanceControl.saveBalance(balance);
+
+        //update temptset
+        updateTempTset(balance);
+
+        //Process Stock Out
+        String StkRemark = "SAL";
+        String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+        if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
+            PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
+                    balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
+        }
+
+        List<PIngredientBean> listING = floorPlanControl.listIngredeint(balance.getR_PluCode());
+        //ตัดสต็อกสินค้าที่มี Ingredent
+        for (PIngredientBean ingBean : listING) {
+            if (ingBean.getPstock().equals("Y") && ingBean.getPactive().equals("Y")) {
+                String R_PluCode = ingBean.getPingCode();
+                double PBPack = ingBean.getPBPack();
+                if (PBPack <= 0) {
+                    PBPack = 1;
+                }
+                double R_QuanIng = (ingBean.getPingQty() * balance.getR_Quan());
+                double R_Total = 0;
+                PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
+                        balance.getCashier(), "Y", "", "", "");
+            }
+        }
+
+        //ตัดสต็อกสินค้าที่เป็นชุด SET (PSET)
+        List<PSetBean> listPset = mainSaleControl.getPSetByPCode(balance.getR_PluCode());
+        for (PSetBean psetBean : listPset) {
+            String pSubCode = psetBean.getPsubcode();
+            double pSubQTY = psetBean.getPsubQTY();
+            PUtility.ProcessStockOut(DocNo, StkCode, pSubCode, new Date(), "A1", pSubQTY * balance.getR_Quan(), 0.00,
+                    balance.getCashier(), "Y", "", "", "");
+        }
+
+        //update promotion
+        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+        String Discount = BalanceControl.GetDiscount(txtTable.getText());
+        txtDiscount.setText("- " + Discount);
+        PublicVar.ErrorColect = true;
+    }
+
+    private void kichenPrint() {
+        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
+        String printerName;
+
+        BranchBean branchBean = BranchControl.getData();
+        String config = branchBean.getSaveOrder();
+        if (!config.equals("N")) {
+            PublicVar.Branch_Saveorder = config;
+        }
+
+        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        if (mainSaleControl.checkCountPrinterTo(tableNo)) {
+            if (!PublicVar.Branch_Saveorder.equals("N")) {
+                printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+            }
+        }
+
+        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
+        List<BalanceBean> listToKic = mainSaleControl.getListAllPrintToKic(tableNo);
+        for (BalanceBean balanceBean : listToKic) {
+            String rKic = balanceBean.getR_Kic();
+            if (rKic.equals("")) {
+                continue;
+            }
+            int iKic = Integer.parseInt(rKic);
+            if (iKic - 1 < 0) {
+                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                continue;
+            }
+            printerName = "kic" + rKic;
+            String printerForm = BranchControl.getForm(rKic);
+            switch (printerForm) {
+                case "1": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
+//                    printerName = "kic" + rKic;
+                    for (BalanceBean balance : listBalanceForm) {
+                        String PCode = balance.getR_PluCode();
+                        if (printerForm.equals("1")) {
+                            if (Value.printkic) {
+                                printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
+                            }
+                        }
+                    }
+                    break;
+                }
+                case "6": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
+                    for (BalanceBean balance : listBalanceForm) {
+                        if (Value.printkic) {
+                            String R_Index = balance.getR_Index();
+                            String R_PLUCODE = balance.getR_PluCode();
+                            double qty = balance.getR_Quan();
+                            double priceTotal = balance.getR_Total();
+                            printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
+                        }
+                    }
+                    break;
+                }
+                case "3":
+                case "4":
+                case "5":
+                    switch (printerForm) {
+                        case "3":
+                            if (Value.printkic) {
+                                String retd = balanceBean.getR_ETD();
+                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                                if (CheckBillBeforeCash.equals("Y")) {
+                                    printBillVoidCheck();
+                                }
+                            }
+                            break;
+                        case "4":
+                            if (Value.printkic) {
+                                printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
+                                printBillVoidCheck();
+                            }
+                            break;
+                        case "5":
+                            if (Value.printkic) {
+                                printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
+                                printBillVoidCheck();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "7":
+                case "2":
+                    if (Value.printkic) {
+
+                        String retd = balanceBean.getR_ETD();
+                        printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+//                        printSimpleForm.KIC_FORM_7(printerName, txtTable.getText());
+//                        printBillVoidCheck();
+                    }
+                    break;
+                default:
+                    printBillVoidCheck();
+                    MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");
+                    break;
+            }
+        }
+
+        CheckKicPrint();
+
+        //update r_kicprint
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + txtTable.getText() + "' "
+                + "and trantype is null "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'' ";
+        balanceControl.execUpdate(sql);
+
+    }
+
+    private void changeSaleType(String SaleType) {
+        // description กำหนดประเภทการขาย
+        switch (SaleType) {
+            case "E":
+                txtTypeDesc.setText(SALE_DINE_IN);
+                break;
+            case "T":
+                txtTypeDesc.setText(SALE_TAKE_AWAY);
+                break;
+            case "D":
+                txtTypeDesc.setText(SALE_Delivery);
+                break;
+            default:
+                break;
+        }
+
+        String oldType = txtShowETD.getText();
+        if (SaleType.equals("E")) {
+            if (oldType.equals("E") || oldType.equals("T") || model.getRowCount() == 0) {
+                txtShowETD.setText("E");
+            } else {
+                MSG.ERR(this, "คุณกำหนดประเภทการขาย (Sale Type)ไม่ถูกต้อง !!!");
+            }
+        } else if (SaleType.equals("T")) {
+            if (((oldType.equals("E")) | (oldType.equals("T")) | (model.getRowCount() == 0))
+                    & !PublicVar.ChargeGroup.equals("2")) {
+                txtShowETD.setText("T");
+            } else {
+                MSG.ERR(this, "คุณกำหนดประเภทการขาย (Sale Type)ไม่ถูกต้อง !!!");
+            }
+        }
+    }
+
+    private void txtTableOnEnter() {
+        txtCust.setEditable(false);
+
+        int RowCount = model.getRowCount();
+        for (int i = 0; i <= RowCount - 1; i++) {
+            model.removeRow(0);
+        }
+    }
+
+    private void txtTableOnExit() {
+        TableFileBean tableFileBean = mainSaleControl.getTableFileByCode(txtTable.getText().trim());
+        if (tableFileBean != null) {
+            if (tableFileBean.getTOnAct().equals("Y") && tableFileBean.getTAmount() > 0) {
+                MSG.WAR(this, "มีพนักงานกำลังป้อนรายการโต๊ะนี้อยู่...");
+                TableOpenStatus = false;
+                txtTable.setText("");
+                txtTable.setEditable(true);
+                txtTable.requestFocus();
+            } else {
+                //load data from tablefile
+                txtTable.setEditable(false);
+                txtCust.setText("" + tableFileBean.getTCustomer());
+                txtCust.setEditable(false);
+                String UpdateTable = "update tablefile set "
+                        + "tonact='Y',"
+                        + "macno='" + Value.MACNO + "',"
+                        + "cashier='" + Value.USERCODE + "',"
+                        + "EmpDisc='0',"
+                        + "FastDisc='0',"
+                        + "TrainDisc='0',"
+                        + "PrintTime1='',"
+                        + "TUser='',"
+                        + "tlogindate=curdate(),"
+                        + "tlogintime=curtime(),"
+                        + "TCurTime=curtime()"
+                        + "where tcode='" + txtTable.getText().trim() + "'";
+                mainSaleControl.execUpdate(UpdateTable);
+                tbpMain.setSelectedIndex(0);
+
+                //load data to table
+                loadTableBalance(txtTable.getText());
+                TableOpenStatus = true;
+            }
+        } else {
+            MSG.ERR(this, "หมายเลขนี้ไม่ได้มีการกำหนดไว้ในการทำงานโต๊ะหลัก !!!");
+            TableOpenStatus = false;
+            txtTable.setText("");
+            txtTable.setEditable(true);
+            txtTable.requestFocus();
+            txtTable.setText("");
+        }
+    }
+
+    private void txtPluCodeOnExit() {
+        saveToBalance();
+        loadTableBalance(txtTable.getText());
+        txtPluCode.setText("");
+        txtPluCode.requestFocus();
+    }
+
+    //ปุ่มพักโต๊ะ
+    private void bntHoldTableClick() {
+        if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
+            if (btnClickPrintKic == true) {
+                String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
+                mainSaleControl.execUpdate(sqlTurnPrintKicOff);
+            }
+            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+            mainSaleControl.execUpdate(sql);
+            try {
+                Thread.sleep(100);
+                kichenPrint();
+            } catch (Exception e) {
+            }
+
+            holdTableAndSave();
+            PublicVar.ErrorColect = false;
+            initScreen();
+            return;
+        }
+        String sql = "update tablefile set tonact ='N' where tcode='" + txtTable.getText() + "';";
+        if (lbTotalAmount.getText().equals("0.00")) {
+            sql = "update tablefile set tonact ='N' , TCustomer='0'"
+                    + " where tcode='" + txtTable.getText() + "';";
+        }
+        mainSaleControl.execUpdate(sql);
+    }
+
+    private void updateCustomerCount(int custCount) {
+        String sql = "update tablefile "
+                + "set tcustomer='" + custCount + "',"
+                + "macno='" + Value.MACNO + "' "
+                + "where tcode='" + txtTable.getText() + "'";
+        mainSaleControl.execUpdate(sql);
+        txtPluCode.requestFocus();
+    }
+
+    private void holdTableAndSave() {
+        String UpdateTableFile = "update tablefile "
+                + "set tonact='N', macno='" + Value.MACNO + "', tpause='Y' "
+                + "where tcode='" + txtTable.getText() + "'";
+
+        mainSaleControl.execUpdate(UpdateTableFile);
+
+        showSum();
+    }
+
+    private void bntlogoffuserClick() {
+        if (MSG.CONF(this, "ยืนยันการออกจากระบบการขาย (Logoff User) ? ")) {
+            if (model.getRowCount() == 0) {
+                PublicVar.P_LineCount = 1;
+                PublicVar.P_LogoffOK = false;
+
+                String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
+                mainSaleControl.execUpdate(sql1);
+
+                String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
+                if (mainSaleControl.execUpdate(sql2)) {
+                    // reset load poshwsetup
+                    PosControl.resetPosHwSetup();
+                }
+
+                if (this.chkEJPath()) {
+                    Prn.printLogout();
+                }
+                if (updateLogout(PublicVar._RealUser)) {
+                    loadLoginForm();
+                }
+            } else {
+                MSG.WAR(this, "มีรายการขายค้างอยู่ไม่สามารถ Logoff ออกจากระบบได้...");
+                if (TableOpenStatus) {
+                    txtPluCode.requestFocus();
+                } else {
+                    txtTable.requestFocus();
+                }
+            }
+        } else {
+            if (TableOpenStatus) {
+                txtPluCode.requestFocus();
+            } else {
+                txtTable.requestFocus();
+            }
+        }
+
+    }
+
+    private boolean updateLogout(String UserCode) {
+        mainSaleControl.execUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
+        Value.CASHIER = "";
+        return true;
+    }
+
+    private void bntPaidinClick() {
+        if (!chkEJPath()) {
+            return;
+        }
+        if (model.getRowCount() == 0) {
+            PaidinFrm frm = new PaidinFrm(this, true);
+            frm.setVisible(true);
+        }
+    }
+
+    private void bntPaidoutClick() {
+        chkEJPath();
+    }
+
+    private void showTableAvialble() {
+        if (!PUtility.CheckCashierClose(PublicVar._User)) {
+            if (txtTable.getText().trim().equals("")) {
+                ShowTable frm = new ShowTable(new JFrame(), true);
+                frm.setVisible(true);
+                if (!PublicVar.ReturnString.equals("")) {
+                    txtTable.setText(PublicVar.ReturnString);
+                    if (txtTable.getText().trim().length() > 0) {
+                        txtTable.setEditable(false);
+                        txtTableOnExit();
+                        if (PublicVar.TableRec_TCustomer == 0) {
+                            txtCust.setEditable(true);
+                            txtCust.requestFocus();
+                            txtCust.selectAll();
+                        } else {
+                            txtPluCode.setEditable(true);
+                            txtPluCode.requestFocus();
+                            txtCust.setSelectionEnd(0);
+                            txtCust.setEditable(false);
+                        }
+                    }
+                }
+            } else {
+                MSG.WAR(this, "มีการกำหนดหมายเลขโต๊ะไว้แล้ว...");
+            }
+        } else {
+            txtTable.setText("");
+            txtTable.requestFocus();
+        }
+    }
+
+    private void showBillDuplicate() {
+        if (!chkEJPath()) {
+            return;
+        }
+        if (model.getRowCount() == 0) {
+            CopyBill frm = new CopyBill(new JFrame(), true);
+            frm.setVisible(true);
+            initScreen();
+        }
+    }
+
+    private void showRefundBill() {
+        if (!chkEJPath()) {
+            return;
+        }
+        PublicVar.TempUserRec = PublicVar.TUserRec;
+        if (model.getRowCount() == 0) {
+            if (posUser.getSale2().equals("Y")) {
+                RefundBill frm = new RefundBill(new JFrame(), true);
+                frm.setVisible(true);
+                PublicVar.P_ItemCount = 0;
+                initScreen();
+            } else {
+                GetUserAction getuser = new GetUserAction(new JFrame(), true);
+                getuser.setVisible(true);
+
+                if (!PublicVar.ReturnString.equals("")) {
+                    if (posUser.getUserName() != null) {
+                        if (posUser.getSale2().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
+                            RefundBill frm = new RefundBill(new JFrame(), true);
+                            frm.setVisible(true);
+                            PublicVar.P_ItemCount = 0;
+                            initScreen();
+                        } else {
+                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        }
+                    } else {
+                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    }
+                }
+            }
+        }
+        PublicVar.TUserRec = PublicVar.TempUserRec;
+    }
+
+    private void bntArPaymentClick() {
+        if (!chkEJPath()) {
+            return;
+        }
+        if (!PUtility.CheckSaleDateOK()) {
+            return;
+        }
+
+        PublicVar.TempUserRec = PublicVar.TUserRec;
+        if (model.getRowCount() == 0) {
+            if (posUser.getSale5().equals("Y")) {
+                ARPayment frm = new ARPayment(new JFrame(), true);
+                frm.setVisible(true);
+            } else {
+                GetUserAction getuser = new GetUserAction(new JFrame(), true);
+                getuser.setVisible(true);
+
+                if (!PublicVar.ReturnString.equals("")) {
+                    if (posUser.getUserName() != null) {
+                        if (posUser.getSale5().equals("Y")) {
+                            PublicVar.TUserRec = posUser;
+                            ARPayment frm = new ARPayment(new JFrame(), true);
+                            frm.setVisible(true);
+                        } else {
+                            MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                        }
+                    } else {
+                        MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
+                    }
+                }
+            }
+        }
+        
+        PublicVar.TUserRec = PublicVar.TempUserRec;
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MAddNewAccr1;
+    private javax.swing.JMenuItem MCancelArPayment1;
+    private javax.swing.JMenuItem MCancelArPayment2;
+    private javax.swing.JMenuItem MHeaderBill1;
+    private javax.swing.JMenu MMainMenu1;
+    private javax.swing.JMenuItem MRepArHistory1;
+    private javax.swing.JMenuItem MRepArNotPayment1;
+    private javax.swing.JMenuItem MRepInvCash1;
+    private javax.swing.JMenuItem MRepMemberHistory1;
+    private javax.swing.JButton bntPrintCheckBill;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnHold;
+    private javax.swing.JRadioButton btnLangEN;
+    private javax.swing.JRadioButton btnLangTH;
+    private javax.swing.JButton btnP1;
+    private javax.swing.JButton btnP10;
+    private javax.swing.JButton btnP11;
+    private javax.swing.JButton btnP12;
+    private javax.swing.JButton btnP13;
+    private javax.swing.JButton btnP14;
+    private javax.swing.JButton btnP15;
+    private javax.swing.JButton btnP16;
+    private javax.swing.JButton btnP17;
+    private javax.swing.JButton btnP18;
+    private javax.swing.JButton btnP19;
+    private javax.swing.JButton btnP2;
+    private javax.swing.JButton btnP20;
+    private javax.swing.JButton btnP21;
+    private javax.swing.JButton btnP22;
+    private javax.swing.JButton btnP23;
+    private javax.swing.JButton btnP24;
+    private javax.swing.JButton btnP25;
+    private javax.swing.JButton btnP26;
+    private javax.swing.JButton btnP27;
+    private javax.swing.JButton btnP28;
+    private javax.swing.JButton btnP29;
+    private javax.swing.JButton btnP3;
+    private javax.swing.JButton btnP30;
+    private javax.swing.JButton btnP31;
+    private javax.swing.JButton btnP32;
+    private javax.swing.JButton btnP4;
+    private javax.swing.JButton btnP5;
+    private javax.swing.JButton btnP6;
+    private javax.swing.JButton btnP7;
+    private javax.swing.JButton btnP8;
+    private javax.swing.JButton btnP9;
+    private javax.swing.JButton btnPayment;
+    private javax.swing.JButton btnPrintKic;
+    private javax.swing.JButton btnSplit;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar11;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JLabel lbCredit;
+    private javax.swing.JLabel lbCreditAmt;
+    private javax.swing.JLabel lbCreditMoney;
+    private javax.swing.JLabel lbTotalAmount;
+    private javax.swing.JPanel pMenu1;
+    private javax.swing.JPanel pMenu2;
+    private javax.swing.JPanel pMenu3;
+    private javax.swing.JPanel pMenu4;
+    private javax.swing.JPanel pMenu5;
+    private javax.swing.JPanel pMenu6;
+    private javax.swing.JPanel pMenu7;
+    private javax.swing.JPanel pMenu8;
+    private javax.swing.JPanel pMenu9;
+    private javax.swing.JPanel pSubMenu1;
+    private javax.swing.JPanel pSubMenu2;
+    private javax.swing.JPanel pSubMenu3;
+    private javax.swing.JTable tbShowBalance;
+    private javax.swing.JTabbedPane tbpMain;
+    private javax.swing.JTextField txtCust;
+    private javax.swing.JTextField txtDiscount;
+    private javax.swing.JTextField txtDisplayDiscount;
+    private javax.swing.JTextField txtMember1;
+    private javax.swing.JTextField txtMember2;
+    private javax.swing.JTextField txtPluCode;
+    private javax.swing.JTextField txtShowETD;
+    private javax.swing.JTextField txtTable;
+    private javax.swing.JTextField txtTypeDesc;
+    // End of variables declaration//GEN-END:variables
+
+    private void showSplitBill() {
+        SplitBillPayment sp = new SplitBillPayment(this, true, txtTable.getText());
+        sp.setVisible(true);
+
+        if (!sp.getTable2().equals("")) {
+            this.setVisible(true);
+            txtTable.setText(sp.getTable2());
+            tableOpened();
+            txtCustOnExit();
+            txtDiscount.setText(BalanceControl.GetDiscount(txtTable.getText()));
+        }
+        sumSplit();
+    }
+
+    private void showMember() {
+        if (Value.MemberAlready == true) {
+            int confirm = JOptionPane.showConfirmDialog(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
+            if (confirm == JOptionPane.YES_OPTION) {
+                Value.MemberAlready = false;
+                String sql = "update tablefile set "
+                        + "MemDisc='', "
+                        + "MemDiscAmt='0.00', "
+                        + "MemCode='', "
+                        + "MemCurAmt='0.00', "
+                        + "MemName='' "
+                        + "where TCode='" + txtTable.getText() + "'";
+                mainSaleControl.execUpdate(sql);
+                showMember();
+            }
+        } else {
+            MemberDialog frm = new MemberDialog(this, true, tableNo);
+            frm.setVisible(true);
+
+            if (frm.getMemCode() != null) {
+                Value.MemberAlready = true;
+                memberBean = MemmaterController.getMember(frm.getMemCode());
+                // update member in tablefile
+                SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                String sql = "update tablefile set "
+                        + "MemDisc='" + memberBean.getMember_DiscountRate() + "', "
+                        + "MemDiscAmt='0.00', "
+                        + "MemCode='" + memberBean.getMember_Code() + "', "
+                        + "MemCurAmt='" + memberBean.getMember_TotalScore() + "', "
+                        + "MemName='" + ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()) + "', "
+                        + "MemBegin='" + simp.format(memberBean.getMember_Brithday()) + "', "
+                        + "MemEnd='" + simp.format(memberBean.getMember_ExpiredDate()) + "' "
+                        + "where TCode='" + txtTable.getText() + "'";
+                mainSaleControl.execUpdate(sql);
+
+                // update old order
+                MemberControl mc = new MemberControl();
+                mc.updateMemberAllBalance(txtTable.getText(), memberBean);
+
+                // update all discount and promotion
+                BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+            }
+        }
+
+        showSum();
+    }
+
+    private void showHoldTable() {
+        if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
+            printBillCheck();
+        }
+        tbpMain.setSelectedIndex(0);
+
+        bntHoldTableClick();
+        txtTable.setText("");
+        txtCust.setText("");
+
+        clearTable();
+        clearHistory();
+        Value.TableSelected = "";
+
+        this.setVisible(false);
+//        dispose();
+
+        // show floorplan
+        showFloorPlan();
+    }
+
+    private void showPaidIn() {
+        if (PUtility.CheckSaleDateOK()) {
+            bntPaidinClick();
+        }
+    }
+
+    private void showPaidOut() {
+        if (PUtility.CheckSaleDateOK()) {
+            bntPaidoutClick();
+        }
+    }
+
+    private void showBillCheck() {
+        if (model.getRowCount() > 0) {
+            kichenPrint();
+            bntcheckbillClick();
+        }
+    }
+
+    private void showPayAR() {
+        if (PUtility.CheckSaleDateOK()) {
+            bntArPaymentClick();
+        }
+    }
+
+    private void showCheckBill() {
+        if (model.getRowCount() > 0) {
+            kichenPrint();
+            btnPaymentClick();
+            showSum();
+        }
+    }
+
+    private void selectedTableBalance() {
+        if (tbShowBalance.getRowCount() > 0) {
+            tbShowBalance.requestFocus();
+            Rectangle rect = tbShowBalance.getCellRect(0, 0, true);
+            tbShowBalance.scrollRectToVisible(rect);
+            tbShowBalance.clearSelection();
+            tbShowBalance.setRowSelectionInterval(0, 0);
+        }
+    }
+
+    private void selectedOptionBill() {
+        int row = tbShowBalance.getSelectedRow();
+        String chkPCode = "" + tbShowBalance.getValueAt(row, 0);
+        if (chkPCode.equals("")) {
+            return;
+        }
+
+        String chkRIndex = "" + tbShowBalance.getValueAt(row, 10);
+        //find data set
+        if (!checkRIndex(chkRIndex) && chkRIndex != null) {
+            return;
+        }
+
+        if (row != -1) {
+            PopupItemJDialog popup = new PopupItemJDialog(new JFrame(), true);
+            popup.setVisible(true);
+
+            String typeIndex = popup.getTypeIndex();
+
+            if (!typeIndex.equals("none")) {
+                String PCode = model.getValueAt(row, 0).toString();
+                String PVoid = model.getValueAt(row, 5).toString();
+                String RIndex = model.getValueAt(row, 10).toString();
+                String RPause = model.getValueAt(row, 11).toString();
+                String RKicPrint = model.getValueAt(row, 7).toString();
+
+                if (typeIndex.equals("ItemOption")) {
+                    bntoptionClick();
+                    loadTableBalance(txtTable.getText());
+                } else if (typeIndex.equals("TypeSale")) {
+                    if (model.getRowCount() > 0) {
+                        if (!PCode.equals("") && !PVoid.equals("V")) {
+                            changTypeClick();
+                        } else {
+                            MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
+                        }
+                    }
+                } else if (typeIndex.equals("ItemDiscount")) {
+                    // ตรวจสอบว่าสามารถให้ส่วนลดได้อีกหรือไม่ ?
+                    if (checkCanDisc(RIndex)) {
+                        if (model.getRowCount() > 0) {
+                            if (!PCode.equals("") && !PVoid.equals("V")) {
+                                ItemDiscount i = new ItemDiscount(new JFrame(), true, txtTable.getText(), RIndex, memberBean);
+                                i.setVisible(true);
+
+                                loadTableBalance(txtTable.getText());
+                                txtPluCode.setText("");
+                                txtPluCode.requestFocus();
+                            }
+                        }
+                    } else {
+                        MSG.WAR(this, "รายการสินค้านี้มีการให้ส่วนลดอื่นไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+                    }
+                } else if (typeIndex.equals("ItemVoid")) {
+                    if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
+                        cancelItemBeforeHold();
+                    } else {
+                        if (!PCode.equals("") && !PVoid.equals("V")) {
+                            bntVoidClick();
+                            double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
+                            TableFileBean = tableFileControl.getData(tableNo);
+                            DiscountDialog dd = new DiscountDialog(this, true, tableNo, totalAmount, memberBean,
+                                    txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
+                            dd.clearMemberDiscount();
+                        }
+
+                    }
+                    //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
+
+                } else if (typeIndex.equals("ItemMove")) {
+                    MoveItemDialog m = new MoveItemDialog(new JFrame(), true, txtTable.getText());
+                    m.setVisible(true);
+                } else if (typeIndex.equals("EditQty")) {
+                    ItemEditQty itemEditQty = new ItemEditQty(this, true, txtTable.getText(), RIndex, memberBean);
+                    itemEditQty.setVisible(true);
+                }
+            }
+            BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+            //load data from balance
+            loadTableBalance(txtTable.getText());
+        }
+    }
+
+    private void pCodeEnter() {
+        String pluCode = txtPluCode.getText().trim();
+        String chkOpt = "";
+        if (!pluCode.equals("")) {
+            chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
+        }
+
+        if (chkOpt.equals("+")) {
+            //สามารถเลือกจำนวนได้เลย
+
+            pluCode = pluCode.substring(0, pluCode.length() - 1);
+
+            int qtySet;
+            if (Value.autoqty) {
+                GetQty frm = new GetQty(new JFrame(), true, pluCode);
+                frm.setVisible(true);
+
+                qtySet = frm.ReturnQty;
+            } else {
+                qtySet = 1;
+            }
+            if (!pluCode.equals("")) {
+                if (qtySet > 0) {
+                    txtPluCode.setText(QtyIntFmt.format(qtySet).trim() + "*" + pluCode);
+                    if (seekPluCode()) {
+                        if (PublicVar.P_Status.equals("S")) {
+                            txtPluCode.setEditable(false);
+                        } else {
+                            txtPluCodeOnExit();
+                        }
+                    }
+                } else {
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                }
+            }
+        } else {
+            if (findPluCode()) {
+                if (PublicVar.P_Status.equals("S")) {
+                    txtPluCode.setEditable(false);
+                } else {
+                    txtPluCodeOnExit();
+                }
+            }
+        }
+    }
+
+    private void clearHistory() {
+        int size = historyBack.size();
+        for (int i = 0; i < size; i++) {
+            historyBack.remove(0);
+        }
+    }
+
+    private String buttonName;
+    private int buttonIndex;
+
+    private void addMouseEvent(final JButton btn, final int index) {
+        btn.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == 3) {//click ขวา
+                    buttonName = btn.getName();
+                    buttonIndex = index;
+                    if (!ProductControl.checkProductItem(buttonName)) {
+                        jMenuItem2.setVisible(false);
+                    } else {
+                        jMenuItem2.setVisible(true);
+                    }
+                    jPopupMenu1.show(btn, e.getX(), e.getY());
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+    }
+
+    private boolean checkCanDisc(String RIndex) {
+        return mainSaleControl.getBalanceByIndex(RIndex);
+    }
+
+    private void sumSplit() {
+        updatetable();
+    }
+
+    private void updatetable() {
+        String table = txtTable.getText();
+        String cus = txtCust.getText();
+
+        BalanceBean balanceBean = mainSaleControl.getBalanceByRTable(table);
+        String UpdateTableFile = "update tablefile "
+                + "set tonact='N',"
+                + "macno='" + Value.MACNO + "',"
+                + "TCurTime = CurTime(),"
+                + "TCustomer = '" + cus + "',"
+                + "TItem = '" + balanceBean.getR_Total() + "',"
+                + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
+                + "where tcode='" + txtTable.getText() + "'";
+        mainSaleControl.execUpdate(UpdateTableFile);
+    }
+
+    private boolean isTakeOrder() {
+        boolean isTakeOrder = false;
+        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+        if (poshwSetup.getTakeOrderChk().equals("Y")) {
+            btnPayment.setVisible(false);
+            btnSplit.setVisible(false);
+//            bntPrintCheckBill.setVisible(false);
+            isTakeOrder = true;
+        }
+
+        return isTakeOrder;
+    }
+
+    private void updateTempTset(BalanceBean bBean) {
+        String sqlUpd = "update tempset set "
+                + "PIndex='" + bBean.getR_Index() + "' "
+                + "where PTableNo='" + bBean.getR_Table() + "' ";
+        mainSaleControl.execUpdate(sqlUpd);
+
+        List<TempsetBean> listTempSet = mainSaleControl.getTempsetByPIndex(bBean.getR_Index());
+        for (TempsetBean tempBean : listTempSet) {
+            if (tempBean.getPCode().equals(bBean.getR_PluCode())) {
+                updateBalanceOptionFromTemp(bBean.getR_Index(), bBean.getR_Table(), bBean.getR_PluCode());
+            } else {
+                String PCode = tempBean.getPCode();
+                if (!PCode.equals("")) {
+                    String StkCode = PUtility.GetStkCode();
+                    String emp = Value.EMP_CODE;
+                    String etd = txtShowETD.getText();
+                    String[] data = Option.splitPrice(PCode);
+                    double R_Quan = Double.parseDouble(data[0]);
+                    PCode = data[1];
+                    ProductBean productBean = productControl.getData(PCode);
+
+                    BalanceBean balance = new BalanceBean();
+                    balance.setStkCode(StkCode);
+                    balance.setR_PrintOK(PublicVar.PrintOK);
+                    balance.setMacno(Value.MACNO);
+                    balance.setCashier(Value.USERCODE);
+                    balance.setR_ETD(etd);
+                    balance.setR_Quan(R_Quan);
+                    balance.setR_Table(txtTable.getText());
+                    balance.setR_Emp(emp);
+
+                    balance.setR_PrCuType("");
+                    balance.setR_PrCuQuan(0.00);
+                    balance.setR_PrCuAmt(0.00);
+
+                    balance.setR_PluCode(productBean.getPCode());
+                    balance.setR_Group(productBean.getPGroup());
+                    balance.setR_Status(productBean.getPStatus());
+                    balance.setR_Normal(productBean.getPNormal());
+                    balance.setR_Discount(productBean.getPDiscount());
+                    balance.setR_Service(productBean.getPService());
+                    balance.setR_Vat(productBean.getPVat());
+                    balance.setR_Type(productBean.getPType());
+                    balance.setR_Stock(productBean.getPStock());
+                    balance.setR_PName(productBean.getPDesc());
+                    balance.setR_Unit(productBean.getPUnit1());
+                    balance.setR_Set(productBean.getPSet());
+
+                    if (balance.getR_Status().equals("P")) {
+                        switch (etd) {
+                            case "E":
+                                balance.setR_Price(productBean.getPPrice11());
+                                break;
+                            case "T":
+                                balance.setR_Price(productBean.getPPrice12());
+                                break;
+                            case "D":
+                                balance.setR_Price(productBean.getPPrice13());
+                                break;
+                            case "P":
+                                balance.setR_Price(productBean.getPPrice14());
+                                break;
+                            case "W":
+                                balance.setR_Price(productBean.getPPrice15());
+                                break;
+                            default:
+                                txtShowETD.setText("E");
+                                break;
+                        }
+                    }
+
+                    balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
+                    balance.setR_PrChkType("");
+
+                    String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
+                    balance.setR_Index(R_Index);
+                    memberBean = null;
+
+                    // for not member
+                    balance.setR_PrSubType("");
+                    balance.setR_PrSubCode("");
+                    balance.setR_PrSubQuan(0);// not member default 0
+                    balance.setR_PrSubDisc(0);
+                    balance.setR_PrSubBath(0);
+                    balance.setR_PrSubAmt(0);
+                    balance.setR_QuanCanDisc(balance.getR_Quan());
+                    balance.setR_KicPrint("");
+                    balance.setR_Pause("P");
+
+                    balanceControl.saveBalance(balance);
+                    updateBalanceOptionFromTemp(bBean.getR_Index(), balance.getR_Table(), PCode);
+
+                    //Process stock out
+                    String StkRemark = "SAL";
+                    String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
+                        PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
+                                balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
+                    }
+
+                    //ตัดสต็อกสินค้าที่มี Ingredent
+                    List<PIngredientBean> listPNG = floorPlanControl.listIngredeint(balance.getR_PluCode());
+                    for (PIngredientBean pngBean : listPNG) {
+                        String R_PluCode = pngBean.getPingCode();
+                        double R_QuanIng = (pngBean.getPingQty() * balance.getR_Quan());
+                        double R_Total = 0;
+                        if (pngBean.getPstock().equals("Y") && pngBean.getPactive().equals("Y")) {
+                            PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, R_QuanIng, R_Total,
+                                    balance.getCashier(), "Y", "", "", "");
+                        }
+                    }
+                }
+            }
+        }
+
+        //clear tempset
+        String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
+        mainSaleControl.execUpdate(sqlClear);
+    }
+
+    private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
+        TempsetBean tempBean = mainSaleControl.getTempsetByPIndexPCode(R_Index, PCode);
+        if (tempBean != null) {
+            String opt = ThaiUtil.Unicode2ASCII(tempBean.getPOption());
+            String sql1 = "update balance "
+                    + "set R_Opt1='" + opt + "',"
+                    + "R_LinkIndex='" + R_Index + "' "
+                    + "where R_Table='" + TableNo + "' "
+                    + "and R_PluCode='" + PCode + "' "
+                    + "and R_LinkIndex=''";
+            mainSaleControl.execUpdate(sql1);
+        }
+    }
+
+    private boolean checkRIndex(String chkRIndex) {
+        boolean isCheck;
+        BalanceBean balanceBean = mainSaleControl.getBalanceByRIndex(chkRIndex);
+        if (balanceBean != null) {
+            String r_linkindex = balanceBean.getR_LinkIndex();
+            isCheck = r_linkindex.equals(chkRIndex);
+        } else {
+            isCheck = true;
+        }
+
+        return isCheck;
+    }
+
+    private void cancelItemBeforeHold() {
+        try {
+            String sqlUpdatePro = "update balance set "
+                    //                    + "R_PrCode='',"
+                    + "R_PrType='-P',"
+                    + "R_PRDisc='0',"
+                    + "R_PRAmt='0',"
+                    + "R_PrQuan='0',"
+                    + "R_PrChkType='',"
+                    + "R_QuanCanDisc=R_Quan "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and r_PrCode<>'' ";
+            mainSaleControl.execUpdate(sqlUpdatePro);
+            String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+            mainSaleControl.execUpdate(sqlUpdateTable);
+        } catch (Exception e) {
+            MSG.ERR(this, e.getMessage());
+        }
+        int[] rows = tbShowBalance.getSelectedRows();
+        String StkRemark = "SAL";
+        Date TDate = new Date();
+        String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+
+        for (int i = 0; i < rows.length; i++) {
+            String r_index = "" + tbShowBalance.getValueAt(rows[i], 10);
+            BalanceBean bean = balanceControl.getBalanceIndex(txtTable.getText(), r_index);
+            if (bean == null) {
+                continue;
+            }
+
+            boolean isMenuSet = false;
+            String r_linkIndex = bean.getR_LinkIndex();
+            if (r_linkIndex == null || r_linkIndex.equals("null")) {
+                r_linkIndex = "";
+            }
+            if (!r_linkIndex.equals("")) {
+                if (!bean.getR_Index().equals(bean.getR_LinkIndex())) {
+                    isMenuSet = true;
+                    r_index = r_linkIndex;
+                } else {
+                    isMenuSet = true;
+                }
+            }
+
+            mainSaleControl.execUpdate("delete from tempset where PTableNo='" + txtTable.getText() + "';");
+            boolean canRemoveFromTableBalance = mainSaleControl.execUpdate("delete from balance "
+                    + "where r_index='" + r_index + "' "
+                    + "and r_pause='P' and r_kicprint<>'P'");
+            if (!canRemoveFromTableBalance) {
+                MSG.WAR(this, "รายการอาหาร " + bean.getR_PName() + " ถูกส่งครัวไปแล้ว ไม่สามารถลบออกได้ จะต้อง Void เท่านั้น");
+            } else {
+                // ################ โค้ดสำหรับคืน Stock
+                PUtility.ProcessStockOut(DocNo, bean.getStkCode(), bean.getR_PluCode(), TDate, StkRemark, -1 * bean.getR_Quan(),
+                        -1 * bean.getR_Total(), bean.getCashier(), bean.getR_Stock(), bean.getR_Set(), bean.getR_Index(), "1");
+
+                //ตัดสต็อกสินค้าที่มี Ingredent
+                List<PIngredientBean> listING = floorPlanControl.listIngredeint(bean.getR_PluCode());
+                for (PIngredientBean pngBean : listING) {
+                    String R_PluCode = pngBean.getPingCode();
+                    double R_QuanIng = (pngBean.getPingQty() * bean.getR_Quan());
+                    double R_Total = 0;
+                    PUtility.ProcessStockOut(DocNo, bean.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
+                            R_Total, bean.getCashier(), "Y", "", "", "");
+                }
+
+                //ตรวจสอบถ้าเป็น menu set ให้ลบข้อมูลภายใน Set ด้วย
+                if (isMenuSet) {
+                    List<BalanceBean> listBalance = mainSaleControl.getBalanceByRLinkIndex(r_index);
+                    for (BalanceBean balanceBean : listBalance) {
+                        BalanceBean bean2 = balanceControl.getBalanceIndex(txtTable.getText(), balanceBean.getR_Index());
+                        String sqlDel = "delete from balance "
+                                + "where r_index='" + balanceBean.getR_Index() + "' "
+                                + "and r_pause='P'";
+                        mainSaleControl.execUpdate(sqlDel);
+
+                        PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), bean2.getR_PluCode(), TDate, StkRemark, -1 * bean2.getR_Quan(),
+                                -1 * bean2.getR_Total(), bean2.getCashier(), bean2.getR_Stock(), bean2.getR_Set(), bean2.getR_Index(), "1");
+
+                        //ตัดสต็อกสินค้าที่มี Ingredent
+                        listING = floorPlanControl.listIngredeint(bean2.getR_PluCode());
+                        for (PIngredientBean pngBean : listING) {
+                            String R_PluCode = pngBean.getPingCode();
+                            double PBPack = pngBean.getPBPack();
+                            if (PBPack <= 0) {
+                                PBPack = 1;
+                            }
+                            double R_QuanIng = (pngBean.getPingQty() * bean2.getR_Quan());
+                            double R_Total = 0;
+                            PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), R_PluCode, TDate, StkRemark, -1 * R_QuanIng,
+                                    R_Total, bean2.getCashier(), "Y", "", "", "");
+                        }
+                    }
+                }
+                // ################ END คืน Stock 
+            }
+        }
+
+        //update tablefile
+        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+        showSum();
+        loadTableBalance(txtTable.getText());
+    }
+
+    private void upDateTableFile() {
+        String sql = "UPDATE tablefile SET "
+                + "TOnAct= 'Y',"
+                + "macno='" + Value.MACNO + "' ,"
+                + "tpause='N' "
+                + "WHERE Tcode='" + txtTable.getText() + "'";
+        mainSaleControl.execUpdate(sql);
+    }
+
+    private void CheckKicPrint() {
+        if (mainSaleControl.checkKicPrint(tableNo)) {
+            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+            if (CheckBillBeforeCash.equals("Y")) {
+                printBillVoidCheck();
+            }
+        }
+    }
+
+    private String getButtonIndex(int i) {
+        if ((i + 1) < 10) {
+            return "0" + (i + 1);
+        }
+        return "" + (i + 1);
+    }
+
+    private String refreshMenuButtonGroup(String buttonName) {
+        String panelGroup = buttonName.substring(0, buttonName.length() - 2);
+        if (panelGroup.length() <= 0) {
+            panelGroup = buttonName;
+        }
+
+        return panelGroup;
+    }
+
+    String getNewPNameWrap(String PName) {
+        String[] names = new String[2];
+        if (PName.length() > 50) {
+            names[0] = PName.substring(0, 50);
+            names[1] = PName.substring(50, PName.length());
+        } else {
+            return PName;
+        }
+
+        if (names[0] == null) {
+            names[0] = "";
+        }
+        if (names[1] == null) {
+            names[1] = "";
+        }
+
+        return names[0] + "<br>" + names[1];
+    }
+
+    private void showFloorPlan() {
+        try {
+            FloorPlanDialog floorPlan = new FloorPlanDialog();
+            floorPlan.setVisible(true);
+        } catch (Exception e) {
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(MainSale.class, "error", e);
+        }
+
+    }
+
+    private void changeOrderType() {
+        if (txtTypeDesc.getText().equals(SALE_DINE_IN)) {
+            txtShowETD.setText("T");
+            changeSaleType("T");
+            txtTypeDesc.setText(SALE_TAKE_AWAY);
+        } else if (txtTypeDesc.getText().equals(SALE_TAKE_AWAY)) {
+            txtShowETD.setText("D");
+            changeSaleType("D");
+            txtTypeDesc.setText(SALE_Delivery);
+        } else if (txtTypeDesc.getText().equals(SALE_Delivery)) {
+            txtShowETD.setText("P");
+            changeSaleType("P");
+            txtTypeDesc.setText(SALE_Pinto);
+        } else if (txtTypeDesc.getText().equals(SALE_Pinto)) {
+            txtShowETD.setText("W");
+            changeSaleType("W");
+            txtTypeDesc.setText(SALE_WholeSale);
+        } else if (txtTypeDesc.getText().equals(SALE_WholeSale)) {
+            txtShowETD.setText("E");
+            changeSaleType("E");
+            txtTypeDesc.setText(SALE_DINE_IN);
+        }
+    }
+
+    public class TableTestFormatRenderer extends DefaultTableCellRenderer {
+
+        private Format formatter;
+
+        public TableTestFormatRenderer(Format formatter) {
+            if (formatter == null) {
+                throw new NullPointerException();
+            }
+            this.formatter = formatter;
+        }
+
+        @Override
+        protected void setValue(Object obj) {
+            setText(obj == null ? "" : formatter.format(obj));
+        }
+    }
+
+    private void loadButtonProductMenu(String menuCode) {
+        ButtonCustom buttonCustom = new ButtonCustom();
+        List<MenuMGR> listMenu = buttonCustom.getDataButtonLayout(menuCode);
+        JButton[] btnGrid = new JButton[]{
+            btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
+            btnP9, btnP10, btnP11, btnP12, btnP13, btnP14, btnP15, btnP16
+        };
+
+        for (int i = 0; i < btnGrid.length; i++) {
+            JButton btn = btnGrid[i];
+            btn = buttonCustom.buttonDefault(btn);
+            String btnIndex = getButtonIndex(i);
+            btn.setName(menuCode + btnIndex);
+            addMouseEvent(btn, i);
+        }
+
+        for (int i = 0; i < listMenu.size(); i++) {
+            final MenuMGR menu = listMenu.get(i);
+            btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
+            btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
+                JButton btnMenu = (JButton) e.getSource();
+                if (menu.getPCode().equals("")) {
+                    loadButtonProductMenu(menu.getMenuCode());
+                } else if (!txtCust.getText().trim().equals("")) {
+                    addProductFromButtonMenu(menu.getPCode(), btnMenu.getName());
+                }
+            });
+        }
+
+        // add back button
+        btnGrid[15].setText("กลับ");
+        btnGrid[15].setName(menuCode);
+        btnGrid[15].setFocusable(false);
+        btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+        btnGrid[15].setBackground(Color.GRAY);
+        btnGrid[15].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton btn = (JButton) e.getSource();
+                if (btn.getName() != null) {
+                    String btnName = btn.getName();
+                    if (btnName.length() >= 3) {
+                        String backMenu = btnName.substring(0, btnName.length() - 2);
+                        loadButtonProductMenu(backMenu);
+                    }
+                }
+            }
+        });
+    }
+
+    private void addProductFromButtonMenu(String PCode, String btnName) {
+        if (!showPopupOption(btnName)) {
+            return;
+        }
+        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
+        if (findPluCode()) {
+            if (PublicVar.P_Status.equals("S")) {
+                txtPluCode.setEditable(false);
+                return;
+            }
+
+            //สามารถเลือกจำนวนได้เลย
+            double qtySet;
+            if (Value.autoqty) {
+                GetQty frm = new GetQty(new JFrame(), true, txtPluCode.getText());
+                frm.setVisible(true);
+                qtySet = frm.ReturnQty;
+            } else {
+                qtySet = PublicVar.P_Qty;
+            }
+
+            if (!txtPluCode.getText().trim().equals("")) {
+                if (qtySet > 0) {
+                    txtPluCode.setText("" + qtySet + "*" + PCode);
+                    if (seekPluCode()) {
+                        if (PublicVar.P_Status.equals("S")) {
+                            txtPluCode.setEditable(false);
+                        } else {
+                            txtPluCodeOnExit();
+                        }
+                    }
+                } else {
+                    txtPluCode.setText("");
+                    txtPluCode.requestFocus();
+                }
+            }
+        }
+    }
+
+    private void addHistory(int index) {
+        int size = historyBack.size();
+        boolean isExists = false;
+        for (int i = 0; i < size; i++) {
+            int a = historyBack.get(i);
+            if (a == index) {
+                isExists = true;
+                break;
+            }
+        }
+        if (!isExists) {
+            historyBack.add(index);
+        }
+    }
+
+    private void loadHeaderMenu() {
+        CompanyBean companyBean = mainSaleControl.getHeaderCompany();
+        tbpMain.setTitleAt(0, companyBean.getHead1());
+        tbpMain.setTitleAt(1, companyBean.getHead2());
+        tbpMain.setTitleAt(2, companyBean.getHead3());
+        tbpMain.setTitleAt(3, companyBean.getHead4());
+        tbpMain.setTitleAt(4, "");
+        tbpMain.setTitleAt(5, "");
+        tbpMain.setTitleAt(6, "");
+        tbpMain.setTitleAt(7, "");
+        tbpMain.setTitleAt(8, "");
+    }
+
+    private void printBillCheck() {
+        if (Value.useprint) {
+            PPrint print = new PPrint();
+            print.PrintCheckBill(txtTable.getText());
+        } else {
+            JOptionPane.showMessageDialog(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + Value.useprint);
+        }
+    }
+
+    private void printBillVoidCheck() {
+        if (Value.useprint) {
+            if (mainSaleControl.printBillVoidCheck(tableNo)) {
+                PPrint print = new PPrint();
+                print.PrintVoidBill(tableNo);
+            }
+        }
+    }
+
+    private boolean showPopupOption(String MenuCode) {
+        String pcode, pname, main;
+        SoftMenuSetup menuSetup = mainSaleControl.getMenuShowText(MenuCode);
+        if (menuSetup != null) {
+            pcode = menuSetup.getPCode();
+            pname = ThaiUtil.Unicode2ASCII(menuSetup.getMenuShowText());
+            main = "main";
+
+            ModalPopup popup = new ModalPopup(this, true, pcode, pname, tableNo, main, MenuCode);
+            popup.setVisible(true);
+        } else {
+            MgrButtonSetupBean mgrButtonBean = mainSaleControl.getMgrButtonAndMenuSetup(MenuCode);
+            if (mgrButtonBean != null) {
+                String PCode = mgrButtonBean.getPCode();
+
+                //check before order foods
+                boolean checkBefore = mgrButtonBean.getCheck_before().equals("Y");
+                if (checkBefore) {
+                    boolean passBefore = mainSaleControl.checkPassBeforeOrder(txtTable.getText());
+                    if (!passBefore) {
+                        MSG.WAR(this, "ไม่มีรายการอาหาร กรุณาเลือกเมนูอาหารหลักก่อน");
+                        return false;
+                    }
+                }
+                //end before order foods
+
+                //check auto add before
+                boolean isAutoAdd = false;
+                String pstock = PUtility.GetStkCode();
+                List<MgrButtonSetupBean> listMgr = mainSaleControl.getAllMgrButtonSetup(PCode);
+                for (MgrButtonSetupBean mgrBean : listMgr) {
+                    isAutoAdd = true;
+
+                    String autoPCode = mgrBean.getAutu_pcode();
+                    String autoPDesc = mgrBean.getAuto_pdesc();
+                    String tempset = "INSERT INTO tempset "
+                            + "(PTableNo, PIndex, PCode, PDesc, "
+                            + "PPostStock,PProTry, POption, PTime) "
+                            + "VALUES ('" + txtTable.getText() + "', '', '" + autoPCode + "', "
+                            + "'" + ThaiUtil.Unicode2ASCII(autoPDesc) + "', '" + pstock + "',"
+                            + "'auto', '', "
+                            + "CURTIME())";
+                    mainSaleControl.execUpdate(tempset);
+                }
+
+                //end loop autoadd
+                pname = ThaiUtil.Unicode2ASCII(mgrButtonBean.getPDesc());
+                main = "main";
+                updateTempmenuset("", PCode, pname, "", main);
+
+                if (!isAutoAdd) {
+                    ModalPopup popup = new ModalPopup(this, true, PCode, pname, tableNo, main, MenuCode);
+                    popup.setVisible(true);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void updateTempmenuset(String Index, String PCode, String PName, String Option, String TryName) {
+        String pstock = PUtility.GetStkCode();
+        String sql = "INSERT INTO tempset "
+                + "(PTableNo, PIndex, PCode, PDesc, "
+                + "PPostStock,PProTry, POption, PTime) "
+                + "VALUES ('" + tableNo + "', '" + Index + "', '" + PCode + "', "
+                + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
+                + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
+        mainSaleControl.execUpdate(sql);
+    }
+
+    private void showCustomerInput() {
+        String r_etd = txtShowETD.getText();
+        String customerCount = txtCust.getText();
+        int cc = 0;
+        try {
+            cc = Integer.parseInt(customerCount);
+        } catch (NumberFormatException e) {
+        }
+
+        if (PublicVar.defaultCustomer.equals("true")) {
+            int cuscount = Integer.parseInt(PublicVar.defaultCustomerQty);
+            cc = cuscount;
+            txtCust.setText("" + cc);
+            updateCustomerCount(cc);
+        }
+        if (cc == 0 && r_etd.equalsIgnoreCase("E")) {
+            CustomerCountDialog ccd = new CustomerCountDialog(this, true, txtTable.getText(), txtShowETD.getText());
+            ccd.setVisible(true);
+
+            txtCust.setText("" + ccd.getCountCustomer());
+            int custCount = ccd.getCountCustomer();
+            if (r_etd.equalsIgnoreCase("T")) {
+                txtCustOnExit();
+                return;
+            }
+
+            if (custCount > 0) {
+                txtCustOnExit();
+            }
+        }
+    }
+
+}

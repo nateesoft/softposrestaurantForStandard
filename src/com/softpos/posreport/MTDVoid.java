@@ -479,7 +479,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        PUtility.showError(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -560,7 +560,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            PUtility.showError(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

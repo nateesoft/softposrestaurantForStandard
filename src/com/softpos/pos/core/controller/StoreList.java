@@ -25,7 +25,7 @@ public class StoreList {
             }
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(StoreList.class, "error", e);
 
             return false;
@@ -57,7 +57,7 @@ public class StoreList {
 
             return i > 0;
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(StoreList.class, "error", e);
 
             return false;

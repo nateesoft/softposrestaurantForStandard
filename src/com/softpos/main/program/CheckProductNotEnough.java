@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.main.pos.view.FindProduct;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.GraphicsEnvironment;

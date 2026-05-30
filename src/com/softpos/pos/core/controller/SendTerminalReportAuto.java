@@ -211,7 +211,7 @@ public class SendTerminalReportAuto {
             rsGetSumBillno.close();
             rsGetEntertain.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
@@ -226,7 +226,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
@@ -242,7 +242,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
@@ -258,7 +258,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
@@ -306,7 +306,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         }
         
@@ -537,7 +537,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -719,7 +719,7 @@ public class SendTerminalReportAuto {
             stmt.close();
             listObj.add(new Object[]{countb_refnoD});
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -757,7 +757,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -797,7 +797,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -901,12 +901,12 @@ public class SendTerminalReportAuto {
                         }
                         rsAddress.close();
                     } catch (IOException | InterruptedException | SQLException | MessagingException e) {
-                        MSG.ERR(e.getMessage());
+                        
                     }
             }
             rsConfig.close();
         } catch (InterruptedException | SQLException e) {
-            MSG.ERR(e.getMessage());
+            
         } finally {
             mysql.closeConnection(this.getClass());
         }

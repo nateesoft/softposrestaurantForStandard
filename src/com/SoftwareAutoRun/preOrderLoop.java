@@ -81,7 +81,7 @@ public class preOrderLoop extends javax.swing.JFrame {
             System.out.println("Thread sleep 1000");
             preOrderLoop();
         } catch (Exception e) {
-            MSG.ERR(e.toString());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mc.close();
         }

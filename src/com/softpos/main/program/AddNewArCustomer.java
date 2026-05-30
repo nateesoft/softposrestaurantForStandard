@@ -1,6 +1,5 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ThaiUtil;
 import database.MySQLConnect;
@@ -75,8 +74,8 @@ public class AddNewArCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ปรับรุงรายการลูกหนี้การค้า");
+        setAlwaysOnTop(true);
         setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        setUndecorated(true);
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -400,7 +399,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem2.setText("บันทึกข้อมูล (Save/Update)");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -410,7 +409,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem3.setText("ลบข้อมูล (Delete/Remove)");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -421,7 +420,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
         jMenu1.add(jMenuItem3);
         jMenu1.add(jSeparator1);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jMenuItem4.setText("ออกจากการทำงาน (Exit)");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -455,7 +454,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(650, 506));
+        setSize(new java.awt.Dimension(650, 534));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -593,7 +592,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
          */
         
         if (!TempCode.equals("")) {
-            if (PUtility.ShowConfirmMsg("ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
+            if (MSG.CONF(this, "ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
                 MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
@@ -602,7 +601,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -642,7 +641,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -661,7 +660,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -727,7 +726,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AddNewArCustomer.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
@@ -752,7 +751,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AddNewArCustomer.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

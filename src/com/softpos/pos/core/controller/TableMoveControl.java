@@ -40,7 +40,7 @@ public class TableMoveControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableMoveControl.class);

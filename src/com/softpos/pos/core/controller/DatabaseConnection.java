@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 import database.MySQLConnect;
 import util.AppLogUtil;
-import util.MSG;
 
 public class DatabaseConnection {
 
@@ -12,7 +11,6 @@ public class DatabaseConnection {
         try {
             return mysql.executeUpdate(sql) > 0;
         } catch (Exception e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(DatabaseConnection.class, "error", e);
             return false;
         } finally {

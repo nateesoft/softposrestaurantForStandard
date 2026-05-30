@@ -695,7 +695,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                         rs.close();
                         stmt.close();
                     } catch (SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                     } finally {
                         mysql.closeConnection(this.getClass());
                     }
@@ -923,7 +923,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             rec.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }
@@ -1136,7 +1136,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 //            rs.close();
 //            stmt.close();
 //        } catch (SQLException e) {
-//            MSG.ERR(e.getMessage());
+//            MSG.ERR(this, e.getMessage());
 //        } finally {
 //            mysql.closeConnection(this.getClass());
 //        }
@@ -1250,7 +1250,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
         } finally {
             mysql.closeConnection(this.getClass());
         }

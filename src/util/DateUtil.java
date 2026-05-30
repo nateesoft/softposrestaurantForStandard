@@ -31,7 +31,7 @@ public class DateUtil {
         try {
             d = sdf.parse(date);
         } catch (ParseException e) {
-            MSG.ERR("DateControl:getDate:" + e.getMessage());
+            System.err.println("DateControl:getDate:" + e.getMessage());
         }
 
         return d;

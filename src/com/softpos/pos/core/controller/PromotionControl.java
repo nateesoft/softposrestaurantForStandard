@@ -41,7 +41,7 @@ public class PromotionControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -147,7 +147,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -173,7 +173,7 @@ public class PromotionControl {
                     proTab.setPDate1(rs.getDate("PDate1"));
                     proTab.setPDate2(rs.getDate("PDate2"));
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    
                 }
 
                 proTab.setPStrDay(rs.getString("PStrDay"));
@@ -251,7 +251,7 @@ public class PromotionControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -278,7 +278,7 @@ public class PromotionControl {
                     proTab.setPDate1(rs.getDate("PDate1"));
                     proTab.setPDate2(rs.getDate("PDate2"));
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    
                 }
 
                 proTab.setPStrDay(rs.getString("PStrDay"));
@@ -358,7 +358,7 @@ public class PromotionControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -974,7 +974,7 @@ public class PromotionControl {
                         }//END TYPE 5
 
                     } catch (NumberFormatException | SQLException e) {
-                        MSG.ERR(e.getMessage());
+                        
                         AppLogUtil.log(PromotionControl.class, "error", e);
                     }
                 }
@@ -1008,7 +1008,7 @@ public class PromotionControl {
             stmt1.executeUpdate(updateTableFile);
             stmt1.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1032,7 +1032,6 @@ public class PromotionControl {
             rs.close();
             stmtGetPro.close();
         } catch (SQLException e) {
-            MSG.ERR(e.toString());
             AppLogUtil.log(PromotionControl.class, "error" + sqlGetProtype, e);
         }
         String sql = "";
@@ -1047,7 +1046,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error"+sql, e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1069,7 +1068,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1087,7 +1086,7 @@ public class PromotionControl {
             stmt.executeUpdate("delete from tpromotion2 where TCode='" + table + "'");
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1109,7 +1108,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1128,7 +1127,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1150,7 +1149,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1169,7 +1168,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1197,7 +1196,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1216,7 +1215,7 @@ public class PromotionControl {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1251,7 +1250,7 @@ public class PromotionControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

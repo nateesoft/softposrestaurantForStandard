@@ -117,7 +117,7 @@ public class FindMember extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR_MSG(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -173,14 +173,14 @@ public class FindMember extends javax.swing.JDialog {
                 rs.close();
                 stmt.close();
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(FindMember.class, "error", e);
             } finally {
                 mysql.closeConnection(this.getClass());
             }
 
         } else {
-            MSG.WAR("รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
+            MSG.WAR(this, "รหัสสมาชิกต้องมีขนาด 7 หลักเท่านั้น...");
             TMemCode.setText("");
             TMemCode.requestFocus();
         }
@@ -229,7 +229,7 @@ public class FindMember extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -280,7 +280,7 @@ public class FindMember extends javax.swing.JDialog {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

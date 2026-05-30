@@ -30,7 +30,6 @@ public class MTranController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
             mysql.closeConnection(MTranController.class);
@@ -53,7 +52,6 @@ public class MTranController {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
             mysql.closeConnection(MTranController.class);
@@ -101,7 +99,6 @@ public class MTranController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
             mysql.closeConnection(MTranController.class);
@@ -122,7 +119,6 @@ public class MTranController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
             mysql.closeConnection(MTranController.class);

@@ -80,7 +80,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -134,7 +134,7 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -221,14 +221,14 @@ public class BillControl {
                     mysql2.open(BillControl.class);
                     mysql2.executeUpdate(sqlInsAccr);
                 } catch (Exception e) {
-                    MSG.ERR(e.getMessage());
+                    
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql2.closeConnection(BillControl.class);
                 }
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error: " + sql, e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -261,7 +261,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -389,7 +389,7 @@ public class BillControl {
             pre.executeUpdate();
             pre.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -617,7 +617,7 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql.closeConnection(this.getClass());
@@ -1004,7 +1004,7 @@ public class BillControl {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql2.closeConnection(this.getClass());
@@ -1051,7 +1051,7 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    MSG.ERR(e.getMessage());
+                    
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysql3.closeConnection(this.getClass());
@@ -1081,11 +1081,11 @@ public class BillControl {
                 BillControl.updateNextBill();
                 BranchControl.updateKicItemNo();
             } catch (NumberFormatException e) {
-                MSG.ERR(e.getMessage());
+                
             }
             return BillNo;
         } catch (Exception e) {
-            MSG.CONF(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
         return BillNo;
@@ -1124,7 +1124,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1227,7 +1227,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1327,7 +1327,7 @@ public class BillControl {
             }
             rs.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1536,7 +1536,7 @@ public class BillControl {
             rs1.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1659,7 +1659,7 @@ public class BillControl {
                     bean.setB_MemBegin(rs.getDate("B_MemBegin"));
                     bean.setB_MemEnd(rs.getDate("B_MemEnd"));
                 } catch (SQLException e) {
-                    MSG.ERR(null, e.getMessage());
+                    
                     AppLogUtil.log(BillControl.class, "error", e);
                 }
 
@@ -1670,7 +1670,7 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1809,7 +1809,7 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -1838,7 +1838,7 @@ public class BillControl {
                 rs.close();
             }
         } catch (SQLException e) {
-            MSG.ERR(e.getMessage());
+            
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
