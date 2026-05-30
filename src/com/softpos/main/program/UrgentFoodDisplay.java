@@ -5,7 +5,7 @@
  */
 package com.softpos.main.program;
 
-import com.softpos.bean.PKicTran;
+import com.softpos.pos.core.model.PKicTran;
 import com.softpos.util.ThaiUtil;
 import database.ConfigFile;
 import java.awt.Color;

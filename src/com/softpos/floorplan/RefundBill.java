@@ -20,7 +20,7 @@ import com.softpos.pos.core.model.TranRecord;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 import com.softpos.util.ThaiUtil;
-import convert_utility.text_to_image.TextToImage;
+import com.softpos.util.TextToImage;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;

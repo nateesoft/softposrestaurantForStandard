@@ -18,7 +18,7 @@ import com.softpos.pos.core.controller.RefundBillController;
 import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
-import convert_utility.text_to_image.TextToImage;
+import com.softpos.util.TextToImage;
 import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
