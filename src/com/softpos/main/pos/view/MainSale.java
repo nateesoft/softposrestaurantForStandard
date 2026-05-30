@@ -60,7 +60,6 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -1683,6 +1682,12 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         pMenu4.setVisible(false);
         pMenu5.setVisible(false);
         pMenu6.setVisible(false);
+        pMenu7.setVisible(false);
+        pMenu8.setVisible(false);
+        pMenu9.setVisible(false);
+        pSubMenu1.setVisible(false);
+        pSubMenu2.setVisible(false);
+        pSubMenu3.setVisible(false);
 
         isTakeOrder();
 
@@ -3376,8 +3381,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private int buttonIndex;
 
     private void addMouseEvent(final JButton btn, final int index) {
-        btn.addMouseListener(new MouseListener() {
-
+        java.awt.event.MouseListener listener = new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == 3) {//click ขวา
@@ -3391,23 +3395,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     jPopupMenu1.show(btn, e.getX(), e.getY());
                 }
             }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
+        };
+        btn.putClientProperty("rightClickListener", listener);
+        btn.addMouseListener(listener);
     }
 
     private boolean checkCanDisc(String RIndex) {
@@ -3813,6 +3803,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         for (int i = 0; i < btnGrid.length; i++) {
             JButton btn = btnGrid[i];
+            java.awt.event.MouseListener old = (java.awt.event.MouseListener) btn.getClientProperty("rightClickListener");
+            if (old != null) {
+                btn.removeMouseListener(old);
+            }
             btn = buttonCustom.buttonDefault(btn);
             String btnIndex = getButtonIndex(i);
             btn.setName(menuCode + btnIndex);
@@ -3821,6 +3815,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         for (int i = 0; i < listMenu.size(); i++) {
             final MenuMGR menu = listMenu.get(i);
+            if (menu.getMIndex() >= 15) continue; // slot 15 reserved for back button
             btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
             btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
                 JButton btnMenu = (JButton) e.getSource();
@@ -3838,16 +3833,13 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         btnGrid[15].setFocusable(false);
         btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
         btnGrid[15].setBackground(Color.GRAY);
-        btnGrid[15].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton btn = (JButton) e.getSource();
-                if (btn.getName() != null) {
-                    String btnName = btn.getName();
-                    if (btnName.length() >= 3) {
-                        String backMenu = btnName.substring(0, btnName.length() - 2);
-                        loadButtonProductMenu(backMenu);
-                    }
+        btnGrid[15].addActionListener((ActionEvent e) -> {
+            JButton btn = (JButton) e.getSource();
+            if (btn.getName() != null) {
+                String btnName = btn.getName();
+                if (btnName.length() >= 3) {
+                    String backMenu = btnName.substring(0, btnName.length() - 2);
+                    loadButtonProductMenu(backMenu);
                 }
             }
         });
@@ -3905,19 +3897,6 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (!isExists) {
             historyBack.add(index);
         }
-    }
-
-    private void loadHeaderMenu() {
-        CompanyBean companyBean = mainSaleControl.getHeaderCompany();
-        tbpMain.setTitleAt(0, companyBean.getHead1());
-        tbpMain.setTitleAt(1, companyBean.getHead2());
-        tbpMain.setTitleAt(2, companyBean.getHead3());
-        tbpMain.setTitleAt(3, companyBean.getHead4());
-        tbpMain.setTitleAt(4, "");
-        tbpMain.setTitleAt(5, "");
-        tbpMain.setTitleAt(6, "");
-        tbpMain.setTitleAt(7, "");
-        tbpMain.setTitleAt(8, "");
     }
 
     private void printBillCheck() {

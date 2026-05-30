@@ -42,7 +42,6 @@ import com.softpos.pos.core.model.SPTempRefundBean;
 import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.pos.core.model.TempsetBean;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -60,8 +59,10 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -1698,6 +1699,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private final TableSetupControl tableSetupControl = new TableSetupControl();
     List<FloorPlanBean> listFloorPlan = new ArrayList<>();
+    private final Map<String, JButton> buttonMap = new HashMap<>();
 
     private ImageIcon loadIcon(String path) {
         java.net.URL url = getClass().getResource(path);
@@ -1712,8 +1714,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         try {
             resetButton();
             for (FloorPlanBean bean : listFloorPlan) {
-                String codeId = bean.getCodeId();
-                JButton btn = findButton(panelMain, codeId);
+                JButton btn = buttonMap.get(bean.getCodeId());
                 if (btn == null) {
                     continue;
                 }
@@ -1830,19 +1831,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         // load in first time
         initLoadButtons();
         loadZone(zoneSelected);
-    }
-
-    private JButton findButton(JPanel pnZone, String codeId) {
-        for (int i = 0; i < pnZone.getComponentCount(); i++) {
-            Component comp = pnZone.getComponent(i);
-            if (comp instanceof JButton) {
-                JButton btn = (JButton) pnZone.getComponent(i);
-                if (btn.getName().equals(codeId)) {
-                    return btn;
-                }
-            }
-        }
-        return null;
     }
 
     public void printCheckBillFromPDA() {
@@ -2091,30 +2079,25 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         buttons[98] = btn90;
         buttons[99] = btn100;
 
+        for (int i = 0; i < buttons.length; i++) {
+            setupButtonStyle(buttons[i], i);
+        }
         resetButton();
     }
 
     private void resetButton() {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = initButtonTable(buttons[i], i);
+        for (JButton button : buttons) {
+            button.setText("");
+            button.setIcon(null);
+            button.setBackground(null);
+            button.setForeground(Color.BLACK);
         }
     }
 
-    private JButton initButtonTable(JButton button, int c) {
-        button.setText("");
-        button.setIcon(null);
-        button.setBackground(null);
-        button.setForeground(Color.BLACK);
-
-        for (ActionListener listener : button.getActionListeners()) {
-            button.removeActionListener(listener);
-        }
-
+    private void setupButtonStyle(JButton button, int c) {
         if (buttonStyle == 1) {
             button.setFont(fontA);
             button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-            button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
-            button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
         } else {
             button.setPreferredSize(new Dimension(50, 50));
             button.setFocusPainted(false);
@@ -2124,11 +2107,15 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.setOpaque(false);
             button.setFont(fontA);
             button.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(180, 180, 180), 1));
-            button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
-            button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
         }
+        button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
+        button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
+    }
 
-        return button;
+    private String formatIndex(int n) {
+        if (n < 10) return "00" + n;
+        if (n < 100) return "0" + n;
+        return "" + n;
     }
 
     private void loadZone(String zone) {
@@ -2143,23 +2130,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         btnZone6.setBackground("E".equals(zone) ? Color.green : null);
         btnZone7.setBackground("F".equals(zone) ? Color.green : null);
 
-        // set button name
+        buttonMap.clear();
         for (int i = 0; i < buttons.length; i++) {
-            String strCount;
-            if ((i + 1) < 10) {
-                strCount = "00" + (i + 1);
-            } else if ((i + 1) < 100) {
-                strCount = "0" + (i + 1);
-            } else {
-                strCount = "" + (i + 1);
-            }
-            buttons[i].setName(zone + strCount);
-            buttons[i].setText("");
-            buttons[i].setIcon(null);
-            buttons[i].setBackground(null);
-            buttons[i].setForeground(Color.BLACK);
+            String name = zone + formatIndex(i + 1);
+            buttons[i].setName(name);
+            buttonMap.put(name, buttons[i]);
         }
-        // load data
         addButton();
     }
 
