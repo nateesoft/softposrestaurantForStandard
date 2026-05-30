@@ -103,8 +103,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         initComponents();
 
         SwingUtilities.invokeLater(() -> {
-            com.formdev.flatlaf.FlatIntelliJLaf.setup();
-
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             POSHW = POSHWSetup.Bean(Value.MACNO);
             CONFIG = POSConfigSetup.Bean();
@@ -1871,10 +1869,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             Value.CASHIER = "";
             clearTemp();
             PosControl.logout();
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-            }
             System.exit(0);
         } else {
             PublicVar.countRound = 0;

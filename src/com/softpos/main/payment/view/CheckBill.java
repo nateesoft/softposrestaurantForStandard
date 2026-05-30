@@ -2079,10 +2079,6 @@ public class CheckBill extends javax.swing.JDialog {
             lockScreen1(false);
             UpdateMember("Del");
             txtCashAmount.setEnabled(false);
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {
-            }
             return;
         }
         if (saveCredit == netTotal || saveAR == netTotal || (saveCredit + returnCash) == netTotal
@@ -2161,18 +2157,11 @@ public class CheckBill extends javax.swing.JDialog {
                 }
             }
             billControl.saveBillNo(tableNo, billBean);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CheckBill.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             Value.MemberAlready = false;
             lockScreen1(false);
             UpdateMember("Del");
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {
-            }
+
             return;
         }
 

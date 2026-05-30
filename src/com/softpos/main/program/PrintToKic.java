@@ -50,14 +50,6 @@ public class PrintToKic extends javax.swing.JFrame {
         setState(JFrame.ICONIFIED);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-//        ActionListener timerListener = (ActionEvent e) -> {
-//        for (int i = 0; i < 1;) {
-//        new Thread(() -> {
-        try {
-                    Thread.sleep(5000);
-//            Thread.sleep(1000);
-        } catch (Exception e) {
-        }
         if (printkic == true) {
             System.out.println("PROCESS " + refresh + "sec");
 //                new Thread(() -> {
