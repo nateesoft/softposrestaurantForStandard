@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
-import javax.swing.JOptionPane;
 import util.AppLogUtil;
 import util.MSG;
 import util.NumberFormat;
@@ -718,7 +717,7 @@ public class DiscountDialog extends javax.swing.JDialog {
             txtBahtAmt.requestFocus();
             return;
         }
-        JOptionPane.showMessageDialog(this, "ระบบถูกกำหนดว่า ห้ามให้ส่วนลดรายการนี้ !");
+        MSG.WAR(this, "ระบบถูกกำหนดว่า ห้ามให้ส่วนลดรายการนี้ !");
     }//GEN-LAST:event_btnBahtActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -1121,13 +1120,13 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (!fest.equals("0.00") || !emp.equals("0.00") || !mem.equals("0.00") || !train.equals("0.00")) {
             txtCupon.setText("");
             txtCuponAmt.setText("0.00");
-            JOptionPane.showMessageDialog(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+            MSG.WAR(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
         }
         if (posConfig.getP_SubDiscGet().equals("Y")) {
             txtCupon.requestFocus();
             txtCupon.selectAll();
         } else {
-            JOptionPane.showMessageDialog(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
+            MSG.WAR(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
             txtCupon.setText("");
             txtCuponAmt.setText("0.00");
         }
@@ -1143,13 +1142,13 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (!fest.equals("0.00") || !emp.equals("0.00") || !mem.equals("0.00") || !cup.equals("0.00")) {
             txtTrain.setText("");
             txtTrainAmt.setText("0.00");
-            JOptionPane.showMessageDialog(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+            MSG.WAR(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
         }
         if (posConfig.getP_TrainDiscGet().equals("Y")) {
             txtTrain.requestFocus();
             txtTrain.selectAll();
         } else {
-            JOptionPane.showMessageDialog(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
+            MSG.WAR(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
             txtTrain.setText("");
             txtTrainAmt.setText("0.00");
         }
@@ -1166,7 +1165,7 @@ public class DiscountDialog extends javax.swing.JDialog {
             if (!fest.equals("0.00") || !emp.equals("0.00") || !train.equals("0.00") || !cup.equals("0.00") || !mem.equals("0.00")) {
                 txtMem.setText("");
                 txtMemAmt.setText("0.00");
-                JOptionPane.showMessageDialog(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+                MSG.WAR(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
             } else {
                 CheckDis3();
                 txtMem.setFocusable(true);
@@ -1174,7 +1173,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                 txtMem.selectAll();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
+            MSG.WAR(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
             txtMem.setText("");
             txtMemAmt.setText("0.00");
         }
@@ -1191,14 +1190,14 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (!fest.equals("0.00") || !mem.equals("0.00") || !train.equals("0.00") || !cup.equals("0.00")) {
             txtEmp.setText("");
             txtEmpAmt.setText("0.00");
-            JOptionPane.showMessageDialog(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+            MSG.WAR(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
 
         } else {
             if (posConfig.getP_EmpDiscGet().equals("Y")) {
                 txtEmp.requestFocus();
                 txtEmp.selectAll();
             } else {
-                JOptionPane.showMessageDialog(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
+                MSG.WAR(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
                 txtEmp.setText("");
                 txtEmpAmt.setText("0.00");
             }
@@ -1215,14 +1214,14 @@ public class DiscountDialog extends javax.swing.JDialog {
         if (!emp.equals("0.00") || !mem.equals("0.00") || !train.equals("0.00") || !cup.equals("0.00")) {
             txtFest.setText("");
             txtFestAmt.setText("0.00");
-            JOptionPane.showMessageDialog(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+            MSG.WAR(this, "ท่านได้ให้ส่วนลดไปแล้วไม่สามารถให้ส่วนลดได้อีก");
 
         } else {
             if (posConfig.getP_FastDiscGet().equals("Y")) {
                 txtFest.requestFocus();
                 txtFest.selectAll();
             } else {
-                JOptionPane.showMessageDialog(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
+                MSG.WAR(this, "ส่วนลดนี้ยังไม่ได้กำหนดให้เปิดใช้งาน !");
                 txtFest.setText("");
                 txtFestAmt.setText("0.00");
             }
@@ -1674,7 +1673,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         discAllow = NumberUtil.UP_DOWN_NATURAL_BAHT(discAllow);
         if (input > discAllow) {
             // warning
-            JOptionPane.showMessageDialog(this, "ยอดส่วนลดมากกว่า % ที่สามารถให้ส่วนลดได้ !");
+            MSG.WAR(this, "ยอดส่วนลดมากกว่า % ที่สามารถให้ส่วนลดได้ !");
             txtBahtAmt.setText("0.00");
             txtBahtAmt.selectAll();
             txtBahtAmt.requestFocus();

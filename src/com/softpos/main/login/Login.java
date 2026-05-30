@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -27,7 +26,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import soft.virtual.KeyBoardDialog;
@@ -342,7 +340,7 @@ public class Login extends javax.swing.JDialog {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         checkUserLogin();
-        
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMouseClicked
@@ -355,53 +353,40 @@ public class Login extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         posControl.posHwSetupOnAct("N");
-        JOptionPane.showMessageDialog(this, "ปลดล้อกโปรแกรมเรียบร้อยกรุณากรอก Username : Password");
+        MSG.NOTICE(this, "ปลดล้อกโปรแกรมเรียบร้อยกรุณากรอก Username : Password");
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private static void applyThaiFont() {
+        // FlatLaf bundles "Inter" font which has no Thai glyphs.
+        // Override defaultFont with Tahoma which ships with every Windows version and supports Thai.
+        javax.swing.UIManager.put("defaultFont",
+                new javax.swing.plaf.FontUIResource("Tahoma", java.awt.Font.PLAIN, 13));
+    }
 
     public static void main(String args[]) {
         AppLogUtil.startup("SoftPOS Restaurant", "1.0");
+        com.formdev.flatlaf.FlatIntelliJLaf.setup();
+        
+        applyThaiFont();
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> AppLogUtil.shutdown()));
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (CheckApplication.isRunning()) {
-                JOptionPane.showMessageDialog(new JFrame(), "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar", "Applications are opened", JOptionPane.WARNING_MESSAGE);
+        SwingUtilities.invokeLater(() -> {
+            if (CheckApplication.isRunning()) {
+                MSG.WAR(new JFrame(), "มีการเปิดใช้งานโปรแกรมอยู่แล้วกรุณาเรียกใช้ที่ Task bar");
                 System.exit(0);
             }
-            File f = new File("softrestaurant.running");
-            if (f.exists()) {
-                int confirm = JOptionPane.showConfirmDialog(null, "โปรแกรมถูกปิดไม่สมบูรณ์ ท่านต้องการเปิดใช้งานต่อหรือไม่ ?",
-                        "เปิดใช้งานโปรแกรม", JOptionPane.OK_CANCEL_OPTION);
-                if (confirm == JOptionPane.OK_OPTION) {
-                    new File("softrestaurant.running").delete();
-                } else {
-                    new File("softrestaurant.running").delete();
-                    System.exit(0);
-                }
-            } else {
-                try {
-                    f.createNewFile();
-                } catch (IOException ex) {
-                }
-            }
-
-            com.formdev.flatlaf.FlatIntelliJLaf.setup();
 
             /* Create and display the dialog */
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    Login dialog = new Login(new javax.swing.JFrame(), true);
-                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosing(java.awt.event.WindowEvent e) {
-                            System.exit(0);
-                        }
-                    });
-                    dialog.setVisible(true);
-                }
+            java.awt.EventQueue.invokeLater(() -> {
+                Login dialog = new Login(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             });
-            }
         });
     }
 
@@ -461,9 +446,9 @@ public class Login extends javax.swing.JDialog {
                 POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
                 String POSOnActCheck = poshwSetup.getOnAct();
                 if (POSOnActCheck.equals("Y")) {
-                    JOptionPane.showMessageDialog(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                    MSG.WAR(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
                             + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
-                            + "กรุณาตรวจสอบฐานข้อมูล", "สถานะเครื่อง POS", JOptionPane.WARNING_MESSAGE);
+                            + "กรุณาตรวจสอบฐานข้อมูล");
                     System.exit(0);
                 }
                 MSG.ERR(this, "มียอดขายค้างอยู่ไม่สามารถเข้าทำรายการขายวันปัจจุบันได้ กรุณา End Of Day ก่อน ");
@@ -591,23 +576,23 @@ public class Login extends javax.swing.JDialog {
             @Override
             public void run() {
                 //check ftp file date
-            try {
-                pbCheckUpdate.setStringPainted(true);
-                pbCheckUpdate.setMinimum(0);
-                pbCheckUpdate.setMaximum(100);
+                try {
+                    pbCheckUpdate.setStringPainted(true);
+                    pbCheckUpdate.setMinimum(0);
+                    pbCheckUpdate.setMaximum(100);
 
-                for (int i = 1; i <= 100; i++) {
-                    pbCheckUpdate.setValue(i);
-                    pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                    try {
-                        Thread.sleep(25);
-                    } catch (InterruptedException e) {
+                    for (int i = 1; i <= 100; i++) {
+                        pbCheckUpdate.setValue(i);
+                        pbCheckUpdate.setString("Check Update: (" + i + " %)");
+                        try {
+                            Thread.sleep(25);
+                        } catch (InterruptedException e) {
+                        }
                     }
+                    pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00");
+                } catch (Exception e) {
+                    MSG.ERR(new JFrame(), e.getMessage());
                 }
-                pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00");
-            } catch (Exception e) {
-                MSG.ERR(new JFrame(), e.getMessage());
-            }
             }
         }).start();
     }

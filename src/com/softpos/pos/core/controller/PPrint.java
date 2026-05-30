@@ -47,11 +47,9 @@ import javax.print.attribute.HashPrintServiceAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
-import javax.swing.JOptionPane;
 import printReport.PrintDriver;
 import util.AppLogUtil;
 import util.DateUtil;
-import util.MSG;
 import util.NumberUtil;
 
 public class PPrint {

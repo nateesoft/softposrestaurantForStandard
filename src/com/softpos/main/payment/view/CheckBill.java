@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
@@ -1342,7 +1341,7 @@ public class CheckBill extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtCreditNo.getText().equals("")) {
                 if (txtCreditNo.getText().length() > 16) {
-                    JOptionPane.showMessageDialog(this, "Over Credit Number:");
+                    MSG.WAR(this, "Over Credit Number:");
                     txtCreditNo.requestFocus();
                     txtCreditNo.selectAll();
                 } else {
@@ -1361,7 +1360,7 @@ public class CheckBill extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtCreditTrackNo.getText().equals("")) {
                 if (txtCreditTrackNo.getText().length() > 6) {
-                    JOptionPane.showMessageDialog(this, "Over Appr Code:");
+                    MSG.WAR(this, "Over Appr Code:");
                     txtCreditTrackNo.selectAll();
                     txtCreditTrackNo.requestFocus();
                 } else {
@@ -1560,7 +1559,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void txtCreditTrackNoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCreditTrackNoMouseClicked
         if (txtCreditNo.getText().length() > 16) {
-            JOptionPane.showMessageDialog(this, "Over Credit Number:");
+            MSG.WAR(this, "Over Credit Number:");
             txtCreditNo.setEnabled(true);
             txtCreditNo.requestFocus();
             txtCreditNo.selectAll();
@@ -1575,7 +1574,7 @@ public class CheckBill extends javax.swing.JDialog {
     private void txtCreditAmountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCreditAmountMouseClicked
         if (!txtCreditNo.getText().equals("") || !txtCreditTrackNo.getText().equals("")) {
             if (txtCreditTrackNo.getText().length() > 6) {
-                JOptionPane.showMessageDialog(this, "Over Appr Code:");
+                MSG.WAR(this, "Over Appr Code:");
                 txtCreditTrackNo.requestFocus();
                 txtCreditTrackNo.selectAll();
             }
@@ -1970,7 +1969,7 @@ public class CheckBill extends javax.swing.JDialog {
 
         double returnMoney = Double.parseDouble(txtReturnMoneyAmount.getText().replace(",", ""));
         if (returnMoney > netTotal) {
-            JOptionPane.showMessageDialog(this, "**** ยอดการหักคืนเงินมัดจำ (Earnest-Return) มากกว่ายอดที่ต้องจ่ายจริง ****");
+            MSG.WAR(this, "**** ยอดการหักคืนเงินมัดจำ (Earnest-Return) มากกว่ายอดที่ต้องจ่ายจริง ****");
             txtReturnMoneyAmount.selectAll();
             return;
         }
@@ -2242,8 +2241,8 @@ public class CheckBill extends javax.swing.JDialog {
             txtArAmount.selectAll();
         } else {
             //แจ้งเตือนให้เพิ่มลูกค้าเพื่อเป็นหนี้ใหม่
-            int confirm = JOptionPane.showConfirmDialog(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
-            if (confirm == JOptionPane.YES_OPTION) {
+            boolean confirm = MSG.CONF(this, "ไม่พบรหัสลูกหนี้ " + txtArCode.getText() + " ในแฟ้มข้อมูลลูกหนี้ .. ต้องการเพิ่มใหม่หรือไม่ ?");
+            if (confirm) {
                 AddNewArCustomer addNew = new AddNewArCustomer(new JFrame(), true);
                 addNew.setVisible(true);
             }
@@ -2287,7 +2286,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void checkBillOK() {
         if (txtCreditNo.getText().length() > 16 || txtCreditTrackNo.getText().length() > 6) {
-            JOptionPane.showMessageDialog(this, "Over Credit Number Or Over Appr Code : Please Check!");
+            MSG.WAR(this, "Over Credit Number Or Over Appr Code : Please Check!");
             txtCreditNo.setEditable(true);
             txtCreditTrackNo.setEditable(true);
             return;

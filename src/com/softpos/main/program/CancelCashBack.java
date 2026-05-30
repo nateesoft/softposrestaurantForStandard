@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.AppLogUtil;
 import util.JTableUtility;
@@ -122,8 +121,8 @@ public class CancelCashBack extends javax.swing.JDialog {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         String code = txtCode.getText();
-        int icon = JOptionPane.showConfirmDialog(this, "ยืนยันการยกเลิกรายการคืนเงินมัดจำหมายเลข " + code + " (Yes/No)");
-        if (icon == JOptionPane.YES_OPTION) {
+        boolean icon = MSG.CONF(this, "ยืนยันการยกเลิกรายการคืนเงินมัดจำหมายเลข " + code + " (Yes/No)");
+        if (icon) {
             updateCashBack(txtCode.getText());
         }
     }//GEN-LAST:event_btnOkActionPerformed

@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
 import util.DateChooseDialog;
 import util.MSG;
@@ -325,7 +324,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void ProcessProc() {
 
         if (Value.printdriver) {
-            JOptionPane.showMessageDialog(this, Value.driverNotSupport);
+            MSG.WAR(this, Value.driverNotSupport);
         } else if (!Value.getComPort().equals("NONE")) {
             if (prn.OpenPrint(Value.getComPort())) {
                 Double SumAmt = 0.0;

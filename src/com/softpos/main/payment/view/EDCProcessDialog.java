@@ -162,13 +162,13 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                 }
             }
             if (timeOut > 30000) {
-                javax.swing.JOptionPane.showMessageDialog(this, "กรุณาตรวจสอบสถานะเครื่อง EDC ...");
+                MSG.ERR(this, "กรุณาตรวจสอบสถานะเครื่อง EDC ...");
                 closePort();
                 chkResult();
             }
             resultStr = writeStr;
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Port " + portName + " ไม่สามารถใช้งานได้...กรุณาตรวจสอบ");
+            MSG.ERR(this, "Port " + portName + " ไม่สามารถใช้งานได้...กรุณาตรวจสอบ");
             chkResult();
         }
     }

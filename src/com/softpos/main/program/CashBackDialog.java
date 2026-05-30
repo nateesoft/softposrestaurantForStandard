@@ -12,7 +12,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JOptionPane;
 import printReport.PrintDriver;
 import util.AppLogUtil;
 import util.MSG;
@@ -139,8 +138,8 @@ public class CashBackDialog extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            int icon = JOptionPane.showConfirmDialog(this, "ยืนยันการคืนเงินมัดจำเป็นเงินสด (Yes/No) ?");
-            if (icon == JOptionPane.YES_OPTION) {
+            boolean icon = MSG.CONF(this, "ยืนยันการคืนเงินมัดจำเป็นเงินสด (Yes/No) ?");
+            if (icon) {
                 saveCashBack();
             }
         }

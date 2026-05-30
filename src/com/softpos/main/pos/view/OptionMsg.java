@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -224,8 +223,8 @@ public class OptionMsg extends javax.swing.JDialog {
     public void bntAddExit() {
         if (!txtAdd.getText().equals("")) {
             InputMsgToSelectedTable(txtAdd.getText());
-            int icon = JOptionPane.showConfirmDialog(this, "ต้องการให้เพิ่มข้อมูลเก็บไว้ในระบบ เพื่อใช้ในครั้งต่อไปหรือไม่ ? \nกด Yes เพื่อยืนยัน.");
-            if (icon == JOptionPane.YES_OPTION) {
+            boolean icon = MSG.CONF(this, "ต้องการให้เพิ่มข้อมูลเก็บไว้ในระบบ เพื่อใช้ในครั้งต่อไปหรือไม่ ? \nกด Yes เพื่อยืนยัน.");
+            if (icon) {
                 /**
                  * * OPEN CONNECTION **
                  */

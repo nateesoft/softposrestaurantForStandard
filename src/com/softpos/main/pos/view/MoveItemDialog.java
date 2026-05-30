@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -443,7 +442,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
     private void table1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table1MouseClicked
         if (txtTable2.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(this, "กรุณาระบุโต๊ะที่ต้องการย้ายรายการอาหารไป !");
+            MSG.WAR(this, "กรุณาระบุโต๊ะที่ต้องการย้ายรายการอาหารไป !");
             txtTable2.setText("");
             txtTable2.requestFocus();
         } else {
@@ -453,7 +452,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     String R_Index = table1.getValueAt(row, 11).toString();
                     String R_Void = table1.getValueAt(row, 1).toString();
                     if (R_Void.equalsIgnoreCase("V")) {
-                        JOptionPane.showMessageDialog(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
+                        MSG.WAR(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                     } else {
                         TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
                         if (tableFileBean != null) {
@@ -552,7 +551,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
     private void table1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table1KeyPressed
 
         if (txtTable2.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(this, "กรุณาระบุโต๊ะที่ต้องการย้ายรายการอาหารไป !");
+            MSG.WAR(this, "กรุณาระบุโต๊ะที่ต้องการย้ายรายการอาหารไป !");
             txtTable2.setText("");
             txtTable2.requestFocus();
         } else {
@@ -563,7 +562,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         String R_Index = table1.getValueAt(row, 11).toString();
                         String R_Void = table1.getValueAt(row, 1).toString();
                         if (R_Void.equalsIgnoreCase("V")) {
-                            JOptionPane.showMessageDialog(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
+                            MSG.WAR(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                         } else {
                             TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
                             if (tableFileBean != null) {
@@ -763,7 +762,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
             loadDataActive = true;
 
         } else {
-            JOptionPane.showMessageDialog(this, "โต๊ะ " + txtTable2.getText() + " ถูกเปิดใช้งานอยู่ ไม่สามารถย้ายรายการได้");
+            MSG.WAR(this, "โต๊ะ " + txtTable2.getText() + " ถูกเปิดใช้งานอยู่ ไม่สามารถย้ายรายการได้");
             txtTable2.setEditable(true);
             txtTable2.setText("");
             txtTable2.requestFocus();

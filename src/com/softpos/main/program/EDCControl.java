@@ -14,7 +14,7 @@ import javax.comm.SerialPortEvent;
 import javax.comm.SerialPortEventListener;
 import javax.comm.UnsupportedCommOperationException;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import util.MSG;
 
 public class EDCControl extends JDialog implements SerialPortEventListener {
 
@@ -173,14 +173,14 @@ public class EDCControl extends JDialog implements SerialPortEventListener {
                 }
             }
             if (TimeOut > 30000) {
-                JOptionPane.showMessageDialog(this, "กรุณาตรวจสอบสถานะเครื่อง EDC ...");
+                MSG.WAR(this, "กรุณาตรวจสอบสถานะเครื่อง EDC ...");
                 closePort();
                 ChkResult();
             }
             ResultStr = "";
 
         } else {
-            JOptionPane.showMessageDialog(this, "Port " + PortName + " ไม่สามารถใช้งานได้...กรุณาตรวจสอบ");
+            MSG.WAR(this, "Port " + PortName + " ไม่สามารถใช้งานได้...กรุณาตรวจสอบ");
             ChkResult();
         }
     }
@@ -210,7 +210,7 @@ public class EDCControl extends JDialog implements SerialPortEventListener {
         String T01 = "";
         String TD2 = "";
         String ChkError = ResultStr.substring(3, 5);
-        //JOptionPane.showMessageDialog(this, ChkError);
+        //MSG.WAR(this, ChkError);
         if (ChkError.equals("Y6")) {
             CardCode = "";
             AppCode = "";

@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JOptionPane;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
 import util.MSG;
@@ -45,7 +44,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("กำหนดหมายเลขโต๊ะ (T001)");
-        setUndecorated(true);
+        setAlwaysOnTop(true);
         setResizable(false);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -263,8 +262,8 @@ public class SetupButtonTable extends javax.swing.JDialog {
                     Statement stmt1 = mysql.getConnection().createStatement();
                     ResultSet rs = stmt1.executeQuery(sqlChk);
                     if (rs.next()) {
-                        int icon = JOptionPane.showConfirmDialog(this, "พบข้อมูลนี้อยู่ในระบบแล้ว ท่านต้องการอัพเดตข้อมูลซ้ำหรือไม่ ?");
-                        if (icon == JOptionPane.YES_OPTION) {
+                        boolean icon = MSG.CONF(this, "พบข้อมูลนี้อยู่ในระบบแล้ว ท่านต้องการอัพเดตข้อมูลซ้ำหรือไม่ ?");
+                        if (icon) {
                             Statement stmt3 = mysql.getConnection().createStatement();
                             if (stmt3.executeUpdate("delete from tablesetup where TCode='" + txtTable.getText() + "'") > 0) {
                                 stmt3.executeUpdate(sql);

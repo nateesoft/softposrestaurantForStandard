@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -2792,7 +2791,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             TempCreditAmt = Double.parseDouble(PUtility.ConvertReal(_CreditAmt.getText()));
             //if (!DecFmt.format(double.parsedouble(PUtility.ConvertReal(_CreditAmt.getText()))).equals(DecFmt.format(_CurAmount))) {
             if (Double.parseDouble(PUtility.ConvertReal(_CreditAmt.getText())) > (Double.parseDouble(PUtility.ConvertReal(DecFmt.format(_CurAmount))))) {
-                JOptionPane.showMessageDialog(this, "ยอดรับชำระด้วยบัตรเครดิต มากกว่ายอดที่ต้องจ่ายจริง...");
+                MSG.WAR(this, "ยอดรับชำระด้วยบัตรเครดิต มากกว่ายอดที่ต้องจ่ายจริง...");
                 _CreditAmt.setValue(_CurAmount);
                 _CreditAmt.requestFocus(true);
                 _CreditAmt.selectAll();
@@ -2802,7 +2801,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     _CrCardNo.setFocusable(true);
                     _CrCardNo.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(this, "ยอดรับชำระด้วยบัตรเครดิต ต้องมากกว่า 0 บาท...");
+                    MSG.WAR(this, "ยอดรับชำระด้วยบัตรเครดิต ต้องมากกว่า 0 บาท...");
                     _CreditAmt.setValue(_CurAmount);
                     _CreditAmt.requestFocus(true);
                     _CreditAmt.selectAll();

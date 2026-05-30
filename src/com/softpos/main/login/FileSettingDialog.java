@@ -7,8 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.swing.JOptionPane;
 import com.softpos.pos.core.controller.Value;
+import util.MSG;
 
 public class FileSettingDialog extends javax.swing.JDialog {
 
@@ -476,8 +476,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
             writer.flush();
             writer.close();
 
-            System.out.println("Done");
-            JOptionPane.showMessageDialog(this, "กรุณาออกจากระบบ และเริ่มต้นใหม่อีกครั้ง !");
+            MSG.NOTICE(this, "กรุณาออกจากระบบ และเริ่มต้นใหม่อีกครั้ง !");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

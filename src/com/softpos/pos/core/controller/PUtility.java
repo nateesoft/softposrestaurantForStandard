@@ -27,9 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.JOptionPane;
 import util.AppLogUtil;
-import util.MSG;
 
 public class PUtility extends DatabaseConnection {
 

@@ -75,7 +75,6 @@ import java.util.List;
 import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -1592,7 +1591,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             balanceControl.execUpdate(sqlTurnPrintKicOff);
         }
         if (lbTotalAmount.getText().equals("0.00")) {
-            JOptionPane.showMessageDialog(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
+            MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
             String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
             balanceControl.execUpdate(sql);
@@ -3127,8 +3126,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void showMember() {
         if (Value.MemberAlready == true) {
-            int confirm = JOptionPane.showConfirmDialog(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
-            if (confirm == JOptionPane.YES_OPTION) {
+            boolean confirm = MSG.CONF(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
+            if (confirm) {
                 Value.MemberAlready = false;
                 String sql = "update tablefile set "
                         + "MemDisc='', "
@@ -3926,7 +3925,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             PPrint print = new PPrint();
             print.PrintCheckBill(txtTable.getText());
         } else {
-            JOptionPane.showMessageDialog(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + Value.useprint);
+            MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + Value.useprint);
         }
     }
 

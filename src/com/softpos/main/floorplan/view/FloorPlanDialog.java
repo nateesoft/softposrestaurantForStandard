@@ -2,7 +2,6 @@ package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.main.login.FileSettingDialog;
-import com.softpos.main.program.CheckProductNotEnough;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBill;
 import com.softpos.main.program.DisplayEJ;
@@ -68,7 +67,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -96,7 +94,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private JButton[] buttons = new JButton[100];
     private PosUserBean posUser = null;
     private PPrint pPrint = new PPrint();
-    
+
     private final ProductControl productControl = new ProductControl();
     private final FloorPlanController floorPlanControl = new FloorPlanController();
 
@@ -157,7 +155,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         btnZone1 = new javax.swing.JButton();
         btnZone2 = new javax.swing.JButton();
@@ -339,16 +336,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
-            }
-        });
-
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 0, 51));
-        jButton1.setMnemonic('\u0e22');
-        jButton1.setText("-");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
             }
         });
 
@@ -1113,17 +1100,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(panelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1141,14 +1125,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        if (ChkEJPath()) {
+        if (checkEJPath()) {
             DailyRep frm = new DailyRep(this, true);
             frm.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        if (ChkEJPath()) {
+        if (checkEJPath()) {
             MTDRep frm = new MTDRep(this, true);
             frm.setVisible(true);
         }
@@ -1331,47 +1315,41 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
     private void jMenuItem38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem38ActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(this, "ต้องการดึงรายการยกเลิกบิลล่าสุดใช่หรือไม่");
-        if (dialogResult == JOptionPane.YES_OPTION) {
-            if (dialogResult == 0) {
-                BillControl billControl = new BillControl();
-                BillNoBean billNoBean = billControl.getLastBillNo();
-                if (billNoBean != null) {
-                    String tableNo = billNoBean.getB_Table();
-                    String b_refno = billNoBean.getB_Refno();
-                    int b_cust = billNoBean.getB_Cust();
+        boolean dialogResult = MSG.CONF(this, "ต้องการดึงรายการยกเลิกบิลล่าสุดใช่หรือไม่");
+        if (dialogResult) {
+            BillControl billControl = new BillControl();
+            BillNoBean billNoBean = billControl.getLastBillNo();
+            if (billNoBean != null) {
+                String tableNo = billNoBean.getB_Table();
+                String b_refno = billNoBean.getB_Refno();
+                int b_cust = billNoBean.getB_Cust();
 
-                    TableFileControl tfControl = new TableFileControl();
-                    boolean isMore = tfControl.checkTableMoreItem(tableNo);
-                    if (isMore) {
-                        MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
-                    } else {
-                        TSaleController tSaleControl = new TSaleController();
-                        List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
-                        boolean updated = false;
-                        for (TSaleBean tSaleBean : lisTSale) {
-                            if (!updated) {
-                                String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
-                                tfControl.execUpdate(sql);
-                                updated = true;
-                            }
-                            String pcode = tSaleBean.getR_PluCode();
-                            String r_etd = tSaleBean.getR_ETD();
-                            double r_quan = tSaleBean.getR_Quan();
-                            saveToBalance(tableNo, pcode, r_etd, r_quan);
+                TableFileControl tfControl = new TableFileControl();
+                boolean isMore = tfControl.checkTableMoreItem(tableNo);
+                if (isMore) {
+                    MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
+                } else {
+                    TSaleController tSaleControl = new TSaleController();
+                    List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
+                    boolean updated = false;
+                    for (TSaleBean tSaleBean : lisTSale) {
+                        if (!updated) {
+                            String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
+                            tfControl.execUpdate(sql);
+                            updated = true;
                         }
-                        MSG.NOTICE(this, "ดึงรายการยกเลิกบิลล่าสุดเรียบร้อย โต๊ะ : " + tableNo);
-                        addButton();
+                        String pcode = tSaleBean.getR_PluCode();
+                        String r_etd = tSaleBean.getR_ETD();
+                        double r_quan = tSaleBean.getR_Quan();
+                        saveToBalance(tableNo, pcode, r_etd, r_quan);
                     }
+                    MSG.NOTICE(this, "ดึงรายการยกเลิกบิลล่าสุดเรียบร้อย โต๊ะ : " + tableNo);
+                    addButton();
                 }
             }
             // Saving code here
         }
     }//GEN-LAST:event_jMenuItem38ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        setState(JFrame.ICONIFIED);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnZone1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZone1ActionPerformed
         loadZone("T");
@@ -1660,7 +1638,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JButton btnZone5;
     private javax.swing.JButton btnZone6;
     private javax.swing.JButton btnZone7;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -1957,7 +1934,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         if (!checkExistTempRefund) {
-            JOptionPane.showMessageDialog(this, "ไม่พบบิลรายการขายสินค้า ที่ยกเลิกก่อนหน้านี้ !");
+            MSG.WAR(this, "ไม่พบบิลรายการขายสินค้า ที่ยกเลิกก่อนหน้านี้ !");
         } else {
             floorPlanControl.deleteSpTempRefund();
             BalanceControl.updateProSerTable(tableTemp, null);
@@ -2217,7 +2194,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
             sql = "delete from tempset where ptableno='" + tableNo + "';";
             floorPlanControl.execUpdate(sql);
-            
+
             exit();
 
             MainSale mainSale = new MainSale(new JFrame(), true, tableNo);
@@ -2260,7 +2237,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 showPOS(tableNo);
                             } else {
                                 if (!login.getLoginPWD().equals("")) {
-                                    JOptionPane.showMessageDialog(new JFrame(), "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
+                                    MSG.ERR(new JFrame(), "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
                                 }
                                 login.setVisible(false);
                             }
@@ -2329,7 +2306,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         return pnButton;
     }
 
-    boolean ChkEJPath() {
+    boolean checkEJPath() {
         if (POSHW.getEJounal().equals("Y")) {
             try {
                 String TempFile = POSHW.getEJDailyPath();

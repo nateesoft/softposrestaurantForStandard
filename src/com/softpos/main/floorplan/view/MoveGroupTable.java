@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
 import util.AppLogUtil;
@@ -575,8 +574,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     isSave = true;
                 } else if (t1.getTAmount() > 0 && t2.getTAmount() > 0) {
                     //โต๊ะหมายเลข 4 มีข้อมูลอยู่แล้วต้องการจะรวมโต๊ะใช่หรือไม่ ?
-                    int confirm = JOptionPane.showConfirmDialog(this, "โต๊ะหมายเลข " + t2.getTAmount() + " มีข้อมูลอยู่แล้วต้องการจะรวมโต๊ะใช่หรือไม่ ?");
-                    if (confirm == JOptionPane.YES_OPTION) {
+                    boolean confirm = MSG.CONF(this, "โต๊ะหมายเลข " + t2.getTAmount() + " มีข้อมูลอยู่แล้วต้องการจะรวมโต๊ะใช่หรือไม่ ?");
+                    if (confirm) {
                         //ข้อมูลที่ทำการย้ายจากโต๊ะ 1 ไปรวมกันกับโต๊ะ 3 จำนวน 2 รายการ
                         MSG.NOTICE(this, "ข้อมูลที่ทำการย้ายจากโต๊ะ " + t1.getTcode().toUpperCase() + " ไป โต๊ะ " + t2.getTcode().toUpperCase() + " มูลค่า " + t1.getTAmount() + "");
                         isSave = true;
@@ -596,8 +595,8 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 MSG.NOTICE(this, "ข้อมูลที่ทำการย้ายจากโต๊ะ " + t1.getTcode().toUpperCase() + " ไป โต๊ะ " + txtTable2.getText().toUpperCase() + " มูลค่า " + t1.getTAmount() + "");
                 isSave = true;
             } else if (t1.getTAmount() > 0 && t2.getTAmount() > 0) {
-                int confirm = JOptionPane.showConfirmDialog(this, "โต๊ะหมายเลข " + t2.getTcode().toUpperCase() + " มีข้อมูลอยู่แล้วต้องการจะรวมโต๊ะใช่หรือไม่ ?");
-                if (confirm == JOptionPane.YES_OPTION) {
+                boolean confirm = MSG.CONF(this, "โต๊ะหมายเลข " + t2.getTcode().toUpperCase() + " มีข้อมูลอยู่แล้วต้องการจะรวมโต๊ะใช่หรือไม่ ?");
+                if (confirm) {
                     //ข้อมูลที่ทำการย้ายจากโต๊ะ 1 ไปรวมกันกับโต๊ะ 3 จำนวน 2 รายการ
                     MSG.NOTICE(this, "ข้อมูลที่ทำการย้ายจากโต๊ะ " + t1.getTcode().toUpperCase() + " ไป โต๊ะ " + t2.getTcode().toUpperCase() + " จำนวน " + t1.getTAmount() + "");
                     isSave = true;
