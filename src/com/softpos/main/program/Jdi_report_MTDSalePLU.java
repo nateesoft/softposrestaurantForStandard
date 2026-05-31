@@ -415,8 +415,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             sumQty = sumQty.add(qty);
             BigDecimal amt = new BigDecimal(String.valueOf(GArray[i].S_Amt));
             sumAmt = sumAmt.add(amt);
-            // System.out.println("DD "+sumQty);
-            //  System.out.println("AA "+sumAmt);
         }
 
         txtSumQty.setText(intFmt.format(sumQty.doubleValue()));
@@ -445,10 +443,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             column = tblShow.getColumnModel().getColumn(i);
             column.setPreferredWidth(colSize[i]);
         }
-        DecimalFormat DoubleFmt = new DecimalFormat("##,###,##0.00");
-        DecimalFormat IntegerFmt = new DecimalFormat("##,###,##0");
-        DecimalFormat PersentFmt = new DecimalFormat("#,##0.00%");
-
         TableColumnModel tcm = tblShow.getColumnModel();
 
         DefaultTableCellRenderer d;
@@ -463,7 +457,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         d.setHorizontalAlignment(SwingConstants.RIGHT);
         tcm.getColumn(3).setCellRenderer(d);
         tcm.getColumn(4).setCellRenderer(d);
-
     }
 
 }

@@ -2,7 +2,6 @@ package printReport;
 
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.SendTerminalReportAuto;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
@@ -61,50 +60,9 @@ public class PrintDriver {
         this.height = h;
     }
 
-    public String getPrinterName() {
-        return Value.printerDriverName;
-    }
-
-    public void setPrinterName(String printerName) {
-        Value.printerDriverName = printerName;
-    }
-
-//    public void addImage(String path) {
-//        textAll += "<img src=\"" + path + "\" width=200 height=200></img>";
-//        textNormal += "...";
-//    }
-//    public void addImageQR() {
-//        textAll += "\n";
-//        textAll += "testPrint QRCode";
-//        textAll += "\n";
-//        textAll += "<tr><td><img src=\"../QRPayment.png\" width=100 height=100></img></td></tr>";
-//        textAll += "<tr><td><img src=\"https://www.w3schools.com/images/picture.jpg\" width=100 height=100></img></td></tr>";
-//        textNormal += "...";
-//    }
-    public void addText(String str, String size) {
-        textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font>";
-        textNormal += str;
-    }
-
     public void addTextIFont(String str) {
         textAll += "<tr><td " + str + "</td></tr>";
         textNormal += str + "\n";
-    }
-
-    public void addTextLn(String str, String size) {
-        textAll += "<font face=" + fontName + " size=" + size + ">" + str + "</font><br>";
-        textNormal += str + "\n";
-    }
-
-    public void addText(String str) {
-        String[] datas = str.split("=", str.length());
-        for (int i = 0; i <= str.length(); i++) {
-
-        }
-        String[] temps = new String[]{"", "", ""};
-        System.arraycopy(datas, 0, temps, 0, datas.length);
-        textAll += "<tr><td><font face=" + fontName + " size=0>" + str + "</font></td></tr>";
-        textNormal += str;
     }
 
     public void addTextLn(String str) {
@@ -112,71 +70,11 @@ public class PrintDriver {
         textNormal += str + "\n";
     }
 
-    public void printVoid(String R_Table) {
-        BalanceControl bControl = new BalanceControl();
-        List<BalanceBean> list = bControl.getBalanceIndexVoid(R_Table);
-        if (list == null) {
-            return;
-        }
-        int size = list.size();
-        for (int i = 0; i < size; i++) {
-            BalanceBean bean = (BalanceBean) list.get(i);
-            addTextLn("โต๊ะ " + R_Table + "");
-            addTextLn("*** ยกเลิกรายการ ***");
-            addTextLn("(" + bean.getR_Opt9() + ")");
-            addTextLn("UserVoid : " + bean.getCashier());
-            addTextLn("");
-            String ETD = bean.getR_ETD();
-            if (ETD.equals("E")) {
-                addTextLn("*** EAT-IN ***");
-            } else if (ETD.equals("T")) {
-                addTextLn("*** Takeaway ***");
-            } else if (ETD.equals("D")) {
-                addTextLn("*** Delivery ***");
-            } else if (ETD.equals("P")) {
-                addTextLn("*** Pinto ***");
-            } else if (ETD.equals("W")) {
-                addTextLn("*** Wholesale ***");
-            }
-            addTextLn(bean.getR_PName());
-            addTextLn("จำนวน  " + (bean.getR_Quan() * -1) + "  " + "ราคา  " + bean.getR_Price());
-            addTextLn("----------------------");
-
-            SimpleDateFormat simp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
-            addTextLn(simp.format(new Date()) + " " + bean.getMacno() + "/");
-
-            setPrinterName("KIC" + bean.getR_Kic());//set printer sample KIC1
-            printKichen();
-
-            //update r_kicprint
-            /**
-             * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
-            try {
-                String sql = "update balance "
-                        + "set r_kicprint='P' "
-                        + "where r_index='" + bean.getR_Index() + "' "
-                        + "and r_table='" + bean.getR_Table() + "'";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-
-                AppLogUtil.log(PrintDriver.class, "error", e);
-            } finally {
-                mysql.closeConnection(this.getClass());
-            }
-        }
-
-        close();
-    }
-
     public void printHTML() {
         //Print Cashier
         String text = header + textAll + footer;
+        AppLogUtil.info("printHTML: ");
+        AppLogUtil.htmlFile(text);
 
         try {
             JEditorPane editor = new JEditorPane();
@@ -189,11 +87,13 @@ public class PrintDriver {
             PrintService printService = getPrinter();
             if (printService != null) {
                 editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printHTML:...>>>  ");
             }
-            printService = null;
-        } catch (PrinterException ex) {
-            System.err.println("printHTML=>PrinterException: " + ex.getMessage());
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
         }
+
         close();
     }
 
@@ -216,7 +116,6 @@ public class PrintDriver {
         BufferedWriter output = null;
         DateConvert dc = new DateConvert();
         try {
-            SendTerminalReportAuto tm = new SendTerminalReportAuto();
             String filename = dc.dateGetToShow(dc.GetCurrentDate()).replace("/", "").replace(" ", "");
             String path = "D:/DailySales/" + filename + "MTD.html";
             PublicVar.filePath = path;
@@ -225,7 +124,7 @@ public class PrintDriver {
             output.write(text);
 
         } catch (IOException e) {
-
+            AppLogUtil.log(PrintDriver.class, "error", e);
         } finally {
             if (output != null) {
                 try {
@@ -239,7 +138,8 @@ public class PrintDriver {
     public void printHTMLKitChen(String printerName) {
         //Print Cashier
         String text = header + textAll + footer;
-//        String printer = "";
+        AppLogUtil.info("printHTMLKitChen: ");
+        AppLogUtil.htmlFile(text);
         try {
             JEditorPane editor = new JEditorPane();
             editor.setContentType("text/html");
@@ -250,26 +150,23 @@ public class PrintDriver {
 
             PrintService printService = getPrinterKitchen();
             if (printService != null) {
+                AppLogUtil.info("Process Print kic No.:...>>>  " + printerName);
                 editor.print(null, null, false, printService, attr, false);
             } else {
-                AppLogUtil.htmlFile(text);
-                System.out.println("Process Print kic No.:...>>>  " + printerName);
-                try {
-                    Thread.sleep(90 * 3);
-                } catch (Exception e) {
-                }
+                AppLogUtil.info("Cannot print printHTMLKitChen:...>>>  ");
             }
         } catch (PrinterException ex) {
-            AppLogUtil.htmlFile(ex.toString());
-            System.err.println(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
+            AppLogUtil.log(PrintDriver.class, "error", ex);
         }
+
         close();
     }
 
     public void printHTMLKitChenByKictran(String printerName) {
         //Print Cashier
         String text = header + textAll + footer;
-//        String printer = "";
+        AppLogUtil.info("printHTMLKitChenByKictran: ");
+        AppLogUtil.htmlFile(text);
         try {
             JEditorPane editor = new JEditorPane();
             editor.setContentType("text/html");
@@ -282,44 +179,18 @@ public class PrintDriver {
             if (printService != null) {
                 editor.print(null, null, false, printService, attr, false);
             } else {
-                AppLogUtil.htmlFile(text);
-                System.out.println("Process Print kic No.:...>>>  " + printerName);
-                try {
-                    Thread.sleep(90 * 3);
-                } catch (Exception e) {
-                }
+                AppLogUtil.info("Cannot print printHTMLKitChenByKictran:...>>>  " + printerName);
             }
-        } catch (PrinterException ex) {
-            AppLogUtil.htmlFile(ex.toString());
-            System.err.println(printerName + " printHTMLKitChen=>PrinterException:" + ex.getMessage());
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
         }
-        close();
-    }
 
-    public void printHTMLOrder() {
-        //Print Cashier
-        String text = header + textAll + footer;
-
-        try {
-            JEditorPane editor = new JEditorPane();
-            editor.setContentType("text/html");
-            editor.setText(text);
-            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
-
-            PrintService printService = getPrinterKitchen();
-            if (printService != null) {
-                editor.print(null, null, false, printService, attr, false);
-            } else {
-                AppLogUtil.htmlFile(text);
-            }
-        } catch (PrinterException ex) {
-            System.err.println("printHTMLOrder=>PrinterException:" + ex.getMessage());
-        }
         close();
     }
 
     public void printNormal() {
+        AppLogUtil.info("printNormal: ");
+        AppLogUtil.htmlFile(textNormal);
         try {
             JTextArea textArea = new JTextArea(textNormal);
             textArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -330,15 +201,20 @@ public class PrintDriver {
             PrintService printService = getPrinter();
             if (printService != null) {
                 textArea.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printNormal:...>>>  ");
             }
-        } catch (PrinterException ex) {
-            System.err.println("printNormal=>PrinterException:" + ex.getMessage());
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
         }
 
         close();
     }
 
     public void printKichen() {
+        AppLogUtil.info("printKichen: ");
+        AppLogUtil.htmlFile(textNormal);
+
         try {
             JTextArea textArea = new JTextArea(textNormal);
             textArea.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -348,9 +224,11 @@ public class PrintDriver {
             PrintService printService = getPrinter();
             if (printService != null) {
                 textArea.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printKichen:...>>>  ");
             }
-        } catch (PrinterException ex) {
-            System.err.println("printKichen=>PrinterException:" + ex.getMessage());
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
         }
 
         close();
@@ -367,29 +245,6 @@ public class PrintDriver {
                 }
             } else {
                 if (printService1.getName().equals(Value.printerDriverName)) {
-                    return printService1;
-                }
-            }
-        }
-
-        if (printService.length > 0) {
-            return printService[0];
-        } else {
-            return null;
-        }
-    }
-
-    private PrintService getPrinterKitchen(String printer) {
-        PrintService[] printService = PrinterJob.lookupPrintServices();
-//        printer = "Snagit 9";
-        for (PrintService printService1 : printService) {
-            if (PublicVar.printerCheckBill == true) {
-                if (printService1.getName().equals(printer)) {
-                    PublicVar.printerCheckBill = false;
-                    return printService1;
-                }
-            } else {
-                if (printService1.getName().equals(printer)) {
                     return printService1;
                 }
             }
@@ -419,7 +274,6 @@ public class PrintDriver {
 
     private PrintService getPrinterKitchenKictran(String printer) {
         PrintService[] printService = PrinterJob.lookupPrintServices();
-
         for (PrintService printService1 : printService) {
             if (printService1.getName().equals(printer)) {
                 return printService1;
@@ -440,32 +294,8 @@ public class PrintDriver {
                     UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
                             "Tahoma", java.awt.Font.PLAIN, 14)));
                 } catch (Exception e) {
-
                 }
             }
         });
     }
-
-    public Image addTextToImage(BufferedImage bufferImage, String[] text) {
-        final int VERTICLE_PADDING_PIXELS = 5;
-        final int LEFT_MARGIN_PIXELS = 5;
-        FontMetrics fm = bufferImage.createGraphics().getFontMetrics();
-        int ww = bufferImage.getWidth();
-        int hh = bufferImage.getHeight() + (text.length * (fm.getHeight() + VERTICLE_PADDING_PIXELS));
-
-        for (String s : text) {
-            ww = Math.max(ww, fm.stringWidth(s) + LEFT_MARGIN_PIXELS);
-        }
-
-        BufferedImage result = new BufferedImage(bufferImage.getHeight(), ww, hh);
-        Graphics2D g = result.createGraphics();
-        g.drawImage(bufferImage, 0, 0, null);
-
-        for (int x = 0; x < text.length; x++) {
-            g.drawString(text[x], LEFT_MARGIN_PIXELS, bufferImage.getHeight() + (x + 1) * VERTICLE_PADDING_PIXELS + x * fm.getHeight());
-        }
-
-        return result;
-    }
-
 }

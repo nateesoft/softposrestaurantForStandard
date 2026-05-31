@@ -306,7 +306,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             PrintCreditDriver(MacNo1, MacNo1, CashNo1, CashNo2);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());

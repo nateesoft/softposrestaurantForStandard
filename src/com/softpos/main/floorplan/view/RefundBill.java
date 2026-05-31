@@ -407,11 +407,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         if (loadDataFromBillNo() && checkPermit() || PublicVar.ReturnPermitRefund == true) {
             if (MSG.CONF(this, "ยืนยันการยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " Yes/No ?")) {
                 updateDatabaseForRefund();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(RefundBill.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
                 POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
                 prn.Print_Head_EJ();
                 prn.PrintBillRefund(BillNo);

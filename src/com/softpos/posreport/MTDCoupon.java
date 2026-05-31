@@ -365,7 +365,7 @@ public class MTDCoupon extends javax.swing.JDialog {
             PrintSpecialCuponDriver(MacNo1, MacNo2);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(PublicVar.HWrec_Heading1);
                     prn.print(PublicVar.HWrec_Heading2);

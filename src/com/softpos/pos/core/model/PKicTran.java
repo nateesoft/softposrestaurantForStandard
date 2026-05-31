@@ -8,9 +8,8 @@ package com.softpos.pos.core.model;
 ////
 
 import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.pos.core.model.BalanceBean;
-import com.softpos.pos.core.model.ProductBean;
 import static com.softpos.pos.core.controller.BranchControl.updateKicItemNo;
+import com.softpos.util.AppLogUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.text.ParseException;
@@ -18,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import com.softpos.util.DateConvert;
+import java.sql.SQLException;
 
 /**
  *
@@ -62,8 +62,9 @@ public class PKicTran {
     public static ArrayList<PKicTranBean> getKicTran(String tableNo) {
         DateConvert dc = new DateConvert();
         ArrayList<PKicTranBean> list = new ArrayList();
+        MySQLConnect mysql = new MySQLConnect();
+        
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sql = "select pitemno, pcode, pindex, ptable, ptimein, pqty,"
                     + " pflage, petd,R_UrgentFoodItemName "
@@ -76,8 +77,7 @@ public class PKicTran {
             ProductControl ProductControl = new ProductControl();
             while (rs.next()) {
                 PKicTranBean kicTranBean = new PKicTranBean();
-                ProductBean bean = new ProductBean();
-                bean = ProductControl.getData(rs.getString("pcode"));
+                ProductBean bean = ProductControl.getData(rs.getString("pcode"));
                 kicTranBean.setpItemNo(rs.getString("pitemno"));
                 kicTranBean.setpCode(rs.getString("pcode"));
                 kicTranBean.setpDesc(bean.getPDesc());
@@ -88,7 +88,7 @@ public class PKicTran {
                 kicTranBean.setpFlage(rs.getString("pflage"));
                 String etd = rs.getString("petd");
                 String pdesc = rs.getString("R_UrgentFoodItemName");
-                if (pdesc.isEmpty() || pdesc == null || pdesc.equals("") || pdesc.equals("null")) {
+                if (null == pdesc || pdesc.equals("") || pdesc.equals("null")) {
                     pdesc = "ตามทั้งโต๊ะ";
                 }
                 if (etd.equals("E")) {
@@ -114,10 +114,13 @@ public class PKicTran {
                 list.add(kicTranBean);
                 rs.close();
             }
+            
+        } catch (SQLException | ParseException e) {
+            AppLogUtil.log(PKicTran.class, "error", e);
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            System.out.println(e.toString());
         }
+        
         return list;
     }
 

@@ -368,7 +368,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MTDPrintCreditDriver();
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());

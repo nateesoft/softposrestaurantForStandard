@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class FileSettingDialog extends javax.swing.JDialog {
@@ -478,7 +479,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
             MSG.NOTICE(this, "กรุณาออกจากระบบ และเริ่มต้นใหม่อีกครั้ง !");
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            AppLogUtil.log(FileSettingDialog.class, "error", e);
         }
     }
 

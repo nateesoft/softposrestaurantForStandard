@@ -316,7 +316,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             PrintVoidDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());

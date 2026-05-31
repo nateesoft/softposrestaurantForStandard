@@ -55,11 +55,8 @@ public class Login extends javax.swing.JDialog {
         checkUpdate();
         PublicVar.loadFromDelphiBOR = Boolean.parseBoolean(ConfigFile.getProperties("loadFromDelphiBOR"));
         PublicVar.picturePath = ConfigFile.getProperties("picturePath");
-        try {
-            ClearTablefileNotUse();
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        clearTablefileNotUse();
     }
 
     @SuppressWarnings("unchecked")
@@ -420,8 +417,8 @@ public class Login extends javax.swing.JDialog {
     private void checkUserLogin() {
         final String loginname = txtUser.getText();
         final String password = txtPass.getText();
-        
-        AppLogUtil.info("checkUserLogin: " + loginname);
+
+        AppLogUtil.info("Login by username: " + loginname);
 
         PublicVar.printerStation = ConfigFile.getProperties("printerStation");
         PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
@@ -433,7 +430,7 @@ public class Login extends javax.swing.JDialog {
 
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
-            
+
             clearlogin();
             return;
         }
@@ -562,6 +559,9 @@ public class Login extends javax.swing.JDialog {
             @Override
             protected void done() {
                 Login.this.setVisible(false);
+                
+                
+                AppLogUtil.info("Login success into floorplan by username: " + loginname);
                 FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
                 floorPlanDialog.setVisible(true);
             }
@@ -629,20 +629,23 @@ public class Login extends javax.swing.JDialog {
         }
     }
 
-    private void ClearTablefileNotUse() throws SQLException {
+    private void clearTablefileNotUse() {
         MySQLConnect mysql = new MySQLConnect();
-        mysql.open(Login.class);
-        String sql = "select * from balance limit 1";
-        ResultSet rs = mysql.executeQuery(sql);
-        if (!rs.next()) {
-            String sqlTablefile = "update tablefile set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
-            mysql.executeUpdate(sqlTablefile);
-            System.out.println(sqlTablefile);
+        try {
+            mysql.open(Login.class);
+            String sql = "select * from balance limit 1";
+            try (ResultSet rs = mysql.executeQuery(sql)) {
+                if (!rs.next()) {
+                    String sqlTablefile = "update tablefile "
+                            + "set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
+                    mysql.executeUpdate(sqlTablefile);
+                }
+            }
+            mysql.closeConnection(this.getClass());
+        } catch (SQLException e) {
+            AppLogUtil.log(Login.class, "error", e);
+        } finally {
+            mysql.close();
         }
-
-        rs.close();
-        mysql.closeConnection(this.getClass());
-
     }
-
 }

@@ -30,14 +30,13 @@ public class sendMenuButttonToBorController {
             Statement stmt = mysql.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlGetMenuLocal);
             while (rs.next()) {
-                sendMgrButtonToBorBean bean = new sendMgrButtonToBorBean();
-                bean = mappingBeanMGRButton(rs);
+                sendMgrButtonToBorBean bean = mappingBeanMGRButton(rs);
                 listMGRButtonSetup.add(bean);
             }
             rs.close();
             stmt.close();
             mysql.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
         return listMGRButtonSetup;
@@ -72,14 +71,13 @@ public class sendMenuButttonToBorController {
             Statement stmt1 = mysql.getConnection().createStatement();
             ResultSet rs1 = stmt1.executeQuery(sqlGetMenuLocal);
             while (rs1.next()) {
-                sendSoft_MenustupBean bean = new sendSoft_MenustupBean();
-                bean = mappingsendSoft_Menusetup(rs1);
+                sendSoft_MenustupBean bean = mappingsendSoft_Menusetup(rs1);
                 listSoft_menusetupSetup.add(bean);
             }
             rs1.close();
             stmt1.close();
             mysql.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
         return listSoft_menusetupSetup;

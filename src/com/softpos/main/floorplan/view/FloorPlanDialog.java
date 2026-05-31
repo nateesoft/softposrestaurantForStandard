@@ -1179,10 +1179,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         s.setVisible(true);
         if (!Value.TableSelected.equals("")) {
             setVisible(false);
+            
+            AppLogUtil.info("Open Table: " + Value.TableSelected);
             MainSale mainSale = new MainSale(this, true, Value.TableSelected);
             mainSale.setVisible(true);
-            //dispose();
-            this.setVisible(false);
         }
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
@@ -1835,7 +1835,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     public void printCheckBillFromPDA() {
         //ฟังก์ชั่นสั่งเช็คบิลสำหรับ PDA
-        System.out.println("PrintCheckBillFromPDA= loop");
+        AppLogUtil.info("PrintCheckBillFromPDA= loop");
         if (!POSHW.getTakeOrderChk().equals("Y")) {
             List<BalanceBean> listBalanceBean = BalanceControl.getBalanceForPDA();
             for (BalanceBean balanceBean : listBalanceBean) {

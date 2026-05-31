@@ -1124,7 +1124,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         try {
             size = Integer.parseInt(txtFontSize.getText());
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+            AppLogUtil.log(MGRButtonMenu.class, "error", e);
         }
         Font font;
         String fontText = "Tahoma";//cbFontList.getSelectedItem().toString()

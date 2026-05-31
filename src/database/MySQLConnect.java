@@ -11,8 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.softpos.util.AppLogUtil;
 
 public class MySQLConnect {
@@ -42,7 +40,6 @@ public class MySQLConnect {
                     HostName = data[1];
                 } else if (data[0].equalsIgnoreCase("database")) {
                     DbName = data[1];
-                    System.out.println("Database Name = " + DbName);
                     Value.DATABASE = data[1];
                 } else if (data[0].equalsIgnoreCase("user")) {
                     UserName = data[1];
@@ -130,7 +127,6 @@ public class MySQLConnect {
         try (Statement stmt = con.createStatement()) {
             return stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, e);
             AppLogUtil.log(MySQLConnect.class, "error", e);
             return 0;
         }
@@ -146,7 +142,6 @@ public class MySQLConnect {
             currentStatement = con.createStatement();
             return currentStatement.executeQuery(sql);
         } catch (SQLException e) {
-            Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, e);
             AppLogUtil.log(MySQLConnect.class, "error", e);
             return null;
         }
@@ -168,7 +163,6 @@ public class MySQLConnect {
                 MySQLConstants.MYSQL_CONNECT.remove(System.identityHashCode(con));
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(MySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
                 AppLogUtil.log(MySQLConnect.class, "error", ex);
             }
             con = null;

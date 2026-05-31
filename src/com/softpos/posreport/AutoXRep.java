@@ -544,7 +544,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     }
 
                 } else if (!Value.getComPort().equals("NONE")) {
-                    if (prn.OpenPrint(Value.getComPort())) {
+                    if (prn.openPrint(Value.getComPort())) {
                         if (chkTerminal.isSelected()) {
                             ProcessTerminal();
                         }

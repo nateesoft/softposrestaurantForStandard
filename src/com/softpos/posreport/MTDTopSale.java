@@ -532,7 +532,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         if (Value.printdriver) {
             PrintTopSaleDriver("000", "999", "0000", "9999", Group1, Group2, CntOrder);
         } else if (!Value.getComPort().equals("NONE")) {
-            if (prn.OpenPrint(Value.getComPort())) {
+            if (prn.openPrint(Value.getComPort())) {
                 prn.InitPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());

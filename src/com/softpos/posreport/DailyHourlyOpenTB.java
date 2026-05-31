@@ -351,7 +351,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
             PrintHourlyByCustDriver();
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());

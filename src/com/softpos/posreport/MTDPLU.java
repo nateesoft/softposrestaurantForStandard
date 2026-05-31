@@ -629,7 +629,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             MTDPluPrintDriver();
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
@@ -734,13 +734,9 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
-//            String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
-//                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
-//                    + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
                     + "where s_date between'" + dc.dateDatabase(DateFrom) + "' and '" + dc.dateDatabase(DateTo) + "' and s_dept between'" + txtMacNo1.getText() + "' and '" + txtMacNo2.getText() + "' "
                     + "and s_pcode between'" + txtPlu1.getText() + "' and '" + txtPlu2.getText() + "' group  by s_pcode order by s_dept,s_pcode";
-//            System.out.println(SqlQuery);
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             TempGroup = "";

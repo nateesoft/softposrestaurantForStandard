@@ -141,7 +141,6 @@ public class TextToImage {
                     height = (text.size() * 17);
                 }
 
-                //System.out.println(width+" X "+height);
                 iter = ImageIO.getImageWritersByFormatName(formatImage);
                 if (iter.hasNext()) {
                     writer = iter.next();
@@ -169,15 +168,14 @@ public class TextToImage {
 
                 writer.setOutput(imageOut);
                 writer.write(new IIOImage(txtImg, null, null));
-                //System.out.println("Write complete!" + gImage.getBackground());
                 success = true;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 success = false;
             } finally {
                 if (imageOut != null) {
                     try {
                         imageOut.close();
-                    } catch (Exception ex) {
+                    } catch (IOException ex) {
                         System.err.println("TextToImage: failed to close stream: " + ex.getMessage());
                     }
                 }

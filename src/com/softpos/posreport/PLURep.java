@@ -730,14 +730,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             String SqlQuery = "select *from t_sale where macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
                     + "and cashier between '" + CashNo1 + "' and '" + CashNo2 + "' "
                     + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
-                    //                    + "and r_plucode between'" + Plu1 + "' and '" + Plu2 + "' "
                     + "and r_void<>'V' and r_refund<>'V' Order by r_group,r_plucode";
-//            String SqlQuery = "select *from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
-//                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
-//                    + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
-//                    + "and (r_plucode>='" + Plu1 + "') and (r_plucode<='" + Plu2 + "') "
-//                    + "and (r_void<>'V') and (r_refund<>'V') Order by r_group,r_plucode";
-//            System.out.println(SqlQuery);
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();
             TempGroup = "";

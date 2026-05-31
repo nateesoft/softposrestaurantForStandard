@@ -57,8 +57,9 @@ public class DateUtil {
         SimpleDateFormat simp = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
         try {
             return simp.parse(dateTimeString);
-        } catch (ParseException ex) {
-            Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+
         }
         return null;
     }
@@ -200,31 +201,6 @@ public class DateUtil {
         return count;
     }
 
-    public static void showDateDetail(Calendar date) {
-        System.out.println();
-        System.out.println("date.getTime()   = " + date.getTime());
-        System.out.println("  date.get(Calendar.DATE)          = " + date.get(Calendar.DATE));
-        System.out.println("  date.get(Calendar.MONTH )        = " + (date.get(Calendar.MONTH)));
-        System.out.println("  date.get(Calendar.YEAR)          = " + date.get(Calendar.YEAR));
-        System.out.println("  date.get(Calendar.DAY_OF_MONTH)  = " + date.get(Calendar.DAY_OF_MONTH));
-        System.out.println("  date.get(Calendar.DAY_OF_WEEK)   = " + date.get(Calendar.DAY_OF_WEEK));
-        System.out.println("  date.get(Calendar.DAY_OF_WEEK_IN_MONTH) = " + date.get(Calendar.DAY_OF_WEEK_IN_MONTH));
-        System.out.println("  date.get(Calendar.DAY_OF_YEAR)   = " + date.get(Calendar.DAY_OF_YEAR));
-        System.out.println("  date.get(Calendar.WEEK_OF_MONTH) = " + date.get(Calendar.WEEK_OF_MONTH));
-        System.out.println("  date.get(Calendar.WEEK_OF_YEAR)  = " + date.get(Calendar.WEEK_OF_YEAR));
-        System.out.println("  date.get(Calendar.HOUR)          = " + date.get(Calendar.HOUR));
-        System.out.println("  date.get(Calendar.HOUR_OF_DAY)   = " + date.get(Calendar.HOUR_OF_DAY));
-        System.out.println("  date.get(Calendar.MINUTE)        = " + date.get(Calendar.MINUTE));
-        System.out.println("  date.get(Calendar.SECOND)        = " + date.get(Calendar.SECOND));
-        System.out.println("  date.get(Calendar.MILLISECOND)   = " + date.get(Calendar.MILLISECOND));
-        System.out.println();
-        System.out.println("  date.getMaximum(Calendar.DAY_OF_MONTH) = " + date.getMaximum(Calendar.DAY_OF_MONTH) + " ผิด");
-        System.out.println("  date.getMaximum(Calendar.MONTH)        = " + date.getMaximum(Calendar.MONTH) + " ผิด");
-        System.out.println("  date.getMinimum(Calendar.DAY_OF_MONTH) = " + date.getMinimum(Calendar.DAY_OF_MONTH) + " ผิด");
-        System.out.println("  date.getMinimum(Calendar.MONTH)        = " + date.getMinimum(Calendar.MONTH) + " ผิด");
-        System.out.println("  date.getMinimalDaysInFirstWeek()       = " + date.getMinimalDaysInFirstWeek());
-    }
-
     public static GregorianCalendar fusionDate(Date day, Date time) {
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
         SimpleDateFormat month = new SimpleDateFormat("M", Locale.ENGLISH);
@@ -232,8 +208,7 @@ public class DateUtil {
         SimpleDateFormat hour = new SimpleDateFormat("H", Locale.ENGLISH);
         SimpleDateFormat minute = new SimpleDateFormat("m", Locale.ENGLISH);
         SimpleDateFormat second = new SimpleDateFormat("s", Locale.ENGLISH);
-        GregorianCalendar cal = null;
-        cal = new GregorianCalendar(
+        GregorianCalendar cal = new GregorianCalendar(
                 Integer.parseInt(year.format(day)),
                 Integer.parseInt(month.format(day)) - 1,
                 Integer.parseInt(date.format(day)),
@@ -245,7 +220,6 @@ public class DateUtil {
     }
 
     public static GregorianCalendar convertDateToCal(Date day) {
-
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
         SimpleDateFormat month = new SimpleDateFormat("M", Locale.ENGLISH);
         SimpleDateFormat date = new SimpleDateFormat("d", Locale.ENGLISH);
@@ -404,10 +378,7 @@ public class DateUtil {
     }
 
     public static String lunarStay(GregorianCalendar lunarLanding, GregorianCalendar lunarDeparture) {
-        //System.out.println("LunarLanding := "+lunarLanding.getTime());
-        //System.out.println("LunarDeparture := "+lunarDeparture.getTime());
         long lunarStay = getDistanceSeconds(lunarLanding, lunarDeparture);
-        //System.out.println("Lunar stay = " + calcHMS(lunarStay));
         return calcHMS(lunarStay);
     }
 

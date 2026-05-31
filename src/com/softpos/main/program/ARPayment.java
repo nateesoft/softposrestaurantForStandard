@@ -2144,7 +2144,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             if (Value.printdriver) {
                 PrintBillArDriver(XRef_No, ArCode, ReferentNo);
             } else {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
@@ -2355,7 +2355,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             if (Value.printdriver) {
                 RetVal = true;
             } else {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.closePrint();
                     RetVal = true;
                 }

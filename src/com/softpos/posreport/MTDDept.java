@@ -7,6 +7,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -20,8 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.DateChooseDialog;
@@ -306,7 +305,7 @@ public class MTDDept extends javax.swing.JDialog {
             PrintGroupDriver(GArray, Found);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
@@ -543,8 +542,6 @@ public class MTDDept extends javax.swing.JDialog {
     }
 
     public void bntViewClick() {
-        String TDate = txtDate1.getText();
-
         try {
             TDate1 = DatefmtShow.parse(txtDate1.getText());
             TDate2 = DatefmtShow.parse(txtDate2.getText());
@@ -558,7 +555,6 @@ public class MTDDept extends javax.swing.JDialog {
             InitScreen();
         } catch (ParseException ex) {
             MSG.ERR(this, "กรุณาป้อนวันที่ให้ถูกต้อง (Format=dd/MM/yyyy EXP 01/01/2009)");
-            Logger.getLogger(MTDTerminal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1136,7 +1132,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 double b_nettotal = rs.getDouble("b_nettotal");
                 double b_vat = rs.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "E", "0", 0.00, 0.00, 0.00});
@@ -1153,7 +1149,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 double b_nettotal = rs4.getDouble("b_nettotal");
                 double b_vat = rs4.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "T", "0", 0.00, 0.00, 0.00});
@@ -1168,7 +1164,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 double b_nettotal = rsD.getDouble("b_nettotal");
                 double b_vat = rsD.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "D", "0", 0.00, 0.00, 0.00});

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,9 +54,6 @@ public final class DateChooseDialog extends javax.swing.JDialog {
         spYear.setEditor(new JSpinner.NumberEditor(spYear, "####0"));
         tblCalendar.requestFocus();
         showCalendar();
-
-        //tblCalendar.requestFocus(true);
-        //System.out.println("Start");
     }
 
     public DateChooseDialog(java.awt.Frame parent, boolean modal, Point point) {
@@ -243,21 +241,17 @@ public final class DateChooseDialog extends javax.swing.JDialog {
 }//GEN-LAST:event_tblCalendarMouseReleased
 
     private void tblCalendarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblCalendarKeyReleased
-//        if(evt.getKeyCode()== evt.VK_ENTER){
-//            initSelectDate();
-//        }
+
 }//GEN-LAST:event_tblCalendarKeyReleased
 
     private void cmdForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdForwardActionPerformed
         curDay.add(Calendar.MONTH, +1);
         showCalendar();
-        //       System.out.println("Forward");
 }//GEN-LAST:event_cmdForwardActionPerformed
 
     private void cmdBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBackActionPerformed
         curDay.add(Calendar.MONTH, -1);
         showCalendar();
-        //       System.out.println("back");
 }//GEN-LAST:event_cmdBackActionPerformed
 
     private void cbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMonthActionPerformed
@@ -265,53 +259,65 @@ public final class DateChooseDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cbMonthActionPerformed
 
     private void spYearStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spYearStateChanged
-        //System.out.println("<<<DDDDD>>>");
         doInputAction();
     }//GEN-LAST:event_spYearStateChanged
 
 private void cbMonthKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbMonthKeyPressed
-    if (evt.getKeyCode() == evt.VK_ESCAPE) {
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         selectDate = null;
         dispose();
     }
 }//GEN-LAST:event_cbMonthKeyPressed
 
 private void tblCalendarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblCalendarKeyPressed
-    if (evt.getKeyCode() == evt.VK_ESCAPE) {
-        selectDate = null;
-        dispose();
-    } else if (evt.getKeyCode() == evt.VK_ENTER) {
-        initSelectDate();
-    } else if (evt.getKeyCode() == evt.VK_UP) {
-        int index = tblCalendar.getSelectedRow();
-        if (index == 0) {
-            curDay.add(Calendar.MONTH, +1);
-            showCalendar();
-            tblCalendar.setRowSelectionInterval(0, index);
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_ESCAPE:
+            selectDate = null;
+            dispose();
+            break;
+        case KeyEvent.VK_ENTER:
+            initSelectDate();
+            break;
+        case KeyEvent.VK_UP: {
+            int index = tblCalendar.getSelectedRow();
+            if (index == 0) {
+                curDay.add(Calendar.MONTH, +1);
+                showCalendar();
+                tblCalendar.setRowSelectionInterval(0, index);
+            }
+            break;
         }
-    } else if (evt.getKeyCode() == evt.VK_DOWN) {
-        int index = tblCalendar.getSelectedRow();
-        if (index == 5) {
-            curDay.add(Calendar.MONTH, -1);
-            showCalendar();
-            tblCalendar.setRowSelectionInterval(0, index);
+        case KeyEvent.VK_DOWN: {
+            int index = tblCalendar.getSelectedRow();
+            if (index == 5) {
+                curDay.add(Calendar.MONTH, -1);
+                showCalendar();
+                tblCalendar.setRowSelectionInterval(0, index);
+            }
+            break;
         }
-    } else if (evt.getKeyCode() == evt.VK_LEFT) {
-        int index = tblCalendar.getSelectedColumn();
-        int inrow = tblCalendar.getSelectedRow();
-        if (index == 0) {
-            curDay.add(Calendar.YEAR, -1);
-            showCalendar();
-            tblCalendar.setRowSelectionInterval(0, inrow);
+        case KeyEvent.VK_LEFT: {
+            int index = tblCalendar.getSelectedColumn();
+            int inrow = tblCalendar.getSelectedRow();
+            if (index == 0) {
+                curDay.add(Calendar.YEAR, -1);
+                showCalendar();
+                tblCalendar.setRowSelectionInterval(0, inrow);
+            }
+            break;
         }
-    } else if (evt.getKeyCode() == evt.VK_RIGHT) {
-        int index = tblCalendar.getSelectedColumn();
-        int inrow = tblCalendar.getSelectedRow();
-        if (index == 6) {
-            curDay.add(Calendar.YEAR, +1);
-            showCalendar();
-            tblCalendar.setRowSelectionInterval(0, inrow);
+        case KeyEvent.VK_RIGHT: {
+            int index = tblCalendar.getSelectedColumn();
+            int inrow = tblCalendar.getSelectedRow();
+            if (index == 6) {
+                curDay.add(Calendar.YEAR, +1);
+                showCalendar();
+                tblCalendar.setRowSelectionInterval(0, inrow);
+            }
+            break;
         }
+        default:
+            break;
     }
 }//GEN-LAST:event_tblCalendarKeyPressed
 
@@ -530,15 +536,12 @@ private void tblCalendarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 sDate.set(Calendar.MONTH, month);
                 sDate.set(Calendar.DAY_OF_MONTH, dayn);
 
-                //System.out.println("Your Select Date is "+dateShowFmt.format(sDate.getTime()));
-                //System.out.println("Today : "+dateShowFmt.format(new Date()));
                 selectDate = sDate;
                 dispose();
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 MSG.ERR(null, "Input Year Incorrect!!!");
                 selectDate = null;
             }
-            //System.out.println("Your Select Date is " + dateShowFmt.format(selectDate.getTime()));
         }
     }
 
@@ -553,13 +556,13 @@ private void tblCalendarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private void doInputAction() {
         int month = cbMonth.getSelectedIndex();
         int year = Integer.parseInt(String.valueOf(spYear.getValue()));
-//        System.out.println("MY "+month+ " "+year);
         curDay = new GregorianCalendar(year, month, 1);
         showCalendar();
     }
 
     private class TimeShow implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             lbToday.setText("วันนี้ : " + df.format(new Date()));
         }

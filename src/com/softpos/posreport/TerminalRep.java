@@ -303,7 +303,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                         String amt = frec.DeliveryAmt + "";
                         String cust = frec.DeliveryCust + "";
                         String net = frec.DeliveryNet + "";
-                        System.out.println(amt + ":" + cust + ":" + net);
+                        AppLogUtil.info(amt + ":" + cust + ":" + net);
                     }
                     if (rs.getString("b_etd").equals("P")) {
                         frec.PintoCnt++;

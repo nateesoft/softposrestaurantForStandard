@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.AppLogUtil;
 import java.io.IOException;
 import java.util.*;
 import javax.mail.*;
@@ -34,10 +35,10 @@ public class SendEmail {
 
             Transport.send(message);
 
-            System.out.println("ส่งข้อมูลการแจ้งปัญหาของท่านไปยังทีมงาน Support โปรแกรมเรียบร้อยแล้ว");
+            AppLogUtil.info("ส่งข้อมูลการแจ้งปัญหาของท่านไปยังทีมงาน Support โปรแกรมเรียบร้อยแล้ว");
             return true;
         } catch (MessagingException e) {
-            System.err.println("พบข้อผิดพลาดในการส่งข้อมูล\n" + e.getMessage());
+            AppLogUtil.log(SendEmail.class, "error", e);
             return false;
         }
     }

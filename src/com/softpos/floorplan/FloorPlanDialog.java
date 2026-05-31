@@ -139,19 +139,19 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         PosControl.logout();
                         System.exit(0);
                     }
-                    System.out.println("loadHeaderTab()");
+                    AppLogUtil.info("loadHeaderTab()");
                     addButton();
-                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-                        printCheckBillFromPDA();
-                    }
-                    if (i == 9) {
-                        i = 0;
-                    }
-                    try {
-                        System.out.println("Thread.sleep(" + refresh + " * 1000)");
-                        Thread.sleep(refresh * 1000);
-                    } catch (InterruptedException ex) {
-                    }
+//                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+//                        printCheckBillFromPDA();
+//                    }
+//                    if (i == 9) {
+//                        i = 0;
+//                    }
+//                    try {
+//                        System.out.println("Thread.sleep(" + refresh + " * 1000)");
+//                        Thread.sleep(refresh * 1000);
+//                    } catch (InterruptedException ex) {
+//                    }
                 }
             }).start();
 
@@ -1866,7 +1866,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     public void printCheckBillFromPDA() {
         //ฟังก์ชั่นสั่งเช็คบิลสำหรับ PDA
-        System.out.println("PrintCheckBillFromPDA= loop");
+        AppLogUtil.info("PrintCheckBillFromPDA= loop");
         if (!POSHW.getTakeOrderChk().equals("Y")) {
             List<BalanceBean> listBalanceBean = BalanceControl.getBalanceForPDA();
             for (BalanceBean balanceBean : listBalanceBean) {
@@ -1888,10 +1888,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             Value.CASHIER = "";
             clearTemp();
             PosControl.logout();
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-            }
+
             System.exit(0);
         } else {
             PublicVar.countRound = 0;
@@ -2517,10 +2514,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     public void showTime() {
         jMenu9.setText(dateConvertTimeShow.dateGetToShow(dateConvertTimeShow.GetCurrentDate()).replace(" ", "") + " " + dateConvertTimeShow.GetCurrentTime() + " USER " + Value.CASHIER);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-        }
     }
 
 }

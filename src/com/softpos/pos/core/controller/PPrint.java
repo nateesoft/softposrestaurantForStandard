@@ -75,7 +75,6 @@ public class PPrint {
     private boolean EJPrint = false;
     private POSHWSetup POSHW;
     private POSConfigSetup CONFIG;
-    private String Regid;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
@@ -85,12 +84,11 @@ public class PPrint {
         CONFIG = POSConfigSetup.Bean();
     }
 
-    public boolean OpenPrint(String PortName) {
-        System.out.println("OpenPrint");
+    public boolean openPrint(String PortName) {
+        AppLogUtil.info("OpenPrint");
         if (OpenStatus) {
             return OpenStatus;
         }
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getPRNTYPE().equals("6")) {
             OpenStatus = false;
             portList = CommPortIdentifier.getPortIdentifiers();
@@ -102,8 +100,10 @@ public class PPrint {
                             serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                         } catch (PortInUseException e) {
                             System.err.println("Can not Open Port...1");
+                            AppLogUtil.log(PPrint.class, "error", e);
                         } catch (RuntimeException re) {
                             System.err.println("Com Port ไม่สามารถใช้งานได้ " + portId.getName());
+                            AppLogUtil.log(PPrint.class, "error", re);
                         }
                         try {
                             outputStream = serialPort.getOutputStream();
@@ -177,7 +177,6 @@ public class PPrint {
     }
 
     public void OpenDrawer() {
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!POSHW.getDRPort().equals("NONE") && POSHW.getDRType().equals("1")) {
             String TempRate = POSHW.getDRCOM().trim();
             byte Rate = 49;
@@ -201,17 +200,18 @@ public class PPrint {
     }
     String PrinterName = "";
 
-    public void OpenDrawerDriver() {
+    public void openDrawerDriver() {
         PrinterName = Value.printerDriverName;
+
         byte[] open = {27, 112, 48, 55, 121};
-        String printer = PrinterName;
         PrintServiceAttributeSet printserviceattributeset = new HashPrintServiceAttributeSet();
-        printserviceattributeset.add(new PrinterName(printer, null));
+        printserviceattributeset.add(new PrinterName(PrinterName, null));
         PrintService[] printservice = PrintServiceLookup.lookupPrintServices(null, printserviceattributeset);
         if (printservice.length == 0) {
-            System.err.println("Printer not found");
+            AppLogUtil.info("openDrawerDriver: Printer not found !!!");
             return;
         }
+
         PrintService pservice = printservice[0];
         DocPrintJob job = pservice.createPrintJob();
         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
@@ -220,7 +220,7 @@ public class PPrint {
         try {
             job.print(doc, aset);
         } catch (PrintException ex) {
-            System.err.println(ex.getMessage());
+            AppLogUtil.log(PPrint.class, "error", ex);
         }
     }
 
@@ -235,11 +235,7 @@ public class PPrint {
             outputStream.flush();
             LineCount = 0;
         } catch (IOException ex) {
-            if (ex.getMessage().contains("nativeDrain")) {
-                //System.err.println(ex.getMessage());
-            } else {
-                System.err.println(ex.getMessage());
-            }
+            AppLogUtil.log(PPrint.class, "error", ex);
         }
     }
 
@@ -251,8 +247,7 @@ public class PPrint {
                 outputStream.write(Str);
                 outputStream.flush();
             } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-                //System.err.println(ex.getMessage());
+                AppLogUtil.log(PPrint.class, "error", ex);
             }
         }
         if (Stye == 2) {
@@ -415,7 +410,6 @@ public class PPrint {
     }
 
     public void Print_Head_EJ() {
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         String TempFile = POSHW.getEJDailyPath() + "/tempbill.txt";
         File fObject = new File(TempFile);
         if (fObject.canRead()) {
@@ -432,8 +426,7 @@ public class PPrint {
         TextWrite.writeToText(TempFile, POSHW.getHeading2());
         TextWrite.writeToText(TempFile, POSHW.getHeading3());
         TextWrite.writeToText(TempFile, POSHW.getHeading4());
-        Cposhwsetup();
-        TextWrite.writeToText(TempFile, "REG ID :" + Regid);
+        TextWrite.writeToText(TempFile, "REG ID :" + POSHW.getMacNo());
         EJPrint = true;
     }
 
@@ -442,10 +435,10 @@ public class PPrint {
     public void print(String PrintMsg) {
         if (isPrintOutTest) {
 
-            System.out.println("----------PRINT OUT TEST-----------");
+            AppLogUtil.info("----------PRINT OUT TEST-----------");
             isPrintOutTest = false;
         }
-        System.out.println(PrintMsg);
+        AppLogUtil.info(PrintMsg);
         if (POSHW.getPRNTYPE().equals("6")) {
             try {
                 XLine1 = PrintMsg + "\n";
@@ -512,6 +505,7 @@ public class PPrint {
                 System.err.println(ex.getMessage());
             }
         }
+
         POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
         String TempFile = bean.getEJDailyPath() + "/log" + Value.MACNO + ".gif";
         TextWriter TextWrite = new TextWriter();
@@ -519,6 +513,7 @@ public class PPrint {
         if (!fObject.canRead()) {
             TextWrite.writeToText(TempFile, "");
         }
+
         TextWrite.writeToText(TempFile, PrintMsg);
         if (EJPrint) {
             String TempBill = POSHW.getEJDailyPath() + "/tempbill.txt";
@@ -531,7 +526,7 @@ public class PPrint {
     }
 
     public void closePrint() {
-        System.out.println("Close Printer");
+        AppLogUtil.info("Close Printer");
         if (!OpenStatus) {
             return;
         }
@@ -568,14 +563,13 @@ public class PPrint {
 
     public void PrintHeader() {
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+                print("REG ID :" + POSHW.getMacNo());
                 CutPaper();
                 closePrint();
             }
@@ -586,7 +580,6 @@ public class PPrint {
 
     public void printLogin(String user) {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
             if (Value.printdriver == true) {
@@ -597,7 +590,7 @@ public class PPrint {
                 pd.printNormal();
             } else {
                 if (!Value.getComPort().equals("NONE")) {
-                    if (OpenPrint(Value.getComPort())) {
+                    if (openPrint(Value.getComPort())) {
                         InitPrinter();
                         print("Log In User : " + user);
                         print("Log In Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / ").replace("/", " / "));
@@ -620,7 +613,6 @@ public class PPrint {
 
     public void printLogout() {
         if (Value.useprint) {
-            POSHW = POSHWSetup.Bean(Value.MACNO);
             Date dateP = new Date();
 
             if (Value.printdriver == true) {
@@ -631,7 +623,7 @@ public class PPrint {
                 pd.printNormal();
             } else {
                 if (!Value.getComPort().equals("NONE")) {
-                    if (OpenPrint(Value.getComPort())) {
+                    if (openPrint(Value.getComPort())) {
                         InitPrinter();
                         print("Log Out User : " + Value.USERCODE);
                         print("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
@@ -656,7 +648,7 @@ public class PPrint {
 
     public void printerror(String RefNo) {
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print("");
                 print("มีปัญหาในการบันทึกข้อมูล  Bill-No : " + RefNo);
@@ -667,11 +659,9 @@ public class PPrint {
         }
     }
 
-    public void PrintSubTotalBillDriver(String _RefNo, String tableNo) {
+    public void printSubTotalBillDriver(String _RefNo, String tableNo) {
         String t = "";
         String t1 = "";
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         double totalDiscount = 0.00;
         BillControl billC = new BillControl();
         BillNoBean bBean = billC.getData(_RefNo);
@@ -691,7 +681,6 @@ public class PPrint {
                     discountBath += (int) (bean.getR_DiscBath());
                 }
             }
-            CONFIG = POSConfigSetup.Bean();
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     MySQLConnect mysql = new MySQLConnect();
@@ -742,8 +731,8 @@ public class PPrint {
                 if (!POSHW.getHeading4().equals("")) {
                     t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 }
-                Cposhwsetup();
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
+
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2> " + "-----------------------------------------_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + PPrint_DatefmtThai.format(dateP).replace("/", " / " + "_");
@@ -858,13 +847,8 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ส่วนลดคูปอง  " + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(bBean.getB_SubDiscAmt())) + "_";
             }
             if (bBean.getB_CuponDiscAmt() > 0) {
-//                List<Object[]> list = printCuponName(_RefNo);
-//                String CuName;
-//                if (list != null && list.size() > 0) {
-//                    CuName = list.get(0)[0].toString();
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + Space + bBean.getB_CuponName() + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + "-" + "_";
-//                }
                 if (bBean.getB_Total() != bBean.getB_NetTotal()) {
                     t += "align=right colspan=3><font face=Angsana New size=3>" + "TOTAL : " + DecFmt.format(bBean.getB_Total() - discountBath) + "_";
                 }
@@ -1016,12 +1000,8 @@ public class PPrint {
 
             for (String data1 : strs) {
                 pd.addTextIFont(data1);
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException e) {
-//                }
             }
-            OpenDrawerDriver();
+            openDrawerDriver();
             pd.printHTML();
         } else {
             List<TSaleBean> listTSale = billC.getAllTSaleNovoidSum(_RefNo);
@@ -1039,7 +1019,6 @@ public class PPrint {
                     discountBath += (int) bean.getR_DiscBath();
                 }
             }
-            CONFIG = POSConfigSetup.Bean();
 
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
@@ -1110,8 +1089,8 @@ public class PPrint {
                 }
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
 //                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
-                Cposhwsetup();
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
+
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
 //                t += "colspan=2 align=left><font face=Angsana New size=2> "
 //                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
@@ -1244,11 +1223,9 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
                     }
                 }
-//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
-//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
-                Cposhwsetup();
+
                 Date dateP = new Date();
-                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_";
+                t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
@@ -1450,7 +1427,7 @@ public class PPrint {
                 } catch (InterruptedException e) {
                 }
             }
-            OpenDrawerDriver();
+            openDrawerDriver();
             pd.printHTML();
             if (ConfigFile.getProperties("printerStation").equals("true")) {
                 PrintDriver pd1 = new PrintDriver();
@@ -1458,10 +1435,6 @@ public class PPrint {
 
                 for (String data2 : strs1) {
                     pd1.addTextIFont(data2);
-//                    try {
-//                        Thread.sleep(50);
-//                    } catch (InterruptedException e) {
-//                    }
                 }
                 pd1.printHTML();
             }
@@ -1470,7 +1443,7 @@ public class PPrint {
 
     public void PrintSubTotalBill(String _RefNo, String tableNo) {
         if (Value.printdriver == true) {
-            PrintSubTotalBillDriver(_RefNo, tableNo);
+            printSubTotalBillDriver(_RefNo, tableNo);
         } else {
             BillControl billC = new BillControl();
             BillNoBean bBean = billC.getData(_RefNo);
@@ -1485,7 +1458,7 @@ public class PPrint {
             int ItemCnt = 0;
             String VatStr;
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     OpenDrawer();
                     InitPrinter();
@@ -1497,7 +1470,6 @@ public class PPrint {
                             ItemCnt = (int) (ItemCnt + bean.getR_Quan());
                         }
                     }
-                    CONFIG = POSConfigSetup.Bean();
                     double Vat = CONFIG.getP_Vat();
                     SelectStye(14);
                     print(POSHW.getHeading1());
@@ -1505,8 +1477,7 @@ public class PPrint {
                     SelectStye(1);
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+                    print("REG ID :" + POSHW.getMacNo());
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(" ");
@@ -1775,24 +1746,22 @@ public class PPrint {
     }
 
     public void printCheckBillDriver(String tableNo) {
+        AppLogUtil.info("printCheckBillDriver table = " + tableNo);
+
         PublicVar.printerCheckBill = true;
         PrintDriver pd = new PrintDriver();
         String t = "";
         String t1 = "";//Header1
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         BalanceControl bc = new BalanceControl();
         double totalDiscount;
         String cuponCode = "";
+
         if (CONFIG.getP_PrintSum().equals("Y")) {
-            List<BalanceBean> listBeanNoVoid = null;
-            listBeanNoVoid = bc.getAllBalanceNoVoidSum(tableNo);
+            List<BalanceBean> listBeanNoVoid = bc.getAllBalanceNoVoidSum(tableNo);
             TableFileControl tCon = new TableFileControl();
-            TableFileBean tBean = null;
-            tBean = tCon.getData(tableNo);
+            TableFileBean tBean = tCon.getData(tableNo);
             int ItemCnt = 0;
             String VatStr;
-            CONFIG = POSConfigSetup.Bean();
             double totalNonVat = 0;
             totalDiscount = tBean.getProDiscAmt() + tBean.getSpaDiscAmt()
                     + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
@@ -1811,7 +1780,7 @@ public class PPrint {
             double vatPrint = ServiceControl.getDouble(tBean.getTAmount() - totalNonVat, "PAYMENT") - (totalDiscount) + tBean.getServiceAmt();
 
             if (CONFIG.getP_VatType().equals("I")) {
-                vatPrint = vatPrint * CONFIG.getP_Vat() / 107;
+                vatPrint = vatPrint * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
             }
             if (CONFIG.getP_VatType().equals("E")) {
                 vatPrint = vatPrint * CONFIG.getP_Vat() / 100;
@@ -1857,7 +1826,7 @@ public class PPrint {
                 }
             }
             t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------_";
-            Cposhwsetup();
+
             Date dateP = new Date();
             t1 += "colspan=3 align=left><font face=Angsana New size=2> "
                     + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
@@ -1923,7 +1892,6 @@ public class PPrint {
             t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
             t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + ItemCnt + " Item" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getTAmount()) + "_";
             t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
-//            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "NonVAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(totalNonVat) + "_";
 
             if (tBean.getProDiscAmt() > 0) {
                 t1 += "colspan=2 align=right><font face=Angsana New size=2>" + TAB + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getProDiscAmt()) + "_";
@@ -2015,28 +1983,13 @@ public class PPrint {
 
             for (String data1 : strsHead1) {
                 pd.addTextIFont(data1);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
-
             }
 
             for (String data : strs) {
                 pd.addTextIFont(data);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
-
             }
             for (String dataMem : strsMember) {
                 pd.addTextIFont(dataMem);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
-
             }
 
             pd.printHTML();
@@ -2049,7 +2002,6 @@ public class PPrint {
             tBean = tCon.getData(tableNo);
             int ItemCnt = 0;
             String VatStr;
-            CONFIG = POSConfigSetup.Bean();
             double vatPrint = tBean.getNetTotal();
             for (int i = 0; i < listBeanNoVoid.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBeanNoVoid.get(i);
@@ -2080,7 +2032,7 @@ public class PPrint {
                 t1 += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
             }
             t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------_";
-            Cposhwsetup();
+
             Date dateP = new Date();
             t1 += "colspan=2 align=left><font face=Angsana New size=-2> "
                     + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
@@ -2230,25 +2182,25 @@ public class PPrint {
 
             for (String data1 : strsHead1) {
                 pd.addTextIFont(data1);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                }
             }
 
             for (String data : strs) {
                 pd.addTextIFont(data);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                }
             }
             for (String data : strsMember) {
                 pd.addTextIFont(data);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                }
             }
             pd.printHTML();
         }
@@ -2258,8 +2210,6 @@ public class PPrint {
     public void printCheckBillDriverPDA(String tableNo, String emp) {
         PrintDriver pd = new PrintDriver();
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         t += "colspan=3 align=center><font face=Angsana New size=5>" + "-----------------------------------------_";
         t += "colspan=3 align=left><font face=Angsana New size=5>" + "***โต๊ะ " + tableNo + " สั่งเช็คบิล***_";
         t += "colspan=3 align=left><font face=Angsana New size=5>" + "พนักงาน..." + emp.replace("/", "") + "_";
@@ -2275,6 +2225,8 @@ public class PPrint {
     }
 
     public void PrintCheckBill(String tableNo) {
+        AppLogUtil.info("printBillCheck printdriver = " + Value.printdriver);
+
         if (Value.printdriver == true) {
             printCheckBillDriver(tableNo);
         } else {
@@ -2287,11 +2239,10 @@ public class PPrint {
             int SubLength2 = 13;
             int ItemCnt = 0;
             String VatStr;
-            CONFIG = POSConfigSetup.Bean();
             String t1 = "";
             String t2 = "";
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     TableFileControl tCon = new TableFileControl();
                     TableFileBean tBean = tCon.getData(tableNo);
                     InitPrinter();
@@ -2329,7 +2280,7 @@ public class PPrint {
                         }
                         print(t2);
                     }
-                    Cposhwsetup();
+
                     SelectStye(1);
                     print(" ");
                     Date dateP = new Date();
@@ -2520,7 +2471,7 @@ public class PPrint {
         service.submit(new Runnable() {
             @Override
             public void run() {
-                System.out.println("PrintVoidBill : Start Printing....");
+                AppLogUtil.info("PrintVoidBill : Start Printing....");
                 if (Value.printdriver == true) {
                     PrintVoidBillDriver(tableNo);
                 } else {
@@ -2532,9 +2483,8 @@ public class PPrint {
                     int SubLength = 20;
                     int SubLength2 = 13;
                     String VatStr;
-                    CONFIG = POSConfigSetup.Bean();
                     if (!Value.getComPort().equals("NONE")) {
-                        if (OpenPrint(Value.getComPort())) {
+                        if (openPrint(Value.getComPort())) {
                             InitPrinter();
                             PublicVar.P_LineCount = 0;
                             for (int i = 0; i < listBean.size(); i++) {
@@ -2545,7 +2495,7 @@ public class PPrint {
                             }
                             print(POSHW.getHeading1());
                             print(POSHW.getHeading2());
-                            Cposhwsetup();
+
                             print(" *** ใบยกเลิกรายการอาหาร *** ");
 
                             print(" ");
@@ -2665,7 +2615,6 @@ public class PPrint {
         int AmtLength = 10;
         int SubLength = 20;
         int SubLength2 = 13;
-        CONFIG = POSConfigSetup.Bean();
         if (!Value.getComPort().equals("NONE")) {
             PublicVar.P_LineCount = 0;
             for (int i = 0; i < listBean.size(); i++) {
@@ -2692,7 +2641,6 @@ public class PPrint {
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading2().trim().replace(" ", "&nbsp; ") + "_";
             }
             t += "colspan=3 align=center>_";
-            Cposhwsetup();
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + " *** ใบยกเลิกรายการอาหาร *** " + "_");
 
             t += "colspan=3 align=center>_";
@@ -2838,18 +2786,18 @@ public class PPrint {
     }
 
     public void PrintTableAction() {
-        if (Value.printdriver == true == true) {
+        if (Value.printdriver == true) {
             PrintTableActionDriver();
         } else if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
                 print("");
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("      รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน) ");
                 print("               Table Check        ");
                 Date dateP = new Date();
@@ -2908,17 +2856,17 @@ public class PPrint {
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
         Date dateP = new Date();
-        if (Value.printdriver == true == true) {
+        if (Value.printdriver == true) {
             //PrintDriver
         } else if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("   รายงานยอดการเงิน (Terminal Report)");
                 print("หมายเลขเครื่อง : " + Value.MACNO);
 
@@ -3091,9 +3039,8 @@ public class PPrint {
     }
 
     public void PrintTerminalEngForm(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
-        CONFIG = POSConfigSetup.Bean();
         Date dateP = new Date();
-        if (Value.printdriver == true == true) {
+        if (Value.printdriver == true) {
             PrintTerminalEngFormDriver(frec, CrArray, macNo);
         } else {
             if (!Value.getComPort().equals("NONE")) {
@@ -3152,10 +3099,10 @@ public class PPrint {
                 } else {
 
                 }
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print("   Daily Sale (Terminal Report)");
-                    Cposhwsetup();
+
                     print("Printed On" + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
                     print("Cashier:" + PublicVar._User + " Mac:" + macNo);
                     print("");
@@ -3351,8 +3298,6 @@ public class PPrint {
 
     private void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         Date dateP = new Date();
         if (!Value.getComPort().equals("NONE")) {
             List<Object[]> list1 = DocAnalyse(Datefmt.format(dateP) + "", Datefmt.format(dateP) + "");
@@ -3435,7 +3380,7 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "รายงานการขายยอดเงินของเครื่อง" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "(Daily Sale..Terminal Report)" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>_");
-            Cposhwsetup();
+
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Cashier:" + PublicVar._UserName + " Mac:" + macNo + "_");
 
@@ -3619,18 +3564,18 @@ public class PPrint {
     }
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray) {
-        if (Value.printdriver == true == true) {
+        if (Value.printdriver == true) {
             PrintCashierDriver(frec, CrArray);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+
+                    print("REG ID :" + POSHW.getMacNo());
                     print("   รายงานพนักงานขาย (Cashier Report)");
                     print("รหัสพนักงาน : " + frec.Cashier1);
                     Date dateP = new Date();
@@ -3845,18 +3790,18 @@ public class PPrint {
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
-        if (Value.printdriver == true == true) {
+        if (Value.printdriver == true) {
             PrintGroupDriver(GArray);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+
+                    print("REG ID :" + POSHW.getMacNo());
                     print("         รายงานการขายตามกลุ่มสินค้า");
                     print("           (Department Report)");
                     print("หมายเลขเครื่อง :" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2);
@@ -3933,8 +3878,6 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
 
         if (POSHW.getHeading1().length() >= 18) {
@@ -3955,7 +3898,7 @@ public class PPrint {
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4()) + "_";
-        Cposhwsetup();
+
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal() + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("_");
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("รายงานการขายตามกลุ่มสินค้า" + "_");
@@ -4023,14 +3966,14 @@ public class PPrint {
         Double SumTAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("      รายงานการเบิกสินค้าประจำวัน By DEPT");
                 print("แสดงรวมทุกเครื่อง");
                 print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
@@ -4088,14 +4031,14 @@ public class PPrint {
         Double SumTAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("      รายงานสรุปการเบิกสินค้า By DEPT");
                 print("สาขา  " + PublicVar.Branch_Code + " " + PUtility.DataFull(PublicVar.Branch_Name, 25));
                 print("ช่วงวันที่    " + DatefmtShow.format(TDate1) + "..." + DatefmtShow.format(TDate2));
@@ -4160,17 +4103,17 @@ public class PPrint {
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver == true == true) {
+            if (Value.printdriver == true) {
                 PrintPluDriver(GArray);
             } else {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+
+                    print("REG ID :" + POSHW.getMacNo());
                     print("         รายงานการขายตามรหัสสินค้า");
                     print("              (PLU Report)");
                     print("หมายเลขเครื่อง :" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2);
@@ -4256,8 +4199,6 @@ public class PPrint {
         Double SumWAmt = 0.0;
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         int ArraySize = GArray.length;
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -4277,7 +4218,7 @@ public class PPrint {
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
-        Cposhwsetup();
+
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG.ID :" + POSHW.getTerminal() + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "รายงานการขายตามรหัสสินค้า" + "_";
@@ -4364,14 +4305,14 @@ public class PPrint {
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("         รายงานการเบิกสินค้า By PLU");
                 print("แสดงรวมทุกเครื่อง");
                 print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
@@ -4454,14 +4395,14 @@ public class PPrint {
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("      รายงานการสรุปการเบิกสินค้า By PLU");
                 print("สาขา  " + PublicVar.Branch_Code + " " + PUtility.DataFull(PublicVar.Branch_Name, 25));
                 print("ช่วงวันที่    " + DatefmtShow.format(TDate1) + "..." + DatefmtShow.format(TDate2));
@@ -4535,14 +4476,14 @@ public class PPrint {
         Double SumS = 0.0;
         int ArraySize = HArray.length;
         if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 print("         รายงานการขายตามช่วงเวลา");
                 print("            (Hourly Report)");
                 print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
@@ -4601,14 +4542,14 @@ public class PPrint {
             BillControl billControl = new BillControl();
             BillNoBean tBean = billControl.getData(_RefNo);
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+
+                    print("REG ID :" + POSHW.getMacNo());
                     print("      ***สำเนาใบเสร็จรับเงิน " + Integer.toString(ICopy) + " ***");
                     PublicVar.P_LineCount = 0;
                     for (int i = 0; i < listBean.size(); i++) {
@@ -4617,8 +4558,6 @@ public class PPrint {
                             ItemCnt = (int) (ItemCnt + bean.getR_Quan());
                         }
                     }
-                    CONFIG = POSConfigSetup.Bean();
-                    POSHW = POSHWSetup.Bean(Value.MACNO);
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
@@ -4877,7 +4816,6 @@ public class PPrint {
         BillControl billControl = new BillControl();
         BillNoBean tBean = billControl.getData(RefNo);
         PPrint p = new PPrint();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (!Value.getComPort().equals("NONE")) {
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -4898,8 +4836,8 @@ public class PPrint {
             t += "_";
             t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
-            Cposhwsetup();
-            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_");
+
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "***สำเนาใบเสร็จรับเงิน " + Integer.toString(ICopy) + " ***" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>_");
             PublicVar.P_LineCount = 0;
@@ -4909,7 +4847,6 @@ public class PPrint {
                     ItemCnt = (int) (ItemCnt + bean.getR_Quan());
                 }
             }
-            CONFIG = POSConfigSetup.Bean();
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 Date dateP = new Date();
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
@@ -5191,18 +5128,15 @@ public class PPrint {
             BillControl bill = new BillControl();
             BillNoBean bBean = bill.getData(_RefNo);
 
-            POSHW = POSHWSetup.Bean(Value.MACNO);
-            CONFIG = POSConfigSetup.Bean();
-
             if (!Value.getComPort().equals("NONE")) {
-                if (OpenPrint(Value.getComPort())) {
+                if (openPrint(Value.getComPort())) {
                     InitPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
                     print(POSHW.getHeading3());
                     print(POSHW.getHeading4());
-                    Cposhwsetup();
-                    print("REG ID :" + Regid);
+
+                    print("REG ID :" + POSHW.getMacNo());
                     print("      ***บิลยกเลิกรายการขาย (Refund) ***");
                     print("Void User : " + PublicVar._User);
                     print("Void Date/Time : " + PUtility.CurDate());
@@ -5444,8 +5378,6 @@ public class PPrint {
         BillControl bill = new BillControl();
         BillNoBean bBean = bill.getData(_RefNo);
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {
@@ -5465,8 +5397,8 @@ public class PPrint {
 
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading3().trim() + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + POSHW.getHeading4().trim() + "_");
-        Cposhwsetup();
-        t += ("colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + Regid + "_");
+
+        t += ("colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "***" + Space + "บิลยกเลิกรายการขาย" + "***" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "***" + Space + "(Refund)***" + "_");
@@ -5699,13 +5631,11 @@ public class PPrint {
             }
 
         }
-        OpenDrawerDriver();
+        openDrawerDriver();
         pd.printHTML();
     }
 
     private void PrintTableActionDriver() {
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {
             String[] strs = POSHW.getHeading1().replace(" ", Space).split("_");
@@ -5728,7 +5658,6 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
         t += ("colspan=3 align=center><font face=Angsana New size=2>_");
 
-        Cposhwsetup();
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน)") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("Daily...Table Check" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>_");
@@ -5784,14 +5713,14 @@ public class PPrint {
         if (Value.printdriver == true) {
             printHeaderBillDriver();
         } else if (!Value.getComPort().equals("NONE")) {
-            if (OpenPrint(Value.getComPort())) {
+            if (openPrint(Value.getComPort())) {
                 InitPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
                 print(POSHW.getHeading3());
                 print(POSHW.getHeading4());
-                Cposhwsetup();
-                print("REG ID :" + Regid);
+
+                print("REG ID :" + POSHW.getMacNo());
                 CutPaper();
                 closePrint();
             }
@@ -5903,7 +5832,6 @@ public class PPrint {
     }
 
     private String[] credit(String Macno) {
-        CONFIG = POSConfigSetup.Bean();
         String[] credit = new String[]{"", ""};
 
         MySQLConnect mysql = new MySQLConnect();
@@ -6002,7 +5930,7 @@ public class PPrint {
                     nettotal = b_nettotal - b_vat;
                 }
 
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "E", "0", 0.00, 0.00, 0.00});
@@ -6025,7 +5953,7 @@ public class PPrint {
                 if (CONFIG.getP_VatType().equals("E")) {
                     nettotal = b_nettotal - b_vat;
                 }
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "T", "0", 0.00, 0.00, 0.00});
@@ -6048,7 +5976,7 @@ public class PPrint {
                 if (CONFIG.getP_VatType().equals("E")) {
                     nettotal = b_nettotal - b_vat;
                 }
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "D", "0", 0.00, 0.00, 0.00});
@@ -6110,28 +6038,6 @@ public class PPrint {
         }
 
         return listObj;
-    }
-
-    private void Cposhwsetup() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-            String billnoT = "select macno from poshwsetup limit 1";
-            ResultSet rs = stmt.executeQuery(billnoT);
-            if (rs.next()) {
-                String regid = rs.getString("macno");
-                this.Regid = regid;
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PPrint.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
     }
 
     private void printEntertain(String b_Table) {

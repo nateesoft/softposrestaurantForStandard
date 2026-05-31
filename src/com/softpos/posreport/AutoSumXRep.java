@@ -576,7 +576,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     if (ChkCashierSignOn()) {
                         if (ChkCashierClose()) {
                             if (!Value.getComPort().equals("NONE")) {
-                                if (prn.OpenPrint(Value.getComPort())) {
+                                if (prn.openPrint(Value.getComPort())) {
                                     boolean ChkProcess = false;
                                     if (chkTerminal.isSelected()) {
                                         ProcessTerminal();
@@ -2919,7 +2919,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             int Cnt2 = 0;
             if (Value.printdriver) {
 
-            } else if (prn.OpenPrint(Value.getComPort())) {
+            } else if (prn.openPrint(Value.getComPort())) {
                 prn.InitPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());

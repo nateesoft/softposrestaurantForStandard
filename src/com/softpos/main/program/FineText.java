@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
@@ -42,21 +43,17 @@ public class FineText extends javax.swing.JDialog {
 
                 txtMain = g.doc.getText(0, g.doc.getLength());
                 index = txtMain.indexOf(txtold, index);
-                //  System.out.println("txt >"+index);
                 if (index != -1) {
-
                     g.TextArea.select(index, index + txtold.length());
-
                     h.removeAllHighlights();
                     h.addHighlight(index, index + txtold.length(), BOX_HighlightPainter);
 
                 } else {
                     h.removeAllHighlights();
-
                     tf_txt.requestFocus();
                 }
-            } catch (BadLocationException ex) {
-                Logger.getLogger(FineText.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (BadLocationException e) {
+                AppLogUtil.log(FineText.class, "error", e);
             }
         }
     }

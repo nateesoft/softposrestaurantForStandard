@@ -73,11 +73,11 @@ public class PaidoutFrm extends javax.swing.JDialog {
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "หมายเหตุ :" + Space + reson);
                 pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "");
                 pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal());
-                Prn.OpenDrawerDriver();
+                Prn.openDrawerDriver();
                 pd.printHTML();
 
             } else if (!Value.getComPort().equals("NONE")) {
-                if (Prn.OpenPrint(Value.getComPort())) {
+                if (Prn.openPrint(Value.getComPort())) {
                     try {
                         //PRINT OUT
                         Prn.InitPrinter();

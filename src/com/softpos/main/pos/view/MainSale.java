@@ -43,7 +43,6 @@ import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
-import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.MenuListBean;
 import com.softpos.pos.core.model.MgrButtonSetupBean;
@@ -62,7 +61,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -184,9 +182,9 @@ public class MainSale extends javax.swing.JDialog {
         java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, screen.width, screen.height);
         sumSplit();
-        txtPluCode.setEditable(true);
-        txtPluCode.setFocusable(true);
-        txtPluCode.requestFocus();
+        txtProductCode.setEditable(true);
+        txtProductCode.setFocusable(true);
+        txtProductCode.requestFocus();
         upDateTableFile();
         showCustomerInput();
     }
@@ -252,10 +250,10 @@ public class MainSale extends javax.swing.JDialog {
 
         txtTable.setText("");
         txtCust.setText("");
-        txtPluCode.setText("");
+        txtProductCode.setText("");
         txtTable.setEditable(true);
         txtCust.setEditable(false);
-        txtPluCode.setEditable(false);
+        txtProductCode.setEditable(false);
 
         txtTable.requestFocus();
 
@@ -343,7 +341,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel6 = new javax.swing.JPanel();
         txtDisplayDiscount = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        txtPluCode = new javax.swing.JTextField();
+        txtProductCode = new javax.swing.JTextField();
         txtDiscount = new javax.swing.JTextField();
         btnPrintKic = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
@@ -733,25 +731,25 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 35, 97, 30));
 
-        txtPluCode.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        txtPluCode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-        txtPluCode.setMargin(new java.awt.Insets(2, 0, 2, 2));
-        txtPluCode.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtProductCode.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtProductCode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        txtProductCode.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        txtProductCode.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txtPluCodeFocusGained(evt);
+                txtProductCodeFocusGained(evt);
             }
         });
-        txtPluCode.addActionListener(new java.awt.event.ActionListener() {
+        txtProductCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPluCodeActionPerformed(evt);
+                txtProductCodeActionPerformed(evt);
             }
         });
-        txtPluCode.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtProductCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtPluCodeKeyPressed(evt);
+                txtProductCodeKeyPressed(evt);
             }
         });
-        jPanel6.add(txtPluCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 170, 30));
+        jPanel6.add(txtProductCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 35, 170, 30));
 
         txtDiscount.setEditable(false);
         txtDiscount.setBackground(new java.awt.Color(204, 153, 0));
@@ -1140,9 +1138,9 @@ public class MainSale extends javax.swing.JDialog {
                     txtCust.requestFocus();
                     txtCust.selectAll();
                 } else {
-                    txtPluCode.setEditable(true);
-                    txtPluCode.setBackground(Color.WHITE);
-                    txtPluCode.requestFocus();
+                    txtProductCode.setEditable(true);
+                    txtProductCode.setBackground(Color.WHITE);
+                    txtProductCode.requestFocus();
                 }
             }
             return;
@@ -1310,8 +1308,8 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
 
 private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        txtPluCode.setEditable(true);
-        txtPluCode.requestFocus();
+        txtProductCode.setEditable(true);
+        txtProductCode.requestFocus();
 
         txtCustOnExit();
     }
@@ -1331,8 +1329,8 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             }
             updateCustomerCount(customerInTable);
             txtCust.setEditable(false);
-            txtPluCode.setEditable(true);
-            txtPluCode.requestFocus();
+            txtProductCode.setEditable(true);
+            txtProductCode.requestFocus();
         } catch (NumberFormatException e) {
             MSG.ERR(this, "กรุณาป้อนจำนวนลูกค้า เป็นตัวเลขเท่านั้น...");
             PublicVar.TableRec_TCustomer = 1;
@@ -1340,7 +1338,7 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         }
     }
 
-private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPluCodeKeyPressed
+private void txtProductCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductCodeKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (!isTakeOrder()) {
         switch (evt.getKeyCode()) {
@@ -1353,7 +1351,7 @@ private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 FindProduct find = new FindProduct(new JFrame(), true);
                 find.setVisible(true);
                 if (!find.getPCode().equals("")) {
-                    txtPluCode.setText(txtPluCode.getText() + find.getPCode());
+                    txtProductCode.setText(txtProductCode.getText() + find.getPCode());
 
                 }
                 break;
@@ -1380,12 +1378,12 @@ private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         }
     }
 
-}//GEN-LAST:event_txtPluCodeKeyPressed
+}//GEN-LAST:event_txtProductCodeKeyPressed
 
 private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        txtPluCode.requestFocus();
+        txtProductCode.requestFocus();
     } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
@@ -1400,7 +1398,7 @@ private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 
             if (r_index != null && !strVoid.equalsIgnoreCase("V")) {
                 selectedOptionBill();
-                txtPluCode.requestFocus();
+                txtProductCode.requestFocus();
             }
         }
     }
@@ -1617,10 +1615,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }
     }//GEN-LAST:event_txtTableFocusGained
 
-    private void txtPluCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPluCodeFocusGained
-        txtPluCode.setEditable(true);
-        txtPluCode.requestFocus();
-    }//GEN-LAST:event_txtPluCodeFocusGained
+    private void txtProductCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductCodeFocusGained
+        txtProductCode.setEditable(true);
+        txtProductCode.requestFocus();
+    }//GEN-LAST:event_txtProductCodeFocusGained
 
     boolean isSelected = false;
 
@@ -1734,7 +1732,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new KeyBoardDialog(new JFrame(), true, 4).get(txtPluCode, 4);
+        new KeyBoardDialog(new JFrame(), true, 4).get(txtProductCode, 4);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtMember1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMember1MouseClicked
@@ -1802,9 +1800,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         PublicVar.languagePrint = "EN";
     }//GEN-LAST:event_btnLangENItemStateChanged
 
-    private void txtPluCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPluCodeActionPerformed
+    private void txtProductCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductCodeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPluCodeActionPerformed
+    }//GEN-LAST:event_txtProductCodeActionPerformed
 
     private void cancelArPaymentClick() {
         PublicVar.TempUserRec = PublicVar.TUserRec;
@@ -2163,7 +2161,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
             } else {
                 MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...ไม่สามารถกำหนด Option เพิ่มเติมได้...");
-                txtPluCode.requestFocus();
+                txtProductCode.requestFocus();
             }
         }
     }
@@ -2180,7 +2178,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     boolean seekPluCode() {
         String PluCode;
         String StrQty;
-        String TempCode = txtPluCode.getText();
+        String TempCode = txtProductCode.getText();
         PublicVar.P_Code = "";
         PublicVar.P_Status = "";
         PublicVar.P_Qty = 0.0;
@@ -2193,8 +2191,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 PluCode = TempCode.substring(index + 1);
                 if (!PUtility.ChkNumValue(StrQty)) {
                     MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
-                    txtPluCode.setText("");
-                    txtPluCode.requestFocus();
+                    txtProductCode.setText("");
+                    txtProductCode.requestFocus();
                 }
                 Qty = Double.parseDouble(StrQty);
             } else {
@@ -2212,9 +2210,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             PluCode = menuListBean.getPlucode();
                         } else {
                             MSG.ERR(this, "ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
-                            txtPluCode.setText("");
-                            txtPluCode.selectAll();
-                            txtPluCode.requestFocus();
+                            txtProductCode.setText("");
+                            txtProductCode.selectAll();
+                            txtProductCode.requestFocus();
                             return false;
                         }
                     }
@@ -2231,7 +2229,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     String TempCode2 = seekBarCode(PluCode);
                     if (TempCode2.equals("")) {
                         MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
-                        txtPluCode.setText("");
+                        txtProductCode.setText("");
                     } else {
                         PluCode = TempCode2;
                         found = true;
@@ -2239,12 +2237,12 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         PublicVar.P_Status = TempStatus;
                         PublicVar.P_Qty = Qty;
                     }
-                    txtPluCode.selectAll();
-                    txtPluCode.requestFocus();
+                    txtProductCode.selectAll();
+                    txtProductCode.requestFocus();
                 }
             } else {
                 MSG.WAR(this, "จำนวนขายต้องมากกว่า 0...");
-                txtPluCode.requestFocus();
+                txtProductCode.requestFocus();
             }
         }
 
@@ -2263,7 +2261,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     if (ChangOk) {
                         clearDataMem();
                         loadTableBalance(txtTable.getText());
-                        txtPluCode.requestFocus();
+                        txtProductCode.requestFocus();
                     }
                 }
             }
@@ -2278,7 +2276,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private boolean findPluCode() {
         String PluCode;
         String StrQty;
-        String TempCode = txtPluCode.getText();
+        String TempCode = txtProductCode.getText();
         if (TempCode != null) {
             if (TempCode.substring(0, 1).equals("*")) {
                 TempCode = TempCode.replace("*", "");
@@ -2295,8 +2293,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         //check outofstock
         if (checkOutStockList) {
             MSG.WAR(this, "สินค้ามีไม่ในสต๊อก หรือถูกยกเลิกการขายไปแล้ว กรุณาตรวจสอบ !!!");
-            txtPluCode.setText("");
-            txtPluCode.requestFocus();
+            txtProductCode.setText("");
+            txtProductCode.requestFocus();
             return false;
         }
 
@@ -2307,8 +2305,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 PluCode = TempCode.substring(index + 1);
                 if (!PUtility.ChkNumValue(StrQty)) {
                     MSG.ERR(this, "ป้อนจำนวนไม่ถูกต้อง..กรุณาป้อนใหม่...");
-                    txtPluCode.setText("");
-                    txtPluCode.requestFocus();
+                    txtProductCode.setText("");
+                    txtProductCode.requestFocus();
                 }
                 boolean checkNumberlic = com.softpos.util.CheckStringOrNumberlic.CheckStringOrNumberlic(StrQty);
                 if (checkNumberlic == true) {
@@ -2331,9 +2329,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             PluCode = menuListBean.getPlucode();
                         } else {
                             MSG.WAR(this, "ไม่พบรหัส Menu Items " + PluCode + " ในฐานข้อมูล !!!");
-                            txtPluCode.setText("");
-                            txtPluCode.selectAll();
-                            txtPluCode.requestFocus();
+                            txtProductCode.setText("");
+                            txtProductCode.selectAll();
+                            txtProductCode.requestFocus();
                             return false;
                         }
                     }
@@ -2350,7 +2348,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     String TempCode2 = seekBarCode(PluCode);
                     if (TempCode2.equals("")) {
                         MSG.ERR(this, "ไม่พบรหัสสินค้า " + PluCode + " ในฐานข้อมูล หรือรหัสสินค้านี้อาจถูกยกเลิกการขายแล้ว...");
-                        txtPluCode.setText("");
+                        txtProductCode.setText("");
                     } else {
                         PluCode = TempCode2;
                         found = true;
@@ -2358,12 +2356,12 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         PublicVar.P_Status = TempStatus;
                         PublicVar.P_Qty = Qty;
                     }
-                    txtPluCode.selectAll();
-                    txtPluCode.requestFocus();
+                    txtProductCode.selectAll();
+                    txtProductCode.requestFocus();
                 }
             } else {
                 MSG.WAR(this, "จำนวนขายต้องมากกว่า 0...");
-                txtPluCode.requestFocus();
+                txtProductCode.requestFocus();
             }
         }
         return found;
@@ -2387,9 +2385,12 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         return RetVal;
     }
 
-    private void saveToBalance() {
-        String PCode = txtPluCode.getText();
+    private void saveMenuToBalance() {
+        AppLogUtil.info("saveMenuToBalance: " + txtProductCode.getText());
+        
+        String PCode = txtProductCode.getText();
         String StkCode = PUtility.GetStkCode();
+        
         String emp = Value.EMP_CODE;
         String etd = txtShowETD.getText();
         String[] data = Option.splitPrice(PCode);
@@ -2402,21 +2403,21 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         double Price = 0.00;
         ProductBean productBean = productControl.getProductCodeArray(PCode);
         if (productBean.getPStatus().equals("S")) {
-            txtPluCode.setEditable(false);
+            txtProductCode.setEditable(false);
         }
 
         if (productBean.getPCode() == null) {
             MSG.WAR(this, "ไม่พบรหัสสินค้า " + PCode + " ในฐานข้อมูล หรือ รหัสสินค้านี้อาจยกเลิกการขายแล้ว...");
-            txtPluCode.setText("");
-            txtPluCode.selectAll();
-            txtPluCode.requestFocus();
+            txtProductCode.setText("");
+            txtProductCode.selectAll();
+            txtProductCode.requestFocus();
             return;
         }
 
         if (!PUtility.CheckStockOK(PCode, R_Quan)) {
-            txtPluCode.setText("");
-            txtPluCode.selectAll();
-            txtPluCode.requestFocus();
+            txtProductCode.setText("");
+            txtProductCode.selectAll();
+            txtProductCode.requestFocus();
             return;
         }
 
@@ -2607,6 +2608,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             printerName = "kic" + rKic;
             String printerForm = BranchControl.getForm(rKic);
             
+            AppLogUtil.info("kichenPrint (printerName="+printerName+", printerForm="+printerForm+")");
+            
             switch (printerForm) {
                 case "1": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
@@ -2766,11 +2769,11 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }
     }
 
-    private void txtPluCodeOnExit() {
-        saveToBalance();
+    private void orderMenuToBalance() {
+        saveMenuToBalance();
         loadTableBalance(txtTable.getText());
-        txtPluCode.setText("");
-        txtPluCode.requestFocus();
+        txtProductCode.setText("");
+        txtProductCode.requestFocus();
     }
 
     //ปุ่มพักโต๊ะ
@@ -2806,7 +2809,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "macno='" + Value.MACNO + "' "
                 + "where tcode='" + txtTable.getText() + "'";
         mainSaleControl.execUpdate(sql);
-        txtPluCode.requestFocus();
+        txtProductCode.requestFocus();
     }
 
     private void holdTableAndSave() {
@@ -2843,14 +2846,14 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             } else {
                 MSG.WAR(this, "มีรายการขายค้างอยู่ไม่สามารถ Logoff ออกจากระบบได้...");
                 if (TableOpenStatus) {
-                    txtPluCode.requestFocus();
+                    txtProductCode.requestFocus();
                 } else {
                     txtTable.requestFocus();
                 }
             }
         } else {
             if (TableOpenStatus) {
-                txtPluCode.requestFocus();
+                txtProductCode.requestFocus();
             } else {
                 txtTable.requestFocus();
             }
@@ -2893,8 +2896,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             txtCust.requestFocus();
                             txtCust.selectAll();
                         } else {
-                            txtPluCode.setEditable(true);
-                            txtPluCode.requestFocus();
+                            txtProductCode.setEditable(true);
+                            txtProductCode.requestFocus();
                             txtCust.setSelectionEnd(0);
                             txtCust.setEditable(false);
                         }
@@ -3093,7 +3096,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JTextField txtDisplayDiscount;
     private javax.swing.JTextField txtMember1;
     private javax.swing.JTextField txtMember2;
-    private javax.swing.JTextField txtPluCode;
+    private javax.swing.JTextField txtProductCode;
     private javax.swing.JTextField txtShowETD;
     private javax.swing.JTextField txtTable;
     private javax.swing.JTextField txtTypeDesc;
@@ -3161,7 +3164,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     private void actionHoldTable() {
+        AppLogUtil.info("Hold Table: " + tableNo);
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
+            AppLogUtil.info("Condition to print bill check: " + tableNo);
+            
             printBillCheck();
         }
         tbpMain.setSelectedIndex(0);
@@ -3175,7 +3181,6 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         Value.TableSelected = "";
 
         this.setVisible(false);
-//        dispose();
 
         // show floorplan
         showFloorPlan();
@@ -3270,8 +3275,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 i.setVisible(true);
 
                                 loadTableBalance(txtTable.getText());
-                                txtPluCode.setText("");
-                                txtPluCode.requestFocus();
+                                txtProductCode.setText("");
+                                txtProductCode.requestFocus();
                             }
                         }
                     } else {
@@ -3308,7 +3313,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     private void pCodeEnter() {
-        String pluCode = txtPluCode.getText().trim();
+        String pluCode = txtProductCode.getText().trim();
         String chkOpt = "";
         if (!pluCode.equals("")) {
             chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
@@ -3330,25 +3335,25 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             }
             if (!pluCode.equals("")) {
                 if (qtySet > 0) {
-                    txtPluCode.setText(QtyIntFmt.format(qtySet).trim() + "*" + pluCode);
+                    txtProductCode.setText(QtyIntFmt.format(qtySet).trim() + "*" + pluCode);
                     if (seekPluCode()) {
                         if (PublicVar.P_Status.equals("S")) {
-                            txtPluCode.setEditable(false);
+                            txtProductCode.setEditable(false);
                         } else {
-                            txtPluCodeOnExit();
+                            orderMenuToBalance();
                         }
                     }
                 } else {
-                    txtPluCode.setText("");
-                    txtPluCode.requestFocus();
+                    txtProductCode.setText("");
+                    txtProductCode.requestFocus();
                 }
             }
         } else {
             if (findPluCode()) {
                 if (PublicVar.P_Status.equals("S")) {
-                    txtPluCode.setEditable(false);
+                    txtProductCode.setEditable(false);
                 } else {
-                    txtPluCodeOnExit();
+                    orderMenuToBalance();
                 }
             }
         }
@@ -3835,36 +3840,36 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (!showPopupOption(btnName)) {
             return;
         }
-        txtPluCode.setText(txtPluCode.getText().trim() + "*" + PCode);
+        txtProductCode.setText(txtProductCode.getText().trim() + "*" + PCode);
         if (findPluCode()) {
             if (PublicVar.P_Status.equals("S")) {
-                txtPluCode.setEditable(false);
+                txtProductCode.setEditable(false);
                 return;
             }
 
             //สามารถเลือกจำนวนได้เลย
             double qtySet;
             if (Value.autoqty) {
-                GetQty frm = new GetQty(new JFrame(), true, txtPluCode.getText());
+                GetQty frm = new GetQty(new JFrame(), true, txtProductCode.getText());
                 frm.setVisible(true);
                 qtySet = frm.ReturnQty;
             } else {
                 qtySet = PublicVar.P_Qty;
             }
 
-            if (!txtPluCode.getText().trim().equals("")) {
+            if (!txtProductCode.getText().trim().equals("")) {
                 if (qtySet > 0) {
-                    txtPluCode.setText("" + qtySet + "*" + PCode);
+                    txtProductCode.setText("" + qtySet + "*" + PCode);
                     // ใช้ข้อมูลจาก findPluCode() ที่ query ไปแล้ว ไม่ต้อง query ซ้ำผ่าน seekPluCode()
                     PublicVar.P_Qty = qtySet;
                     if (PublicVar.P_Status.equals("S")) {
-                        txtPluCode.setEditable(false);
+                        txtProductCode.setEditable(false);
                     } else {
-                        txtPluCodeOnExit();
+                        orderMenuToBalance();
                     }
                 } else {
-                    txtPluCode.setText("");
-                    txtPluCode.requestFocus();
+                    txtProductCode.setText("");
+                    txtProductCode.requestFocus();
                 }
             }
         }
@@ -3887,6 +3892,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void printBillCheck() {
         if (Value.useprint) {
+            AppLogUtil.info("printBillCheck usePrint = " + Value.useprint);
             PPrint print = new PPrint();
             print.PrintCheckBill(txtTable.getText());
         } else {

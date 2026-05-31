@@ -13,6 +13,7 @@ import com.softpos.pos.core.controller.ControlPrintCheckBill;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableFileBean;
+import com.softpos.util.AppLogUtil;
 import database.ConfigFile;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
@@ -39,6 +40,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import com.softpos.util.DateConvert;
+import java.awt.print.PrinterException;
 
 public class PrintKicFormReport {
 
@@ -130,33 +132,21 @@ public class PrintKicFormReport {
             param.put("R_PluCode", ThaiUtil.ASCII2Unicode(R_PluCode));
             param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
 
-//                    param.put("cust_Contact", ThaiUtil.ASCII2Unicode(memberBean.getMember_HomeTel() + " แฟกซ์: " + memberBean.getMember_Fax() + " มือถือ " + memberBean.getMember_Mobile()));
-//                    param.put("cust_ID", ThaiUtil.ASCII2Unicode(memberBean.getMember_Code() + " : " + memberBean.getMember_NameThai() + " " + memberBean.getMember_SurnameThai()));
-//                    // fill report to run jasper file
-//                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportJasper, param, report.getConnection());
             JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
-//Auto Print NotPreview
-//                    JasperPrintManager.printReport(jasperPrint, false);
-
-            //Class Printer Job
             PrinterJob printerJob = PrinterJob.getPrinterJob();
 
             PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
             printerJob.defaultPage(pageFormat);
 
             int selectedService = 0;
-
             AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
-//            AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerNameShort, null));
 
             PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
 
             try {
                 printerJob.setPrintService(printService[selectedService]);
-
-            } catch (Exception e) {
-
-                System.out.println(e);
+            } catch (PrinterException e) {
+                AppLogUtil.log(PrintKicFormReport.class, "error", e);
             }
             JRPrintServiceExporter exporter;
             PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
@@ -173,53 +163,31 @@ public class PrintKicFormReport {
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
             exporter.exportReport();
 
-//                    // show report viewer
-//                    JasperViewer jasperViewer = new JasperViewer(jasperPrint, true);
-//                    jasperViewer.setVisible(true);
-//                    jasperViewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             param.clear();
-            // close connection
+            
             report.closeConnection();
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
             Thread.sleep(100);
-//                    }
-
         } catch (Exception ex) {
             Logger.getLogger(PrintKicFormReport.class.getName()).log(Level.SEVERE, null, ex);
         }
-//            }
-//        }).start();
-
     }
 
     public void PrintKicForm8_Report(
             final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_Index) throws Exception {
-//        printerName = "Snagit 9";
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
+
         TableFileControl tbControl = new TableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
 
         DateConvert dc = new DateConvert();
-//        PosControl control = new PosControl();
-//        POSHWSetup POSHWSetup = control.getData(Macno);
-//        POSConfigSetup bean = new POSConfigSetup();
-//        bean = control.getData();
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
 
         try {
-//                    if (tbBean.getTItem() > 0 && ConfigFile.getProperties("printerStation").equals("true")) {
             PrintKicFormReport report = new PrintKicFormReport();
 
             // open connection
             report.openConnection();
 
-            // source file
-//                        String reportJasper = new File(".").getCanonicalPath() + JASPER_FILE;
-//                        String sourceFileName = "D:\\CPS_Restaurant650\\src\\java\\printReport\\printCheckBillReport.jrxml";
-//                        String sourceFileName = "D:\\pdaV.EngTabletOppoA12\\src\\java\\printReport\\printCheckBillReport.jrxml";
             String sourceFileName = "D:\\Source Code Java\\softposrestaurantForStandard\\src\\report\\file\\kicFrom_8Qrcode.jrxml";
             String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
 
@@ -263,13 +231,7 @@ public class PrintKicFormReport {
             param.put("R_Index", ThaiUtil.ASCII2Unicode(R_Index));
             param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
 
-//                    param.put("cust_Contact", ThaiUtil.ASCII2Unicode(memberBean.getMember_HomeTel() + " แฟกซ์: " + memberBean.getMember_Fax() + " มือถือ " + memberBean.getMember_Mobile()));
-//                    param.put("cust_ID", ThaiUtil.ASCII2Unicode(memberBean.getMember_Code() + " : " + memberBean.getMember_NameThai() + " " + memberBean.getMember_SurnameThai()));
-//                    // fill report to run jasper file
-//                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportJasper, param, report.getConnection());
             JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
-//Auto Print NotPreview
-//                    JasperPrintManager.printReport(jasperPrint, false);
 
             //Class Printer Job
             PrinterJob printerJob = PrinterJob.getPrinterJob();
@@ -280,16 +242,12 @@ public class PrintKicFormReport {
             int selectedService = 0;
 
             AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
-//            AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerNameShort, null));
-
             PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
 
             try {
                 printerJob.setPrintService(printService[selectedService]);
-
-            } catch (Exception e) {
-
-                System.out.println(e);
+            } catch (PrinterException e) {
+                AppLogUtil.log(PrintKicFormReport.class, "error", e);
             }
             JRPrintServiceExporter exporter;
             PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
@@ -306,23 +264,15 @@ public class PrintKicFormReport {
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
             exporter.exportReport();
 
-//                    // show report viewer
-//                    JasperViewer jasperViewer = new JasperViewer(jasperPrint, true);
-//                    jasperViewer.setVisible(true);
-//                    jasperViewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             param.clear();
             // close connection
             report.closeConnection();
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
             Thread.sleep(100);
-//                    }
 
-        } catch (Exception ex) {
-            Logger.getLogger(PrintKicFormReport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            AppLogUtil.log(PrintKicFormReport.class, "error", e);
         }
-//            }
-//        }).start();
-
     }
 
     public Connection getConnection() throws Exception {

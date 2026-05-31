@@ -27,7 +27,6 @@ public class PrintToKicController extends DatabaseConnection {
                     + "and r_kicprint<>'P' and r_void<>'V' "
                     + "and r_kic<>'0' and r_printOK='Y' and r_pause='P' "
                     + "group by r_table order by r_etd,r_index;";
-            System.out.println(sql);
             try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     PrintToKic.kicPrintting = true;
@@ -39,7 +38,6 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -49,8 +47,7 @@ public class PrintToKicController extends DatabaseConnection {
     }
 
     public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo, String macno) {
-        List<BalanceBean> listBalance = listBalance = null;
-        listBalance = new ArrayList<>();
+        List<BalanceBean> listBalance = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
@@ -76,7 +73,6 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -110,7 +106,6 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
             mysql.closeConnection(this.getClass());
@@ -145,7 +140,6 @@ public class PrintToKicController extends DatabaseConnection {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

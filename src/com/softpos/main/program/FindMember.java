@@ -100,7 +100,7 @@ public class FindMember extends javax.swing.JDialog {
                     TDate1 = Datefmtshow.format(rs.getDate("m_end"));
                     TDate2 = Datefmtshow.format(rs.getDate("m_brid"));
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    AppLogUtil.log(FindMember.class, "error", e);
                 }
 
                 Object[] input = {

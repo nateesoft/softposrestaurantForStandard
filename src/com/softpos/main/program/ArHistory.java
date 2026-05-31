@@ -632,7 +632,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 if (Value.printdriver) {
                     PrintARHistoryDriver();
                 } else {
-                    if (prn.OpenPrint(Value.getComPort())) {
+                    if (prn.openPrint(Value.getComPort())) {
                         prn.InitPrinter();
                         prn.print(POSHW.getHeading1());
                         prn.print(POSHW.getHeading2());

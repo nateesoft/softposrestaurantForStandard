@@ -1,6 +1,7 @@
 package database;
 
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -87,7 +88,7 @@ public class MySQLConnectWebOnline {
         try (Statement stmt = con.createStatement()) {
             return stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, e);
+            AppLogUtil.log(MySQLConnectWebOnline.class, "error", e);
             return 0;
         }
     }
@@ -102,7 +103,7 @@ public class MySQLConnectWebOnline {
             currentStatement = con.createStatement();
             return currentStatement.executeQuery(sql);
         } catch (SQLException e) {
-            Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, e);
+            AppLogUtil.log(MySQLConnectWebOnline.class, "error", e);
             return null;
         }
     }
@@ -112,8 +113,8 @@ public class MySQLConnectWebOnline {
         if (con != null) {
             try {
                 con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(MySQLConnectWebOnline.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException e) {
+                AppLogUtil.log(MySQLConnectWebOnline.class, "error", e);
             }
             con = null;
         }

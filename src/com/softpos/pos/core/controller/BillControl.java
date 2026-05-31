@@ -241,26 +241,23 @@ public class BillControl {
         try {
             String sql = "select max(b_refno), max(B_KicQue) maxque from billno";
             int que;
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                try {
-                    que = Integer.parseInt(rs.getString("maxque"));
-                    que += 1;
-                    if (que < 10) {
-                        q = "0" + que;
-                    } else {
-                        q = "" + que;
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    try {
+                        que = Integer.parseInt(rs.getString("maxque"));
+                        que += 1;
+                        if (que < 10) {
+                            q = "0" + que;
+                        } else {
+                            q = "" + que;
+                        }
+                    } catch (SQLException | NumberFormatException e) {
+                        AppLogUtil.info("Not get que from billno, n" + e.getMessage());
+                        q = "01";
                     }
-                } catch (SQLException | NumberFormatException e) {
-                    System.out.println("Not get que from billno, n" + e.getMessage());
-                    q = "01";
                 }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -388,7 +385,6 @@ public class BillControl {
             pre.executeUpdate();
             pre.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {
             mysql.closeConnection(BillControl.class);
@@ -402,8 +398,7 @@ public class BillControl {
         try {
             BalanceControl balanceControl = new BalanceControl();
             if (!posConfig.getP_PrintSum().equals("Y")) {
-                List<BalanceBean> balance = null;
-                balance = balanceControl.getAllBalance(table);
+                List<BalanceBean> balance = balanceControl.getAllBalance(table);
 
                 //for T_Sale
                 int size = balance.size();
@@ -415,8 +410,7 @@ public class BillControl {
 
                 int MAX_Que = branchBean.getKicItemNo();
                 for (int i = 0; i < size; i++) {
-                    BalanceBean bean = null;
-                    bean = (BalanceBean) balance.get(i);
+                    BalanceBean bean = (BalanceBean) balance.get(i);
                     TSaleBean tSaleBean = mappingBalanceToTSale(i, size, bean, BillNo, billBean);
 
                     if (etdTypeFromTSale.equals("")) {
@@ -451,7 +445,6 @@ public class BillControl {
                 double creditPay = billBean.getB_CrAmt1();
                 double totalSum = tableFile.getNetTotal();
                 double B_Ton = billBean.getB_Ton();
-//            double B_Total = tableFile.getTAmount();
                 double B_Total = tableFile.getFood() + tableFile.getDrink() + tableFile.getProduct();
 
                 billNo.setB_Earnest(billBean.getB_Earnest());
@@ -579,10 +572,8 @@ public class BillControl {
                 billNo.setStampRate("");
                 BillControl.saveBillNo(billNo, memberBean);
                 if (Value.useprint) {
-//                new Thread(() -> {
                     PPrint print = new PPrint();
                     print.PrintSubTotalBill(BillNo, table);
-//                }).start();
                 }
 
                 //clear transaction for table (balance, tablefile)

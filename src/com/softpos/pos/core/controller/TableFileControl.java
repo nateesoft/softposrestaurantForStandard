@@ -232,7 +232,7 @@ public class TableFileControl extends DatabaseConnection {
                     try {
                         bean.setTLoginDate(rs.getDate("TLoginDate"));
                     } catch (SQLException e) {
-                        System.out.println("Error Date: " + e.getMessage());
+                        AppLogUtil.log(TableFileControl.class, "error", e);
                     }
 
                     allTable.add(bean);
@@ -310,7 +310,7 @@ public class TableFileControl extends DatabaseConnection {
                         bean.setMemBegin(rs.getDate("MemBegin"));
                         bean.setMemEnd(rs.getDate("MemEnd"));
                     } catch (SQLException e) {
-                        System.out.println("Error Date: " + e.getMessage());
+                        AppLogUtil.log(TableFileControl.class, "error", e);
                     }
 
                     allTable.add(bean);
@@ -536,7 +536,7 @@ public class TableFileControl extends DatabaseConnection {
             try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(chk)) {
                 if (rs.next()) {
                     // มีตารางในระบบแล้ว
-                    System.out.println("มีตาราง " + newTable + " ในระบบแล้ว");
+                    AppLogUtil.info("มีตาราง " + newTable + " ในระบบแล้ว");
                     String[] subString = newTable.split("-");
                     int tbSplit = 0;
                     String text = "";
@@ -556,7 +556,6 @@ public class TableFileControl extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysql.closeConnection(TableFileControl.class);

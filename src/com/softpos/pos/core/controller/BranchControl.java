@@ -28,7 +28,6 @@ public class BranchControl {
     }
 
     public static BranchBean getData() {
-        System.out.println("Into Method BranchBean getData()");
         if (branchBean != null) {
             return branchBean;
         }
@@ -39,8 +38,7 @@ public class BranchControl {
             try (ResultSet rs = mysql.executeQuery(sql)) {
                 if (rs.next()) {
                     branchBean = new BranchBean();
-                    String bCheck = "";
-                    bCheck = rs.getString("Code");
+                    String bCheck = rs.getString("Code");
                     if (bCheck.equals("999")) {
                         branchBean.setCode("sss");
                     } else {
@@ -73,7 +71,7 @@ public class BranchControl {
                     try {
                         branchBean.setPrintAutoSumDate(rs.getDate("PrintAutoSumDate"));
                     } catch (SQLException e) {
-                        System.out.println("Error Date: " + e.getMessage());
+                        AppLogUtil.log(BranchControl.class, "error", e);
                     }
                     branchBean.setSaveOrder(rs.getString("SaveOrder"));
                     branchBean.setSaveOrderCopy(rs.getString("SaveOrderCopy"));

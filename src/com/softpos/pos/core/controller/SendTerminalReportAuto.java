@@ -185,7 +185,7 @@ public class SendTerminalReportAuto {
                         String amt = frec.DeliveryAmt + "";
                         String cust = frec.DeliveryCust + "";
                         String net = frec.DeliveryNet + "";
-                        System.out.println(amt + ":" + cust + ":" + net);
+                        AppLogUtil.info(amt + ":" + cust + ":" + net);
                     }
                     if (rs.getString("b_etd").equals("P")) {
                         frec.PintoCnt++;
@@ -635,7 +635,7 @@ public class SendTerminalReportAuto {
                 double b_nettotal = rs.getDouble("b_nettotal");
                 double b_vat = rs.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "E", "0", 0.00, 0.00, 0.00});
@@ -652,7 +652,7 @@ public class SendTerminalReportAuto {
                 double b_nettotal = rs4.getDouble("b_nettotal");
                 double b_vat = rs4.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "T", "0", 0.00, 0.00, 0.00});
@@ -667,7 +667,7 @@ public class SendTerminalReportAuto {
                 double b_nettotal = rsD.getDouble("b_nettotal");
                 double b_vat = rsD.getDouble("b_vat");
                 double nettotal = b_nettotal - b_vat;
-                System.out.println(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
+                AppLogUtil.info(b_etd + " " + b_cust + " " + b_nettotal + " " + b_vat);
                 listObj.add(new Object[]{countb_refno, b_etd, b_cust, b_vat, nettotal, b_nettotal,});
             } else {
                 listObj.add(new Object[]{"0", "D", "0", 0.00, 0.00, 0.00});
@@ -893,19 +893,19 @@ public class SendTerminalReportAuto {
                         String[] attachFiles = new String[1];
 
                         attachFiles[0] = PublicVar.filePath;
-                        System.out.println(PublicVar.filePath);
+                        AppLogUtil.info(PublicVar.filePath);
                         SendEmail.sendEmailWithAttachments(host, port, username, password, mailTo, subject, message, attachFiles);
                         Thread.sleep(3600 * 5);
                         System.exit(0);
                     }
                     rsAddress.close();
                 } catch (IOException | InterruptedException | SQLException | MessagingException e) {
-
+                    AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
                 }
             }
             rsConfig.close();
         } catch (InterruptedException | SQLException e) {
-
+            AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
         }

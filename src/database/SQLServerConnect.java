@@ -1,5 +1,6 @@
 package database;
 
+import com.softpos.util.AppLogUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -39,19 +40,17 @@ public class SQLServerConnect {
 
     private Connection connect() throws ClassNotFoundException, SQLException {
         Class.forName(CLASS_NAME);
-        System.out.println("Driver Loaded.");
-
-        //String jdbcUrl = "jdbc:sqlserver://" + SERVER + ";database=" + DATABASE + ";user=" + USER + ";password=" + PASS;
+        
         String jdbcUrl = "jdbc:mysql://" + SERVER + ":" + PORT + "/" + DATABASE + "?charset=" + CHARSET;
         conn = DriverManager.getConnection(jdbcUrl, USER, PASS);
-        System.out.println("Connected.");
+        AppLogUtil.info("SQLServerConnect Connected.");
 
         return conn;
     }
 
     public ResultSet getResultSet(String sql) throws Exception {
         if (conn == null) {
-            System.out.println("Not connect database !");
+            AppLogUtil.info("Not connect database !");
             return null;
         }
         Statement stmt = conn.createStatement();
@@ -62,7 +61,7 @@ public class SQLServerConnect {
 
     public int getUpdate(String sql) throws SQLException {
         if (conn == null) {
-            System.out.println("Not connect database !");
+            AppLogUtil.info("Not connect database !");
             return -1;
         }
         int iUpdate = -1;
@@ -77,7 +76,7 @@ public class SQLServerConnect {
 
         if (conn != null) {
             conn.close();
-            System.out.println("Connection Closed.");
+            AppLogUtil.info("Connection Closed.");
         }
 
     }

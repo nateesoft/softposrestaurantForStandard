@@ -263,7 +263,7 @@ public class ButtonCustom {
                     green = Integer.parseInt(color[1]);
                     blue = Integer.parseInt(color[2]);
                 } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
+                    AppLogUtil.log(ButtonCustom.class, "error", e);
                 }
             }
         }
@@ -281,7 +281,7 @@ public class ButtonCustom {
                     int blue = Integer.parseInt(color[2]);
                     return new Color(red, green, blue);
                 } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
+                    AppLogUtil.log(ButtonCustom.class, "error", e);
                 }
             }
         }

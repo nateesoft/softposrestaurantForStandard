@@ -67,7 +67,6 @@ public class NumberToString {
             textReturn = b + "บาท" + bb + "สตางค์";
         }
 
-        System.out.println(textReturn);
         return textReturn;
     }
 

@@ -474,8 +474,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             sumQty = sumQty.add(qty);
             BigDecimal amt = new BigDecimal(String.valueOf(GArray[i].S_Amt));
             sumAmt = sumAmt.add(amt);
-            // System.out.println("DD "+sumQty);
-            //  System.out.println("AA "+sumAmt);
         }
 
         txtSumQty.setText(intFmt.format(sumQty.doubleValue()));

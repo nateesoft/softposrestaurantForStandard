@@ -5,6 +5,7 @@
  */
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 
@@ -25,14 +26,10 @@ public class ControlPrintCheckBill {
                 String sql = "update balance set PDAPrintCheck='Y',pdaemp='" + ThaiUtil.Unicode2ASCII(emp) + "',PDAPrintCheckStation='" + PrinterName + "' "
                         + "where r_table='" + tableNO.toUpperCase() + "' "
                         + "and trantype ='PDA';";
-//                String sql11 = "update tablefile set chkbill='Y' where tcode='" + tableNO + "'";
                 mysql.executeUpdate(sql);
-//                mysql.executeUpdate(sql11);
-//                printKicReport print = new printKicReport();
-//                print.printKicReport(tableNO, PrinterName, Macno);
-
             } catch (Exception e) {
                 System.out.println(e.toString());
+                AppLogUtil.log(ControlPrintCheckBill.class, "error", e);
             } finally {
                 mysql.close();
             }

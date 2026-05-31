@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.util.AppLogUtil;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -227,7 +228,7 @@ private void XPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         int TempPro = (Integer.parseInt(TempDate) + Integer.parseInt(TempMonth) + Integer.parseInt(TempYear)) * DayOfWeek(TempDay);
         String TempPro2 = PassFmt.format(TempPro).trim();
         RetVal = password.equals(TempPro2);
-        System.out.println("TempPro:" + TempPro);
+        AppLogUtil.info("TempPro:" + TempPro);
 
         return RetVal;
     }

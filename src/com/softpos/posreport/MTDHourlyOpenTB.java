@@ -103,7 +103,6 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 double sumNettotalT = 0.00;
                 int sumBillE = 0;
                 int sumBillT = 0;
-                System.out.println(time1 + time2);
                 if (time2.equals("00:00:00")) {
                     time2 = "23:59:59";
                 }
@@ -520,7 +519,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
             PrintHourlyDriverByCust();
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                if (prn.OpenPrint(Value.getComPort())) {
+                if (prn.openPrint(Value.getComPort())) {
                     prn.InitPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());

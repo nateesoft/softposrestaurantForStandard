@@ -50,68 +50,29 @@ public class PrintToKic extends javax.swing.JFrame {
 
                 if (printkic == true) {
                     System.out.println("PROCESS " + refresh + "sec");
-//                new Thread(() -> {
                     while (kicPrintting != true) {
                         System.out.println("kicPrintFromPDA");
-
                         kicPrintFromPDA();
-
-                        try {
-                            Thread.sleep(3 * 1000);
-                        } catch (Exception e) {
-                        }
                     }
                 }
             }
-
-//        }).start();
         }).start();
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//            }
-//            if (refresh < 0) {
-//                refresh = 1000;
-//            }
-//        Timer timer = new Timer(10, timerListener);
-//            try {
-//                Thread.sleep(3000);
-//            } catch (Exception e) {
-//            }
-//        if (kicPrintting != true) {
-//            Timer timer = new Timer(refresh * 1000, timerListener);
-//            timer.start();
-//        } 
-//        }
-//        };
     }
 
     private void loadStatus() {
         //check ftp file date
-        try {
-            pbCheckUpdate.setStringPainted(true);
-            pbCheckUpdate.setMinimum(0);
-            pbCheckUpdate.setMaximum(100);
-            for (int i = 1; i <= 100; i++) {
-                pbCheckUpdate.setValue(i);
-                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                }
-            }
+        pbCheckUpdate.setStringPainted(true);
+        pbCheckUpdate.setMinimum(0);
+        pbCheckUpdate.setMaximum(100);
+        for (int i = 1; i <= 100; i++) {
+            pbCheckUpdate.setValue(i);
+            pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
+        }
 
-            pbCheckUpdate.setString("Load data Complete ");
-            Thread.sleep(2);
-            for (int i = 100; i >= 0; i--) {
-                pbCheckUpdate.setValue(i);
-                pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                }
-            }
-        } catch (InterruptedException e) {
+        pbCheckUpdate.setString("Load data Complete ");
+        for (int i = 100; i >= 0; i--) {
+            pbCheckUpdate.setValue(i);
+            pbCheckUpdate.setString("LOADDING Data: (" + i + " %)");
         }
     }
 
@@ -275,26 +236,13 @@ public class PrintToKic extends javax.swing.JFrame {
                 kicPrintting = true;
                 System.out.println("Found data to print kicPrintFromPDA() ");
                 lblProcessLog.setText("Total Bill: " + balanceBean.getR_Total());
-//                if (kicPrintting == false) {
-//                    kicPrintting = true;
+
                 tableNo = balanceBean.getR_Table();
                 lblProcessShow.setText("กำลังพิมพ์ข้อมูล โต๊ะ : " + balanceBean.getR_Table() + " สั่งจากเครื่อง : " + balanceBean.getMacno());
 
                 kichenPrint(balanceBean.getR_Table(), balanceBean.getMacno());
-                try {
-                    Thread.sleep(10 * 1000);
-                } catch (Exception e) {
-                }
+
                 kicPrintting = false;
-//                kicPrintFromPDA();
-//                }
-            } else {
-//                try {
-//                    Thread.sleep(30*1000);
-//                } catch (Exception e) {
-//                }
-//                kicPrintting = false;
-//                kicPrintFromPDA();
             }
         }
     }
@@ -379,8 +327,6 @@ public class PrintToKic extends javax.swing.JFrame {
                                 break;
                             case "2":
                                 if (Value.printkic) {
-//                                    printSimpleForm.KIC_FORM_7(printerName, tableNo);//OldVersion print html 
-
                                     printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
                                 }
                                 break;

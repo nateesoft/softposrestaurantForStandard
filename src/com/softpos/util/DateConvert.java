@@ -60,8 +60,7 @@ public class DateConvert {
         Calendar current1 = Calendar.getInstance();
         current1.add(Calendar.DATE, +0);
         DateOrder += GetLocalDate.format(current1.getTime());
-        System.out.println(dateString);
-        //txtDate1.setText(dateString);
+
         return DateOrder;
     }
 
@@ -75,7 +74,6 @@ public class DateConvert {
         c.set(yyyy, MM - 1, dd - i);//set back date
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String dateUse = s.format(c.getTime());//use date time (format: yyyy-MM-dd);
-//        System.out.println(dateUse);
         return dateUse;
     }
 
@@ -86,8 +84,7 @@ public class DateConvert {
         Calendar current = Calendar.getInstance();
         current.add(Calendar.DATE, 0);
         TimeString += ShowDatefmt.format(current.getTime());
-//        System.out.println("GetCurrentTime:"+TimeString);
-        //txtDate1.setText(dateString);
+        
         return TimeString;
     }
 
@@ -106,8 +103,6 @@ public class DateConvert {
         MM = MM - cur_MM;
         yyyy = yyyy - cur_yyyy;
         int sum = dd + MM + yyyy;
-//        System.out.println(dd + "/" + MM + "/" + yyyy);
-        System.out.println(sum);
         return sum;
     }
 
@@ -124,7 +119,6 @@ public class DateConvert {
         } else {
             valueReturn = -1;
         }
-        System.out.println(valueReturn);
         return valueReturn;
 
     }
