@@ -79,7 +79,7 @@ public class PPrint {
     private String TAB = Space + Space + Space;
     private String TAB2 = TAB + TAB;
 
-    public void PPrint() {
+    public PPrint() {
         POSHW = POSHWSetup.Bean(Value.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
@@ -2623,7 +2623,6 @@ public class PPrint {
                     break;
                 }
             }
-            PPrint();
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
