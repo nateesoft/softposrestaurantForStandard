@@ -25,6 +25,7 @@ import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
+import java.util.List;
 
 public class MTDDept extends javax.swing.JDialog {
 
@@ -445,7 +446,7 @@ public class MTDDept extends javax.swing.JDialog {
         t += "align=left><font face=Angsana New size=1>" + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 6) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + PUtility.DataFullSpace(IntFmt.format(SumSQty), 6) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 10) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
-        ArrayList<Object[]> list1 = DocAnalyse(Datefmt.format(dateP) + "", Datefmt.format(dateP) + "");
+        List<Object[]> list1 = DocAnalyse(Datefmt.format(dateP) + "", Datefmt.format(dateP) + "");
         String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
         double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
         double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
@@ -1077,8 +1078,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             KeyBoardDialog.get(txtMacNo1);
         }
     }//GEN-LAST:event_txtMacNo1MouseClicked
-    private ArrayList<Object[]> DocAnalyse(String date1, String date2) {
-        ArrayList<Object[]> listObj = new ArrayList<>();
+    private List<Object[]> DocAnalyse(String date1, String date2) {
+        List<Object[]> listObj = new ArrayList<>();
         String sqlSelectDocTypeE = "select count(b_refno)b_refno,"
                 + "b_ondate, "
                 + "b_macno, "

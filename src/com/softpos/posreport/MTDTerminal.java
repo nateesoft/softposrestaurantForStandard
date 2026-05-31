@@ -27,6 +27,7 @@ import soft.virtual.KeyBoardDialog;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
+import java.util.List;
 
 public class MTDTerminal extends javax.swing.JDialog {
 
@@ -883,7 +884,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             PrintTerminalEngFormDriver(frec, CrArray, macNo1, macNo1);
         } else {
             if (!Value.getComPort().equals("NONE")) {
-                ArrayList<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
+                List<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
                 String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
                 double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
                 double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
@@ -1038,7 +1039,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         String am = credit[1];
                         prn.print(PUtility.DataFullR("CRADIT                 ", 20) + PUtility.DataFull(cd, 6) + PUtility.DataFull(am, 13));
                     }
-                    ArrayList<String[]> list = CreName(macNo1, macNo2);
+                    List<String[]> list = CreName(macNo1, macNo2);
                     for (int i = 0; i < list.size(); i++) {
                         String[] CreName = (String[]) list.get(i);
 
@@ -1145,7 +1146,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String t = "";
         double sumCuponAmt = 0.00;
         CONFIG = POSConfigSetup.Bean();
-        ArrayList<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
+        List<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
         String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
         double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
         double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
@@ -1320,7 +1321,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             double am1 = Double.parseDouble(am);
             t += ("align=left><font face=Angsana New size=1>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=1>" + cd + TAB + "</td><td align=right><font face=Angsana New size=1>" + DecFmt.format(am1)) + "_";
         }
-        ArrayList<String[]> list = CreName(macNo1, macNo2);
+        List<String[]> list = CreName(macNo1, macNo2);
         for (int i = 0; i < list.size(); i++) {
             String[] CreName = (String[]) list.get(i);
 
@@ -1420,8 +1421,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         pd.printHTML();
     }
 
-    private ArrayList<Object[]> DocAnalyse(String date1, String date2) {
-        ArrayList<Object[]> listObj = new ArrayList<>();
+    private List<Object[]> DocAnalyse(String date1, String date2) {
+        List<Object[]> listObj = new ArrayList<>();
         String sqlSelectDocTypeE = "select count(b_refno)b_refno,"
                 + "b_ondate, "
                 + "b_macno, "
@@ -1568,8 +1569,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         return listObj;
     }
 
-    private ArrayList<String[]> CreName(String macNo1, String macNo2) {
-        ArrayList<String[]> list = new ArrayList<>();
+    private List<String[]> CreName(String macNo1, String macNo2) {
+        List<String[]> list = new ArrayList<>();
         /**
          * * OPEN CONNECTION **
          */

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.softpos.util.DateConvert;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -25,7 +26,7 @@ import java.sql.SQLException;
  */
 public class PKicTran {
 
-    public static void setPKicTran(ArrayList<BalanceBean> bill, int kicItemNo) {
+    public static void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
 
         DateConvert dc = new DateConvert();
         String today = dc.GetCurrentDate();
@@ -59,9 +60,9 @@ public class PKicTran {
         }
     }
 
-    public static ArrayList<PKicTranBean> getKicTran(String tableNo) {
+    public static List<PKicTranBean> getKicTran(String tableNo) {
         DateConvert dc = new DateConvert();
-        ArrayList<PKicTranBean> list = new ArrayList();
+        List<PKicTranBean> list = new ArrayList();
         MySQLConnect mysql = new MySQLConnect();
         
         try {

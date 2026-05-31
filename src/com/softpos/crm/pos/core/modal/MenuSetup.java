@@ -2,6 +2,7 @@ package com.softpos.crm.pos.core.modal;
 
 import com.softpos.pos.core.model.ProductBean;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuSetup {
 
@@ -10,7 +11,7 @@ public class MenuSetup {
     private String PCode;
     private String ShortName;
     private String PPathName;
-    private ArrayList<ProductBean> productList = new ArrayList<>();
+    private List<ProductBean> productList = new ArrayList<>();
 
     public MenuSetup() {
     }
@@ -63,11 +64,11 @@ public class MenuSetup {
         this.PPathName = PPathName;
     }
 
-    public ArrayList<ProductBean> getProductList() {
+    public List<ProductBean> getProductList() {
         return productList;
     }
 
-    public void setProductList(ArrayList<ProductBean> productList) {
+    public void setProductList(List<ProductBean> productList) {
         this.productList = productList;
     }
 

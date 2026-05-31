@@ -21,6 +21,7 @@ import printReport.PrintDriver;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
+import java.util.List;
 
 /**
  *
@@ -54,8 +55,8 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
-    public ArrayList<Object[]> LoadData() {
-        ArrayList<Object[]> ListObj = new ArrayList<>();
+    public List<Object[]> LoadData() {
+        List<Object[]> ListObj = new ArrayList<>();
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
@@ -514,7 +515,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void PrintHourlyByCust() {
-        ArrayList<Object[]> ListObj = LoadData();
+        List<Object[]> ListObj = LoadData();
         if (Value.printdriver) {
             PrintHourlyDriverByCust();
         } else {
@@ -572,7 +573,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void PrintHourlyDriverByCust() {
-        ArrayList<Object[]> ListObj = LoadData();
+        List<Object[]> ListObj = LoadData();
         String t = "";
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");

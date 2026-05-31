@@ -14,7 +14,7 @@ import com.softpos.util.AppLogUtil;
 
 public class ControlMenu {
 
-    private final ArrayList<CompanyMenu> companyMenu;
+    private final List<CompanyMenu> companyMenu;
     private int size;
 
     public ControlMenu() {
@@ -331,7 +331,7 @@ public class ControlMenu {
 
     public List<String> getDataArray(String menuHead) {
         List<MenuSetup> listMenu = menuAt(menuHead);
-        ArrayList<String> dataArray = new ArrayList<String>();
+        List<String> dataArray = new ArrayList<>();
         for (int a1 = 0; a1 < 28; a1++) {
             //data[a1] = "";
             dataArray.add("");

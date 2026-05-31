@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import java.util.List;
 
 /**
  *
@@ -223,7 +224,7 @@ public class UpdateData extends javax.swing.JDialog {
         new Thread(() -> {
             DecimalFormat df = new DecimalFormat("#,###");
             DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
-            ArrayList<Object[]> listObj = LoadData();
+            List<Object[]> listObj = LoadData();
             MySQLConnect mysql = new MySQLConnect();
             try {
                 mysql.open(this.getClass());
@@ -254,9 +255,9 @@ public class UpdateData extends javax.swing.JDialog {
         }).start();
     }
 
-    public ArrayList<Object[]> LoadData() {
+    public List<Object[]> LoadData() {
         SwingUtilities.invokeLater(() -> setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)));
-        ArrayList<Object[]> ListObj = new ArrayList<>();
+        List<Object[]> ListObj = new ArrayList<>();
         String BType = "-";
 
         MySQLConnect mysql = new MySQLConnect();

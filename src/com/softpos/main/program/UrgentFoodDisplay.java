@@ -60,7 +60,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
             @Override
             public void run() {
                 jLabel1.setText("KIC : " + ConfigFile.getProperties("stationKicNo"));
-//                ArrayList<PKicTranBean> bean = new ArrayList();
+//                List<PKicTranBean> bean = new ArrayList();
 //                bean = PKicTran.getKicTran(tableNo);
 //                int size = bean.size();
                 jButton2.setText(ThaiUtil.ASCII2Unicode("โต๊ะ : " + tableNo + " ***รอนานแล้ว"));

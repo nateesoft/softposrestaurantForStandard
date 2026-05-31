@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import com.softpos.util.AppLogUtil;
+import java.util.List;
 
 /**
  *
@@ -21,8 +22,8 @@ import com.softpos.util.AppLogUtil;
  */
 public class sendMenuButttonToBorController {
 
-    public ArrayList<sendMgrButtonToBorBean> sendMGRButtonSetupToBor() {
-        ArrayList listMGRButtonSetup = new ArrayList();
+    public List<sendMgrButtonToBorBean> sendMGRButtonSetupToBor() {
+        List listMGRButtonSetup = new ArrayList();
         try {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open(sendMenuButttonToBorController.class);
@@ -62,8 +63,8 @@ public class sendMenuButttonToBorController {
         return bean;
     }
 
-    public ArrayList<sendSoft_MenustupBean> sendDataSoft_menusetupToBor() {
-        ArrayList listSoft_menusetupSetup = new ArrayList();
+    public List<sendSoft_MenustupBean> sendDataSoft_menusetupToBor() {
+        List listSoft_menusetupSetup = new ArrayList();
         try {
             MySQLConnect mysql = new MySQLConnect();
             mysql.open(sendMenuButttonToBorController.class);

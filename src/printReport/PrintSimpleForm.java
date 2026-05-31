@@ -151,7 +151,7 @@ public class PrintSimpleForm {
                     String r_index = (rs.getString("R_Index"));
 
                     //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                    ArrayList<String[]> listOpt = new ArrayList<>();
+                    List<String[]> listOpt = new ArrayList<>();
                     try {
                         String sqlOpt = "select * from balance "
                                 + "where r_table='" + tableNo + "' "
@@ -327,7 +327,7 @@ public class PrintSimpleForm {
                 String r_index = (rs.getString("R_Index"));
 
                 //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                ArrayList<String[]> listOpt = new ArrayList<>();
+                List<String[]> listOpt = new ArrayList<>();
                 try {
                     String sqlOpt = "select * from balance "
                             + "where r_table='" + tableNo + "' "
@@ -502,7 +502,7 @@ public class PrintSimpleForm {
                 String r_index = (rs.getString("R_Index"));
 
                 //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                ArrayList<String[]> listOpt = new ArrayList<>();
+                List<String[]> listOpt = new ArrayList<>();
                 try {
                     String sqlOpt = "select * from balance "
                             + "where r_table='" + tableNo + "' "
@@ -737,7 +737,7 @@ public class PrintSimpleForm {
 //                                        String TUser = getEmpName(rs.getString("R_Emp"));
 //
 //                                        //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-//                                        ArrayList<String[]> listOpt = new ArrayList<>();
+//                                        List<String[]> listOpt = new ArrayList<>();
 //                                        try {
 //                                            String sqlOpt = "select * from balance "
 //                                                    + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
@@ -911,11 +911,11 @@ public class PrintSimpleForm {
         TableFileControl tCon = new TableFileControl();
         TableFileBean tBean = tCon.getData(tableNo);
 
-        ArrayList<BalanceBean> listE = new ArrayList<>();
-        ArrayList<BalanceBean> listT = new ArrayList<>();
-        ArrayList<BalanceBean> listD = new ArrayList<>();
-        ArrayList<BalanceBean> listP = new ArrayList<>();
-        ArrayList<BalanceBean> listW = new ArrayList<>();
+        List<BalanceBean> listE = new ArrayList<>();
+        List<BalanceBean> listT = new ArrayList<>();
+        List<BalanceBean> listD = new ArrayList<>();
+        List<BalanceBean> listP = new ArrayList<>();
+        List<BalanceBean> listW = new ArrayList<>();
         if (ATFromPrintToKic.equals("PDA")) {
             tBean.setTPause("Y");
         }
@@ -1570,11 +1570,11 @@ public class PrintSimpleForm {
         }
 
         //Loop Void
-        ArrayList<BalanceBean> listVE = new ArrayList<>();
-        ArrayList<BalanceBean> listVT = new ArrayList<>();
-        ArrayList<BalanceBean> listVD = new ArrayList<>();
-        ArrayList<BalanceBean> listVP = new ArrayList<>();
-        ArrayList<BalanceBean> listVW = new ArrayList<>();
+        List<BalanceBean> listVE = new ArrayList<>();
+        List<BalanceBean> listVT = new ArrayList<>();
+        List<BalanceBean> listVD = new ArrayList<>();
+        List<BalanceBean> listVP = new ArrayList<>();
+        List<BalanceBean> listVW = new ArrayList<>();
         if (!ATFromPrintToKic.equals("PDA") && ATFromPrintToKic.equals("")) {
             String sqlvoid = "select R_EMP, R_Void, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -1976,11 +1976,11 @@ public class PrintSimpleForm {
         TableFileControl tCon = new TableFileControl();
         TableFileBean tBean = tCon.getData(tableNo);
 
-        ArrayList<BalanceBean> listE = new ArrayList<>();
-        ArrayList<BalanceBean> listT = new ArrayList<>();
-        ArrayList<BalanceBean> listD = new ArrayList<>();
-        ArrayList<BalanceBean> listP = new ArrayList<>();
-        ArrayList<BalanceBean> listW = new ArrayList<>();
+        List<BalanceBean> listE = new ArrayList<>();
+        List<BalanceBean> listT = new ArrayList<>();
+        List<BalanceBean> listD = new ArrayList<>();
+        List<BalanceBean> listP = new ArrayList<>();
+        List<BalanceBean> listW = new ArrayList<>();
         if (ATFromPrintToKic.equals("PDA")) {
             tBean.setTPause("Y");
         }
@@ -2302,11 +2302,11 @@ public class PrintSimpleForm {
         }
 
         //Loop Void
-        ArrayList<BalanceBean> listVE = new ArrayList<>();
-        ArrayList<BalanceBean> listVT = new ArrayList<>();
-        ArrayList<BalanceBean> listVD = new ArrayList<>();
-        ArrayList<BalanceBean> listVP = new ArrayList<>();
-        ArrayList<BalanceBean> listVW = new ArrayList<>();
+        List<BalanceBean> listVE = new ArrayList<>();
+        List<BalanceBean> listVT = new ArrayList<>();
+        List<BalanceBean> listVD = new ArrayList<>();
+        List<BalanceBean> listVP = new ArrayList<>();
+        List<BalanceBean> listVW = new ArrayList<>();
         if (!ATFromPrintToKic.equals("PDA") && ATFromPrintToKic.equals("")) {
             String sqlvoid = "select R_EMP, R_Void, R_PluCode, R_PName,sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -2780,7 +2780,7 @@ public class PrintSimpleForm {
                                         TUser = getEmpName(rs.getString("TUser"));
                                         
                                         //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                                        ArrayList<String[]> listOpt = new ArrayList<>();
+                                        List<String[]> listOpt = new ArrayList<>();
                                         try {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
@@ -2989,7 +2989,7 @@ public class PrintSimpleForm {
                                         TUser = getEmpName(rs.getString("TUser"));
                                         
                                         //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                                        ArrayList<String[]> listOpt = new ArrayList<>();
+                                        List<String[]> listOpt = new ArrayList<>();
                                         try {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
@@ -3163,7 +3163,7 @@ public class PrintSimpleForm {
                             int qty = rs.getInt("R_Quan");
                             TUser = getEmpBalance(rs.getString("R_PluCode"), rs.getString("R_Index"), rs.getString("TCode"));
                             //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                            ArrayList<String[]> listOpt = new ArrayList<>();
+                            List<String[]> listOpt = new ArrayList<>();
                             try {
                                 String sqlOpt = "select * from balance "
                                         + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "' and R_Index='" + R_Index + "'";
@@ -3696,7 +3696,7 @@ public class PrintSimpleForm {
                 TUser = getEmpName(rs.getString("R_Emp"));
 
                 //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                ArrayList<String[]> listOpt = new ArrayList<>();
+                List<String[]> listOpt = new ArrayList<>();
                 try {
                     String sqlOpt = "select * from balance "
                             + "where r_table='" + ThaiUtil.ASCII2Unicode(tableNo) + "' "
@@ -3874,7 +3874,7 @@ public class PrintSimpleForm {
                 String r_index = (rs.getString("R_Index"));
 
                 //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                ArrayList<String[]> listOpt = new ArrayList<>();
+                List<String[]> listOpt = new ArrayList<>();
                 try {
                     String sqlOpt = "select * from balance "
                             + "where r_table='" + tableNo + "' "

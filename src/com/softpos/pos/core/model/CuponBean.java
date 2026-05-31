@@ -2,6 +2,7 @@ package com.softpos.pos.core.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CuponBean {
 
@@ -312,7 +313,7 @@ public class CuponBean {
         this.CuEPayment = CuEPayment;
     }
 
-    public ArrayList<CuponlistBean> getListBean() {
+    public List<CuponlistBean> getListBean() {
         return listBean;
     }
 
@@ -320,5 +321,5 @@ public class CuponBean {
         this.listBean = listBean;
     }
 
-    private ArrayList<CuponlistBean> listBean = new ArrayList<>();
+    private List<CuponlistBean> listBean = new ArrayList<>();
 }

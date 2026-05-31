@@ -16,6 +16,7 @@ import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
 import printReport.PrintDriver;
 import com.softpos.util.MSG;
+import java.util.List;
 
 /**
  *
@@ -44,8 +45,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         POSHW = POSHWSetup.Bean(Value.MACNO);
     }
 
-    public ArrayList<Object[]> LoadData() {
-        ArrayList<Object[]> ListObj = new ArrayList<>();
+    public List<Object[]> LoadData() {
+        List<Object[]> ListObj = new ArrayList<>();
 
         MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
@@ -346,7 +347,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void PrintHourlyByCust() {
-        ArrayList<Object[]> ListObj = LoadData();
+        List<Object[]> ListObj = LoadData();
         if (Value.printdriver) {
             PrintHourlyByCustDriver();
         } else {
@@ -405,7 +406,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void PrintHourlyByCustDriver() {
-        ArrayList<Object[]> ListObj = LoadData();
+        List<Object[]> ListObj = LoadData();
         String t = "";
         POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getHeading1().trim().length() >= 18) {

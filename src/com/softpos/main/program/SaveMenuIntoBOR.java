@@ -12,10 +12,10 @@ import com.softpos.main.floorplan.view.FloorPlanDialog;
 import database.SQLServerConnect;
 import java.awt.Color;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JFrame;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import java.util.List;
 
 /**
  *
@@ -44,8 +44,8 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
 
     public void processSendToBor() throws ClassNotFoundException, SQLException, Exception {
         sendMenuButttonToBorController sendBor = new sendMenuButttonToBorController();
-        ArrayList<sendMgrButtonToBorBean> list = sendBor.sendMGRButtonSetupToBor();
-        ArrayList<sendSoft_MenustupBean> list1 = sendBor.sendDataSoft_menusetupToBor();
+        List<sendMgrButtonToBorBean> list = sendBor.sendMGRButtonSetupToBor();
+        List<sendSoft_MenustupBean> list1 = sendBor.sendDataSoft_menusetupToBor();
         int sizeMGRButton = list.size();
         int sizeSoftMenusetup = list1.size();
         SQLServerConnect SV = new SQLServerConnect();
