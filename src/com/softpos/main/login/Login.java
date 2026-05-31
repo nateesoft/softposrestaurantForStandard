@@ -366,7 +366,7 @@ public class Login extends javax.swing.JDialog {
     }
 
     public static void main(String args[]) {
-        AppLogUtil.startup("SoftPOS Restaurant", "1.0");
+        AppLogUtil.startup("ICS Restaurant", "1.0");
         com.formdev.flatlaf.FlatIntelliJLaf.setup();
 
         applyThaiFont();
@@ -420,6 +420,8 @@ public class Login extends javax.swing.JDialog {
     private void checkUserLogin() {
         final String loginname = txtUser.getText();
         final String password = txtPass.getText();
+        
+        AppLogUtil.info("checkUserLogin: " + loginname);
 
         PublicVar.printerStation = ConfigFile.getProperties("printerStation");
         PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
@@ -431,6 +433,7 @@ public class Login extends javax.swing.JDialog {
 
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
+            
             clearlogin();
             return;
         }

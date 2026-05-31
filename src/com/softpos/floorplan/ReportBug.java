@@ -4,6 +4,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import com.softpos.pos.core.controller.SendEmail;
+import com.softpos.util.MSG;
 
 public class ReportBug extends javax.swing.JDialog {
 
@@ -234,8 +235,8 @@ public class ReportBug extends javax.swing.JDialog {
     private void txtMSGKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMSGKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             if (!txtMSG.getText().trim().equals("")) {
-                int icon = JOptionPane.showConfirmDialog(this, "ท่านมีรายการค้างอยู่ ท่านต้องการยกเลิกการส่งข้อมูลใช่หรือไม่ ?");
-                if (icon == JOptionPane.YES_OPTION) {
+                boolean icon = MSG.CONF(this, "ท่านมีรายการค้างอยู่ ท่านต้องการยกเลิกการส่งข้อมูลใช่หรือไม่ ?");
+                if (icon) {
                     dispose();
                 }
             } else {

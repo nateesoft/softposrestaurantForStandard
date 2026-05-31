@@ -434,17 +434,13 @@ public class PrintDriver {
     }
 
     public void close() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (OSValidator.isWindows()) {
-                    try {
-//                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                        UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                                "Tahoma", java.awt.Font.PLAIN, 14)));
-                    } catch (Exception e) {
+        SwingUtilities.invokeLater(() -> {
+            if (OSValidator.isWindows()) {
+                try {
+                    UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
+                            "Tahoma", java.awt.Font.PLAIN, 14)));
+                } catch (Exception e) {
 
-                    }
                 }
             }
         });

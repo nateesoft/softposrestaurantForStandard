@@ -1358,7 +1358,7 @@ private void txtPluCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 }
                 break;
             case KeyEvent.VK_F3:
-                showHoldTable();
+                actionHoldTable();
                 break;
             case KeyEvent.VK_F4:
                 showCheckBill();
@@ -1581,7 +1581,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }//GEN-LAST:event_tbShowBalanceMouseClicked
 
     private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
-        showHoldTable();
+        actionHoldTable();
     }//GEN-LAST:event_btnHoldActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
@@ -2606,16 +2606,14 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             }
             printerName = "kic" + rKic;
             String printerForm = BranchControl.getForm(rKic);
+            
             switch (printerForm) {
                 case "1": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
-//                    printerName = "kic" + rKic;
                     for (BalanceBean balance : listBalanceForm) {
                         String PCode = balance.getR_PluCode();
                         if (printerForm.equals("1")) {
-                            if (Value.printkic) {
-                                printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
-                            }
+                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
                         }
                     }
                     break;
@@ -2623,13 +2621,11 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 case "6": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
                     for (BalanceBean balance : listBalanceForm) {
-                        if (Value.printkic) {
-                            String R_Index = balance.getR_Index();
-                            String R_PLUCODE = balance.getR_PluCode();
-                            double qty = balance.getR_Quan();
-                            double priceTotal = balance.getR_Total();
-                            printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
-                        }
+                        String R_Index = balance.getR_Index();
+                        String R_PLUCODE = balance.getR_PluCode();
+                        double qty = balance.getR_Quan();
+                        double priceTotal = balance.getR_Total();
+                        printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
                     }
                     break;
                 }
@@ -2638,26 +2634,20 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 case "5":
                     switch (printerForm) {
                         case "3":
-                            if (Value.printkic) {
-                                String retd = balanceBean.getR_ETD();
-                                printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
-                                String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-                                if (CheckBillBeforeCash.equals("Y")) {
-                                    printBillVoidCheck();
-                                }
+                            String retd = balanceBean.getR_ETD();
+                            printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+                            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                            if (CheckBillBeforeCash.equals("Y")) {
+                                printBillVoidCheck();
                             }
                             break;
                         case "4":
-                            if (Value.printkic) {
-                                printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
-                                printBillVoidCheck();
-                            }
+                            printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
+                            printBillVoidCheck();
                             break;
                         case "5":
-                            if (Value.printkic) {
-                                printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
-                                printBillVoidCheck();
-                            }
+                            printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
+                            printBillVoidCheck();
                             break;
                         default:
                             break;
@@ -2665,13 +2655,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     break;
                 case "7":
                 case "2":
-                    if (Value.printkic) {
-
-                        String retd = balanceBean.getR_ETD();
-                        printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
-//                        printSimpleForm.KIC_FORM_7(printerName, txtTable.getText());
-//                        printBillVoidCheck();
-                    }
+                    String retd = balanceBean.getR_ETD();
+                    printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
                     break;
                 default:
                     printBillVoidCheck();
@@ -2795,16 +2780,15 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
                 mainSaleControl.execUpdate(sqlTurnPrintKicOff);
             }
+            
             String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
             mainSaleControl.execUpdate(sql);
-            try {
-                Thread.sleep(100);
-                kichenPrint();
-            } catch (Exception e) {
-            }
-
+            
+            kichenPrint();
             holdTableAndSave();
+            
             PublicVar.ErrorColect = false;
+            
             initScreen();
             return;
         }
@@ -3176,7 +3160,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         showSum();
     }
 
-    private void showHoldTable() {
+    private void actionHoldTable() {
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
             printBillCheck();
         }

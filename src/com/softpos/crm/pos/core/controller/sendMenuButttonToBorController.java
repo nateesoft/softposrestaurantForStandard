@@ -105,15 +105,4 @@ public class sendMenuButttonToBorController {
 
         return bean;
     }
-
-    public static void main(String[] args) {
-        try {
-            sendMenuButttonToBorController sendBor = new sendMenuButttonToBorController();
-            ArrayList list = sendBor.sendMGRButtonSetupToBor();
-            ArrayList list1 = sendBor.sendDataSoft_menusetupToBor();
-            System.out.println(list.size());
-            System.out.println(list1.size());
-        } catch (Exception e) {
-        }
-    }
 }

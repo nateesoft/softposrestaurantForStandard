@@ -160,9 +160,4 @@ public class PKicTran {
         }
 
     }
-
-//    public static void main(String[] args) throws ParseException {
-//
-//        getDefferentTime("10:00:01", "10:32:03");
-//    }
 }

@@ -490,9 +490,4 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
         }
     }
-
-    public static void main(String[] args) {
-        DlgBrowseProduct dlg = new DlgBrowseProduct(null, true);
-        dlg.setVisible(true);
-    }
 }

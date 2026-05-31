@@ -1,7 +1,6 @@
 package com.softpos.floorplan;
 
 import com.softpos.pos.core.controller.FloorPlanController;
-import com.softpos.login.FileSettingDialog;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBill;
 import com.softpos.main.program.DisplayEJ;
@@ -20,6 +19,7 @@ import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.floorplan.view.CheckProductNotEnough;
+import com.softpos.main.login.FileSettingDialog;
 import com.softpos.main.pos.view.MainSale;
 import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
@@ -72,7 +72,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -106,82 +105,64 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (OSValidator.isWindows()) {
-                    try {
-                        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                        MSG.ERR(null, e.getMessage());
-                    }
+        SwingUtilities.invokeLater(() -> {
+            if (OSValidator.isWindows()) {
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                    MSG.ERR(null, e.getMessage());
                 }
-
-                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
-                setExtendedState(JFrame.MAXIMIZED_BOTH);
-                POSHW = POSHWSetup.Bean(Value.MACNO);
-                CONFIG = POSConfigSetup.Bean();
-                posUser = PosControl.getPosUser(PublicVar.ReturnString);
-                loadHeaderTab();
-                refresh = PosControl.getRefreshTime();
-                if (refresh < 1) {
-                    refresh = 10;
-                }
-
-                Value.TableSelected = "";
-
-//           new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    for (int a = 0; a < 10; a++) {
-//                        if (a == 9) {
-//                            a = 0;
-//                        }
-//                        showTime();
-//                    }
-//                }
-//            }).start();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        jMenu9.setVisible(false);
-                        loadHeaderTab();
-                        for (int i = 0; i < 10; i++) {
-                            initLoadButtons();
-                            loadZone(zoneSelected);//load header for tab
-                            PublicVar.countRound++;
-                            if (PublicVar.countRound > (120 * 6)) {
-                                clearTemp();
-                                PosControl.logout();
-                                System.exit(0);
-                            }
-                            System.out.println("loadHeaderTab()");
-                            addButton();
-                            if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
-                                printCheckBillFromPDA();
-                            }
-                            if (i == 9) {
-                                i = 0;
-                            }
-                            try {
-                                System.out.println("Thread.sleep(" + refresh + " * 1000)");
-                                Thread.sleep(refresh * 1000);
-                            } catch (InterruptedException ex) {
-                            }
-                        }
-                    }
-                }).start();
-
-                jMenu1.setVisible(true);
-                jMenu2.setVisible(false);
-                jMenu3.setVisible(true);
-                jMenu4.setVisible(false);
-//            jMenu7.setVisible(false);
-                MShowDailyEJ1.setVisible(false);
-                jMenuItem38.setVisible(false);
-                // init product list data
-                productControl.initLoadProductActive();
             }
+
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            POSHW = POSHWSetup.Bean(Value.MACNO);
+            CONFIG = POSConfigSetup.Bean();
+            posUser = PosControl.getPosUser(PublicVar.ReturnString);
+            loadHeaderTab();
+            refresh = PosControl.getRefreshTime();
+            if (refresh < 1) {
+                refresh = 10;
+            }
+
+            Value.TableSelected = "";
+
+            new Thread(() -> {
+                jMenu9.setVisible(false);
+                loadHeaderTab();
+                for (int i = 0; i < 10; i++) {
+                    initLoadButtons();
+                    loadZone(zoneSelected);//load header for tab
+                    PublicVar.countRound++;
+                    if (PublicVar.countRound > (120 * 6)) {
+                        clearTemp();
+                        PosControl.logout();
+                        System.exit(0);
+                    }
+                    System.out.println("loadHeaderTab()");
+                    addButton();
+                    if (PublicVar.PrintCheckBillFromPDA.equals("true")) {
+                        printCheckBillFromPDA();
+                    }
+                    if (i == 9) {
+                        i = 0;
+                    }
+                    try {
+                        System.out.println("Thread.sleep(" + refresh + " * 1000)");
+                        Thread.sleep(refresh * 1000);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }).start();
+
+            jMenu1.setVisible(true);
+            jMenu2.setVisible(false);
+            jMenu3.setVisible(true);
+            jMenu4.setVisible(false);
+            MShowDailyEJ1.setVisible(false);
+            jMenuItem38.setVisible(false);
+
+            productControl.initLoadProductActive();
         });
     }
 
@@ -1365,38 +1346,36 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
     private void jMenuItem38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem38ActionPerformed
-        int dialogResult = JOptionPane.showConfirmDialog(null, "ต้องการดึงรายการยกเลิกบิลล่าสุดใช่หรือไม่");
-        if (dialogResult == JOptionPane.YES_OPTION) {
-            if (dialogResult == 0) {
-                BillControl billControl = new BillControl();
-                BillNoBean billNoBean = billControl.getLastBillNo();
-                if (billNoBean != null) {
-                    String tableNo = billNoBean.getB_Table();
-                    String b_refno = billNoBean.getB_Refno();
-                    int b_cust = billNoBean.getB_Cust();
+        boolean dialogResult = MSG.CONF(this, "ต้องการดึงรายการยกเลิกบิลล่าสุดใช่หรือไม่");
+        if (dialogResult) {
+            BillControl billControl = new BillControl();
+            BillNoBean billNoBean = billControl.getLastBillNo();
+            if (billNoBean != null) {
+                String tableNo = billNoBean.getB_Table();
+                String b_refno = billNoBean.getB_Refno();
+                int b_cust = billNoBean.getB_Cust();
 
-                    TableFileControl tfControl = new TableFileControl();
-                    boolean isMore = tfControl.checkTableMoreItem(tableNo);
-                    if (isMore) {
-                        MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
-                    } else {
-                        TSaleController tSaleControl = new TSaleController();
-                        List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
-                        boolean updated = false;
-                        for (TSaleBean tSaleBean : lisTSale) {
-                            if (!updated) {
-                                String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
-                                tfControl.execUpdate(sql);
-                                updated = true;
-                            }
-                            String pcode = tSaleBean.getR_PluCode();
-                            String r_etd = tSaleBean.getR_ETD();
-                            double r_quan = tSaleBean.getR_Quan();
-                            saveToBalance(tableNo, pcode, r_etd, r_quan);
+                TableFileControl tfControl = new TableFileControl();
+                boolean isMore = tfControl.checkTableMoreItem(tableNo);
+                if (isMore) {
+                    MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
+                } else {
+                    TSaleController tSaleControl = new TSaleController();
+                    List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
+                    boolean updated = false;
+                    for (TSaleBean tSaleBean : lisTSale) {
+                        if (!updated) {
+                            String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
+                            tfControl.execUpdate(sql);
+                            updated = true;
                         }
-                        MSG.NOTICE(this, "ดึงรายการยกเลิกบิลล่าสุดเรียบร้อย โต๊ะ : " + tableNo);
-                        addButton();
+                        String pcode = tSaleBean.getR_PluCode();
+                        String r_etd = tSaleBean.getR_ETD();
+                        double r_quan = tSaleBean.getR_Quan();
+                        saveToBalance(tableNo, pcode, r_etd, r_quan);
                     }
+                    MSG.NOTICE(this, "ดึงรายการยกเลิกบิลล่าสุดเรียบร้อย โต๊ะ : " + tableNo);
+                    addButton();
                 }
             }
             // Saving code here
@@ -1973,7 +1952,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
 
         if (!checkExistTempRefund) {
-            JOptionPane.showMessageDialog(this, "ไม่พบบิลรายการขายสินค้า ที่ยกเลิกก่อนหน้านี้ !");
+            MSG.WAR(this, "ไม่พบบิลรายการขายสินค้า ที่ยกเลิกก่อนหน้านี้ !");
         } else {
             floorPlanControl.deleteSpTempRefund();
             BalanceControl.updateProSerTable(tableTemp, null);
@@ -2273,7 +2252,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                 showPOS(tableNo);
                             } else {
                                 if (!login.getLoginPWD().equals("")) {
-                                    JOptionPane.showMessageDialog(null, "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
+                                    MSG.ERR(new JFrame(), "ท่านระบุรหัสบริกรไม่ถูกต้อง !");
                                 }
                                 login.setVisible(false);
                             }

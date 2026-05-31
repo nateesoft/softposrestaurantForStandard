@@ -2269,10 +2269,6 @@ public class PPrint {
         String[] strs = t.split("_");
         for (String data : strs) {
             pd.addTextIFont(data);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
 
         pd.printHTML();
@@ -2299,7 +2295,7 @@ public class PPrint {
                     TableFileControl tCon = new TableFileControl();
                     TableFileBean tBean = tCon.getData(tableNo);
                     InitPrinter();
-                    //OpenDrawer() ; 
+                    OpenDrawer();
                     PublicVar.P_LineCount = 0;
                     for (int i = 0; i < listBeanNoVoid.size(); i++) {
                         BalanceBean bean = (BalanceBean) listBeanNoVoid.get(i);
@@ -2314,7 +2310,6 @@ public class PPrint {
                         for (String data : strs) {
                             t1 += data.replace("_", "\n") + "\n";
                         }
-//                        print(POSHW.getHeading1());
                         print(t1);
                     } else {
                         if (!POSHW.getHeading1().equals("") || POSHW.getHeading1() != null) {
@@ -2520,20 +2515,13 @@ public class PPrint {
 
     }
 
-    public void PrintCheckBillPDA(String tableNo) {
-        if (Value.printdriver == true == true) {
-            printCheckBillDriver(tableNo);
-        } else {
-
-        }
-    }
-
     public void PrintVoidBill(final String tableNo) {
         ExecutorService service = Executors.newFixedThreadPool(1);
         service.submit(new Runnable() {
+            @Override
             public void run() {
                 System.out.println("PrintVoidBill : Start Printing....");
-                if (Value.printdriver == true == true) {
+                if (Value.printdriver == true) {
                     PrintVoidBillDriver(tableNo);
                 } else {
                     BalanceControl bc = new BalanceControl();
@@ -2543,7 +2531,6 @@ public class PPrint {
                     int AmtLength = 10;
                     int SubLength = 20;
                     int SubLength2 = 13;
-                    int ItemCnt = 0;
                     String VatStr;
                     CONFIG = POSConfigSetup.Bean();
                     if (!Value.getComPort().equals("NONE")) {
@@ -2553,7 +2540,6 @@ public class PPrint {
                             for (int i = 0; i < listBean.size(); i++) {
                                 BalanceBean bean = (BalanceBean) listBean.get(i);
                                 if (!bean.getR_Void().equals("V")) {
-                                    ItemCnt = (int) (ItemCnt + bean.getR_Quan());
                                     break;
                                 }
                             }
