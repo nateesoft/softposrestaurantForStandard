@@ -17,13 +17,13 @@ public class WebServiceControl {
     private final PosControl posControl;
 
     public WebServiceControl() {
-        posControl = new PosControl();
+        posControl = AppContext.getPosControl();
     }
 
     public void updateService(String table) {
         MySQLConnect mysql = new MySQLConnect();
         try {
-            BalanceControl balanceControl = new BalanceControl();
+            BalanceControl balanceControl = AppContext.getBalanceControl();
             List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
             double ServiceTotal = 0;
             double VatTotal = 0;

@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.util.ThaiUtil;
@@ -57,7 +58,7 @@ public class ItemEditQty extends javax.swing.JDialog {
         txtPAmountEdit.setText("");
         txtPQuanEdit.requestFocus();
         txtNewPDesc.setText("");
-        BalanceControl bCon = new BalanceControl();
+        BalanceControl bCon = AppContext.getBalanceControl();
         balanceBean = bCon.getBalanceIndex(tableNo, RIndex);
 
         if (balanceBean != null) {
@@ -78,7 +79,7 @@ public class ItemEditQty extends javax.swing.JDialog {
 
     public void ProcessUpdateBalance() {
         if (XNewQty > 0.0000001) {
-            BalanceControl bCon = new BalanceControl();
+            BalanceControl bCon = AppContext.getBalanceControl();
             balanceBean = bCon.getBalanceIndex(tableNo, RIndex);
             double newAmount = Double.parseDouble(txtPAmountEdit.getText().replace(",", ""));
             String sqlUpdateBalance;

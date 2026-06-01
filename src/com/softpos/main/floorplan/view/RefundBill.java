@@ -1,5 +1,6 @@
 package com.softpos.main.floorplan.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.MPluController;
 import com.softpos.pos.core.controller.MTranController;
 import com.softpos.main.program.GetUserAction;
@@ -62,7 +63,7 @@ public class RefundBill extends javax.swing.JDialog {
     private String macno = "";
     private String memcode = "";
 
-    private BillControl billControl = new BillControl();
+    private BillControl billControl = AppContext.getBillControl();
 
     /**
      * Creates new form RefundBill
@@ -421,16 +422,16 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 fObject2.delete();
 
                 // check member point and remove both table mycrmbranch.mplu and mycrmbranch.mtran
-                BillControl billControl = new BillControl();
+                BillControl billControl = AppContext.getBillControl();
                 BillNoBean billBean = billControl.getData(BillNo);
 
                 String receiptNo = billBean.getB_MacNo() + "/" + billBean.getB_Refno();
-                MPluController mpluControl = new MPluController();
+                MPluController mpluControl = AppContext.getMPluController();
                 mpluControl.refundBill(receiptNo);
-                MTranController mtranControl = new MTranController();
+                MTranController mtranControl = AppContext.getMTranController();
                 mtranControl.refundBill(receiptNo);
 
-                MemmaterController memControl = new MemmaterController();
+                MemmaterController memControl = AppContext.getMemmaterController();
                 memControl.updateScoreRefund(billBean.getB_MemCode(), billBean.getB_MemCurSum());
 
                 MSG.NOTICE(this, "การยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " เรียบร้อยแล้ว...");
@@ -538,7 +539,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     PUtility.ProcessStockOut(DocNo, StkCode, rs.getString("r_plucode"), TDate, StkRemark, -1 * rs.getDouble("r_quan"), -1 * rs.getDouble("r_total"), PublicVar.TUserRec.getUserName(), rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
                     double quantity = rs.getDouble("r_quan");
                     String r_plucode = rs.getString("r_plucode");
-                    FloorPlanController floorPlanControl = new FloorPlanController();
+                    FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
                     List<PIngredientBean> listING = floorPlanControl.listIngredeint(r_plucode);
                     //ตัดสต็อกสินค้าที่มี Ingredent
                     for (PIngredientBean ingBean : listING) {
@@ -582,7 +583,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         BillNo = txtBillNo.getText();
         //Load Data From BillNo
 
-        RefundBillController refundControl = new RefundBillController();
+        RefundBillController refundControl = AppContext.getRefundBillController();
         BillNoBean billNoBean = refundControl.checkBillByRefno(Value.MACNO, BillNo);
         if (billNoBean == null) {
             MSG.WAR(this, "ไม่พบเลขที่ใบเสร็จรับเงินที่ต้องการยกเลิก (Refund) กรุณาตรวจสอบเลขที่ใบเสร็จใหม่...");

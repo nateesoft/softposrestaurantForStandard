@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.BalanceControl;
@@ -39,7 +40,7 @@ public class ItemDiscount extends javax.swing.JDialog {
         this.tableNo = tableNo;
         this.RIndex = RIndex;
 
-        BalanceControl bCon = new BalanceControl();
+        BalanceControl bCon = AppContext.getBalanceControl();
         balanceBean = bCon.getBalanceIndex(tableNo, RIndex);
 
         if (balanceBean != null) {
@@ -457,7 +458,7 @@ private void btnExitKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_b
             MSG.ERR(this, e.getMessage());
         }
 
-        ItemDisControl disCon = new ItemDisControl();
+        ItemDisControl disCon = AppContext.getItemDisControl();
         disCon.saveBalanceItemDiscount(PCode, Table, Index, prDisc, prBaht, memberBean);
 
         this.dispose();

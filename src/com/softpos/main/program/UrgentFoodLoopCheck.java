@@ -5,6 +5,7 @@
  */
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
@@ -187,7 +188,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     pIndex = rs.getString("PIndex");
                     pTable = rs.getString("PTable");
                     BalanceBean bean = new BalanceBean();
-                    BalanceControl bl = new BalanceControl();
+                    BalanceControl bl = AppContext.getBalanceControl();
                     bean = bl.getBalanceIndex(pTable, pIndex);
                     if (bean != null) {
                         int pQty = rs.getInt("PQty");

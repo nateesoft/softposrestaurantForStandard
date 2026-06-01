@@ -15,7 +15,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class CheckBillController extends DatabaseConnection {
+public class CheckBillController {
 
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;

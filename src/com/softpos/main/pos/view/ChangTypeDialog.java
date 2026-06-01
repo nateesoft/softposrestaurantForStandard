@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.util.ThaiUtil;
@@ -39,7 +40,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
         this.tableNo = tableNo;
         this.tempETD = tempETD;
 
-        balanceControl = new BalanceControl();
+        balanceControl = AppContext.getBalanceControl();
 
         model = (DefaultTableModel) tblshowplu.getModel();
         tblshowplu.setShowGrid(true);

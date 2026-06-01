@@ -13,7 +13,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class PrintToKicController extends DatabaseConnection {
+public class PrintToKicController {
 
     public BalanceBean getBalaneForPDA() {
         BalanceBean bean = null;

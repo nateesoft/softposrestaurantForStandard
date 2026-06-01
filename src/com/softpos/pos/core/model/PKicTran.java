@@ -7,6 +7,7 @@ package com.softpos.pos.core.model;
 
 ////
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ProductControl;
 import static com.softpos.pos.core.controller.BranchControl.updateKicItemNo;
 import com.softpos.util.AppLogUtil;
@@ -75,7 +76,7 @@ public class PKicTran {
                     + "order by pitemno,petd;";
             ResultSet rs = mysql.executeQuery(sql);
 
-            ProductControl ProductControl = new ProductControl();
+            ProductControl ProductControl = AppContext.getProductControl();
             while (rs.next()) {
                 PKicTranBean kicTranBean = new PKicTranBean();
                 ProductBean bean = ProductControl.getData(rs.getString("pcode"));

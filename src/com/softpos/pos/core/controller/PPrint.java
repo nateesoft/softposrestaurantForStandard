@@ -79,9 +79,9 @@ public class PPrint {
     private String TAB2 = TAB + TAB;
     private String PrinterName = "";
     boolean isPrintOutTest = true;
-    private final TableFileControl tableFileControl = new TableFileControl();
-    private final BalanceControl balanceControl = new BalanceControl();
-    private final BillControl billControl = new BillControl();
+    private final TableFileControl tableFileControl = AppContext.getTableFileControl();
+    private final BalanceControl balanceControl = AppContext.getBalanceControl();
+    private final BillControl billControl = AppContext.getBillControl();
 
     public PPrint() {
         POSHW = POSHWSetup.Bean(Value.MACNO);

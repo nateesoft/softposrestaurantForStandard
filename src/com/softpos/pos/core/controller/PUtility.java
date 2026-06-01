@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import com.softpos.util.AppLogUtil;
 
-public class PUtility extends DatabaseConnection {
+public class PUtility {
 
     static DecimalFormat DecFmt = new DecimalFormat("#######0.00");
 
@@ -210,7 +210,7 @@ public class PUtility extends DatabaseConnection {
                 }
             }
             if (SetProc) {
-                ProductControl productControl = new ProductControl();
+                ProductControl productControl = AppContext.getProductControl();
                 List<PSetBean> listPsetBean = getPSetByPCode(TempCode);
                 for (PSetBean psetBean : listPsetBean) {
                     RetVal = true;
@@ -516,7 +516,7 @@ public class PUtility extends DatabaseConnection {
         Date date = new Date();
 
         List<PSetBean> psetList = getPSetByPCode(XCode);
-        ProductControl productControl = new ProductControl();
+        ProductControl productControl = AppContext.getProductControl();
         for (PSetBean psetBean : psetList) {
             String TempCode = psetBean.getPsubcode();
             Double TempQty = psetBean.getPsubQTY() * XQty;
@@ -606,7 +606,7 @@ public class PUtility extends DatabaseConnection {
         SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
         Date date = new Date();
 
-        ProductControl productControl = new ProductControl();
+        ProductControl productControl = AppContext.getProductControl();
         List<BalanceSetBean> listBalanceSet = getBalanceSetByPCodeRIndex(XCode, r_index);
         for (BalanceSetBean bean : listBalanceSet) {
             String TempCode = bean.getR_psubcode();

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class TableFileControl extends DatabaseConnection {
+public class TableFileControl {
 
     public static final int TABLE_READY = 1;
     public static final int TABLE_NOT_ACTIVE = 2;
@@ -492,11 +492,11 @@ public class TableFileControl extends DatabaseConnection {
                 stmt.close();
             }
 
-            PromotionControl proControl = new PromotionControl();
+            PromotionControl proControl = AppContext.getPromotionControl();
             proControl.updatePromotion(table);
 
             //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
-            ServiceControl serviceControl = new ServiceControl();
+            ServiceControl serviceControl = AppContext.getServiceControl();
             serviceControl.updateService(table);
         } catch (SQLException e) {
 
@@ -605,7 +605,7 @@ public class TableFileControl extends DatabaseConnection {
         try {
             mysql.open(TableFileControl.class);
             double TAmount = 0.00;
-            BalanceControl bControl = new BalanceControl();
+            BalanceControl bControl = AppContext.getBalanceControl();
             List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
             for (int i = 0; i < dataBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) dataBean.get(i);
@@ -624,11 +624,11 @@ public class TableFileControl extends DatabaseConnection {
             }
 
             //คำนวณโปรโมชัน + ค่าบริการ และคำนวณภาษีมูลค่าเพิ่ม
-            PromotionControl proControl = new PromotionControl();
+            PromotionControl proControl = AppContext.getPromotionControl();
             proControl.updatePromotion(tableNo);
 
             //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
-            ServiceControl serviceControl = new ServiceControl();
+            ServiceControl serviceControl = AppContext.getServiceControl();
             serviceControl.updateService(tableNo);
 
         } catch (SQLException e) {

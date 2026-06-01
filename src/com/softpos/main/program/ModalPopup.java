@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ModalPopupController;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.util.ThaiUtil;
@@ -30,7 +31,7 @@ public class ModalPopup extends javax.swing.JDialog {
     private String PNameSet = "";
     private String Main = "";
     private String TableNo = "";
-    private ModalPopupController modalControl = new ModalPopupController();
+    private ModalPopupController modalControl = AppContext.getModalPopupController();
 
     public ModalPopup(java.awt.Dialog parent, boolean modal,
             String PCode, String PName, String TableNo, String Main, String MenuCode) {

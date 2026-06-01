@@ -9,6 +9,7 @@ package printReport;
  *
  * @author User
  */
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ControlPrintCheckBill;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
@@ -68,11 +69,11 @@ public class PrintKicFormReport {
 //
 //            @Override
 //            public void run() {
-        TableFileControl tbControl = new TableFileControl();
+        TableFileControl tbControl = AppContext.getTableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
 
         DateConvert dc = new DateConvert();
-//        PosControl control = new PosControl();
+//        PosControl control = AppContext.getPosControl();
 //        POSHWSetup POSHWSetup = control.getData(Macno);
 //        POSConfigSetup bean = new POSConfigSetup();
 //        bean = control.getData();
@@ -175,7 +176,7 @@ public class PrintKicFormReport {
     public void PrintKicForm8_Report(
             final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_Index) throws Exception {
 
-        TableFileControl tbControl = new TableFileControl();
+        TableFileControl tbControl = AppContext.getTableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
 
         DateConvert dc = new DateConvert();

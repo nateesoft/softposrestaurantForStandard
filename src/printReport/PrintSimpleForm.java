@@ -1,6 +1,8 @@
 package printReport;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
+import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.PrintToKicController;
 import com.softpos.pos.core.controller.TableFileControl;
@@ -46,9 +48,10 @@ public class PrintSimpleForm {
     private String ETD = "";
     private String CustomerIn = "";
 
-    private final EmployeeControl employeeControl = new EmployeeControl();
-    private final PrintToKicController printToKicController = new PrintToKicController();
-    private final TableFileControl tableFileControl = new TableFileControl();
+    private final EmployeeControl employeeControl = AppContext.getEmployeeControl();
+    private final PrintToKicController printToKicController = AppContext.getPrintToKicController();
+    private final TableFileControl tableFileControl = AppContext.getTableFileControl();
+    private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
 
     public PrintSimpleForm() {
         employeeControl.initLoadEmployeeList();
@@ -632,7 +635,7 @@ public class PrintSimpleForm {
                 + "and r_printOk='Y' "
                 + "and r_kic<>'' "
                 + "and trantype='PDA';";
-        printToKicController.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
 //            }
 //        });
     }
@@ -1132,7 +1135,7 @@ public class PrintSimpleForm {
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='E' ;";
                         }
-                        printToKicController.execUpdate(sql);
+                        databaseConnection.execUpdate(sql);
                     } catch (Exception e) {
 
                     }
@@ -1176,7 +1179,7 @@ public class PrintSimpleForm {
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='T' ;";
                         }
-                        printToKicController.execUpdate(sql);
+                        databaseConnection.execUpdate(sql);
                     }
                 } catch (Exception e) {
 
@@ -1220,7 +1223,7 @@ public class PrintSimpleForm {
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='D' ;";
                         }
-                        printToKicController.execUpdate(sql);
+                        databaseConnection.execUpdate(sql);
                     }
                 } catch (Exception e) {
 
@@ -1261,7 +1264,7 @@ public class PrintSimpleForm {
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='P' ;";
                         }
-                        printToKicController.execUpdate(sql);
+                        databaseConnection.execUpdate(sql);
                     }
                 } catch (Exception e) {
 
@@ -1303,7 +1306,7 @@ public class PrintSimpleForm {
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='W' ;";
                         }
-                        printToKicController.execUpdate(sql);
+                        databaseConnection.execUpdate(sql);
                     }
                 } catch (Exception e) {
 
@@ -1657,7 +1660,7 @@ public class PrintSimpleForm {
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'"
                         + ";";
-                printToKicController.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 sql = "update balance "
                         + "set r_kicprint='P',"
                         + "r_pause='Y' "
@@ -1669,7 +1672,7 @@ public class PrintSimpleForm {
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'"
                         + ";";
-                printToKicController.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 mysql.closeConnection(this.getClass());
             } catch (Exception e) {
             }
@@ -2376,7 +2379,7 @@ public class PrintSimpleForm {
                     + "and r_void='V' "
                     + "and macno='" + macno + "'"
                     + ";";
-            printToKicController.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
             mysql.closeConnection(this.getClass());
         }
 //            }

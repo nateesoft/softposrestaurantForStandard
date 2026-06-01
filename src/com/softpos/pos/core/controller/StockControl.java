@@ -299,7 +299,7 @@ public class StockControl {
     public static double PRODUCT_PRICE(String PCode, String ETD) {
         double price = 0.00;
         try {
-            ProductControl proCont = new ProductControl();
+            ProductControl proCont = AppContext.getProductControl();
             ProductBean product = proCont.getData(PCode);
 
             //กำหนดราคาเองตามป้าย

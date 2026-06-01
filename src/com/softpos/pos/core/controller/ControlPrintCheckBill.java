@@ -17,7 +17,7 @@ public class ControlPrintCheckBill {
 
     public void PrintCheckBill(String tableNO, boolean CheckBill, String emp, String PrinterName, String Macno) {
 
-        EmployControl empc = new EmployControl();
+        EmployControl empc = AppContext.getEmployControl();
         if (CheckBill == true) {
             emp = ThaiUtil.Unicode2ASCII(empc.empName(emp));
             MySQLConnect mysql = new MySQLConnect();

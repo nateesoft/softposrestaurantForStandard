@@ -11,7 +11,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class RefundBillController extends DatabaseConnection {
+public class RefundBillController {
 
     public BillNoBean checkBillByRefno(String macno, String billNo) {
         BillNoBean bean = null;

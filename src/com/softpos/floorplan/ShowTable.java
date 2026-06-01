@@ -1,5 +1,6 @@
 package com.softpos.floorplan;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.Value;
@@ -248,7 +249,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
             if (!tableNo.equals("")) {
                 Value.TableSelected = tableNo;
-                TableFileControl tfCont = new TableFileControl();
+                TableFileControl tfCont = AppContext.getTableFileControl();
                 if (tfCont.checkTableOpened(tableNo)) {
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
@@ -279,7 +280,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
             if (!tableNo.equals("")) {
                 Value.TableSelected = tableNo;
-                TableFileControl tfCont = new TableFileControl();
+                TableFileControl tfCont = AppContext.getTableFileControl();
                 if (tfCont.checkTableOpened(tableNo)) {
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     Value.TableSelected = "";
@@ -300,7 +301,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                 String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
                 if (!tableNo.equals("")) {
                     Value.TableSelected = tableNo;
-                    TableFileControl tfCont = new TableFileControl();
+                    TableFileControl tfCont = AppContext.getTableFileControl();
                     if (tfCont.checkTableOpened(tableNo)) {
                         MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                         Value.TableSelected = "";

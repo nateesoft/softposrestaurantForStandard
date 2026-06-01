@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.program.CouponDiscount;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
@@ -2162,7 +2163,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void loadDataToText() {
-        TableFileControl tfCon = new TableFileControl();
+        TableFileControl tfCon = AppContext.getTableFileControl();
         TableFileBean tBean = tfCon.getData(tableNo);
         txtFestAmt.setText(NumberFormat.showDouble2(tBean.getFastDiscAmt()));
         txtEmpAmt.setText(NumberFormat.showDouble2(tBean.getEmpDiscAmt()));

@@ -21,7 +21,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class MainSaleController extends DatabaseConnection {
+public class MainSaleController {
 
     public MenuListBean getMenuListByMenuItem(String PluCode) {
         MenuListBean bean = null;

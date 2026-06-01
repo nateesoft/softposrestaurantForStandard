@@ -13,7 +13,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class CouponDiscountController extends DatabaseConnection {
+public class CouponDiscountController {
 
     public List<BalanceBean> getBalanceByQuanCanDisc(String tableNo, String pCode) {
         List<BalanceBean> listBalance = new ArrayList<>();

@@ -58,7 +58,7 @@ public class TableMoveControl {
         } else {
 
             // Check table form exist data
-            BalanceControl bControl = new BalanceControl();
+            BalanceControl bControl = AppContext.getBalanceControl();
             List<BalanceBean> dataBalanceFrom = bControl.getAllBalance(tableFrom);
             List<BalanceBean> dataBalanceDest = bControl.getAllBalance(tableDest);
 
@@ -79,7 +79,7 @@ public class TableMoveControl {
                     updateRLinkIndex(tableDest);
 
                     // Clear table destination
-                    TableFileControl tbFile = new TableFileControl();
+                    TableFileControl tbFile = AppContext.getTableFileControl();
                     tbFile.setDefaultTableFile(tableFrom);
                 } else {
                     //keyMoveTable.put("Table "+tableDest+" exist data already , Confirm to Move table ?", true);
@@ -93,7 +93,7 @@ public class TableMoveControl {
                     updateRLinkIndex(tableDest);
 
                     // Clear table destination
-                    TableFileControl tbFile = new TableFileControl();
+                    TableFileControl tbFile = AppContext.getTableFileControl();
                     tbFile.setDefaultTableFile(tableFrom);
                 }
             }
@@ -101,7 +101,7 @@ public class TableMoveControl {
     }
 
     public static void moveProduct(String table1, String table2, String R_Index) {
-        BalanceControl bControl = new BalanceControl();
+        BalanceControl bControl = AppContext.getBalanceControl();
         List<BalanceBean> dataBalanceFrom = bControl.getBalanceIndex(R_Index);
 
         for (int i = 0; i < dataBalanceFrom.size(); i++) {

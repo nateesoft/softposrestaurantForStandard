@@ -14,7 +14,7 @@ import com.softpos.util.NumberUtil;
 public class ItemDisControl {
 
     public void saveBalanceItemDiscount(String PCode, String Table, String Index, double prDisc, double prBaht, MemberBean memberBean) {
-        BalanceControl bCon = new BalanceControl();
+        BalanceControl bCon = AppContext.getBalanceControl();
         BalanceBean bean = bCon.getProduct(PCode, Index);
 
         double prAmt = 0, R_Total = 0, addServiceAmt = 0, Service = 0, ItemDiscAmt = 0, Net_Total = 0;

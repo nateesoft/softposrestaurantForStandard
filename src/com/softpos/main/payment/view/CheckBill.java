@@ -1,5 +1,6 @@
 package com.softpos.main.payment.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.pos.view.DiscountDialog;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
@@ -15,6 +16,7 @@ import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.pos.view.MemberDialog;
 import com.softpos.pos.core.controller.CheckBillController;
+import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
@@ -34,8 +36,6 @@ import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -56,7 +56,8 @@ public class CheckBill extends javax.swing.JDialog {
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
     private POSConfigSetup CONFIG;
-    private CheckBillController checkBillControl = new CheckBillController();
+    private CheckBillController checkBillControl = AppContext.getCheckBillController();
+    private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
 
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
@@ -1862,7 +1863,7 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void loadTableBill() {
-        TableFileControl tfCon = new TableFileControl();
+        TableFileControl tfCon = AppContext.getTableFileControl();
         tBean = tfCon.getData(tableNo);
         double totalDiscount;
         totalDiscount = tBean.getProDiscAmt() + tBean.getSpaDiscAmt() + tBean.getCuponDiscAmt()
@@ -1872,7 +1873,7 @@ public class CheckBill extends javax.swing.JDialog {
         txtBillNo.setText("WAIT");
 
         POSConfigSetup config = PosControl.getData();
-        BalanceControl bc = new BalanceControl();
+        BalanceControl bc = AppContext.getBalanceControl();
         double NetTotalUpDown = 0;
         if (!config.getP_PayBahtRound().equals("O")) {
             NetTotalUpDown = NumberUtil.UP_DOWN_NATURAL_BAHT(tBean.getNetTotal() - totalDiscount);
@@ -2043,7 +2044,7 @@ public class CheckBill extends javax.swing.JDialog {
             // for earnest
             billBean.setB_Earnest(returnMoney);
 
-            TableFileControl tfCon = new TableFileControl();
+            TableFileControl tfCon = AppContext.getTableFileControl();
             TableFileBean tableFileBean = tfCon.getData(tableNo);
 
             //get from bean
@@ -2069,7 +2070,7 @@ public class CheckBill extends javax.swing.JDialog {
                     billBean.setB_SumScore(memberBean.getMember_TotalScore());
                 }
             }
-            BillControl billControl = new BillControl();
+            BillControl billControl = AppContext.getBillControl();
             PublicVar.SubTotalOK = true;
             String billNoRef = billControl.saveBillNo(tableNo, billBean);
             txtBillNo.setText(billNoRef);
@@ -2143,7 +2144,7 @@ public class CheckBill extends javax.swing.JDialog {
             billBean.setB_SubDisc(discBean.getStrCuponDiscount());
             billBean.setB_SubDiscAmt(discBean.getCuponDiscount());
 
-            BillControl billControl = new BillControl();
+            BillControl billControl = AppContext.getBillControl();
             PublicVar.SubTotalOK = true;
             if (!CONFIG.getP_PayBahtRound().equals("O")) {
                 double cashPay = Double.parseDouble(txtCashAmount.getText().trim().replace(",", ""));
@@ -2270,7 +2271,7 @@ public class CheckBill extends javax.swing.JDialog {
     private void clearTempSet(String tableNo) {
         String sql = "delete from tempset "
                 + "where PTableNo='" + tableNo + "'";
-        checkBillControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
     }
 
     private void checkBillOK() {
@@ -2306,21 +2307,21 @@ public class CheckBill extends javax.swing.JDialog {
         String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
         String sql2 = "insert ignore into temp_balance select * from balance "
                 + "where r_table='" + tableNo + "' order by r_index";
-        checkBillControl.execUpdate(sql1);
-        checkBillControl.execUpdate(sql2);
+        databaseConnection.execUpdate(sql1);
+        databaseConnection.execUpdate(sql2);
     }
 
     private void restoreTempBalance() {
         if (checkBillControl.restoreTempBalance(tableNo)) {
             String sql1 = "delete from balance where r_table='" + tableNo + "'";
             String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
-            checkBillControl.execUpdate(sql1);
-            checkBillControl.execUpdate(sql2);
+            databaseConnection.execUpdate(sql1);
+            databaseConnection.execUpdate(sql2);
         }
     }
 
     private void clearTempGift() {
-        checkBillControl.execUpdate("delete from tempgift");
+        databaseConnection.execUpdate("delete from tempgift");
     }
 
     private boolean checkStatusCreditData() {
@@ -2355,10 +2356,10 @@ public class CheckBill extends javax.swing.JDialog {
         }
         switch (choice) {
             case "Ins":
-                checkBillControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 break;
             case "Del":
-                checkBillControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 break;
         }
     }
@@ -2375,7 +2376,7 @@ public class CheckBill extends javax.swing.JDialog {
         }
 
         // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-        MainSaleController mainSaleControl = new MainSaleController();
+        MainSaleController mainSaleControl = AppContext.getMainSaleController();
         if (mainSaleControl.checkCountPrinterTo(tableNo)) {
             if (!PublicVar.Branch_Saveorder.equals("N")) {
                 printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
@@ -2464,7 +2465,7 @@ public class CheckBill extends javax.swing.JDialog {
                 + "and r_kicprint<>'P' "
                 + "and r_printOk='Y' "
                 + "and r_kic<>'';";
-        checkBillControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
     }
 
     private void CheckKicPrint() {

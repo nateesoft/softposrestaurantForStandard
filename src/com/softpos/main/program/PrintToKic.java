@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.PrintToKicController;
@@ -23,7 +24,7 @@ public class PrintToKic extends javax.swing.JFrame {
     private int refresh = 15;
     public static boolean kicPrintting = false;
     private boolean printkic = false;
-    private final PrintToKicController control = new PrintToKicController();
+    private final PrintToKicController control = AppContext.getPrintToKicController();
 
     /**
      * Creates new form PrintToKic

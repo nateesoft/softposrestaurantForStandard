@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.controller.TableFileControl;
@@ -26,7 +27,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
     private String tableNo;
     private String table2;
     private DecimalFormat df = new DecimalFormat("###0.00");
-    private ProductControl productControl = new ProductControl();
+    private ProductControl productControl = AppContext.getProductControl();
 
     public SplitBillPayment(java.awt.Dialog parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -245,7 +246,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         //cancel order
-        BalanceControl bcontrol = new BalanceControl();
+        BalanceControl bcontrol = AppContext.getBalanceControl();
         bcontrol.restoreBalance(txtTable1.getText(), txtTable2.getText());
 
         table2 = "";
@@ -295,7 +296,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
             if (isAllow) {
                 if (table != null || PCode != null || R_Index != null) {
-                    BalanceControl balanceControl = new BalanceControl();
+                    BalanceControl balanceControl = AppContext.getBalanceControl();
 
                     boolean isLoop = false;
                     /**
@@ -374,7 +375,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
             if (isAllow) {
                 if (table != null || PCode != null || R_Index != null) {
-                    BalanceControl balanceControl = new BalanceControl();
+                    BalanceControl balanceControl = AppContext.getBalanceControl();
 
                     boolean isLoop = false;
                     /**
@@ -457,7 +458,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        BalanceControl bControl = new BalanceControl();
+        BalanceControl bControl = AppContext.getBalanceControl();
         List<BalanceBean> balance = bControl.getAllBalance(txtTable1.getText());
         for (int i = 0; i < balance.size(); i++) {
             BalanceBean bean = (BalanceBean) balance.get(i);
@@ -487,7 +488,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        BalanceControl bControl = new BalanceControl();
+        BalanceControl bControl = AppContext.getBalanceControl();
         List<BalanceBean> balance = bControl.getAllBalance(txtTable2.getText());
         for (int i = 0; i < balance.size(); i++) {
             BalanceBean bean = (BalanceBean) balance.get(i);
@@ -510,12 +511,12 @@ public class SplitBillPayment extends javax.swing.JDialog {
         txtTable2.setText(txtTable1.getText() + "-1");
 
         //create table split
-        TableFileControl tableFile = new TableFileControl();
+        TableFileControl tableFile = AppContext.getTableFileControl();
         TableFileBean tBean = tableFile.getData(txtTable1.getText());
         tableFile.createNewTableSplit(tBean, txtTable2.getText());
 
         //backup data to temp balance
-        BalanceControl balance = new BalanceControl();
+        BalanceControl balance = AppContext.getBalanceControl();
         if (balance.backupBalance(txtTable1.getText())) {
             loadTable(txtTable1.getText());
         } else {

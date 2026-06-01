@@ -25,7 +25,7 @@ public class PromotionControl {
     private final PosControl posControl;
 
     public PromotionControl() {
-        posControl = new PosControl();
+        posControl = AppContext.getPosControl();
     }
 
     public void saveTempPromotion(TempPromotion bean) {
@@ -49,11 +49,11 @@ public class PromotionControl {
     }
 
     public void savePromotionItem(String PCode, String Table, String Index, double prDisc, double prBaht) {
-        BalanceControl bCon = new BalanceControl();
+        BalanceControl bCon = AppContext.getBalanceControl();
         BalanceBean bean = bCon.getProduct(PCode, Index);
 
         double prAmt = 0, R_Total = 0, addServiceAmt = 0, Service = 0;
-        ProductControl pCon = new ProductControl();
+        ProductControl pCon = AppContext.getProductControl();
         ProductBean product = pCon.getData(PCode);
 
         double priceMain = StockControl.PRODUCT_PRICE(PCode, bean.getR_ETD());
@@ -374,10 +374,10 @@ public class PromotionControl {
         double ProDiscAmt = 0.00;
         double NetTotal;
 
-        ProductControl productControl = new ProductControl();
+        ProductControl productControl = AppContext.getProductControl();
         ProductBean product;
 
-        BalanceControl balanceControl = new BalanceControl();
+        BalanceControl balanceControl = AppContext.getBalanceControl();
         List<BalanceBean> dataBean = balanceControl.getAllBalancePromotion(table);//Filter by Promotion and Discount = 'Y'
         String PCode;
 

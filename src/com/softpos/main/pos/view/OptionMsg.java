@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.util.ThaiUtil;
@@ -35,7 +36,7 @@ public class OptionMsg extends javax.swing.JDialog {
         this.index = index;
         this.tableNo = tableNo;
 
-        BalanceControl bControl = new BalanceControl();
+        BalanceControl bControl = AppContext.getBalanceControl();
         bean = bControl.getBalanceIndex(tableNo, index);
 
         model1 = (DefaultTableModel) tblOptionMsg.getModel();

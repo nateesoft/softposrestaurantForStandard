@@ -1,5 +1,6 @@
 package com.softpos.main.floorplan.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.main.login.FileSettingDialog;
 import com.softpos.main.program.CheckStockNow;
@@ -22,6 +23,7 @@ import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.IngedientController;
 import com.softpos.pos.core.controller.PosUserController;
@@ -96,8 +98,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private PosUserBean posUser = null;
     private PPrint pPrint = new PPrint();
 
-    private final ProductControl productControl = new ProductControl();
-    private final FloorPlanController floorPlanControl = new FloorPlanController();
+    private final ProductControl productControl = AppContext.getProductControl();
+    private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
+    private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
 
     private static class FloorInitData {
 
@@ -1316,25 +1319,25 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem38ActionPerformed
         boolean dialogResult = MSG.CONF(this, "ต้องการดึงรายการยกเลิกบิลล่าสุดใช่หรือไม่");
         if (dialogResult) {
-            BillControl billControl = new BillControl();
+            BillControl billControl = AppContext.getBillControl();
             BillNoBean billNoBean = billControl.getLastBillNo();
             if (billNoBean != null) {
                 String tableNo = billNoBean.getB_Table();
                 String b_refno = billNoBean.getB_Refno();
                 int b_cust = billNoBean.getB_Cust();
 
-                TableFileControl tfControl = new TableFileControl();
+                TableFileControl tfControl = AppContext.getTableFileControl();
                 boolean isMore = tfControl.checkTableMoreItem(tableNo);
                 if (isMore) {
                     MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
                 } else {
-                    TSaleController tSaleControl = new TSaleController();
+                    TSaleController tSaleControl = AppContext.getTSaleController();
                     List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
                     boolean updated = false;
                     for (TSaleBean tSaleBean : lisTSale) {
                         if (!updated) {
                             String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
-                            tfControl.execUpdate(sql);
+                            databaseConnection.execUpdate(sql);
                             updated = true;
                         }
                         String pcode = tSaleBean.getR_PluCode();
@@ -1467,7 +1470,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
                 balance.setR_PrChkType("");
 
-                BalanceControl balanceControl = new BalanceControl();
+                BalanceControl balanceControl = AppContext.getBalanceControl();
                 String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
                 balance.setR_Index(R_Index);
 
@@ -1503,7 +1506,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
 
                 //ตัดสต็อกสินค้าที่มี Ingredent
-                IngedientController ingController = new IngedientController();
+                IngedientController ingController = AppContext.getIngedientController();
                 List<PIngredientBean> listIng = ingController.getIngredient(balance.getR_PluCode());
                 for (PIngredientBean bean : listIng) {
                     if (bean.getPstock().equals("Y") && bean.getPactive().equals("Y")) {
@@ -1697,7 +1700,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private javax.swing.JPanel panelMain;
     // End of variables declaration//GEN-END:variables
 
-    private final TableSetupControl tableSetupControl = new TableSetupControl();
+    private final TableSetupControl tableSetupControl = AppContext.getTableSetupControl();
     List<FloorPlanBean> listFloorPlan = new ArrayList<>();
     private final Map<String, JButton> buttonMap = new HashMap<>();
 
@@ -1874,11 +1877,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         List<SPTempRefundBean> listRefund = floorPlanControl.getSpTempRefund();
         if (!listRefund.isEmpty()) {
             //create temp table
-            TableFileControl tableFileControl = new TableFileControl();
+            TableFileControl tableFileControl = AppContext.getTableFileControl();
             tableFileControl.createNewTable(tableTemp);
         }
 
-        BalanceControl bControl = new BalanceControl();
+        BalanceControl bControl = AppContext.getBalanceControl();
         int count = 0;
         for (SPTempRefundBean spTemp : listRefund) {
             count++;
@@ -1937,7 +1940,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void refund() {
-        PosUserController posUserControl = new PosUserController();
+        PosUserController posUserControl = AppContext.getPosUserController();
         boolean isPermit = posUserControl.getPosUser().getSale2().equals("Y");
         if (isPermit) {
             RefundBill refund = new RefundBill(this, true);
@@ -2164,10 +2167,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "TLoginTime=curtime(),"
                     + "Macno='" + Value.MACNO + "' "
                     + "where TCode = '" + tableNo + "'";
-            floorPlanControl.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
 
             sql = "delete from tempset where ptableno='" + tableNo + "';";
-            floorPlanControl.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
 
             exit();
 
@@ -2186,7 +2189,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
                 Value.TableSelected = tableNo;
                 //check table is available
-                TableFileControl tfCont = new TableFileControl();
+                TableFileControl tfCont = AppContext.getTableFileControl();
                 if (!tfCont.checkTableOpened(tableNo)) {
 
                     String P_EmpUse = CONFIG.getP_EmpUse();
@@ -2196,7 +2199,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         login.setVisible(true);
 
                         if (!login.getLoginPWD().equals("")) {
-                            EmployeeControl employeeControl = new EmployeeControl();
+                            EmployeeControl employeeControl = AppContext.getEmployeeControl();
                             if (employeeControl.getEmployeeByCode(login.getLoginPWD())) {
                                 login.setVisible(false);
 
@@ -2206,7 +2209,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                         + "TLoginTime=curtime(),"
                                         + "Macno='" + Value.MACNO + "' "
                                         + "where TCode = '" + tableNo + "'";
-                                floorPlanControl.execUpdate(sql);
+                                databaseConnection.execUpdate(sql);
                                 Value.EMP_CODE = login.getLoginPWD();
                                 showPOS(tableNo);
                             } else {
@@ -2336,7 +2339,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";
-        floorPlanControl.execUpdate(sqlUpd);
+        databaseConnection.execUpdate(sqlUpd);
 
         List<TempsetBean> listTempset = floorPlanControl.getTempsetByPIndex(bBean.getR_Index());
         for (TempsetBean tempsetBean : listTempset) {
@@ -2405,7 +2408,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     balance.setR_Total(balance.getR_Quan() * balance.getR_Price());
                     balance.setR_PrChkType("");
 
-                    BalanceControl balanceControl = new BalanceControl();
+                    BalanceControl balanceControl = AppContext.getBalanceControl();
                     String R_Index = balanceControl.getIndexBalance(balance.getR_Table());
                     balance.setR_Index(R_Index);
                     memberBean = null;
@@ -2455,7 +2458,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         //clear tempset
         String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-        floorPlanControl.execUpdate(sqlClear);
+        databaseConnection.execUpdate(sqlClear);
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
@@ -2467,7 +2470,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "where R_Table='" + TableNo + "' "
                     + "and R_PluCode='" + PCode + "' "
                     + "and R_LinkIndex=''";
-            floorPlanControl.execUpdate(sqlUpdate);
+            databaseConnection.execUpdate(sqlUpdate);
         }
     }
 

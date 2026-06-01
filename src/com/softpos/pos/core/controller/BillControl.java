@@ -31,7 +31,7 @@ import com.softpos.util.DateUtil;
 public class BillControl {
 
     private final POSConfigSetup posConfig;
-    private final MemmaterController memControl = new MemmaterController();
+    private final MemmaterController memControl = AppContext.getMemmaterController();
     private MemberBean memberBean;
 
     public BillControl() {
@@ -39,7 +39,7 @@ public class BillControl {
     }
 
     public static String getLocalMacNO() {
-        PropControl prop = new PropControl();
+        PropControl prop = AppContext.getPropControl();
         return prop.getMacNo();
     }
 
@@ -396,7 +396,7 @@ public class BillControl {
 
         final String BillNo = BillControl.getBillIDCurrent();
         try {
-            BalanceControl balanceControl = new BalanceControl();
+            BalanceControl balanceControl = AppContext.getBalanceControl();
             if (!posConfig.getP_PrintSum().equals("Y")) {
                 List<BalanceBean> balance = balanceControl.getAllBalance(table);
 
@@ -436,7 +436,7 @@ public class BillControl {
                 }
 
                 //for Billno
-                TableFileControl tableControl = new TableFileControl();
+                TableFileControl tableControl = AppContext.getTableFileControl();
                 TableFileBean tableFile = tableControl.getData(table);
                 this.memberBean = MemmaterController.getMember(tableFile.getMemCode());
 
@@ -614,11 +614,11 @@ public class BillControl {
                 }
 
                 //save t_cupon
-                TempCuponController tcCon = new TempCuponController();
+                TempCuponController tcCon = AppContext.getTempCuponController();
                 TempCuponBean tcBean = null;
                 tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
 
-                TCuponControl tCon = new TCuponControl();
+                TCuponControl tCon = AppContext.getTCuponControl();
                 TCuponBean tBean = new TCuponBean();
                 tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
                 tBean.setR_Refno(BillNo);
@@ -797,14 +797,14 @@ public class BillControl {
                     promotionBean.setPrAmt(tSaleBean.getR_PrAmt());
                     promotionBean.setFlage("-");
 
-                    PromotionControl proControl = new PromotionControl();
+                    PromotionControl proControl = AppContext.getPromotionControl();
                     proControl.saveTPromotion(promotionBean);
                 }
             }
 
             //for Billno
             try {
-                TableFileControl tableControl = new TableFileControl();
+                TableFileControl tableControl = AppContext.getTableFileControl();
                 TableFileBean tableFile = tableControl.getData(table);
 
                 BillNoBean billNo = new BillNoBean();
@@ -1048,10 +1048,10 @@ public class BillControl {
                 }
 
                 //save t_cupon
-                TempCuponController tcCon = new TempCuponController();
+                TempCuponController tcCon = AppContext.getTempCuponController();
                 TempCuponBean tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
 
-                TCuponControl tCon = new TCuponControl();
+                TCuponControl tCon = AppContext.getTCuponControl();
                 TCuponBean tBean = new TCuponBean();
                 tBean.setR_Index(BillNo + "/" + tcBean.getTerminal());
                 tBean.setR_Refno(BillNo);
@@ -1777,7 +1777,7 @@ public class BillControl {
             promotionBean.setPrAmt(tSaleBean.getR_PrAmt());
             promotionBean.setFlage("-");
 
-            PromotionControl proControl = new PromotionControl();
+            PromotionControl proControl = AppContext.getPromotionControl();
             proControl.saveTPromotion(promotionBean);
         }
 

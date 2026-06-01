@@ -5,6 +5,7 @@
  */
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.sendMenuButttonToBorController;
 import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
 import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
@@ -43,7 +44,7 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
     }
 
     public void processSendToBor() throws ClassNotFoundException, SQLException, Exception {
-        sendMenuButttonToBorController sendBor = new sendMenuButttonToBorController();
+        sendMenuButttonToBorController sendBor = AppContext.getSendMenuButttonToBorController();
         List<sendMgrButtonToBorBean> list = sendBor.sendMGRButtonSetupToBor();
         List<sendSoft_MenustupBean> list1 = sendBor.sendDataSoft_menusetupToBor();
         int sizeMGRButton = list.size();

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author nateesun
  */
-public class EmployeeControl extends DatabaseConnection {
+public class EmployeeControl {
 
     private List<EmployeeBean> listAll = null;
 

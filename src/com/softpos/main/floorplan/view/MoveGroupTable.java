@@ -1,5 +1,6 @@
 package com.softpos.main.floorplan.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.program.EMPListDialog;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.TableFileControl;
@@ -539,7 +540,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (validData()) {
-            TableFileControl tbControl = new TableFileControl();
+            TableFileControl tbControl = AppContext.getTableFileControl();
             TableFileBean t1 = tbControl.getData(txtTable1.getText().toUpperCase());
             TableFileBean t2 = tbControl.getData(txtTable2.getText().toUpperCase());
 

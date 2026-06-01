@@ -170,7 +170,7 @@ public class MemmaterController {
         double pointTotal = computeMemberScore(billBean, member.getMember_PointExpiredDate());
 
         // update MTran vs Billno
-        MTranController mTranCon = new MTranController();
+        MTranController mTranCon = AppContext.getMTranController();
 
         if (mTranCon.checkReceiptNoExist(billBean.getB_Refno())) {
             MTranBean mTranBean = new MTranBean();
@@ -191,10 +191,10 @@ public class MemmaterController {
             mTranCon.create(mTranBean);
 
             // Mplu VS T_Sale
-            BillControl billControl = new BillControl();
+            BillControl billControl = AppContext.getBillControl();
             List<TSaleBean> listTSale = billControl.getAllTSale(billBean.getB_Refno());
 
-            MPluController mPluCon = new MPluController();
+            MPluController mPluCon = AppContext.getMPluController();
             List<MPluBean> listMPlu = new ArrayList<>();
             for (TSaleBean tSaleBean : listTSale) {
                 MPluBean pluBean = new MPluBean();

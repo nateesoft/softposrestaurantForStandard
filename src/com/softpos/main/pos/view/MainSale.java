@@ -1,5 +1,6 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.floorplan.view.PaidinFrm;
 import com.softpos.main.floorplan.view.RefundBill;
@@ -34,6 +35,7 @@ import com.softpos.main.program.GetUserAction;
 import com.softpos.main.program.ModalPopup;
 import com.softpos.main.program.PrintInv1;
 import com.softpos.main.program.RepMember;
+import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.PUtility;
@@ -107,12 +109,13 @@ public class MainSale extends javax.swing.JDialog {
     private String SALE_WholeSale = "ขายส่ง";
     private boolean btnClickPrintKic = false;
 
-    private final TableFileControl tableFileControl = new TableFileControl();
-    private final EmployeeControl empControl = new EmployeeControl();
-    private final ProductControl productControl = new ProductControl();
-    private final BalanceControl balanceControl = new BalanceControl();
-    private final FloorPlanController floorPlanControl = new FloorPlanController();
-    private final MainSaleController mainSaleControl = new MainSaleController();
+    private final TableFileControl tableFileControl = AppContext.getTableFileControl();
+    private final EmployeeControl empControl = AppContext.getEmployeeControl();
+    private final ProductControl productControl = AppContext.getProductControl();
+    private final BalanceControl balanceControl = AppContext.getBalanceControl();
+    private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
+    private final MainSaleController mainSaleControl = AppContext.getMainSaleController();
+    private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
 
     private TableFileBean TableFileBean = null;
 
@@ -1585,16 +1588,16 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
         if (btnClickPrintKic == true) {
             String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
-            balanceControl.execUpdate(sqlTurnPrintKicOff);
+            databaseConnection.execUpdate(sqlTurnPrintKicOff);
         }
         if (lbTotalAmount.getText().equals("0.00")) {
             MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
             String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
-            balanceControl.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
             kichenPrint();
             sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
-            balanceControl.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
 
             showCheckBill();
         }
@@ -1710,11 +1713,11 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
                 String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
-                balanceControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
             }
-            balanceControl.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
+            databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
             kichenPrint();
-            balanceControl.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
+            databaseConnection.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
             printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -1899,9 +1902,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         + "R_QuanCanDisc=R_Quan "
                         + "where R_Table='" + tableNo + "' "
                         + "and r_PrCode<>'' ";
-                mainSaleControl.execUpdate(sqlUpdatePro);
+                databaseConnection.execUpdate(sqlUpdatePro);
                 String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
-                mainSaleControl.execUpdate(sqlUpdateTable);
+                databaseConnection.execUpdate(sqlUpdateTable);
             } catch (Exception e) {
                 MSG.ERR(this, e.getMessage());
             }
@@ -1911,7 +1914,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             }
             String R_Index = model.getValueAt(row, 10).toString();
 
-            PosUserController posUserControl = new PosUserController();
+            PosUserController posUserControl = AppContext.getPosUserController();
             PosUserBean posUserbean = posUserControl.getPosUser();
             boolean isPermit = posUserbean.getSale3().equals("Y");
             if (isPermit) {//มีสิทธิ์ Void
@@ -2011,7 +2014,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     private void procVoid(String RIndex, String voidMsg, String LoginName) {
-        BalanceControl branchControl = new BalanceControl();
+        BalanceControl branchControl = AppContext.getBalanceControl();
         BalanceBean bean = branchControl.getBalanceIndex(txtTable.getText(), RIndex);
 
         if (bean.getR_Void().equals("V")) {
@@ -2109,7 +2112,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
                 + "where r_index='" + bean.getR_Index() + "' "
                 + "and r_table='" + bean.getR_Table() + "'";
-        balanceControl.execUpdate(updBalance);
+        databaseConnection.execUpdate(updBalance);
 
         if ((bean.getR_Set().equals("Y")) && checkPSetSelect(bean.getR_PluCode())) {
             String updateBalance = "update balance "
@@ -2121,7 +2124,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     + "r_kicprint='' "
                     + "where r_index='" + bean.getR_Index() + "' "
                     + "and r_table='" + bean.getR_Table() + "'";
-            balanceControl.execUpdate(updateBalance);
+            databaseConnection.execUpdate(updateBalance);
         }
 
         //update promotion, discount
@@ -2679,7 +2682,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "and r_kicprint<>'P' "
                 + "and r_printOk='Y' "
                 + "and r_kic<>'' ";
-        balanceControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
 
     }
 
@@ -2752,7 +2755,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         + "tlogintime=curtime(),"
                         + "TCurTime=curtime()"
                         + "where tcode='" + txtTable.getText().trim() + "'";
-                mainSaleControl.execUpdate(UpdateTable);
+                databaseConnection.execUpdate(UpdateTable);
                 tbpMain.setSelectedIndex(0);
 
                 //load data to table
@@ -2781,11 +2784,11 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
-                mainSaleControl.execUpdate(sqlTurnPrintKicOff);
+                databaseConnection.execUpdate(sqlTurnPrintKicOff);
             }
             
             String sql = "update tablefile set tpause='Y', TOnAct='N' where tcode='" + tableNo + "';";
-            mainSaleControl.execUpdate(sql);
+            databaseConnection.execUpdate(sql);
             
             kichenPrint();
             holdTableAndSave();
@@ -2800,7 +2803,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             sql = "update tablefile set tonact ='N' , TCustomer='0'"
                     + " where tcode='" + txtTable.getText() + "';";
         }
-        mainSaleControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
     }
 
     private void updateCustomerCount(int custCount) {
@@ -2808,7 +2811,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "set tcustomer='" + custCount + "',"
                 + "macno='" + Value.MACNO + "' "
                 + "where tcode='" + txtTable.getText() + "'";
-        mainSaleControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
         txtProductCode.requestFocus();
     }
 
@@ -2817,7 +2820,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "set tonact='N', macno='" + Value.MACNO + "', tpause='Y' "
                 + "where tcode='" + txtTable.getText() + "'";
 
-        mainSaleControl.execUpdate(UpdateTableFile);
+        databaseConnection.execUpdate(UpdateTableFile);
 
         showSum();
     }
@@ -2829,10 +2832,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 PublicVar.P_LogoffOK = false;
 
                 String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
-                mainSaleControl.execUpdate(sql1);
+                databaseConnection.execUpdate(sql1);
 
                 String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
-                if (mainSaleControl.execUpdate(sql2)) {
+                if (databaseConnection.execUpdate(sql2)) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
                 }
@@ -2862,7 +2865,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     private boolean updateLogout(String UserCode) {
-        mainSaleControl.execUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
+        databaseConnection.execUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
         Value.CASHIER = "";
         return true;
     }
@@ -3128,7 +3131,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         + "MemCurAmt='0.00', "
                         + "MemName='' "
                         + "where TCode='" + txtTable.getText() + "'";
-                mainSaleControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 showMember();
             }
         } else {
@@ -3149,10 +3152,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         + "MemBegin='" + simp.format(memberBean.getMember_Brithday()) + "', "
                         + "MemEnd='" + simp.format(memberBean.getMember_ExpiredDate()) + "' "
                         + "where TCode='" + txtTable.getText() + "'";
-                mainSaleControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
 
                 // update old order
-                MemberControl mc = new MemberControl();
+                MemberControl mc = AppContext.getMemberControl();
                 mc.updateMemberAllBalance(txtTable.getText(), memberBean);
 
                 // update all discount and promotion
@@ -3410,7 +3413,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "TItem = '" + balanceBean.getR_Total() + "',"
                 + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
                 + "where tcode='" + txtTable.getText() + "'";
-        mainSaleControl.execUpdate(UpdateTableFile);
+        databaseConnection.execUpdate(UpdateTableFile);
     }
 
     private boolean isTakeOrder() {
@@ -3430,7 +3433,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";
-        mainSaleControl.execUpdate(sqlUpd);
+        databaseConnection.execUpdate(sqlUpd);
 
         List<TempsetBean> listTempSet = mainSaleControl.getTempsetByPIndex(bBean.getR_Index());
         for (TempsetBean tempBean : listTempSet) {
@@ -3543,7 +3546,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         //clear tempset
         String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-        mainSaleControl.execUpdate(sqlClear);
+        databaseConnection.execUpdate(sqlClear);
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
@@ -3556,7 +3559,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     + "where R_Table='" + TableNo + "' "
                     + "and R_PluCode='" + PCode + "' "
                     + "and R_LinkIndex=''";
-            mainSaleControl.execUpdate(sql1);
+            databaseConnection.execUpdate(sql1);
         }
     }
 
@@ -3585,9 +3588,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     + "R_QuanCanDisc=R_Quan "
                     + "where R_Table='" + tableNo + "' "
                     + "and r_PrCode<>'' ";
-            mainSaleControl.execUpdate(sqlUpdatePro);
+            databaseConnection.execUpdate(sqlUpdatePro);
             String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
-            mainSaleControl.execUpdate(sqlUpdateTable);
+            databaseConnection.execUpdate(sqlUpdateTable);
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
         }
@@ -3617,8 +3620,8 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 }
             }
 
-            mainSaleControl.execUpdate("delete from tempset where PTableNo='" + txtTable.getText() + "';");
-            boolean canRemoveFromTableBalance = mainSaleControl.execUpdate("delete from balance "
+            databaseConnection.execUpdate("delete from tempset where PTableNo='" + txtTable.getText() + "';");
+            boolean canRemoveFromTableBalance = databaseConnection.execUpdate("delete from balance "
                     + "where r_index='" + r_index + "' "
                     + "and r_pause='P' and r_kicprint<>'P'");
             if (!canRemoveFromTableBalance) {
@@ -3646,7 +3649,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         String sqlDel = "delete from balance "
                                 + "where r_index='" + balanceBean.getR_Index() + "' "
                                 + "and r_pause='P'";
-                        mainSaleControl.execUpdate(sqlDel);
+                        databaseConnection.execUpdate(sqlDel);
 
                         PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), bean2.getR_PluCode(), TDate, StkRemark, -1 * bean2.getR_Quan(),
                                 -1 * bean2.getR_Total(), bean2.getCashier(), bean2.getR_Stock(), bean2.getR_Set(), bean2.getR_Index(), "1");
@@ -3683,7 +3686,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "macno='" + Value.MACNO + "' ,"
                 + "tpause='N' "
                 + "WHERE Tcode='" + txtTable.getText() + "'";
-        mainSaleControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
     }
 
     private void CheckKicPrint() {
@@ -3954,7 +3957,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                             + "CURTIME())";
                     batchSqls.add(tempset);
                 }
-                mainSaleControl.execBatch(batchSqls);
+                databaseConnection.execBatch(batchSqls);
 
                 //end loop autoadd
                 pname = ThaiUtil.Unicode2ASCII(mgrButtonBean.getPDesc());
@@ -3979,7 +3982,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "VALUES ('" + tableNo + "', '" + Index + "', '" + PCode + "', "
                 + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
                 + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
-        mainSaleControl.execUpdate(sql);
+        databaseConnection.execUpdate(sql);
     }
 
     private void showCustomerInput() {

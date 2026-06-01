@@ -1,5 +1,6 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.crm.pos.core.modal.CouponRec;
 import com.softpos.pos.core.controller.CuponControl;
@@ -54,7 +55,7 @@ public class CouponDiscount extends javax.swing.JDialog {
     private String Member1;
     private String Member2;
     private double totalAmount;
-    private CouponDiscountController couponControl = new CouponDiscountController();
+    private CouponDiscountController couponControl = AppContext.getCouponDiscountController();
 
     public CouponDiscount(java.awt.Frame parent, boolean modal, String tableNo, String Member1, String Member2, double totalAmount) {
 
@@ -707,7 +708,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         } else {
             //ตรวจสอบคูปองส่วนลดที่นำมาใช้
             String cuCode = txtCucode.getText();
-            CuponControl cc = new CuponControl();
+            CuponControl cc = AppContext.getCuponControl();
             CuponBean cBean = cc.getCupon(cuCode);
             if (cBean.getCuType().equals("A") || cBean.getCuType().equals("C")) {
                 if (cuponQty > 1 && cBean.getCuType().equals("C")) {
@@ -719,7 +720,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
 
                 //check from cuponlist
-                CuponListControl lc = new CuponListControl();
+                CuponListControl lc = AppContext.getCuponListControl();
                 List<CuponlistBean> listBean = lc.listCuponlist(cuCode);
                 //******* START ******//
                 if (listBean.isEmpty()) {
@@ -980,10 +981,10 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         //update tablefile
         BalanceControl.updateProSerTable(tableNo, null);
 
-        TableFileControl tfCon = new TableFileControl();
+        TableFileControl tfCon = AppContext.getTableFileControl();
         TableFileBean tBean = tfCon.getData(tableNo);
 
-        CuponControl cuCon = new CuponControl();
+        CuponControl cuCon = AppContext.getCuponControl();
         CuponBean cuBean = cuCon.getCupon(txtCucode.getText());
 
         int cuQuan = 0;
@@ -997,7 +998,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         //update tempcupon
-        TempCuponController temp = new TempCuponController();
+        TempCuponController temp = AppContext.getTempCuponController();
         TempCuponBean bean = new TempCuponBean();
         bean.setR_Index(tableNo + tBean.getMacNo());
         bean.setR_Table(tableNo);

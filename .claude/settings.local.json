@@ -31,7 +31,9 @@
       "Bash(unzip -p dist/SoftPOSRestaurantForStandart.jar META-INF/MANIFEST.MF)",
       "Bash(xargs file)",
       "Bash(cd \"/Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/images\" && rm -f \\\\ *)",
-      "Bash(xargs cat)"
+      "Bash(xargs cat)",
+      "Bash(sort -t: -k1,1 -k2,2n)",
+      "Bash(python3 -)"
     ]
   }
 }

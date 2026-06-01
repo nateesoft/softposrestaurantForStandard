@@ -17,7 +17,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class FloorPlanController extends DatabaseConnection {
+public class FloorPlanController {
 
     public List<SPTempRefundBean> getSpTempRefund() {
         List<SPTempRefundBean> listSpTempRefund = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.controller.Value;
@@ -23,7 +25,8 @@ public class MoveItemDialog extends javax.swing.JDialog {
     private String TABLE_NO;
     private String TABLE_2;
     private boolean loadDataActive = false;
-    private TableFileControl tableFileControl = new TableFileControl();
+    private TableFileControl tableFileControl = AppContext.getTableFileControl();
+    private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
 
     public MoveItemDialog(java.awt.Frame parent, boolean modal, String TABLE_NO) {
         super(parent, modal);
@@ -460,7 +463,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                             TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                         } else {
                             //create table2 before add data
-                            TableFileControl tfc = new TableFileControl();
+                            TableFileControl tfc = AppContext.getTableFileControl();
                             tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
 
                             //add data
@@ -482,11 +485,11 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 TABLE_2 = txtTable2.getText();
 
                 //none active table1
-                TableFileControl tfControl = new TableFileControl();
+                TableFileControl tfControl = AppContext.getTableFileControl();
                 tfControl.updateTableNotActive(TABLE_NO);
 
                 String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
-                tableFileControl.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
 
                 Value.TableSelected = TABLE_2;
                 this.setVisible(false);//dispose();
@@ -570,7 +573,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                                 TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                             } else {
                                 //create table2 before add data
-                                TableFileControl tfc = new TableFileControl();
+                                TableFileControl tfc = AppContext.getTableFileControl();
                                 tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
 
                                 //add data
@@ -621,7 +624,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadTable1() {
-        BalanceControl bc = new BalanceControl();
+        BalanceControl bc = AppContext.getBalanceControl();
         List<BalanceBean> listBalance = bc.getAllBalance(txtTable1.getText());
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         table1.setRowHeight(35);
@@ -652,7 +655,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
     }
 
     private void loadTable2() {
-        BalanceControl bc = new BalanceControl();
+        BalanceControl bc = AppContext.getBalanceControl();
         List<BalanceBean> listBalance = bc.getAllBalance(txtTable2.getText());
         DefaultTableModel model = (DefaultTableModel) table2.getModel();
         table2.setRowHeight(35);
@@ -755,7 +758,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
     private void checkLoadTable2() {
         backupData();
-        TableFileControl tfCon = new TableFileControl();
+        TableFileControl tfCon = AppContext.getTableFileControl();
         if (!tfCon.checkTableOpened(txtTable2.getText())) {
             txtTable2.setEditable(false);
             loadTable2();

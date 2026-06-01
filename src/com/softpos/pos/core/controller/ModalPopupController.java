@@ -16,7 +16,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class ModalPopupController extends DatabaseConnection {
+public class ModalPopupController {
 
     public List<OptionSetBean> getListOptionSet(String pCode) {
         List<OptionSetBean> listOption = new ArrayList<>();

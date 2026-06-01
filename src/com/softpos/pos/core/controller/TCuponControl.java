@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class TCuponControl extends DatabaseConnection {
+public class TCuponControl {
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
 
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
@@ -138,7 +139,7 @@ public class TCuponControl extends DatabaseConnection {
                         + "'" + bean.getTerminal() + "','" + bean.getCashier() + "','" + bean.getTime() + "',"
                         + "'" + bean.getCuCode() + "','" + bean.getCuQuan() + "','" + bean.getCuAmt() + "',"
                         + "'" + bean.getRefund() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
-                this.execUpdate(sql);
+                databaseConnection.execUpdate(sql);
                 isResult = true;
             }
         }
@@ -160,6 +161,6 @@ public class TCuponControl extends DatabaseConnection {
                 + "CuTextCode='" + bean.getCuTextCode() + "', "
                 + "CuTextComment='" + bean.getCuTextComment() + "' "
                 + "where R_Index='" + bean.getR_Index() + "'";
-        return this.execUpdate(sql);
+        return databaseConnection.execUpdate(sql);
     }
 }

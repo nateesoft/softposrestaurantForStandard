@@ -1,5 +1,6 @@
 package com.softpos.main.login;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.BranchControl;
@@ -40,7 +41,7 @@ public class Login extends javax.swing.JDialog {
     private Timer timer;
     private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat IntFmt = new DecimalFormat("#,##0");
-    private PosControl posControl = new PosControl();
+    private PosControl posControl = AppContext.getPosControl();
 
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -441,12 +442,12 @@ public class Login extends javax.swing.JDialog {
             @Override
             protected LoginFetchData doInBackground() {
                 LoginFetchData data = new LoginFetchData();
-                data.loginBean = new LoginController().validateLogin(loginname, password);
+                data.loginBean = AppContext.getLoginController().validateLogin(loginname, password);
                 if (!data.loginBean.isValidLogin()) {
                     return data;
                 }
                 data.currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
-                data.hasPendingBills = new BillControl().checkBillNoValid(data.currentDate);
+                data.hasPendingBills = AppContext.getBillControl().checkBillNoValid(data.currentDate);
                 data.posHwSetup = PosControl.getData(Value.MACNO);
                 data.posUserBean = PosControl.getPosUser(loginname);
                 data.branchCode = BranchControl.getData().getCode();
@@ -551,7 +552,7 @@ public class Login extends javax.swing.JDialog {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                new LoginController().updateLogin(loginname);
+                AppContext.getLoginController().updateLogin(loginname);
                 posControl.posHwSetupOnAct("Y");
                 return null;
             }

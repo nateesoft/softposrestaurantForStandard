@@ -14,7 +14,7 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.NumberUtil;
 
-public class ServiceControl extends DatabaseConnection {
+public class ServiceControl {
 
     private POSConfigSetup CONFIG;
     private final PosControl posControl;
@@ -22,12 +22,12 @@ public class ServiceControl extends DatabaseConnection {
     private DecimalFormat df = new DecimalFormat("##.00");
 
     public ServiceControl() {
-        posControl = new PosControl();
+        posControl = AppContext.getPosControl();
         CONFIG = POSConfigSetup.Bean();
     }
 
     public void updateService(String table) {
-        BalanceControl balanceControl = new BalanceControl();
+        BalanceControl balanceControl = AppContext.getBalanceControl();
         List<BalanceBean> dataBalance = balanceControl.getAllBalanceNoVoidSum(table);
         double ServiceTotal = 0.00;
         double ServicePercent = POSConfigSetup.Bean().getP_Service();
@@ -108,7 +108,7 @@ public class ServiceControl extends DatabaseConnection {
         DateConvert dc = new DateConvert();
         MySQLConnect mysql = new MySQLConnect();
         try {
-            TableFileControl tfc = new TableFileControl();
+            TableFileControl tfc = AppContext.getTableFileControl();
             TableFileBean tBean = tfc.getData(table);
 
             /**

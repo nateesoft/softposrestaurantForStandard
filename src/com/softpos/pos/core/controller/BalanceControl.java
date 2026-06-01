@@ -19,7 +19,7 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.DateFormat;
 
-public class BalanceControl extends DatabaseConnection {
+public class BalanceControl {
 
     private BalanceBean balanceCurrent = new BalanceBean();
 
@@ -120,7 +120,7 @@ public class BalanceControl extends DatabaseConnection {
         bean.setR_VoidTime("");
         bean.setR_MoveFlag("0");
 
-        ProductControl productControl = new ProductControl();
+        ProductControl productControl = AppContext.getProductControl();
         ProductBean product = productControl.getData(bb.getR_PluCode());
 
         bean.setR_Index(bb.getR_Index());//หมายเลขโต๊ะ/ลำดับที่รายการอาหาร
@@ -1768,7 +1768,7 @@ public class BalanceControl extends DatabaseConnection {
     }
 
     public boolean copyProductTo(String table1, String table2, String R_Index, String PCode, ProductBean product) {
-        BalanceControl balanceControl = new BalanceControl();
+        BalanceControl balanceControl = AppContext.getBalanceControl();
         BalanceBean bean = balanceControl.getBalanceIndex(table1, R_Index);
         if (bean == null) {
             return false;
@@ -1795,7 +1795,7 @@ public class BalanceControl extends DatabaseConnection {
                     int dateEXP = Integer.parseInt(rs.getString("pdate2").replace("-", ""));
                     int nowDate = Integer.parseInt(dc.GetCurrentDate().replace("-", ""));
                     if (dateEXP >= nowDate) {
-                        PromotionControl proControl = new PromotionControl();
+                        PromotionControl proControl = AppContext.getPromotionControl();
                         proControl.updatePromotion(table);
                     }
                 }
@@ -1813,29 +1813,29 @@ public class BalanceControl extends DatabaseConnection {
             updateProSerTableMem(table, memberBean);
 
             // ให้ส่วนลดสมาชิก
-            MemberControl memControl = new MemberControl();
+            MemberControl memControl = AppContext.getMemberControl();
             memControl.updateMemberDiscount(table, memberBean);
         }
 
         //คำนวณส่วนลด
-        DiscountControl discControl = new DiscountControl();
+        DiscountControl discControl = AppContext.getDiscountControl();
         discControl.updateDiscount(table);
 
         //คำนวน % ชาร์จเครดิต
         //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
-        ServiceControl serviceControl = new ServiceControl();
+        ServiceControl serviceControl = AppContext.getServiceControl();
         serviceControl.updateService(table);
     }
 
     public static void updateProSerTableMem(String table, MemberBean memberBean) {
         if (memberBean != null) {
-            MemberControl memControl = new MemberControl();
+            MemberControl memControl = AppContext.getMemberControl();
             memControl.updateMemberAllBalance(table, memberBean);
         }
     }
 
     public static void updateProSerTableMemVIP(String table, String discountRate) {
-        MemberControl memControl = new MemberControl();
+        MemberControl memControl = AppContext.getMemberControl();
         memControl.updateMemVIPAllBalance(table, discountRate);
     }
 

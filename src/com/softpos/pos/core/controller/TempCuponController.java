@@ -12,7 +12,8 @@ import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class TempCuponController extends DatabaseConnection {
+public class TempCuponController {
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
 
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
@@ -132,8 +133,8 @@ public class TempCuponController extends DatabaseConnection {
     }
 
     public void clearTempOld(String index) {
-        this.execUpdate("delete from tempcupon where r_index='" + index + "'");
-        this.execUpdate("delete from tempgift");
+        databaseConnection.execUpdate("delete from tempcupon where r_index='" + index + "'");
+        databaseConnection.execUpdate("delete from tempgift");
     }
 
     public void saveTempCupon(TempCuponBean bean) {
@@ -178,7 +179,7 @@ public class TempCuponController extends DatabaseConnection {
     }
 
     public boolean moveToTCupon(TempCuponBean tempcupon, String B_Refno) {
-        TCuponControl tCon = new TCuponControl();
+        TCuponControl tCon = AppContext.getTCuponControl();
         TCuponBean tBean = new TCuponBean();
         tBean.setR_Index(B_Refno + "/" + tempcupon.getTerminal());
         tBean.setTerminal(tempcupon.getTerminal());
