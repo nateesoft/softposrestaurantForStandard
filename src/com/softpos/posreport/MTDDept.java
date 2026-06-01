@@ -307,7 +307,7 @@ public class MTDDept extends javax.swing.JDialog {
         } else {
             if (!Value.getComPort().equals("NONE")) {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
@@ -359,7 +359,7 @@ public class MTDDept extends javax.swing.JDialog {
                     prn.print(" ");
                     prn.print(" ");
 
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -532,10 +532,6 @@ public class MTDDept extends javax.swing.JDialog {
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
 
         pd.printHTML();

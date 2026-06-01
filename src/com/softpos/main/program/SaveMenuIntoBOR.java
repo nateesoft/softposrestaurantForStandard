@@ -54,7 +54,6 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
             if (sizeMGRButton > 0) {
                 String SVDel = "delete from mgrbuttonsetup;";
                 SV.getUpdate(SVDel);
-                Thread.sleep(900);
                 for (int i = 0; i < list.size(); i++) {
                     jTextField1.setText("ส่งข้อมูล MGRButtonSetup : " + (i + 1));
                     checkUpdate();
@@ -72,7 +71,6 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
             if (sizeSoftMenusetup > 0) {
                 String SVDel = "delete from soft_menusetup;";
                 SV.getUpdate(SVDel);
-                Thread.sleep(900);
                 for (int i = 0; i < list1.size(); i++) {
                     jTextField1.setText("ส่งข้อมูล Soft_Menusetup : " + (i + 1));
                     checkUpdate();
@@ -118,10 +116,6 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
                     for (int i = 1; i <= 100; i++) {
                         pbCheckUpdate.setValue(i);
                         pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                        try {
-                            Thread.sleep(25);
-                        } catch (InterruptedException e) {
-                        }
                     }
                     pbCheckUpdate.setString("Update Menu To BOR Complete!");
                 } catch (Exception e) {

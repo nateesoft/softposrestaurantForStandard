@@ -633,7 +633,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     PrintARHistoryDriver();
                 } else {
                     if (prn.openPrint(Value.getComPort())) {
-                        prn.InitPrinter();
+                        prn.initPrinter();
                         prn.print(POSHW.getHeading1());
                         prn.print(POSHW.getHeading2());
                         prn.print(POSHW.getHeading3());
@@ -683,7 +683,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         prn.print("");
                         prn.print("");
 
-                        prn.CutPaper();
+                        prn.cutPaper();
                         prn.closePrint();
                     } else {
                         MSG.ERR(this, "เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
@@ -788,10 +788,6 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         for (String data : strs) {
             pd.addTextIFont(data);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
 

@@ -435,7 +435,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } else {
             if (!Value.getComPort().equals("NONE")) {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
@@ -491,7 +491,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     prn.print(" ");
                     prn.print(" ");
 
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -574,10 +574,6 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
         txtMacNo1.requestFocus();

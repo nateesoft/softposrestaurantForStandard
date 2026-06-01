@@ -953,7 +953,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("   รายงานยอดการเงิน (Terminal Report)");
         prn.print("        Automatic Sum X-Report)   ");
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
@@ -1129,7 +1129,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
     }
 
     public void ProcessCashier() {
@@ -1359,7 +1359,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray, boolean ChkVoid) {
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("   รายงานพนักงานขาย (Cashier Report)");
         prn.print("       (Automatic Sum Xreport)");
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
@@ -1560,7 +1560,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading4());
         //Print_Str(" ");
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
     }
 
     public void ProcessGroup() {
@@ -1774,7 +1774,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามกลุ่มสินค้า");
         prn.print("           (Department Report)");
         prn.print("         (Automatic Sum XReport)");
@@ -1825,7 +1825,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2050,7 +2050,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามรหัสสินค้า");
         prn.print("              (PLU Report)");
         prn.print("        (Automatic Sum XReport)");
@@ -2109,7 +2109,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2545,7 +2545,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Double SumS = 0.0;
         int ArraySize = HArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามช่วงเวลา");
         prn.print("            (Hourly Report)");
         prn.print("        (Automatic Sum X-Report)");
@@ -2578,7 +2578,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2586,7 +2586,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String MacNo1 = Value.MACNO;
         String MacNo2 = Value.MACNO;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการพิมพ์ใบเสร็จรับเงิน");
         prn.print("             (Receipt Report)");
         prn.print("        (Automatic Sum X-Report)");
@@ -2651,7 +2651,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2661,7 +2661,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการทำรายการ Void");
         prn.print("              (Void Report)");
         prn.print("         (Automatic Sum X-Report)");
@@ -2712,7 +2712,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2754,7 +2754,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             AppLogUtil.log(AutoSumXRep.class, "error", e);
         }
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการรับชำระด้วยบัตรเครดิต");
         prn.print("               (Credit Report)");
         prn.print("          (Automatic Sum X-Report)");
@@ -2820,7 +2820,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2858,7 +2858,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("       รายงานการรับชำระด้วยบัตรของขวัญ");
         prn.print("          (Gift Voucher Report)");
         prn.print("         (Automatic Sum X-Report)");
@@ -2906,7 +2906,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2920,7 +2920,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             if (Value.printdriver) {
 
             } else if (prn.openPrint(Value.getComPort())) {
-                prn.InitPrinter();
+                prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
@@ -2979,7 +2979,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 prn.print(" ");
                 prn.print(" ");
                 prn.print(" ");
-                prn.CutPaper();
+                prn.cutPaper();
                 prn.closePrint();
             }
         }

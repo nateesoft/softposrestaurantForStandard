@@ -341,22 +341,7 @@ public class PrintToKic extends javax.swing.JFrame {
         if (!PublicVar.Branch_Saveorder.equals("N")) {
             printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
         }
-        //update r_kicprint
-//        String sql = "update balance "
-//                + "set r_kicprint='P',"
-//                + "r_pause='Y' "
-//                + "where r_table='" + tableNo + "' "
-//                + "and r_kicprint<>'P' "
-//                + "and r_printOk='Y' "
-//                + "and r_kic<>'' "
-//                + "and macno='" + macno + "' "
-//                + "and trantype = 'PDA';";
-//
-//        control.execUpdate(sql);
-        try {
-            Thread.sleep(900 * 5);
-        } catch (Exception e) {
-        }
+        
         kicPrintting = false;
     }
 

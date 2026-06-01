@@ -868,8 +868,6 @@ public class SendTerminalReportAuto {
             if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
                 String TimeSend = rsConfig.getString("TimeSend1");
-//                if (TranEmailAuto.equals("Y") && timeNow.equals(TimeSend)) {
-                Thread.sleep(3600 * 3);
                 try {
                     String sqlAddress = "select address from company limit 1";
                     ResultSet rsAddress = mysql.executeQuery(sqlAddress);
@@ -879,7 +877,6 @@ public class SendTerminalReportAuto {
                         String password = data[1];
                         String to[] = rsConfig.getString("EmailAddress").split(",");
                         ProcessProc();
-                        Thread.sleep(3600);
 
                         String host = "smtp.gmail.com";
                         String port = "587";
@@ -895,16 +892,15 @@ public class SendTerminalReportAuto {
                         attachFiles[0] = PublicVar.filePath;
                         AppLogUtil.info(PublicVar.filePath);
                         SendEmail.sendEmailWithAttachments(host, port, username, password, mailTo, subject, message, attachFiles);
-                        Thread.sleep(3600 * 5);
                         System.exit(0);
                     }
                     rsAddress.close();
-                } catch (IOException | InterruptedException | SQLException | MessagingException e) {
+                } catch (IOException | SQLException | MessagingException e) {
                     AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
                 }
             }
             rsConfig.close();
-        } catch (InterruptedException | SQLException e) {
+        } catch (SQLException e) {
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());

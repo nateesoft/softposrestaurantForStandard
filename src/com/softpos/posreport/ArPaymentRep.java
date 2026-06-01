@@ -319,7 +319,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     prn.print(" ");
                     prn.print(" ");
                     prn.print(" ");
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -417,20 +417,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         String[] strs = t.split("_");
         for (String data : strs) {
             pd.addTextIFont(data);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         if (!t1.equals("")) {
             t1 += "colspan=2 align=right><font face=Angsana New size=1>" + "ยอดยกเลิกรายการ : " + Space + billVoid + Space + "บิล" + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + DecFmt.format(billVoidAmt) + "_";
             String[] strs1 = t1.split("_");
             for (String data1 : strs1) {
                 pd.addTextIFont(data1);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
             }
         }
 

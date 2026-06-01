@@ -169,7 +169,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 PrintCancelArPaymentDriver(TempBillNo);
             } else {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
@@ -209,7 +209,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                     prn.print("");
                     prn.print("");
 
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -281,10 +281,6 @@ public class CancelArPayment extends javax.swing.JDialog {
         PrintDriver pd = new PrintDriver();
         for (String data : strs) {
             pd.addTextIFont(data);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
     }

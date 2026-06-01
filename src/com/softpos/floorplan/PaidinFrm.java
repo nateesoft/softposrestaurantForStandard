@@ -71,9 +71,9 @@ public class PaidinFrm extends javax.swing.JDialog {
             if (Prn.openPrint(Value.getComPort())) {
                 try {
                     // PRINTER OUT
-                    Prn.InitPrinter();
-                    Prn.OpenDrawer();
-                    Prn.InitPrinter();
+                    Prn.initPrinter();
+                    Prn.openDrawer();
+                    Prn.initPrinter();
                     Prn.print(St + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                     Prn.print("------------------------------------------------------------");
                     Prn.print("จำนวนเงินสำรองทอนนำเข้าลิ้นชัก " + PUtility.DataFull(Decfmt.format(PaidinAmt), 12));
@@ -91,7 +91,7 @@ public class PaidinFrm extends javax.swing.JDialog {
                     Prn.print("");
                     Prn.print("");
                     Prn.print("");
-                    Prn.CutPaper();
+                    Prn.cutPaper();
                     Prn.closePrint();
                 } catch (Exception e2) {
                     MSG.ERR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");

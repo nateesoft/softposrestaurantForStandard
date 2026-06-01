@@ -2190,11 +2190,6 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-
-            }
         }
         pd.printHTML();
     }

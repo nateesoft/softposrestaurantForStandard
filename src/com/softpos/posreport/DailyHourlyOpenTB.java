@@ -353,7 +353,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         } else {
             if (!Value.getComPort().equals("NONE")) {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
@@ -396,7 +396,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                     prn.print(" ");
                     prn.print(" ");
 
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 } else {
 //                PUtility.showError("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
@@ -461,10 +461,6 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         pd.setResolution(100, 75);
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
     }

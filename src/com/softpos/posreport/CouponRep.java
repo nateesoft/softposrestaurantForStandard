@@ -209,7 +209,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         } else {
             if (!Value.getComPort().equals("NONE")) {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(PublicVar.HWrec_Heading1);
                     prn.print(PublicVar.HWrec_Heading2);
                     prn.print(PublicVar.HWrec_Heading3);
@@ -260,7 +260,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     prn.print(" ");
                     prn.print(" ");
                     prn.print(" ");
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -338,10 +338,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
 

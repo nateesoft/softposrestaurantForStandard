@@ -1122,7 +1122,7 @@ public class PUtility extends DatabaseConnection {
         while (I <= TempStr.length() - 1) {   // Check TIS Upper }
 
             ch = TempStr.charAt(I);
-            if (PPrint.SearchArray((int) ch, List1) != -1) {
+            if (PPrint.searchArray((int) ch, List1) != -1) {
                 ICnt++;
             }
             I = I + 1;

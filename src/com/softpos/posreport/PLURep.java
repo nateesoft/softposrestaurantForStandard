@@ -1453,7 +1453,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } finally {
             mysql.closeConnection(this.getClass());
         }
-        prn.PrintPlu(GArray);
+        prn.printPlu(GArray);
         txtMacNo1.requestFocus();
     }
 

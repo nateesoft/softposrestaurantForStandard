@@ -457,7 +457,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 txtCopy.setText(Integer.toString(CopyPrn));
             }
             for (int i = 1; i <= CopyPrn; i++) {
-                prn.PrintBillCopy(MyArray, BillNo, i, CreditArray);
+                prn.printBillCopy(MyArray, BillNo, i, CreditArray);
             }
 
             MySQLConnect mysql3 = new MySQLConnect();

@@ -275,10 +275,6 @@ public class CashBackDialog extends javax.swing.JDialog {
 
             for (String data : strs) {
                 pd.addTextIFont(data);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                }
             }
             pd.printHTML();
         }

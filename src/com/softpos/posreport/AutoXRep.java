@@ -831,7 +831,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         if (Value.printdriver) {
-            prn.PrintTerminalEngForm(frec, CrArray, Value.MACNO);
+            prn.printTerminalEngForm(frec, CrArray, Value.MACNO);
         } else {
             PrintTerminal(frec, CrArray);
         }
@@ -839,7 +839,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("   รายงานยอดการเงิน (Terminal Report)");
         prn.print("          Automatic X-Report)   ");
         prn.print("หมายเลขเครื่อง : " + Value.MACNO);
@@ -1002,7 +1002,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
     }
 
     public void ProcessCashier() {
@@ -1228,7 +1228,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray, boolean ChkVoid) {
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("   รายงานพนักงานขาย (Cashier Report)");
         prn.print("        (Automatic Xreport)");
         prn.print("หมายเลขเครื่อง : " + Value.MACNO);
@@ -1427,7 +1427,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading4());
         //Print_Str(" ");
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
         mysql.closeConnection(this.getClass());
     }
@@ -1627,7 +1627,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         if (Value.printdriver) {
-            prn.PrintGroupDriver(GArray);
+            prn.printGroupDriver(GArray);
         } else {
             PrintGroup(GArray);
         }
@@ -1649,7 +1649,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามกลุ่มสินค้า");
         prn.print("           (Department Report)");
         prn.print("           (Automatic XReport)");
@@ -1700,7 +1700,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -1908,7 +1908,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         if (Value.printdriver) {
-            prn.PrintPluDriver(GArray);
+            prn.printPluDriver(GArray);
         } else {
             PrintPlu(GArray);
         }
@@ -1930,7 +1930,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามรหัสสินค้า");
         prn.print("              (PLU Report)");
         prn.print("          (Automatic XReport)");
@@ -1989,7 +1989,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2005,7 +2005,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumS = 0.0;
         int ArraySize = HArray.length;
 
-        prn.InitPrinter();
+        prn.initPrinter();
         prn.print("         รายงานการขายตามช่วงเวลา");
         prn.print("            (Hourly Report)");
         prn.print("         (Automatic X-Report)");
@@ -2038,7 +2038,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         prn.print("REG ID :" + Value.MACNO);
-        prn.CutPaper();
+        prn.cutPaper();
 
     }
 
@@ -2049,7 +2049,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             InvRep inv = new InvRep(null, true);
             inv.PrintInvDriver(MacNo1, MacNo2);
         } else {
-            prn.InitPrinter();
+            prn.initPrinter();
             prn.print("         รายงานการพิมพ์ใบเสร็จรับเงิน");
             prn.print("             (Receipt Report)");
             prn.print("          (Automatic X-Report)");
@@ -2109,7 +2109,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
             prn.print("REG ID :" + Value.MACNO);
-            prn.CutPaper();
+            prn.cutPaper();
         }
 
     }
@@ -2123,7 +2123,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             VoidRep vrd = new VoidRep(null, true);
             vrd.PrintVoidDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
-            prn.InitPrinter();
+            prn.initPrinter();
             prn.print("         รายงานการทำรายการ Void");
             prn.print("              (Void Report)");
             prn.print("          (Automatic X-Report)");
@@ -2175,7 +2175,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
             prn.print("REG ID :" + Value.MACNO);
-            prn.CutPaper();
+            prn.cutPaper();
         }
 
     }
@@ -2224,7 +2224,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 AppLogUtil.log(AutoXRep.class, "error", e);
             }
 
-            prn.InitPrinter();
+            prn.initPrinter();
             prn.print("         รายงานการรับชำระด้วยบัตรเครดิต");
             prn.print("               (Credit Report)");
             prn.print("            (Automatic X-Report)");
@@ -2290,7 +2290,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
             prn.print("REG ID :" + Value.MACNO);
-            prn.CutPaper();
+            prn.cutPaper();
 
         }
 
@@ -2333,7 +2333,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             GiftVoucherRep gift = new GiftVoucherRep(null, true);
             gift.PrintVoucherRepDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
-            prn.InitPrinter();
+            prn.initPrinter();
             prn.print("       รายงานการรับชำระด้วยบัตรของขวัญ");
             prn.print("          (Gift Voucher Report)");
             prn.print("          (Automatic X-Report)");
@@ -2382,7 +2382,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
             prn.print("REG ID :" + Value.MACNO);
-            prn.CutPaper();
+            prn.cutPaper();
         }
 
     }

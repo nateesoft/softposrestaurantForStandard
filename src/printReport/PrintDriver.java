@@ -1,15 +1,8 @@
 package printReport;
 
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.model.BalanceBean;
-import database.MySQLConnect;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.BufferedWriter;
@@ -18,12 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;

@@ -178,7 +178,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         if (evt.getClickCount() == 2) {
             if (FunctionList.getSelectedIndex() == 0) {
                 if (Value.useprint) {
-                    prn.PrintTableAction();
+                    prn.printTableAction();
                 }
             }
         }

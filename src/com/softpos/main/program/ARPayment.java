@@ -1545,11 +1545,6 @@ private void c_bntenterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:
         }
     } else {
         if (_TCash.hasFocus()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                MSG.ERR(this, e.getMessage());
-            }
             _TCashExit();
         } else {
 
@@ -1774,10 +1769,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public void inputfrombnt(String Str) {
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-        }
         if (_TCash.hasFocus()) {
             String tempstr;
             tempstr = _TCash.getText();
@@ -2145,7 +2136,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 PrintBillArDriver(XRef_No, ArCode, ReferentNo);
             } else {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
@@ -2223,7 +2214,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prn.print(" ");
                     prn.print(" ");
                     prn.print(" ");
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -2307,10 +2298,6 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
     }

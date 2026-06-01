@@ -2784,7 +2784,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 mainSaleControl.execUpdate(sqlTurnPrintKicOff);
             }
             
-            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+            String sql = "update tablefile set tpause='Y', TOnAct='N' where tcode='" + tableNo + "';";
             mainSaleControl.execUpdate(sql);
             
             kichenPrint();
@@ -3894,7 +3894,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (Value.useprint) {
             AppLogUtil.info("printBillCheck usePrint = " + Value.useprint);
             PPrint print = new PPrint();
-            print.PrintCheckBill(txtTable.getText());
+            print.printCheckBill(txtTable.getText());
         } else {
             MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + Value.useprint);
         }
@@ -3904,7 +3904,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (Value.useprint) {
             if (mainSaleControl.printBillVoidCheck(tableNo)) {
                 PPrint print = new PPrint();
-                print.PrintVoidBill(tableNo);
+                print.printVoidBill(tableNo);
             }
         }
     }

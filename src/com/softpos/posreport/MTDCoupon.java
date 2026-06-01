@@ -366,7 +366,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         } else {
             if (!Value.getComPort().equals("NONE")) {
                 if (prn.openPrint(Value.getComPort())) {
-                    prn.InitPrinter();
+                    prn.initPrinter();
                     prn.print(PublicVar.HWrec_Heading1);
                     prn.print(PublicVar.HWrec_Heading2);
                     prn.print(PublicVar.HWrec_Heading3);
@@ -413,7 +413,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                     prn.print(" ");
                     prn.print(" ");
                     prn.print(" ");
-                    prn.CutPaper();
+                    prn.cutPaper();
                     prn.closePrint();
                 }
             }
@@ -493,10 +493,6 @@ public class MTDCoupon extends javax.swing.JDialog {
 
         for (String data1 : strs) {
             pd.addTextIFont(data1);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-            }
         }
         pd.printHTML();
 

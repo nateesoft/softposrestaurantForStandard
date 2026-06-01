@@ -381,7 +381,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             mysql.closeConnection(this.getClass());
         }
 
-        prn.PrintTerminalEngForm(frec, CrArray, txtMacNo.getText());
+        prn.printTerminalEngForm(frec, CrArray, txtMacNo.getText());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

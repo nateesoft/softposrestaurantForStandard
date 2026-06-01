@@ -2175,7 +2175,7 @@ public class CheckBill extends javax.swing.JDialog {
             public void run() {
                 PPrint print = new PPrint();
                 if (Value.useprint && Value.printdriver == false) {
-                    print.PrintCheckBill(tableNo);
+                    print.printCheckBill(tableNo);
                 } else {
                     print.printCheckBillDriver(tableNo);
                 }
@@ -2480,7 +2480,7 @@ public class CheckBill extends javax.swing.JDialog {
         if (Value.useprint) {
             if (checkBillControl.readyToPrintVoid(tableNo)) {
                 PPrint print = new PPrint();
-                print.PrintVoidBill(tableNo);
+                print.printVoidBill(tableNo);
             }
         }
     }

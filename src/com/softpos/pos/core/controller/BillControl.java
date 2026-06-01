@@ -573,7 +573,7 @@ public class BillControl {
                 BillControl.saveBillNo(billNo, memberBean);
                 if (Value.useprint) {
                     PPrint print = new PPrint();
-                    print.PrintSubTotalBill(BillNo, table);
+                    print.printSubTotalBill(BillNo, table);
                 }
 
                 //clear transaction for table (balance, tablefile)
@@ -1004,9 +1004,9 @@ public class BillControl {
                 if (Value.useprint) {
 //                new Thread(() -> {
                     PPrint print = new PPrint();
-                    print.PrintSubTotalBill(BillNo, table);
+                    print.printSubTotalBill(BillNo, table);
                     if (PublicVar.PrintCopyAuto.equals("true")) {
-                        print.PrintSubTotalBill(BillNo, table);
+                        print.printSubTotalBill(BillNo, table);
                     }
 //                }).start();
                 }

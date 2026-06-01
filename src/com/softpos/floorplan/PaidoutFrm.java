@@ -80,9 +80,9 @@ public class PaidoutFrm extends javax.swing.JDialog {
                 if (Prn.openPrint(Value.getComPort())) {
                     try {
                         //PRINT OUT
-                        Prn.InitPrinter();
-                        Prn.OpenDrawer();
-                        Prn.InitPrinter();
+                        Prn.initPrinter();
+                        Prn.openDrawer();
+                        Prn.initPrinter();
                         Prn.print(St + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         Prn.print("------------------------------------------------------------");
                         Prn.print("จำนวนเงินนำออกจากลิ้นชัก    " + PUtility.DataFull(Decfmt.format(PaidoutAmt), 12));
@@ -96,7 +96,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
                         Prn.print("");
                         Prn.print("");
                         Prn.print("");
-                        Prn.CutPaper();
+                        Prn.cutPaper();
                     } catch (Exception e2) {
                         MSG.WAR(this, "กรุณาป้อนจำนวนเงิน ให้ถูกต้อง...");
                         return;

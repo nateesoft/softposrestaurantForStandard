@@ -748,7 +748,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         if (Value.useprint) {
-            prn.PrintGroup(GArray);
+            prn.printGroup(GArray);
         }
         txtMacNo1.requestFocus();
     }

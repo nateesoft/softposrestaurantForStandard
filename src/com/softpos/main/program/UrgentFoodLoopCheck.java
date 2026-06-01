@@ -38,10 +38,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     double countTime1 = 1;
 
     public UrgentFoodLoopCheck() {
-        try {
-            Thread.sleep(3600 * 3);
-        } catch (Exception e) {
-        }
         initComponents();
         new Thread(new Runnable() {
             @Override
@@ -54,47 +50,30 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 
                 printerName = ConfigFile.getProperties("printerName");
                 jLabel4.setText("Printer Active = " + printerName);
-//                for (int i = 0; i < 10; i++) {
                 getDataFromKicTran();
                 System.out.println("Into Method UrgentFoodLoopCheck() " + countTime + this.getClass());
                 if (trickSound == true) {
                     for (int a = 0; a < 10; a++) {
                         playSound();
-                        try {
-                            Thread.sleep(6300 * 4);
-                        } catch (Exception e) {
-                        }
                     }
                     trickSound = false;
                 }
-//                    try {
-//                        Thread.sleep(900 * 5);
-//                    } catch (Exception e) {
-//                    }
-//                    if (i == 9) {
-//                        i = 0;
-//                    }
             }
-
-//            }
         }).start();
+        
         if (printerConfigDriver.equals("true")) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 10; i++) {
-                        countTime1++;
-                        printCheckItOut();
-                        jLabel3.setText("UrgentFoodLoopCheck : Loop LEVEL " + countTime1);
-                        try {
-                            Thread.sleep(900 * 5);
-                        } catch (Exception e) {
-                        }
-                        if (i == 9) {
-                            i = 0;
-                        }
+            new Thread(() -> {
+                for (int i = 0; i < 10; i++) {
+                    countTime1++;
+                    printCheckItOut();
+                    jLabel3.setText("UrgentFoodLoopCheck : Loop LEVEL " + countTime1);
+                    try {
+                        Thread.sleep(100);
+                    } catch (Exception e) {
                     }
-
+                    if (i == 9) {
+                        i = 0;
+                    }
                 }
             }).start();
         }
@@ -150,7 +129,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 }
                 try {
 
-                    Thread.sleep(1200);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                 }
                 if (i > 7) {
@@ -243,7 +222,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                             if (printerConfigDriver.equals("true")) {
                                 printDriver.printHTMLKitChenByKictran(printerName);
                                 jLabel4.setText("Printing : " + printerName + " / printCheckItOut " + bean.getR_Table() + " index =  " + bean.getR_Index());
-                                Thread.sleep(900);
                             }
 
                         } catch (Exception e) {
@@ -284,7 +262,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 
                 }
                 rs.close();
-//                Thread.sleep(900);
             }
         } catch (Exception e) {
             MSG.NOTICE(this, e.getMessage());
@@ -315,13 +292,8 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     String[] strs = textToPrint.split("_");
                     for (String data1 : strs) {
                         printDriver.addTextIFont(data1);
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                        }
                     }
                     try {
-                        Thread.sleep(100);
                         if (printerConfigDriver.equals("true")) {
                             printDriver.printHTMLKitChenByKictran(ConfigFile.getProperties("printerName"));
                         }

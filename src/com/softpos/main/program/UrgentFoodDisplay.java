@@ -39,7 +39,6 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
                 for (int i = 0; i < 10; i++) {
                     try {
                         playSound();
-                        Thread.sleep(1800);
                     } catch (Exception e) {
                     }
                     if (i == 9) {
@@ -77,10 +76,6 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
                     for (int i = 0; i < 10; i++) {
                         jButton2.setForeground(Color.red);
                         jButton2.setBackground(Color.BLACK);
-                        try {
-                            Thread.sleep(200);
-                        } catch (Exception e) {
-                        }
                         jButton2.setForeground(Color.blue);
                         jButton2.setBackground(Color.white);
                         try {

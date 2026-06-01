@@ -409,8 +409,8 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 updateDatabaseForRefund();
 
                 POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
-                prn.Print_Head_EJ();
-                prn.PrintBillRefund(BillNo);
+                prn.print_Head_EJ();
+                prn.printBillRefund(BillNo);
                 String TempBill = bean.getEJDailyPath() + "/tempbill.txt";
                 String ImageFile = bean.getEJDailyPath() + "/" + PublicVar.Branch_Code + "_" + Value.MACNO + "_RFN" + BillNo + ".gif";
                 TextToImage toImage = new TextToImage();

@@ -167,7 +167,6 @@ public class PrintKicFormReport {
             
             report.closeConnection();
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
-            Thread.sleep(100);
         } catch (Exception ex) {
             Logger.getLogger(PrintKicFormReport.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -268,7 +267,6 @@ public class PrintKicFormReport {
             // close connection
             report.closeConnection();
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
-            Thread.sleep(100);
 
         } catch (Exception e) {
             AppLogUtil.log(PrintKicFormReport.class, "error", e);
