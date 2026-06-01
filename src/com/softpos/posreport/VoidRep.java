@@ -390,7 +390,6 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     public void PrintVoidDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2) {
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {

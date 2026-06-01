@@ -2466,6 +2466,8 @@ public class PPrint {
 
     }
 
+    private final BalanceControl balanceControl = new BalanceControl();
+    
     public void PrintVoidBill(final String tableNo) {
         ExecutorService service = Executors.newFixedThreadPool(1);
         service.submit(new Runnable() {
@@ -2475,8 +2477,8 @@ public class PPrint {
                 if (Value.printdriver == true) {
                     PrintVoidBillDriver(tableNo);
                 } else {
-                    BalanceControl bc = new BalanceControl();
-                    List<BalanceBean> listBean = bc.getAllBalance(tableNo);
+                    
+                    List<BalanceBean> listBean = balanceControl.getAllBalance(tableNo);
 
                     int QtyLength = 5;
                     int AmtLength = 10;

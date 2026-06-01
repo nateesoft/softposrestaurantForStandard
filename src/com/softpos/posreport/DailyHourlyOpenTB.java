@@ -408,7 +408,6 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     public void PrintHourlyByCustDriver() {
         List<Object[]> ListObj = LoadData();
         String t = "";
-        POSHW = POSHWSetup.Bean(Value.MACNO);
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
             for (String data : strs) {

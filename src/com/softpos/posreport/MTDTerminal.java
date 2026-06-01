@@ -31,7 +31,6 @@ import java.util.List;
 
 public class MTDTerminal extends javax.swing.JDialog {
 
-    private POSConfigSetup CONFIG;
     SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
@@ -44,6 +43,8 @@ public class MTDTerminal extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     DateConvert dc = new DateConvert();
+    
+    private POSConfigSetup CONFIG;
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
@@ -56,7 +57,9 @@ public class MTDTerminal extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
         InitScreen();
+        
         POSHW = POSHWSetup.Bean(Value.MACNO);
+        CONFIG = POSConfigSetup.Bean();
     }
 
     /**
@@ -879,7 +882,6 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void PrintTerminalEngForm(FinalcialRec frec, CreditRec[] CrArray, String macNo1, String macNo2) {
-        CONFIG = POSConfigSetup.Bean();
         if (Value.printdriver) {
             PrintTerminalEngFormDriver(frec, CrArray, macNo1, macNo1);
         } else {
@@ -1145,7 +1147,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo1, String macNo2) {
         String t = "";
         double sumCuponAmt = 0.00;
-        CONFIG = POSConfigSetup.Bean();
+        
         List<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
         String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
         double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
