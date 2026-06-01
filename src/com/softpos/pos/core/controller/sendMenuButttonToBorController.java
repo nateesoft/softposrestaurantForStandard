@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.softpos.crm.pos.core.controller;
+package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
 import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;

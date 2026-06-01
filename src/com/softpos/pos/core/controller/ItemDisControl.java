@@ -1,10 +1,9 @@
-package com.softpos.webapp.promotion;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
-import com.softpos.webapp.service.ServiceControl;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +44,7 @@ public class ItemDisControl {
                 addServiceAmt = Service / 100 * bean.getR_Total();
 
                 //คิดการปัดเศษ
-                addServiceAmt = ServiceControl.getDouble(addServiceAmt);
+                addServiceAmt = WebServiceControl.getDouble(addServiceAmt);
 
                 R_Total = bean.getR_Total() + addServiceAmt;
             }

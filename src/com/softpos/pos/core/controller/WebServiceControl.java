@@ -1,4 +1,4 @@
-package com.softpos.webapp.service;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
@@ -12,11 +12,11 @@ import java.util.List;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.NumberUtil;
 
-public class ServiceControl {
+public class WebServiceControl {
 
     private final PosControl posControl;
 
-    public ServiceControl() {
+    public WebServiceControl() {
         posControl = new PosControl();
     }
 
@@ -114,7 +114,7 @@ public class ServiceControl {
 
         } catch (SQLException e) {
 
-            AppLogUtil.log(ServiceControl.class, "error", e);
+            AppLogUtil.log(WebServiceControl.class, "error", e);
         } finally {
             mysql.closeConnection(this.getClass());
         }

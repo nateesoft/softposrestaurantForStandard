@@ -1,4 +1,4 @@
-package com.softpos.member;
+package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;

@@ -1,4 +1,4 @@
-package com.softpos.crm.pos.core.controller;
+package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MPluBean;
 import com.softpos.util.ThaiUtil;

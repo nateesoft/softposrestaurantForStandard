@@ -30,7 +30,8 @@
       "Bash(curl -L -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/flatlaf-3.7.1.jar https://repo1.maven.org/maven2/com/formdev/flatlaf/3.7.1/flatlaf-3.7.1.jar --progress-bar)",
       "Bash(unzip -p dist/SoftPOSRestaurantForStandart.jar META-INF/MANIFEST.MF)",
       "Bash(xargs file)",
-      "Bash(cd \"/Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/images\" && rm -f \\\\ *)"
+      "Bash(cd \"/Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/images\" && rm -f \\\\ *)",
+      "Bash(xargs cat)"
     ]
   }
 }

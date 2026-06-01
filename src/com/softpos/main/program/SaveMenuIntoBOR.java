@@ -5,7 +5,7 @@
  */
 package com.softpos.main.program;
 
-import com.softpos.crm.pos.core.controller.sendMenuButttonToBorController;
+import com.softpos.pos.core.controller.sendMenuButttonToBorController;
 import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
 import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
 import com.softpos.main.floorplan.view.FloorPlanDialog;

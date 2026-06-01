@@ -2,10 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.crm.pos.core.controller.BranchFileController;
-import com.softpos.crm.pos.core.controller.MPluController;
-import com.softpos.crm.pos.core.controller.MTranController;
-import com.softpos.crm.pos.core.controller.PointTypeController;
 import com.softpos.crm.pos.core.modal.BranchFileBean;
 import com.softpos.crm.pos.core.modal.MPluBean;
 import com.softpos.crm.pos.core.modal.MTranBean;

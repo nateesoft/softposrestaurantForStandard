@@ -4,7 +4,7 @@ import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.floorplan.view.PaidinFrm;
 import com.softpos.main.floorplan.view.RefundBill;
 import com.softpos.main.floorplan.view.ShowTable;
-import com.softpos.member.MemberControl;
+import com.softpos.pos.core.controller.MemberControl;
 import com.softpos.pos.core.controller.BalanceControl;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;

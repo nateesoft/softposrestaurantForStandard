@@ -6,7 +6,7 @@ import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
-import com.softpos.webapp.promotion.ItemDisControl;
+import com.softpos.pos.core.controller.ItemDisControl;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import soft.virtual.KeyBoardDialog;

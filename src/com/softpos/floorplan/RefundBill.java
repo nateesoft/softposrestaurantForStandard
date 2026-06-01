@@ -1,7 +1,7 @@
 package com.softpos.floorplan;
 
-import com.softpos.crm.pos.core.controller.MPluController;
-import com.softpos.crm.pos.core.controller.MTranController;
+import com.softpos.pos.core.controller.MPluController;
+import com.softpos.pos.core.controller.MTranController;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.POSHWSetup;
