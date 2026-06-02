@@ -83,7 +83,6 @@ public class GetQty extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ป้อนจำนวนสินค้า");
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 

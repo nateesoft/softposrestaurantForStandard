@@ -109,7 +109,6 @@ public class Jdi_depReport extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการขายตามแผนก (Dept)");
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(252, 192, 239));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -359,7 +358,7 @@ public class Jdi_depReport extends javax.swing.JDialog {
                 .addContainerGap(59, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1008, 729));
+        setSize(new java.awt.Dimension(1008, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -51,9 +51,8 @@ public class DailyRep extends javax.swing.JDialog {
         bntExit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการขายประจำวัน (Daily Report)");
-        setUndecorated(true);
         setResizable(false);
 
         jPanel4.setBackground(new java.awt.Color(102, 153, 0));
@@ -164,7 +163,7 @@ public class DailyRep extends javax.swing.JDialog {
 
         getAccessibleContext().setAccessibleParent(FunctionList);
 
-        setSize(new java.awt.Dimension(950, 742));
+        setSize(new java.awt.Dimension(950, 770));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

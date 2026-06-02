@@ -2,9 +2,8 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="0"/>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="&#xe15;&#xe35;&#xe22;&#xe4c;&#xe25;&#xe31;&#xe14;&#xe15;&#xe48;&#xe32;&#xe07;&#xe46; &#xe17;&#xe35;&#xe48;&#xe43;&#xe0a;&#xe49;&#xe23;&#xe30;&#xe1a;&#xe1a;"/>
-    <Property name="undecorated" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>

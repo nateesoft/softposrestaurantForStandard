@@ -66,7 +66,6 @@ public class FindAr extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการค้นหาลูกหนี้การค้า");
-        setUndecorated(true);
 
         tblShow.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tblShow.setModel(new javax.swing.table.DefaultTableModel(

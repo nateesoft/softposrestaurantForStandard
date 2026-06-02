@@ -28,9 +28,8 @@ public class ShortKeyDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ตีย์ลัดต่างๆ ที่ใช้ระบบ");
-        setUndecorated(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N

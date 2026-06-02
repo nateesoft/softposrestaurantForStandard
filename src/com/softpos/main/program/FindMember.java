@@ -325,7 +325,6 @@ public class FindMember extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ค้นหาข้อมูลสมาชิก (Find Member)");
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -511,7 +510,7 @@ public class FindMember extends javax.swing.JDialog {
                 .addContainerGap(77, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1008, 729));
+        setSize(new java.awt.Dimension(1008, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

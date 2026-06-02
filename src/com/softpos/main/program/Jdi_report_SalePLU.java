@@ -64,7 +64,6 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานการขายตามรหัสสินค้า (PLU Code)");
         setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -389,7 +388,7 @@ public class Jdi_report_SalePLU extends javax.swing.JDialog {
                 .addGap(34, 34, 34))
         );
 
-        setSize(new java.awt.Dimension(1008, 729));
+        setSize(new java.awt.Dimension(1008, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

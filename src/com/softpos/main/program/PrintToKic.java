@@ -97,8 +97,8 @@ public class PrintToKic extends javax.swing.JFrame {
         lblProcessShow = new javax.swing.JLabel();
         lblProcessLog = new javax.swing.JLabel();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Print To Kic @Softpos");
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 

@@ -62,9 +62,8 @@ public class FileSettingDialog extends javax.swing.JDialog {
         cbPopup = new javax.swing.JComboBox();
         jPanel5 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("File Configuration");
-        setUndecorated(true);
 
         jTabbedPane1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -252,8 +251,8 @@ public class FileSettingDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbPrint, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbKicPrint, javax.swing.GroupLayout.Alignment.TRAILING, 0, 67, Short.MAX_VALUE)
-                            .addComponent(cbDriver, javax.swing.GroupLayout.Alignment.TRAILING, 0, 67, Short.MAX_VALUE)))
+                            .addComponent(cbKicPrint, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbDriver, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

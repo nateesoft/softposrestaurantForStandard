@@ -45,9 +45,8 @@ public class MTDRep extends javax.swing.JDialog {
         bntExit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายงานประจำเดือน");
-        setUndecorated(true);
         setResizable(false);
 
         jPanel4.setBackground(new java.awt.Color(255, 102, 102));
@@ -153,7 +152,7 @@ public class MTDRep extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(845, 698));
+        setSize(new java.awt.Dimension(845, 726));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

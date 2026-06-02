@@ -79,7 +79,6 @@ public final class Giftvoucher extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการบัตรกำนัล/บัตรของขวัญ (Giftvouchar)");
         setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -199,7 +198,7 @@ public final class Giftvoucher extends javax.swing.JDialog {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(634, 309));
+        setSize(new java.awt.Dimension(634, 337));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -55,7 +55,6 @@ public class EmployLogin extends javax.swing.JDialog {
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
-        setUndecorated(true);
         setResizable(false);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 51, 0), 3));
@@ -320,7 +319,7 @@ public class EmployLogin extends javax.swing.JDialog {
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(333, 431));
+        setSize(new java.awt.Dimension(333, 459));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

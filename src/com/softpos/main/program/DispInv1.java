@@ -244,7 +244,6 @@ public class DispInv1 extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.lightGray, 2));
         jPanel1.setFocusable(false);
@@ -534,7 +533,7 @@ public class DispInv1 extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(1008, 729));
+        setSize(new java.awt.Dimension(1008, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

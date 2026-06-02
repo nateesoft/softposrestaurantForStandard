@@ -142,7 +142,6 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ส่งเมนูเข้า BOR");
-        setUndecorated(true);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tranfer.jpg"))); // NOI18N

@@ -72,7 +72,6 @@ public class DisplayEJ extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ตรวจสอบรายการการทำงาน (ม้วนในเครื่อง)");
-        setUndecorated(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -141,7 +140,7 @@ public class DisplayEJ extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(816, 729));
+        setSize(new java.awt.Dimension(816, 757));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

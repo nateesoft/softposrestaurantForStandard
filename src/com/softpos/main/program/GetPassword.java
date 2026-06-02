@@ -49,7 +49,6 @@ public class GetPassword extends javax.swing.JDialog {
 
         setTitle("Get Password");
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));

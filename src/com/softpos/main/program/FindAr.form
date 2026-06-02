@@ -4,7 +4,6 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="&#xe23;&#xe32;&#xe22;&#xe01;&#xe32;&#xe23;&#xe04;&#xe49;&#xe19;&#xe2b;&#xe32;&#xe25;&#xe39;&#xe01;&#xe2b;&#xe19;&#xe35;&#xe49;&#xe01;&#xe32;&#xe23;&#xe04;&#xe49;&#xe32;"/>
-    <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="0"/>
