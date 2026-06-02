@@ -1,22 +1,16 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.Font;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class GiftDialogList extends javax.swing.JDialog {
 
     private String giftCode;
     private String giftTypeCode;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public GiftDialogList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -140,26 +134,9 @@ public class GiftDialogList extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             model.removeRow(0);
         }
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from gifttype";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            try (ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    model.addRow(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.WAR(this, e.getMessage());
-            AppLogUtil.log(GiftDialogList.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<Object[]> rows = AppContext.getCuponControl().getGiftTypeList();
+        for (Object[] row : rows) {
+            model.addRow(row);
         }
     }
 }

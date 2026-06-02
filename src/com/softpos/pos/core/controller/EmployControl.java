@@ -3,6 +3,8 @@ package com.softpos.pos.core.controller;
 import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
@@ -63,6 +65,26 @@ public class EmployControl {
         }
 
         return empName;
+    }
+
+    public List<String[]> getAllEmployees() {
+        List<String[]> employees = new ArrayList<>();
+        try {
+            mysqlConnect.open();
+            String sql = "select * from employ order by code";
+            ResultSet rs = mysqlConnect.executeQuery(sql);
+            while (rs.next()) {
+                String code = rs.getString("code");
+                String name = ThaiUtil.ASCII2Unicode(rs.getString("name"));
+                employees.add(new String[]{code, name});
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        } finally {
+            mysqlConnect.close();
+        }
+        return employees;
     }
 
 }

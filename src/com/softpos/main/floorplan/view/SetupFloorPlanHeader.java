@@ -4,17 +4,12 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CompanyBean;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class SetupFloorPlanHeader extends javax.swing.JDialog {
 
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PosControl PosControl = AppContext.getPosControl();
 
     public SetupFloorPlanHeader(java.awt.Frame parent, boolean modal) {
@@ -324,26 +319,10 @@ public class SetupFloorPlanHeader extends javax.swing.JDialog {
 
     private void saveItem() {
 
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "update company set "
-                    + "FloorTab1='" + ThaiUtil.Unicode2ASCII(txtTab1.getText()) + "',"
-                    + "FloorTab2='" + ThaiUtil.Unicode2ASCII(txtTab2.getText()) + "',"
-                    + "FloorTab3='" + ThaiUtil.Unicode2ASCII(txtTab3.getText()) + "',"
-                    + "FloorTab4='" + ThaiUtil.Unicode2ASCII(txtTab4.getText()) + "',"
-                    + "FloorTab5='" + ThaiUtil.Unicode2ASCII(txtTab5.getText()) + "',"
-                    + "FloorTab6='" + ThaiUtil.Unicode2ASCII(txtTab6.getText()) + "',"
-                    + "FloorTab7='" + ThaiUtil.Unicode2ASCII(txtTab7.getText()) + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(SetupFloorPlanHeader.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        AppContext.getPosControl().updateFloorTabNames(
+                txtTab1.getText(), txtTab2.getText(), txtTab3.getText(),
+                txtTab4.getText(), txtTab5.getText(), txtTab6.getText(),
+                txtTab7.getText());
 
         PosControl.resetDataCompany();
 

@@ -7,13 +7,13 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.util.ThaiUtil;
+import com.softpos.pos.core.controller.PrintToKicController;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.PKicTranBean;
 import database.ConfigFile;
-import database.MySQLConnect;
 import java.awt.Cursor;
 import java.awt.Toolkit;
-import java.sql.ResultSet;
+import java.util.List;
 import javax.swing.JFrame;
 import printReport.PrintDriver;
 import com.softpos.util.AppLogUtil;
@@ -36,7 +36,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     public static DateConvert dc = new DateConvert();
     double countTime = 1;
     double countTime1 = 1;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public UrgentFoodLoopCheck() {
         initComponents();
@@ -81,35 +80,23 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     }
 
     public void getDataFromKicTran() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-
         try {
-
             for (int i = 0; i < 10; i++) {
                 countTime++;
                 jLabel2.setText("getDataFromKictran : Loop LEVEL " + countTime);
                 System.out.println("Into Method getDataFromKictran() " + countTime + this.getClass());
-                String sql = "select * from kictran "
-                        + "where "
-                        + "PFlage='N' "
-                        + "and R_AlertKitchen='N' "
-                        + "and R_FoodUrgent='Y' "
-                        + "and pkic='" + stationKicNo + "' "
-                        + "limit 1;";
-                
-                try {
-                    mysqlConnect.open(this.getClass());
-                    ResultSet rs = mysqlConnect.executeQuery(sql);
-                    if (rs.next() && !rs.wasNull()) {
-                        trickSound = true;
-                        String tableNo = rs.getString(ThaiUtil.ASCII2Unicode("PTable"));
-                        String pdesc = rs.getString(ThaiUtil.ASCII2Unicode("R_UrgentFoodItemName"));
-                        String pcode = rs.getString("pcode");
-                        String pindex = rs.getString(ThaiUtil.ASCII2Unicode("pindex"));
 
-                        if (pdesc.equals("") || pdesc == null || pdesc.equals("null")) {
+                try {
+                    PrintToKicController controller = AppContext.getPrintToKicController();
+                    PKicTranBean bean = controller.getUrgentFoodItem(stationKicNo);
+                    if (bean != null) {
+                        trickSound = true;
+                        String tableNo = bean.getpTable();
+                        String pdesc = bean.getR_UrgentFoodItemName();
+                        String pcode = bean.getpCode();
+                        String pindex = bean.getpIndex();
+
+                        if (pdesc == null || pdesc.equals("") || pdesc.equals("null")) {
                             UrgentFoodDisplay display = new UrgentFoodDisplay(tableNo, "", "ตามทั้งโต๊ะ", "");
                             display.setVisible(true);
                         } else {
@@ -119,17 +106,12 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     } else {
                         trickSound = false;
                     }
-
-                    rs.close();
-
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                     MSG.NOTICE(this, e.getMessage());
-                } finally {
-                    mysqlConnect.closeConnection(this.getClass());
                 }
-                try {
 
+                try {
                     Thread.sleep(100);
                 } catch (Exception e) {
                 }
@@ -141,10 +123,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
             System.out.println(e.toString());
         }
-
     }
-//        }).start();
-//    }
 
     public static void playSound() {
         new Thread(new Runnable() {
@@ -162,129 +141,93 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     public void printCheckItOut() {
         try {
             System.out.println("Into Method printCheckItOut() ");
-            String sql = "select * from kictran "
-                    + "where "
-                    + "PFlage='Y' "
-                    + "and PServe='Y' "
-                    + "and R_PrintCheckOut='N' "
-                    + "and pkic='" + stationKicNo + "' "
-                    + "limit 1;";
-            mysqlConnect.open(this.getClass());
+            PrintToKicController controller = AppContext.getPrintToKicController();
             countTime1++;
             jLabel2.setText("getDataFromKictran : Loop LEVEL " + countTime1);
-            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                String textToPrint = "";
-                String pTable = "";
-                String pIndex = "";
-                String pcode = "";
 
-                if (rs.next()) {
-                    System.out.println("Printing PrictCheckItOut");
-                    System.out.println(rs.getString("PCode"));
-                    pcode = rs.getString("PCode");
-                    pIndex = rs.getString("PIndex");
-                    pTable = rs.getString("PTable");
-                    BalanceBean bean = new BalanceBean();
-                    BalanceControl bl = AppContext.getBalanceControl();
-                    bean = bl.getBalanceIndex(pTable, pIndex);
-                    if (bean != null) {
-                        int pQty = rs.getInt("PQty");
-                        String pEtd = rs.getString("PEtd");
-                        textToPrint += "โตีะ : " + pTable + "_";
-                        if (pEtd.equals("E")) {
-                            pEtd = "ทานในร้าน";
-                        } else if (pEtd.equals("T")) {
-                            pEtd = "ห่อกลับ";
-                        } else if (pEtd.equals("D")) {
-                            pEtd = "Delivery";
-                        } else if (pEtd.equals("P")) {
-                            pEtd = "Pinto";
-                        } else if (pEtd.equals("W")) {
-                            pEtd = "Whole Sale";
-                        }
-                        textToPrint += "colspan=3 align=center><font face=Angsana New size=5> " + "โต๊ะ : " + pTable + "_";
-                        textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "*** : " + pEtd + " ***_";
-                        textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "จำนวน : " + pQty + "_";
-                        textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + pcode + " # " + bean.getR_PName() + "_";
-                        textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + dc.dateGetToShow(dc.GetCurrentDate()) + " เวลา " + dc.GetCurrentTime() + "_";
-                        PrintDriver printDriver = new PrintDriver();
-                        String[] strs = textToPrint.split("_");
-                        for (String data1 : strs) {
-                            printDriver.addTextIFont(data1);
-                            try {
-                                Thread.sleep(100);
-                            } catch (Exception e) {
-                            }
-                        }
+            PKicTranBean kicBean = controller.getPendingCheckout(stationKicNo);
+            if (kicBean != null) {
+                System.out.println("Printing PrictCheckItOut");
+                System.out.println(kicBean.getpCode());
+                String pcode = kicBean.getpCode();
+                String pIndex = kicBean.getpIndex();
+                String pTable = kicBean.getpTable();
+                BalanceControl bl = AppContext.getBalanceControl();
+                BalanceBean bean = bl.getBalanceIndex(pTable, pIndex);
+                if (bean != null) {
+                    int pQty = kicBean.getpQty();
+                    String pEtd = kicBean.getpEtd();
+                    String textToPrint = "";
+                    textToPrint += "โตีะ : " + pTable + "_";
+                    if (pEtd.equals("E")) {
+                        pEtd = "ทานในร้าน";
+                    } else if (pEtd.equals("T")) {
+                        pEtd = "ห่อกลับ";
+                    } else if (pEtd.equals("D")) {
+                        pEtd = "Delivery";
+                    } else if (pEtd.equals("P")) {
+                        pEtd = "Pinto";
+                    } else if (pEtd.equals("W")) {
+                        pEtd = "Whole Sale";
+                    }
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=5> " + "โต๊ะ : " + pTable + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "*** : " + pEtd + " ***_";
+                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "จำนวน : " + pQty + "_";
+                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + pcode + " # " + bean.getR_PName() + "_";
+                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + dc.dateGetToShow(dc.GetCurrentDate()) + " เวลา " + dc.GetCurrentTime() + "_";
+                    PrintDriver printDriver = new PrintDriver();
+                    String[] strs = textToPrint.split("_");
+                    for (String data1 : strs) {
+                        printDriver.addTextIFont(data1);
                         try {
-                            if (printerConfigDriver.equals("true")) {
-                                printDriver.printHTMLKitChenByKictran(printerName);
-                                jLabel4.setText("Printing : " + printerName + " / printCheckItOut " + bean.getR_Table() + " index =  " + bean.getR_Index());
-                            }
-
-                        } catch (Exception e) {
-                            AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                            MSG.ERR(this, e.getMessage());
-                        }
-                        try {
-                            String sqlUpdate = "update kictran set "
-                                    + "R_PrintCheckOut='Y' "
-                                    + "where ptable='" + pTable + "' "
-                                    + "and pindex='" + pIndex + "' "
-                                    + "and pcode='" + pcode + "' "
-                                    + "and R_PrintCheckOut='N' ;";
-                            mysqlConnect.executeUpdate(sqlUpdate);
                             Thread.sleep(100);
                         } catch (Exception e) {
-                            AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                            MSG.NOTICE(this, e.getMessage());
                         }
-
-                    } else {
-                        try {
-                            String sqlBalanceisNull = "update kictran "
-                                    + "set "
-                                    + "R_PrintCheckOut='Y' "
-                                    + "where pindex='" + pIndex + "' "
-                                    + "and ptable='" + pTable + "' "
-                                    + "and pcode='" + pcode + "';";
-                            System.out.println(sqlBalanceisNull);
-                            mysqlConnect.executeUpdate(sqlBalanceisNull);
-                        } catch (Exception e) {
-                            System.out.println(e.toString());
-                            MSG.NOTICE(this, e.getMessage());
-                            AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                        }
-
                     }
-
+                    try {
+                        if (printerConfigDriver.equals("true")) {
+                            printDriver.printHTMLKitChenByKictran(printerName);
+                            jLabel4.setText("Printing : " + printerName + " / printCheckItOut " + bean.getR_Table() + " index =  " + bean.getR_Index());
+                        }
+                    } catch (Exception e) {
+                        AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
+                        MSG.ERR(this, e.getMessage());
+                    }
+                    try {
+                        controller.markCheckoutPrinted(pTable, pIndex, pcode);
+                        Thread.sleep(100);
+                    } catch (Exception e) {
+                        AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
+                        MSG.NOTICE(this, e.getMessage());
+                    }
+                } else {
+                    try {
+                        controller.markCheckoutPrintedNoBalance(pTable, pIndex, pcode);
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                        MSG.NOTICE(this, e.getMessage());
+                        AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
+                    }
                 }
-                rs.close();
             }
         } catch (Exception e) {
             MSG.NOTICE(this, e.getMessage());
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
         }
-
     }
 
     public void printUrgentLog() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                DateConvert dc = new DateConvert();
+                DateConvert dcLocal = new DateConvert();
                 try {
+                    PrintToKicController controller = AppContext.getPrintToKicController();
+                    List<PKicTranBean> logList = controller.getUrgentClickLog(dcLocal.GetCurrentDate());
                     String textToPrint = "";
-                    String sql = "select * from kictran_urgentClick where pdate='" + dc.GetCurrentDate() + "';";
-                    mysqlConnect.open(this.getClass());
-                    ResultSet rs = mysqlConnect.executeQuery(sql);
-                    int i = 0;
-                    while (rs.next()) {
-                        textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + rs.getString("pTable") + " # " + dc.dateGetToShow(rs.getString("pDate")) + " เวลา " + rs.getString("pTime") + "_";
-                        i++;
+                    for (PKicTranBean entry : logList) {
+                        textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dcLocal.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
                     }
-                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + i + " ครั้ง " + "_";
+                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + logList.size() + " ครั้ง " + "_";
                     PrintDriver printDriver = new PrintDriver();
                     String[] strs = textToPrint.split("_");
                     for (String data1 : strs) {
@@ -294,19 +237,13 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                         if (printerConfigDriver.equals("true")) {
                             printDriver.printHTMLKitChenByKictran(ConfigFile.getProperties("printerName"));
                         }
-
                     } catch (Exception e) {
                         AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                     }
-                    rs.close();
-                    mysqlConnect.close();
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                     MSG.ERR(new JFrame(), e.getMessage());
-                } finally {
-                    mysqlConnect.closeConnection(this.getClass());
                 }
-
             }
         }).start();
     }

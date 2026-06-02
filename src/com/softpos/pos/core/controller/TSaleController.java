@@ -4,6 +4,7 @@ import com.softpos.pos.core.model.TSaleBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,46 @@ import java.util.List;
  * @author nathee
  */
 public class TSaleController {
-    
+
     private final MySQLConnect mysqlConnect = new MySQLConnect();
+
+    /**
+     * Returns the daily sale summary as a double array:
+     *   [0] = hold (balance unpaid, r_total)
+     *   [1] = paid (billno paid, b_nettotal)
+     *   [2] = total (hold + paid)
+     */
+    public double[] getDailySaleSummary() {
+        double hold = 0.00;
+        double paid = 0.00;
+
+        mysqlConnect.open(TSaleController.class);
+        try {
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+
+            String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                hold = rs.getDouble("r_total");
+            }
+            rs.close();
+
+            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
+            ResultSet rs1 = stmt.executeQuery(sql1);
+            if (rs1.next()) {
+                paid = rs1.getDouble("b_nettotal");
+            }
+            rs1.close();
+
+            stmt.close();
+        } catch (SQLException e) {
+            // caller handles display of errors
+        } finally {
+            mysqlConnect.closeConnection(TSaleController.class);
+        }
+
+        return new double[]{hold, paid, hold + paid};
+    }
 
     public List<TSaleBean> listTSaleByRefId(String b_refno) {
         List<TSaleBean> listTsale = new ArrayList<>();

@@ -3,18 +3,13 @@ package com.softpos.main.floorplan.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.BranchBean;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JFileChooser;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class HomeImageDialog extends javax.swing.JDialog {
     
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl BranchControl = AppContext.getBranchControl();
 
     public HomeImageDialog(java.awt.Frame parent, boolean modal) {
@@ -191,22 +186,8 @@ public class HomeImageDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            if (stmt.executeUpdate(jTextArea1.getText()) > 0) {
-                MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(HomeImageDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        if (BranchControl.executeRawSql(jTextArea1.getText())) {
+            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -237,25 +218,10 @@ public class HomeImageDialog extends javax.swing.JDialog {
     }
 
     private void saveImageReady() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-
-        try {
-            String path = txtPathImage.getText();
-            path = path.replace("\\", "/");
-            String sql = "update branch set IMG_HOME_PATH='" + path + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            if (stmt.executeUpdate(sql) > 0) {
-                MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(HomeImageDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        String path = txtPathImage.getText();
+        path = path.replace("\\", "/");
+        if (BranchControl.updateHomeImagePath(path)) {
+            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
         }
     }
 }

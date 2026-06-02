@@ -1,20 +1,14 @@
 package com.softpos.main.program;
 
-import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class EMPListDialog extends javax.swing.JDialog {
 
     public static String[] data;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public EMPListDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -175,29 +169,9 @@ public class EMPListDialog extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from employ order by code";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String code = rs.getString("code");
-                String name = ThaiUtil.ASCII2Unicode(rs.getString("name"));
-
-                model.addRow(new Object[]{code, name});
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(EMPListDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<String[]> employees = AppContext.getEmployControl().getAllEmployees();
+        for (String[] emp : employees) {
+            model.addRow(new Object[]{emp[0], emp[1]});
         }
     }
 }

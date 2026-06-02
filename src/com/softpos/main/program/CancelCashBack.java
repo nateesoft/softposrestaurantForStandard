@@ -1,19 +1,14 @@
 package com.softpos.main.program;
 
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.MSG;
 
 public class CancelCashBack extends javax.swing.JDialog {
     
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
-
     public CancelCashBack(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -172,29 +167,9 @@ public class CancelCashBack extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from billret where fat = 'N'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("Ref_No"),
-                    rs.getString("Terminal"),
-                    rs.getString("Cashier"),
-                    rs.getString("STotal"),
-                    rs.getString("Fat"),
-                    rs.getString("UserVoid")
-                });
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CancelCashBack.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<Object[]> rows = AppContext.getRefundBillController().listPendingCashBacks();
+        for (Object[] row : rows) {
+            model.addRow(row);
         }
     }
 
@@ -202,27 +177,14 @@ public class CancelCashBack extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        mysqlConnect.open(this.getClass());
-        try {
-            int row = table.getSelectedRow();
-            if (row != -1) {
-
-                String sql = "update billret set Fat='V' where ref_no='" + code + "'";
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                int i = stmt.executeUpdate(sql);
-                stmt.close();
-                if (i > 0) {
-                    dispose();
-                }
-            } else {
-                MSG.WAR(this, "กรุณาเลือกราย !!!");
-                table.requestFocus();
+        int row = table.getSelectedRow();
+        if (row != -1) {
+            if (AppContext.getRefundBillController().voidCashBack(code)) {
+                dispose();
             }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CancelCashBack.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        } else {
+            MSG.WAR(this, "กรุณาเลือกราย !!!");
+            table.requestFocus();
         }
     }
 }

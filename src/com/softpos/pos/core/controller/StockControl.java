@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import com.softpos.util.AppLogUtil;
 
 public class StockControl {
@@ -291,6 +293,120 @@ public class StockControl {
             }
         } catch (SQLException e) {
 
+            AppLogUtil.log(StockControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
+    public List<String[]> listAllStock() {
+        List<String[]> result = new ArrayList<>();
+
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from stockfile;";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                result.add(new String[]{
+                    rs.getString("stkcode"),
+                    rs.getString("stkname"),
+                    rs.getString("flage")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(StockControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return result;
+    }
+
+    public String[] findProductByCode(String pcode) {
+        String[] row = null;
+
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select pcode, pdesc from product where pcode='" + pcode + "' limit 1";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                row = new String[]{rs.getString("pcode"), rs.getString("pdesc")};
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(StockControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return row;
+    }
+
+    public void addOutStockItem(String pcode) {
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select pcode,pdesc from product where pcode='" + pcode + "' limit 1";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                String foundCode = rs.getString("pcode");
+                Statement stmt2 = mysqlConnect.getConnection().createStatement();
+                stmt2.executeUpdate("delete from outstocklist where pcode='" + foundCode + "'");
+                stmt2.executeUpdate("insert into outstocklist values('" + foundCode + "');");
+                stmt2.close();
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(StockControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
+    public List<String[]> listOutStockItems() {
+        List<String[]> result = new ArrayList<>();
+
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select product.pcode,pdesc,punit1 "
+                    + "from outstocklist o, product "
+                    + "where o.pcode=product.pcode";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                result.add(new String[]{
+                    rs.getString("pcode"),
+                    rs.getString("pdesc"),
+                    rs.getString("punit1")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(StockControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return result;
+    }
+
+    public void removeOutStockItem(String pcode) {
+        mysqlConnect.open(this.getClass());
+        try {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                int i = stmt.executeUpdate("delete from outstocklist where pcode='" + pcode + "'");
+                if (i > 0) {
+                    AppLogUtil.info("Delete success.");
+                }
+            }
+        } catch (SQLException e) {
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

@@ -1,23 +1,16 @@
 package com.softpos.main.floorplan.view;
 
-import database.MySQLConnect;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.softpos.pos.core.controller.AppContext;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class DiarySale extends javax.swing.JDialog {
 
     private final SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
     private String DD = dd.format(new Date());
     private DecimalFormat DecFormat = new DecimalFormat("#,##0.00");
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
-
     public DiarySale(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -230,44 +223,12 @@ public class DiarySale extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadSale() {
-        
-        mysqlConnect.open(this.getClass());
-
-        try {
-            String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            double TS = 0.00;//เอามาจาก Balance ยังไม่ชำระ
-            double TS1 = 0.00;//เอามาจาก Billno ชำระเงินแล้ว
-            double TTS = 0.00;
-            if (rs.next()) {
-                TS = rs.getDouble("r_total");
-                lblHold.setText(TS + "");
-            } else {
-                TS = 0.00;
-            }
-
-            String sql1 = "SELECT sum(b_nettotal) b_nettotal FROM billno where b_void <> 'V';";
-            ResultSet rs1 = stmt.executeQuery(sql1);
-            if (rs1.next()) {
-                TS1 = rs1.getDouble("b_nettotal");
-            } else {
-                TS1 = 0.00;
-            }
-            rs1.close();
-
-            TTS += TS + TS1;
-            lblPay.setText(DecFormat.format(TS1) + "");
-            lblHold.setText(DecFormat.format(TS) + "");
-            lblTotal.setText(DecFormat.format(TTS));
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(DiarySale.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        double[] summary = AppContext.getTSaleController().getDailySaleSummary();
+        double hold  = summary[0];
+        double paid  = summary[1];
+        double total = summary[2];
+        lblHold.setText(DecFormat.format(hold));
+        lblPay.setText(DecFormat.format(paid));
+        lblTotal.setText(DecFormat.format(total));
     }
 }

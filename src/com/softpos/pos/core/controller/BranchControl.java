@@ -187,4 +187,29 @@ public class BranchControl {
         return form;
     }
 
+    public boolean updateHomeImagePath(String path) {
+        try {
+            mysqlConnect.open(BranchControl.class);
+            String sql = "update branch set IMG_HOME_PATH='" + path + "'";
+            return mysqlConnect.executeUpdate(sql) > 0;
+        } catch (Exception e) {
+            AppLogUtil.log(BranchControl.class, "error", e);
+            return false;
+        } finally {
+            mysqlConnect.closeConnection(BranchControl.class);
+        }
+    }
+
+    public boolean executeRawSql(String sql) {
+        try {
+            mysqlConnect.open(BranchControl.class);
+            return mysqlConnect.executeUpdate(sql) > 0;
+        } catch (Exception e) {
+            AppLogUtil.log(BranchControl.class, "error", e);
+            return false;
+        } finally {
+            mysqlConnect.closeConnection(BranchControl.class);
+        }
+    }
+
 }

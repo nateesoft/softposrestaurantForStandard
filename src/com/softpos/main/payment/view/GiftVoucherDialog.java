@@ -2,16 +2,12 @@ package com.softpos.main.payment.view;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.program.GiftDialogList;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 import com.softpos.util.NumberFormat;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
@@ -20,7 +16,6 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     private double totalAmount = 0.00;
     private double netTotalAmount = 0.00;
     private String billno;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public GiftVoucherDialog(java.awt.Frame parent, boolean modal, String billno, String totalAmountText) {
         super(parent, modal);
@@ -290,30 +285,12 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         for (int i = 0; i < rows; i++) {
             String GNo = tbGift.getValueAt(i, 0).toString();
             String GAmt = tbGift.getValueAt(i, 1).toString().replace(",", "");
-            /**
-             * * OPEN CONNECTION **
-             */            
-            mysqlConnect.open(this.getClass());
-            try {
-                String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
-                ResultSet rs = mysqlConnect.executeQuery(sqlCheckTempGiftf);
-                if (netTotalAmount > 0) {
-                    if (!rs.next()) {
-                        String sqlAdd = "insert into tempgift"
-                                + "(macno,gifttype,giftno,giftamt) "
-                                + "values('" + Value.MACNO + "','" + PublicVar.VoucherType + "','" + GNo + "','" + GAmt + "')";
-                        try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                            stmt.executeUpdate(sqlAdd);
-                        }
-                        setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
-                    }
+            if (netTotalAmount > 0) {
+                boolean saved = AppContext.getCuponControl().saveTempGift(
+                        GNo, PublicVar.VoucherType, Double.parseDouble(GAmt), Value.MACNO);
+                if (saved) {
+                    setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
                 }
-                rs.close();
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(GiftVoucherDialog.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
             }
         }
 
@@ -417,23 +394,8 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     }
 
     private void clearModel() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "delete from tempgift";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-            PublicVar.VoucherType = "";
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        AppContext.getCuponControl().clearTempGift();
+        PublicVar.VoucherType = "";
 
         int size = model.getRowCount();
         for (int i = 0; i < size; i++) {
@@ -478,29 +440,12 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     }
 
     private void loadData() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from tempgift";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getString("giftno"),
-                        NumberFormat.showDouble2(rs.getDouble("giftamt"))
-                    });
-                }
-
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<Object[]> rows = AppContext.getCuponControl().loadTempGift(Value.MACNO);
+        for (Object[] row : rows) {
+            model.addRow(new Object[]{
+                row[0],
+                NumberFormat.showDouble2((Double) row[1])
+            });
         }
     }
 }

@@ -22,6 +22,8 @@ public class PKicTranBean {
     private String pWaitTime = "";
     private String pEtd = "";
     private String R_UrgentFoodItemName = "";
+    private String pDate = "";
+    private String pTime = "";
 
     public String getR_UrgentFoodItemName() {
         return R_UrgentFoodItemName;
@@ -109,6 +111,22 @@ public class PKicTranBean {
 
     public void setpWaitTime(String pWaitTime) {
         this.pWaitTime = pWaitTime;
+    }
+
+    public String getpDate() {
+        return pDate;
+    }
+
+    public void setpDate(String pDate) {
+        this.pDate = pDate;
+    }
+
+    public String getpTime() {
+        return pTime;
+    }
+
+    public void setpTime(String pTime) {
+        this.pTime = pTime;
     }
 
 }

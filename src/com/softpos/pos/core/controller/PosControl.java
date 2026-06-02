@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class PosControl {
 
@@ -562,6 +563,83 @@ public class PosControl {
             stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(ShowTable.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(PosControl.class);
+        }
+    }
+
+    public void savePaidIn(double paidinAmt) {
+        mysqlConnect.open(PosControl.class);
+        try {
+            String sql = "insert into paidiofile "
+                    + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
+                    + "values (curdate(),curtime(),'" + Value.CASHIER + "',"
+                    + "'" + Value.MACNO + "','I','" + paidinAmt + "','0.0')";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(PosControl.class);
+        }
+    }
+
+    public void initiatePaidOut(String reson) {
+        mysqlConnect.open(PosControl.class);
+        try {
+            String resonEncoded = ThaiUtil.Unicode2ASCII(reson);
+            String sql = "insert into paidiofile "
+                    + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt,reson) "
+                    + "values (curdate(),curtime(),"
+                    + "'" + Value.CASHIER + "','" + Value.MACNO + "',"
+                    + "'O','0','0','" + resonEncoded + "')";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(PosControl.class);
+        }
+    }
+
+    public void savePaidOut(double paidoutAmt, String reson) {
+        mysqlConnect.open(PosControl.class);
+        try {
+            String sql = "UPDATE paidiofile SET PaidOutAmt= '" + paidoutAmt + "' "
+                    + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(PosControl.class);
+        }
+    }
+
+    public void updateFloorTabNames(String tab1, String tab2, String tab3, String tab4,
+            String tab5, String tab6, String tab7) {
+        mysqlConnect.open(PosControl.class);
+        try {
+            String sql = "update company set "
+                    + "FloorTab1='" + ThaiUtil.Unicode2ASCII(tab1) + "',"
+                    + "FloorTab2='" + ThaiUtil.Unicode2ASCII(tab2) + "',"
+                    + "FloorTab3='" + ThaiUtil.Unicode2ASCII(tab3) + "',"
+                    + "FloorTab4='" + ThaiUtil.Unicode2ASCII(tab4) + "',"
+                    + "FloorTab5='" + ThaiUtil.Unicode2ASCII(tab5) + "',"
+                    + "FloorTab6='" + ThaiUtil.Unicode2ASCII(tab6) + "',"
+                    + "FloorTab7='" + ThaiUtil.Unicode2ASCII(tab7) + "'";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            MSG.ERR(null, e.getMessage());
+            AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
         }

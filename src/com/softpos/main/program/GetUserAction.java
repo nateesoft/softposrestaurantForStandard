@@ -1,19 +1,14 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.model.PosUserBean;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class GetUserAction extends javax.swing.JDialog {
     
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
-
     public GetUserAction(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -255,10 +250,6 @@ public class GetUserAction extends javax.swing.JDialog {
     }
 
     public void checkuserlogin() {
-        //db.getDbVar();
-        //db.dbconnect();
-        String OnAct = "";
-        String MacNoOnAct = "";
         String loginname = c_loginname.getText();
         char[] pass = c_loginpassword.getPassword();
         String password = "";
@@ -268,39 +259,19 @@ public class GetUserAction extends javax.swing.JDialog {
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
             clearlogin();
-        }
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        boolean isClose = false;
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SQLQuery = "select username,sale2 from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            if (rs.next()) {
-                PublicVar.ReturnString = loginname;
-                if (rs.getString("sale2").equals("Y")) {
-                    PublicVar.ReturnPermitRefund = true;
-                }
-                isClose = true;
-            } else {
-                MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
-                clearlogin();
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(GetUserAction.class, "error", e);
-            clearlogin();
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            return;
         }
 
-        if (isClose) {
+        PosUserBean user = AppContext.getPosUserController().authenticate(loginname, password);
+        if (user != null) {
+            PublicVar.ReturnString = loginname;
+            if ("Y".equals(user.getSale2())) {
+                PublicVar.ReturnPermitRefund = true;
+            }
             this.setVisible(false);//dispose();
+        } else {
+            MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
+            clearlogin();
         }
     }
 

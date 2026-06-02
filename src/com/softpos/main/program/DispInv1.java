@@ -3,15 +3,12 @@ package com.softpos.main.program;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +19,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
 
@@ -35,7 +31,6 @@ public class DispInv1 extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     Date date = new Date();
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
     /**
@@ -106,51 +101,34 @@ public class DispInv1 extends javax.swing.JDialog {
              * * OPEN CONNECTION **
              */
             
-            mysqlConnect.open(this.getClass());
-            try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String sql = "select * from invcashdoc "
-                        + "where (invdate>='" + Datefmt.format(TempDate1) + "') "
-                        + "and (invdate<='" + Datefmt.format(TempDate2) + "') "
-                        + "and substring(invno,1,1)='P' "
-                        + "order by invno";
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    String VoidDate = "";
-                    try {
-                        VoidDate = ShowDatefmt.format(rs.getDate("voiddate"));
-                    } catch (SQLException e) {
-
-                    }
-                    XTotalCnt++;
-                    Object[] input = {rs.getString("void"),
-                        rs.getString("invno"),
-                        ShowDatefmt.format(rs.getDate("invdate")),
-                        rs.getString("macno"),
-                        rs.getString("refno"),
-                        rs.getString("custcode"),
-                        rs.getString("custname"),
-                        rs.getDouble("subtotal"),
-                        rs.getDouble("vat"),
-                        rs.getDouble("amount"),
-                        rs.getString("voidmessage"),
-                        rs.getString("uservoid"),
-                        VoidDate
-                    };
-                    XAmt1 = XAmt1 + rs.getDouble("subtotal");
-                    XAmt2 = XAmt2 + rs.getDouble("vat");
-                    XAmt3 = XAmt3 + rs.getDouble("amount");
-                    model2.addRow(input);
+            java.util.List<java.util.Map<String, Object>> rows = AppContext.getBillControl()
+                    .getInvCashDocByDateAndPrefix(Datefmt.format(TempDate1), Datefmt.format(TempDate2), "P");
+            for (java.util.Map<String, Object> row : rows) {
+                String VoidDate = "";
+                if (row.get("voiddate") != null) {
+                    VoidDate = ShowDatefmt.format((java.sql.Date) row.get("voiddate"));
                 }
-                showCell(0, 0);
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(DispInv1.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
+                XTotalCnt++;
+                Object[] input = {row.get("void"),
+                    row.get("invno"),
+                    ShowDatefmt.format((java.sql.Date) row.get("invdate")),
+                    row.get("macno"),
+                    row.get("refno"),
+                    row.get("custcode"),
+                    row.get("custname"),
+                    row.get("subtotal"),
+                    row.get("vat"),
+                    row.get("amount"),
+                    row.get("voidmessage"),
+                    row.get("uservoid"),
+                    VoidDate
+                };
+                XAmt1 = XAmt1 + (Double) row.get("subtotal");
+                XAmt2 = XAmt2 + (Double) row.get("vat");
+                XAmt3 = XAmt3 + (Double) row.get("amount");
+                model2.addRow(input);
             }
+            showCell(0, 0);
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));
             TotalAmt2.setText(DecFmt.format(XAmt2));

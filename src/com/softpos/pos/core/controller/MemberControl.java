@@ -207,6 +207,190 @@ public class MemberControl {
         }
     }
 
+    /**
+     * Returns all members from {db_member}.memmaster ordered by m_name.
+     * Each element: {m_code, m_name, m_tel, m_mobile, m_office, m_end (java.sql.Date), m_brid (java.sql.Date)}
+     */
+    public List<Object[]> getAllMembers(String dbMember) {
+        List<Object[]> list = new ArrayList<>();
+        /**
+         * * OPEN CONNECTION **
+         */
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from " + dbMember + ".memmaster order by m_name";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    rs.getDate("m_end"),
+                    rs.getDate("m_brid")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+        return list;
+    }
+
+    /**
+     * Finds members from {db_member}.memmaster where m_code = code, ordered by m_name.
+     * Each element: {m_code, m_name, m_tel, m_mobile, m_office, m_end (java.sql.Date), m_brid (java.sql.Date)}
+     */
+    public List<Object[]> findMemberByCode(String dbMember, String code) {
+        List<Object[]> list = new ArrayList<>();
+        /**
+         * * OPEN CONNECTION **
+         */
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from " + dbMember + ".memmaster where m_code = '" + code + "' order by m_name";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    rs.getDate("m_end"),
+                    rs.getDate("m_brid")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+        return list;
+    }
+
+    /**
+     * Finds members from {db_member}.memmaster where m_name LIKE %name%, ordered by m_name.
+     * Each element: {m_code, m_name, m_tel, m_mobile, m_office, m_end (java.sql.Date), m_brid (java.sql.Date)}
+     */
+    public List<Object[]> findMemberByName(String dbMember, String name) {
+        List<Object[]> list = new ArrayList<>();
+        String pattern = "%" + name + "%";
+        /**
+         * * OPEN CONNECTION **
+         */
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from " + dbMember + ".memmaster where m_name like '" + pattern + "' order by m_name";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    rs.getDate("m_end"),
+                    rs.getDate("m_brid")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+        return list;
+    }
+
+    /**
+     * Finds members from {db_member}.memmaster where m_tel/m_mobile/m_office LIKE %tel%, ordered by m_name.
+     * Each element: {m_code, m_name, m_tel, m_mobile, m_office, m_end (java.sql.Date), m_brid (java.sql.Date)}
+     */
+    public List<Object[]> findMemberByTel(String dbMember, String tel) {
+        List<Object[]> list = new ArrayList<>();
+        String pattern = "%" + tel + "%";
+        /**
+         * * OPEN CONNECTION **
+         */
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from " + dbMember + ".memmaster "
+                    + "where (m_tel like '" + pattern + "') or (m_mobile like '" + pattern + "') "
+                    + "or (m_office like '" + pattern + "') order by m_name";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getString("m_tel"),
+                    rs.getString("m_mobile"),
+                    rs.getString("m_office"),
+                    rs.getDate("m_end"),
+                    rs.getDate("m_brid")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+        return list;
+    }
+
+    /**
+     * Returns member transaction report: mtran LEFT JOIN {db_member}.memmaster
+     * filtered by m_code range and m_date range, ordered by m_code, m_date, m_billno.
+     * Each element: {m_code, m_name, m_date (java.sql.Date), m_billno, m_netamt, m_disc, m_score, m_sum}
+     */
+    public List<Object[]> getMemberTransactionReport(String dbMember, String code1, String code2, String date1, String date2) {
+        List<Object[]> list = new ArrayList<>();
+        /**
+         * * OPEN CONNECTION **
+         */
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from mtran left join " + dbMember + ".memmaster on mtran.m_code=memmaster.m_code "
+                    + "where (mtran.m_code>='" + code1 + "') and (mtran.m_code<='" + code2 + "') "
+                    + "and (m_date>='" + date1 + "') and (m_date<='" + date2 + "') "
+                    + "order by mtran.m_code,m_date,m_billno";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(new Object[]{
+                    rs.getString("m_code"),
+                    rs.getString("m_name"),
+                    rs.getDate("m_date"),
+                    rs.getString("m_billno"),
+                    rs.getDouble("m_netamt"),
+                    rs.getDouble("m_disc"),
+                    rs.getDouble("m_score"),
+                    rs.getDouble("m_sum")
+                });
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+        return list;
+    }
+
     public void updateTableFileMember(String tableNo, String memCode, String memName, boolean add) {
         mysqlConnect.open(MemberControl.class);
         try {

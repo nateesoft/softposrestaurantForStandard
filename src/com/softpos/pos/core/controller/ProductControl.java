@@ -521,4 +521,63 @@ public class ProductControl {
         return isProduct;
     }
 
+    public List<String> getOptionsByProductCode(String pCode) {
+        List<String> list = new ArrayList<>();
+        mysqlConnect.open(ProductControl.class);
+        try {
+            String sql = "select o.* "
+                    + "from product p, optionfile o "
+                    + "where p.pgroup=o.pgroup "
+                    + "and p.pcode='" + pCode + "'";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                list.add(ThaiUtil.ASCII2Unicode(rs.getString("optionname")));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(ProductControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(ProductControl.class);
+        }
+        return list;
+    }
+
+    public List<ProductBean> getKicProductList() {
+        List<ProductBean> list = new ArrayList<>();
+        mysqlConnect.open(ProductControl.class);
+        try {
+            String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
+                    + "from product "
+                    + "where pfix='F' "
+                    + "and pgroup <'12' "
+                    + "order by pgroup,pcode";
+            ResultSet rs = mysqlConnect.executeQuery(sql);
+            while (rs.next()) {
+                ProductBean bean = new ProductBean();
+                bean.setPCode(rs.getString("pcode"));
+                bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
+                bean.setPKic(rs.getString("pkic"));
+                list.add(bean);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(ProductControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(ProductControl.class);
+        }
+        return list;
+    }
+
+    public void updateKicMapping(String pCode, String kic) {
+        mysqlConnect.open(ProductControl.class);
+        try {
+            String sql = "update product set pkic='" + kic + "' where pcode='" + pCode + "'";
+            mysqlConnect.executeUpdate(sql);
+        } finally {
+            mysqlConnect.closeConnection(ProductControl.class);
+        }
+    }
+
 }

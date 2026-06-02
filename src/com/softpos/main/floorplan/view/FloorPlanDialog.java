@@ -6,7 +6,6 @@ import com.softpos.main.login.FileSettingDialog;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBill;
 import com.softpos.main.program.DisplayEJ;
-import com.softpos.main.program.EmployLogin;
 import com.softpos.main.program.GetQty;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.main.pos.view.MainSale;
@@ -170,7 +169,29 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         btnZone5 = new javax.swing.JButton();
         btnZone6 = new javax.swing.JButton();
         btnZone7 = new javax.swing.JButton();
-        panelMain = new javax.swing.JPanel();
+        panelMain = new javax.swing.JPanel() {
+            @Override
+            protected void paintComponent(java.awt.Graphics g) {
+                super.paintComponent(g);
+                java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+                int w = getWidth();
+                int h = getHeight();
+                float[] fractions = {0.0f, 0.40f, 0.70f, 1.0f};
+                java.awt.Color[] colors = {
+                    new java.awt.Color(20, 8, 2),
+                    new java.awt.Color(65, 32, 9),
+                    new java.awt.Color(45, 20, 5),
+                    new java.awt.Color(28, 11, 3)
+                };
+                java.awt.LinearGradientPaint lgp = new java.awt.LinearGradientPaint(
+                    0, 0, w, h, fractions, colors
+                );
+                g2d.setPaint(lgp);
+                g2d.fillRect(0, 0, w, h);
+                g2d.dispose();
+            }
+        };
         btn1 = new javax.swing.JButton();
         btn2 = new javax.swing.JButton();
         btn3 = new javax.swing.JButton();

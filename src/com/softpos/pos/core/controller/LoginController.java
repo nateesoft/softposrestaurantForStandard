@@ -47,6 +47,24 @@ public class LoginController {
         return loginBean;
     }
 
+    public void clearTablefileIfNoBalance() {
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select * from balance limit 1";
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (!rs.next()) {
+                    String sqlTablefile = "update tablefile "
+                            + "set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
+                    mysqlConnect.executeUpdate(sqlTablefile);
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(this.getClass(), "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
     public void updateLogin(String UserCode) {
         /**
          * * OPEN CONNECTION **

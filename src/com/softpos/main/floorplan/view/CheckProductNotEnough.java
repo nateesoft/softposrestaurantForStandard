@@ -1,22 +1,18 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.main.pos.view.FindProduct;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.StockControl;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.MSG;
 
 public class CheckProductNotEnough extends javax.swing.JDialog {
-    
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public CheckProductNotEnough(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -281,95 +277,42 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadProduct() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select pcode, pdesc from product where pcode='" + txtPCode.getText() + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                txtPCode.setText(rs.getString("pcode"));
-                txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
-                btnAdd.requestFocus();
-            } else {
-                MSG.ERR(this, "ไม่พบรายการสินค้ารายการนี้ในระบบ กรุณาป้อนข้อมูลอีกครั้ง");
-                txtPCode.setText("");
-                txtPCode.requestFocus();
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckProductNotEnough.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        StockControl stockControl = AppContext.getStockControl();
+        String[] product = stockControl.findProductByCode(txtPCode.getText());
+        if (product != null) {
+            txtPCode.setText(product[0]);
+            txtPDesc.setText(ThaiUtil.ASCII2Unicode(product[1]));
+            btnAdd.requestFocus();
+        } else {
+            MSG.ERR(this, "ไม่พบรายการสินค้ารายการนี้ในระบบ กรุณาป้อนข้อมูลอีกครั้ง");
+            txtPCode.setText("");
+            txtPCode.requestFocus();
         }
     }
 
     private void addProductLost() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select pcode,pdesc from product where pcode='" + txtPCode.getText() + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                //add product lost
-                sql = "insert into outstocklist values('" + rs.getString("pcode") + "');";
-                Statement stmt2 = mysqlConnect.getConnection().createStatement();
-                stmt2.executeUpdate("delete from outstocklist where pcode='" + rs.getString("pcode") + "'");
-                stmt2.executeUpdate(sql);
-                stmt2.close();
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckProductNotEnough.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
+        StockControl stockControl = AppContext.getStockControl();
+        stockControl.addOutStockItem(txtPCode.getText());
         loadData();
     }
 
     private void loadData() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            table = JTableUtility.getDefaultTableFont(table);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        table = JTableUtility.getDefaultTableFont(table);
 
-            int size = model.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model.removeRow(0);
-            }
-            String sql = "select product.pcode,pdesc,punit1 "
-                    + "from outstocklist o, product "
-                    + "where o.pcode=product.pcode";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("pcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
-                    ThaiUtil.ASCII2Unicode(rs.getString("punit1"))
-                });
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckProductNotEnough.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        int size = model.getRowCount();
+        for (int i = 0; i < size; i++) {
+            model.removeRow(0);
+        }
+
+        StockControl stockControl = AppContext.getStockControl();
+        List<String[]> rows = stockControl.listOutStockItems();
+        for (String[] row : rows) {
+            model.addRow(new Object[]{
+                row[0],
+                ThaiUtil.ASCII2Unicode(row[1]),
+                ThaiUtil.ASCII2Unicode(row[2])
+            });
         }
 
         txtPCode.setText("");
@@ -382,21 +325,8 @@ public class CheckProductNotEnough extends javax.swing.JDialog {
         int row = table.getSelectedRow();
         if (row != -1) {
             String PCode = table.getValueAt(row, 0).toString();
-
-            mysqlConnect.open(this.getClass());
-            try {
-                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                    int i = stmt.executeUpdate("delete from outstocklist where pcode='" + PCode + "'");
-                    if (i > 0) {
-                        AppLogUtil.info("Delete success.");
-                    }
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(CheckProductNotEnough.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
-            }
+            StockControl stockControl = AppContext.getStockControl();
+            stockControl.removeOutStockItem(PCode);
         }
 
         //load data to table

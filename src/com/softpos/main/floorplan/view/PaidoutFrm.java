@@ -1,22 +1,18 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JFrame;
 import printReport.PrintDriver;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {
@@ -27,7 +23,6 @@ public class PaidoutFrm extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String reson;
     private String Space = " &nbsp; ";
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final Value Value = new Value();
@@ -110,23 +105,7 @@ public class PaidoutFrm extends javax.swing.JDialog {
             }
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "
-                    + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(PaidoutFrm.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        AppContext.getPosControl().savePaidOut(PaidoutAmt, reson);
 
         this.setVisible(false);//dispose();
     }

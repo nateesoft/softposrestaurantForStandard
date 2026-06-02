@@ -34,7 +34,10 @@
       "Bash(xargs cat)",
       "Bash(sort -t: -k1,1 -k2,2n)",
       "Bash(python3 -)",
-      "Bash(grep -n 'MySQLConnect\\\\|\\\\.open\\(\\\\|\\\\.close\\\\|executeUpdate\\\\|executeQuery\\\\|PreparedStatement\\\\|ResultSet\\\\|Statement\\\\|getConnection\\\\|new MySQLConnect' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/__TRACKED_VAR__)"
+      "Bash(grep -n 'MySQLConnect\\\\|\\\\.open\\(\\\\|\\\\.close\\\\|executeUpdate\\\\|executeQuery\\\\|PreparedStatement\\\\|ResultSet\\\\|Statement\\\\|getConnection\\\\|new MySQLConnect' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/__TRACKED_VAR__)",
+      "Bash(sed -n '1,20p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)",
+      "Bash(sed -n '34,40p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)",
+      "Bash(sed -n '104,160p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)"
     ]
   }
 }

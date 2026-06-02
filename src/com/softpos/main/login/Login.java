@@ -11,13 +11,10 @@ import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.pos.core.model.PosUserBean;
 import database.ConfigFile;
-import database.MySQLConnect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +35,6 @@ public class Login extends javax.swing.JDialog {
     private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat IntFmt = new DecimalFormat("#,##0");
     private PosControl posControl = AppContext.getPosControl();
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl BranchControl = AppContext.getBranchControl();
     private final PosControl PosControl = AppContext.getPosControl();
 
@@ -629,22 +625,7 @@ public class Login extends javax.swing.JDialog {
         }
     }
 
-    private void clearTablefileNotUse() {        
-        try {
-            mysqlConnect.open(Login.class);
-            String sql = "select * from balance limit 1";
-            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                if (!rs.next()) {
-                    String sqlTablefile = "update tablefile "
-                            + "set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
-                    mysqlConnect.executeUpdate(sqlTablefile);
-                }
-            }
-            mysqlConnect.closeConnection(this.getClass());
-        } catch (SQLException e) {
-            AppLogUtil.log(Login.class, "error", e);
-        } finally {
-            mysqlConnect.close();
-        }
+    private void clearTablefileNotUse() {
+        AppContext.getLoginController().clearTablefileIfNoBalance();
     }
 }

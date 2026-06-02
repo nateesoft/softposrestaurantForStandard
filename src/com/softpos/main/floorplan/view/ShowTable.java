@@ -4,14 +4,10 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -24,14 +20,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class ShowTable extends javax.swing.JDialog {
 
     private DefaultTableModel model2;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public ShowTable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -217,24 +211,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 }
             }
             TableSelected = ShowTableLogin.getValueAt(currow, 0).toString();
-            /**
-             * * OPEN CONNECTION **
-             */
-            
-            mysqlConnect.open(this.getClass());
-            try {
-                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                    String QryUpdatetable = "update tablefile set TonAct='N' where (TCode='" + TableSelected + "')";
-                    stmt.executeUpdate(QryUpdatetable);
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(ShowTable.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
-            }
-
+            AppContext.getTableFileControl().setTableNotActive(TableSelected);
             loadDataToGrid();
         }
 
@@ -314,49 +291,14 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     }//GEN-LAST:event_ShowTableLoginMouseClicked
 
     private void loadDataToGrid() {
-        //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
-        mysqlConnect.open(this.getClass());
-        try {
-            String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
-                    + "TOnAct, ChkBill, PrintChkBill"
-                    + " from tablefile "
-                    + "where tonact='Y' "
-                    + "or TAmount>0 "
-                    + "or TItem > 0 "
-                    + "or Tcustomer > 0 "
-                    + "order by tcode";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(LoadTableFile);
-
-            int RowCount = model2.getRowCount();
-            for (int i = 0; i < RowCount; i++) {
-                model2.removeRow(0);
-            }
-            while (rs.next()) {
-                Object[] input = {
-                    rs.getString("Tcode"),
-                    rs.getDate("Tlogindate"),
-                    rs.getString("TCurTime"),
-                    rs.getFloat("TCustomer"),
-                    rs.getFloat("TItem"),
-                    rs.getFloat("TAmount"),
-                    rs.getString("TOnAct"),
-                    rs.getString("ChkBill"),
-                    rs.getString("PrintChkBill")
-                };
-                model2.addRow(input);
-            }
-
-            showCell(0, 0);
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ShowTable.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        int RowCount = model2.getRowCount();
+        for (int i = 0; i < RowCount; i++) {
+            model2.removeRow(0);
         }
+        for (Object[] row : AppContext.getTableFileControl().getActiveTables()) {
+            model2.addRow(row);
+        }
+        showCell(0, 0);
     }
 
     private void showCell(int row, int column) {

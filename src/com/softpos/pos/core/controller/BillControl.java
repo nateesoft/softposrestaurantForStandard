@@ -1842,7 +1842,7 @@ public class BillControl {
 
     public List<String> getLinkedBalanceIndices(String rIndex) {
         List<String> list = new ArrayList<>();
-        
+
         mysqlConnect.open(BillControl.class);
         try {
             String sql = "select R_Index from balance "
@@ -1859,6 +1859,277 @@ public class BillControl {
             mysqlConnect.closeConnection(BillControl.class);
         }
         return list;
+    }
+
+    public List<java.util.Map<String, Object>> getInvCashDocByDateAndPrefix(String date1, String date2, String prefix) {
+        List<java.util.Map<String, Object>> data = new ArrayList<>();
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "select * from invcashdoc "
+                    + "where (invdate>='" + date1 + "') "
+                    + "and (invdate<='" + date2 + "') "
+                    + "and substring(invno,1,1)='" + prefix + "' "
+                    + "order by invno";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                java.util.Map<String, Object> row = new java.util.LinkedHashMap<>();
+                row.put("void", rs.getString("void"));
+                row.put("invno", rs.getString("invno"));
+                row.put("invdate", rs.getDate("invdate"));
+                row.put("macno", rs.getString("macno"));
+                row.put("refno", rs.getString("refno"));
+                row.put("custcode", rs.getString("custcode"));
+                row.put("custname", rs.getString("custname"));
+                row.put("subtotal", rs.getDouble("subtotal"));
+                row.put("vat", rs.getDouble("vat"));
+                row.put("amount", rs.getDouble("amount"));
+                row.put("voidmessage", rs.getString("voidmessage"));
+                row.put("uservoid", rs.getString("uservoid"));
+                try {
+                    row.put("voiddate", rs.getDate("voiddate"));
+                } catch (SQLException e) {
+                    row.put("voiddate", null);
+                }
+                data.add(row);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
+        return data;
+    }
+
+    public String getCurrentBillNo(String macno) {
+        String refno = "";
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "select * from billno where b_macno='" + macno + "'";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                refno = rs.getString("b_refno");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
+        return refno;
+    }
+
+    public boolean validateBillNo(String macno, String refno) {
+        boolean valid = false;
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "select b_refno from billno where (b_macno='" + macno + "') "
+                    + "and (b_refno='" + refno + "') limit 1";
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                valid = true;
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
+        return valid;
+    }
+
+    public int loadBillForCopy(String macno, String refno) {
+        int billcopy = 0;
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "select * from billno where (b_macno='" + macno + "') "
+                    + "and (b_refno='" + refno + "') limit 1";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    PublicVar.TableRec_RefNo = rs.getString("b_refno");
+                    PublicVar.TableRec_OnDate = rs.getDate("b_ondate");
+                    PublicVar.TableRec_OnTime = rs.getString("b_ontime");
+                    PublicVar.TableRec_TCode = rs.getString("b_table");
+                    PublicVar.TableRec_MacNo = rs.getString("b_macno");
+                    PublicVar.TableRec_Cashier = rs.getString("b_cashier");
+                    PublicVar.TableRec_TLogInTime = "";
+                    PublicVar.TableRec_TCurTime = "";
+                    PublicVar.TableRec_TLoginDate = new Date();
+                    PublicVar.TableRec_TOnAct = "";
+                    PublicVar.TableRec_TCustomer = rs.getInt("b_cust");
+                    PublicVar.TableRec_ETD = rs.getString("b_etd");
+                    PublicVar.TableRec_TAmount = rs.getDouble("b_total");
+                    PublicVar.TableRec_Food = rs.getDouble("b_food");
+                    PublicVar.TableRec_Drink = rs.getDouble("b_drink");
+                    PublicVar.TableRec_Product = rs.getDouble("b_product");
+                    PublicVar.TableRec_Service = rs.getDouble("b_service");
+                    PublicVar.TableRec_ServiceAmt = rs.getDouble("b_serviceamt");
+                    PublicVar.TableRec_FastDisc = rs.getString("b_fastdisc");
+                    PublicVar.TableRec_FastDiscAmt = rs.getDouble("b_fastdiscamt");
+                    PublicVar.TableRec_EmpDisc = rs.getString("b_empdisc");
+                    PublicVar.TableRec_EmpDiscAmt = rs.getDouble("b_empdiscamt");
+                    PublicVar.TableRec_TrainDisc = rs.getString("b_traindisc");
+                    PublicVar.TableRec_TrainDiscAmt = rs.getDouble("b_traindiscamt");
+                    PublicVar.TableRec_MemDisc = rs.getString("b_memdisc");
+                    PublicVar.TableRec_MemDiscAmt = rs.getDouble("b_memdiscamt");
+                    PublicVar.TableRec_SubDisc = rs.getString("b_subdisc");
+                    PublicVar.TableRec_SubDiscAmt = rs.getDouble("b_subdiscamt");
+                    PublicVar.TableRec_DiscBath = rs.getDouble("b_subdiscbath");
+                    PublicVar.TableRec_ProDiscAmt = rs.getDouble("b_prodiscamt");
+                    PublicVar.TableRec_SpaDiscAmt = rs.getDouble("b_spadiscamt");
+                    PublicVar.TableRec_CuponDiscAmt = rs.getDouble("b_cupondiscamt");
+                    PublicVar.TableRec_ItemDiscAmt = rs.getDouble("b_itemdiscamt");
+                    PublicVar.TableRec_MemCode = rs.getString("b_memcode");
+                    PublicVar.TableRec_MemName = rs.getString("b_memname");
+                    PublicVar.TableRec_MemBegin = null;
+                    PublicVar.TableRec_MemEnd = null;
+                    PublicVar.TableRec_MemBrid = null;
+                    PublicVar.TableRec_MemCurAmt = rs.getDouble("b_sumscore");
+                    PublicVar.TableRec_Score = rs.getDouble("b_memcursum");
+                    PublicVar.TableRec_SumScoreal = rs.getDouble("b_sumscore");
+                    PublicVar.TableRec_NetTotal = rs.getDouble("b_nettotal");
+                    PublicVar.TableRec_NetFood = rs.getDouble("b_netfood");
+                    PublicVar.TableRec_NetDrink = rs.getDouble("b_netdrink");
+                    PublicVar.TableRec_NetProduct = rs.getDouble("b_netproduct");
+                    PublicVar.TableRec_NetVat = rs.getDouble("b_netvat");
+                    PublicVar.TableRec_NetNonVat = rs.getDouble("b_netnonvat");
+                    PublicVar.TableRec_Vat = rs.getDouble("b_vat");
+                    PublicVar.TableRec_ArCode = rs.getString("b_accrcode");
+                    PublicVar.TableRec_AccrCr = rs.getInt("b_accrcr");
+                    PublicVar.TableRec_ArPayment = rs.getDouble("b_accramt");
+                    PublicVar.TableRec_PayAmt = rs.getDouble("b_payamt");
+                    PublicVar.TableRec_Ton = rs.getDouble("b_ton");
+                    PublicVar.TableRec_Earnest = rs.getDouble("b_earnest");
+                    PublicVar.TableRec_Gift_Voucher = rs.getDouble("b_giftvoucher");
+                    PublicVar.TableRec_Cash = rs.getDouble("b_cash");
+                    PublicVar.TableRec_Cr_Bank = rs.getString("b_crbank");
+                    PublicVar.TableRec_Cr_CardAmt = rs.getDouble("b_crcardamt");
+                    PublicVar.TableRec_Cr_CurPoint = rs.getInt("b_crcurpoint");
+                    PublicVar.TableRec_Cr_SumPoint = rs.getInt("b_crsumpoint");
+                    PublicVar.TableRec_Cr_Name1 = "";
+                    PublicVar.TableRec_Cr_Charge = rs.getDouble("b_crcharge1");
+                    PublicVar.TableRec_Cr_ChargeAmt = rs.getDouble("b_crchargeamt1");
+                    PublicVar.TableRec_Cr_Redule = 0.00;
+                    PublicVar.TableRec2_Cr_Code1 = rs.getString("b_crcode1");
+                    PublicVar.TableRec_Cr_CardNo1 = rs.getString("b_cardno1");
+                    PublicVar.TableRec_Cr_App_Code1 = rs.getString("b_appcode1");
+                    PublicVar.TableRec_Cr_Amount1 = rs.getDouble("b_cramt1");
+                    PublicVar.TableRec_PrintTotal = 0.00;
+                    PublicVar.TableRec_PrnCnt = 0;
+                    PublicVar.TableRec_BillCopy = 0;
+                    PublicVar.TableRec_PrnTime1 = "";
+                    PublicVar.TableRec_PrnTime2 = "";
+                    PublicVar.TableRec_BranCode = rs.getString("b_bran");
+                    PublicVar.TableRec_BranName = rs.getString("b_branname");
+                    PublicVar.TableRec_BranTel = rs.getString("b_tel");
+                    PublicVar.TableRec_BranTime = rs.getString("b_rectime");
+                    billcopy = rs.getInt("b_billcopy");
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
+        return billcopy;
+    }
+
+    public com.softpos.pos.core.model.TranRecord[] getTSaleForCopy(String macno, String refno,
+            PUtility pUtility, int[] itemCountOut) {
+        com.softpos.pos.core.model.TranRecord[] myArray = null;
+        myArray = new com.softpos.pos.core.model.TranRecord[1];
+        int itemCount = 0;
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "select * from t_sale "
+                    + "where (macno='" + macno + "') "
+                    + "and (r_refno='" + refno + "')";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    itemCount++;
+                    com.softpos.pos.core.model.TranRecord rec = new com.softpos.pos.core.model.TranRecord();
+                    rec.R_Index = rs.getString("r_index");
+                    rec.R_Date = rs.getDate("r_date");
+                    rec.R_Table = rs.getString("r_table");
+                    rec.R_Time = rs.getString("r_time");
+                    rec.Macno = rs.getString("macno");
+                    rec.Cashier = rs.getString("cashier");
+                    rec.R_Emp = rs.getString("r_emp");
+                    rec.R_Set = rs.getString("r_set");
+                    rec.R_Stock = rs.getString("r_stock");
+                    rec.R_PluCode = rs.getString("r_plucode");
+                    rec.R_PName = rs.getString("r_pname");
+                    rec.R_Unit = rs.getString("r_unit");
+                    rec.R_Group = rs.getString("r_group");
+                    rec.R_Status = rs.getString("r_status");
+                    rec.R_Normal = rs.getString("r_normal");
+                    rec.R_Discount = rs.getString("r_discount");
+                    rec.R_Service = rs.getString("r_service");
+                    rec.R_Vat = rs.getString("r_vat");
+                    rec.R_Type = rs.getString("r_type");
+                    rec.R_ETD = rs.getString("r_etd");
+                    rec.R_Quan = rs.getDouble("r_quan");
+                    rec.R_Price = rs.getDouble("r_price");
+                    rec.R_Total = rs.getDouble("r_total");
+                    rec.R_PrType = rs.getString("r_prtype");
+                    rec.R_PrCode = rs.getString("r_prcode");
+                    rec.R_PrDisc = rs.getDouble("r_prdisc");
+                    rec.R_PrBath = rs.getDouble("r_prbath");
+                    rec.R_PrAmt = rs.getDouble("r_pramt");
+                    rec.R_PrQuan = rs.getDouble("r_prquan");
+                    rec.R_Redule = rs.getDouble("r_redule");
+                    rec.R_KIC = rs.getString("r_kic");
+                    rec.R_KicPrint = rs.getString("r_kicprint");
+                    rec.R_Void = rs.getString("r_void");
+                    rec.R_VoidUser = rs.getString("r_voiduser");
+                    rec.R_VoidTime = rs.getString("r_voidtime");
+                    rec.R_DiscBath = rs.getDouble("r_discbath");
+                    if (itemCount > 1) {
+                        myArray = pUtility.addArray(myArray);
+                    }
+                    myArray[myArray.length - 1] = rec;
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
+        if (itemCountOut != null && itemCountOut.length > 0) {
+            itemCountOut[0] = itemCount;
+        }
+        return myArray;
+    }
+
+    public void incrementBillCopyCount(String macno, String refno) {
+
+        mysqlConnect.open(BillControl.class);
+        try {
+            String sql = "update billno set "
+                    + "b_billcopy=b_billcopy+1 "
+                    + "where (b_refno='" + refno + "') "
+                    + "and (b_macno='" + macno + "')";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(BillControl.class);
+        }
     }
 
 }

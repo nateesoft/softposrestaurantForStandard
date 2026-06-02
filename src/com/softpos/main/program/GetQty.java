@@ -1,18 +1,14 @@
 package com.softpos.main.program;
 
-import com.softpos.util.ThaiUtil;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class GetQty extends javax.swing.JDialog {
@@ -21,7 +17,6 @@ public class GetQty extends javax.swing.JDialog {
     private String PCode;
     public static String[] OPTION_TEXT = new String[]{"", "", "", "", "", "", "", "", ""};
     private boolean isFirst = true;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form GetQty
@@ -769,41 +764,20 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private DefaultTableModel model1;
 
     private void loadOption(String PCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        try {
-            model1 = (DefaultTableModel) tblOptionMsg.getModel();
-            tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
-            tblOptionMsg.setRowHeight(30);
-            JTableHeader tHeader = tblOptionMsg.getTableHeader();
-            tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
+        model1 = (DefaultTableModel) tblOptionMsg.getModel();
+        tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        tblOptionMsg.setRowHeight(30);
+        JTableHeader tHeader = tblOptionMsg.getTableHeader();
+        tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-            mysqlConnect.open(this.getClass());
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String sql = "select o.* "
-                    + "from product p, optionfile o "
-                    + "where p.pgroup=o.pgroup "
-                    + "and p.pcode='" + PCode + "';";
-            ResultSet rs = stmt.executeQuery(sql);
+        int rowCount = model1.getRowCount();
+        for (int i = 0; i <= rowCount - 1; i++) {
+            model1.removeRow(0);
+        }
 
-            //Clear tblOptionMsg
-            int RowCount = model1.getRowCount();
-            for (int i = 0; i <= RowCount - 1; i++) {
-                model1.removeRow(0);
-            }
-            while (rs.next()) {
-                Object[] input = {ThaiUtil.ASCII2Unicode(rs.getString("optionname"))};
-                model1.addRow(input);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(GetQty.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<String> options = AppContext.getProductControl().getOptionsByProductCode(PCode);
+        for (String optionName : options) {
+            model1.addRow(new Object[]{optionName});
         }
     }
 

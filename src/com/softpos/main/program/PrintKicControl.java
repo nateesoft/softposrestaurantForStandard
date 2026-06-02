@@ -1,11 +1,9 @@
 package com.softpos.main.program;
 
-import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.model.ProductBean;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 /**
@@ -14,8 +12,6 @@ import com.softpos.util.MSG;
  */
 public class PrintKicControl extends javax.swing.JDialog {
     
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
-
     public PrintKicControl(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -199,48 +195,21 @@ public class PrintKicControl extends javax.swing.JDialog {
         }
 
         
-        try {
-            mysqlConnect.open(this.getClass());
-            String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
-                    + "from product "
-                    + "where pfix='F' "
-                    + "and pgroup <'12' "
-                    + "order by pgroup,pcode";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            while (rs.next()) {
-                String pcode = rs.getString("pcode");
-                String pdesc = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
-                String pkic = rs.getString("pkic");
-                model.addRow(new Object[]{pcode, pdesc, pkic});
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(PrintKicControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<ProductBean> list = AppContext.getProductControl().getKicProductList();
+        for (ProductBean bean : list) {
+            model.addRow(new Object[]{bean.getPCode(), bean.getPDesc(), bean.getPKic()});
         }
     }
 
     public void btnSave() {
         DefaultTableModel model = (DefaultTableModel) tblKicSetup.getModel();
-        try {
-            mysqlConnect.open(this.getClass());
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String code = model.getValueAt(i, 0).toString();
-                String kic = model.getValueAt(i, 2).toString();
-                String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
-                mysqlConnect.executeUpdate(sql);
-            }
-            MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
-
-            loadData();
-        } catch (Exception e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(PrintKicControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String code = model.getValueAt(i, 0).toString();
+            String kic = model.getValueAt(i, 2).toString();
+            AppContext.getProductControl().updateKicMapping(code, kic);
         }
+        MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
+        loadData();
 
     }
 

@@ -1,27 +1,24 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
 
@@ -38,7 +35,6 @@ public class RepMember extends javax.swing.JDialog {
     Double XTotalAmt = 0.0;
     Double XTotalDisc = 0.0;
     PPrint prn = new PPrint();
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
     /**
@@ -630,41 +626,26 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 model2.removeRow(0);
             }
 
-            /**
-             * * OPEN CONNECTION **
-             */
-            
-            mysqlConnect.open(this.getClass());
-            try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SQLQuery = "select * from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
-                        + "where (mtran.m_code>='" + TempCode1 + "') and (mtran.m_code<='" + TempCode2 + "') and (m_date>='" + Datefmt.format(TempDate1) + "') and (m_date<='" + Datefmt.format(TempDate2) + "') order by mtran.m_code,m_date,m_billno";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
-                while (rs.next()) {
-                    XTotalCnt++;
-                    XTotalAmt = XTotalAmt + rs.getDouble("m_netamt");
-                    XTotalDisc = XTotalDisc + rs.getDouble("m_disc");
-                    Object[] input = {rs.getString("m_code"),
-                        rs.getString("m_name"),
-                        ShowDatefmt.format(rs.getDate("m_date")),
-                        rs.getString("m_billno"),
-                        rs.getDouble("m_netamt"),
-                        rs.getDouble("m_disc"),
-                        rs.getDouble("m_score"),
-                        rs.getDouble("m_sum")
-
-                    };
-                    model2.addRow(input);
-                }
-                showCell(0, 0);
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(RepMember.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
+            List<Object[]> rows = AppContext.getMemberControl().getMemberTransactionReport(
+                    Value.db_member, TempCode1, TempCode2,
+                    Datefmt.format(TempDate1), Datefmt.format(TempDate2));
+            for (Object[] row : rows) {
+                XTotalCnt++;
+                XTotalAmt = XTotalAmt + (Double) row[4];
+                XTotalDisc = XTotalDisc + (Double) row[5];
+                Object[] input = {
+                    row[0],
+                    row[1],
+                    row[2] != null ? ShowDatefmt.format(row[2]) : "",
+                    row[3],
+                    row[4],
+                    row[5],
+                    row[6],
+                    row[7]
+                };
+                model2.addRow(input);
             }
+            showCell(0, 0);
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt.setText(DecFmt.format(XTotalAmt));

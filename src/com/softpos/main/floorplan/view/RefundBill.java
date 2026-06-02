@@ -9,32 +9,24 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.RefundBillController;
-import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.util.TextToImage;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -49,20 +41,16 @@ import com.softpos.util.MSG;
 
 public class RefundBill extends javax.swing.JDialog {
 
-    private Date date = new Date();
     private TranRecord[] MyArray;
     private int ArraySize;
     private PPrint prn = new PPrint();
     private String BillNo = "";
     private DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    private SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private DefaultTableModel model;
     private String macno = "";
     private String memcode = "";
 
     private BillControl billControl = AppContext.getBillControl();
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PosControl PosControl = AppContext.getPosControl();
@@ -442,130 +430,10 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void updateDatabaseForRefund() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-
-        String sql;
-        try {
-            sql = "update billno "
-                    + "set b_voiduser='" + PublicVar.TUserRec.getUserName() + "',"
-                    + "b_voidtime='" + Timefmt.format(date) + "',"
-                    + "b_void='V' "
-                    + "where b_macno='" + macno + "' "
-                    + "and b_refno='" + BillNo + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "update t_sale set r_refund='V' "
-                    + "where (macno='" + macno + "') "
-                    + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "update t_saleset set r_refund='V' "
-                    + "where (macno='" + macno + "') "
-                    + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "update t_cupon set refund='V' "
-                    + "where (terminal='" + macno + "') "
-                    + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "delete from t_promotion "
-                    + "where (terminal='" + macno + "') "
-                    + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "update t_gift set fat='V'  where (macno='" + macno + "') and (refno='" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            sql = "delete from accr where (arno='" + PublicVar.Branch_Code + "/" + macno + "/" + BillNo + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            if (!memcode.equals("")) {
-                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                    BillNoBean bBean = billControl.getData(BillNo);
-
-                    String SqlQuery = "update " + Value.db_member + ".memmaster set "
-                            + "m_sum=m_sum-" + bBean.getB_NetTotal() + " "
-                            + "where (m_code='" + memcode + "')";
-                    stmt.executeUpdate(SqlQuery);
-                    stmt.close();
-                }
-
-                sql = "delete from mtran where m_billno='" + macno + "/" + BillNo + "'";
-                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-
-                sql = "delete from mtranplu where m_billno='" + macno + "/" + BillNo + "'";
-                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-            }
-
-            // Return Stock
-            sql = "select * from t_sale where (macno='" + macno + "') and (r_refno='" + BillNo + "') and (r_void<>'V')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    String StkCode = PUtility.GetStkCode();
-                    String StkRemark = "SAL";
-                    String DocNo = "R" + rs.getString("r_refno");
-                    Date TDate = rs.getDate("r_date");
-                    PUtility.ProcessStockOut(DocNo, StkCode, rs.getString("r_plucode"), TDate, StkRemark, -1 * rs.getDouble("r_quan"), -1 * rs.getDouble("r_total"), PublicVar.TUserRec.getUserName(), rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
-                    double quantity = rs.getDouble("r_quan");
-                    String r_plucode = rs.getString("r_plucode");
-                    FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
-                    List<PIngredientBean> listING = floorPlanControl.listIngredeint(r_plucode);
-                    //ตัดสต็อกสินค้าที่มี Ingredent
-                    for (PIngredientBean ingBean : listING) {
-                        if (ingBean.getPstock().equals("Y") && ingBean.getPactive().equals("Y")) {
-                            String R_PluCode = ingBean.getPingCode();
-                            double PBPack = ingBean.getPBPack();
-                            if (PBPack <= 0) {
-                                PBPack = 1;
-                            }
-                            double R_QuanIng = (ingBean.getPingQty() * quantity);
-                            double R_Total = 0;
-                            PUtility.ProcessStockOut(DocNo, StkCode, R_PluCode, new Date(), StkRemark, -R_QuanIng, R_Total,
-                                    Value.USERCODE, "Y", "", "", "");
-                        }
-                    }
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        BillNoBean bBean = billControl.getData(BillNo);
+        RefundBillController refundControl = AppContext.getRefundBillController();
+        refundControl.voidBillForRefund(macno, BillNo, PublicVar.TUserRec.getUserName(),
+                memcode, PublicVar.Branch_Code, bBean.getB_NetTotal(), PUtility);
     }
 
     private void Cleartblshowplu() {
@@ -622,85 +490,62 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private void loadDataFromT_Sale() {
         BillNo = txtBillNo.getText();
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String LoadBalance = "select * from t_sale "
-                    + "where (macno='" + Value.MACNO + "') and (r_refno='" + BillNo + "')";
-            ResultSet rs = stmt.executeQuery(LoadBalance);
-            Date dt = new Date();
-            PublicVar.P_ItemCount = 0;
-            MyArray = null;
-            MyArray = new TranRecord[1];
-            Cleartblshowplu();
+        PublicVar.P_ItemCount = 0;
+        MyArray = null;
+        MyArray = new TranRecord[1];
+        Cleartblshowplu();
 
-            while (rs.next()) {
-                PublicVar.P_ItemCount++;
-                TranRecord TranRec = new TranRecord();
-                TranRec.R_Index = rs.getString("r_index");
-                TranRec.R_Date = rs.getDate("r_date");
-                TranRec.R_Table = rs.getString("r_table");
-                TranRec.R_Time = rs.getString("r_time");
-                TranRec.Macno = rs.getString("macno");
-                TranRec.Cashier = rs.getString("cashier");
-                TranRec.R_Emp = rs.getString("r_emp");
-                TranRec.R_Set = rs.getString("r_set");
-                TranRec.R_Stock = rs.getString("r_stock");
-                TranRec.R_PluCode = rs.getString("r_plucode");
-                TranRec.R_PName = ThaiUtil.ASCII2Unicode(rs.getString("r_pname"));
-                TranRec.R_Unit = rs.getString("r_unit");
-                TranRec.R_Group = rs.getString("r_group");
-                TranRec.R_Status = rs.getString("r_status");
-                TranRec.R_Normal = rs.getString("r_normal");
-                TranRec.R_Discount = rs.getString("r_discount");
-                TranRec.R_Service = rs.getString("r_service");
-                TranRec.R_Vat = rs.getString("r_vat");
-                TranRec.R_Type = rs.getString("r_type");
-                TranRec.R_ETD = rs.getString("r_etd");
-                TranRec.R_Quan = rs.getDouble("r_quan");
-                TranRec.R_Price = rs.getDouble("r_price");
-                TranRec.R_Total = rs.getDouble("r_total");
-                TranRec.R_PrType = rs.getString("r_prtype");
-                TranRec.R_PrCode = rs.getString("r_prcode");
-                TranRec.R_PrDisc = rs.getDouble("r_prdisc");
-                TranRec.R_PrBath = rs.getDouble("r_prbath");
-                TranRec.R_PrAmt = rs.getDouble("r_pramt");
-                TranRec.R_PrQuan = rs.getDouble("r_prquan");
-                TranRec.R_Redule = rs.getDouble("r_redule");
-                TranRec.R_KIC = rs.getString("r_kic");
-                TranRec.R_KicPrint = rs.getString("r_kicprint");
-                TranRec.R_Void = rs.getString("r_void");
-                TranRec.R_VoidTime = rs.getString("r_voidtime");
-                TranRec.R_DiscBath = rs.getDouble("r_discbath");
-                if (PublicVar.P_ItemCount > 1) {
-                    MyArray = PUtility.addArray(MyArray);
-                }
-                ArraySize = MyArray.length;
-                MyArray[ArraySize - 1] = TranRec;
-                Object[] input = {rs.getString("r_void"),
-                    rs.getString("r_etd"),
-                    rs.getString("r_plucode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("r_pname")),
-                    rs.getDouble("r_quan"),
-                    rs.getDouble("r_price"),
-                    rs.getDouble("r_total")
-                };
-                model.addRow(input);
+        RefundBillController refundControl = AppContext.getRefundBillController();
+        List<Object[]> rows = refundControl.loadSaleItemsForRefund(Value.MACNO, BillNo);
 
-                int RowCount = model.getRowCount();
-                showCell(RowCount - 1, 0);
+        for (Object[] row : rows) {
+            PublicVar.P_ItemCount++;
+            TranRecord TranRec = new TranRecord();
+            TranRec.R_Index    = (String) row[0];
+            TranRec.R_Date     = (java.util.Date) row[1];
+            TranRec.R_Table    = (String) row[2];
+            TranRec.R_Time     = (String) row[3];
+            TranRec.Macno      = (String) row[4];
+            TranRec.Cashier    = (String) row[5];
+            TranRec.R_Emp      = (String) row[6];
+            TranRec.R_Set      = (String) row[7];
+            TranRec.R_Stock    = (String) row[8];
+            TranRec.R_PluCode  = (String) row[9];
+            TranRec.R_PName    = (String) row[10];
+            TranRec.R_Unit     = (String) row[11];
+            TranRec.R_Group    = (String) row[12];
+            TranRec.R_Status   = (String) row[13];
+            TranRec.R_Normal   = (String) row[14];
+            TranRec.R_Discount = (String) row[15];
+            TranRec.R_Service  = (String) row[16];
+            TranRec.R_Vat      = (String) row[17];
+            TranRec.R_Type     = (String) row[18];
+            TranRec.R_ETD      = (String) row[19];
+            TranRec.R_Quan     = (Double) row[20];
+            TranRec.R_Price    = (Double) row[21];
+            TranRec.R_Total    = (Double) row[22];
+            TranRec.R_PrType   = (String) row[23];
+            TranRec.R_PrCode   = (String) row[24];
+            TranRec.R_PrDisc   = (Double) row[25];
+            TranRec.R_PrBath   = (Double) row[26];
+            TranRec.R_PrAmt    = (Double) row[27];
+            TranRec.R_PrQuan   = (Double) row[28];
+            TranRec.R_Redule   = (Double) row[29];
+            TranRec.R_KIC      = (String) row[30];
+            TranRec.R_KicPrint = (String) row[31];
+            TranRec.R_Void     = (String) row[32];
+            TranRec.R_VoidTime = (String) row[33];
+            TranRec.R_DiscBath = (Double) row[34];
+            if (PublicVar.P_ItemCount > 1) {
+                MyArray = PUtility.addArray(MyArray);
             }
+            ArraySize = MyArray.length;
+            MyArray[ArraySize - 1] = TranRec;
+            Object[] input = {row[32], row[19], row[9], row[10], row[20], row[21], row[22]};
+            model.addRow(input);
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            int RowCount = model.getRowCount();
+            showCell(RowCount - 1, 0);
         }
     }
 
@@ -744,24 +589,8 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     // End of variables declaration//GEN-END:variables
 
     private boolean checkPermit() {
-        mysqlConnect.open(this.getClass());
-        boolean isPermit = false;
-        try {
-            String sql = "select Username, Sale3 from posuser "
-                    + "where username='" + Value.USERCODE + "' and Sale2='Y' limit 1";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                if (rs.next()) {
-                    isPermit = true;
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(RefundBill.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        RefundBillController refundControl = AppContext.getRefundBillController();
+        boolean isPermit = refundControl.hasRefundPermission(Value.USERCODE);
 
         if (isPermit) {
             return true;

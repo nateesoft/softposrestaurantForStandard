@@ -1,18 +1,13 @@
 package com.softpos.main.program;
 
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.StockControl;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
-
 public class CheckStockNow extends javax.swing.JDialog {
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public CheckStockNow(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -129,38 +124,23 @@ public class CheckStockNow extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadData() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        try {
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            table.setFont(new Font("Tahoma", Font.PLAIN, 14));
-            table.setRowHeight(25);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        table.setRowHeight(25);
 
-            int size = model.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model.removeRow(0);
-            }
-            mysqlConnect.open(this.getClass());
-            String sql = "select * from stockfile;";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("stkcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("stkname")),
-                    rs.getString("flage")
-                });
-            }
+        int size = model.getRowCount();
+        for (int i = 0; i < size; i++) {
+            model.removeRow(0);
+        }
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CheckStockNow.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        StockControl stockControl = AppContext.getStockControl();
+        List<String[]> rows = stockControl.listAllStock();
+        for (String[] row : rows) {
+            model.addRow(new Object[]{
+                row[0],
+                ThaiUtil.ASCII2Unicode(row[1]),
+                row[2]
+            });
         }
     }
 }

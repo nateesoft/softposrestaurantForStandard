@@ -3,17 +3,13 @@ package com.softpos.main.program;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class CashBackDialog extends javax.swing.JDialog {
@@ -25,7 +21,6 @@ public class CashBackDialog extends javax.swing.JDialog {
     Date date = new Date();
     SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
 
     public CashBackDialog(java.awt.Frame parent, boolean modal) {
@@ -174,61 +169,11 @@ public class CashBackDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         
-        mysqlConnect.open(this.getClass());
-        String refStr = "";
-        try {
-            //select returnbillno from branch
-            //0000002
-            String sql = "select returnbillno from branch limit 1";
-            int refNo;
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                refNo = 0;
-                if (rs.next()) {
-                    String ref = rs.getString(1);
-                    if (ref != null) {
-                        refNo = Integer.parseInt(ref);
-                    }
-                }
-                rs.close();
-            }
-
-            if (refNo < 10) {
-                refStr = "000000" + refNo;
-            } else if (refNo < 100) {
-                refStr = "00000" + refNo;
-            } else if (refNo < 1000) {
-                refStr = "0000" + refNo;
-            } else if (refNo < 10000) {
-                refStr = "000" + refNo;
-            } else if (refNo < 100000) {
-                refStr = "00" + refNo;
-            } else if (refNo < 1000000) {
-                refStr = "0" + refNo;
-            } else {
-                refStr = "" + refNo;
-            }
-
-            String sql1 = "insert into billret(Ref_No,OnDate,Stotal,Cash,Cupon,Credit,Terminal,Cashier,Fat,UserVoid) values "
-                    + "('" + refStr + "',curdate(),'" + cash + "','" + cash + "','0','0','" + Value.MACNO + "','" + Value.CASHIER + "','N','')";
-            Statement stmt1 = mysqlConnect.getConnection().createStatement();
-            int i = stmt1.executeUpdate(sql1);
-            if (i > 0) {
-                //update returnbillno
-                stmt1.executeUpdate("update branch set returnbillno=returnbillno+1");
-
-                //print output to printer
-                stmt1.close();
-                dispose();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CashBackDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        String refStr = AppContext.getRefundBillController().saveCashBack(cash, Value.MACNO, Value.CASHIER);
+        if (refStr != null) {
+            dispose();
+            PrintReturnMoney(refStr);
         }
-
-        PrintReturnMoney(refStr);
     }
 
     public void PrintReturnMoney(String Refno) {

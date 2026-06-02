@@ -1,16 +1,9 @@
 package com.softpos.main.floorplan.view;
 
-import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
-import java.sql.SQLException;
-import java.sql.Statement;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
+import com.softpos.pos.core.controller.AppContext;
 
 public class ResonPaidoutFrm extends javax.swing.JDialog {
-    
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
+
 
     public ResonPaidoutFrm(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -107,28 +100,6 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void saveResonPaidout() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String reson = ThaiUtil.Unicode2ASCII(txtReson.getText());
-
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SQLQuery = "insert into paidiofile "
-                    + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt,reson) "
-                    + "values (curdate(),curtime(),"
-                    + "'" + Value.CASHIER + "','" + Value.MACNO + "',"
-                    + "'O','0','0','" + reson + "')";
-            stmt.executeUpdate(SQLQuery);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ResonPaidoutFrm.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
+        AppContext.getPosControl().initiatePaidOut(txtReson.getText());
     }
 }

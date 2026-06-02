@@ -1,15 +1,11 @@
 package com.softpos.main.program;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -18,7 +14,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public final class Giftvoucher extends javax.swing.JDialog {
@@ -26,7 +21,6 @@ public final class Giftvoucher extends javax.swing.JDialog {
     private DefaultTableModel model;
     private SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private Double giftAmt;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form Giftvoucher
@@ -243,22 +237,8 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public void bntClearAllClick() {
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
-            prm.setString(1, Value.MACNO);
-            prm.executeUpdate();
-
-            prm.close();
-            clearGrid();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
+        AppContext.getCuponControl().clearTempGiftByMacno(Value.MACNO);
+        clearGrid();
         txtGiftNo.setText("");
     }
 
@@ -315,61 +295,14 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     if (findGiftPrice(giftPrice)) {
                         if (!giftExp.equals("000000")) {
                             if (checkExpDate(giftExp, giftExp2)) {
-                                /**
-                                 * * OPEN CONNECTION **
-                                 */
-                                mysqlConnect.open(this.getClass());
-                                try {
-                                    String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
-                                            + "values (?,?,?,?,?,?,?,?,?,?)";
-                                    PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
-                                    prm11.setString(1, Value.MACNO);
-                                    prm11.setString(2, giftBarcode);
-                                    prm11.setString(3, giftType);
-                                    prm11.setString(4, giftPrice);
-                                    prm11.setString(5, giftModel);
-                                    prm11.setString(6, giftLot);
-                                    prm11.setString(7, giftExp2);
-                                    prm11.setString(8, giftCode);
-                                    prm11.setString(9, giftNo);
-                                    prm11.setDouble(10, giftAmt);
-                                    prm11.executeUpdate();
-                                    prm11.close();
-                                } catch (SQLException e) {
-                                    MSG.ERR(this, e.getMessage());
-                                    AppLogUtil.log(Giftvoucher.class, "error", e);
-                                } finally {
-                                    mysqlConnect.closeConnection(this.getClass());
-                                }
+                                AppContext.getCuponControl().insertTempGift(
+                                        Value.MACNO, giftBarcode, giftType, giftPrice,
+                                        giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                             }
                         } else {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
-                            mysqlConnect.open(this.getClass());
-                            try {
-                                String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
-                                        + "values (?,?,?,?,?,?,?,?,?,?)";
-                                PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
-                                prm11.setString(1, Value.MACNO);
-                                prm11.setString(2, giftBarcode);
-                                prm11.setString(3, giftType);
-                                prm11.setString(4, giftPrice);
-                                prm11.setString(5, giftModel);
-                                prm11.setString(6, giftLot);
-                                prm11.setString(7, giftExp2);
-                                prm11.setString(8, giftCode);
-                                prm11.setString(9, giftNo);
-                                prm11.setDouble(10, giftAmt);
-
-                                prm11.executeUpdate();
-                                prm11.close();
-                            } catch (SQLException e) {
-                                MSG.ERR(this, e.getMessage());
-                                AppLogUtil.log(Giftvoucher.class, "error", e);
-                            } finally {
-                                mysqlConnect.closeConnection(this.getClass());
-                            }
+                            AppContext.getCuponControl().insertTempGift(
+                                    Value.MACNO, giftBarcode, giftType, giftPrice,
+                                    giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                         }
                     }
                 }
@@ -378,124 +311,36 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             if (findGiftPrice(giftPrice)) {
                 if (!giftExp.equals("000000")) {
                     if (checkExpDate(giftExp, giftExp2)) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
-                        mysqlConnect.open(this.getClass());
-                        try {
-                            String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
-                                    + "values (?,?,?,?,?,?,?,?,?,?)";
-                            PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
-                            prm11.setString(1, Value.MACNO);
-                            prm11.setString(2, giftBarcode);
-                            prm11.setString(3, giftType);
-                            prm11.setString(4, giftPrice);
-                            prm11.setString(5, giftModel);
-                            prm11.setString(6, giftLot);
-                            prm11.setString(7, giftExp2);
-                            prm11.setString(8, giftCode);
-                            prm11.setString(9, giftNo);
-                            prm11.setDouble(10, giftAmt);
-
-                            prm11.executeUpdate();
-                            prm11.close();
-                        } catch (SQLException e) {
-                            MSG.ERR(this, e.getMessage());
-                            AppLogUtil.log(Giftvoucher.class, "error", e);
-                        } finally {
-                            mysqlConnect.closeConnection(this.getClass());
-                        }
+                        AppContext.getCuponControl().insertTempGift(
+                                Value.MACNO, giftBarcode, giftType, giftPrice,
+                                giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                     }
                 } else {
-                    /**
-                     * * OPEN CONNECTION **
-                     */
-                    mysqlConnect.open(this.getClass());
-                    try {
-                        String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
-                                + "values (?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
-                        prm11.setString(1, Value.MACNO);
-                        prm11.setString(2, giftBarcode);
-                        prm11.setString(3, giftType);
-                        prm11.setString(4, giftPrice);
-                        prm11.setString(5, giftModel);
-                        prm11.setString(6, giftLot);
-                        prm11.setString(7, giftExp2);
-                        prm11.setString(8, giftCode);
-                        prm11.setString(9, giftNo);
-                        prm11.setDouble(10, giftAmt);
-
-                        prm11.executeUpdate();
-                        prm11.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(Giftvoucher.class, "error", e);
-                    } finally {
-                        mysqlConnect.closeConnection(this.getClass());
-                    }
+                    AppContext.getCuponControl().insertTempGift(
+                            Value.MACNO, giftBarcode, giftType, giftPrice,
+                            giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                 }
             }
         }
-
     }
 
     public boolean findGiftStatus(String giftCode, String giftNo) {
-        boolean isValid = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String sql = "select gcode from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') limit 1";
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                isValid = true;
-            } else {
-                MSG.ERR(this, "บัตรของขวัญนี้ยังไม่มีการลงทะเบียบจากสำนักงานใหญ่...ไม่สามารถนำมาใช้บริการได้...");
-                isValid = false;
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        boolean isValid = AppContext.getCuponControl().isGiftStatusValid(giftCode, giftNo);
+        if (!isValid) {
+            MSG.ERR(this, "บัตรของขวัญนี้ยังไม่มีการลงทะเบียบจากสำนักงานใหญ่...ไม่สามารถนำมาใช้บริการได้...");
         }
-
         return isValid;
     }
 
     public Boolean findGiftPrice(String GiftPrice) {
-        Boolean isValid = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select priceamt from giftprice where (pricecode='" + GiftPrice + "') limit 1");
-            if (rs.next()) {
-                giftAmt = rs.getDouble("priceamt");
-                isValid = true;
-            } else {
-                MSG.ERR(this, "รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
-                giftAmt = 0.0;
-                isValid = false;
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        double price = AppContext.getCuponControl().getGiftPrice(GiftPrice);
+        if (price < 0) {
+            MSG.ERR(this, "รหัสราคาบัตรกำนัล/บัตรของขัวญ ไม่ถูกต้อง...");
+            giftAmt = 0.0;
+            return false;
         }
-
-        return isValid;
+        giftAmt = price;
+        return true;
     }
 
     public boolean checkExpDate(String giftExp, String giftExp2) {
@@ -511,40 +356,11 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void showDataToGrid() {
         clearGrid();
-        int lineCount = 1;
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "' limit 1";
-            ResultSet rs = stmt.executeQuery(LoadTempGift);
-            if (rs.next()) {
-                Object[] input = {
-                    rs.getString("gifttype"),
-                    rs.getString("giftmodel"),
-                    rs.getString("giftlot"),
-                    rs.getString("giftexp"),
-                    rs.getString("giftbarcode"),
-                    rs.getString("giftno"),
-                    rs.getDouble("giftamt")
-                };
-                model.addRow(input);
-                lineCount++;
-
-                showCell(0, 0);
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(Giftvoucher.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        Object[] row = AppContext.getCuponControl().getTempGiftByMacno(Value.MACNO);
+        if (row != null) {
+            model.addRow(row);
+            showCell(0, 0);
         }
-
     }
 
     public void showCell(int row, int column) {

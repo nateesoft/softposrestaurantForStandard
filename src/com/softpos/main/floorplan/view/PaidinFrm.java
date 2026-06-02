@@ -1,20 +1,17 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.model.POSHWSetup;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import printReport.PrintDriver;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class PaidinFrm extends javax.swing.JDialog {
@@ -23,7 +20,6 @@ public class PaidinFrm extends javax.swing.JDialog {
     private PPrint Prn = new PPrint();
     private DecimalFormat Decfmt = new DecimalFormat("###,###,##0.00");
     private POSHWSetup POSHW;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final Value Value = new Value();
@@ -104,25 +100,7 @@ public class PaidinFrm extends javax.swing.JDialog {
                 Prn.closePrint();
             }
         }
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "insert into paidiofile "
-                    + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
-                    + "values (curdate(),curtime(),'" + Value.CASHIER + "',"
-                    + "'" + Value.MACNO + "','I','" + PaidinAmt + "','" + PaidoutAmt + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(PaidinFrm.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        AppContext.getPosControl().savePaidIn(PaidinAmt);
 
         this.setVisible(false);//dispose();
     }

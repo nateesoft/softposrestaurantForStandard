@@ -806,6 +806,23 @@ public class TableFileControl {
         }
     }
 
+    public void saveCustomerName(String tableNo, String memName) {
+
+        mysqlConnect.open(TableFileControl.class);
+        try {
+            String sql = "UPDATE tablefile SET "
+                    + "MemName='" + ThaiUtil.Unicode2ASCII(memName) + "' "
+                    + "WHERE Tcode = '" + tableNo + "'";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(TableFileControl.class);
+        }
+    }
+
     public void saveCustomerCount(String tableNo, String cus, String memName) {
         
         mysqlConnect.open(TableFileControl.class);
@@ -832,7 +849,8 @@ public class TableFileControl {
             try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
-                    return rs.getString("MemName") != null ? rs.getString("MemName") : "";
+                    String name = rs.getString("MemName");
+                    return name != null ? ThaiUtil.ASCII2Unicode(name) : "";
                 }
             }
         } catch (SQLException e) {
