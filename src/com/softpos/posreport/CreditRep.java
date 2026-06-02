@@ -31,6 +31,10 @@ public class CreditRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public CreditRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -266,10 +270,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -279,7 +283,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         }
 
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
                         + "where (B_MacNo>='" + MacNo1 + "') "
@@ -330,7 +334,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     int SumTotal = 0;
                     Double SumTotalAmt = 0.0;
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -380,16 +384,15 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
         }
 
-        mysql.closeConnection(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
 
         txtMacNo1.requestFocus();
     }
 
     public void PrintCreditDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -399,7 +402,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         }
 
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
                         + "where (B_MacNo>='" + MacNo1 + "') "
@@ -461,7 +464,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int SumTotal = 0;
         Double SumTotalAmt = 0.0;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -488,7 +491,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CreditRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (SumCard > 0) {
@@ -512,13 +515,12 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert into tempcredit (mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
                     + "values ('CASHIER1',curdate(),?,'" + TRefno + "',?,?,?,?)";
-            PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, Value.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
@@ -532,7 +534,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CreditRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

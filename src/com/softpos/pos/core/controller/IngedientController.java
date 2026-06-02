@@ -14,9 +14,11 @@ import java.util.List;
  */
 public class IngedientController {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public List<PIngredientBean> getIngredient(String pluCode) {
         List<PIngredientBean> listIng = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(IngedientController.class);
             String sql2 = "select i.*,pdesc,PBPack,pstock,pactive "

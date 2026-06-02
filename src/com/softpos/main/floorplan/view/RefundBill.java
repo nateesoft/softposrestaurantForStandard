@@ -35,8 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -64,6 +62,10 @@ public class RefundBill extends javax.swing.JDialog {
     private String memcode = "";
 
     private BillControl billControl = AppContext.getBillControl();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PosControl PosControl = AppContext.getPosControl();
 
     /**
      * Creates new form RefundBill
@@ -148,7 +150,6 @@ public class RefundBill extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("รายการยกเลิกบิลการขาย");
         setFocusable(false);
-        setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -354,7 +355,7 @@ public class RefundBill extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1040, 457));
+        setSize(new java.awt.Dimension(1040, 485));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -444,8 +445,8 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
 
         String sql;
         try {
@@ -455,7 +456,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "b_void='V' "
                     + "where b_macno='" + macno + "' "
                     + "and b_refno='" + BillNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -463,7 +464,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             sql = "update t_sale set r_refund='V' "
                     + "where (macno='" + macno + "') "
                     + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -471,7 +472,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             sql = "update t_saleset set r_refund='V' "
                     + "where (macno='" + macno + "') "
                     + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -479,7 +480,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             sql = "update t_cupon set refund='V' "
                     + "where (terminal='" + macno + "') "
                     + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -487,25 +488,25 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             sql = "delete from t_promotion "
                     + "where (terminal='" + macno + "') "
                     + "and (r_refno='" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
 
             sql = "update t_gift set fat='V'  where (macno='" + macno + "') and (refno='" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
 
             sql = "delete from accr where (arno='" + PublicVar.Branch_Code + "/" + macno + "/" + BillNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
 
             if (!memcode.equals("")) {
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     BillNoBean bBean = billControl.getData(BillNo);
 
                     String SqlQuery = "update " + Value.db_member + ".memmaster set "
@@ -516,13 +517,13 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
 
                 sql = "delete from mtran where m_billno='" + macno + "/" + BillNo + "'";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
                     stmt.close();
                 }
 
                 sql = "delete from mtranplu where m_billno='" + macno + "/" + BillNo + "'";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
                     stmt.close();
                 }
@@ -530,7 +531,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
             // Return Stock
             sql = "select * from t_sale where (macno='" + macno + "') and (r_refno='" + BillNo + "') and (r_void<>'V')";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     String StkCode = PUtility.GetStkCode();
                     String StkRemark = "SAL";
@@ -563,7 +564,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -624,10 +625,9 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadBalance = "select * from t_sale "
                     + "where (macno='" + Value.MACNO + "') and (r_refno='" + BillNo + "')";
             ResultSet rs = stmt.executeQuery(LoadBalance);
@@ -700,7 +700,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -744,13 +744,12 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     // End of variables declaration//GEN-END:variables
 
     private boolean checkPermit() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         boolean isPermit = false;
         try {
             String sql = "select Username, Sale3 from posuser "
                     + "where username='" + Value.USERCODE + "' and Sale2='Y' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isPermit = true;
                 }
@@ -761,7 +760,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(RefundBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (isPermit) {

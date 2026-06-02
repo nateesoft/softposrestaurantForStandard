@@ -14,6 +14,7 @@ import com.softpos.util.MSG;
 public class ExtItemList extends javax.swing.JDialog {
 
     public static String data;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public ExtItemList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -204,11 +205,11 @@ public class ExtItemList extends javax.swing.JDialog {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            
+            mysqlConnect.open(this.getClass());
             try {
                 String sql = "delete from customer where sp_code='" + code + "'";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 if (stmt.executeUpdate(sql) > 0) {
                     MSG.NOTICE(this, "ลบข้อมูลเรียบร้อยแล้ว");
                 }
@@ -217,7 +218,7 @@ public class ExtItemList extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ExtItemList.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -240,8 +241,7 @@ public class ExtItemList extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) tbCustomer.getModel();
             int size = model.getRowCount();
@@ -258,7 +258,7 @@ public class ExtItemList extends javax.swing.JDialog {
                 sql += " order by sp_desc";
             }
 
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 CustomerBean bean = new CustomerBean();
@@ -298,7 +298,7 @@ public class ExtItemList extends javax.swing.JDialog {
             AppLogUtil.log(ExtItemList.class, "error", e);
             AppLogUtil.log(ExtItemList.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

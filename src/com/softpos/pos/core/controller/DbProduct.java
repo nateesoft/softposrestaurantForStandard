@@ -12,6 +12,18 @@ public class DbProduct {
         return du.queryList("SELECT * FROM product WHERE pactive = 'Y' and pfix='F' ORDER BY pcode");
     }
 
+    /** Returns products matching keyword in PCode or PDesc. includeInactive=true adds PActive='N'. Raw ASCII Thai. */
+    public List<Map<String, Object>> searchProducts(String keyword, boolean includeInactive) {
+        String activeClause = includeInactive ? "and PActive in ('Y','N')" : "and PActive='Y'";
+        String sql = "select PCode, PDesc, PUnit1, PPrice11, PGroup, GroupName "
+                + "from product p, groupfile g "
+                + "where p.pgroup=g.groupcode "
+                + "and (PCode like '%" + keyword + "%' "
+                + "or PDesc like '%" + keyword + "%') "
+                + activeClause + " order by PCode";
+        return du.queryList(sql);
+    }
+
     public Map<String, Object> getAtPk(String pcode) {
         return du.querySingle("SELECT * FROM product WHERE pcode=? AND pactive = 'Y' and PFix='F'", pcode);
     }

@@ -32,6 +32,10 @@ public class AutoXRep extends javax.swing.JDialog {
     Date date = new Date();
     PPrint prn = new PPrint();
     private POSHWSetup POSHW;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     /**
      * Creates new form AutoXRep
@@ -594,10 +598,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select b_refno from billno limit 1");
             ReturnVal = rs.next();
             rs.close();
@@ -606,7 +610,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -617,10 +621,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select r_refno from balance limit 1");
             ReturnVal = rs.next();
             rs.close();
@@ -629,7 +632,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return ReturnVal;
@@ -643,10 +646,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "' order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -784,7 +786,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile where (terminal='" + Value.MACNO + "') and (flage='I') ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -799,7 +801,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile where (terminal='" + Value.MACNO + "') and (flage='O') ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -814,7 +816,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where (r_void='V') and (macno='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -827,7 +829,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (Value.printdriver) {
@@ -914,10 +916,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -939,7 +940,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumCupon = 0.0;
         int CntBill = 0;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -957,7 +958,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
         prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -978,7 +979,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("----------------------------------------");
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -990,7 +991,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         prn.print("----------------------------------------");
@@ -1009,10 +1010,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_cashier,sum(b_nettotal) from billno where b_macno='" + Value.MACNO + "' group by b_cashier order by b_cashier";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1024,7 +1024,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1036,10 +1036,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from billno where (b_cashier='" + TempCashNo + "')  and (b_macno='" + Value.MACNO + "')  order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1178,7 +1177,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='I') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1193,7 +1192,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='O') and (terminal='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1208,7 +1207,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + TempCashNo + "')  and (macno='" + Value.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1221,7 +1220,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintCashier(frec, CrArray, false);
@@ -1305,10 +1304,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_ar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1329,7 +1327,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumCupon = 0.0;
         int CntBill = 0;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1347,7 +1345,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
         prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_crar where (fat<>'V') and (cashier='" + frec.Cashier1 + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1367,7 +1365,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("AR Pay-No    Amount  Mac  User User Void ");
         prn.print("----------------------------------------");
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billar where (fat='V') and (cashier='" + frec.Cashier1 + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -1397,7 +1395,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             int SumVoid = 0;
             Double SumAmount = 0.0;
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + frec.Cashier1 + "')";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 while (rs.next()) {
@@ -1429,7 +1427,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("REG ID :" + Value.MACNO);
         prn.cutPaper();
 
-        mysql.closeConnection(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
     }
 
     public void ProcessGroup() {
@@ -1442,10 +1440,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from t_sale where (macno='" + Value.MACNO + "') "
                     + "and (r_void<>'V') and (r_refund<>'V') Order by r_group";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -1623,7 +1620,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (Value.printdriver) {
@@ -1716,10 +1713,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from t_sale where (macno='" + Value.MACNO + "')"
                     + "and (r_void<>'V') and (r_refund<>'V') Order by r_group,r_plucode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -1904,7 +1900,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (Value.printdriver) {
@@ -2063,10 +2059,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select * from billno where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') order by b_refno";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 while (rs.next()) {
@@ -2097,7 +2092,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");
@@ -2141,10 +2136,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select * from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                         + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (r_void='V') order by macno,cashier,r_time";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -2161,7 +2155,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");
@@ -2193,10 +2187,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
                 stmt.executeUpdate(SqlQuery);
                 stmt.close();
@@ -2206,7 +2199,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             }
 
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select crcode,DECODE(crid,'snpfood') as crno,crapp,cramt from t_crar where (terminal>='" + MacNo1 + "') "
                         + "and (terminal<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (fat<>'V')";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -2244,7 +2237,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             int SumTotal = 0;
             Double SumTotalAmt = 0.0;
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 while (rs.next()) {
@@ -2272,7 +2265,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             if (SumCard > 0) {
@@ -2300,13 +2293,12 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert into tempcredit (terminal,crcode,crid,crapp,cramt) "
                     + "values (?,?,?,?,?)";
-            PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, Value.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
@@ -2320,7 +2312,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AutoXRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -2350,10 +2342,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select *from t_gift where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') "
                         + "and (cashier<='" + CashNo2 + "') and (fat='V') order by giftbarcode";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -2368,7 +2359,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AutoXRep.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             prn.print("----------------------------------------");

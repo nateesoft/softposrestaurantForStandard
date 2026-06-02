@@ -34,6 +34,11 @@ public class VoidRep extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private POSConfigSetup CONFIG;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final Value Value = new Value();
 
     public VoidRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -339,7 +344,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -429,7 +434,6 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

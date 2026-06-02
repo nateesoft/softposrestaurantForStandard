@@ -23,6 +23,7 @@ public class FindCustomer extends javax.swing.JDialog {
 
     DefaultTableModel model;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form FindMember
@@ -85,10 +86,10 @@ public class FindCustomer extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select * from customer order by sp_desc";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
@@ -113,7 +114,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -124,10 +125,9 @@ public class FindCustomer extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select *from customer where sp_code like '" + TempStr + "' order by sp_desc";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
@@ -153,7 +153,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -163,10 +163,9 @@ public class FindCustomer extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select * from customer where sp_desc like '" + TempStr + "' order by sp_desc";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
@@ -192,7 +191,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -202,10 +201,9 @@ public class FindCustomer extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select *from customer where (tel like '" + TempStr + "') order by sp_desc";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
@@ -229,7 +227,7 @@ public class FindCustomer extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCustomer.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

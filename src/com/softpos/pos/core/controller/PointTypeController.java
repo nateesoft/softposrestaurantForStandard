@@ -15,10 +15,12 @@ import com.softpos.util.DateUtil;
  * @author nathee
  */
 public class PointTypeController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
-    public static PointTypeBean getData(String pointTypeCode) {
+    public PointTypeBean getData(String pointTypeCode) {
         PointTypeBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(PointTypeController.class);
             String sql = "select * "
@@ -40,9 +42,8 @@ public class PointTypeController {
         return bean;
     }
 
-    public static PointTypeBean getDataBranchPoint() {
+    public PointTypeBean getDataBranchPoint() {
         PointTypeBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(PointTypeController.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");

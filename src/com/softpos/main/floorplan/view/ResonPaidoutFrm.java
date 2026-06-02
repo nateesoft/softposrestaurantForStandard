@@ -9,6 +9,8 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class ResonPaidoutFrm extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public ResonPaidoutFrm(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -109,12 +111,12 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String reson = ThaiUtil.Unicode2ASCII(txtReson.getText());
 
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SQLQuery = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt,reson) "
                     + "values (curdate(),curtime(),"
@@ -126,7 +128,7 @@ public class ResonPaidoutFrm extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ResonPaidoutFrm.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

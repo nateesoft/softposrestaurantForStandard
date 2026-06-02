@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MPluBean;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,10 +16,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class MPluController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
-    public static MPluBean getData(String branchCode) {
+    public MPluBean getData(String branchCode) {
         MPluBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(MPluController.class);
             String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
@@ -60,7 +61,6 @@ public class MPluController {
 
     public int create(List<MPluBean> listMPlu) {
         int[] resultCreate = new int[0];
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MPluController.class);
         try {
             String sql = "insert into " + Value.db_member + ".mplu "
@@ -98,7 +98,6 @@ public class MPluController {
     }
 
     public void refundBill(String receiptNo) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MPluController.class);
 
         try {

@@ -14,6 +14,7 @@ public class CustomerName extends javax.swing.JDialog {
     private int custCountTotal = 0;
     private String TABLE_NO;
     private String R_ETD;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public CustomerName(java.awt.Frame parent, boolean modal, String TABLE_NO, String R_ETD) {
         super(parent, modal);
@@ -180,8 +181,8 @@ public class CustomerName extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             if (R_ETD.equals("T")) {
                 if (txtCustomerName.getText().trim().equals("")) {
@@ -191,7 +192,7 @@ public class CustomerName extends javax.swing.JDialog {
                     String sql = "UPDATE tablefile SET "
                             + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                             + "WHERE Tcode = '" + TABLE_NO + "'";
-                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                    try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                         stmt.executeUpdate(sql);
                         stmt.close();
                     }
@@ -200,7 +201,7 @@ public class CustomerName extends javax.swing.JDialog {
                 String sql = "UPDATE tablefile SET "
                         + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
                         + "WHERE Tcode = '" + TABLE_NO + "'";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     stmt.executeUpdate(sql);
                     stmt.close();
                 }
@@ -209,7 +210,7 @@ public class CustomerName extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         dispose();
@@ -219,11 +220,10 @@ public class CustomerName extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String NameCus = rs.getString("MemName");
@@ -237,7 +237,7 @@ public class CustomerName extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CustomerName.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

@@ -2,6 +2,7 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.BalanceBean;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.sql.SQLException;
@@ -20,6 +21,10 @@ public class ServiceControl {
     private final PosControl posControl;
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private DecimalFormat df = new DecimalFormat("##.00");
+    private final MySQLConnect mysql = new MySQLConnect();
+    
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public ServiceControl() {
         posControl = AppContext.getPosControl();
@@ -106,7 +111,7 @@ public class ServiceControl {
         }
 
         DateConvert dc = new DateConvert();
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             TableFileControl tfc = AppContext.getTableFileControl();
             TableFileBean tBean = tfc.getData(table);
@@ -144,7 +149,7 @@ public class ServiceControl {
         }
     }
 
-    public static double getDouble(double db, String type) {
+    public double getDouble(double db, String type) {
         if (db > 0) {
             switch (type) {
                 case "SERVICE":

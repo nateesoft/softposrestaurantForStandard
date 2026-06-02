@@ -8,8 +8,10 @@ import com.softpos.util.AppLogUtil;
 
 public class DatabaseConnection {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public boolean execUpdate(String sql) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(DatabaseConnection.class);
         try {
             return mysql.executeUpdate(sql) > 0;
@@ -25,7 +27,6 @@ public class DatabaseConnection {
         if (sqls == null || sqls.isEmpty()) {
             return true;
         }
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(DatabaseConnection.class);
         try (Statement stmt = mysql.getConnection().createStatement()) {
             for (String sql : sqls) {

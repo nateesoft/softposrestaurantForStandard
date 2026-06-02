@@ -19,6 +19,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     private String TableNo;
     private DefaultTableModel model;
     private String index;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public OptionMenuSet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -316,21 +317,20 @@ public class OptionMenuSet extends javax.swing.JDialog {
         if (row != -1) {
             /**
              * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+             */            
+            mysqlConnect.open(this.getClass());
             try {
                 String sql = "delete from optionset "
                         + "where pcode='" + txtPCode.getText() + "' "
                         + "and optionname='" + ThaiUtil.Unicode2ASCII(txtOptionName.getText()) + "'";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 stmt.executeUpdate(sql);
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(OptionMenuSet.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             txtOptionName.setText("");
@@ -383,8 +383,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "INSERT INTO optionset "
                     + "(PCode, PDesc, OptionCode, OptionName) "
@@ -392,7 +391,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
                     + "'" + ThaiUtil.Unicode2ASCII(pdesc) + "', "
                     + "'" + opcode + "', "
                     + "'" + ThaiUtil.Unicode2ASCII(opname) + "');";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -400,7 +399,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         LoadOpt();
@@ -420,12 +419,11 @@ public class OptionMenuSet extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from optionset "
                     + "where PCode = '" + txtPCode.getText() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String PC = ThaiUtil.ASCII2Unicode(rs.getString("PCode"));
@@ -445,7 +443,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(OptionMenuSet.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

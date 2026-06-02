@@ -13,10 +13,12 @@ import com.softpos.util.AppLogUtil;
  */
 public class CustomerConrol {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public CustomerBean getCustomer(String custCode) {
         CustomerBean bean = new CustomerBean();
         String sql = "select * from customer where sp_code='" + custCode + "' limit 1";
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(this.getClass());
             ResultSet rs = mysql.executeQuery(sql);

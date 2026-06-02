@@ -12,10 +12,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class PosUserController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public PosUserBean getPosUser() {
         PosUserBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PosUserController.class);
         try {
             String sql = "select Username, Sale2, Sale3 from posuser where username='" + Value.USERCODE + "' limit 1";

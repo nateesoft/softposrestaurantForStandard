@@ -82,6 +82,15 @@ public class PPrint {
     private final TableFileControl tableFileControl = AppContext.getTableFileControl();
     private final BalanceControl balanceControl = AppContext.getBalanceControl();
     private final BillControl billControl = AppContext.getBillControl();
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final PUtility pUtility = new PUtility();
+    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final ServiceControl ServiceControl = AppContext.getServiceControl();
+    
+    private final Value Value = new Value();
 
     public PPrint() {
         POSHW = POSHWSetup.Bean(Value.MACNO);
@@ -574,7 +583,7 @@ public class PPrint {
             }
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     try {
                         mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
@@ -689,7 +698,7 @@ public class PPrint {
                             }
                             if (bean.getR_PrType().equals("-P")) {
                                 if (bean.getR_PrAmt() > 0) {
-                                    t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   **Promotion  " + bean.getR_PrCode() + " " + PUtility.SeekPromotionName(bean.getR_PrCode())) + "_";
+                                    t += ("colspan=3 align=left><font face=Angsana New size=2> " + "   **Promotion  " + bean.getR_PrCode() + " " + pUtility.SeekPromotionName(bean.getR_PrCode())) + "_";
                                 }
                             }
                             if (bean.getR_PrType().equals("-I")) {
@@ -722,7 +731,7 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลดพนักงาน.." + bBean.getB_EmpDisc() + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(bBean.getB_EmpDiscAmt())) + "_";
             }
             if (bBean.getB_TrainDiscAmt() > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลด Trainnee.." + bBean.getB_TrainDisc() + "</td><td align=right ><font face=Angsana New size=2>- " + PUtility.DataFull2(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength)) + "_";
+                t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลด Trainnee.." + bBean.getB_TrainDisc() + "</td><td align=right ><font face=Angsana New size=2>- " + pUtility.DataFull2(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength)) + "_";
             }
             if (bBean.getB_ItemDiscAmt() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2> " + DecFmt.format(bBean.getB_ItemDiscAmt())) + "-_";
@@ -790,7 +799,6 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -816,7 +824,6 @@ public class PPrint {
             if (bBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -835,13 +842,13 @@ public class PPrint {
                 }
 
                 t += ("colspan=3 align=left><font face=Angsana New size=-> " + crName) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + pUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CrAmt1())) + "_";
             }
 
             if (bBean.getB_AccrAmt() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "AR-" + bBean.getB_AccrCode() + " ลูกหนี้การค้า........" + DecFmt.format(bBean.getB_AccrAmt())) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + PUtility.SeekArName(bBean.getB_AccrCode())) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + pUtility.SeekArName(bBean.getB_AccrCode())) + "_";
             }
             if (bBean.getB_Entertain1() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Entertain  : " + DecFmt.format(bBean.getB_Entertain1())) + "_";
@@ -913,7 +920,6 @@ public class PPrint {
 
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
-                    MySQLConnect mysql = new MySQLConnect();
                     try {
                         mysql.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
@@ -1149,7 +1155,7 @@ public class PPrint {
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "ลดพนักงาน.." + bBean.getB_EmpDisc() + TAB + DecFmt.format(bBean.getB_EmpDiscAmt())) + "_";
             }
             if (bBean.getB_TrainDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "ลด Trainnee.." + bBean.getB_TrainDisc() + TAB + PUtility.DataFull2(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength)) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "ลด Trainnee.." + bBean.getB_TrainDisc() + TAB + pUtility.DataFull2(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength)) + "_";
             }
             if (bBean.getB_ItemDiscAmt() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ItemDiscAmt())) + "-_";
@@ -1221,7 +1227,6 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -1246,7 +1251,6 @@ public class PPrint {
             if (bBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -1263,7 +1267,7 @@ public class PPrint {
                     mysql.closeConnection(this.getClass());
                 }
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + crName) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + pUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
                 if (bBean.getB_CrCharge1() > 0) {
                     t += ("colspan=3 align=left><font face=Angsana New size=2> ") + "Credit Charge" + Space + DecFmt.format(bBean.getB_CrCharge1()) + Space + "%" + Space + DecFmt.format(bBean.getB_CrChargeAmt1()) + "_";
                 }
@@ -1276,7 +1280,7 @@ public class PPrint {
             }
             if (bBean.getB_AccrAmt() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=-2> " + "AR-" + bBean.getB_AccrCode() + " ลูกหนี้การค้า........" + DecFmt.format(bBean.getB_AccrAmt())) + "_";
-                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + PUtility.SeekArName(bBean.getB_AccrCode())) + "_";
+                t += ("colspan=3 align=left><font face=Angsana New size=-2> " + pUtility.SeekArName(bBean.getB_AccrCode())) + "_";
             }
 
             if (!bBean.getB_MemCode().equals("")) {
@@ -1367,12 +1371,12 @@ public class PPrint {
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
                         print(" ");
-                        print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
-                        print(PUtility.DataFullR("CC : " + IntFmt.format(bBean.getB_Cust()) + " Seat", 15) + PUtility.DataFullR(" ", 11) + PUtility.DataFullR("NAME: " + getLastEmployeeCheckBill(tableNo, _RefNo), 15));
-                        print(PUtility.DataFullR("COM: " + Value.MACNO, 15));
+                        print(pUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + pUtility.DataFullR(" TABLE : " + tableNo, 15));
+                        print(pUtility.DataFullR("CC : " + IntFmt.format(bBean.getB_Cust()) + " Seat", 15) + pUtility.DataFullR(" ", 11) + pUtility.DataFullR("NAME: " + getLastEmployeeCheckBill(tableNo, _RefNo), 15));
+                        print(pUtility.DataFullR("COM: " + Value.MACNO, 15));
                         if (!tBean.getMemName().trim().equals("")) {
                             print(" ");
-                            print(PUtility.DataFullR(" ", 26) + PUtility.DataFullR("NAME CC: " + tBean.getMemName(), 15));
+                            print(pUtility.DataFullR(" ", 26) + pUtility.DataFullR("NAME CC: " + tBean.getMemName(), 15));
                         }
                         print(" ");
                         print("----------------------------------------");
@@ -1397,7 +1401,7 @@ public class PPrint {
                                 if (bean.getR_PrAmt() == 0) {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
                                         String R_PName = bean.getR_PName();
                                         String space = "  ";
@@ -1407,12 +1411,12 @@ public class PPrint {
                                             space = " ";
                                             R_PName = R_PName.substring(0, 21);
                                         }
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(R_PName, sizeNew) + space + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(R_PName, sizeNew) + space + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                 } else {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
                                         String R_PName = bean.getR_PName();
                                         int sizeNew = 20;
@@ -1422,16 +1426,16 @@ public class PPrint {
                                             space = " ";
                                             R_PName = R_PName.substring(0, 21);
                                         }
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(R_PName, sizeNew) + space + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(R_PName, sizeNew) + space + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                     if (bean.getR_PrType().equals("-P")) {
                                         if (bean.getR_PrAmt() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode()), 20));
+                                            print("   **Promotion  " + bean.getR_PrCode() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode()), 20));
                                         }
                                     }
                                     if (bean.getR_PrType().equals("-I")) {
                                         if (bean.getR_PrDisc() != 0) {
-                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
+                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
                                         }
                                     }
                                 }
@@ -1441,44 +1445,43 @@ public class PPrint {
                         Date dateP = new Date();
                         print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         print("----------------------------------------");
-                        print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
+                        print("     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
                     printEntertain(bBean.getB_Table());
                     print("----------------------------------------");
                     if (bBean.getB_ProDiscAmt() > 0) {
-                        print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength));
+                        print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_SpaDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_MemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(bBean.getB_MemDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(bBean.getB_MemDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_FastDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(bBean.getB_FastDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(bBean.getB_FastDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_EmpDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(bBean.getB_EmpDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(bBean.getB_EmpDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_TrainDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(bBean.getB_TrainDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(bBean.getB_TrainDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_ItemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_ServiceAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(bBean.getB_ServiceAmt()), 9));
+                        print("     " + pUtility.DataFullR("ค่าบริการ (Service)     ", 23) + pUtility.DataFull(DecFmt.format(bBean.getB_ServiceAmt()), 9));
                     }
                     if (bBean.getB_Earnest() > 0) {
-                        print("     " + PUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + PUtility.DataFull(DecFmt.format(bBean.getB_Earnest()), 9));
+                        print("     " + pUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + pUtility.DataFull(DecFmt.format(bBean.getB_Earnest()), 9));
                     }
                     if (bBean.getB_SubDiscBath() > 0) {
-                        print("     " + PUtility.DataFullR("ส่วนลดบาท                                 ", 23) + PUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), 9));
+                        print("     " + pUtility.DataFullR("ส่วนลดบาท                                 ", 23) + pUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), 9));
                     }
                     if (bBean.getB_GiftVoucher() > 0) {
-                        print("     " + PUtility.DataFullR("บัตรกำนัล               ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
+                        print("     " + pUtility.DataFullR("บัตรกำนัล               ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
-                        MySQLConnect mysql = new MySQLConnect();
                         try {
                             mysql.open(this.getClass());
                             String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
@@ -1486,7 +1489,7 @@ public class PPrint {
                             ResultSet rsGetGiftno = mysql.executeQuery(sqlGetGiffNo);
                             if (rsGetGiftno.next()) {
                                 giffno = rsGetGiftno.getString("giftno");
-                                print("Gift-No.    " + PUtility.DataFullR(giffno, 30));
+                                print("Gift-No.    " + pUtility.DataFullR(giffno, 30));
                                 rsGetGiftno.close();
                             }
                         } catch (SQLException e) {
@@ -1497,16 +1500,15 @@ public class PPrint {
                         }
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
-                        print("     " + PUtility.DataFullR(bBean.getB_CuponName(), SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
-                        MySQLConnect mysql = new MySQLConnect();
+                        print("     " + pUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
+                        print("     " + pUtility.DataFullR(bBean.getB_CuponName(), SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
                         mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
-                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
+                                print("   " + pUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + pUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
                             stmt.close();
@@ -1523,38 +1525,37 @@ public class PPrint {
                         if (list != null && !list.isEmpty()) {
                             CuName = list.get(0)[0].toString();
                             CuDisc = Double.parseDouble(list.get(0)[1].toString());
-                            print(" " + PUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
-                            print("    " + PUtility.DataFullR(CuName, 30) + " " + PUtility.DataFullR(DecFmt.format(CuDisc) + "", 7));
+                            print(" " + pUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
+                            print("    " + pUtility.DataFullR(CuName, 30) + " " + pUtility.DataFullR(DecFmt.format(CuDisc) + "", 7));
 
                         }
                     }
                     if (CONFIG.getP_VatType().equals("I")) {
                         selectStye(14);//แก้ไขใหม่
                         print("");
-                        print("     Sub-TOTAL         " + PUtility.DataFull(DecFmt.format(bBean.getB_NetTotal()), AmtLength));
+                        print("     Sub-TOTAL         " + pUtility.DataFull(DecFmt.format(bBean.getB_NetTotal()), AmtLength));
                         selectStye(1);
                         if (CONFIG.getP_VatPrn().equals("Y")) {
-                            print(PUtility.DataFull("      Vat..." + IntFmt.format(Vat) + "%", 30) + PUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
+                            print(pUtility.DataFull("      Vat..." + IntFmt.format(Vat) + "%", 30) + pUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
                             print("----------------------------------------");
 
                         }
                         if (PublicVar.b_entertain > 0) {
-                            print("     " + PUtility.DataFullR("Entertain.....", SubLength) + PUtility.DataFull(DecFmt.format(PublicVar.b_entertain), AmtLength));
+                            print("     " + pUtility.DataFullR("Entertain.....", SubLength) + pUtility.DataFull(DecFmt.format(PublicVar.b_entertain), AmtLength));
                             printEntertain(bBean.getB_Table());
                         }
                     } else {
-                        print(PUtility.DataFull("      Net-Amount ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_NetVat() + bBean.getB_NetNonVat()), AmtLength));
-                        print(PUtility.DataFull("      Vat....... ", SubLength) + PUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + PUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
+                        print(pUtility.DataFull("      Net-Amount ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_NetVat() + bBean.getB_NetNonVat()), AmtLength));
+                        print(pUtility.DataFull("      Vat....... ", SubLength) + pUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + pUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
                         print("VAT INCLUDED");
                     }
 
                     if (bBean.getB_PayAmt() > 0) {
-                        print("CASH  : " + PUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + "  CHANGE : " + PUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength));
+                        print("CASH  : " + pUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + "  CHANGE : " + pUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength));
                     }
                     if (bBean.getB_CrAmt1() > 0) {
                         //get credit name
                         String crName = "";
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
@@ -1572,13 +1573,13 @@ public class PPrint {
                         }
 
                         print(bBean.getB_CrCode1() + "  " + crName);
-                        print("XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + "  " + bBean.getB_AppCode1());
-                        print("Credit Payment               " + PUtility.DataFull(DecFmt.format(bBean.getB_CrAmt1()), AmtLength));
+                        print("XXXXXXXXXXX" + pUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + "  " + bBean.getB_AppCode1());
+                        print("Credit Payment               " + pUtility.DataFull(DecFmt.format(bBean.getB_CrAmt1()), AmtLength));
                     }
 
                     if (bBean.getB_AccrAmt() > 0) {
-                        print("AR-" + bBean.getB_AccrCode() + " ลูกหนี้การค้า........" + PUtility.DataFull(DecFmt.format(bBean.getB_AccrAmt()), AmtLength));
-                        print(PUtility.DataFullR(PUtility.SeekArName(bBean.getB_AccrCode()), 38));
+                        print("AR-" + bBean.getB_AccrCode() + " ลูกหนี้การค้า........" + pUtility.DataFull(DecFmt.format(bBean.getB_AccrAmt()), AmtLength));
+                        print(pUtility.DataFullR(pUtility.SeekArName(bBean.getB_AccrCode()), 38));
                     }
 
                     if (!bBean.getB_MemCode().equals("")) {
@@ -1595,9 +1596,9 @@ public class PPrint {
                     print(" ");
                     selectStye(5);
                     if (!tBean.getMemName().equals("")) {
-                        print("Name CC : " + PUtility.DataFullR(tBean.getMemName(), 15));
+                        print("Name CC : " + pUtility.DataFullR(tBean.getMemName(), 15));
                     }
-                    print(PUtility.DataFullR(" ", 12) + " " + "Receipt No: " + _RefNo);
+                    print(pUtility.DataFullR(" ", 12) + " " + "Receipt No: " + _RefNo);
                     selectStye(1);
                     print(" ");
                     if (!CONFIG.getP_PrintRecpMessage().equals("")) {
@@ -2151,11 +2152,11 @@ public class PPrint {
                     selectStye(1);
                     print(" ");
                     Date dateP = new Date();
-                    print(PUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + PUtility.DataFullR(" TABLE : " + tableNo, 15));
-                    print("CC : " + PUtility.DataFullR(IntFmt.format(tBean.getTCustomer()), 2) + " Seat" + PUtility.DataFullR(" ", 11) + PUtility.DataFullR("NAME: " + getLastEmployee(tableNo), 15));
+                    print(pUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + pUtility.DataFullR(" TABLE : " + tableNo, 15));
+                    print("CC : " + pUtility.DataFullR(IntFmt.format(tBean.getTCustomer()), 2) + " Seat" + pUtility.DataFullR(" ", 11) + pUtility.DataFullR("NAME: " + getLastEmployee(tableNo), 15));
                     if (!tBean.getMemName().equals("")) {
                         print(" ");
-                        print(PUtility.DataFullR(" ", 26) + PUtility.DataFullR("NAME CC: " + tBean.getMemName(), 15));
+                        print(pUtility.DataFullR(" ", 26) + pUtility.DataFullR("NAME CC: " + tBean.getMemName(), 15));
                     }
                     print(" ");
                     print("----------------------------------------");
@@ -2173,7 +2174,7 @@ public class PPrint {
                             }
                             if (CONFIG.getP_CodePrn().equals("Y")) {
                                 print(bean.getR_PName());
-                                print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 if (!bean.getR_Opt1().equals("")) {
                                     print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                 }
@@ -2186,7 +2187,7 @@ public class PPrint {
                                     space = " ";
                                     R_PName = R_PName.substring(0, 21);
                                 }
-                                print(bean.getR_Normal() + VatStr + PUtility.DataFullR(R_PName, sizeNew) + space + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                print(bean.getR_Normal() + VatStr + pUtility.DataFullR(R_PName, sizeNew) + space + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 if (!bean.getR_Opt1().equals("")) {
                                     print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                 }
@@ -2201,7 +2202,7 @@ public class PPrint {
                             if (bean.getR_PrAmt() == 0) {
                                 if (CONFIG.getP_CodePrn().equals("Y")) {
                                     print(bean.getR_PName());
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     if (!bean.getR_Opt1().equals("")) {
                                         print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                     }
@@ -2214,7 +2215,7 @@ public class PPrint {
                                         space = " ";
                                         R_PName = R_PName.substring(0, 21);
                                     }
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(R_PName, sizeNew) + space + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(R_PName, sizeNew) + space + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     if (!bean.getR_Opt1().equals("")) {
                                         print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                     }
@@ -2222,7 +2223,7 @@ public class PPrint {
                             } else {
                                 if (CONFIG.getP_CodePrn().equals("Y")) {
                                     print(bean.getR_PName());
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     if (!bean.getR_Opt1().equals("")) {
                                         print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                     }
@@ -2235,14 +2236,14 @@ public class PPrint {
                                         space = " ";
                                         R_PName = R_PName.substring(0, 21);
                                     }
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(R_PName, sizeNew) + space + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(R_PName, sizeNew) + space + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     if (!bean.getR_Opt1().equals("")) {
                                         print(bean.getR_Opt1());
                                     }
                                 }
                                 if (bean.getR_PrType().equals("-P")) {
                                     if (bean.getR_PrAmt() > 0) {
-                                        print("   **Promotion  " + bean.getR_PrCode() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode()), 20));
+                                        print("   **Promotion  " + bean.getR_PrCode() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode()), 20));
                                     }
                                     if (!bean.getR_Opt1().equals("")) {
                                         print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
@@ -2250,7 +2251,7 @@ public class PPrint {
                                 }
                                 if (bean.getR_PrType().equals("-I")) {
                                     if (bean.getR_PrDisc() != 0) {
-                                        print("   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
+                                        print("   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
                                         print(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()));
                                     }
                                 }
@@ -2260,42 +2261,42 @@ public class PPrint {
 
                     print("----------------------------------------");
                     if (tBean.getProDiscAmt() > 0) {
-                        print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
+                        print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
                     }
                     if (tBean.getSpaDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
                     }
                     if (tBean.getMemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดสมาชิก..", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดสมาชิก..", SubLength2) + pUtility.DataFull(tBean.getMemDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
                     }
                     if (tBean.getFastDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดเทศกาล..", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดเทศกาล..", SubLength2) + pUtility.DataFull(tBean.getFastDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
                     }
                     if (tBean.getEmpDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดพนักงาน..", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดพนักงาน..", SubLength2) + pUtility.DataFull(tBean.getEmpDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
                     }
                     if (tBean.getTrainDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลด Trainnee..", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด Trainnee..", SubLength2) + pUtility.DataFull(tBean.getTrainDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
                     }
                     if (tBean.getSubDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดคูปอง..", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดคูปอง..", SubLength2) + pUtility.DataFull(tBean.getSubDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
                     }
                     if (tBean.getDiscBath() > 0) {
-                        print("     " + PUtility.DataFullR("ลด(บาท)..", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด(บาท)..", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
                     }
                     if (tBean.getItemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
                     }
                     if (tBean.getServiceAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ค่าบริการ (Service)", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
+                        print("     " + pUtility.DataFullR("ค่าบริการ (Service)", 23) + pUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
                     }
                     if (tBean.getCuponDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ส่วนลดคูปอง(Cupon)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getCuponDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ส่วนลดคูปอง(Cupon)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getCuponDiscAmt()), AmtLength));
                     }
-                    print(PUtility.DataFull(" ", 25) + "TOTAL " + DecFmt.format(tBean.getNetTotal()));
+                    print(pUtility.DataFull(" ", 25) + "TOTAL " + DecFmt.format(tBean.getNetTotal()));
                     print("----------------------------------------");
                     print(" ");
-                    print(PUtility.DataFullR("COM: " + Value.MACNO, 15) + " **No Recipt**");
+                    print(pUtility.DataFullR("COM: " + Value.MACNO, 15) + " **No Recipt**");
                     //print("----------------------------------------");
                     print(" ");
                     selectStye(1);
@@ -2325,7 +2326,7 @@ public class PPrint {
                     print(" ");
 
                     cutPaper();
-                    updatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
+                    updatePrintCheckBill(pUtility.DataFullR(tableNo, 5));
                     closePrint();
                 }
             }
@@ -2366,7 +2367,7 @@ public class PPrint {
 
                             print(" ");
                             Date dateP = new Date();
-                            print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + PUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
+                            print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + pUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
                             print("COM: " + Value.MACNO);
                             print(" ");
                             print("----------------------------------------");
@@ -2380,14 +2381,13 @@ public class PPrint {
                                     }
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                     String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
                                     String NameVoid = "";
 
-                                    MySQLConnect mysql = new MySQLConnect();
                                     try {
                                         mysql.open(this.getClass());
                                         ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
@@ -2414,39 +2414,39 @@ public class PPrint {
                             TableFileBean tBean = tableFileControl.getData(tableNo);
 
                             if (tBean.getProDiscAmt() > 0) {
-                                print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
+                                print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
                             }
                             if (tBean.getSpaDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength));
                             }
                             if (tBean.getMemDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(tBean.getMemDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength));
                             }
                             if (tBean.getFastDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(tBean.getFastDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength));
                             }
                             if (tBean.getEmpDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(tBean.getEmpDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength));
                             }
                             if (tBean.getTrainDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(tBean.getTrainDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength));
                             }
                             if (tBean.getSubDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลดคูปอง...........", SubLength2) + pUtility.DataFull(tBean.getSubDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength));
                             }
                             if (tBean.getDiscBath() > 0) {
-                                print("     " + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลด(บาท)..........", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength));
                             }
                             if (tBean.getItemDiscAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
+                                print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength));
                             }
                             if (tBean.getServiceAmt() > 0) {
-                                print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
+                                print("     " + pUtility.DataFullR("ค่าบริการ (Service)     ", 23) + pUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9));
                             }
 
                             print("----------------------------------------");
                             selectStye(1);
-                            print("TABLE  " + PUtility.DataFullR(tableNo, 5) + "   " + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน");
+                            print("TABLE  " + pUtility.DataFullR(tableNo, 5) + "   " + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน");
 
                             print(" ");
                             print("");
@@ -2460,7 +2460,7 @@ public class PPrint {
                             print(" ");
 
                             cutPaper();
-                            updatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
+                            updatePrintCheckBill(pUtility.DataFullR(tableNo, 5));
                             closePrint();
                         }
                     }
@@ -2516,14 +2516,13 @@ public class PPrint {
                 if (bean.getR_Void().equals("V")) {
                     if (CONFIG.getP_CodePrn().equals("Y")) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2>" + bean.getR_PName() + "_");
-                        t += ("align=left><font face=Angsana New size=2>" + PUtility.DataFullR(bean.getR_PluCode(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
+                        t += ("align=left><font face=Angsana New size=2>" + pUtility.DataFullR(bean.getR_PluCode(), 20) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
                     } else {
-                        t += ("align=left><font face=Angsana New size=2>" + PUtility.DataFullR(bean.getR_PName(), 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
+                        t += ("align=left><font face=Angsana New size=2>" + pUtility.DataFullR(bean.getR_PName(), 20) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + "_");
                     }
                     String sqlNameVoid = "select name from posuser where username='" + bean.getR_VoidUser() + "' limit 1;";
                     String NameVoid = "";
 
-                    MySQLConnect mysql = new MySQLConnect();
                     try {
                         mysql.open(this.getClass());
                         ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
@@ -2549,41 +2548,41 @@ public class PPrint {
 
             TableFileBean tBean = tableFileControl.getData(tableNo);
             if (tBean.getProDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getSpaDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getSpaDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getMemDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getMemDisc(), 8) + "-" + PUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(tBean.getMemDisc(), 8) + "-" + pUtility.DataFull(DecFmt.format(tBean.getMemDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getFastDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getFastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(tBean.getFastDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getFastDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getEmpDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getEmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(tBean.getEmpDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getEmpDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getTrainDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getTrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(tBean.getTrainDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getTrainDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getSubDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(tBean.getSubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลดคูปอง...........", SubLength2) + pUtility.DataFull(tBean.getSubDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getSubDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getDiscBath() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลด(บาท)..........", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getDiscBath()), AmtLength) + "_");
             }
             if (tBean.getItemDiscAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getItemDiscAmt()), AmtLength) + "_");
             }
             if (tBean.getServiceAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ค่าบริการ (Service)     ", 23) + pUtility.DataFull(DecFmt.format(tBean.getServiceAmt()), 9) + "_");
             }
 
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "TABLE  " + TAB + PUtility.DataFullR(tableNo, 5) + Space + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน" + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "TABLE  " + TAB + pUtility.DataFullR(tableNo, 5) + Space + "จำนวนลูกค้า : " + IntFmt.format(tBean.getTCustomer()) + " คน" + "_");
             t += (">_");
             t = changeLanguage(t);
-            updatePrintCheckBill(PUtility.DataFullR(tableNo, 5));
+            updatePrintCheckBill(pUtility.DataFullR(tableNo, 5));
             String[] strs = t.split("_");
 
             for (String data : strs) {
@@ -2666,7 +2665,6 @@ public class PPrint {
                 print("----------------------------------------");
                 Double SumTotal = 0.0;
 
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
@@ -2676,10 +2674,10 @@ public class PPrint {
                             + "group by r_table";
                     ResultSet rs = stmt.executeQuery(ChkTable);
                     while (rs.next()) {
-                        print(PUtility.DataFull(rs.getString("r_table"), 6)
-                                + PUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
-                                + PUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
-                                + PUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
+                        print(pUtility.DataFull(rs.getString("r_table"), 6)
+                                + pUtility.DataFull(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + "     "
+                                + pUtility.DataFull(rs.getString("TCurTime"), 8) + "  "
+                                + pUtility.DataFull(IntFmt.format(rs.getInt("tcustomer")), 5));
                         SumTotal = SumTotal + rs.getDouble("sum(r_total)");
                     }
                     rs.close();
@@ -2692,7 +2690,7 @@ public class PPrint {
                 }
 
                 print("-----------------------------------------");
-                print("Total " + PUtility.DataFull(DecFmt.format(SumTotal), 10));
+                print("Total " + pUtility.DataFull(DecFmt.format(SumTotal), 10));
                 print("-----------------------------------------");
                 print("");
                 print("");
@@ -2792,45 +2790,44 @@ public class PPrint {
                     double NetSale_VatExclude = frec.Net_Sale * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
 
                     print("----------------------------------------");
-                    print(PUtility.DataFullR("FOOD                   ", 20) + PUtility.DataFull(DecFmt.format(frec.Food), 19));
-                    print(PUtility.DataFullR("BEVERAGE               ", 20) + PUtility.DataFull(DecFmt.format(frec.Drink), 19));
+                    print(pUtility.DataFullR("FOOD                   ", 20) + pUtility.DataFull(DecFmt.format(frec.Food), 19));
+                    print(pUtility.DataFullR("BEVERAGE               ", 20) + pUtility.DataFull(DecFmt.format(frec.Drink), 19));
                     if (frec.Product > 0) {
-                        print(PUtility.DataFullR("PRODUCT                ", 20) + PUtility.DataFull(DecFmt.format(frec.Product), 19));
+                        print(pUtility.DataFullR("PRODUCT                ", 20) + pUtility.DataFull(DecFmt.format(frec.Product), 19));
                     }
-                    print(PUtility.DataFullR("TOTAL-SALES            ", 20) + PUtility.DataFull(DecFmt.format(frec.Dept_Sum), 19));
+                    print(pUtility.DataFullR("TOTAL-SALES            ", 20) + pUtility.DataFull(DecFmt.format(frec.Dept_Sum), 19));
                     print("========================================");
                     if (frec.Charge > 0) {
-                        print(PUtility.DataFullR("Charge   Credit        ", 20) + PUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Charge), 13));
+                        print(pUtility.DataFullR("Charge   Credit        ", 20) + pUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Charge), 13));
                     }
                     if (frec.Vip_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Member           ", 20) + PUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13));
+                        print(pUtility.DataFullR("Discount Member           ", 20) + pUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13));
                     }
                     if (frec.Fast_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Festival      ", 20) + PUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13));
+                        print(pUtility.DataFullR("Discount Festival      ", 20) + pUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13));
                     }
                     if (frec.Emp_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Employ        ", 20) + PUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13));
+                        print(pUtility.DataFullR("Discount Employ        ", 20) + pUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13));
                     }
                     if (frec.Train_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Staff Discound", 20) + PUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Train_Disc), 13));
+                        print(pUtility.DataFullR("Discount Staff Discound", 20) + pUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Train_Disc), 13));
                     }
                     if (frec.Sub_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Cupon         ", 20) + PUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13));
+                        print(pUtility.DataFullR("Discount Cupon         ", 20) + pUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13));
                     }
                     if (frec.Gen_Refund > 0) {
-                        print(PUtility.DataFullR("Discount Bath.         ", 20) + PUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13));
+                        print(pUtility.DataFullR("Discount Bath.         ", 20) + pUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13));
                     }
                     if (frec.Promotion > 0) {
-                        print(PUtility.DataFullR("Discount Promotion     ", 20) + PUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Promotion), 13));
+                        print(pUtility.DataFullR("Discount Promotion     ", 20) + pUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Promotion), 13));
                     }
                     if (frec.Spacial > 0) {
-                        print(PUtility.DataFullR("Discount Special       ", 20) + PUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Spacial), 13));
+                        print(pUtility.DataFullR("Discount Special       ", 20) + pUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Spacial), 13));
                     }
                     if (frec.Item_Disc > 0) {
-                        print(PUtility.DataFullR("Discount Item          ", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13));
+                        print(pUtility.DataFullR("Discount Item          ", 20) + pUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Item_Disc), 13));
                     }
                     if (frec.Cupon_Disc > 0) {
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
@@ -2846,7 +2843,7 @@ public class PPrint {
                                 double amt = rs.getDouble("amt");
                                 String quan = rs.getString("quan");
                                 String name = rs.getString("name");
-                                print(PUtility.DataFullR(name, 20) + PUtility.DataFull(quan, 6) + PUtility.DataFull(DecFmt.format(amt), 13));
+                                print(pUtility.DataFullR(name, 20) + pUtility.DataFull(quan, 6) + pUtility.DataFull(DecFmt.format(amt), 13));
                             }
                             rs.close();
                         } catch (SQLException e) {
@@ -2860,25 +2857,25 @@ public class PPrint {
 
                     print("----------------------------------------");
                     if (CONFIG.getP_VatType().equals("I")) {
-                        print(PUtility.DataFullR("Gross-Sales              ", 20) + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19));
+                        print(pUtility.DataFullR("Gross-Sales              ", 20) + pUtility.DataFull(DecFmt.format(frec.Net_Sale), 19));
                     }
                     if (CONFIG.getP_VatType().equals("E")) {
-                        print(PUtility.DataFullR("Gross-Sales              ", 20) + PUtility.DataFull(DecFmt.format(frec.Net_Sale - frec.Service), 19));
+                        print(pUtility.DataFullR("Gross-Sales              ", 20) + pUtility.DataFull(DecFmt.format(frec.Net_Sale - frec.Service), 19));
                     }
 
                     print("========================================");
                     if (frec.Gift > 0) {
-                        print(PUtility.DataFullR("Gift Voucher           ", 20) + PUtility.DataFull(IntFmt.format(frec.GiftCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Gift), 13));
+                        print(pUtility.DataFullR("Gift Voucher           ", 20) + pUtility.DataFull(IntFmt.format(frec.GiftCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Gift), 13));
                     }
                     if (frec.Entertain > 0) {
-                        print(PUtility.DataFullR("Entertain                       ", 20) + PUtility.DataFull(IntFmt.format(frec.BillEntertain), 6) + PUtility.DataFull(DecFmt.format(frec.Entertain), 13));
+                        print(pUtility.DataFullR("Entertain                       ", 20) + pUtility.DataFull(IntFmt.format(frec.BillEntertain), 6) + pUtility.DataFull(DecFmt.format(frec.Entertain), 13));
                     }
-                    print(PUtility.DataFullR("CASH                   ", 20) + PUtility.DataFull(IntFmt.format(frec.CashCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Cash), 13));
+                    print(pUtility.DataFullR("CASH                   ", 20) + pUtility.DataFull(IntFmt.format(frec.CashCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Cash), 13));
                     String[] credit = credit(macNo);
                     if (!credit.equals("")) {
                         String cd = credit[0];
                         String am = credit[1];
-                        print(PUtility.DataFullR("CRADIT                 ", 20) + PUtility.DataFull(cd, 6) + PUtility.DataFull(am, 13));
+                        print(pUtility.DataFullR("CRADIT                 ", 20) + pUtility.DataFull(cd, 6) + pUtility.DataFull(am, 13));
                         List<String[]> list = creName(macNo);
                         for (int i = 0; i < list.size(); i++) {
                             String[] CreName = (String[]) list.get(i);
@@ -2886,46 +2883,46 @@ public class PPrint {
                             String name = CreName[0];
                             String num = CreName[1];
                             String amt = CreName[2];
-                            print(" " + PUtility.DataFull(name, 6) + PUtility.DataFull(("" + num), 18) + PUtility.DataFull(amt, 13));
+                            print(" " + pUtility.DataFull(name, 6) + pUtility.DataFull(("" + num), 18) + pUtility.DataFull(amt, 13));
                         }
                     }
                     if (frec.ArPaymentCnt > 0) {
-                        print(PUtility.DataFullR("AR.                    ", 20) + PUtility.DataFull(IntFmt.format(frec.ArPaymentCnt), 6) + PUtility.DataFull(DecFmt.format(frec.ArPayment), 13));
+                        print(pUtility.DataFullR("AR.                    ", 20) + pUtility.DataFull(IntFmt.format(frec.ArPaymentCnt), 6) + pUtility.DataFull(DecFmt.format(frec.ArPayment), 13));
                     }
                     if (CrArray != null) {
                         int ArraySize = CrArray.length;
                         for (int i = 0; i < ArraySize; i++) {
-                            print(PUtility.DataFullR(CrArray[i].CrName + "                     ", 20) + PUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + PUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13));
+                            print(pUtility.DataFullR(CrArray[i].CrName + "                     ", 20) + pUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + pUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13));
                         }
                     }
                     if (frec.Paid_In > 0) {
-                        print(PUtility.DataFullR("FLOAT IN              ", 20) + PUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Paid_In), 13));
+                        print(pUtility.DataFullR("FLOAT IN              ", 20) + pUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Paid_In), 13));
                     }
                     if (frec.Paid_Out > 0) {
-                        print(PUtility.DataFullR("FLOAT OUT             ", 20) + PUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Paid_Out), 13));
+                        print(pUtility.DataFullR("FLOAT OUT             ", 20) + pUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Paid_Out), 13));
                     }
                     double in = frec.Paid_In;
                     double out = frec.Paid_Out;
                     print("");
-                    print(PUtility.DataFullR("CASH IN DRAWER        ", 20) + PUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19));
+                    print(pUtility.DataFullR("CASH IN DRAWER        ", 20) + pUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19));
                     print("========================================");
-                    print(PUtility.DataFullR("Bank In              ", 20) + PUtility.DataFull(DecFmt.format(frec.Cash), 19));
+                    print(pUtility.DataFullR("Bank In              ", 20) + pUtility.DataFull(DecFmt.format(frec.Cash), 19));
                     print("========================================");
-                    print(PUtility.DataFullR("Vat                  ", 20) + PUtility.DataFull(DecFmt.format(frec.VatAmt), 19));
-                    print(PUtility.DataFullR("Net-Sales              ", 20) + PUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19));
+                    print(pUtility.DataFullR("Vat                  ", 20) + pUtility.DataFull(DecFmt.format(frec.VatAmt), 19));
+                    print(pUtility.DataFullR("Net-Sales              ", 20) + pUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19));
                     print("----------------------------------------");
-                    print(PUtility.DataFullR("Customer             ", 20) + PUtility.DataFull(IntFmt.format(frec.Customer), 6));
-                    print(PUtility.DataFullR("MGR Refund           ", 20) + PUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + PUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13));
-                    print(PUtility.DataFullR("MGR Void             ", 20) + PUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + PUtility.DataFull(DecFmt.format(frec.VoidValue), 13));
+                    print(pUtility.DataFullR("Customer             ", 20) + pUtility.DataFull(IntFmt.format(frec.Customer), 6));
+                    print(pUtility.DataFullR("MGR Refund           ", 20) + pUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + pUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13));
+                    print(pUtility.DataFullR("MGR Void             ", 20) + pUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + pUtility.DataFull(DecFmt.format(frec.VoidValue), 13));
                     print("----------------------------------------");
-                    print(PUtility.DataFullR("Docket               ", 20) + PUtility.DataFull(IntFmt.format(frec.CntBill), 6));
+                    print(pUtility.DataFullR("Docket               ", 20) + pUtility.DataFull(IntFmt.format(frec.CntBill), 6));
                     print("  Start Docket   " + frec.StBill + "   To    " + frec.SpBill);
                     print("========================================");
                     print("SaleType     Docket    CC         Amount");
                     print("========================================");
-                    print("Dine-In    " + PUtility.DataFull(IntFmt.format(frec.Eat_In_Cnt), 6) + PUtility.DataFull(IntFmt.format(frec.Eat_In_Cust), 8) + PUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13));
-                    print("Take Away  " + PUtility.DataFull(IntFmt.format(frec.Take_AwayCnt), 6) + PUtility.DataFull(IntFmt.format(frec.Take_AwayCust), 8) + PUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13));
-                    print("Delivery   " + PUtility.DataFull(IntFmt.format(frec.DeliveryCnt), 6) + PUtility.DataFull(IntFmt.format(frec.DeliveryCust), 8) + PUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13));
+                    print("Dine-In    " + pUtility.DataFull(IntFmt.format(frec.Eat_In_Cnt), 6) + pUtility.DataFull(IntFmt.format(frec.Eat_In_Cust), 8) + pUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13));
+                    print("Take Away  " + pUtility.DataFull(IntFmt.format(frec.Take_AwayCnt), 6) + pUtility.DataFull(IntFmt.format(frec.Take_AwayCust), 8) + pUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13));
+                    print("Delivery   " + pUtility.DataFull(IntFmt.format(frec.DeliveryCnt), 6) + pUtility.DataFull(IntFmt.format(frec.DeliveryCust), 8) + pUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13));
                     print("========================================");
                     print("");
                     print("");
@@ -2934,7 +2931,7 @@ public class PPrint {
                     print("              ***Format***");
                     print("");
                     print("");
-                    print("     " + PUtility.DataFullR(" DineIn", 10) + PUtility.DataFullR("   TakeAway", 16) + PUtility.DataFullR("Delivery", 18));
+                    print("     " + pUtility.DataFullR(" DineIn", 10) + pUtility.DataFullR("   TakeAway", 16) + pUtility.DataFullR("Delivery", 18));
                     print("");
                     print("Gross Sales");
                     print("Net Sales");
@@ -2943,12 +2940,12 @@ public class PPrint {
                     print("AVG/Dock");
                     print("AVG/Head");
                     print("----------------------------------------");
-                    print("" + PUtility.DataFull(DecFmt.format(totalE), 10) + " " + PUtility.DataFull(DecFmt.format(totalT), 14) + "" + PUtility.DataFull(DecFmt.format(totalD), 15));
-                    print("" + PUtility.DataFull(DecFmt.format(nettotalE), 10) + " " + PUtility.DataFull(DecFmt.format(nettotalT), 14) + "" + PUtility.DataFull(DecFmt.format(nettotalD), 15));
-                    print("" + PUtility.DataFull(IntFmt.format(countBillE), 10) + " " + PUtility.DataFull(IntFmt.format(countBillT), 14) + "" + PUtility.DataFull(IntFmt.format(countBillD), 15));
-                    print("" + PUtility.DataFull(DecFmt.format(countCCE), 10) + " " + PUtility.DataFull(DecFmt.format(countCCT), 14) + "" + PUtility.DataFull(DecFmt.format(countCCD), 15));
-                    print("" + PUtility.DataFull(DecFmt.format(AVG_DockE), 10) + " " + PUtility.DataFull(DecFmt.format(AVG_DockT), 14) + "" + PUtility.DataFull(DecFmt.format(AVG_DockD), 15));
-                    print("" + PUtility.DataFull(DecFmt.format(AVG_CCE), 10) + " " + PUtility.DataFull(DecFmt.format(AVG_CCT), 14) + "" + PUtility.DataFull(DecFmt.format(AVG_CCD), 15));
+                    print("" + pUtility.DataFull(DecFmt.format(totalE), 10) + " " + pUtility.DataFull(DecFmt.format(totalT), 14) + "" + pUtility.DataFull(DecFmt.format(totalD), 15));
+                    print("" + pUtility.DataFull(DecFmt.format(nettotalE), 10) + " " + pUtility.DataFull(DecFmt.format(nettotalT), 14) + "" + pUtility.DataFull(DecFmt.format(nettotalD), 15));
+                    print("" + pUtility.DataFull(IntFmt.format(countBillE), 10) + " " + pUtility.DataFull(IntFmt.format(countBillT), 14) + "" + pUtility.DataFull(IntFmt.format(countBillD), 15));
+                    print("" + pUtility.DataFull(DecFmt.format(countCCE), 10) + " " + pUtility.DataFull(DecFmt.format(countCCT), 14) + "" + pUtility.DataFull(DecFmt.format(countCCD), 15));
+                    print("" + pUtility.DataFull(DecFmt.format(AVG_DockE), 10) + " " + pUtility.DataFull(DecFmt.format(AVG_DockT), 14) + "" + pUtility.DataFull(DecFmt.format(AVG_DockD), 15));
+                    print("" + pUtility.DataFull(DecFmt.format(AVG_CCE), 10) + " " + pUtility.DataFull(DecFmt.format(AVG_CCT), 14) + "" + pUtility.DataFull(DecFmt.format(AVG_CCD), 15));
                     print("");
                     print("----------------------------------------");
                     print("");
@@ -3068,37 +3065,36 @@ public class PPrint {
             t += ("colspan=2 align=left><font face=Angsana New size=2>" + "TOTAL-SALES" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Dept_Sum) + TAB + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=====================================" + "_");
             if (frec.Charge > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Charge   Credit", 20) + PUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Charge), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Charge   Credit", 20) + pUtility.DataFull(IntFmt.format(frec.ChargeCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Charge), 13) + "_");
             }
             if (frec.Vip_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Member", 20) + PUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Member", 20) + pUtility.DataFull(IntFmt.format(frec.Vip_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Vip_Disc), 13) + "_");
             }
             if (frec.Fast_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Festival", 20) + PUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Festival", 20) + pUtility.DataFull(IntFmt.format(frec.Fast_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Fast_Disc), 13) + "_");
             }
             if (frec.Emp_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Employ", 20) + PUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Employ", 20) + pUtility.DataFull(IntFmt.format(frec.Emp_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Emp_Disc), 13) + "_");
             }
             if (frec.Train_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Staff Discound", 20) + PUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Train_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Staff Discound", 20) + pUtility.DataFull(IntFmt.format(frec.Train_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Train_Disc), 13) + "_");
             }
             if (frec.Sub_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Cupon", 20) + PUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Cupon", 20) + pUtility.DataFull(IntFmt.format(frec.Sub_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Sub_Disc), 13) + "_");
             }
             if (frec.Gen_Refund > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Bath.", 20) + PUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Bath.", 20) + pUtility.DataFull(IntFmt.format(frec.Gen_RefundCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Gen_Refund), 13) + "_");
             }
             if (frec.Promotion > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Promotion", 20) + PUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Promotion), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Promotion", 20) + pUtility.DataFull(IntFmt.format(frec.PromotionCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Promotion), 13) + "_");
             }
             if (frec.Spacial > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Special", 20) + PUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Spacial), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Special", 20) + pUtility.DataFull(IntFmt.format(frec.SpacialCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Spacial), 13) + "_");
             }
             if (frec.Item_Disc > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Item", 20) + pUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Item_Disc), 13) + "_");
             }
             if (frec.Cupon_Disc > 0) {
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
@@ -3114,7 +3110,7 @@ public class PPrint {
                         double amt = rs.getDouble("amt");
                         String quan = rs.getString("quan");
                         String name = rs.getString("name");
-                        t += (Space + "align=left><font face=Angsana New size=2>" + PUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
+                        t += (Space + "align=left><font face=Angsana New size=2>" + pUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
                     }
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
@@ -3127,7 +3123,7 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
             t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Gross-Sales" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Dept_Sum - totalDiscount) + TAB + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Service Charge" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Service), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Service Charge" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Service), 19) + TAB + "_");
             if (frec.Gift > 0) {
                 t += ("align=left><font face=Angsana New size=2>" + "Gift Voucher" + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(frec.GiftCnt) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Gift) + TAB + "_");
             }
@@ -3135,11 +3131,11 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "Entertain" + IntFmt.format(frec.BillEntertain) + DecFmt.format(frec.Entertain) + TAB + "_");
             }
             if (CONFIG.getP_VatType().contains("I")) {
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
             }
             if (CONFIG.getP_VatType().contains("E")) {
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net (มูลค่า)" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net-Sales" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Net_Sale), 19) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net (มูลค่า)" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Net_Sale - NetSale_VatExclude), 19) + TAB + "_");
             }
             t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Round Total" + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.B_NetDiff) + TAB + "_");
             t += ("align=left><font face=Angsana New size=2>" + "CASH" + "</td><td align=right><font face=Angsana New size=2>" + IntFmt.format(frec.CashCnt) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(frec.Cash) + TAB + "_");
@@ -3154,7 +3150,7 @@ public class PPrint {
                 if (am == null) {
                     am = "0";
                 }
-                t += ("align=left><font face=Angsana New size=2>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(cd, 6) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(Double.parseDouble(am)) + TAB + "_");
+                t += ("align=left><font face=Angsana New size=2>" + "CRADIT" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(cd, 6) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(Double.parseDouble(am)) + TAB + "_");
                 List<String[]> list = creName(macNo);
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "รายการรับชำระเครดิต" + "_");
                 for (int i = 0; i < list.size(); i++) {
@@ -3164,7 +3160,7 @@ public class PPrint {
                     String num = CreName[1];
                     String amt = CreName[2];
                     double amt1 = Double.parseDouble(amt);
-                    t += ("align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(name, 16) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(("" + num), 8) + "</td><td  align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(amt1), 13)) + TAB + "_";
+                    t += ("align=left><font face=Angsana New size=2>" + TAB + pUtility.DataFull(name, 16) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(("" + num), 8) + "</td><td  align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(amt1), 13)) + TAB + "_";
                 }
             }
             if (frec.ArPaymentCnt > 0) {
@@ -3173,36 +3169,36 @@ public class PPrint {
             if (CrArray != null) {
                 int ArraySize = CrArray.length;
                 for (int i = 0; i < ArraySize; i++) {
-                    t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + PUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13) + TAB + "_");
+                    t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + pUtility.DataFull(IntFmt.format(CrArray[i].CrCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(CrArray[i].CrAmt), 13) + TAB + "_");
                 }
             }
 
             t += ("colspan=3 align=center><font face=Angsana New size=2>_");
             if (frec.Paid_In > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT IN" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Paid_In), 13) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT IN" + Space + pUtility.DataFull(IntFmt.format(frec.Paid_InCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Paid_In), 13) + TAB + "_");
             }
             if (frec.Paid_Out > 0) {
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT OUT" + Space + PUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Paid_Out), 13) + TAB + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "FLOAT OUT" + Space + pUtility.DataFull(IntFmt.format(frec.Paid_OutCnt), 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Paid_Out), 13) + TAB + "_");
             }
             double in = frec.Paid_In;
             double out = frec.Paid_Out;
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "CASH IN DRAWER" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Bank In" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Cash), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "CASH IN DRAWER" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Cash + in - out), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Bank In" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Cash), 19) + TAB + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net Total : " + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Net_Sale + (frec.B_NetDiff * -1)), 19) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Vat" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.VatAmt), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Net Total : " + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Net_Sale + (frec.B_NetDiff * -1)), 19) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Vat" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.VatAmt), 19) + TAB + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "-------------------------------------------------" + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Customer" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(frec.Customer), 6) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Refund" + Space + PUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + Space + "Doc." + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Void" + Space + TAB + PUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + Space + "Items." + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.VoidValue), 13) + TAB + "_");
-            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Total Docket" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(frec.CntBill), 6) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Customer" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(frec.Customer), 6) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Refund" + Space + pUtility.DataFull(IntFmt.format(frec.CntBillVoid), 6) + Space + "Doc." + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.AmtBillVoid), 13) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "MGR Void" + Space + TAB + pUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + Space + "Items." + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.VoidValue), 13) + TAB + "_");
+            t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Total Docket" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(frec.CntBill), 6) + TAB + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Start Docket" + Space + frec.StBill + Space + "To.." + Space + frec.SpBill + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "SaleType" + TAB + TAB + "Docket" + TAB + TAB + "CC" + TAB + "Amount" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Dine - In" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Take Away" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Delivery" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Dine - In" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Take Away" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
+            t += ("align=left><font face=Angsana New size=2>" + "Delivery" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "Analysts" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>_");
@@ -3276,10 +3272,10 @@ public class PPrint {
                     if (GArray[0].S_Qty > 0) {
                         for (int i = 0; i < ArraySize; i++) {
 
-                            print(PUtility.DataFullR(GArray[i].GroupCode, 4) + "  " + GArray[i].GroupName);
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].E_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].E_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].T_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].T_Amt), 12));
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].D_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].D_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].P_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].P_Amt), 12));
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].W_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].W_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].S_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].S_Amt), 12));
+                            print(pUtility.DataFullR(GArray[i].GroupCode, 4) + "  " + GArray[i].GroupName);
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].E_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].E_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].T_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].T_Amt), 12));
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].D_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].D_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].P_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].P_Amt), 12));
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].W_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].W_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].S_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].S_Amt), 12));
 
                             SumEQty = SumEQty + GArray[i].E_Qty;
                             SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -3297,9 +3293,9 @@ public class PPrint {
                     }
                     print("----------------------------------------");
                     print("***Subtotal***");
-                    print(PUtility.DataFull(IntFmt.format(SumEQty), 6) + PUtility.DataFull(DecFmt.format(SumEAmt), 12) + PUtility.DataFull(IntFmt.format(SumTQty), 6) + PUtility.DataFull(DecFmt.format(SumTAmt), 12));
-                    print(PUtility.DataFull(IntFmt.format(SumDQty), 6) + PUtility.DataFull(DecFmt.format(SumDAmt), 12) + PUtility.DataFull(IntFmt.format(SumPQty), 6) + PUtility.DataFull(DecFmt.format(SumPAmt), 12));
-                    print(PUtility.DataFull(IntFmt.format(SumWQty), 6) + PUtility.DataFull(DecFmt.format(SumWAmt), 12) + PUtility.DataFull(IntFmt.format(SumSQty), 6) + PUtility.DataFull(DecFmt.format(SumSAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumEQty), 6) + pUtility.DataFull(DecFmt.format(SumEAmt), 12) + pUtility.DataFull(IntFmt.format(SumTQty), 6) + pUtility.DataFull(DecFmt.format(SumTAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumDQty), 6) + pUtility.DataFull(DecFmt.format(SumDAmt), 12) + pUtility.DataFull(IntFmt.format(SumPQty), 6) + pUtility.DataFull(DecFmt.format(SumPAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumWQty), 6) + pUtility.DataFull(DecFmt.format(SumWAmt), 12) + pUtility.DataFull(IntFmt.format(SumSQty), 6) + pUtility.DataFull(DecFmt.format(SumSAmt), 12));
 
                     print("----------------------------------------");
                     print("");
@@ -3375,10 +3371,10 @@ public class PPrint {
         t += "colspan=3 align=Center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
         if (GArray[0].S_Qty > 0) {
             for (int i = 0; i < ArraySize; i++) {
-                t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullR(GArray[i].GroupCode, 4) + Space + Space + GArray[i].GroupName + "_");
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + (pUtility.DataFullR(GArray[i].GroupCode, 4) + Space + Space + GArray[i].GroupName + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
 
                 SumEQty = SumEQty + GArray[i].E_Qty;
                 SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -3396,9 +3392,9 @@ public class PPrint {
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------" + "_");
         t += "align=center><font face=Angsana New size=2>" + ("***Subtotal***" + "_");
-        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 12) + "_");
-        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 12) + "_");
-        t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 12) + "_");
+        t += "align=left><font face=Angsana New size=2>" + (pUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumEAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(SumTQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumTAmt), 12) + "_");
+        t += "align=left><font face=Angsana New size=2>" + (pUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumDAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(SumPQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumPAmt), 12) + "_");
+        t += "align=left><font face=Angsana New size=2>" + (pUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumWAmt), 12) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(SumSQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumSAmt), 12) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
         t += "align=center><font face=Angsana New size=2>" + "_";
 
@@ -3460,14 +3456,14 @@ public class PPrint {
                     if (GArray[0].S_Qty > 0) {
                         for (int i = 0; i < ArraySize; i++) {
                             if (!GArray[i].GroupCode.equals(TempDept)) {
-                                print(PUtility.DataFullR(GArray[i].GroupCode, 4) + "  " + GArray[i].GroupName);
+                                print(pUtility.DataFullR(GArray[i].GroupCode, 4) + "  " + GArray[i].GroupName);
                                 TempDept = GArray[i].GroupCode;
                             }
 
-                            print(PUtility.DataFullR(GArray[i].PCode + "  " + GArray[i].PName, 38));
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].E_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].E_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].T_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].T_Amt), 12));
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].D_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].D_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].P_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].P_Amt), 12));
-                            print(PUtility.DataFull(IntFmt.format(GArray[i].W_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].W_Amt), 12) + PUtility.DataFull(IntFmt.format(GArray[i].S_Qty), 6) + PUtility.DataFull(DecFmt.format(GArray[i].S_Amt), 12));
+                            print(pUtility.DataFullR(GArray[i].PCode + "  " + GArray[i].PName, 38));
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].E_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].E_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].T_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].T_Amt), 12));
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].D_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].D_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].P_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].P_Amt), 12));
+                            print(pUtility.DataFull(IntFmt.format(GArray[i].W_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].W_Amt), 12) + pUtility.DataFull(IntFmt.format(GArray[i].S_Qty), 6) + pUtility.DataFull(DecFmt.format(GArray[i].S_Amt), 12));
 
                             SumEQty = SumEQty + GArray[i].E_Qty;
                             SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -3485,9 +3481,9 @@ public class PPrint {
                     }
                     print("----------------------------------------");
                     print("***Subtotal***");
-                    print(PUtility.DataFull(IntFmt.format(SumEQty), 6) + PUtility.DataFull(DecFmt.format(SumEAmt), 12) + PUtility.DataFull(IntFmt.format(SumTQty), 6) + PUtility.DataFull(DecFmt.format(SumTAmt), 12));
-                    print(PUtility.DataFull(IntFmt.format(SumDQty), 6) + PUtility.DataFull(DecFmt.format(SumDAmt), 12) + PUtility.DataFull(IntFmt.format(SumPQty), 6) + PUtility.DataFull(DecFmt.format(SumPAmt), 12));
-                    print(PUtility.DataFull(IntFmt.format(SumWQty), 6) + PUtility.DataFull(DecFmt.format(SumWAmt), 12) + PUtility.DataFull(IntFmt.format(SumSQty), 6) + PUtility.DataFull(DecFmt.format(SumSAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumEQty), 6) + pUtility.DataFull(DecFmt.format(SumEAmt), 12) + pUtility.DataFull(IntFmt.format(SumTQty), 6) + pUtility.DataFull(DecFmt.format(SumTAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumDQty), 6) + pUtility.DataFull(DecFmt.format(SumDAmt), 12) + pUtility.DataFull(IntFmt.format(SumPQty), 6) + pUtility.DataFull(DecFmt.format(SumPAmt), 12));
+                    print(pUtility.DataFull(IntFmt.format(SumWQty), 6) + pUtility.DataFull(DecFmt.format(SumWAmt), 12) + pUtility.DataFull(IntFmt.format(SumSQty), 6) + pUtility.DataFull(DecFmt.format(SumSAmt), 12));
 
                     print("----------------------------------------");
                     print("");
@@ -3568,16 +3564,16 @@ public class PPrint {
         if (GArray[0].S_Qty > 0) {
             for (int i = 0; i < ArraySize; i++) {
                 if (!GArray[i].GroupCode.equals(TempDept)) {
-                    t += "colspan=3 align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(GArray[i].GroupCode, 4) + Space + GArray[i].GroupName) + "_";
+                    t += "colspan=3 align=left><font face=Angsana New size=2>" + (pUtility.DataFullSpace(GArray[i].GroupCode, 4) + Space + GArray[i].GroupName) + "_";
                     TempDept = GArray[i].GroupCode;
                 }
 
 //                t += "align=left><font face=Angsana New size=2>" + SubStringText(GArray[i].PCode + Space + GArray[i].PName, 33) + "_";
                 t += "align=left><font face=Angsana New size=2>" + subStringText(GArray[i].PCode, 33) + "_";
                 t += "align=left><font face=Angsana New size=2>" + subStringText(Space + GArray[i].PName, 33) + "_";
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
-                t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + PUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].D_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].D_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].P_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].P_Amt), 10) + "_");
+                t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].W_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].W_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].S_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].S_Amt), 10) + "_");
 
                 SumEQty = SumEQty + GArray[i].E_Qty;
                 SumEAmt = SumEAmt + GArray[i].E_Amt;
@@ -3595,9 +3591,9 @@ public class PPrint {
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("***Subtotal***") + "_";
-        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumEAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumTQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumTAmt), 10)) + "_";
-        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumDAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumPQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumPAmt), 10)) + "_";
-        t += "align=left><font face=Angsana New size=2>" + TAB + (PUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + PUtility.DataFull(IntFmt.format(SumSQty), 3) + PUtility.DataFullSpace(DecFmt.format(SumSAmt), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(SumEQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumEAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(SumTQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumTAmt), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(SumDQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumDAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(SumPQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumPAmt), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(SumSQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumSAmt), 10)) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "_";
         PrintDriver pd = new PrintDriver();
@@ -3657,13 +3653,13 @@ public class PPrint {
                                 }
                                 if (CONFIG.getP_CodePrn().equals("Y")) {
                                     print(bean.getR_PName());
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 } else {
                                     int sizeNew = 20;
                                     if (bean.getR_PName().length() > 20) {
                                         sizeNew = 21;
                                     }
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 }
                                 selectStye(13);
                             } else {
@@ -3675,39 +3671,39 @@ public class PPrint {
                                 if (bean.getR_PrAmt() == 0) {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
                                         int sizeNew = 20;
                                         if (bean.getR_PName().length() > 20) {
                                             sizeNew = 21;
                                         }
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                 } else {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
                                         int sizeNew = 20;
                                         if (bean.getR_PName().length() > 20) {
                                             sizeNew = 21;
                                         }
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), sizeNew) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                     if (bean.getR_PrType().equals("-P")) {
                                         if (bean.getR_PrAmt() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode()), 20));
+                                            print("   **Promotion  " + bean.getR_PrCode() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode()), 20));
                                         }
                                         if (bean.getR_PrAmt2() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode2()), 20));
+                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode2()), 20));
                                         }
                                     }
                                     if (bean.getR_PrType().equals("-I")) {
                                         if (bean.getR_PrDisc() != 0) {
-                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
+                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
                                         }
                                         if (bean.getR_PrAmt2() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength));
+                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength));
                                         }
                                     }
                                 }
@@ -3715,51 +3711,50 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5));
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + pUtility.DataFullR(tBean.getB_Table(), 5));
                         print("----------------------------------------");
-                        print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
+                        print("     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     }
 
                     print("----------------------------------------");
 //                print("Sub-TOTAL   " + "(Item" + PUtility.DataFull(IntFmt.format(ItemCnt), QtyLength) + " )     " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
-                    print("Sub-TOTAL         " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
+                    print("Sub-TOTAL         " + pUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     print("COMP NO:" + PublicVar._User + " Mac:" + Value.MACNO);
                     if (tBean.getB_ProDiscAmt() > 0) {
-                        print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_ProDiscAmt()), AmtLength));
+                        print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_ProDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_SpaDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_SpaDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_SpaDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_MemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(tBean.getB_MemDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getB_MemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(tBean.getB_MemDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getB_MemDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_FastDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(tBean.getB_FastDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getB_FastDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(tBean.getB_FastDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getB_FastDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_EmpDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(tBean.getB_EmpDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getB_EmpDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(tBean.getB_EmpDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getB_EmpDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_TrainDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(tBean.getB_TrainDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getB_TrainDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(tBean.getB_TrainDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getB_TrainDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_SubDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดคูปอง(Cupon)    ", SubLength2) + PUtility.DataFull(tBean.getB_SubDisc(), 8) + PUtility.DataFull(DecFmt.format(tBean.getB_SubDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดคูปอง(Cupon)    ", SubLength2) + pUtility.DataFull(tBean.getB_SubDisc(), 8) + pUtility.DataFull(DecFmt.format(tBean.getB_SubDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_SubDiscBath() > 0) {
-                        print("     " + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_SubDiscBath()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด(บาท)..........", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_SubDiscBath()), AmtLength));
                     }
                     if (tBean.getB_ItemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_ItemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_CuponDiscAmt() > 0) {
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
-                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                print("     " + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
                                 String SMS_Code = rs.getString("sms_code");
                                 if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
                                     print("     " + "SMS CODE " + SMS_Code);
@@ -3775,36 +3770,35 @@ public class PPrint {
                         }
                     }
                     if (tBean.getB_ServiceAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(tBean.getB_ServiceAmt()), 9));
+                        print("     " + pUtility.DataFullR("ค่าบริการ (Service)     ", 23) + pUtility.DataFull(DecFmt.format(tBean.getB_ServiceAmt()), 9));
                     }
 
                     if (tBean.getB_Earnest() > 0) {
-                        print("     " + PUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + PUtility.DataFull(DecFmt.format(tBean.getB_Earnest()), 9));
+                        print("     " + pUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + pUtility.DataFull(DecFmt.format(tBean.getB_Earnest()), 9));
                     }
                     if (CONFIG.getP_VatType().equals("I")) {
                         //Print_Str(" ");
                         selectStye(3);
-                        print("TOTAL " + PUtility.DataFull(DecFmt.format(tBean.getB_NetTotal()), AmtLength));
+                        print("TOTAL " + pUtility.DataFull(DecFmt.format(tBean.getB_NetTotal()), AmtLength));
                         selectStye(1);
                         if (CONFIG.getP_VatPrn().equals("Y")) {
-                            print(PUtility.DataFull("              Vat...", 43) + PUtility.DataFull(DecFmt.format(tBean.getB_Vat()), AmtLength));
+                            print(pUtility.DataFull("              Vat...", 43) + pUtility.DataFull(DecFmt.format(tBean.getB_Vat()), AmtLength));
                         }
                     } else {
-                        print(PUtility.DataFull("      Net-Amount ", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_NetVat() + tBean.getB_NetNonVat()), AmtLength));
-                        print(PUtility.DataFull("      Vat....... ", SubLength) + PUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + PUtility.DataFull(DecFmt.format(tBean.getB_Vat()), AmtLength));
+                        print(pUtility.DataFull("      Net-Amount ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_NetVat() + tBean.getB_NetNonVat()), AmtLength));
+                        print(pUtility.DataFull("      Vat....... ", SubLength) + pUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + pUtility.DataFull(DecFmt.format(tBean.getB_Vat()), AmtLength));
                         print("VAT INCLUDED");
                     }
                     if (tBean.getB_GiftVoucher() > 0) {
-                        print("     " + PUtility.DataFullR("บัตรกำนัล..............", SubLength) + PUtility.DataFull(DecFmt.format(tBean.getB_GiftVoucher()), AmtLength));
+                        print("     " + pUtility.DataFullR("บัตรกำนัล..............", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_GiftVoucher()), AmtLength));
 
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
-                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
+                                print("   " + pUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + pUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
                             stmt.close();
@@ -3816,12 +3810,11 @@ public class PPrint {
                         }
                     }
                     if (tBean.getB_PayAmt() > 0) {
-                        print("เงินสด  : " + PUtility.DataFull(DecFmt.format(tBean.getB_PayAmt()), AmtLength) + "  ทอน : " + PUtility.DataFull(DecFmt.format(tBean.getB_Ton()), AmtLength));
+                        print("เงินสด  : " + pUtility.DataFull(DecFmt.format(tBean.getB_PayAmt()), AmtLength) + "  ทอน : " + pUtility.DataFull(DecFmt.format(tBean.getB_Ton()), AmtLength));
                     }
                     if (tBean.getB_CrAmt1() > 0) {
                         //get credit name
                         String crName = "";
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
@@ -3840,8 +3833,8 @@ public class PPrint {
                         }
 
                         print(tBean.getB_CrCode1() + "  " + crName);
-                        print("XXXXXXXXXXX" + PUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + "  " + tBean.getB_AppCode1());
-                        print("Credit Payment               " + PUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength));
+                        print("XXXXXXXXXXX" + pUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + "  " + tBean.getB_AppCode1());
+                        print("Credit Payment               " + pUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength));
                     }
                     print("----------------------------------------");
                     selectStye(5);
@@ -3999,15 +3992,15 @@ public class PPrint {
                                     t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**Promotion  " + bean.getR_PrCode() + "_");
                                 }
                                 if (bean.getR_PrAmt2() > 0) {
-                                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode2()), 20) + "_");
+                                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode2()), 20) + "_");
                                 }
                             }
                             if (bean.getR_PrType().equals("-I")) {
                                 if (bean.getR_PrDisc() != 0) {
-                                    t += ("colspan=3 alin=left><font face=Angsana New size=2>" + "   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%" + "_");
+                                    t += ("colspan=3 alin=left><font face=Angsana New size=2>" + "   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%" + "_");
                                 }
                                 if (bean.getR_PrAmt2() > 0) {
-                                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength) + "_");
+                                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength) + "_");
                                 }
                             }
                         }
@@ -4034,9 +4027,9 @@ public class PPrint {
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
                 Date dateP = new Date();
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + PUtility.DataFullR(tBean.getB_Table(), 5) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "TABLE  " + pUtility.DataFullR(tBean.getB_Table(), 5) + "_");
                 t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------");
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + "</td></font><td align=right><font face=Angsana New size=2>-" + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength) + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + "</td></font><td align=right><font face=Angsana New size=2>-" + pUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength) + "_");
             }
 
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -4071,14 +4064,13 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_ItemDiscAmt()) + "-_");
             }
             if (tBean.getB_CuponDiscAmt() > 0) {
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
                     ResultSet rs = stmt.executeQuery(CheckCoupon);
                     while (rs.next()) {
-                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                     }
                     rs.close();
                     stmt.close();
@@ -4108,14 +4100,13 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             if (tBean.getB_GiftVoucher() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "บัตรกำนัล...." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_GiftVoucher()) + "_");
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     Statement stmt = mysql.getConnection().createStatement();
                     String CheckGift = "select * from t_gift where (refno='" + RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
                     while (rs.next()) {
-                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFull(rs.getString("giftbarcode") + rs.getString("giftno"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength) + "_");
+                        t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + pUtility.DataFull(rs.getString("giftbarcode") + rs.getString("giftno"), 25) + "@" + pUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength) + "_");
                     }
                     rs.close();
                     stmt.close();
@@ -4127,12 +4118,11 @@ public class PPrint {
                 }
             }
             if (tBean.getB_PayAmt() > 0) {
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Cash : " + PUtility.DataFull(DecFmt.format(tBean.getB_PayAmt()), AmtLength) + Space + "Change : " + PUtility.DataFull(DecFmt.format(tBean.getB_Ton()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Cash : " + pUtility.DataFull(DecFmt.format(tBean.getB_PayAmt()), AmtLength) + Space + "Change : " + pUtility.DataFull(DecFmt.format(tBean.getB_Ton()), AmtLength) + "_");
             }
             if (tBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                MySQLConnect mysql = new MySQLConnect();
                 mysql.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
@@ -4151,8 +4141,8 @@ public class PPrint {
                 }
 
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + tBean.getB_CrCode1() + Space + crName + "_");
-                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "XXXXXXXXXXX" + PUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + TAB + tBean.getB_AppCode1() + "_");
-                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + PUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength) + "_");
+                t += ("colspan=3 align=left><font face=Angsana New size=2>" + "XXXXXXXXXXX" + pUtility.Addzero(tBean.getB_CardNo1(), 16).substring(12, 16) + TAB + tBean.getB_AppCode1() + "_");
+                t += ("colspan=2 align=left><font face=Angsana New size=2>" + "Credit Payment" + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(tBean.getB_CrAmt1()), AmtLength) + "_");
             }
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Receipt No: " + RefNo + "_");
@@ -4208,7 +4198,7 @@ public class PPrint {
                     print("REG ID :" + POSHW.getMacNo());
                     print("      ***บิลยกเลิกรายการขาย (Refund) ***");
                     print("Void User : " + PublicVar._User);
-                    print("Void Date/Time : " + PUtility.CurDate());
+                    print("Void Date/Time : " + pUtility.CurDate());
                     selectStye(3);
                     print("อ้างถึงใบเสร็จรับเงินเลขที่");
                     print(_RefNo);
@@ -4237,9 +4227,9 @@ public class PPrint {
                                 }
                                 if (CONFIG.getP_CodePrn().equals("Y")) {
                                     print(bean.getR_PName());
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 } else {
-                                    print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                    print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), 20) + "  " + pUtility.DataFull(IntFmt.format(-1 * bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(-1 * bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                 }
                                 selectStye(13);
                             } else {
@@ -4251,31 +4241,31 @@ public class PPrint {
                                 if (bean.getR_PrAmt() == 0) {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                 } else {
                                     if (CONFIG.getP_CodePrn().equals("Y")) {
                                         print(bean.getR_PName());
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PluCode(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     } else {
-                                        print(bean.getR_Normal() + VatStr + PUtility.DataFullR(bean.getR_PName(), 20) + "  " + PUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + PUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
+                                        print(bean.getR_Normal() + VatStr + pUtility.DataFullR(bean.getR_PName(), 20) + "  " + pUtility.DataFull(IntFmt.format(bean.getR_Quan()), QtyLength) + pUtility.DataFull(DecFmt.format(bean.getR_Total()), AmtLength) + bean.getR_ETD());
                                     }
                                     if (bean.getR_PrType().equals("-P")) {
                                         if (bean.getR_PrAmt() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode()), 20));
+                                            print("   **Promotion  " + bean.getR_PrCode() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode()), 20));
                                         }
                                         if (bean.getR_PrAmt2() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode2()), 20));
+                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode2()), 20));
                                         }
                                     }
                                     if (bean.getR_PrType().equals("-I")) {
                                         if (bean.getR_PrDisc() != 0) {
-                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
+                                            print("   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%");
                                         }
                                         if (bean.getR_PrAmt2() > 0) {
-                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength));
+                                            print("   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength));
                                         }
                                     }
                                 }
@@ -4285,49 +4275,48 @@ public class PPrint {
                         Date dateP = new Date();
                         print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
                         print("----------------------------------------");
-                        print("     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
+                        print("     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
                     print("----------------------------------------");
-                    print("Sub-TOTAL   " + "(Item" + PUtility.DataFull(IntFmt.format(ItemCnt), QtyLength) + " )     " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
+                    print("Sub-TOTAL   " + "(Item" + pUtility.DataFull(IntFmt.format(ItemCnt), QtyLength) + " )     " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     if (bBean.getB_ProDiscAmt() > 0) {
-                        print("    " + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength));
+                        print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_SpaDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_MemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(bBean.getB_MemDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(bBean.getB_MemDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_FastDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(bBean.getB_FastDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(bBean.getB_FastDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_EmpDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(bBean.getB_EmpDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(bBean.getB_EmpDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_TrainDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(bBean.getB_TrainDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(bBean.getB_TrainDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_SubDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(bBean.getB_SubDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_SubDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดคูปอง...........", SubLength2) + pUtility.DataFull(bBean.getB_SubDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_SubDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_SubDiscBath() > 0) {
-                        print("     " + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลด(บาท)..........", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), AmtLength));
                     }
                     if (bBean.getB_ItemDiscAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
+                        print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
                         /**
                          * * OPEN CONNECTION **
                          */
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
-                                print("     " + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
+                                print("     " + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
                                 String SMS_Code = rs.getString("sms_code");
                                 if ((SMS_Code != null) & (!SMS_Code.equals(""))) {
                                     print("     " + "SMS CODE " + SMS_Code);
@@ -4343,39 +4332,38 @@ public class PPrint {
                         }
                     }
                     if (bBean.getB_ServiceAmt() > 0) {
-                        print("     " + PUtility.DataFullR("ค่าบริการ (Service)     ", 23) + PUtility.DataFull(DecFmt.format(bBean.getB_ServiceAmt()), 9));
+                        print("     " + pUtility.DataFullR("ค่าบริการ (Service)     ", 23) + pUtility.DataFull(DecFmt.format(bBean.getB_ServiceAmt()), 9));
                     }
 
                     if (bBean.getB_Earnest() > 0) {
-                        print("     " + PUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + PUtility.DataFull(DecFmt.format(bBean.getB_Earnest()), 9));
+                        print("     " + pUtility.DataFullR("หักคืนเงินมัดจำ           ", 23) + pUtility.DataFull(DecFmt.format(bBean.getB_Earnest()), 9));
                     }
                     if (CONFIG.getP_VatType().equals("I")) {
                         //Print_Str(" ");
                         selectStye(3);
-                        print("TOTAL " + PUtility.DataFull(DecFmt.format(bBean.getB_NetTotal()), AmtLength));
+                        print("TOTAL " + pUtility.DataFull(DecFmt.format(bBean.getB_NetTotal()), AmtLength));
                         selectStye(1);
                         if (CONFIG.getP_VatPrn().equals("Y")) {
-                            print(PUtility.DataFull("              Vat...", 43) + PUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
+                            print(pUtility.DataFull("              Vat...", 43) + pUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
                         }
                     } else {
-                        print(PUtility.DataFull("      Net-Amount ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_NetVat() + bBean.getB_NetNonVat()), AmtLength));
-                        print(PUtility.DataFull("      Vat....... ", SubLength) + PUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + PUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
+                        print(pUtility.DataFull("      Net-Amount ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_NetVat() + bBean.getB_NetNonVat()), AmtLength));
+                        print(pUtility.DataFull("      Vat....... ", SubLength) + pUtility.DataFull(DecFmt.format(CONFIG.getP_Vat()), QtyLength) + "%" + pUtility.DataFull(DecFmt.format(bBean.getB_Vat()), AmtLength));
                         print("VAT INCLUDED");
                     }
                     if (bBean.getB_GiftVoucher() > 0) {
-                        print("     " + PUtility.DataFullR("บัตรกำนัล..............", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
+                        print("     " + pUtility.DataFullR("บัตรกำนัล..............", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
                         /**
                          * * OPEN CONNECTION **
                          */
-                        MySQLConnect mysql = new MySQLConnect();
                         mysql.open(this.getClass());
                         try {
                             Statement stmt = mysql.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
-                                print("   " + PUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + PUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
+                                print("   " + pUtility.DataFull(rs.getString("giftbarcode"), 25) + "@" + pUtility.DataFull(DecFmt.format(rs.getDouble("giftamt")), AmtLength));
                             }
                             rs.close();
                             stmt.close();
@@ -4387,12 +4375,12 @@ public class PPrint {
                         }
                     }
                     if (bBean.getB_PayAmt() > 0) {
-                        print("เงินสด  : " + PUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + "  ทอน : " + PUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength));
+                        print("เงินสด  : " + pUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + "  ทอน : " + pUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength));
                     }
 
                     print("----------------------------------------");
                     selectStye(5);
-                    print("TABLE  " + PUtility.DataFull(bBean.getB_Table(), 5) + "   จำนวนลูกค้า : " + IntFmt.format(bBean.getB_Cust()) + " คน");
+                    print("TABLE  " + pUtility.DataFull(bBean.getB_Table(), 5) + "   จำนวนลูกค้า : " + IntFmt.format(bBean.getB_Cust()) + " คน");
                     selectStye(1);
 
                     print(" ");
@@ -4465,7 +4453,7 @@ public class PPrint {
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "***" + Space + "บิลยกเลิกรายการขาย" + "***" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "***" + Space + "(Refund)***" + "_");
         t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Void User : " + Space + ThaiUtil.ASCII2Unicode(bBean.getB_VoidUser()) + "_");
-        t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Void Date/Time : " + PUtility.CurDate() + "_");
+        t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Void Date/Time : " + pUtility.CurDate() + "_");
         t += ("colspan=3 align=left><font face=Angsana New size=2>" + "อ้างถึงใบเสร็จรับเงินเลขที่_" + Space + _RefNo + "_");
         t += (">_");
         PublicVar.P_LineCount = 0;
@@ -4537,18 +4525,18 @@ public class PPrint {
                         }
                         if (bean.getR_PrType().equals("-P")) {
                             if (bean.getR_PrAmt() > 0) {
-                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode()), 20) + "_");
+                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode()), 20) + "_");
                             }
                             if (bean.getR_PrAmt2() > 0) {
-                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(PUtility.SeekPromotionName(bean.getR_PrCode2()), 20) + "_");
+                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(pUtility.SeekPromotionName(bean.getR_PrCode2()), 20) + "_");
                             }
                         }
                         if (bean.getR_PrType().equals("-I")) {
                             if (bean.getR_PrDisc() != 0) {
-                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Item-Discount " + bean.getR_PrCode() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%" + "_");
+                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Item-Discount " + bean.getR_PrCode() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrDisc() - bean.getR_Redule()), QtyLength) + "%" + "_");
                             }
                             if (bean.getR_PrAmt2() > 0) {
-                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + PUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength) + "_");
+                                t += ("colspan=3 align=center><font face=Angsana New size=2>" + "   **Promotion  " + bean.getR_PrCode2() + " " + pUtility.DataFull(DecFmt.format(bean.getR_PrAmt()), AmtLength) + "_");
                             }
                         }
                     }
@@ -4558,31 +4546,31 @@ public class PPrint {
             Date dateP = new Date();
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
-            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + PUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength) + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength) + "_");
         }
         if (bBean.getB_ProDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลด Promotion     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ProDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_SpaDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("Special Disc     ", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("Special Disc     ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_SpaDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_MemDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลดสมาชิก..........", SubLength2) + PUtility.DataFull(bBean.getB_MemDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลดสมาชิก..........", SubLength2) + pUtility.DataFull(bBean.getB_MemDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_MemDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_FastDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลดเทศกาล.........", SubLength2) + PUtility.DataFull(bBean.getB_FastDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลดเทศกาล.........", SubLength2) + pUtility.DataFull(bBean.getB_FastDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_FastDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_EmpDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลดพนักงาน.........", SubLength2) + PUtility.DataFull(bBean.getB_EmpDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลดพนักงาน.........", SubLength2) + pUtility.DataFull(bBean.getB_EmpDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_EmpDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_TrainDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลด Trainnee......", SubLength2) + PUtility.DataFull(bBean.getB_TrainDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลด Trainnee......", SubLength2) + pUtility.DataFull(bBean.getB_TrainDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_TrainDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_SubDiscAmt() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลดคูปอง...........", SubLength2) + PUtility.DataFull(bBean.getB_SubDisc(), 8) + PUtility.DataFull(DecFmt.format(bBean.getB_SubDiscAmt()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลดคูปอง...........", SubLength2) + pUtility.DataFull(bBean.getB_SubDisc(), 8) + pUtility.DataFull(DecFmt.format(bBean.getB_SubDiscAmt()), AmtLength) + "_");
         }
         if (bBean.getB_SubDiscBath() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + PUtility.DataFullR("ลด(บาท)..........", SubLength) + PUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), AmtLength) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + pUtility.DataFullR("ลด(บาท)..........", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_SubDiscBath()), AmtLength) + "_");
         }
         if (bBean.getB_ItemDiscAmt() > 0) {
             t += ("colspan=2 align=center><font face=Angsana New size=2>" + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_ItemDiscAmt()) + "_");
@@ -4591,14 +4579,13 @@ public class PPrint {
             t += ("colspan=2 align=left><font face=Angsana New size=-2> " + "ส่วนลดคูปอง  " + DecFmt.format(bBean.getB_SubDiscAmt())) + "_";
         }
         if (bBean.getB_CuponDiscAmt() > 0) {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
                 String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
                 ResultSet rs = stmt.executeQuery(CheckCoupon);
                 while (rs.next()) {
-                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + PUtility.DataFullR(PUtility.SeekCuponName(rs.getString("cucode")), 20) + PUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
+                    t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
                 }
                 rs.close();
                 stmt.close();
@@ -4636,9 +4623,8 @@ public class PPrint {
             t += ("colspan=2 align=center><font face=Angsana New size=2>" + "VAT INCLUDED" + "_");
         }
         if (bBean.getB_GiftVoucher() > 0) {
-            t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + PUtility.DataFullR("บัตรกำนัล...", SubLength) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher()) + "_");
+            t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + pUtility.DataFullR("บัตรกำนัล...", SubLength) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher()) + "_");
 
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open(this.getClass());
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -4658,11 +4644,11 @@ public class PPrint {
         }
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
         if (bBean.getB_PayAmt() > 0) {
-            t += ("colspan=3 align=center><font face=Angsana New size=2>" + Space + "Cash  : " + Space + PUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + Space + "Change : " + Space + PUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength) + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + Space + "Cash  : " + Space + pUtility.DataFull(DecFmt.format(bBean.getB_PayAmt()), AmtLength) + Space + "Change : " + Space + pUtility.DataFull(DecFmt.format(bBean.getB_Ton()), AmtLength) + "_");
         }
         if (bBean.getB_CrAmt1() > 0) {
             t += ("colspan=3 align=left><font face=Angsana New size=2> " + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + PUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + "  " + bBean.getB_AppCode1() + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + pUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + "  " + bBean.getB_AppCode1() + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2> " + "Credit Payment" + TAB + DecFmt.format(bBean.getB_CrAmt1())) + "_";
         }
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -4725,7 +4711,6 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
         Double SumTotal = 0.0;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -4735,11 +4720,11 @@ public class PPrint {
                     + "group by r_table";
             ResultSet rs = stmt.executeQuery(ChkTable);
             while (rs.next()) {
-                t += "align=left><font face=Angsana New size=2>" + (PUtility.DataFullSpace(rs.getString("r_table"), 6)
-                        + PUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
+                t += "align=left><font face=Angsana New size=2>" + (pUtility.DataFullSpace(rs.getString("r_table"), 6)
+                        + pUtility.DataFullSpace(DecFmt.format(rs.getDouble("sum(r_total)")), 10) + Space
                         + "</td><td align=right><fonjt face=Angsana New size=2>"
-                        + PUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
-                        + PUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
+                        + pUtility.DataFullSpace(rs.getString("TCurTime"), 8) + Space
+                        + pUtility.DataFullSpace(IntFmt.format(rs.getInt("tcustomer")), 5)) + "_";
                 SumTotal = SumTotal + rs.getDouble("sum(r_total)");
             }
             rs.close();
@@ -4751,7 +4736,7 @@ public class PPrint {
             mysql.closeConnection(this.getClass());
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
-        t += "align=left><font face=Angsana New size=2>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=2" + PUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
+        t += "align=left><font face=Angsana New size=2>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=2" + pUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
 
         PrintDriver pd = new PrintDriver();
@@ -4785,7 +4770,6 @@ public class PPrint {
     }
 
     private void updatePrintCheckBill(String table) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -4802,7 +4786,6 @@ public class PPrint {
 
     private List<String[]> creName(String macNo) {
         List<String[]> list = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -4887,7 +4870,6 @@ public class PPrint {
     private String[] credit(String Macno) {
         String[] credit = new String[]{"", ""};
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -4958,7 +4940,6 @@ public class PPrint {
                 + "and b_etd='D' "
                 + "group by b_etd";
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             int countb_refnoE = 0;
@@ -5094,7 +5075,6 @@ public class PPrint {
     }
 
     private void printEntertain(String b_Table) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select CuCode, CuName, R_PrCuQuan, CuponDiscAmt "
@@ -5117,7 +5097,7 @@ public class PPrint {
                     space = " ";
                     R_PName = R_PName.substring(0, 21);
                 }
-                print(" " + PUtility.DataFullR(R_PName, sizeNew + 2) + space + PUtility.DataFull(IntFmt.format(R_PrCuQuan), 3) + PUtility.DataFull(DecFmt.format(CuponDiscAmt), 12));
+                print(" " + pUtility.DataFullR(R_PName, sizeNew + 2) + space + pUtility.DataFull(IntFmt.format(R_PrCuQuan), 3) + pUtility.DataFull(DecFmt.format(CuponDiscAmt), 12));
             }
 
             rs.close();
@@ -5132,7 +5112,6 @@ public class PPrint {
 
     private String getLastEmployee(String tableNo) {
         String R_EMP = "";
-        MySQLConnect mysql = new MySQLConnect();
         BillNoBean b = new BillNoBean();
         mysql.open(this.getClass());
         try {
@@ -5160,7 +5139,6 @@ public class PPrint {
 
     public String getLastEmployeeCheckBill(String tableNo, String refno) {
         String R_EMP = "-";
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select r_emp from t_sale "
@@ -5202,7 +5180,6 @@ public class PPrint {
         List<Object[]> listObj = new ArrayList<>();
         String cuname;
         double total;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total "
                     + "from t_cupon inner join cupon "
@@ -5305,7 +5282,6 @@ public class PPrint {
 
     public String getCuponName(String cuCode) {
         String cuName = "";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
             String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";

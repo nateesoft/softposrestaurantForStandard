@@ -12,8 +12,10 @@ import com.softpos.util.DateFormat;
 
 public class CuponControl {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public List<CuponBean> listCupon() {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
 
         List<CuponBean> listBean = new ArrayList<>();
@@ -73,7 +75,6 @@ public class CuponControl {
     }
 
     public List<CuponBean> listCupon(String CuCode) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         List<CuponBean> listBean = new ArrayList<>();
@@ -136,7 +137,6 @@ public class CuponControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         CuponBean bean = new CuponBean();
@@ -195,7 +195,6 @@ public class CuponControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "insert into cupon (CuCode,CuName,CuBegin,CuEnd,CuStrDay,CuType,CuADisc,"
@@ -237,7 +236,6 @@ public class CuponControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         try {

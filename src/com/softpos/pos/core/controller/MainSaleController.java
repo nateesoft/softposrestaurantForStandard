@@ -22,10 +22,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class MainSaleController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public MenuListBean getMenuListByMenuItem(String PluCode) {
         MenuListBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(MainSaleController.class);
         try {
             String SqlQuery = "select plucode from menulist where menuitem=('" + PluCode + "') "
@@ -51,7 +53,6 @@ public class MainSaleController {
 
     public boolean checkOutstockList(String TempCode) {
         boolean valid = false;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select pcode from outstocklist where pcode='" + TempCode + "' limit 1";
@@ -76,7 +77,6 @@ public class MainSaleController {
     public List<PSetBean> getPSetByPCode(String pluCode) {
         List<PSetBean> listPset = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sqlPSET = "select * from pset where pcode='" + pluCode + "';";
@@ -113,7 +113,6 @@ public class MainSaleController {
 
     public boolean checkCountPrinterTo(String tableNo) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
@@ -135,8 +134,6 @@ public class MainSaleController {
 
     public List<BalanceBean> getListAllPrintToKic(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
@@ -162,8 +159,6 @@ public class MainSaleController {
 
     public List<BalanceBean> printOnlyForm1(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select R_PluCode from balance "
@@ -193,8 +188,6 @@ public class MainSaleController {
 
     public List<BalanceBean> printOnlyForm6(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
@@ -228,7 +221,6 @@ public class MainSaleController {
 
     public TableFileBean getTableFileByCode(String tableNo) {
         TableFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select TAmount, TCustomer, tonact from tablefile where tcode='" + tableNo + "' limit 1";
@@ -254,7 +246,6 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select r_time,r_date from balance where r_table ='" + tableNo + "' limit 1";
@@ -279,8 +270,6 @@ public class MainSaleController {
 
     public boolean getBalanceByIndex(String RIndex) {
         boolean isValid = false;
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
@@ -305,7 +294,6 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRTable(String tableNo) {
         BalanceBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "SELECT COUNT(R_PName) items FROM balance where r_table = '" + tableNo + "'";
@@ -330,8 +318,6 @@ public class MainSaleController {
 
     public List<TempsetBean> getTempsetByPIndex(String PIndex) {
         List<TempsetBean> listPset = new ArrayList<>();
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select * from tempset where PIndex='" + PIndex + "' ";
@@ -357,8 +343,6 @@ public class MainSaleController {
 
     public TempsetBean getTempsetByPIndexPCode(String PIndex, String pCode) {
         TempsetBean bean = null;
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select POption from tempset where PIndex='" + PIndex + "' "
@@ -383,7 +367,6 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRIndex(String rIndex) {
         BalanceBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select r_linkindex from balance "
@@ -410,8 +393,6 @@ public class MainSaleController {
 
     public boolean checkKicPrint(String tableNo) {
         boolean isValid = false;
-
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select r_kicprint "
@@ -437,7 +418,6 @@ public class MainSaleController {
 
     public CompanyBean getHeaderCompany() {
         CompanyBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "SELECT head1, head2, head3, head4 FROM company limit 1";
@@ -466,7 +446,6 @@ public class MainSaleController {
     public boolean printBillVoidCheck(String tableNo) {
         boolean isValid = false;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
@@ -491,7 +470,6 @@ public class MainSaleController {
     public List<BalanceBean> getBalanceByRLinkIndex(String rLinkIndex) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select R_Index,R_Stock from balance "
@@ -520,7 +498,6 @@ public class MainSaleController {
     public SoftMenuSetup getMenuShowText(String menuCode) {
         SoftMenuSetup bean = null;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select n.PCode,n.MenuShowText from optionset o,soft_menusetup n "
@@ -548,7 +525,6 @@ public class MainSaleController {
     public List<MgrButtonSetupBean> getAllMgrButtonSetup(String pCode) {
         List<MgrButtonSetupBean> listMgrButton = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select auto_pcode, auto_pdesc from mgrbuttonsetup "
@@ -578,7 +554,6 @@ public class MainSaleController {
     public MgrButtonSetupBean getMgrButtonAndMenuSetup(String menuCode) {
         MgrButtonSetupBean bean = null;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "select o.PCode,o.PDesc, o.check_before "
@@ -608,7 +583,6 @@ public class MainSaleController {
 
     public boolean checkPassBeforeOrder(String tableNo) {
         boolean isFound = false;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MainSaleController.class);
         try {
             String sql = "SELECT 1 FROM balance where r_table = '" + tableNo + "' limit 1";

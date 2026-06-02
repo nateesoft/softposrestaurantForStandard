@@ -21,6 +21,7 @@ public class GetQty extends javax.swing.JDialog {
     private String PCode;
     public static String[] OPTION_TEXT = new String[]{"", "", "", "", "", "", "", "", ""};
     private boolean isFirst = true;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form GetQty
@@ -772,7 +773,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             model1 = (DefaultTableModel) tblOptionMsg.getModel();
             tblOptionMsg.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -780,8 +781,8 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             JTableHeader tHeader = tblOptionMsg.getTableHeader();
             tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-            mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select o.* "
                     + "from product p, optionfile o "
                     + "where p.pgroup=o.pgroup "
@@ -803,7 +804,7 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GetQty.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

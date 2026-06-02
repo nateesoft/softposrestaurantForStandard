@@ -1,7 +1,6 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.MTranBean;
-import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,10 +13,12 @@ import com.softpos.util.DateUtil;
  * @author nathee
  */
 public class MTranController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
-    public static MTranBean getData(String branchCode) {
+    public MTranBean getData(String branchCode) {
         MTranBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
 
         try {
             mysql.open(MTranController.class);
@@ -39,7 +40,6 @@ public class MTranController {
 
     public boolean checkReceiptNoExist(String receiptNo) {
         boolean isNoExist = true;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(MTranController.class);
             String sql = "select Receipt_No from " + Value.db_member + ".mtran "
@@ -80,7 +80,6 @@ public class MTranController {
     public int create(MTranBean bean) {
         int resultCreate = 0;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MTranController.class);
 
         try {
@@ -107,7 +106,6 @@ public class MTranController {
     }
 
     public void refundBill(String receiptNo) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MTranController.class);
 
         try {

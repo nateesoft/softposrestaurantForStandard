@@ -31,6 +31,10 @@ public class InvRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     /**
      * Creates new form InvRep
@@ -245,7 +249,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -340,7 +344,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

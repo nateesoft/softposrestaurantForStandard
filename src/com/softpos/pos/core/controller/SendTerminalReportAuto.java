@@ -39,6 +39,11 @@ public class SendTerminalReportAuto {
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     public String filePath = "";
     public String fileName = "";
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public void ProcessProc() throws FileNotFoundException, UnsupportedEncodingException {
         POSHW = POSHWSetup.Bean("001");
@@ -50,7 +55,7 @@ public class SendTerminalReportAuto {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -440,7 +445,7 @@ public class SendTerminalReportAuto {
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13)) + "_";
         }
         if (frec.Cupon_DiscCnt > 0) {
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open(this.getClass());
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
@@ -520,7 +525,7 @@ public class SendTerminalReportAuto {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -618,7 +623,7 @@ public class SendTerminalReportAuto {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -729,7 +734,7 @@ public class SendTerminalReportAuto {
 
     private List<String[]> CreName(String macNo1, String macNo2) {
         List<String[]> list = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -770,7 +775,7 @@ public class SendTerminalReportAuto {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -858,7 +863,7 @@ public class SendTerminalReportAuto {
     }
 
     public void beforeProcess() {
-        MySQLConnect mysql = new MySQLConnect();
+        
 
         try {
             DateConvert dc1 = new DateConvert();

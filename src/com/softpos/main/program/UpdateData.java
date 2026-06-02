@@ -26,6 +26,8 @@ import java.util.List;
  * @author ASUS
  */
 public class UpdateData extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form UpdateData
@@ -59,9 +61,9 @@ public class UpdateData extends javax.swing.JDialog {
         PanelStatus = new javax.swing.JPanel();
         lblStatus = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Update New Menu");
         setMaximumSize(new java.awt.Dimension(1024, 768));
-        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(1024, 768));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -225,10 +227,10 @@ public class UpdateData extends javax.swing.JDialog {
             DecimalFormat df = new DecimalFormat("#,###");
             DefaultTableModel model = (DefaultTableModel) tblCommand.getModel();
             List<Object[]> listObj = LoadData();
-            MySQLConnect mysql = new MySQLConnect();
+            
             try {
-                mysql.open(this.getClass());
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                mysqlConnect.open(this.getClass());
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     if (listObj != null && !listObj.isEmpty()) {
                         for (int i = 0; i < listObj.size(); i++) {
                             final String sql = ThaiUtil.ASCII2Unicode(listObj.get(i)[0].toString());
@@ -245,7 +247,7 @@ public class UpdateData extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(UpdateData.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
             SwingUtilities.invokeLater(() -> {
                 btnUpdate.setEnabled(true);
@@ -260,11 +262,10 @@ public class UpdateData extends javax.swing.JDialog {
         List<Object[]> ListObj = new ArrayList<>();
         String BType = "-";
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sqlGetBType = "Select btype btype from tranconfig limit 1";
-            ResultSet rsGetBtype = mysql.executeQuery(sqlGetBType);
+            ResultSet rsGetBtype = mysqlConnect.executeQuery(sqlGetBType);
             if (rsGetBtype.next()) {
                 BType = rsGetBtype.getString("btype");
             }
@@ -282,7 +283,7 @@ public class UpdateData extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(UpdateData.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         SwingUtilities.invokeLater(() -> setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)));

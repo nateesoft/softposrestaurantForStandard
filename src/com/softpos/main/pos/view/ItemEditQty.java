@@ -38,6 +38,9 @@ public class ItemEditQty extends javax.swing.JDialog {
     private DecimalFormat dec1 = new DecimalFormat("#0.00");
     private MemberBean memberBean;
     private String NewDesc;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     /**
      * Creates new form ItemEditQty
@@ -91,16 +94,15 @@ public class ItemEditQty extends javax.swing.JDialog {
                     + " '" + balanceBean.getR_PluCode() + "', '" + ThaiUtil.Unicode2ASCII(balanceBean.getR_ETD() + "-" + balanceBean.getR_PName().replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", "") + "-" + balanceBean.getR_Opt1()) + "','" + XQty + "',"
                     + " '" + XPrice + "','" + XNewQty + "','" + newAmount + "');";
 
-            if (balanceBean != null) {
-                MySQLConnect mysql = new MySQLConnect();
+            if (balanceBean != null) {                
                 try {
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     balanceBean.setR_Quan(XNewQty);
                     balanceBean.setR_Price(newAmount);
                     balanceBean.setR_Total(XNewAmount);
                     NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-").replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", ""));
 
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     if (!txtNewPDesc.getText().replace("null", "").equals("")) {
                         this.XNewAmount = XNewQty * newAmount;
                         balanceBean.setR_Total(XNewAmount);
@@ -140,7 +142,7 @@ public class ItemEditQty extends javax.swing.JDialog {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(ItemEditQty.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
 

@@ -18,10 +18,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class FloorPlanController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<SPTempRefundBean> getSpTempRefund() {
         List<SPTempRefundBean> listSpTempRefund = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from sp_temp_refund limit 1;";
@@ -50,7 +52,6 @@ public class FloorPlanController {
     }
 
     public void deleteSpTempRefund() {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "delete from sp_temp_refund";
@@ -65,7 +66,6 @@ public class FloorPlanController {
 
     public TempsetBean getPOptionFromTempSet(String rIndex, String pCode) {
         TempsetBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(FloorPlanController.class);
         try {
             String sql = "select POption from tempset "
@@ -92,7 +92,6 @@ public class FloorPlanController {
     public List<TempsetBean> getTempsetByPIndex(String rIndex) {
         List<TempsetBean> listTempset = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(FloorPlanController.class);
         try {
             String sql = "select * from tempset where PIndex='" + rIndex + "' ";
@@ -117,7 +116,6 @@ public class FloorPlanController {
     public List<PIngredientBean> listIngredeint(String pluCode) {
         List<PIngredientBean> listPing = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(FloorPlanController.class);
         try {
             String sql1 = "select i.*,pdesc,PBPack,pstock,pactive "

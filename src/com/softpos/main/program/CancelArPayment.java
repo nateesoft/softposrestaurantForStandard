@@ -38,6 +38,9 @@ public class CancelArPayment extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     /**
      * Creates new form CancelArPaymentClick
@@ -80,10 +83,10 @@ public class CancelArPayment extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -106,7 +109,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();
@@ -133,25 +136,24 @@ public class CancelArPayment extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SQLQuery = "update billar set fat='V',uservoid='" + PublicVar._User + "' where ref_no='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             SQLQuery = "update t_ar set fat='V' where ref_no='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             SQLQuery = "update t_crar set fat='V' where ref_no='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             SQLQuery = "update accr set ardocpay='',arflage='N' where ardocpay='" + TempBillNo + "' ";
             stmt.executeUpdate(SQLQuery);
             stmt.close();
@@ -159,7 +161,7 @@ public class CancelArPayment extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -184,10 +186,9 @@ public class CancelArPayment extends javax.swing.JDialog {
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SQLQuery = "Select *from t_ar where ref_no='" + TempBillNo + "'";
                         ResultSet rs = stmt.executeQuery(SQLQuery);
                         while (rs.next()) {
@@ -200,7 +201,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(CancelArPayment.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print("Sub-Total................." + DecFmt.format(SumAmount));
@@ -246,10 +247,9 @@ public class CancelArPayment extends javax.swing.JDialog {
         t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         try {
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "Select * from t_ar where ref_no='" + TempBillNo + "'";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 while (rs.next()) {
@@ -263,7 +263,7 @@ public class CancelArPayment extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CancelArPayment.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

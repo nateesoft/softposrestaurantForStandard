@@ -33,7 +33,8 @@
       "Bash(cd \"/Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/images\" && rm -f \\\\ *)",
       "Bash(xargs cat)",
       "Bash(sort -t: -k1,1 -k2,2n)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(grep -n 'MySQLConnect\\\\|\\\\.open\\(\\\\|\\\\.close\\\\|executeUpdate\\\\|executeQuery\\\\|PreparedStatement\\\\|ResultSet\\\\|Statement\\\\|getConnection\\\\|new MySQLConnect' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/__TRACKED_VAR__)"
     ]
   }
 }

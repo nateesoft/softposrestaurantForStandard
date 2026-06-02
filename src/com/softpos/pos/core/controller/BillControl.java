@@ -33,6 +33,11 @@ public class BillControl {
     private final POSConfigSetup posConfig;
     private final MemmaterController memControl = AppContext.getMemmaterController();
     private MemberBean memberBean;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final BranchControl branchControl = AppContext.getBranchControl();
+    private final PosControl PosControl = AppContext.getPosControl();
+    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public BillControl() {
         posConfig = PosControl.getData();
@@ -43,9 +48,9 @@ public class BillControl {
         return prop.getMacNo();
     }
 
-    public static String getBillIDCurrent() {
+    public String getBillIDCurrent() {
         String ReceNo1 = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             String sql = "select ReceNo1 from poshwsetup where Terminal='" + getLocalMacNO() + "' limit 1";
@@ -88,7 +93,7 @@ public class BillControl {
         return ReceNo1;
     }
 
-    public static String getExistCurrent() {
+    public String getExistCurrent() {
         String ReceNo1;
         POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
         ReceNo1 = "" + (poshwSetup.getReceNo1() - 1);
@@ -118,8 +123,8 @@ public class BillControl {
         return ReceNo1;
     }
 
-    public static void updateNextBill() {
-        MySQLConnect mysql = new MySQLConnect();
+    public void updateNextBill() {
+        
         mysql.open(BillControl.class);
         try {
             String sql = "UPDATE poshwsetup "
@@ -140,9 +145,9 @@ public class BillControl {
         }
     }
 
-    public static void saveBillNo(BillNoBean bean, MemberBean memBean) {
-        BranchBean branchBean = BranchControl.getData();
-        MySQLConnect mysql = new MySQLConnect();
+    public void saveBillNo(BillNoBean bean, MemberBean memBean) {
+        BranchBean branchBean = branchControl.getData();
+        
         BalanceBean blBean = new BalanceBean();
         mysql.open(BillControl.class);
         DateConvert dc = new DateConvert();
@@ -234,9 +239,9 @@ public class BillControl {
         }
     }
 
-    public static String getQueUpdate() {
+    public String getQueUpdate() {
         String q = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             String sql = "select max(b_refno), max(B_KicQue) maxque from billno";
@@ -266,8 +271,8 @@ public class BillControl {
         return q;
     }
 
-    public static void saveTSale(TSaleBean bean) {
-        MySQLConnect mysql = new MySQLConnect();
+    public void saveTSale(TSaleBean bean) {
+        
         mysql.open(BillControl.class);
         String sqlTSale = "";
         try {
@@ -394,7 +399,7 @@ public class BillControl {
     public String saveBillNo(final String table, BillNoBean billBean) {
         //get data from balance, tablefile
 
-        final String BillNo = BillControl.getBillIDCurrent();
+        final String BillNo = getBillIDCurrent();
         try {
             BalanceControl balanceControl = AppContext.getBalanceControl();
             if (!posConfig.getP_PrintSum().equals("Y")) {
@@ -404,7 +409,7 @@ public class BillControl {
                 int size = balance.size();
                 double B_Food = 0.0, B_Drink = 0.0, B_Product = 0.0, B_Service = 0.0;
 
-                BranchBean branchBean = BranchControl.getData();
+                BranchBean branchBean = branchControl.getData();
 
                 String etdTypeFromTSale = "";
 
@@ -570,7 +575,8 @@ public class BillControl {
                 billNo.setMStamp("");
                 billNo.setCurStamp("");
                 billNo.setStampRate("");
-                BillControl.saveBillNo(billNo, memberBean);
+                
+                saveBillNo(billNo, memberBean);
                 if (Value.useprint) {
                     PPrint print = new PPrint();
                     print.printSubTotalBill(BillNo, table);
@@ -581,7 +587,7 @@ public class BillControl {
                 tableControl.setDefaultTableFile(table);
 
                 //move tempgift
-                MySQLConnect mysql = new MySQLConnect();
+                
                 mysql.open(BillControl.class);
                 try {
                     String sql = "select * from tempgift";
@@ -635,8 +641,8 @@ public class BillControl {
                 tCon.saveTCupon(tBean);
                 tcCon.clearTempOld(tcBean.getR_Index());
 
-                BillControl.updateNextBill();
-                BranchControl.updateKicItemNo();
+                updateNextBill();
+                branchControl.updateKicItemNo();
 
                 return BillNo;
             }
@@ -652,7 +658,7 @@ public class BillControl {
             double b_netNonVat = 0;
             String productType;
 
-            BranchBean branchBean = BranchControl.getData();
+            BranchBean branchBean = branchControl.getData();
 
             String etdTypeFromTSale = "";
 
@@ -778,7 +784,7 @@ public class BillControl {
                 tSaleBean.setR_Opt9(bean.getR_Opt9());
                 tSaleBean.setR_Date(bean.getR_Date());
 
-                BillControl.saveTSale(tSaleBean);
+                saveTSale(tSaleBean);
 
                 if (!bean.getR_PrType().equals("") && !bean.getR_PrCode().equals("")) {
                     //update T_Promotion
@@ -1000,7 +1006,7 @@ public class BillControl {
                     mysql2.closeConnection(this.getClass());
                 }
 
-                BillControl.saveBillNo(billNo, memberBean);
+                saveBillNo(billNo, memberBean);
                 if (Value.useprint) {
 //                new Thread(() -> {
                     PPrint print = new PPrint();
@@ -1068,8 +1074,8 @@ public class BillControl {
                 tCon.saveTCupon(tBean);
                 tcCon.clearTempOld(tcBean.getR_Index());
 
-                BillControl.updateNextBill();
-                BranchControl.updateKicItemNo();
+                updateNextBill();
+                branchControl.updateKicItemNo();
             } catch (NumberFormatException e) {
 
             }
@@ -1093,7 +1099,7 @@ public class BillControl {
             sql += "order by R_Status, R_Index";
         }
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         List<TSaleBean> data = new ArrayList<>();
         try {
@@ -1127,7 +1133,7 @@ public class BillControl {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1230,7 +1236,7 @@ public class BillControl {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             ResultSet rs = mysql.executeQuery(sql);
@@ -1331,7 +1337,7 @@ public class BillControl {
                 + "where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1537,7 +1543,7 @@ public class BillControl {
 
     public BillNoBean getData(String billNo) {
         BillNoBean bean = new BillNoBean();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             String sql = "select * from billno where B_Refno='" + billNo + "' limit 1";
@@ -1758,7 +1764,7 @@ public class BillControl {
         tSaleBean.setR_Opt9(bean.getR_Opt9());
         tSaleBean.setR_Date(bean.getR_Date());
 
-        BillControl.saveTSale(tSaleBean);
+        saveTSale(tSaleBean);
 
         if (!bean.getR_PrType().equals("") && !bean.getR_PrCode().equals("")) {
             //update T_Promotion
@@ -1787,7 +1793,7 @@ public class BillControl {
     //check ยอดค้างที่ยังไม่ได้ปิดสิ้นวันหรือไม่ ?
     public boolean checkBillNoValid(String dateFmt) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(BillControl.class);
         try {
             String sql = "select b_ondate b_ondate from billno "
@@ -1811,7 +1817,7 @@ public class BillControl {
     public BillNoBean getLastBillNo() {
         BillNoBean bean = null;
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
             mysql.open(BillControl.class);
@@ -1835,6 +1841,27 @@ public class BillControl {
         }
 
         return bean;
+    }
+
+    public List<String> getLinkedBalanceIndices(String rIndex) {
+        List<String> list = new ArrayList<>();
+        
+        mysql.open(BillControl.class);
+        try {
+            String sql = "select R_Index from balance "
+                    + "where R_LinkIndex='" + rIndex + "' order by R_Index";
+            try (Statement stmt = mysql.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(rs.getString("R_Index"));
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(BillControl.class);
+        }
+        return list;
     }
 
 }

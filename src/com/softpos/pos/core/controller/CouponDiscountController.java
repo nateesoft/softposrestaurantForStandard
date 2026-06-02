@@ -15,9 +15,11 @@ import com.softpos.util.AppLogUtil;
  */
 public class CouponDiscountController {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public List<BalanceBean> getBalanceByQuanCanDisc(String tableNo, String pCode) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(CouponDiscountController.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "
@@ -49,7 +51,6 @@ public class CouponDiscountController {
 
     public List<BalanceBean> getBalanceByPrAmt(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(CouponDiscountController.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "

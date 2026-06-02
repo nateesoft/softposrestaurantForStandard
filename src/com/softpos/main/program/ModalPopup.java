@@ -32,6 +32,8 @@ public class ModalPopup extends javax.swing.JDialog {
     private String Main = "";
     private String TableNo = "";
     private ModalPopupController modalControl = AppContext.getModalPopupController();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     public ModalPopup(java.awt.Dialog parent, boolean modal,
             String PCode, String PName, String TableNo, String Main, String MenuCode) {
@@ -276,11 +278,11 @@ public class ModalPopup extends javax.swing.JDialog {
                 private void updateTempmenusetProduct(String Index, String PCode, String PName, String ProMain, String Main) {
                     String pstock = PUtility.GetStkCode();
 
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sqll = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "'";
-                        try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rss = stmt1.executeQuery(sqll)) {
+                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rss = stmt1.executeQuery(sqll)) {
                             if (rss.next()) {
                                 String pcode = rss.getString("pcode");
                                 String tempset = "INSERT INTO tempset (PTableNo, PIndex, PCode, PDesc, "
@@ -288,7 +290,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + Main + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                mysql.executeUpdate(tempset);
+                                mysqlConnect.executeUpdate(tempset);
                             } else {
                                 String pcode = PCode;
                                 String tempset = "INSERT INTO tempset (PTableNo, PIndex, PCode, PDesc, "
@@ -296,7 +298,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
-                                mysql.executeUpdate(tempset);
+                                mysqlConnect.executeUpdate(tempset);
                             }
                             rss.close();
                             stmt1.close();
@@ -305,7 +307,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
             });
@@ -387,11 +389,10 @@ public class ModalPopup extends javax.swing.JDialog {
                 private void updateTempmenusetSideDish(String Index, String PCodeSet, String PNameSet, String ProFree, String free) {
                     String pstock = PUtility.GetStkCode();
 
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
-                        try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rs = stmt1.executeQuery(sql)) {
+                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt1.executeQuery(sql)) {
                             if (rs.next()) {
                                 String tempset = "INSERT INTO tempset "
                                         + "(PTableNo, PIndex, PCode, PDesc, "
@@ -399,7 +400,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCodeSet + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PNameSet) + "', '" + pstock + "','" + free + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProFree) + "', CURTIME())";
-                                mysql.executeUpdate(tempset);
+                                mysqlConnect.executeUpdate(tempset);
                             }
                             rs.close();
                             stmt1.close();
@@ -408,7 +409,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
             });
@@ -502,18 +503,17 @@ public class ModalPopup extends javax.swing.JDialog {
 
                 private boolean checkLimiExtra(String TableNo) {
                     boolean checkExtra = false;
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select PCode from tempset where PTableNo='" + TableNo + "' and PProTry='main' limit 1";
-                        try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                        try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                             if (rs.next()) {
                                 String PCode = rs.getString("PCode");
                                 String sql2 = "select check_extra "
                                         + "from mgrbuttonsetup "
                                         + "where pcode='" + PCode + "' "
                                         + "and check_extra='Y'";
-                                try (Statement stmt1 = mysql.getConnection().createStatement(); ResultSet rs2 = stmt1.executeQuery(sql2)) {
+                                try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rs2 = stmt1.executeQuery(sql2)) {
                                     if (rs2.next()) {
                                         checkExtra = true;
                                     }
@@ -528,7 +528,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                     return checkExtra;
                 }
@@ -602,12 +602,11 @@ public class ModalPopup extends javax.swing.JDialog {
                 }
 
                 private void updateTempmenusetExtraOption(String PCode, String POption) {
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "update tempset set POption='" + ThaiUtil.Unicode2ASCII(POption) + "' "
                                 + "where PCode='" + PCode + "'";
-                        try (Statement stmt = mysql.getConnection().createStatement()) {
+                        try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                             stmt.executeUpdate(sql);
                             stmt.close();
                         }
@@ -615,7 +614,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
             });
@@ -625,11 +624,10 @@ public class ModalPopup extends javax.swing.JDialog {
 
     private boolean showPopupOption(String pCodeItem) {
         boolean isCheck = false;
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select pcode from optionset where pcode ='" + pCodeItem + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isCheck = true;
                 }
@@ -640,19 +638,18 @@ public class ModalPopup extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isCheck;
     }
 
     private void updateTempmenusetExtra(String Index, String PCode, String PName, String Option, String TryName) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select ex_pcode , ex_pdesc from mgrbuttonsetup "
                     + "where ex_pdesc = '" + ThaiUtil.Unicode2ASCII(PName) + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     String pstock = PUtility.GetStkCode();
                     String tempset = "INSERT INTO tempset "
@@ -661,7 +658,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCode + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
-                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         stmt1.executeUpdate(tempset);
                         stmt1.close();
                     }
@@ -673,19 +670,18 @@ public class ModalPopup extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
 
     private boolean loadMenu2Pcs() {
         boolean show = false;
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select qty from mgrbuttonsetup "
                     + "where pcode='" + PCode + "' and check_qty='Y' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     show = true;
                 }
@@ -696,7 +692,7 @@ public class ModalPopup extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ModalPopup.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (!show) {
@@ -757,11 +753,10 @@ public class ModalPopup extends javax.swing.JDialog {
                 private void updateTempmenusetProduct(String Index, String PCode, String ProMain, String Main) {
                     String pstock = PUtility.GetStkCode();
 
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select pcode, pdesc from mgrbuttonsetup where pcode = '" + PCode + "' limit 1";
-                        try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                        try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                             if (rs.next()) {
                                 String pcode = rs.getString("pcode");
                                 String tempset = "INSERT INTO tempset "
@@ -770,7 +765,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '" + pstock + "','" + Main + "', "
                                         + "'', CURTIME())";
-                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                     stmt1.executeUpdate(tempset);
                                 }
                             }
@@ -781,7 +776,7 @@ public class ModalPopup extends javax.swing.JDialog {
                         MSG.ERR(new JFrame(), e.getMessage());
                         AppLogUtil.log(ModalPopup.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
             });

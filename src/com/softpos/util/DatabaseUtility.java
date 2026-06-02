@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class DatabaseUtility {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public int insert(String sql, Object... args) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < args.length; i++) {
@@ -37,7 +39,6 @@ public class DatabaseUtility {
     }
 
     public int executeUpdate(String sql, Object... args) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
@@ -55,7 +56,6 @@ public class DatabaseUtility {
 
     public Map<String, Object> querySingle(String sql, Object... args) {
         Map<String, Object> map = new HashMap<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
@@ -90,7 +90,6 @@ public class DatabaseUtility {
 
     public List<Map<String, Object>> queryList(String sql, Object... args) {
         List<Map<String, Object>> list = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {

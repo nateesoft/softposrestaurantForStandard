@@ -2,19 +2,19 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
+import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import com.softpos.util.AppLogUtil;
 
 public class MemberControl {
 
     MemberBean MemberBean = new MemberBean();
-
-    public MemberControl() {
-
-    }
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public void updateMemberDiscount(String table, MemberBean memberBean) {
         String strDisc = "";
@@ -26,7 +26,7 @@ public class MemberControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select sum(R_PrSubAmt) as MemDiscount "
@@ -57,7 +57,6 @@ public class MemberControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             /*
@@ -126,11 +125,109 @@ public class MemberControl {
         }
     }
 
+    /** Returns all rows from memmaster. Each element: {code, fullName, homeTel, "", mobile, expiredDate, fax} */
+    public List<Object[]> findAllMembers(String dbMember) {
+        List<Object[]> list = new ArrayList<>();
+        mysql.open(MemberControl.class);
+        try {
+            String sql = "select * from " + dbMember + ".memmaster order by Member_Code";
+            try (Statement stmt = mysql.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(new Object[]{
+                        rs.getString("Member_Code"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                        rs.getString("Member_HomeTel"),
+                        "",
+                        rs.getString("Member_Mobile"),
+                        rs.getString("Member_ExpiredDate"),
+                        rs.getString("Member_Fax")
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(MemberControl.class);
+        }
+        return list;
+    }
+
+    public List<Object[]> searchMembers(String dbMember, String memCode, String memName, String memTel) {
+        List<Object[]> list = new ArrayList<>();
+        String sql = "";
+        if (!memCode.equals("")) {
+            sql = "select * from " + dbMember + ".memmaster where Member_Code like '%" + memCode + "%' order by Member_Code";
+        } else if (!memName.equals("")) {
+            sql = "select * from " + dbMember + ".memmaster where Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' order by Member_Code";
+        } else if (!memTel.equals("")) {
+            sql = "select * from " + dbMember + ".memmaster where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' order by Member_Code";
+        }
+        if (sql.isEmpty()) return list;
+        mysql.open(MemberControl.class);
+        try {
+            try (Statement stmt = mysql.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(new Object[]{
+                        rs.getString("Member_Code"),
+                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
+                        rs.getString("Member_HomeTel"),
+                        "",
+                        rs.getString("Member_Mobile"),
+                        rs.getString("Member_ExpiredDate"),
+                        rs.getString("member_fax")
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(MemberControl.class);
+        }
+        return list;
+    }
+
+    public void clearMemberDiscount(String tableNo) {
+        mysql.open(MemberControl.class);
+        try {
+            String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
+                    + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+            String sqlUpdate = "update balance set r_prsubtype='',r_prsubcode='',"
+                    + "r_prsubquan='0',r_prsubdisc='0',r_prsubamt='0'"
+                    + " where r_table='" + tableNo + "'";
+            mysql.executeUpdate(sqlUpdate);
+        } catch (SQLException e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(MemberControl.class);
+        }
+    }
+
+    public void updateTableFileMember(String tableNo, String memCode, String memName, boolean add) {
+        mysql.open(MemberControl.class);
+        try {
+            String sql;
+            if (add) {
+                sql = "Update tablefile set memcode='" + memCode + "',memname='" + ThaiUtil.Unicode2ASCII(memName) + "' where tcode='" + tableNo + "'";
+            } else {
+                sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
+            }
+            mysql.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(MemberControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(MemberControl.class);
+        }
+    }
+
     public void updateMemVIPAllBalance(String table, String discountRate) {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             /*

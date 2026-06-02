@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.BranchFileBean;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +12,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class BranchFileController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
-    public static BranchFileBean getData(String branchCode) {
+    public BranchFileBean getData(String branchCode) {
         BranchFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
@@ -36,9 +37,8 @@ public class BranchFileController {
         return bean;
     }
 
-    public static BranchFileBean getDataMemberPoint(String branchCode) {
+    public BranchFileBean getDataMemberPoint(String branchCode) {
         BranchFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
 
         try {
             mysql.open(BranchFileController.class);

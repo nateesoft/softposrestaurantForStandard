@@ -44,6 +44,10 @@ public class MTDPLU extends javax.swing.JDialog {
     DateConvert dc = new DateConvert();
     String DateFrom = "";
     String DateTo = "";
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public MTDPLU(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -653,7 +657,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -730,7 +734,6 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -945,7 +948,6 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 //        /**
 //         * * OPEN CONNECTION **
 //         */
-//        MySQLConnect mysql = new MySQLConnect();
 //        mysql.open(this.getClass());
 //        try {
 //            Statement stmt = mysql.getConnection().createStatement();
@@ -1204,7 +1206,6 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

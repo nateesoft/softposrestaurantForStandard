@@ -1,11 +1,8 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.MSG;
 
@@ -471,67 +468,19 @@ public class CustomerCountDialog extends javax.swing.JDialog {
     }
 
     private void SaveCus(String Cus) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            if (R_ETD.equals("T")) {
-                if (txtCustomerName.getText().trim().equals("")) {
-                    MSG.ERR(this, "กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
-
-                    txtCustomerName.requestFocus();
-                } else {
-                    String sql = "UPDATE tablefile SET "
-                            + "TCustomer = " + Cus + ","
-                            + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
-                            + "WHERE Tcode = '" + TABLE_NO + "'";
-                    Statement stmt = mysql.getConnection().createStatement();
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                    this.dispose();
-                }
-            } else {
-                String sql = "UPDATE tablefile SET "
-                        + "TCustomer = " + Cus + ","
-                        + "MemName='" + ThaiUtil.Unicode2ASCII(txtCustomerName.getText()) + "' "
-                        + "WHERE Tcode = '" + TABLE_NO + "'";
-                Statement stmt = mysql.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-                this.dispose();
+        if (R_ETD.equals("T")) {
+            if (txtCustomerName.getText().trim().equals("")) {
+                MSG.ERR(this, "กรุณาบันทึกข้อมูลชื่อลูกค้า สำหรับ Take Away ด้วย");
+                txtCustomerName.requestFocus();
+                return;
             }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-        } finally {
-            mysql.closeConnection(this.getClass());
         }
+        new TableFileControl().saveCustomerCount(TABLE_NO, Cus, txtCustomerName.getText());
+        this.dispose();
     }
 
     private void LoadCustomer() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select MemName from tablefile where Tcode = '" + TABLE_NO + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String NameCus = rs.getString("MemName");
-                txtCustomerName.setText(NameCus);
-            } else {
-                txtCustomerName.setText("");
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        txtCustomerName.setText(new TableFileControl().getCustomerName(TABLE_NO));
     }
 
 }

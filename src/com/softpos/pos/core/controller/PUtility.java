@@ -33,11 +33,13 @@ import com.softpos.util.AppLogUtil;
 public class PUtility {
 
     static DecimalFormat DecFmt = new DecimalFormat("#######0.00");
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final PosControl PosControl = AppContext.getPosControl();
 
-    private static List<PSetBean> getPSetByPCode(String TempCode) {
+    private List<PSetBean> getPSetByPCode(String TempCode) {
         List<PSetBean> listBean = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             String sql = "select * from pset where pcode='" + TempCode + "'";
@@ -62,10 +64,10 @@ public class PUtility {
         return listBean;
     }
 
-    private static List<BalanceSetBean> getBalanceSetByPCodeRIndex(String XCode, String r_index) {
+    private List<BalanceSetBean> getBalanceSetByPCodeRIndex(String XCode, String r_index) {
         List<BalanceSetBean> listBean = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             String sql = "select * from balanceset "
@@ -103,7 +105,7 @@ public class PUtility {
         return true;
     }
 
-    public static int GetActionMon(Date EndofdayDate) {
+    public int GetActionMon(Date EndofdayDate) {
         CompanyBean companyBean = PosControl.getDataCompany();
         int RetVal;
         SimpleDateFormat XYear = new SimpleDateFormat("yyyy", Locale.ENGLISH);
@@ -138,7 +140,7 @@ public class PUtility {
         return true;
     }
 
-    public static String GetStkCode() {
+    public String GetStkCode() {
         CompanyBean companyBean = PosControl.getDataCompany();
         return companyBean.getPosStock();
     }
@@ -147,7 +149,7 @@ public class PUtility {
         return "N";
     }
 
-    public static Boolean CheckStockOK(String TempCode, double TempQty) {
+    public Boolean CheckStockOK(String TempCode, double TempQty) {
         String T_Stk = GetStkCode();
         Boolean RetVal = true;
         if (PublicVar.CheckStockOnLine.equals("Y")) {
@@ -158,7 +160,7 @@ public class PUtility {
             int TempAct = GetActionMon(new Date());
             String T_Mon = "bqty" + String.valueOf(TempAct);
 
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open(PUtility.class);
             try {
                 try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -181,10 +183,9 @@ public class PUtility {
             }
 
             if (StkProc) {
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
-                    try (Statement stmt2 = mysql2.getConnection().createStatement()) {
+                    try (Statement stmt2 = mysql.getConnection().createStatement()) {
                         String LoadTableFile = "select bpcode from stkfile where (bpcode='" + TempCode + "') and (bstk='" + T_Stk + "') limit 1 ";
                         try (ResultSet rec2 = stmt2.executeQuery(LoadTableFile)) {
                             if (rec2.next()) {
@@ -206,7 +207,7 @@ public class PUtility {
                 } catch (SQLException e) {
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
             }
             if (SetProc) {
@@ -218,10 +219,9 @@ public class PUtility {
                     StkProc = "Y".equals(proBean.getPStock());
 
                     if (StkProc) {
-                        MySQLConnect mysql2 = new MySQLConnect();
-                        mysql2.open(PUtility.class);
+                        mysql.open(PUtility.class);
                         try {
-                            try (Statement stmt = mysql2.getConnection().createStatement()) {
+                            try (Statement stmt = mysql.getConnection().createStatement()) {
                                 String sql = "select 1 from stkfile where (bpcode='" + psetBean.getPsubcode() + "') and (bstk='" + T_Stk + "') limit 1";
                                 try (ResultSet rs = stmt.executeQuery(sql)) {
                                     if (rs.next()) {
@@ -245,7 +245,7 @@ public class PUtility {
                         } catch (SQLException e) {
                             AppLogUtil.log(PUtility.class, "error", e);
                         } finally {
-                            mysql2.closeConnection(PUtility.class);
+                            mysql.closeConnection(PUtility.class);
                         }
                     }
                 }
@@ -254,12 +254,12 @@ public class PUtility {
         return RetVal;
     }
 
-    public static Boolean SeekStkFile(String TempCode, String T_Stk) {
+    public Boolean SeekStkFile(String TempCode, String T_Stk) {
         Boolean RetVal = false;
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -280,7 +280,7 @@ public class PUtility {
         return RetVal;
     }
 
-    public static void ProcessStockOut(String DocNo, String StkCode, String PCode, Date TDate,
+    public void ProcessStockOut(String DocNo, String StkCode, String PCode, Date TDate,
             String Stk_Remark, Double Qty, Double Amount, String UserPost, String PStock,
             String PSet, String r_index, String SaleOrRefund) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -302,7 +302,7 @@ public class PUtility {
         }
 
         if (StkProc) {
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open(PUtility.class);
             try {
                 String sql = "insert into stcard (s_date,s_no,s_stk,s_pcode,s_que,s_in,s_incost,"
@@ -334,10 +334,9 @@ public class PUtility {
 
             int TempAct = GetActionMon(TDate);
             if (!SeekStkFile(TempCode, StkCode)) {
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
-                    PreparedStatement prm4 = mysql2.getConnection().prepareStatement("insert into stkfile (bpcode,bstk) values (?,?)");
+                    PreparedStatement prm4 = mysql.getConnection().prepareStatement("insert into stkfile (bpcode,bstk) values (?,?)");
                     prm4.setString(1, TempCode);
                     prm4.setString(2, StkCode);
                     prm4.executeUpdate();
@@ -346,17 +345,16 @@ public class PUtility {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
 
             }
             for (int i = TempAct; i <= 24; i++) {
                 String T_Mon = "bqty" + String.valueOf(i);
                 String InsertQuery4 = "update stkfile set " + T_Mon + "=" + T_Mon + "-? where (bpcode=?) and (bstk=?)";
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
-                    PreparedStatement prm4 = mysql2.getConnection().prepareStatement(InsertQuery4);
+                    PreparedStatement prm4 = mysql.getConnection().prepareStatement(InsertQuery4);
                     prm4.setDouble(1, TempQty);
                     prm4.setString(2, TempCode);
                     prm4.setString(3, StkCode);
@@ -366,7 +364,7 @@ public class PUtility {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
             }
         }
@@ -384,7 +382,7 @@ public class PUtility {
         }
     }
 
-    public static void ProcessStockIn(String DocNo, String StkCode, String PCode, Date TDate,
+    public void ProcessStockIn(String DocNo, String StkCode, String PCode, Date TDate,
             String Stk_Remark, Double Qty, Double Amount, String UserPost, String PStock,
             String PSet, String r_index, String SaleOrRefund) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -406,7 +404,7 @@ public class PUtility {
         }
 
         if (StkProc) {
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open(PUtility.class);
             try {
                 String InsertQuery = "insert into stcard (s_date,s_no,s_stk,s_pcode,s_que,s_in,s_incost,"
@@ -437,11 +435,10 @@ public class PUtility {
 
             int TempAct = GetActionMon(TDate);
             if (!SeekStkFile(TempCode, StkCode)) {
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
                     String InsertQuery4 = "insert into stkfile (bpcode,bstk) values (?,?)";
-                    PreparedStatement prm4 = mysql2.getConnection().prepareStatement(InsertQuery4);
+                    PreparedStatement prm4 = mysql.getConnection().prepareStatement(InsertQuery4);
                     prm4.setString(1, TempCode);
                     prm4.setString(2, StkCode);
                     prm4.executeUpdate();
@@ -450,14 +447,13 @@ public class PUtility {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
             }
             for (int i = TempAct; i <= 24; i++) {
                 String T_Mon = "bqty" + String.valueOf(i);
                 String InsertQuery4 = "update stkfile set " + T_Mon + "=" + T_Mon + "-? where (bpcode=?) and (bstk=?)";
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
                     PreparedStatement prm4 = mysql.getConnection().prepareStatement(InsertQuery4);
                     prm4.setDouble(1, TempQty);
@@ -469,7 +465,7 @@ public class PUtility {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
             }
         }
@@ -487,9 +483,9 @@ public class PUtility {
         }
     }
 
-    public static boolean CheckPSetSelect(String PCode) {
+    public boolean CheckPSetSelect(String PCode) {
         boolean RetValue = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -510,7 +506,7 @@ public class PUtility {
         return RetValue;
     }
 
-    public static void ProcessSetUpdateStockOut(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost) {
+    public void ProcessSetUpdateStockOut(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
         Date date = new Date();
@@ -527,7 +523,7 @@ public class PUtility {
             Double TempAmt = productBean.getPPrice11() * XQty;
 
             if (StkProc) {
-                MySQLConnect mysql = new MySQLConnect();
+                
                 mysql.open(PUtility.class);
                 try {
                     String InsertQuery = "insert into stcard (s_date,s_no,s_stk,s_pcode,s_que,s_in,s_incost,"
@@ -558,11 +554,10 @@ public class PUtility {
 
                 int TempAct = GetActionMon(TDate);
                 if (!SeekStkFile(TempCode, StkCode)) {
-                    MySQLConnect mysql2 = new MySQLConnect();
-                    mysql2.open(PUtility.class);
+                    mysql.open(PUtility.class);
                     try {
                         String InsertQuery4 = "insert into stkfile (bpcode,bstk) values (?,?)";
-                        PreparedStatement prm4 = mysql2.getConnection().prepareStatement(InsertQuery4);
+                        PreparedStatement prm4 = mysql.getConnection().prepareStatement(InsertQuery4);
                         prm4.setString(1, TempCode);
                         prm4.setString(2, StkCode);
                         prm4.executeUpdate();
@@ -571,12 +566,11 @@ public class PUtility {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql2.closeConnection(PUtility.class);
+                        mysql.closeConnection(PUtility.class);
                     }
                 }
 
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(PUtility.class);
+                mysql.open(PUtility.class);
                 try {
                     String sql = "update stkfile set bqty?=bqty?-? where (bpcode=?) and (bstk=?)";
                     PreparedStatement prmt = mysql.getConnection().prepareStatement(sql);
@@ -595,13 +589,13 @@ public class PUtility {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(PUtility.class);
+                    mysql.closeConnection(PUtility.class);
                 }
             }
         }
     }
 
-    public static void ProcessSelectSetUpdateStockOut(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost, String r_index) {
+    public void ProcessSelectSetUpdateStockOut(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost, String r_index) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
         Date date = new Date();
@@ -618,7 +612,7 @@ public class PUtility {
             Double TempAmt = proBean.getPPrice11() * XQty;
 
             if (StkProc) {
-                MySQLConnect mysql = new MySQLConnect();
+                
                 mysql.open(ProductControl.class);
                 try {
                     String InsertQuery = "insert into stcard (s_date,s_no,s_stk,s_pcode,s_que,s_in,s_incost,"
@@ -649,11 +643,10 @@ public class PUtility {
 
                 int TempAct = GetActionMon(TDate);
                 if (!SeekStkFile(TempCode, StkCode)) {
-                    MySQLConnect mysql2 = new MySQLConnect();
-                    mysql2.open(ProductControl.class);
+                    mysql.open(ProductControl.class);
                     try {
                         String sql = "insert into stkfile (bpcode,bstk) values (?,?)";
-                        PreparedStatement prmt = mysql2.getConnection().prepareStatement(sql);
+                        PreparedStatement prmt = mysql.getConnection().prepareStatement(sql);
                         prmt.setString(1, TempCode);
                         prmt.setString(2, StkCode);
                         prmt.executeUpdate();
@@ -662,14 +655,13 @@ public class PUtility {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql2.closeConnection(PUtility.class);
+                        mysql.closeConnection(PUtility.class);
                     }
 
-                    MySQLConnect mysql3 = new MySQLConnect();
-                    mysql3.open(ProductControl.class);
+                    mysql.open(ProductControl.class);
                     try {
                         String sql = "update stkfile set bqty?=bqty?-? where (bpcode=?) and (bstk=?)";
-                        PreparedStatement prmt = mysql3.getConnection().prepareStatement(sql);
+                        PreparedStatement prmt = mysql.getConnection().prepareStatement(sql);
                         for (int i = TempAct; i <= 24; i++) {
                             prmt.setInt(1, i);
                             prmt.setInt(2, i);
@@ -685,20 +677,20 @@ public class PUtility {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
-                        mysql3.closeConnection(PUtility.class);
+                        mysql.closeConnection(PUtility.class);
                     }
                 }
             }
         }
     }
 
-    public static void ProcessSelectSetUpdateStockOutRefund(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost, String r_index) {
+    public void ProcessSelectSetUpdateStockOutRefund(String DocNo, String StkCode, String XCode, Date TDate, String StkRemark, Double XQty, String UserPost, String r_index) {
         SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
         String XDocNo = DocNo.substring(1, 8);
         Date date = new Date();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -773,7 +765,7 @@ public class PUtility {
         }
     }
 
-    public static String GetKeyAddMemberValue(String MemberCode) {
+    public String GetKeyAddMemberValue(String MemberCode) {
         SimpleDateFormat Timefmt = new SimpleDateFormat("hhmmss", Locale.ENGLISH);
         DecimalFormat IntFmt = new DecimalFormat("##########");
         Date date2 = new Date();
@@ -798,18 +790,18 @@ public class PUtility {
         if (StrSum1.length() >= 6) {
             Tempcode1 = StrSum1.substring(0, 6);
         } else {
-            Tempcode1 = PUtility.Addzero(StrSum1, 6);
+            Tempcode1 = Addzero(StrSum1, 6);
         }
         if (StrSumx.length() >= 2) {
             Tempcode2 = StrSumx.substring(0, 2);
         } else {
-            Tempcode2 = PUtility.Addzero(StrSumx, 2);
+            Tempcode2 = Addzero(StrSumx, 2);
         }
         String XKeyCode = Tempcode1 + Tempcode2;
         return XKeyCode;
     }
 
-    public static Boolean CheckKeyAddMemberValue(String MemberCode, String KeyCheck) {
+    public Boolean CheckKeyAddMemberValue(String MemberCode, String KeyCheck) {
         DecimalFormat IntFmt = new DecimalFormat("##########");
         String StrSumx = KeyCheck.substring(6, 8);
         int Sumx = Integer.parseInt(StrSumx);
@@ -827,20 +819,20 @@ public class PUtility {
         if (StrSum1.length() >= 6) {
             Tempcode1 = StrSum1.substring(0, 6);
         } else {
-            Tempcode1 = PUtility.Addzero(StrSum1, 6);
+            Tempcode1 = Addzero(StrSum1, 6);
         }
         if (StrSumx.length() >= 2) {
             Tempcode2 = StrSumx.substring(0, 2);
         } else {
-            Tempcode2 = PUtility.Addzero(StrSumx, 2);
+            Tempcode2 = Addzero(StrSumx, 2);
         }
         String XKeyCode = Tempcode1 + Tempcode2;
         return XKeyCode.equals(KeyCheck);
     }
 
-    public static boolean CheckCouponRedule(String XCode2) {
+    public boolean CheckCouponRedule(String XCode2) {
         Boolean ReturnVal = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -863,11 +855,11 @@ public class PUtility {
         return ReturnVal;
     }
 
-    public static int GetUserRound(String XUser) {
+    public int GetUserRound(String XUser) {
         int ReturnVal = 1;
         String TempUser;
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         for (int i = 1; i < 30; i++) {
             TempUser = XUser + "-" + i;
@@ -899,9 +891,9 @@ public class PUtility {
 
     }
 
-    public static boolean CheckCashierClose(String XUser) {
+    public boolean CheckCashierClose(String XUser) {
         boolean ReturnVal = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -924,7 +916,7 @@ public class PUtility {
         return ReturnVal;
     }
 
-    public static String ConvertReal(String TStr) {
+    public String ConvertReal(String TStr) {
         String TempStr = "";
         if (TStr.equals("")) {
             TStr = "0";
@@ -944,7 +936,7 @@ public class PUtility {
         return TempStr;
     }
 
-    public static Boolean ChkValidDate(Date tdate) {
+    public Boolean ChkValidDate(Date tdate) {
         Boolean ReturnValue = false;
         try {
             Dateft.format(tdate);
@@ -954,7 +946,7 @@ public class PUtility {
         return ReturnValue;
     }
 
-    public static Boolean ChkDate(String tdate) {
+    public Boolean ChkDate(String tdate) {
         SimpleDateFormat DateFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         Boolean ReturnValue;
         Date TempDate;
@@ -974,7 +966,7 @@ public class PUtility {
         return ReturnValue;
     }
 
-    public static java.util.Calendar StrToCalendar(String tdate) {
+    public java.util.Calendar StrToCalendar(String tdate) {
         SimpleDateFormat DateFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         Calendar ca2 = Calendar.getInstance();
         String[] casplit = tdate.split("/");
@@ -986,7 +978,7 @@ public class PUtility {
         return ca2;
     }
 
-    public static int getDaysBetween(java.util.Calendar d1, java.util.Calendar d2) {
+    public int getDaysBetween(java.util.Calendar d1, java.util.Calendar d2) {
         if (d1.after(d2)) { // swap dates so that d1 is start and d2 is end
 
             java.util.Calendar swap = d1;
@@ -1006,7 +998,7 @@ public class PUtility {
         return days;
     }
 
-    public static String Addzero(String Str, int Len) {
+    public String Addzero(String Str, int Len) {
         String TempStr = "";
         String ReturnStr;
         int StrLen = Str.trim().length();
@@ -1021,7 +1013,7 @@ public class PUtility {
         return ReturnStr;
     }
 
-    public static boolean ChkNumValue(String Str) {
+    public boolean ChkNumValue(String Str) {
         String NumList[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", ","};
         char ch;
         String Tmp;
@@ -1045,7 +1037,7 @@ public class PUtility {
         return Num == Str.length() && Str.length() != 0;
     }
 
-    public static boolean ChkIntValue(String Str) {
+    public boolean ChkIntValue(String Str) {
         try {
             Integer.parseInt(Str);
             return true;
@@ -1056,11 +1048,11 @@ public class PUtility {
         return false;
     }
 
-    public static String DataFull2(String Str, int Len) {
+    public String DataFull2(String Str, int Len) {
         return TAB + Str;
     }
 
-    public static String DataFull(String Str, int Len) {
+    public String DataFull(String Str, int Len) {
         if (Str == null) {
             return "";
         }
@@ -1078,7 +1070,7 @@ public class PUtility {
         return ReturnStr;
     }
 
-    public static String DataFullSpace(String Str, int Len) {
+    public String DataFullSpace(String Str, int Len) {
         if (Str == null) {
             return "";
         }
@@ -1096,13 +1088,13 @@ public class PUtility {
         return ReturnStr;
     }
 
-    public static String TAB = "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;";
+    public String TAB = "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;";
 
-    public static String DataFullR2(String Str, int Len) {
+    public String DataFullR2(String Str, int Len) {
         return TAB + Str;
     }
 
-    public static String DataFullR(String Str, int Len) {
+    public String DataFullR(String Str, int Len) {
         String ReturnStr;
         String AddStr = "";
         int List1[] = {209, 212, 213, 214, 215, 216, 217, 218, 219, 231, 232, 233, 234, 235, 236, 237};
@@ -1138,11 +1130,11 @@ public class PUtility {
 
     }
 
-    public static String CurDate() {
+    public String CurDate() {
         return Dateft.format(new Date());
     }
 
-    public static TranRecord[] addArray(TranRecord[] MyArray) {
+    public TranRecord[] addArray(TranRecord[] MyArray) {
         int aSize = MyArray.length;
         TranRecord[] NewArray;
         NewArray = new TranRecord[aSize + 1];
@@ -1154,7 +1146,7 @@ public class PUtility {
 
     }
 
-    public static CreditRec[] addCrArray(CreditRec[] MyArray) {
+    public CreditRec[] addCrArray(CreditRec[] MyArray) {
         int aSize = MyArray.length;
         CreditRec[] NewArray;
         NewArray = new CreditRec[aSize + 1];
@@ -1166,7 +1158,7 @@ public class PUtility {
 
     }
 
-    public static CouponRec[] addCuArray(CouponRec[] CuArray) {
+    public CouponRec[] addCuArray(CouponRec[] CuArray) {
         int aSize = CuArray.length;
         CouponRec[] NewArray;
         NewArray = new CouponRec[aSize + 1];
@@ -1178,7 +1170,7 @@ public class PUtility {
 
     }
 
-    public static CreditPaymentRec[] addCreditArray(CreditPaymentRec[] CuArray) {
+    public CreditPaymentRec[] addCreditArray(CreditPaymentRec[] CuArray) {
         int aSize = CuArray.length;
         CreditPaymentRec[] NewArray;
         NewArray = new CreditPaymentRec[aSize + 1];
@@ -1190,7 +1182,7 @@ public class PUtility {
 
     }
 
-    public static CouponDetailRec[] addCuDetailArray(CouponDetailRec[] CuDetailArray) {
+    public CouponDetailRec[] addCuDetailArray(CouponDetailRec[] CuDetailArray) {
         int aSize = CuDetailArray.length;
         CouponDetailRec[] NewArray;
         NewArray = new CouponDetailRec[aSize + 1];
@@ -1202,7 +1194,7 @@ public class PUtility {
 
     }
 
-    public static PluRec[] addPluArray(PluRec[] MyArray) {
+    public PluRec[] addPluArray(PluRec[] MyArray) {
         int aSize = MyArray.length;
         PluRec[] NewArray;
         NewArray = new PluRec[aSize + 1];
@@ -1214,7 +1206,7 @@ public class PUtility {
 
     }
 
-    public static HourlyRec[] addHourlyArray(HourlyRec[] MyArray) {
+    public HourlyRec[] addHourlyArray(HourlyRec[] MyArray) {
         int aSize = MyArray.length;
         HourlyRec[] NewArray;
         NewArray = new HourlyRec[aSize + 1];
@@ -1226,10 +1218,10 @@ public class PUtility {
 
     }
 
-    public static String ReadChargeBillNo(String Macno) {
+    public String ReadChargeBillNo(String Macno) {
         String StrRefBillNo = "";
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1251,10 +1243,10 @@ public class PUtility {
             mysql.closeConnection(PUtility.class);
         }
 
-        return PublicVar.Branch_Code + PUtility.Addzero(StrRefBillNo, 7);
+        return PublicVar.Branch_Code + Addzero(StrRefBillNo, 7);
     }
 
-    public static Boolean ChkMemPoint(String ProCode) {
+    public Boolean ChkMemPoint(String ProCode) {
         Boolean ReturnValue = false;
         if (ProCode.equals("")) {
             ReturnValue = false;
@@ -1266,7 +1258,7 @@ public class PUtility {
             String CurTime = TimeFormat.format(CurDate);
             String CurDay = DayFormat.format(CurDate);
 
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open(PUtility.class);
             try {
                 Statement stmt = mysql.getConnection().createStatement();
@@ -1317,12 +1309,12 @@ public class PUtility {
         return ReturnValue;
     }
 
-    public static Boolean SeekPromotion(String XPro1) {
+    public Boolean SeekPromotion(String XPro1) {
         Boolean ReturnVal = false;
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1393,8 +1385,8 @@ public class PUtility {
         return ReturnVal;
     }
 
-    public static void ClearTempPromotion(String Table) {
-        MySQLConnect mysql = new MySQLConnect();
+    public void ClearTempPromotion(String Table) {
+        
         mysql.open(PUtility.class);
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1411,7 +1403,7 @@ public class PUtility {
 
     }
 
-    public static double RoundDecimal(double TempAmount, String RoundType) {
+    public double RoundDecimal(double TempAmount, String RoundType) {
         double ReturnVal;
         double decimal = DecimalChk(TempAmount);
         double number = NumberChk(TempAmount);
@@ -1471,7 +1463,7 @@ public class PUtility {
         return ReturnVal;
     }
 
-    public static double NumberChk(Double TempAmount) {
+    public double NumberChk(Double TempAmount) {
         Double ReturnVal;
         String TempNum;
         String TempDec;
@@ -1479,14 +1471,14 @@ public class PUtility {
         int index = TempNum.indexOf(".");
         if (index != -1) {
             TempDec = TempNum.substring(0, index);
-            ReturnVal = Double.parseDouble(PUtility.ConvertReal(TempDec));
+            ReturnVal = Double.parseDouble(ConvertReal(TempDec));
         } else {
             ReturnVal = 0.0;
         }
         return ReturnVal;
     }
 
-    public static double DecimalChk(Double TempAmount) {
+    public double DecimalChk(Double TempAmount) {
         Double ReturnVal;
         String TempNum;
         String TempDec;
@@ -1494,17 +1486,17 @@ public class PUtility {
         int index = TempNum.indexOf(".");
         if (index != -1) {
             TempDec = TempNum.substring(index + 1);
-            ReturnVal = Double.parseDouble(PUtility.ConvertReal(TempDec));
+            ReturnVal = Double.parseDouble(ConvertReal(TempDec));
         } else {
             ReturnVal = 0.0;
         }
         return ReturnVal;
     }
 
-    public static String SeekGroupName(String TCode) {
+    public String SeekGroupName(String TCode) {
         String ReturnValues = "";
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1527,9 +1519,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekProductName(String TCode) {
+    public String SeekProductName(String TCode) {
         String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1552,10 +1544,10 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekProductUnit(String TCode) {
+    public String SeekProductUnit(String TCode) {
         String ReturnValues = "";
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1578,9 +1570,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static double SeekPluPrice(String TCode, String Etd) {
+    public double SeekPluPrice(String TCode, String Etd) {
         double ReturnValues = 0.0;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1615,9 +1607,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekCreditName(String TCode) {
+    public String SeekCreditName(String TCode) {
         String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1640,9 +1632,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekCuponName(String TCode) {
+    public String SeekCuponName(String TCode) {
         String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1665,9 +1657,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekArName(String TCode) {
+    public String SeekArName(String TCode) {
         String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1690,14 +1682,14 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static String SeekRegNo(String macNo) {
+    public String SeekRegNo(String macNo) {
         POSHWSetup poshwSetup = PosControl.getData(macNo);
         return poshwSetup.getMacNo();
     }
 
-    public static String SeekPromotionName(String TCode) {
+    public String SeekPromotionName(String TCode) {
         String ReturnValues = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1720,9 +1712,9 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public static Boolean SeekPromotion2(String Macno, String TCode) {
+    public Boolean SeekPromotion2(String Macno, String TCode) {
         boolean foundData = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PUtility.class);
         try {
             try (Statement stmt = mysql.getConnection().createStatement()) {
@@ -1743,7 +1735,7 @@ public class PUtility {
         return foundData;
     }
 
-    public static Boolean ChkPromotion(String XPro1, TranRecord TranRec) {
+    public Boolean ChkPromotion(String XPro1, TranRecord TranRec) {
         Boolean ReturnVal = false;
         if (XPro1.trim().length() == 0) {
             ReturnVal = false;
@@ -1755,7 +1747,7 @@ public class PUtility {
             SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm");
             String CurTime = TimeFormat.format(CurDate);
             String CurDay = DayFormat.format(CurDate);
-            if (PUtility.SeekPromotion(XPro1)) {
+            if (SeekPromotion(XPro1)) {
                 if ((SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate1)) >= 0) && (SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate2)) <= 0)) {
                     if (PublicVar.PSTRDay.indexOf(CurDay) > 0) {
                         if (!((CurTime.compareTo(PublicVar.PTime1S) < 0) || (CurTime.compareTo(PublicVar.PTime1E) > 0))) {

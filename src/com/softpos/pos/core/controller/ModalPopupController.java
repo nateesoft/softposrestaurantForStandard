@@ -17,11 +17,13 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class ModalPopupController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<OptionSetBean> getListOptionSet(String pCode) {
         List<OptionSetBean> listOption = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -49,7 +51,6 @@ public class ModalPopupController {
     public List<MgrButtonSetupBean> getListMgrButtonSetupByPCode(String pCode, String type) {
         List<MgrButtonSetupBean> listOption = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -85,7 +86,6 @@ public class ModalPopupController {
     public List<SoftMenuSetup> loadSoftMenuSetupByMenuCode(String menuSub) {
         List<SoftMenuSetup> listOption = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

@@ -20,6 +20,7 @@ import com.softpos.util.MSG;
 public class FindAr extends javax.swing.JDialog {
 
     DefaultTableModel model2;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form FindAr
@@ -179,10 +180,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             SQLQuery = "Select * from custfile order by sp_desc";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             while (rs.next()) {
@@ -199,7 +200,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindAr.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();

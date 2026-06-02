@@ -7,8 +7,6 @@ import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.controller.LoginController;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.pos.core.model.PosUserBean;
@@ -24,8 +22,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -42,6 +38,9 @@ public class Login extends javax.swing.JDialog {
     private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private DecimalFormat IntFmt = new DecimalFormat("#,##0");
     private PosControl posControl = AppContext.getPosControl();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -630,23 +629,22 @@ public class Login extends javax.swing.JDialog {
         }
     }
 
-    private void clearTablefileNotUse() {
-        MySQLConnect mysql = new MySQLConnect();
+    private void clearTablefileNotUse() {        
         try {
-            mysql.open(Login.class);
+            mysqlConnect.open(Login.class);
             String sql = "select * from balance limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (!rs.next()) {
                     String sqlTablefile = "update tablefile "
                             + "set tonact='N',tpause='Y',titem='0',tamount='0',tcustomer='0',nettotal='0';";
-                    mysql.executeUpdate(sqlTablefile);
+                    mysqlConnect.executeUpdate(sqlTablefile);
                 }
             }
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         } catch (SQLException e) {
             AppLogUtil.log(Login.class, "error", e);
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
     }
 }

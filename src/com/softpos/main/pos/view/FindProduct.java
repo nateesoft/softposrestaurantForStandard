@@ -1,12 +1,11 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.DbProduct;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import com.softpos.util.AppLogUtil;
@@ -209,49 +208,20 @@ public class FindProduct extends javax.swing.JDialog {
         JTableHeader tHeader = tbProduct.getTableHeader();
         tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-        String sqlPlus = "";
-        if (chkProductExpire.isSelected()) {
-            sqlPlus = "and PActive in ('Y', 'N') ";
-        } else {
-            sqlPlus = "and PActive='Y' ";
+        String keyword = ThaiUtil.Unicode2ASCII(txtSearch.getText());
+        boolean includeInactive = chkProductExpire.isSelected();
+
+        List<Map<String, Object>> rows = new DbProduct().searchProducts(keyword, includeInactive);
+        for (Map<String, Object> r : rows) {
+            model.addRow(new Object[]{
+                r.get("PCode"),
+                ThaiUtil.ASCII2Unicode((String) r.get("PDesc")),
+                ThaiUtil.ASCII2Unicode((String) r.get("PUnit1")),
+                r.get("PPrice11"),
+                r.get("PGroup"),
+                ThaiUtil.ASCII2Unicode((String) r.get("GroupName"))
+            });
         }
-
-        String word = ThaiUtil.Unicode2ASCII(txtSearch.getText());
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select PCode, PDesc, PUnit1, PPrice11, PGroup, GroupName "
-                    + "from product p,groupfile g "
-                    + "where p.pgroup=g.groupcode "
-                    + "and (PCode like '%" + word + "%' "
-                    + "or PDesc like '%" + word + "%') "
-                    + sqlPlus
-                    + "order by PCode";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("PCode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("PDesc")),
-                    ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")),
-                    rs.getDouble("PPrice11"),
-                    rs.getString("PGroup"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("GroupName"))
-                });
-            }
-
-            lbTotal.setText("รวมรายการ " + model.getRowCount() + " รายการ");
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(FindProduct.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        lbTotal.setText("รวมรายการ " + model.getRowCount() + " รายการ");
     }
 }

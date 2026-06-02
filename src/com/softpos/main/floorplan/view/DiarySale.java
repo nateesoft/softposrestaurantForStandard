@@ -14,8 +14,9 @@ import com.softpos.util.MSG;
 public class DiarySale extends javax.swing.JDialog {
 
     private final SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
-    String DD = dd.format(new Date());
-    DecimalFormat DecFormat = new DecimalFormat("#,##0.00");
+    private String DD = dd.format(new Date());
+    private DecimalFormat DecFormat = new DecimalFormat("#,##0.00");
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public DiarySale(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -230,7 +231,7 @@ public class DiarySale extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadSale() {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
 
         try {

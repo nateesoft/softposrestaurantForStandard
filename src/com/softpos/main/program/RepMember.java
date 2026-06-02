@@ -38,6 +38,8 @@ public class RepMember extends javax.swing.JDialog {
     Double XTotalAmt = 0.0;
     Double XTotalDisc = 0.0;
     PPrint prn = new PPrint();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     /**
      * Creates new form ArNotPay
@@ -631,10 +633,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "select * from mtran left join " + Value.db_member + ".memmaster on mtran.m_code=memmaster.m_code "
                         + "where (mtran.m_code>='" + TempCode1 + "') and (mtran.m_code<='" + TempCode2 + "') and (m_date>='" + Datefmt.format(TempDate1) + "') and (m_date<='" + Datefmt.format(TempDate2) + "') order by mtran.m_code,m_date,m_billno";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -661,7 +663,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(RepMember.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

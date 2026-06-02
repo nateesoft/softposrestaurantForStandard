@@ -12,10 +12,12 @@ import java.util.List;
  * @author nathee
  */
 public class TSaleController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<TSaleBean> listTSaleByRefId(String b_refno) {
         List<TSaleBean> listTsale = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(TSaleController.class);
         try {
             String sql = "select * from t_sale "

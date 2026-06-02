@@ -25,6 +25,7 @@ public class PrintToKic extends javax.swing.JFrame {
     public static boolean kicPrintting = false;
     private boolean printkic = false;
     private final PrintToKicController control = AppContext.getPrintToKicController();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
 
     /**
      * Creates new form PrintToKic

@@ -25,6 +25,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
     public String pcode = "";
     public String pdesc = "";
     public String pindex = "";
+    private final PKicTran PKicTran = new PKicTran();
 
     public UrgentFoodDisplay(String TableNo, String pcode, String pdesc, String pindex) {
         this.pcode = pcode;

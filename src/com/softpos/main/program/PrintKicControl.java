@@ -13,6 +13,8 @@ import com.softpos.util.MSG;
  * @author ASUS
  */
 public class PrintKicControl extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PrintKicControl(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -33,9 +35,8 @@ public class PrintKicControl extends javax.swing.JDialog {
         btnSave = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("หน้าต่างจัดการเครื่องพิมพ์ออกครัว");
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -197,15 +198,15 @@ public class PrintKicControl extends javax.swing.JDialog {
             model.removeRow(0);//ลบข้อมูลบนตารางจนเหลือ 0 ก่อนที่จะโหลดขึ้นมาใหม่
         }
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql = "select pcode,pdesc,pgroup,pprice11,pkic,pstock "
                     + "from product "
                     + "where pfix='F' "
                     + "and pgroup <'12' "
                     + "order by pgroup,pcode";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 String pcode = rs.getString("pcode");
                 String pdesc = ThaiUtil.ASCII2Unicode(rs.getString("pdesc"));
@@ -217,20 +218,19 @@ public class PrintKicControl extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     public void btnSave() {
         DefaultTableModel model = (DefaultTableModel) tblKicSetup.getModel();
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             for (int i = 0; i < model.getRowCount(); i++) {
                 String code = model.getValueAt(i, 0).toString();
                 String kic = model.getValueAt(i, 2).toString();
                 String sql = "update product set pkic='" + kic + "' where pcode='" + code + "';";
-                mysql.executeUpdate(sql);
+                mysqlConnect.executeUpdate(sql);
             }
             MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อย : Update Complete");
 
@@ -239,7 +239,7 @@ public class PrintKicControl extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PrintKicControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

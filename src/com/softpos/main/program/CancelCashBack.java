@@ -11,6 +11,8 @@ import com.softpos.util.JTableUtility;
 import com.softpos.util.MSG;
 
 public class CancelCashBack extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public CancelCashBack(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -169,11 +171,11 @@ public class CancelCashBack extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from billret where fat = 'N'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 model.addRow(new Object[]{
@@ -192,7 +194,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -200,14 +202,13 @@ public class CancelCashBack extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             int row = table.getSelectedRow();
             if (row != -1) {
 
                 String sql = "update billret set Fat='V' where ref_no='" + code + "'";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 int i = stmt.executeUpdate(sql);
                 stmt.close();
                 if (i > 0) {
@@ -221,7 +222,7 @@ public class CancelCashBack extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelCashBack.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

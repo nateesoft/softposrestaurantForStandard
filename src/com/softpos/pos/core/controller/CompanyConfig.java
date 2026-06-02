@@ -3,6 +3,8 @@ package com.softpos.pos.core.controller;
 import com.softpos.pos.core.model.POSConfigSetup;
 
 public class CompanyConfig {
+    
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public CompanyConfig() {
     }

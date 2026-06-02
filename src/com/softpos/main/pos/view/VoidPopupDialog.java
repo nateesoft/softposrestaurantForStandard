@@ -1,15 +1,11 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.util.ThaiUtil;
+import com.softpos.pos.core.controller.VoidMsgController;
 import com.softpos.pos.core.model.MemberBean;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class VoidPopupDialog extends javax.swing.JDialog {
@@ -183,29 +179,9 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select * from voidmsg";
-            Statement stmt = mysql.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("VCode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("VName"))
-                });
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(VoidPopupDialog.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        List<String[]> rows = new VoidMsgController().getAll();
+        for (String[] r : rows) {
+            model.addRow(new Object[]{r[0], r[1]});
         }
     }
 }

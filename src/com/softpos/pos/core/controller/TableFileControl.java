@@ -19,10 +19,11 @@ public class TableFileControl {
     public static final int TABLE_NOT_SETUP = 0;
     public static final int TABLE_EXIST_DATA = 3;
     public static final int TABLE_EXIST_DATA_IS_ACTIVE = 4;
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public TableFileControl() {
         try {
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.closeConnection(TableFileControl.class);
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -30,7 +31,7 @@ public class TableFileControl {
     }
 
     public void saveTableFile(TableFileBean tableBean) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -78,7 +79,7 @@ public class TableFileControl {
     }
 
     public void updateTableFile(TableFileBean tableFile) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -122,7 +123,7 @@ public class TableFileControl {
 
     public int checkTableRead(String tableNo, String user) {
         int result;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         mysql.open(TableFileControl.class);
         try {
@@ -175,7 +176,7 @@ public class TableFileControl {
 
     public List<TableFileBean> getALlHoldTable() {
         List<TableFileBean> allTable = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -252,7 +253,7 @@ public class TableFileControl {
 
     public List<TableFileBean> getALlTable() {
         List<TableFileBean> allTable = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -330,7 +331,7 @@ public class TableFileControl {
 
     public List<TableSetup> getTable(String TCode) {
         List<TableSetup> allTable = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -361,7 +362,7 @@ public class TableFileControl {
 
     public TableFileBean getData(String table) {
         TableFileBean bean = new TableFileBean();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -440,7 +441,7 @@ public class TableFileControl {
     }
 
     public void setDefaultTableFile(String table) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -474,7 +475,7 @@ public class TableFileControl {
     }
 
     public void updateTableActive(String table, String customer, String emp) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -507,7 +508,7 @@ public class TableFileControl {
     }
 
     public void updateMacno(String table, String username) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -528,7 +529,7 @@ public class TableFileControl {
     }
 
     public void createNewTableSplit(TableFileBean table, String newTable) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -563,7 +564,7 @@ public class TableFileControl {
     }
 
     public String getSplitTable(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -599,8 +600,8 @@ public class TableFileControl {
         return tableNo;
     }
 
-    public static void updateTableFile(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
+    public void updateTableFile(String tableNo) {
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -640,7 +641,7 @@ public class TableFileControl {
     }
 
     public boolean checkTableOpened(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -663,7 +664,7 @@ public class TableFileControl {
     }
 
     public void createNewTable(String tableTemp) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -683,7 +684,7 @@ public class TableFileControl {
     }
 
     public void updateTableNotActive(String TABLE_NO) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -701,7 +702,7 @@ public class TableFileControl {
     }
 
     void updateTableActive(String TABLE_2) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -719,7 +720,7 @@ public class TableFileControl {
     }
 
     public int getItemCount(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         int countItem = 0;
         try {
@@ -768,7 +769,7 @@ public class TableFileControl {
 
     public boolean checkTableMoreItem(String tableNo) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(TableFileControl.class);
         try {
             mysql.open(TableFileControl.class);
@@ -787,6 +788,108 @@ public class TableFileControl {
         }
 
         return isValid;
+    }
+
+    public void updateBalanceType(String rIndex, String rEtd, String tableNo) {
+        
+        mysql.open(TableFileControl.class);
+        try {
+            String sql = "update balance set R_ETD='" + rEtd + "' "
+                    + "where R_Index='" + rIndex + "' and R_Table='" + tableNo + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableFileControl.class);
+        }
+    }
+
+    public void saveCustomerCount(String tableNo, String cus, String memName) {
+        
+        mysql.open(TableFileControl.class);
+        try {
+            String sql = "UPDATE tablefile SET "
+                    + "TCustomer = " + cus + ","
+                    + "MemName='" + ThaiUtil.Unicode2ASCII(memName) + "' "
+                    + "WHERE Tcode = '" + tableNo + "'";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableFileControl.class);
+        }
+    }
+
+    public String getCustomerName(String tableNo) {
+        
+        mysql.open(TableFileControl.class);
+        try {
+            String sql = "select MemName from tablefile where Tcode = '" + tableNo + "' limit 1";
+            try (Statement stmt = mysql.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    return rs.getString("MemName") != null ? rs.getString("MemName") : "";
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableFileControl.class);
+        }
+        return "";
+    }
+
+    public void setTableNotActive(String tableNo) {
+        
+        mysql.open(TableFileControl.class);
+        try {
+            String sql = "update tablefile set TonAct='N' where (TCode='" + tableNo + "')";
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableFileControl.class);
+        }
+    }
+
+    public List<Object[]> getActiveTables() {
+        List<Object[]> list = new ArrayList<>();
+        
+        mysql.open(TableFileControl.class);
+        try {
+            String sql = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
+                    + "TOnAct, ChkBill, PrintChkBill"
+                    + " from tablefile "
+                    + "where tonact='Y' or TAmount>0 or TItem > 0 or Tcustomer > 0 "
+                    + "order by tcode";
+            try (Statement stmt = mysql.getConnection().createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(new Object[]{
+                        rs.getString("Tcode"),
+                        rs.getDate("Tlogindate"),
+                        rs.getString("TCurTime"),
+                        rs.getFloat("TCustomer"),
+                        rs.getFloat("TItem"),
+                        rs.getFloat("TAmount"),
+                        rs.getString("TOnAct"),
+                        rs.getString("ChkBill"),
+                        rs.getString("PrintChkBill")
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableFileControl.class);
+        }
+        return list;
     }
 
 }

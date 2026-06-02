@@ -4,6 +4,7 @@ import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
+import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,8 @@ import com.softpos.util.MSG;
 public class PLURep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     public PLURep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -503,7 +506,6 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //        /**
 //         * * OPEN CONNECTION **
 //         */
-//        MySQLConnect mysql = new MySQLConnect();
 //        mysql.open(this.getClass());
 //        try {
 //            Statement stmt = mysql.getConnection().createStatement();
@@ -723,7 +725,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1036,7 +1038,6 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //        /**
 //         * * OPEN CONNECTION **
 //         */
-//        MySQLConnect mysql = new MySQLConnect();
 //        mysql.open(this.getClass());
 //        try {
 //            Statement stmt = mysql.getConnection().createStatement();
@@ -1256,7 +1257,6 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

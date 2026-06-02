@@ -24,6 +24,9 @@ public class CopyBill extends javax.swing.JDialog {
     PPrint prn = new PPrint();
     CreditPaymentRec[] CreditArray;
     POSConfigSetup CONFIG;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public CopyBill(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -33,10 +36,10 @@ public class CopyBill extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -48,7 +51,7 @@ public class CopyBill extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         txtCopy.setText(Integer.toString(CONFIG.getP_BillCopy()));
@@ -73,7 +76,7 @@ public class CopyBill extends javax.swing.JDialog {
         bntOK = new javax.swing.JButton();
         bntExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("พิมพ์สำเนาใบเสร็จรับเงิน");
         setResizable(false);
 
@@ -237,11 +240,10 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         boolean validCopy = false;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_refno from billno where (b_macno='" + Value.MACNO + "') "
                     + "and (b_refno='" + BillNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -258,7 +260,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (validCopy) {
@@ -278,10 +280,9 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select * from billno where (b_macno='" + Value.MACNO + "') "
                         + "and (b_refno='" + BillNo + "') limit 1";
                 try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
@@ -376,14 +377,13 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
-        MySQLConnect mysql2 = new MySQLConnect();
-        mysql2.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         //Load Data From T_Sale
         try {
-            try (Statement stmt = mysql2.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadBalance = "select * from t_sale "
                         + "where (macno='" + Value.MACNO + "') "
                         + "and (r_refno='" + BillNo + "')";
@@ -445,7 +445,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CopyBill.class, "error", e);
         } finally {
-            mysql2.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (CONFIG.getP_BillCopyOne().equals("Y") & (billcopy > 0)) {
@@ -460,10 +460,9 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 prn.printBillCopy(MyArray, BillNo, i, CreditArray);
             }
 
-            MySQLConnect mysql3 = new MySQLConnect();
-            mysql3.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                try (Statement stmt = mysql3.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     String SqlQuery = "update billno set "
                             + "b_billcopy=b_billcopy+1 "
                             + "where (b_refno='" + BillNo + "') "
@@ -475,7 +474,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(CopyBill.class, "error", e);
             } finally {
-                mysql3.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             this.setVisible(false);//dispose();

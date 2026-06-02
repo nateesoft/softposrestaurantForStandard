@@ -10,17 +10,12 @@ import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.TableFileBean;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.BillControl;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class SplitBillPayment extends javax.swing.JDialog {
 
@@ -28,6 +23,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
     private String table2;
     private DecimalFormat df = new DecimalFormat("###0.00");
     private ProductControl productControl = AppContext.getProductControl();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
 
     public SplitBillPayment(java.awt.Dialog parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -299,35 +295,13 @@ public class SplitBillPayment extends javax.swing.JDialog {
                     BalanceControl balanceControl = AppContext.getBalanceControl();
 
                     boolean isLoop = false;
-                    /**
-                     * * OPEN CONNECTION **
-                     */
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
-                    try {
-                        String sql = "select R_Index from balance "
-                                + "where R_LinkIndex='" + R_Index + "' "
-                                + "order by R_Index;";
-                        Statement stmt = mysql.getConnection().createStatement();
-                        ResultSet rs = stmt.executeQuery(sql);
-                        while (rs.next()) {
-                            isLoop = true;
-                            String R_Index_In = rs.getString("R_Index");
-
-                            // Move product
-                            ProductBean productBean = productControl.getProductCodeArray(PCode);
-                            if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode, productBean)) {
-                                balanceControl.deleteProduct(table, PCode, R_Index_In);
-                            }
+                    List<String> linkedIndices = new BillControl().getLinkedBalanceIndices(R_Index);
+                    for (String R_Index_In : linkedIndices) {
+                        isLoop = true;
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable1.getText(), txtTable2.getText(), R_Index_In, PCode, productBean)) {
+                            balanceControl.deleteProduct(table, PCode, R_Index_In);
                         }
-
-                        rs.close();
-                        stmt.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(SplitBillPayment.class, "error", e);
-                    } finally {
-                        mysql.closeConnection(this.getClass());
                     }
 
                     if (!isLoop) {
@@ -378,35 +352,13 @@ public class SplitBillPayment extends javax.swing.JDialog {
                     BalanceControl balanceControl = AppContext.getBalanceControl();
 
                     boolean isLoop = false;
-                    /**
-                     * * OPEN CONNECTION **
-                     */
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
-                    try {
-                        String sql = "select R_Index from balance "
-                                + "where R_LinkIndex='" + R_Index + "' "
-                                + "order by R_Index;";
-                        Statement stmt = mysql.getConnection().createStatement();
-                        ResultSet rs = stmt.executeQuery(sql);
-                        while (rs.next()) {
-                            isLoop = true;
-                            String R_Index_In = rs.getString("R_Index");
-
-                            // Move product
-                            ProductBean productBean = productControl.getProductCodeArray(PCode);
-                            if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode, productBean)) {
-                                balanceControl.deleteProduct(table, PCode, R_Index_In);
-                            }
+                    List<String> linkedIndices2 = new BillControl().getLinkedBalanceIndices(R_Index);
+                    for (String R_Index_In : linkedIndices2) {
+                        isLoop = true;
+                        ProductBean productBean = productControl.getProductCodeArray(PCode);
+                        if (balanceControl.copyProductTo(txtTable2.getText(), txtTable1.getText(), R_Index_In, PCode, productBean)) {
+                            balanceControl.deleteProduct(table, PCode, R_Index_In);
                         }
-
-                        rs.close();
-                        stmt.close();
-                    } catch (SQLException e) {
-                        MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(SplitBillPayment.class, "error", e);
-                    } finally {
-                        mysql.closeConnection(this.getClass());
                     }
 
                     if (!isLoop) {

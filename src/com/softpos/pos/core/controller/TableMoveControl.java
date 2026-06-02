@@ -12,9 +12,11 @@ import com.softpos.util.AppLogUtil;
 public class TableMoveControl {
 
     private static MemberBean memberBean;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
 
-    private static void updateRLinkIndex(String tableDest) {
-        MySQLConnect mysql = new MySQLConnect();
+    private void updateRLinkIndex(String tableDest) {
+        
         mysql.open(TableMoveControl.class);
         try {
             String sql1 = "select R_SPIndex,R_LinkIndex,R_MoveFrom "
@@ -46,11 +48,13 @@ public class TableMoveControl {
         }
     }
 
+    public TableMoveControl() {}
+    
     public TableMoveControl(MemberBean memberBean) {
         this.memberBean = memberBean;
     }
 
-    public static void moveTable(String tableFrom, String tableDest) {
+    public void moveTable(String tableFrom, String tableDest) {
 
         // Check table are same
         if (tableFrom.equals(tableDest)) {
@@ -100,7 +104,7 @@ public class TableMoveControl {
         }
     }
 
-    public static void moveProduct(String table1, String table2, String R_Index) {
+    public void moveProduct(String table1, String table2, String R_Index) {
         BalanceControl bControl = AppContext.getBalanceControl();
         List<BalanceBean> dataBalanceFrom = bControl.getBalanceIndex(R_Index);
 
@@ -112,5 +116,41 @@ public class TableMoveControl {
 
         BalanceControl.updateProSerTable(table1, memberBean);
         BalanceControl.updateProSerTable(table2, memberBean);
+    }
+
+    public void backupTableData(String table1, String table2) {
+        mysql.open(TableMoveControl.class);
+        try {
+            Statement stmt = mysql.getConnection().createStatement();
+            stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
+            stmt.executeUpdate("create table IF NOT EXISTS temp_tablefile select * from tablefile "
+                    + "where tcode in('" + table1 + "','" + table2 + "');");
+            stmt.executeUpdate("drop table IF EXISTS temp_balance;");
+            stmt.executeUpdate("create table IF NOT EXISTS temp_balance select * from balance "
+                    + "where R_Table in('" + table1 + "','" + table2 + "');");
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableMoveControl.class);
+        }
+    }
+
+    public void restoreTableData(String table1, String table2) {
+        mysql.open(TableMoveControl.class);
+        try {
+            try (Statement stmt = mysql.getConnection().createStatement()) {
+                stmt.executeUpdate("delete from tablefile where tcode in('" + table1 + "','" + table2 + "');");
+                stmt.executeUpdate("delete from balance where r_table in('" + table1 + "','" + table2 + "');");
+                stmt.executeUpdate("insert into tablefile select * from temp_tablefile "
+                        + "where tcode in('" + table1 + "','" + table2 + "');");
+                stmt.executeUpdate("insert into balance select * from temp_balance "
+                        + "where r_table in('" + table1 + "','" + table2 + "');");
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysql.closeConnection(TableMoveControl.class);
+        }
     }
 }

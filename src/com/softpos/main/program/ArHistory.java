@@ -45,6 +45,10 @@ public class ArHistory extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     /**
      * Creates new form ArNotPay
@@ -652,10 +656,10 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         /**
                          * * OPEN CONNECTION **
                          */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
+                        
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
                             ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -675,7 +679,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(ArHistory.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
 
                         prn.print("----------------------------------------");
@@ -750,10 +754,9 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -774,7 +777,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting1()).trim() + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2()).trim() + "_";
@@ -820,10 +823,9 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') order by arcode";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -856,7 +858,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArHistory.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

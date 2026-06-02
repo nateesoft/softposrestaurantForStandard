@@ -42,6 +42,10 @@ public class MTDCoupon extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public MTDCoupon(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -383,7 +387,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
@@ -457,7 +461,6 @@ public class MTDCoupon extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "

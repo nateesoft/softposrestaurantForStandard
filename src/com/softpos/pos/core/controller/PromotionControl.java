@@ -23,13 +23,18 @@ import com.softpos.util.DateUtil;
 public class PromotionControl {
 
     private final PosControl posControl;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final DiscountControl DiscountControl = AppContext.getDiscountControl();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final ServiceControl ServiceControl = AppContext.getServiceControl();
 
     public PromotionControl() {
         posControl = AppContext.getPosControl();
     }
 
     public void saveTempPromotion(TempPromotion bean) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "insert into temppromotion (TableNo,PrCode,PrType,PCode,PQty,PrTotalAmt,PrAmt) "
@@ -129,7 +134,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
@@ -160,7 +165,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from protab where ProCode='" + proCode + "' limit 1";
@@ -266,7 +271,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -383,7 +388,7 @@ public class PromotionControl {
 
         double R_Quan = 0.00;
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
 
         for (int i = 0; i <= dataBean.size() - 1; i++) {
@@ -460,7 +465,6 @@ public class PromotionControl {
                                     + "and R_PRDisc='0'";
                             iUpdate = stmt1.executeUpdate(sqlUpdatePro);
                             stmt1.close();
-//                            ProDiscAmt += R_PrAmt;
                             ProDiscAmt = Double.parseDouble(BalanceControl.GetDiscount(table).replace(",", ""));
 
                             if (iUpdate > 0) {
@@ -1019,7 +1023,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         String sqlGetProtype = "";
         try {
@@ -1057,7 +1061,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "insert into tpromotion2 "
@@ -1079,7 +1083,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -1097,7 +1101,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "insert into tpromotion3 "
@@ -1119,7 +1123,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "delete from tpromotion3 where TCode='" + table + "'";
@@ -1138,7 +1142,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "insert into tpromotion4 "
@@ -1160,7 +1164,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "delete from tpromotion4 where TCode='" + table + "'";
@@ -1185,7 +1189,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "insert into tpromotion5 (TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
@@ -1207,7 +1211,7 @@ public class PromotionControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "delete from tpromotion5 where TCode='" + table + "'";
@@ -1225,7 +1229,7 @@ public class PromotionControl {
     public String promotionCheck(String pcode) {
         String procode = "";
         String prodesc = "";
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             String sql = "select "
                     + "p.pcode, "

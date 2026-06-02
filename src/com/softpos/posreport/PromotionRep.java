@@ -32,6 +32,10 @@ public class PromotionRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public PromotionRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -243,7 +247,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -283,7 +287,6 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public void PrintPromotionDriver(String MacNo1, String MacNo2) {
         String t = "";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
 

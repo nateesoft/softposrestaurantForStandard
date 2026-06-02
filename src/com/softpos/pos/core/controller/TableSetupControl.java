@@ -14,11 +14,13 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class TableSetupControl {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<FloorPlanBean> getTableSetup(String zone) {
         List<FloorPlanBean> listBean = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select code_id, t1.tcode, tcustomer, tonact, "

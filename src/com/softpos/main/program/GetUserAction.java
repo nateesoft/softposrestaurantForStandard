@@ -11,6 +11,8 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class GetUserAction extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public GetUserAction(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -270,11 +272,11 @@ public class GetUserAction extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         boolean isClose = false;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SQLQuery = "select username,sale2 from posuser Where(username= '" + loginname + "') and (password='" + password + "') limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             if (rs.next()) {
@@ -294,7 +296,7 @@ public class GetUserAction extends javax.swing.JDialog {
             AppLogUtil.log(GetUserAction.class, "error", e);
             clearlogin();
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (isClose) {

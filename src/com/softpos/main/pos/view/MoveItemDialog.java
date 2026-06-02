@@ -8,16 +8,12 @@ import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.TableFileBean;
-import database.MySQLConnect;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class MoveItemDialog extends javax.swing.JDialog {
@@ -27,6 +23,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
     private boolean loadDataActive = false;
     private TableFileControl tableFileControl = AppContext.getTableFileControl();
     private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
+    private final TableMoveControl TableMoveControl = AppContext.getTableMoveControl();
 
     public MoveItemDialog(java.awt.Frame parent, boolean modal, String TABLE_NO) {
         super(parent, modal);
@@ -686,56 +683,11 @@ public class MoveItemDialog extends javax.swing.JDialog {
     }
 
     private void backupData() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            Statement stmt = mysql.getConnection().createStatement();
-
-            stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
-            stmt.executeUpdate("create table IF NOT EXISTS temp_tablefile "
-                    + "select * from tablefile "
-                    + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.executeUpdate("drop table IF EXISTS temp_balance;");
-            stmt.executeUpdate("create table IF NOT EXISTS temp_balance "
-                    + "select * from balance "
-                    + "where R_Table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MoveItemDialog.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        TableMoveControl.backupTableData(txtTable1.getText(), txtTable2.getText());
     }
 
     private void restoreData() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate("delete from tablefile "
-                        + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-                stmt.executeUpdate("delete from balance "
-                        + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-                stmt.executeUpdate("insert into tablefile select * from temp_tablefile "
-                        + "where tcode in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-                stmt.executeUpdate("insert into balance select * from temp_balance "
-                        + "where r_table in('" + txtTable1.getText() + "','" + txtTable2.getText() + "');");
-
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MoveItemDialog.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        TableMoveControl.restoreTableData(txtTable1.getText(), txtTable2.getText());
     }
 
     private void inputNumber(JButton btn) {

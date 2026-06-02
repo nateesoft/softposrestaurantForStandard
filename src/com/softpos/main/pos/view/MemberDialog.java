@@ -17,7 +17,8 @@ public class MemberDialog extends javax.swing.JDialog {
     private String MemCode;
     private String MemName;
     private String tableNo;
-    DecimalFormat df = new DecimalFormat("#,###.00");
+    private DecimalFormat df = new DecimalFormat("#,###.00");
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MemberDialog(java.awt.Dialog parent, boolean modal, String table) {
         super(parent, modal);
@@ -377,7 +378,7 @@ public class MemberDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -387,9 +388,9 @@ public class MemberDialog extends javax.swing.JDialog {
                 model.removeRow(0);
             }
 
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql = "select * from " + Value.db_member + ".memmaster order by Member_Code; ";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     model.addRow(new Object[]{
                         rs.getString("Member_Code"),
@@ -408,7 +409,7 @@ public class MemberDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         tbMember.requestFocus();
@@ -418,7 +419,6 @@ public class MemberDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         try {
             model = (DefaultTableModel) tbMember.getModel();
             tbMember.setRowHeight(35);
@@ -428,7 +428,7 @@ public class MemberDialog extends javax.swing.JDialog {
                 model.removeRow(0);
             }
 
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql = "";
             if (!memCode.equals("")) {
                 sql = "select * from " + Value.db_member + ".memmaster "
@@ -443,7 +443,7 @@ public class MemberDialog extends javax.swing.JDialog {
                         + "where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' "
                         + "order by Member_Code ";
             }
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     model.addRow(new Object[]{
                         rs.getString("Member_Code"),
@@ -463,7 +463,7 @@ public class MemberDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         tbMember.requestFocus();
@@ -473,13 +473,12 @@ public class MemberDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         //clear temp cupon
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
                     + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -492,12 +491,12 @@ public class MemberDialog extends javax.swing.JDialog {
                     + "r_prsubdisc='0',"
                     + "r_prsubamt='0'"
                     + " where r_table='" + tableNo + "'";
-            mysql.executeUpdate(sqlUpdate);
+            mysqlConnect.executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -506,9 +505,8 @@ public class MemberDialog extends javax.swing.JDialog {
             return;
         }
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql;
             String memCode = MemCode + "";
             if (memCode.equals("null")) {
@@ -521,17 +519,17 @@ public class MemberDialog extends javax.swing.JDialog {
             }
             switch (choice) {
                 case "Ins":
-                    mysql.executeUpdate(sql);
+                    mysqlConnect.executeUpdate(sql);
                     break;
                 case "Del":
-                    mysql.executeUpdate(sql);
+                    mysqlConnect.executeUpdate(sql);
                     break;
             }
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MemberDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

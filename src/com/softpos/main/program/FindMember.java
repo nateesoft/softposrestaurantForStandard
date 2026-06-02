@@ -24,6 +24,7 @@ public class FindMember extends javax.swing.JDialog {
 
     DefaultTableModel model;
     SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form FindMember
@@ -85,10 +86,10 @@ public class FindMember extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select * from " + Value.db_member + ".memmaster order by m_name";
             ResultSet rs = stmt.executeQuery(sql);
             ClearGrid();
@@ -120,7 +121,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -137,10 +138,9 @@ public class FindMember extends javax.swing.JDialog {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_code = '" + TempStr + "' order by m_name";
                 ResultSet rs = stmt.executeQuery(LoadTableFile);
                 ClearGrid();
@@ -176,7 +176,7 @@ public class FindMember extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(FindMember.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
         } else {
@@ -192,10 +192,9 @@ public class FindMember extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select * from " + Value.db_member + ".memmaster where m_name like '" + TempStr + "' order by m_name";
             ResultSet rs = stmt.executeQuery(LoadTableFile);
             ClearGrid();
@@ -232,7 +231,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -242,10 +241,9 @@ public class FindMember extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select * from " + Value.db_member + ".memmaster "
                     + "where (m_tel like '" + TempStr + "') or (m_mobile like '" + TempStr + "') "
                     + "or (m_office like '" + TempStr + "') order by m_name";
@@ -283,7 +281,7 @@ public class FindMember extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindMember.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

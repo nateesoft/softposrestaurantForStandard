@@ -14,10 +14,11 @@ import com.softpos.util.AppLogUtil;
 
 public class TempCuponController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon";
@@ -56,7 +57,6 @@ public class TempCuponController {
 
     public List<TempCuponBean> listTempcupon(String R_Index) {
         List<TempCuponBean> listBean = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
@@ -98,7 +98,6 @@ public class TempCuponController {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
@@ -141,7 +140,6 @@ public class TempCuponController {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");

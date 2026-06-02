@@ -1,8 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
-import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.BalanceBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -15,13 +13,15 @@ import com.softpos.util.NumberUtil;
 public class WebServiceControl {
 
     private final PosControl posControl;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public WebServiceControl() {
         posControl = AppContext.getPosControl();
     }
 
     public void updateService(String table) {
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             BalanceControl balanceControl = AppContext.getBalanceControl();
             List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);
@@ -120,7 +120,7 @@ public class WebServiceControl {
         }
     }
 
-    public static double getDouble(double db) {
+    public double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_ServiceRound().equalsIgnoreCase("U")) {
             db = NumberUtil.UP_BAHT(db);
         }

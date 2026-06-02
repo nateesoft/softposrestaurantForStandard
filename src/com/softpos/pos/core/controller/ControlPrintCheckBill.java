@@ -15,12 +15,14 @@ import database.MySQLConnect;
  */
 public class ControlPrintCheckBill {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public void PrintCheckBill(String tableNO, boolean CheckBill, String emp, String PrinterName, String Macno) {
 
         EmployControl empc = AppContext.getEmployControl();
         if (CheckBill == true) {
             emp = ThaiUtil.Unicode2ASCII(empc.empName(emp));
-            MySQLConnect mysql = new MySQLConnect();
+            
             try {
                 mysql.open();
                 String sql = "update balance set PDAPrintCheck='Y',pdaemp='" + ThaiUtil.Unicode2ASCII(emp) + "',PDAPrintCheckStation='" + PrinterName + "' "
@@ -37,7 +39,6 @@ public class ControlPrintCheckBill {
     }
 
     public void setPrintCheckBillItemAfterSendKic(String tableNO) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "update balance set PDAPrintChekItemStation='Y' "
                     + "where PDAPrintChekItemStation='N' and r_table='" + tableNO + "'";
@@ -51,7 +52,6 @@ public class ControlPrintCheckBill {
     }
 
     public void PrintUrgentFood(String tableNO) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "update kictran set R_FoodUrgent='Y',R_AlertKitChen='Y' where PTable='" + tableNO + "' and PFlage='N';";
             mysql.open();

@@ -14,6 +14,7 @@ import com.softpos.posreport.PLURep;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.posreport.PromotionRep;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.posreport.TerminalRep;
 import com.softpos.posreport.TopSaleRep;
@@ -26,6 +27,7 @@ import com.softpos.posreport.DailyHourlyOpenTB;
 public class DailyRep extends javax.swing.JDialog {
 
     private PPrint prn = new PPrint();
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public DailyRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

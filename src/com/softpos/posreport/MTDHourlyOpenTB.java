@@ -44,6 +44,10 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     Date TDate2 = new Date();
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     private POSHWSetup POSHW;
 
@@ -57,7 +61,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
 
     public List<Object[]> LoadData() {
         List<Object[]> ListObj = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             DecimalFormat df = new DecimalFormat("00.00");

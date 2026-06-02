@@ -7,8 +7,6 @@ import com.softpos.main.floorplan.view.RefundBill;
 import com.softpos.main.floorplan.view.ShowTable;
 import com.softpos.pos.core.controller.MemberControl;
 import com.softpos.pos.core.controller.BalanceControl;
-import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
-import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMemVIP;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.ButtonCustom;
 import com.softpos.pos.core.controller.EmployeeControl;
@@ -116,8 +114,17 @@ public class MainSale extends javax.swing.JDialog {
     private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
     private final MainSaleController mainSaleControl = AppContext.getMainSaleController();
     private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final PUtility PUtility = new PUtility();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
+    private final PosControl PosControl = AppContext.getPosControl();
+    private final ProductControl ProductControl = AppContext.getProductControl();
 
     private TableFileBean TableFileBean = null;
+    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
@@ -155,7 +162,7 @@ public class MainSale extends javax.swing.JDialog {
                 txtMember1.setText(memberBean.getMember_NameThai());
                 txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
             } else if (tbBean.getMemDiscAmt() != 0) {
-                updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
+                BalanceControl.updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
             }
         }
         txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
@@ -1748,7 +1755,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             txtMember1.setText(" <ค้นหาสมาชิก> ");
             txtMember2.setText(": แต้มสะสม");
         } else {
-            updateProSerTable(tableNo, memberBean);
+            BalanceControl.updateProSerTable(tableNo, memberBean);
             try {
                 if (ValidateValue.isNotEmpty(memberBean.getMember_Code()) && memberBean != null) {
                     txtMember1.setText(memberBean.getMember_NameThai());
@@ -1891,9 +1898,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private void bntVoidClick() {
         try {
             try {
-//                MySQLConnect mysql = new MySQLConnect();
                 String sqlUpdatePro = "update balance set "
-                        //                    + "R_PrCode='',"
                         + "R_PrType='-P',"
                         + "R_PRDisc='0',"
                         + "R_PRAmt='0',"

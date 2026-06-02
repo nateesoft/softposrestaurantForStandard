@@ -25,6 +25,8 @@ public class CashBackDialog extends javax.swing.JDialog {
     Date date = new Date();
     SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
 
     public CashBackDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -171,15 +173,15 @@ public class CashBackDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         String refStr = "";
         try {
             //select returnbillno from branch
             //0000002
             String sql = "select returnbillno from branch limit 1";
             int refNo;
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 refNo = 0;
                 if (rs.next()) {
@@ -209,7 +211,7 @@ public class CashBackDialog extends javax.swing.JDialog {
 
             String sql1 = "insert into billret(Ref_No,OnDate,Stotal,Cash,Cupon,Credit,Terminal,Cashier,Fat,UserVoid) values "
                     + "('" + refStr + "',curdate(),'" + cash + "','" + cash + "','0','0','" + Value.MACNO + "','" + Value.CASHIER + "','N','')";
-            Statement stmt1 = mysql.getConnection().createStatement();
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
             int i = stmt1.executeUpdate(sql1);
             if (i > 0) {
                 //update returnbillno
@@ -223,7 +225,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CashBackDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintReturnMoney(refStr);

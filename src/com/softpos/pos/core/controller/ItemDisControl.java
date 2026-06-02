@@ -1,6 +1,5 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -12,6 +11,11 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.NumberUtil;
 
 public class ItemDisControl {
+    
+    private final BalanceControl balanceControl = AppContext.getBalanceControl();
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final WebServiceControl WebServiceControl = new WebServiceControl();
 
     public void saveBalanceItemDiscount(String PCode, String Table, String Index, double prDisc, double prBaht, MemberBean memberBean) {
         BalanceControl bCon = AppContext.getBalanceControl();
@@ -104,7 +108,7 @@ public class ItemDisControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(this.getClass());
         mysql.open(this.getClass());
         try {
@@ -156,6 +160,6 @@ public class ItemDisControl {
             mysql.closeConnection(this.getClass());
         }
 
-        BalanceControl.updateProSerTable(Table, memberBean);
+        balanceControl.updateProSerTable(Table, memberBean);
     }
 }

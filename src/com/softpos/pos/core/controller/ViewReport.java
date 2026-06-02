@@ -28,6 +28,7 @@ public final class ViewReport {
     private DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     private SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public void printReportPVat(String vatNo) {
         ResultSet rs1;
@@ -35,7 +36,7 @@ public final class ViewReport {
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c limit 1";
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(this.getClass());
             try {
@@ -191,7 +192,6 @@ public final class ViewReport {
         String sqlCompany = "SELECT c.Name, c.Address, c.Subprovince,"
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
             rs1 = mysql.executeQuery(sqlCompany);
@@ -347,7 +347,6 @@ public final class ViewReport {
         String header = "รายงานการพิมพ์ใบกำกับภาษี / ใบเสร็จรับเงิน ประจำวันที่ " + str + " - " + end;
 
         String branchName = "";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(this.getClass());
             try {
@@ -419,7 +418,6 @@ public final class ViewReport {
         String sqlBranch = "SELECT * FROM branch limit 1 ";
         String branchName = "";
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
             rs = mysql.executeQuery(sqlBranch);
             if (rs.next()) {
@@ -492,7 +490,6 @@ public final class ViewReport {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Map parameters = new HashMap();

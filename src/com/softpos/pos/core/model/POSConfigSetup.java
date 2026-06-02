@@ -1,5 +1,6 @@
 package com.softpos.pos.core.model;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 
 public class POSConfigSetup {
@@ -66,6 +67,7 @@ public class POSConfigSetup {
     private String P_ShowKicQue = "N";
     private int P_DefAddTime = 0;
     private String P_BillLang = "T";
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public String getP_Terminal() {
         return P_Terminal;
@@ -563,7 +565,7 @@ public class POSConfigSetup {
         this.P_BillLang = P_BillLang;
     }
 
-    public static POSConfigSetup Bean() {
+    public POSConfigSetup Bean() {
         return PosControl.getData();
     }
 }

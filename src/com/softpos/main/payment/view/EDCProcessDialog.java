@@ -32,6 +32,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
     private String cardType = "";
     private boolean processError = false;
     private boolean processFinish = false;
+    private final PUtility PUtility = new PUtility();
 
     public EDCProcessDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

@@ -40,6 +40,10 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     DateConvert dc = new DateConvert();
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public MTDGiftVoucher(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -455,7 +459,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
+                    
                     mysql.open(this.getClass());
                     try {
                         Statement stmt = mysql.getConnection().createStatement();
@@ -538,7 +542,6 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

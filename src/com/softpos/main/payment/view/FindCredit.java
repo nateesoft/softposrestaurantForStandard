@@ -19,10 +19,11 @@ import com.softpos.util.MSG;
 
 public class FindCredit extends javax.swing.JDialog {
 
-    String DefaultBank = "";
+    private String DefaultBank = "";
     private String TCode;
     private double TCharge;
-    DefaultTableModel model2;
+    private DefaultTableModel model2;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form FindCredit
@@ -232,10 +233,10 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String UserGroupFile = "select creditact from branch limit 1";
             ResultSet rs = stmt.executeQuery(UserGroupFile);
             if (rs.next()) {
@@ -250,7 +251,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return ReturnValues;
@@ -265,10 +266,9 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             if (!DefaultBank.equals("")) {
                 SQLQuery = "Select *from creditfile where crbank='" + DefaultBank + "' order by crbank,crcode";
             } else {
@@ -292,7 +292,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindCredit.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         tblShow.requestFocus();

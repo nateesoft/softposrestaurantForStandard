@@ -1,15 +1,13 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
+import com.softpos.pos.core.controller.MgrButtonController;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.Font;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class MGRButtonSetup extends javax.swing.JDialog {
@@ -30,30 +28,11 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select p.pcode, p.pdesc "
-                    + "from soft_menusetup m, product p "
-                    + "where m.pcode=p.pcode "
-                    + "and menucode='" + menuCode + "' "
-                    + "and m.pcode<>'' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                if (rs.next()) {
-                    txtPCode.setText(rs.getString("pcode"));
-                    txtPDesc.setText(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        MgrButtonController mgrCtrl = new MgrButtonController();
+        String[] product = mgrCtrl.getMenuProductByCode(menuCode);
+        if (product != null) {
+            txtPCode.setText(product[0]);
+            txtPDesc.setText(product[1]);
         }
 
         model1 = (DefaultTableModel) tbSideDishFree.getModel();
@@ -1008,53 +987,14 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "select * from mgrbuttonsetup where pcode='" + txtPCode.getText() + "' order by pcode";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    if (rs.getString("Check_before").equals("Y")) {
-                        isBefore = true;
-                    }
-                    if (rs.getString("Check_qty").equals("Y")) {
-                        isQtyCheck = true;
-                    }
-                    if (rs.getString("check_autoadd").equals("Y")) {
-                        isAutoAdd = true;
-                    }
-
-                    //เพิ่มใหม่
-                    if (rs.getString("check_extra").equals("Y")) {
-                        isExtraNoLimit = true;
-                    }
-
-                    qtyAmt = rs.getInt("qty");
-
-                    model4.addRow(new Object[]{
-                        rs.getString("pcode"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
-                        rs.getString("sd_pcode"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("sd_pdesc")),
-                        rs.getString("ex_pcode"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("ex_pdesc")),
-                        rs.getString("auto_pcode"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("auto_pdesc")),
-                        rs.getString("Check_before"),
-                        rs.getString("Check_qty"),
-                        rs.getInt("qty"),
-                        rs.getString("check_autoadd"),
-                        rs.getString("check_extra")
-                    });
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        MgrButtonController ctrl = new MgrButtonController();
+        for (Object[] row : ctrl.getButtonSetupRows(txtPCode.getText())) {
+            if ("Y".equals(row[8])) isBefore = true;
+            if ("Y".equals(row[9])) isQtyCheck = true;
+            if ("Y".equals(row[11])) isAutoAdd = true;
+            if ("Y".equals(row[12])) isExtraNoLimit = true;
+            qtyAmt = (int) row[10];
+            model4.addRow(row);
         }
 
         loadSideDish();
@@ -1071,22 +1011,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     }
 
     private void deleteDataPCode() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + txtPCode.getText() + "'");
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        new MgrButtonController().deleteByPCode(txtPCode.getText());
     }
 
     private void SaveData() {
@@ -1122,196 +1047,45 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             autocheck = "Y";
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-
-        int size1 = model1.getRowCount();
-        for (int i = 0; i < size1; i++) {
-            String sdCode = "" + tbSideDishFree.getValueAt(i, 0);
-            String sdPDesc = "" + tbSideDishFree.getValueAt(i, 1);
-            try {
-                String sql = "insert into mgrbuttonsetup"
-                        + "(pcode,pdesc,"
-                        + "sd_pcode,sd_pdesc,"
-                        + "ex_pcode,ex_pdesc,auto_pcode,auto_pdesc,check_before,check_qty,"
-                        + "qty,check_autoadd,check_extra) "
-                        + "values("
-                        + "'" + txtPCode.getText() + "','" + ThaiUtil.Unicode2ASCII(txtPDesc.getText()) + "',"
-                        + "'" + sdCode + "','" + ThaiUtil.Unicode2ASCII(sdPDesc) + "',"
-                        + "'','','','','" + beforeCheck + "','" + qtyCheck + "',"
-                        + "'" + qtyAmt + "','" + autocheck + "',"
-                        + "'" + extraCheck + "')";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MGRButtonSetup.class, "error", e);
-            }
+        List<String[]> sdList = new ArrayList<>();
+        for (int i = 0; i < model1.getRowCount(); i++) {
+            sdList.add(new String[]{"" + tbSideDishFree.getValueAt(i, 0), "" + tbSideDishFree.getValueAt(i, 1)});
         }
-
-        int size2 = model2.getRowCount();
-        for (int i = 0; i < size2; i++) {
-            String exCode = "" + tbExtra.getValueAt(i, 0);
-            String exPDesc = "" + tbExtra.getValueAt(i, 1);
-            try {
-                String sql = "insert into mgrbuttonsetup"
-                        + "(pcode,pdesc,"
-                        + "sd_pcode,sd_pdesc,"
-                        + "ex_pcode,ex_pdesc,auto_pcode,auto_pdesc,check_before,check_qty,"
-                        + "qty,check_autoadd,check_extra) "
-                        + "values("
-                        + "'" + txtPCode.getText() + "','" + ThaiUtil.Unicode2ASCII(txtPDesc.getText()) + "',"
-                        + "'','',"
-                        + "'" + exCode + "','" + ThaiUtil.Unicode2ASCII(exPDesc) + "',"
-                        + "'','','" + beforeCheck + "','" + qtyCheck + "',"
-                        + "'" + qtyAmt + "','" + autocheck + "',"
-                        + "'" + extraCheck + "')";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MGRButtonSetup.class, "error", e);
-            }
+        List<String[]> exList = new ArrayList<>();
+        for (int i = 0; i < model2.getRowCount(); i++) {
+            exList.add(new String[]{"" + tbExtra.getValueAt(i, 0), "" + tbExtra.getValueAt(i, 1)});
         }
-
-        int size3 = model3.getRowCount();
-        for (int i = 0; i < size3; i++) {
-            String atCode = "" + tbAutoAdd.getValueAt(i, 0);
-            String atPDesc = "" + tbAutoAdd.getValueAt(i, 1);
-            try {
-                String sql = "insert into mgrbuttonsetup"
-                        + "(pcode,pdesc,"
-                        + "sd_pcode,sd_pdesc,"
-                        + "ex_pcode,ex_pdesc,auto_pcode,auto_pdesc,check_before,check_qty,"
-                        + "qty,check_autoadd,check_extra) "
-                        + "values("
-                        + "'" + txtPCode.getText() + "','" + ThaiUtil.Unicode2ASCII(txtPDesc.getText()) + "',"
-                        + "'','',"
-                        + "'','',"
-                        + "'" + atCode + "','" + ThaiUtil.Unicode2ASCII(atPDesc) + "',"
-                        + "'" + beforeCheck + "','" + qtyCheck + "',"
-                        + "'" + qtyAmt + "','" + autocheck + "',"
-                        + "'" + extraCheck + "')";
-                try (Statement stmt = mysql.getConnection().createStatement()) {
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(MGRButtonSetup.class, "error", e);
-            }
+        List<String[]> atList = new ArrayList<>();
+        for (int i = 0; i < model3.getRowCount(); i++) {
+            atList.add(new String[]{"" + tbAutoAdd.getValueAt(i, 0), "" + tbAutoAdd.getValueAt(i, 1)});
         }
-
-        mysql.closeConnection(this.getClass());
+        new MgrButtonController().saveButtonSetupRows(
+                txtPCode.getText(), txtPDesc.getText(),
+                beforeCheck, qtyCheck, extraCheck, qtyAmt, autocheck,
+                sdList, exList, atList);
     }
 
     private void loadSideDish() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            int size = model1.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model1.removeRow(0);
-            }
-
-            String sql = "select sd_pcode, sd_pdesc from mgrbuttonsetup "
-                    + "where pcode='" + txtPCode.getText() + "' and sd_pcode<>'' "
-                    + "order by sd_pcode";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    model1.addRow(new Object[]{
-                        rs.getString(1),
-                        ThaiUtil.ASCII2Unicode(rs.getString(2))
-                    });
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        int size = model1.getRowCount();
+        for (int i = 0; i < size; i++) model1.removeRow(0);
+        for (String[] row : new MgrButtonController().loadSideDish(txtPCode.getText())) {
+            model1.addRow(new Object[]{row[0], row[1]});
         }
     }
 
     private void loadExtra() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            int size = model2.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model2.removeRow(0);
-            }
-
-            String sql = "select ex_pcode, ex_pdesc from mgrbuttonsetup "
-                    + "where pcode='" + txtPCode.getText() + "' and ex_pcode<>'' "
-                    + "order by ex_pcode";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    model2.addRow(new Object[]{
-                        rs.getString(1),
-                        ThaiUtil.ASCII2Unicode(rs.getString(2))
-                    });
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        int size = model2.getRowCount();
+        for (int i = 0; i < size; i++) model2.removeRow(0);
+        for (String[] row : new MgrButtonController().loadExtra(txtPCode.getText())) {
+            model2.addRow(new Object[]{row[0], row[1]});
         }
     }
 
     private void loadAutoAdd() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            int size = model3.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model3.removeRow(0);
-            }
-
-            String sql = "select auto_pcode, auto_pdesc from mgrbuttonsetup "
-                    + "where pcode='" + txtPCode.getText() + "' and auto_pcode<>'' "
-                    + "order by auto_pcode";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    model3.addRow(new Object[]{
-                        rs.getString(1),
-                        ThaiUtil.ASCII2Unicode(rs.getString(2))
-                    });
-                }
-
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonSetup.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
+        int size = model3.getRowCount();
+        for (int i = 0; i < size; i++) model3.removeRow(0);
+        for (String[] row : new MgrButtonController().loadAutoAdd(txtPCode.getText())) {
+            model3.addRow(new Object[]{row[0], row[1]});
         }
     }
 }

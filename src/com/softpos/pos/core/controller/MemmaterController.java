@@ -25,13 +25,17 @@ import com.softpos.util.DateUtil;
  * @author nathee
  */
 public class MemmaterController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final BranchFileController BranchFileController = AppContext.getBranchFileController();
+    private final PointTypeController PointTypeController = AppContext.getPointTypeController();
 
-    public static MemberBean getMember(String MemberCode) {
+    public MemberBean getMember(String MemberCode) {
         MemberBean bean = null;
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(MemmaterController.class);
         try {
             String sql = "select * from " + Value.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
@@ -146,7 +150,6 @@ public class MemmaterController {
     }
 
     void updateMemberPoint(String memberCode, Date lastDateService, double totalScore) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MemmaterController.class);
 
         try {
@@ -274,7 +277,6 @@ public class MemmaterController {
     }
 
     public void updateScoreRefund(String memberCode, double scoreRemove) {
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(MemmaterController.class);
         try {
             String sql = "update " + Value.db_member + ".memmaster "

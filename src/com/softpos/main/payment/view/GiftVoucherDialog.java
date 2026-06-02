@@ -20,6 +20,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     private double totalAmount = 0.00;
     private double netTotalAmount = 0.00;
     private String billno;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public GiftVoucherDialog(java.awt.Frame parent, boolean modal, String billno, String totalAmountText) {
         super(parent, modal);
@@ -291,18 +292,17 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             String GAmt = tbGift.getValueAt(i, 1).toString().replace(",", "");
             /**
              * * OPEN CONNECTION **
-             */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+             */            
+            mysqlConnect.open(this.getClass());
             try {
                 String sqlCheckTempGiftf = "select giftno from tempgift where giftno='" + GNo + "' limit 1";
-                ResultSet rs = mysql.executeQuery(sqlCheckTempGiftf);
+                ResultSet rs = mysqlConnect.executeQuery(sqlCheckTempGiftf);
                 if (netTotalAmount > 0) {
                     if (!rs.next()) {
                         String sqlAdd = "insert into tempgift"
                                 + "(macno,gifttype,giftno,giftamt) "
                                 + "values('" + Value.MACNO + "','" + PublicVar.VoucherType + "','" + GNo + "','" + GAmt + "')";
-                        try (Statement stmt = mysql.getConnection().createStatement()) {
+                        try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                             stmt.executeUpdate(sqlAdd);
                         }
                         setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
@@ -313,7 +313,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(GiftVoucherDialog.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
 
@@ -420,11 +420,10 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tempgift";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -433,7 +432,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         int size = model.getRowCount();
@@ -482,11 +481,10 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempgift";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     model.addRow(new Object[]{
@@ -502,7 +500,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

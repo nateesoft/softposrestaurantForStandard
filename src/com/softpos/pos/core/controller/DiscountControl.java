@@ -10,7 +10,10 @@ import com.softpos.util.NumberUtil;
 
 public class DiscountControl {
 
-    public static double getDouble(double db) {
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    
+    public double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
             return NumberUtil.UP_DOWN_25(db);
         } else {
@@ -20,7 +23,7 @@ public class DiscountControl {
 
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select sum(R_PrAmt) SUM_R_PrAmt "

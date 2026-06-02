@@ -25,13 +25,15 @@ import com.softpos.util.AppLogUtil;
  */
 public class ButtonCustom {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public JButton getButtonLayout(String menuCode, int menuIndex) {
         return new JButton();
     }
 
     public MenuMGR getDataButtonLayout(String menuCode, int menuIndex) {
         MenuMGR menuMGR = new MenuMGR();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
@@ -69,7 +71,6 @@ public class ButtonCustom {
 
     public List<MenuMGR> getDataButtonLayout(String menuCode) {
         List<MenuMGR> listMenu = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "

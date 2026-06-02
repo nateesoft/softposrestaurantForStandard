@@ -15,12 +15,13 @@ import java.util.List;
  */
 public class EmployeeControl {
 
+    private final MySQLConnect mysql = new MySQLConnect();
     private List<EmployeeBean> listAll = null;
 
     public List<EmployeeBean> initLoadEmployeeList() {
         if (listAll == null) {
             listAll = new ArrayList<>();
-            MySQLConnect mysql = new MySQLConnect();
+            
             try {
                 mysql.open(this.getClass());
                 ResultSet rs = mysql.executeQuery("select * from employ");
@@ -59,7 +60,6 @@ public class EmployeeControl {
 
     public boolean getEmployeeByCode(String code) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(EmployeeControl.class);
         try {
             String sql = "select code,name from employ "

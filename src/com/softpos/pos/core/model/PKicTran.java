@@ -8,8 +8,8 @@ package com.softpos.pos.core.model;
 ////
 
 import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.ProductControl;
-import static com.softpos.pos.core.controller.BranchControl.updateKicItemNo;
 import com.softpos.util.AppLogUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -26,14 +26,17 @@ import java.util.List;
  * @author Administrator
  */
 public class PKicTran {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
 
-    public static void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
+    public void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
 
         DateConvert dc = new DateConvert();
         String today = dc.GetCurrentDate();
         String time = dc.GetCurrentTime();
         try {
-            MySQLConnect mysql = new MySQLConnect();
+            
             mysql.open();
             if (bill.size() > 0) {
                 for (int i = 0; i < bill.size(); i++) {
@@ -51,7 +54,7 @@ public class PKicTran {
                             + " 'N', '00:00:00', '00:00:00', 'N', '',"
                             + " '00:00:00', '00:00:00', ''); ";
                     mysql.executeUpdate(sqlINSKictran);
-                    updateKicItemNo();
+                    BranchControl.updateKicItemNo();
                 }
             }
 
@@ -61,10 +64,9 @@ public class PKicTran {
         }
     }
 
-    public static List<PKicTranBean> getKicTran(String tableNo) {
+    public List<PKicTranBean> getKicTran(String tableNo) {
         DateConvert dc = new DateConvert();
         List<PKicTranBean> list = new ArrayList();
-        MySQLConnect mysql = new MySQLConnect();
         
         try {
             mysql.open();
@@ -140,9 +142,8 @@ public class PKicTran {
         return time;
     }
 
-    public static void updateKicTranDisplay(String status, String tableNo, String pcode, String pindex) {
+    public void updateKicTranDisplay(String status, String tableNo, String pcode, String pindex) {
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sql = "";
             if (pindex.equals("")) {

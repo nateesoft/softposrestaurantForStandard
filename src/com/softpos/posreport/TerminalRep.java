@@ -15,6 +15,7 @@ import com.softpos.util.MSG;
 public class TerminalRep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public TerminalRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -168,7 +169,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.closeConnection(this.getClass());
         mysql.open(this.getClass());
         try {

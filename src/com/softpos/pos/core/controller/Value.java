@@ -36,8 +36,7 @@ public class Value {
 
     public static String driverNotSupport = "ยังไม่ Support การพิมพ์ผ่าน Driver !";
     public static String EMP_CODE = "";
-//    public static String MemberCodeSelected = "";
-//    public static String MemberNameSelected = "";
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
 
     public static String getDateDefault() {
         SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -51,7 +50,7 @@ public class Value {
         OPT = new String[]{"", "", "", "", "", "", "", "", ""};
     }
 
-    public static String getComPort() {
+    public String getComPort() {
         return POSHWSetup.Bean(Value.MACNO).getPRNPort();
     }
 }

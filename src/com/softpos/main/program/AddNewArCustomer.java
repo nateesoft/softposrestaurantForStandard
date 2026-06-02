@@ -22,6 +22,7 @@ public class AddNewArCustomer extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     Date date = new Date();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public AddNewArCustomer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -593,10 +594,10 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         if (!TempCode.equals("")) {
             if (MSG.CONF(this, "ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open(this.getClass());
+                
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SQLQuery = "delete from custfile where sp_code='" + TempCode + "'";
                     stmt.executeUpdate(SQLQuery);
                     stmt.close();
@@ -604,7 +605,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 ClearVariable();
@@ -619,11 +620,10 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             if (SeekCustFile(TempCode)) {
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SQLQuery = "update custfile set sp_desc='" + ThaiUtil.Unicode2ASCII(sp_desc.getText()) + "',"
                             + "sp_addr1='" + ThaiUtil.Unicode2ASCII(sp_address1.getText()) + "',"
                             + "sp_addr2='" + ThaiUtil.Unicode2ASCII(sp_address2.getText()) + "',"
@@ -643,13 +643,13 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 ClearVariable();
             } else {
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SQLQuery = "insert into custfile (sp_code,sp_desc,sp_addr1,sp_addr2,sp_zip,contack,tel,fax,remark,"
                             + "sp_tax,sp_cr,sp_cramt) "
                             + "values ('" + sp_code.getText() + "','" + ThaiUtil.Unicode2ASCII(sp_desc.getText()) + "','" + ThaiUtil.Unicode2ASCII(sp_address1.getText()) + "',"
@@ -662,7 +662,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(AddNewArCustomer.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 ClearVariable();
@@ -704,10 +704,9 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
                 ResultSet rs = stmt.executeQuery(SQLQuery);
                 if (rs.next()) {
@@ -728,7 +727,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AddNewArCustomer.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             GetDataValue();
@@ -740,10 +739,9 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SQLQuery = "select * from custfile where sp_code='" + TempCode + "' limit 1";
             ResultSet rs = stmt.executeQuery(SQLQuery);
             RetVal = rs.next();
@@ -753,7 +751,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(AddNewArCustomer.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetVal;

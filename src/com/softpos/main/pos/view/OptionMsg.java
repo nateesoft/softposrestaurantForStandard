@@ -28,6 +28,8 @@ public class OptionMsg extends javax.swing.JDialog {
     private String tableNo;
     private String index;
     private BalanceBean bean;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     public OptionMsg(java.awt.Frame parent, boolean modal, String tableNo, String index) {
         super(parent, modal);
@@ -103,11 +105,10 @@ public class OptionMsg extends javax.swing.JDialog {
         ShowGroup.setText("กลุ่ม : " + PUtility.SeekGroupName(bean.getR_Group()));
         /**
          * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+         */        
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadOption = "select * from optionfile where pgroup='" + bean.getR_Group() + "'";
                 //Clear tblOptionMsg
                 try (ResultSet rs = stmt.executeQuery(LoadOption)) {
@@ -129,7 +130,7 @@ public class OptionMsg extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -179,10 +180,9 @@ public class OptionMsg extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String[] opt = new String[]{"", "", "", "", "", "", "", ""};
                 BalanceBean bBean = new BalanceBean();
                 bBean.setR_Index(index);
@@ -210,7 +210,7 @@ public class OptionMsg extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(OptionMsg.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         this.setVisible(false);//this.dispose();
@@ -229,13 +229,12 @@ public class OptionMsg extends javax.swing.JDialog {
                 /**
                  * * OPEN CONNECTION **
                  */
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sqlDel = "delete from optionfile "
                             + "where PGroup='" + bean.getR_Group() + "' "
                             + "and OptionName='" + ThaiUtil.Unicode2ASCII(txtAdd.getText()) + "'";
-                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                    try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                         stmt.executeUpdate(sqlDel);
 
                         String sql = "insert into optionfile(PGroup, OptionName) "
@@ -248,7 +247,7 @@ public class OptionMsg extends javax.swing.JDialog {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(OptionMsg.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
             txtAdd.setFocusable(false);

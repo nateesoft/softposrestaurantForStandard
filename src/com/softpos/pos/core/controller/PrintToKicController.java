@@ -14,11 +14,13 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class PrintToKicController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public BalanceBean getBalaneForPDA() {
         BalanceBean bean = null;
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select r_table,macno,"
@@ -48,7 +50,6 @@ public class PrintToKicController {
 
     public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo, String macno) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select r_kic,r_etd from balance "
@@ -84,7 +85,6 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm1(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select * from balance "
@@ -117,7 +117,6 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm6(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(PrintToKicController.class);
         try {
             String sql = "select * from balance "

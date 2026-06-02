@@ -2,22 +2,19 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class ChangTypeDialog extends javax.swing.JDialog {
@@ -94,24 +91,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
     }
 
     void updateBalance(String R_Index, String R_ETD) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
-        try {
-            String sql = "update balance set R_ETD='" + R_ETD + "' "
-                    + "where R_Index='" + R_Index + "' and R_Table='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(ChangTypeDialog.class, "error", e);
-        } finally {
-            mysql.closeConnection(this.getClass());
-        }
+        new TableFileControl().updateBalanceType(R_Index, R_ETD, tableNo);
     }
 
     public void bntEatinClick() {

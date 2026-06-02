@@ -38,6 +38,10 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     private String TAB = Space + Space + Space;
     private POSHWSetup POSHW;
     private String Regid;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     public DailyHourlyOpenTB(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -48,8 +52,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     public List<Object[]> LoadData() {
         List<Object[]> ListObj = new ArrayList<>();
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             DecimalFormat df = new DecimalFormat("00.00");
             DecimalFormat df1 = new DecimalFormat("00.00");
@@ -107,9 +111,9 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         + "and tamount<>'0' "
                         + "and tlogintime between '" + time1 + "' and '" + time2 + "'";
 
-                ResultSet rsTypeE = mysql.executeQuery(sqlE);
+                ResultSet rsTypeE = mysqlConnect.executeQuery(sqlE);
                 if (rsTypeE.next()) {
-                    ResultSet rs = mysql.executeQuery(sqlTableFile);
+                    ResultSet rs = mysqlConnect.executeQuery(sqlTableFile);
                     double bill = 0;
                     double cc = 0;
                     double amount = 0;
@@ -132,7 +136,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                 }
                 rsTypeE.close();
 
-                ResultSet rsTypeT = mysql.executeQuery(sqlT);
+                ResultSet rsTypeT = mysqlConnect.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
                     sumBillT = rsTypeT.getInt("sumBillT");
@@ -172,7 +176,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         return ListObj;
     }

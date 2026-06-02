@@ -10,12 +10,13 @@ import com.softpos.util.AppLogUtil;
 public class BranchControl {
 
     private static BranchBean branchBean = null;
+    private final MySQLConnect mysql = new MySQLConnect();
 
-    public static void updateKicItemNo() {
+    public void updateKicItemNo() {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open(BranchControl.class);
             String sql = "update branch set KicItemNo=KicItemNo+1";
@@ -27,11 +28,10 @@ public class BranchControl {
         }
     }
 
-    public static BranchBean getData() {
+    public BranchBean getData() {
         if (branchBean != null) {
             return branchBean;
         }
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(BranchControl.class);
             String sql = "select * from branch limit 1";
@@ -165,10 +165,9 @@ public class BranchControl {
         return kic;
     }
 
-    public static String getForm(String kicNo) {
+    public String getForm(String kicNo) {
         String form = "1";
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(BranchControl.class);
             String sql = "select KICCopy" + kicNo + " from branch limit 1";

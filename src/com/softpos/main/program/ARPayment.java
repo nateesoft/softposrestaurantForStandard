@@ -84,6 +84,10 @@ public class ARPayment extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     public ARPayment(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -1875,10 +1879,10 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         Giftvoucher frm = new Giftvoucher(null, true);
         frm.setVisible(true);
 
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
-            mysql.open(this.getClass());
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            mysqlConnect.open(this.getClass());
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadTempGift = "select sum(giftamt) "
                         + "from tempgift where macno='" + Value.MACNO + "'";
                 try (ResultSet rs = stmt.executeQuery(LoadTempGift)) {
@@ -1894,7 +1898,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         _TGiftvoucherExit();
@@ -1927,11 +1931,10 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         if (_Gift_Voucher > _NetTotal) {
             if (MSG.CONF(this, "*** ยอดการชำระด้วยบัตรกำนัล/บัตรของขวัญ มากกว่ายอดที่ต้องจ่ายจริง ยืนยันการทำรายการหรือไม่ ? ")) {
             } else {
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     PreparedStatement prm;
-                    prm = mysql.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
+                    prm = mysqlConnect.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
                     prm.setString(1, Value.MACNO);
                     prm.executeUpdate();
                     prm.close();
@@ -1939,7 +1942,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
                 _Gift_Voucher = 0.0;
             }
@@ -1977,10 +1980,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         String RetVal = null;
         int TempBill = 0;
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            mysqlConnect.open(this.getClass());
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select arbillno from branch limit 1";
                 try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
                     if (rs.next()) {
@@ -1995,7 +1997,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             String TempStr = IntFmt.format(TempBill);
             RetVal = PUtility.Addzero(TempStr, 7);
 
-            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 stmt1.executeUpdate("update branch set arbillno=" + TempBill);
                 stmt1.close();
             }
@@ -2003,7 +2005,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -2016,13 +2018,12 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         if (_SubTotalOK) {
             ArCode = txtArCode.getText();
 
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "insert into billar (ref_no,ondate,arcode,stotal,cash,cupon,credit,terminal,"
                         + "cashier,fat,uservoid) values (?,?,?,?,?,?,?,?,?,?,?)";
-                PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+                PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
                 prm.setString(1, XRef_No);
                 prm.setString(2, Datefmt.format(date));
                 prm.setString(3, ArCode);
@@ -2043,16 +2044,16 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 AppLogUtil.log(ARPayment.class, "error", e);
             }
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "select * from  accr "
                         + "where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark='Y')";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 while (rs.next()) {
-                    Statement stmt2 = mysql.getConnection().createStatement();
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                     String InsertQuery = "insert into t_ar  "
                             + "(ref_no,arcode,billno,billdate,amount,fat,terminal,cashier) "
                             + "values (?,?,?,?,?,?,?,?)";
-                    PreparedStatement prm = mysql.getConnection().prepareStatement(InsertQuery);
+                    PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(InsertQuery);
                     prm.setString(1, XRef_No);
                     prm.setString(2, ArCode);
                     prm.setString(3, rs.getString("arno"));
@@ -2075,10 +2076,10 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 int CrCnt = CreditArray.length;
                 for (int i = 0; i < CrCnt; i++) {
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "insert into t_crar (ref_no,crcode,crcnt,cramt,fat,crid,crapp,terminal,cashier) "
                                 + "values (?,?,?,?,?,ENCODE(?,'snpfood'),?,?,?)";
-                        PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+                        PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
                         prm.setString(1, XRef_No);
                         prm.setString(2, CreditArray[i].TableRec_Cr_Code1);
                         prm.setInt(3, 1);
@@ -2098,11 +2099,11 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
             }
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "update accr set arpaytype=?,ardocpay=?,arpdate=?,arflage=?,aramtpay=arnet,"
                         + "arbranpay=? "
                         + "where (arcode=?) and (arflage<>'Y') and (armark='Y')";
-                PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+                PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
                 if (_Cr_Amount1 > 0) {
                     prm.setString(1, "3");
                 } else {
@@ -2120,7 +2121,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ARPayment.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
 
@@ -2151,10 +2152,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prn.print("----------------------------------------");
 
                     double SumCardAmt = 0.0;
-                    MySQLConnect mysql = new MySQLConnect();
                     try {
-                        mysql.open(this.getClass());
-                        Statement stmt = mysql.getConnection().createStatement();
+                        mysqlConnect.open(this.getClass());
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from accr where ardocpay='" + XRef_No + "'";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -2166,7 +2166,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print("Sum-Total                  " + PUtility.DataFull(DecFmt.format(SumCardAmt), 12));
@@ -2249,21 +2249,19 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from accr where ardocpay='" + XRef_No + "'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายการรับเงินลูกหนี้ภายนอก : ไม่ใช่ใบกำกับภาษี") + "_";
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + "อ้างถึงใบเสร็จเลขที่" + TAB + "มูลค่า..." + "_";
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("arno") + TAB + DatefmtShow.format(rs.getDate("ardate")) + TAB + PUtility.DataFullR(DecFmt.format(rs.getDouble("arnet")), 11) + "_";
-                MySQLConnect mysql2 = new MySQLConnect();
                 try {
                     String sqlGetCustFile = "select sp_desc,sp_cr from custfile where sp_code='" + ArCode + "' limit 1";
-                    mysql2.open(this.getClass());
-                    ResultSet rsCustfile = mysql2.executeQuery(sqlGetCustFile);
+                    mysqlConnect.open(this.getClass());
+                    ResultSet rsCustfile = mysqlConnect.executeQuery(sqlGetCustFile);
                     if (rsCustfile.next()) {
                         ArName = ThaiUtil.ASCII2Unicode(rsCustfile.getString("sp_desc"));
                         t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (ArName) + "_";
@@ -2273,7 +2271,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(ARPayment.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
                 t += "colspan=2 align=left><font face=Angsana New size=1>" + "Sub-Total..." + "</td></font><td align=right><font face=Angsana New size=1>" + DecFmt.format(_NetTotal) + "_";
                 if (_Cash > 0) {
@@ -2290,7 +2288,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();
@@ -2386,10 +2384,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public boolean SeekCredit(String CrCode) {
         Boolean RetVal = false;
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SeekCuList = "select * from creditfile where crcode='" + CrCode + "' limit 1";
 
             ResultSet rs = stmt.executeQuery(SeekCuList);
@@ -2409,7 +2406,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -2417,10 +2414,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public Boolean SeekAr(String ArCode) {
         Boolean RetVal = false;
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select sp_desc, sp_cramt from custfile where sp_code='" + ArCode + "' limit 1");
             if (rs.next()) {
                 RetVal = true;
@@ -2433,7 +2429,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -2441,10 +2437,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public Boolean ChkSumArCr(String ArCode) {
         Boolean RetVal = false;
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select sum(arnet),count(arno) from accr where (arcode='" + ArCode + "') and (arflage<>'Y')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
@@ -2462,7 +2457,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetVal;
@@ -2476,10 +2471,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public void LoadAr(String ArCode) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            Statement stmt = mysql.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from accr "
                     + "where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark<>'Y')";
 
@@ -2503,7 +2497,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -2519,10 +2513,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from accr "
                     + "where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark='Y')";
 
@@ -2547,7 +2540,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -2563,10 +2556,9 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "update accr set armark='N' where (arcode='" + ArCode + "') and (arflage<>'Y') ";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -2574,7 +2566,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -2627,8 +2619,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {
                 if (tblAr.isRowSelected(i)) {
@@ -2638,7 +2629,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             TableSelected = tblAr.getValueAt(currow, 0).toString();
             PublicVar.ReturnString = TableSelected;
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "update accr set armark='Y' where (arno='" + TableSelected + "')";
                 stmt.executeUpdate(SqlQuery);
                 stmt.close();
@@ -2648,7 +2639,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
         }
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select sum(arnet) from accr where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark='Y')";
 
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -2661,7 +2652,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         ShowSubtotal();
@@ -2677,8 +2668,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {
                 if (tblArPay.isRowSelected(i)) {
@@ -2687,7 +2677,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
             TableSelected = tblArPay.getValueAt(currow, 0).toString();
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SqlQuery = "update accr set armark='N' where (arno='" + TableSelected + "')";
                 stmt.executeUpdate(SqlQuery);
                 stmt.close();
@@ -2697,7 +2687,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
         }
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select sum(arnet) from accr  where (arcode='" + ArCode + "') and (arflage<>'Y') and (armark='Y')";
 
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -2710,7 +2700,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ARPayment.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         ShowSubtotal();

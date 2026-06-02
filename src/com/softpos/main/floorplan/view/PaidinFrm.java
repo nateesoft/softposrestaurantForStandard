@@ -19,10 +19,14 @@ import com.softpos.util.MSG;
 
 public class PaidinFrm extends javax.swing.JDialog {
 
-    PUtility Utility = new PUtility();
-    PPrint Prn = new PPrint();
-    DecimalFormat Decfmt = new DecimalFormat("###,###,##0.00");
+    private PUtility Utility = new PUtility();
+    private PPrint Prn = new PPrint();
+    private DecimalFormat Decfmt = new DecimalFormat("###,###,##0.00");
     private POSHWSetup POSHW;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     /**
      * Creates new form paidinfrm
@@ -103,21 +107,21 @@ public class PaidinFrm extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
                     + "values (curdate(),curtime(),'" + Value.CASHIER + "',"
                     + "'" + Value.MACNO + "','I','" + PaidinAmt + "','" + PaidoutAmt + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PaidinFrm.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         this.setVisible(false);//dispose();
@@ -153,12 +157,11 @@ public class PaidinFrm extends javax.swing.JDialog {
         jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("บันทึกเงินสำรองทอน");
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
-        setUndecorated(true);
         setResizable(false);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -486,7 +489,7 @@ public class PaidinFrm extends javax.swing.JDialog {
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(360, 442));
+        setSize(new java.awt.Dimension(360, 470));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

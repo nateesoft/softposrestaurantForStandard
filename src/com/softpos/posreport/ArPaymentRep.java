@@ -32,6 +32,10 @@ public class ArPaymentRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final PUtility PUtility = new PUtility();
+    private final Value Value = new Value();
 
     /**
      * Creates new form ArPaymentRep
@@ -228,10 +232,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from t_ar "
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
@@ -256,7 +260,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     Double SumCupon = 0.0;
                     int CntBill = 0;
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from billar "
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
@@ -276,7 +280,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                     prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from t_crar "
                                 + "where (fat<>'V') "
                                 + "and (terminal>='" + MacNo1 + "') "
@@ -299,7 +303,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     prn.print("AR Pay-No    Amount  Mac  User User Void ");
                     prn.print("----------------------------------------");
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from billar "
                                 + "where (fat='V') "
                                 + "and (terminal>='" + MacNo1 + "') "
@@ -336,9 +340,8 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int billVoid = 0;
         double billVoidAmt = 0.00;
 
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
 
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -371,7 +374,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
             String sql = "select * from billar order by Ref_No,fat limit 1;";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 double total = 0.00;
                 double amount = 0.00;
@@ -410,7 +413,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();

@@ -4,6 +4,7 @@ public class AppContext {
 
     private static BalanceControl balanceControl;
     private static BillControl billControl;
+    private static BranchControl branchControl;
     private static BranchFileController branchFileController;
     private static CheckBillController checkBillController;
     private static CouponDiscountController couponDiscountController;
@@ -39,8 +40,20 @@ public class AppContext {
     private static WebServiceControl webServiceControl;
     private static sendMenuButttonToBorController sendMenuButttonToBorControllerInstance;
     private static DatabaseConnection databaseConnection;
-
+    private static PointTypeController pointTypeController;
+    private static TableMoveControl tableMoveControl;
+    
     private AppContext() {}
+
+    public static PointTypeController getPointTypeController() {
+        if (pointTypeController == null) pointTypeController = new PointTypeController();
+        return pointTypeController;
+    }
+
+    public static TableMoveControl getTableMoveControl() {
+        if (tableMoveControl == null) tableMoveControl = new TableMoveControl();
+        return tableMoveControl;
+    }
 
     public static BalanceControl getBalanceControl() {
         if (balanceControl == null) balanceControl = new BalanceControl();
@@ -50,6 +63,11 @@ public class AppContext {
     public static BillControl getBillControl() {
         if (billControl == null) billControl = new BillControl();
         return billControl;
+    }
+    
+    public static BranchControl getBranchControl() {
+        if (branchControl == null) branchControl = new BranchControl();
+        return branchControl;
     }
 
     public static BranchFileController getBranchFileController() {

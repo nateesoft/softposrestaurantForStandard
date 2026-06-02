@@ -9,6 +9,7 @@ import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
 import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.MTDCoupon;
@@ -20,6 +21,7 @@ import com.softpos.util.MSG;
 public class MTDRep extends javax.swing.JDialog {
 
     private PosUserBean posUser = null;
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public MTDRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

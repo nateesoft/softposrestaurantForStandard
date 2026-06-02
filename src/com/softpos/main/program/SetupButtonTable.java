@@ -19,6 +19,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
     private final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private final SimpleDateFormat dy = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
     private boolean actionButton = false;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public SetupButtonTable(java.awt.Frame parent, boolean modal, String codeId) {
         super(parent, modal);
@@ -227,11 +228,11 @@ public class SetupButtonTable extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -239,7 +240,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
             setActionButton(true);
             dispose();
         }
@@ -249,22 +250,21 @@ public class SetupButtonTable extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String tableNo = txtTable.getText();
             String ch = "select tcode from tablefile where tcode='" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rChk = stmt.executeQuery(ch)) {
                 if (rChk.next()) {
                     String sql = "insert into tablesetup(code_id,tcode) values('" + codeId + "','" + tableNo + "')";
                     String sqlChk = "select code_id from tablesetup where code_id='" + tableNo + "' limit 1";
-                    Statement stmt1 = mysql.getConnection().createStatement();
+                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt1.executeQuery(sqlChk);
                     if (rs.next()) {
                         boolean icon = MSG.CONF(this, "พบข้อมูลนี้อยู่ในระบบแล้ว ท่านต้องการอัพเดตข้อมูลซ้ำหรือไม่ ?");
                         if (icon) {
-                            Statement stmt3 = mysql.getConnection().createStatement();
+                            Statement stmt3 = mysqlConnect.getConnection().createStatement();
                             if (stmt3.executeUpdate("delete from tablesetup where TCode='" + txtTable.getText() + "'") > 0) {
                                 stmt3.executeUpdate(sql);
                                 stmt3.close();
@@ -276,7 +276,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
                             return;
                         }
                     } else {
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                             stmt3.executeUpdate(sql);
                         }
                         dispose();
@@ -296,7 +296,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
             setActionButton(true);
         }
     }
@@ -305,11 +305,10 @@ public class SetupButtonTable extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "SELECT TCode FROM tablesetup where code_id = '" + codeid + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String Tcode = ThaiUtil.ASCII2Unicode(rs.getString("TCode"));
@@ -330,7 +329,7 @@ public class SetupButtonTable extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(SetupButtonTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

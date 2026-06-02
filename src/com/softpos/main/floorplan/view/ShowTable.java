@@ -31,6 +31,7 @@ public class ShowTable extends javax.swing.JDialog {
 
     private DefaultTableModel model2;
     static SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public ShowTable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -88,7 +89,6 @@ public class ShowTable extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("แสดงรายการ โต็ะที่มีรายการขาย ");
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -200,7 +200,7 @@ public class ShowTable extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(1019, 651));
+        setSize(new java.awt.Dimension(1019, 679));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -220,10 +220,10 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            
+            mysqlConnect.open(this.getClass());
             try {
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     String QryUpdatetable = "update tablefile set TonAct='N' where (TCode='" + TableSelected + "')";
                     stmt.executeUpdate(QryUpdatetable);
                     stmt.close();
@@ -232,7 +232,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ShowTable.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             loadDataToGrid();
@@ -315,8 +315,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 
     private void loadDataToGrid() {
         //ให้โปรแกรมคำนวณใหม่อีกครั้งก่อนแสดงข้อมูลในตาราง
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String LoadTableFile = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
                     + "TOnAct, ChkBill, PrintChkBill"
@@ -326,7 +325,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     + "or TItem > 0 "
                     + "or Tcustomer > 0 "
                     + "order by tcode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(LoadTableFile);
 
             int RowCount = model2.getRowCount();
@@ -356,7 +355,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

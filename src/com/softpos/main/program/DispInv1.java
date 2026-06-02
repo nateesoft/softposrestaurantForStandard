@@ -35,6 +35,8 @@ public class DispInv1 extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     Date date = new Date();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     /**
      * Creates new form DispInv1
@@ -103,10 +105,10 @@ public class DispInv1 extends javax.swing.JDialog {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String sql = "select * from invcashdoc "
                         + "where (invdate>='" + Datefmt.format(TempDate1) + "') "
                         + "and (invdate<='" + Datefmt.format(TempDate2) + "') "
@@ -147,7 +149,7 @@ public class DispInv1 extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(DispInv1.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
             TotalCnt.setText(IntFmt.format(XTotalCnt));
             TotalAmt1.setText(DecFmt.format(XAmt1));

@@ -14,6 +14,8 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class LoginController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public LoginBean validateLogin(String username, String password) {
         LoginBean loginBean = new LoginBean();
@@ -50,7 +52,7 @@ public class LoginController {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String SQLQuery = "update posuser set "

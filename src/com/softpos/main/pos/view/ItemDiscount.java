@@ -28,6 +28,8 @@ public class ItemDiscount extends javax.swing.JDialog {
     private String RIndex;
     private DecimalFormat dec1 = new DecimalFormat("#0.00");
     private MemberBean memberBean;
+    private final PUtility PUtility = new PUtility();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     /**
      * Creates new form ItemDiscount

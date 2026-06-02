@@ -28,6 +28,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private String menuCode;
     private int menuIndex;
     private boolean editOK = false;
+    private MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MGRButtonMenu(java.awt.Frame parent, boolean modal, String menuCode, int menuIndex) {
         super(parent, modal);
@@ -910,14 +911,13 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         String ShortName = txtShortName.getText();
         /**
          * * OPEN CONNECTION **
-         */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+         */        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from soft_menusetup "
                     + "where MenuCode ='" + menucode + "'"
                     + "AND MenuShowText='" + ThaiUtil.Unicode2ASCII(ShortName) + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -925,7 +925,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         this.setVisible(false);//dispose();
@@ -935,8 +935,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into soft_menusetup"
                     + "(MenuCode,MenuType,OptSet,PSet,PCode,MenuShowText,"
@@ -948,7 +947,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     + "'" + mgr.getIMG() + "','" + mgr.getFontColor() + "','" + mgr.getBGColor() + "','" + mgr.getLayout() + "',"
                     + "'" + mgr.getFontSize() + "','" + mgr.getFontName() + "','" + mgr.getFontAttr() + "'"
                     + ",'" + mgr.getMIndex() + "','" + mgr.getImgSize() + "');";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate("delete from soft_menusetup where MenuCode='" + mgr.getMenuCode() + "'");
                 if (stmt.executeUpdate(sql) > 0) {
                     MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
@@ -960,7 +959,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -968,8 +967,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "update soft_menusetup "
                     + "set "
@@ -980,7 +978,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     + "FontName='" + mgr.getFontName() + "',"
                     + "FontAttr='" + mgr.getFontAttr() + "' "
                     + "where MenuType='" + mgr.getMenuType() + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 if (stmt.executeUpdate(sql) > 0) {
                     stmt.close();
                     MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
@@ -992,7 +990,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1017,13 +1015,12 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
                     + "and M_Index='" + menuIndex + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     MenuMGR m = new MenuMGR();
@@ -1052,7 +1049,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     }
                     txtPCode.setText(m.getPCode());
 
-                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         ResultSet rsFind = stmt1.executeQuery("select PDesc from product where pcode='" + m.getPCode() + "' and PActive='Y'");
                         if (rsFind.next()) {
                             txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
@@ -1104,7 +1101,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1217,10 +1214,9 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         try {
-            mysql.open(this.getClass());
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            mysqlConnect.open(this.getClass());
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
                 if (rs.next()) {
                     txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
@@ -1232,7 +1228,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MGRButtonMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

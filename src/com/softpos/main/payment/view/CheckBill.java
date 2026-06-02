@@ -3,7 +3,6 @@ package com.softpos.main.payment.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.pos.view.DiscountDialog;
 import com.softpos.pos.core.controller.BalanceControl;
-import static com.softpos.pos.core.controller.BalanceControl.updateProSerTable;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.MemmaterController;
@@ -58,6 +57,14 @@ public class CheckBill extends javax.swing.JDialog {
     private POSConfigSetup CONFIG;
     private CheckBillController checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final PUtility PUtility = new PUtility();
+    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
@@ -1644,7 +1651,7 @@ public class CheckBill extends javax.swing.JDialog {
         MBD.setVisible(true);
         try {
             this.memberBean = MemmaterController.getMember(MBD.getMemCode());
-            updateProSerTable(tableNo, memberBean);
+            BalanceControl.updateProSerTable(tableNo, memberBean);
             if (memberBean != null) {
                 txtMember1.setText(memberBean.getMember_NameThai());
                 txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore() + " แต้ม");

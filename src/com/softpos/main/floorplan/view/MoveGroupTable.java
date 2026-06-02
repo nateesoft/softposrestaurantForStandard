@@ -19,6 +19,9 @@ import com.softpos.util.MSG;
 public class MoveGroupTable extends javax.swing.JDialog {
 
     private String tableNo;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final TableMoveControl TableMoveControl = AppContext.getTableMoveControl();
 
     public MoveGroupTable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -62,9 +65,9 @@ public class MoveGroupTable extends javax.swing.JDialog {
         jButton19 = new javax.swing.JButton();
         jButton20 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Move Table Form (บันทึกการย้าย/รวมโต๊ะ)");
-        setUndecorated(true);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -614,13 +617,13 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 /**
                  * * OPEN CONNECTION **
                  */
-                MySQLConnect mysql = new MySQLConnect();
-                mysql.open(this.getClass());
+                
+                mysqlConnect.open(this.getClass());
                 try {
                     int ct1 = 0, ct2 = 0, c = 0;
                     String sqlPlusTCust1 = "select tcustomer tcustFrom1 from tablefile "
                             + "where tcode='" + txtTable1.getText() + "' limit 1";
-                    Statement stmt1 = mysql.getConnection().createStatement();
+                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     ResultSet rs1 = stmt1.executeQuery(sqlPlusTCust1);
                     if (rs1.next()) {
                         ct1 = rs1.getInt("tcustFrom1");
@@ -631,7 +634,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
 
                     String sqlPlusTCust2 = "select tcustomer tcustFrom2 "
                             + "from tablefile where tcode='" + txtTable2.getText() + "' limit 1";
-                    Statement stmt2 = mysql.getConnection().createStatement();
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                     ResultSet rs2 = stmt2.executeQuery(sqlPlusTCust2);
                     if (rs2.next()) {
                         ct2 = rs2.getInt("tcustFrom2");
@@ -643,7 +646,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     String sql = "update tablefile "
                             + "set tcustomer='" + c + "' "
                             + "where tcode='" + txtTable2.getText().toUpperCase() + "'";
-                    Statement stmt3 = mysql.getConnection().createStatement();
+                    Statement stmt3 = mysqlConnect.getConnection().createStatement();
                     stmt3.executeUpdate(sql);
                     stmt3.close();
 
@@ -651,7 +654,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 // backup tmp
@@ -664,11 +667,10 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 /*
                  ค้นหาปริ้นเตอร์ในตารางนั้นๆ ก่อนว่ามีปริ้นเตอร์อะไรบ้าง ที่จะต้องปริ้นออก
                  */
-                MySQLConnect mysql2 = new MySQLConnect();
-                mysql2.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql1 = "select r_kic from balance where r_table='" + txtTable2.getText() + "' group by r_kic;";
-                    Statement stmt = mysql2.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql1);
                     while (rs.next()) {
                         strKic += "kic" + rs.getString("r_kic") + ",";//เก็บข้อมูลปริ้นเตอร์ลงในตัวแปร
@@ -680,7 +682,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                     MSG.ERR(this, e.getMessage());
                     AppLogUtil.log(MoveGroupTable.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 //แยกปริ้นเตอร์ สำหรับพิมพ์ออกจากระบบ
@@ -878,11 +880,10 @@ public class MoveGroupTable extends javax.swing.JDialog {
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
                 String sql = "select code from employ where code='" + txtUser.getText() + "' limit 1";
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     jButton2.requestFocus();
@@ -898,7 +899,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(MoveGroupTable.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         } else {
             txtUser.requestFocus();
@@ -933,22 +934,20 @@ public class MoveGroupTable extends javax.swing.JDialog {
     }
 
     private void updateForVoidAfterMoveTable(String table) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'";
-            mysql.open(this.getClass());
-            mysql.executeUpdate(sql);
+            mysqlConnect.open(this.getClass());
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     private void tmpTableBeforeMove(String table) {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String[] sql = new String[]{
                 "drop table if exists tmp_tablefile;",
@@ -956,7 +955,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
                 "create table if not exists tmp_tablefile select * from tablefile where tcode='" + table + "';",
                 "create table if not exists tmp_balance select * from balance where r_table = '" + table + "';"
             };
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 for (String sql1 : sql) {
                     stmt.executeUpdate(sql1);
                 }
@@ -966,7 +965,7 @@ public class MoveGroupTable extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(MoveGroupTable.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

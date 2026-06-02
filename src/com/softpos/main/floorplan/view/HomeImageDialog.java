@@ -1,5 +1,6 @@
 package com.softpos.main.floorplan.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.BranchBean;
 import database.MySQLConnect;
@@ -12,6 +13,9 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class HomeImageDialog extends javax.swing.JDialog {
+    
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final BranchControl BranchControl = AppContext.getBranchControl();
 
     public HomeImageDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -191,10 +195,10 @@ public class HomeImageDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             if (stmt.executeUpdate(jTextArea1.getText()) > 0) {
                 MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
             }
@@ -203,7 +207,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -237,14 +241,13 @@ public class HomeImageDialog extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
 
         try {
             String path = txtPathImage.getText();
             path = path.replace("\\", "/");
             String sql = "update branch set IMG_HOME_PATH='" + path + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             if (stmt.executeUpdate(sql) > 0) {
                 MSG.NOTICE(this, "บันทึกข้อมูลเรียบร้อยแล้ว");
             }
@@ -253,7 +256,7 @@ public class HomeImageDialog extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(HomeImageDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

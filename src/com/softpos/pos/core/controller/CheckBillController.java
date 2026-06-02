@@ -17,9 +17,11 @@ import com.softpos.util.AppLogUtil;
  */
 public class CheckBillController {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         String sql = "";
         try {
             mysql.open(CheckBillController.class);
@@ -44,7 +46,6 @@ public class CheckBillController {
 
     public CustFileBean getCustFileBySpCode(String arCode) {
         CustFileBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(CheckBillController.class);
             String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
@@ -70,7 +71,6 @@ public class CheckBillController {
 
     public AccrBean getTotalAccrByArCode(String arCode) {
         AccrBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
         String sql = "";
         try {
             mysql.open(CheckBillController.class);
@@ -97,7 +97,6 @@ public class CheckBillController {
 
     public boolean readyToPrintVoid(String tableNo) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
         String sql = "";
         try {
             mysql.open(CheckBillController.class);
@@ -122,7 +121,6 @@ public class CheckBillController {
 
     public boolean readyToCheckKic(String tableNo) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
         String sql = "";
         try {
             mysql.open(CheckBillController.class);
@@ -148,7 +146,6 @@ public class CheckBillController {
     public TableFileBean loadDiscByTableNo(String tableNo) {
         TableFileBean bean = null;
 
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "select sum(FastDiscAmt+EmpDiscAmt+MemDiscAmt+TrainDiscAmt+SubDiscAmt+DiscBath+CuponDiscAmt) AAA "
@@ -172,7 +169,6 @@ public class CheckBillController {
 
     public boolean restoreTempBalance(String tableNo) {
         boolean isValid = false;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open(CheckBillController.class);
             String sql = "select r_table from temp_balance "

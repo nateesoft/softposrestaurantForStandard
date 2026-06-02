@@ -16,6 +16,7 @@ public class GiftDialogList extends javax.swing.JDialog {
 
     private String giftCode;
     private String giftTypeCode;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public GiftDialogList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -142,11 +143,11 @@ public class GiftDialogList extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from gifttype";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     model.addRow(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
@@ -158,7 +159,7 @@ public class GiftDialogList extends javax.swing.JDialog {
             MSG.WAR(this, e.getMessage());
             AppLogUtil.log(GiftDialogList.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

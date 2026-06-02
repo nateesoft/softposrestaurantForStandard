@@ -1,5 +1,6 @@
 package com.softpos.pos.core.model;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 
 public class POSHWSetup {
@@ -56,6 +57,7 @@ public class POSHWSetup {
     private String UseFloorPlan = "N";
     private String TakeOrderChk = "N";
     private String RFIDPort = "NONE";
+    private final PosControl PosControl = AppContext.getPosControl();
 
     public String getTerminal() {
         return Terminal;
@@ -473,7 +475,7 @@ public class POSHWSetup {
         this.RFIDPort = RFIDPort;
     }
 
-    public static POSHWSetup Bean(String MacNo) {
+    public POSHWSetup Bean(String MacNo) {
         return PosControl.getData(MacNo);
     }
 }

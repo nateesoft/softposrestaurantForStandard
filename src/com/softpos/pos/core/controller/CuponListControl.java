@@ -11,11 +11,13 @@ import com.softpos.util.AppLogUtil;
 
 public class CuponListControl {
 
+    private final MySQLConnect mysql = new MySQLConnect();
+    
     public List<CuponlistBean> listCuponlist() {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
 
         List<CuponlistBean> listBean = new ArrayList<>();
@@ -47,7 +49,6 @@ public class CuponListControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         List<CuponlistBean> listBean = new ArrayList<>();
@@ -80,7 +81,6 @@ public class CuponListControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         CuponlistBean bean = new CuponlistBean();
@@ -108,7 +108,6 @@ public class CuponListControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             String sql = "insert into cuponlist (CuCode,PCode)  "
@@ -136,7 +135,6 @@ public class CuponListControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
 
         try {

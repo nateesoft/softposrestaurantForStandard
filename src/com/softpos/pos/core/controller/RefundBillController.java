@@ -12,10 +12,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class RefundBillController {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public BillNoBean checkBillByRefno(String macno, String billNo) {
         BillNoBean bean = null;
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from billno "

@@ -45,6 +45,10 @@ public class ArNotPay extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     /**
      * Creates new form ArNotPay
@@ -660,10 +664,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         /**
                          * * OPEN CONNECTION **
                          */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
+                        
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') and (arflage='N') order by arcode";
                             ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -676,7 +680,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(ArNotPay.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
 
                         prn.print("----------------------------------------");
@@ -742,10 +746,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("ช่วงวันที่") + Space + ardate1.getText() + Space + "ถึง" + Space + ardate2.getText() + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลูกหนี้    วันที่      เลขที่เอกสาร     จำนวนเงิน") + "_";
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                     + "where (arcode>='" + TempCode1 + "') and (arcode<='" + TempCode2 + "') and (ardate>='" + Datefmt.format(TempDate1) + "') and (ardate<='" + Datefmt.format(TempDate2) + "') and (arflage='N') order by arcode";
             ResultSet rs = stmt.executeQuery(SQLQuery);
@@ -758,7 +761,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ArNotPay.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();
@@ -796,10 +799,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             /**
              * * OPEN CONNECTION **
              */
-            MySQLConnect mysql = new MySQLConnect();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
                         + "where (arcode>='" + TempCode1 + "') "
                         + "and (arcode<='" + TempCode2 + "') "
@@ -827,7 +829,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArNotPay.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             TotalCnt.setText(IntFmt.format(XTotalCnt));

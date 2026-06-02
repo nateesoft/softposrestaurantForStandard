@@ -11,10 +11,11 @@ import com.softpos.util.AppLogUtil;
 
 public class TCuponControl {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon";
@@ -50,7 +51,7 @@ public class TCuponControl {
 
     public List<TCuponBean> listTCupon(String R_Index) {
         List<TCuponBean> listBean = new ArrayList<>();
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon "
@@ -91,7 +92,7 @@ public class TCuponControl {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             String sql = "select * from t_cupon where R_Index='" + R_Index + "' limit 1";

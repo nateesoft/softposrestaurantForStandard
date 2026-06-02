@@ -101,6 +101,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final ProductControl productControl = AppContext.getProductControl();
     private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
     private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
+    private final PUtility PUtility = new PUtility();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final PosControl PosControl = AppContext.getPosControl();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     private static class FloorInitData {
 
@@ -1182,7 +1187,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         s.setVisible(true);
         if (!Value.TableSelected.equals("")) {
             setVisible(false);
-            
+
             AppLogUtil.info("Open Table: " + Value.TableSelected);
             MainSale mainSale = new MainSale(this, true, Value.TableSelected);
             mainSale.setVisible(true);

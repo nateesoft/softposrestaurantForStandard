@@ -5,6 +5,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.pos.core.model.POSHWSetup;
 import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -17,6 +18,8 @@ import com.softpos.util.MSG;
 public class DeptRep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
 
     public DeptRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -346,7 +349,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
+        
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();
@@ -555,7 +558,6 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
         mysql.open(this.getClass());
         try {
             Statement stmt = mysql.getConnection().createStatement();

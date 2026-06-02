@@ -26,6 +26,7 @@ public final class Giftvoucher extends javax.swing.JDialog {
     private DefaultTableModel model;
     private SimpleDateFormat Datefmtshow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private Double giftAmt;
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form Giftvoucher
@@ -243,10 +244,10 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public void bntClearAllClick() {
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
-            PreparedStatement prm = mysql.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
+            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
             prm.setString(1, Value.MACNO);
             prm.executeUpdate();
 
@@ -256,7 +257,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         txtGiftNo.setText("");
@@ -318,12 +319,11 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                 /**
                                  * * OPEN CONNECTION **
                                  */
-                                MySQLConnect mysql = new MySQLConnect();
-                                mysql.open(this.getClass());
+                                mysqlConnect.open(this.getClass());
                                 try {
                                     String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                             + "values (?,?,?,?,?,?,?,?,?,?)";
-                                    PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
+                                    PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
                                     prm11.setString(1, Value.MACNO);
                                     prm11.setString(2, giftBarcode);
                                     prm11.setString(3, giftType);
@@ -340,19 +340,18 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                     MSG.ERR(this, e.getMessage());
                                     AppLogUtil.log(Giftvoucher.class, "error", e);
                                 } finally {
-                                    mysql.closeConnection(this.getClass());
+                                    mysqlConnect.closeConnection(this.getClass());
                                 }
                             }
                         } else {
                             /**
                              * * OPEN CONNECTION **
                              */
-                            MySQLConnect mysql = new MySQLConnect();
-                            mysql.open(this.getClass());
+                            mysqlConnect.open(this.getClass());
                             try {
                                 String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                         + "values (?,?,?,?,?,?,?,?,?,?)";
-                                PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
+                                PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
                                 prm11.setString(1, Value.MACNO);
                                 prm11.setString(2, giftBarcode);
                                 prm11.setString(3, giftType);
@@ -370,7 +369,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                                 MSG.ERR(this, e.getMessage());
                                 AppLogUtil.log(Giftvoucher.class, "error", e);
                             } finally {
-                                mysql.closeConnection(this.getClass());
+                                mysqlConnect.closeConnection(this.getClass());
                             }
                         }
                     }
@@ -383,12 +382,11 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         /**
                          * * OPEN CONNECTION **
                          */
-                        MySQLConnect mysql = new MySQLConnect();
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
                             String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                     + "values (?,?,?,?,?,?,?,?,?,?)";
-                            PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
+                            PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
                             prm11.setString(1, Value.MACNO);
                             prm11.setString(2, giftBarcode);
                             prm11.setString(3, giftType);
@@ -406,19 +404,18 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                             MSG.ERR(this, e.getMessage());
                             AppLogUtil.log(Giftvoucher.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                 } else {
                     /**
                      * * OPEN CONNECTION **
                      */
-                    MySQLConnect mysql = new MySQLConnect();
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                                 + "values (?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement prm11 = mysql.getConnection().prepareStatement(sql);
+                        PreparedStatement prm11 = mysqlConnect.getConnection().prepareStatement(sql);
                         prm11.setString(1, Value.MACNO);
                         prm11.setString(2, giftBarcode);
                         prm11.setString(3, giftType);
@@ -436,7 +433,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(Giftvoucher.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
             }
@@ -449,10 +446,9 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select gcode from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -468,7 +464,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -479,10 +475,9 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select priceamt from giftprice where (pricecode='" + GiftPrice + "') limit 1");
             if (rs.next()) {
                 giftAmt = rs.getDouble("priceamt");
@@ -498,7 +493,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -521,10 +516,9 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTempGift = "select * from tempgift where macno='" + Value.MACNO + "' limit 1";
             ResultSet rs = stmt.executeQuery(LoadTempGift);
             if (rs.next()) {
@@ -549,7 +543,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(Giftvoucher.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

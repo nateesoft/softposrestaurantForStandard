@@ -56,6 +56,9 @@ public class CouponDiscount extends javax.swing.JDialog {
     private String Member2;
     private double totalAmount;
     private CouponDiscountController couponControl = AppContext.getCouponDiscountController();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final BalanceControl BalanceControl = AppContext.getBalanceControl();
+    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public CouponDiscount(java.awt.Frame parent, boolean modal, String tableNo, String Member1, String Member2, double totalAmount) {
 
@@ -405,8 +408,8 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from cupon "
                     + "where (curdate()>=cubegin) and (curdate()<=cuend) "
@@ -414,7 +417,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and CuStrDay like '%" + EE + "%' "
                     + "and ChkMember='N' "
                     + "order by cutype,cucode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Object[] row = new Object[ShowTable.getColumnCount()];
@@ -433,7 +436,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -465,10 +468,9 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String LoadTableFile = "select *from cupon "
                     + "where ('" + CuDate + "'>=cubegin) "
                     + "and ('" + CuDate + "'<=cuend) "
@@ -496,7 +498,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -525,10 +527,9 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadTableFile = "select cuquan from tempcupon where (r_table='" + tableNo + "') "
                         + "and (cucode='" + CuCode + "') limit 1";
                 try (ResultSet rs = stmt.executeQuery(LoadTableFile)) {
@@ -543,7 +544,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return RetValue;
@@ -554,10 +555,9 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadTableFile = "select sms_code from tempcupon "
                         + "where (r_table='" + tableNo + "') and (cucode='" + CuCode + "') limit 1";
                 try (ResultSet rs = stmt.executeQuery(LoadTableFile)) {
@@ -572,7 +572,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         if (RetValue == null) {
             RetValue = "";
@@ -585,10 +585,9 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadTableFile = "select m_code from tempcupon where (r_table='" + tableNo + "') "
                         + "and (cucode='" + CuCode + "') limit 1";
                 try (ResultSet rs = stmt.executeQuery(LoadTableFile)) {
@@ -603,7 +602,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         if (RetValue == null) {
             RetValue = "";
@@ -677,15 +676,14 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select count(*) itemCount from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and R_PRAmt='0' "
                     + "and R_Discount ='Y' "
                     + "and r_void<>'V'";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     itemForDisc = rs.getInt("itemCount");//จำนวนสินค้าที่ให้คูปองได้
                 }
@@ -697,7 +695,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (itemForDisc < cuponQty) {
@@ -1025,8 +1023,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             double rTotal = balanceBean.getR_Price() * itemDisc;
             double total = rTotal * percent / 100;
@@ -1039,7 +1036,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "R_QuanCanDisc=R_QuanCanDisc-" + itemDisc + " "
                     + "where R_Index='" + balanceBean.getR_Index() + "' "
                     + "and R_Table='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql3);
                 stmt.close();
             }
@@ -1047,7 +1044,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1055,8 +1052,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             double rTotal = balanceBean.getR_Price() * itemDisc;
             double total = 0;
@@ -1079,14 +1075,14 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "R_QuanCanDisc=R_QuanCanDisc-" + itemDisc + " "
                     + "where R_Index='" + balanceBean.getR_Index() + "' "
                     + "and R_Table='" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql3);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1095,12 +1091,11 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select sum(r_prcuquan) qty from balance "
                     + "where r_table='" + tableNo + "' and r_prcucode='" + cuCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 count = rs.getInt("qty");
@@ -1112,7 +1107,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscount.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return count;

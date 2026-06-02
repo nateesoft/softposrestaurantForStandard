@@ -21,12 +21,16 @@ import com.softpos.util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {
 
-    PUtility Utility = new PUtility();
-    PPrint Prn = new PPrint();
-    DecimalFormat Decfmt = new DecimalFormat("###,###,###.00");
+    private PUtility Utility = new PUtility();
+    private PPrint Prn = new PPrint();
+    private DecimalFormat Decfmt = new DecimalFormat("###,###,###.00");
     private POSHWSetup POSHW;
     private String reson;
     private String Space = " &nbsp; ";
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final PUtility PUtility = new PUtility();
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
+    private final Value Value = new Value();
 
     public PaidoutFrm(java.awt.Frame parent, boolean modal, String reson) {
         super(parent, modal);
@@ -109,19 +113,19 @@ public class PaidoutFrm extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + PaidoutAmt + "' "
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PaidoutFrm.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         this.setVisible(false);//dispose();
@@ -156,9 +160,8 @@ public class PaidoutFrm extends javax.swing.JDialog {
         jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("บันทึกการนำเงินออกจากลิ้นชัก");
-        setUndecorated(true);
         setResizable(false);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));

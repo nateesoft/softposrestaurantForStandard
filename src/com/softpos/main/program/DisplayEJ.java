@@ -15,6 +15,7 @@ public class DisplayEJ extends javax.swing.JDialog {
 
     StyleContext context = new StyleContext();
     StyledDocument doc = new DefaultStyledDocument(context);
+    private final POSHWSetup POSHWSetup = new POSHWSetup();
 
     /**
      * Creates new form DisplayEJ
