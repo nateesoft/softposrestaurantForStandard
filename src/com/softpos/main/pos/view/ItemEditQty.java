@@ -2,18 +2,15 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.ItemEditQtyController;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
-import database.MySQLConnect;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 /**
@@ -38,7 +35,7 @@ public class ItemEditQty extends javax.swing.JDialog {
     private DecimalFormat dec1 = new DecimalFormat("#0.00");
     private MemberBean memberBean;
     private String NewDesc;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final ItemEditQtyController itemEditQtyController = AppContext.getItemEditQtyController();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
@@ -94,56 +91,42 @@ public class ItemEditQty extends javax.swing.JDialog {
                     + " '" + balanceBean.getR_PluCode() + "', '" + ThaiUtil.Unicode2ASCII(balanceBean.getR_ETD() + "-" + balanceBean.getR_PName().replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", "") + "-" + balanceBean.getR_Opt1()) + "','" + XQty + "',"
                     + " '" + XPrice + "','" + XNewQty + "','" + newAmount + "');";
 
-            if (balanceBean != null) {                
-                try {
-                    mysqlConnect.open(this.getClass());
-                    balanceBean.setR_Quan(XNewQty);
-                    balanceBean.setR_Price(newAmount);
+            if (balanceBean != null) {
+                balanceBean.setR_Quan(XNewQty);
+                balanceBean.setR_Price(newAmount);
+                balanceBean.setR_Total(XNewAmount);
+                NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-").replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", ""));
+
+                if (!txtNewPDesc.getText().replace("null", "").equals("")) {
+                    this.XNewAmount = XNewQty * newAmount;
                     balanceBean.setR_Total(XNewAmount);
-                    NewDesc = ThaiUtil.Unicode2ASCII(txtNewPDesc.getText().trim().replace(" ", "-").replace("(", " ").replace(")", " ").replace("'", "").replace("\"", "").replace(";", ""));
-
-                    Statement stmt = mysqlConnect.getConnection().createStatement();
-                    if (!txtNewPDesc.getText().replace("null", "").equals("")) {
-                        this.XNewAmount = XNewQty * newAmount;
-                        balanceBean.setR_Total(XNewAmount);
-                        if (balanceBean.getR_Price() != 0) {
-                            newAmount = balanceBean.getR_Price();
-                        }
-
-                        sqlUpdateBalance = "update balance set "
-                                + "r_total='" + balanceBean.getR_Total() + "'"
-                                + ",r_quan='" + balanceBean.getR_Quan() + "' "
-                                + ThaiUtil.Unicode2ASCII(",r_pname='" + NewDesc + "' ")
-                                + ",r_price='" + newAmount + "' "
-                                + "where r_index='" + RIndex + "' "
-                                + "and r_plucode='" + txtPCode.getText() + "';";
-                        balanceBean.setR_PName(NewDesc);
-                    } else {
-                        if (balanceBean.getR_Price() != 0) {
-                            newAmount = balanceBean.getR_Price();
-                        }
-                        this.XNewAmount = XNewQty * newAmount;
-                        balanceBean.setR_Total(XNewAmount);
-                        sqlUpdateBalance = "update balance set "
-                                + "r_total='" + balanceBean.getR_Total() + "'"
-                                + ",r_quan='" + balanceBean.getR_Quan() + "' "
-                                + ",r_price='" + newAmount + "' "
-                                + "where r_index='" + RIndex + "' "
-                                + "and r_plucode='" + txtPCode.getText() + "';";
+                    if (balanceBean.getR_Price() != 0) {
+                        newAmount = balanceBean.getR_Price();
                     }
-
-                    stmt.executeUpdate(sqlUpdateBalance);
-
-                    String sqlUpdateTableFile = "update tablefile set TAmount= TAmount+" + (XNewAmount) + " where tcode='" + tableNo + "';";
-                    stmt.executeUpdate(sqlUpdateTableFile);
-                    stmt.executeUpdate(sql);
-                    stmt.close();
-                } catch (SQLException e) {
-                    MSG.ERR(this, e.getMessage());
-                    AppLogUtil.log(ItemEditQty.class, "error", e);
-                } finally {
-                    mysqlConnect.closeConnection(this.getClass());
+                    sqlUpdateBalance = "update balance set "
+                            + "r_total='" + balanceBean.getR_Total() + "'"
+                            + ",r_quan='" + balanceBean.getR_Quan() + "' "
+                            + ThaiUtil.Unicode2ASCII(",r_pname='" + NewDesc + "' ")
+                            + ",r_price='" + newAmount + "' "
+                            + "where r_index='" + RIndex + "' "
+                            + "and r_plucode='" + txtPCode.getText() + "';";
+                    balanceBean.setR_PName(NewDesc);
+                } else {
+                    if (balanceBean.getR_Price() != 0) {
+                        newAmount = balanceBean.getR_Price();
+                    }
+                    this.XNewAmount = XNewQty * newAmount;
+                    balanceBean.setR_Total(XNewAmount);
+                    sqlUpdateBalance = "update balance set "
+                            + "r_total='" + balanceBean.getR_Total() + "'"
+                            + ",r_quan='" + balanceBean.getR_Quan() + "' "
+                            + ",r_price='" + newAmount + "' "
+                            + "where r_index='" + RIndex + "' "
+                            + "and r_plucode='" + txtPCode.getText() + "';";
                 }
+
+                String sqlUpdateTableFile = "update tablefile set TAmount= TAmount+" + XNewAmount + " where tcode='" + tableNo + "';";
+                itemEditQtyController.saveItemEdits(sqlUpdateBalance, sqlUpdateTableFile, sql);
             }
 
             BalanceControl.updateProSerTable(tableNo, memberBean);

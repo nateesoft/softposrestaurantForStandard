@@ -153,4 +153,98 @@ public class TableMoveControl {
             mysqlConnect.closeConnection(TableMoveControl.class);
         }
     }
+
+    public void updateCustomerCount(String tableFrom, String tableTo) {
+        mysqlConnect.open(TableMoveControl.class);
+        try {
+            int ct1 = 0, ct2 = 0;
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
+            ResultSet rs1 = stmt1.executeQuery("select tcustomer from tablefile where tcode='" + tableFrom + "' limit 1");
+            if (rs1.next()) ct1 = rs1.getInt("tcustomer");
+            rs1.close();
+            stmt1.close();
+
+            Statement stmt2 = mysqlConnect.getConnection().createStatement();
+            ResultSet rs2 = stmt2.executeQuery("select tcustomer from tablefile where tcode='" + tableTo + "' limit 1");
+            if (rs2.next()) ct2 = rs2.getInt("tcustomer");
+            rs2.close();
+            stmt2.close();
+
+            Statement stmt3 = mysqlConnect.getConnection().createStatement();
+            stmt3.executeUpdate("update tablefile set tcustomer='" + (ct1 + ct2) + "' where tcode='" + tableTo.toUpperCase() + "'");
+            stmt3.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(TableMoveControl.class);
+        }
+    }
+
+    public String[] getPrinterList(String table) {
+        mysqlConnect.open(TableMoveControl.class);
+        StringBuilder sb = new StringBuilder();
+        try {
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select r_kic from balance where r_table='" + table + "' group by r_kic;");
+            while (rs.next()) {
+                sb.append("kic").append(rs.getString("r_kic")).append(",");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(TableMoveControl.class);
+        }
+        return sb.toString().split(",");
+    }
+
+    public boolean verifyEmployeeCode(String code) {
+        mysqlConnect.open(TableMoveControl.class);
+        try {
+            Statement stmt = mysqlConnect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select code from employ where code='" + code + "' limit 1");
+            boolean found = rs.next();
+            rs.close();
+            stmt.close();
+            return found;
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+            return false;
+        } finally {
+            mysqlConnect.closeConnection(TableMoveControl.class);
+        }
+    }
+
+    public void updateForVoidAfterMoveTable(String table) {
+        mysqlConnect.open(TableMoveControl.class);
+        try {
+            mysqlConnect.executeUpdate("update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'");
+        } catch (Exception e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(TableMoveControl.class);
+        }
+    }
+
+    public void tmpTableBeforeMove(String table) {
+        mysqlConnect.open(TableMoveControl.class);
+        try {
+            String[] sqls = {
+                "drop table if exists tmp_tablefile;",
+                "drop table if exists tmp_balance;",
+                "create table if not exists tmp_tablefile select * from tablefile where tcode='" + table + "';",
+                "create table if not exists tmp_balance select * from balance where r_table = '" + table + "';"
+            };
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                for (String sql : sqls) {
+                    stmt.executeUpdate(sql);
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(TableMoveControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(TableMoveControl.class);
+        }
+    }
 }

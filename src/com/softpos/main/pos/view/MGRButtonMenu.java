@@ -1,19 +1,17 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ButtonCustom;
+import com.softpos.pos.core.controller.MgrButtonController;
 import com.softpos.crm.pos.core.modal.MenuMGR;
 import com.softpos.main.program.DlgBrowseProduct;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -28,7 +26,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private String menuCode;
     private int menuIndex;
     private boolean editOK = false;
-    private MySQLConnect mysqlConnect = new MySQLConnect();
+    private final MgrButtonController mgrButtonController = AppContext.getMgrButtonController();
 
     public MGRButtonMenu(java.awt.Frame parent, boolean modal, String menuCode, int menuIndex) {
         super(parent, modal);
@@ -909,88 +907,21 @@ public class MGRButtonMenu extends javax.swing.JDialog {
 
     private void delete(String menucode) {
         String ShortName = txtShortName.getText();
-        /**
-         * * OPEN CONNECTION **
-         */        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "delete from soft_menusetup "
-                    + "where MenuCode ='" + menucode + "'"
-                    + "AND MenuShowText='" + ThaiUtil.Unicode2ASCII(ShortName) + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonMenu.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        this.setVisible(false);//dispose();
+        mgrButtonController.deleteMenuSetup(menucode, ThaiUtil.Unicode2ASCII(ShortName));
+        this.setVisible(false);
     }
 
     private void saveMenu(MenuMGR mgr) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "insert into soft_menusetup"
-                    + "(MenuCode,MenuType,OptSet,PSet,PCode,MenuShowText,"
-                    + "IMG,FontColor,BGColor,Layout,"
-                    + "FontSize,FontName,FontAttr,M_Index,IMG_SIZE) "
-                    + "values("
-                    + "'" + mgr.getMenuCode() + "','" + mgr.getMenuType() + "','" + mgr.getOptSet() + "','" + mgr.getPSet() + "',"
-                    + "'" + mgr.getPCode() + "','" + ThaiUtil.Unicode2ASCII(mgr.getMenuShowText()) + "',"
-                    + "'" + mgr.getIMG() + "','" + mgr.getFontColor() + "','" + mgr.getBGColor() + "','" + mgr.getLayout() + "',"
-                    + "'" + mgr.getFontSize() + "','" + mgr.getFontName() + "','" + mgr.getFontAttr() + "'"
-                    + ",'" + mgr.getMIndex() + "','" + mgr.getImgSize() + "');";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate("delete from soft_menusetup where MenuCode='" + mgr.getMenuCode() + "'");
-                if (stmt.executeUpdate(sql) > 0) {
-                    MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
-                    this.setVisible(false);//dispose();
-                }
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonMenu.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        if (mgrButtonController.saveMenuSetup(mgr)) {
+            MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+            this.setVisible(false);
         }
     }
 
     private void saveMenuAll(MenuMGR mgr) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "update soft_menusetup "
-                    + "set "
-                    + "FontColor='" + mgr.getFontColor() + "',"
-                    + "BGColor='" + mgr.getBGColor() + "',"
-                    + "Layout='" + mgr.getLayout() + "',"
-                    + "FontSize='" + mgr.getFontSize() + "',"
-                    + "FontName='" + mgr.getFontName() + "',"
-                    + "FontAttr='" + mgr.getFontAttr() + "' "
-                    + "where MenuType='" + mgr.getMenuType() + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                if (stmt.executeUpdate(sql) > 0) {
-                    stmt.close();
-                    MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
-                    this.setVisible(false);//dispose();
-                }
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonMenu.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        if (mgrButtonController.updateMenuSetupAll(mgr)) {
+            MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
+            this.setVisible(false);
         }
     }
 
@@ -1012,97 +943,57 @@ public class MGRButtonMenu extends javax.swing.JDialog {
 
     private void loadInit(String menuCode, int menuIndex) {
         loadFontList();
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from soft_menusetup "
-                    + "where MenuCode='" + menuCode + "' "
-                    + "and M_Index='" + menuIndex + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    MenuMGR m = new MenuMGR();
-                    m.setMenuCode(rs.getString("MenuCode"));
-                    m.setMenuType(rs.getInt("MenuType"));
-                    m.setOptSet(rs.getString("OptSet"));
-                    m.setPSet(rs.getString("PSet"));
-                    m.setPCode(rs.getString("PCode"));
-                    m.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                    m.setIMG(rs.getString("IMG"));
-                    m.setFontColor(rs.getString("FontColor"));
-                    m.setBGColor(rs.getString("BGColor"));
-                    m.setLayout(rs.getInt("Layout"));
-                    m.setFontSize(rs.getInt("FontSize"));
-                    m.setFontName(rs.getString("FontName"));
-                    m.setMIndex(rs.getInt("M_Index"));
-                    m.setFontAttr(rs.getString("FontAttr"));
+        MenuMGR m = mgrButtonController.getMenuSetup(menuCode, menuIndex);
+        if (m == null) return;
 
-                    cbTypeMenu.setSelectedIndex(m.getMenuType());
-                    if (m.getMenuType() == 0) {
-                        txtPCode.setEnabled(false);
-                        btnFindProduct.setEnabled(false);
-                    } else {
-                        txtPCode.setEnabled(true);
-                        btnFindProduct.setEnabled(true);
-                    }
-                    txtPCode.setText(m.getPCode());
-
-                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
-                        ResultSet rsFind = stmt1.executeQuery("select PDesc from product where pcode='" + m.getPCode() + "' and PActive='Y'");
-                        if (rsFind.next()) {
-                            txtPDesc.setText(ThaiUtil.ASCII2Unicode(rsFind.getString("PDesc")));
-                        }
-
-                        rsFind.close();
-                    }
-
-                    txtShortName.setText(m.getMenuShowText());
-                    ButtonCustom buttonCustom = new ButtonCustom();
-                    Color bgColor = buttonCustom.getColorFormat(m.getBGColor());
-                    btnBGColor.setBackground(bgColor);
-                    if (m.getFontAttr().equals("B")) {
-                        chkFontBold.setSelected(true);
-                        chkFontItalic.setSelected(false);
-                        chkFontBoldAndItalic.setSelected(false);
-                    } else if (m.getFontAttr().equals("I")) {
-                        chkFontItalic.setSelected(true);
-                        chkFontBold.setSelected(true);
-                        chkFontBoldAndItalic.setSelected(false);
-                    } else if (m.getFontAttr().equals("BI")) {
-                        chkFontBoldAndItalic.setSelected(true);
-                        chkFontBold.setSelected(true);
-                        chkFontItalic.setSelected(false);
-                    } else {
-                        chkFontBold.setSelected(false);
-                        chkFontItalic.setSelected(false);
-                        chkFontBoldAndItalic.setSelected(false);
-                    }
-
-                    btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
-                    if (m.getFontName().equals("")) {
-                        cbFontList.setSelectedItem("Tahoma");
-                    } else {
-                        cbFontList.setSelectedItem(m.getFontName());
-                    }
-
-                    cbLayoutMenu.setSelectedIndex(m.getLayout());
-                    txtPathIMG.setText(m.getIMG());
-                    txtImgSize.setText("" + m.getImgSize());
-
-                    autoPreview();
-                }
-
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonMenu.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        cbTypeMenu.setSelectedIndex(m.getMenuType());
+        if (m.getMenuType() == 0) {
+            txtPCode.setEnabled(false);
+            btnFindProduct.setEnabled(false);
+        } else {
+            txtPCode.setEnabled(true);
+            btnFindProduct.setEnabled(true);
         }
+        txtPCode.setText(m.getPCode());
+        String pDesc = mgrButtonController.getProductDesc(m.getPCode());
+        if (!pDesc.isEmpty()) {
+            txtPDesc.setText(pDesc);
+        }
+
+        txtShortName.setText(m.getMenuShowText());
+        ButtonCustom buttonCustom = new ButtonCustom();
+        Color bgColor = buttonCustom.getColorFormat(m.getBGColor());
+        btnBGColor.setBackground(bgColor);
+        if (m.getFontAttr().equals("B")) {
+            chkFontBold.setSelected(true);
+            chkFontItalic.setSelected(false);
+            chkFontBoldAndItalic.setSelected(false);
+        } else if (m.getFontAttr().equals("I")) {
+            chkFontItalic.setSelected(true);
+            chkFontBold.setSelected(true);
+            chkFontBoldAndItalic.setSelected(false);
+        } else if (m.getFontAttr().equals("BI")) {
+            chkFontBoldAndItalic.setSelected(true);
+            chkFontBold.setSelected(true);
+            chkFontItalic.setSelected(false);
+        } else {
+            chkFontBold.setSelected(false);
+            chkFontItalic.setSelected(false);
+            chkFontBoldAndItalic.setSelected(false);
+        }
+
+        btnFontColor.setForeground(buttonCustom.getColorFormat(m.getFontColor()));
+        if (m.getFontName().equals("")) {
+            cbFontList.setSelectedItem("Tahoma");
+        } else {
+            cbFontList.setSelectedItem(m.getFontName());
+        }
+
+        cbLayoutMenu.setSelectedIndex(m.getLayout());
+        txtPathIMG.setText(m.getIMG());
+        txtImgSize.setText("" + m.getImgSize());
+
+        autoPreview();
     }
 
     private void autoPreview() {
@@ -1211,24 +1102,9 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     }
 
     private void selectmenu() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        try {
-            mysqlConnect.open(this.getClass());
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery("select PDesc from product where pcode='" + txtPCode.getText() + "' and PActive='Y' limit 1");
-                if (rs.next()) {
-                    txtShortName.setText(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MGRButtonMenu.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        String pDesc = mgrButtonController.getProductDesc(txtPCode.getText());
+        if (!pDesc.isEmpty()) {
+            txtShortName.setText(pDesc);
         }
     }
 

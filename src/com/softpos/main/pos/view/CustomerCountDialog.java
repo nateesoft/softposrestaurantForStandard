@@ -1,7 +1,6 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.util.ThaiUtil;
 import java.awt.event.KeyEvent;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.MSG;

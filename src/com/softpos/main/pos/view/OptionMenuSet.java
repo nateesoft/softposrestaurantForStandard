@@ -1,25 +1,21 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
-import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.OptionMenuSetController;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class OptionMenuSet extends javax.swing.JDialog {
 
     private String TableNo;
     private DefaultTableModel model;
     private String index;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final OptionMenuSetController optionMenuSetController = AppContext.getOptionMenuSetController();
 
     public OptionMenuSet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -315,24 +311,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     private void btnFindProduct2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindProduct2ActionPerformed
         int row = tbOption.getSelectedRow();
         if (row != -1) {
-            /**
-             * * OPEN CONNECTION **
-             */            
-            mysqlConnect.open(this.getClass());
-            try {
-                String sql = "delete from optionset "
-                        + "where pcode='" + txtPCode.getText() + "' "
-                        + "and optionname='" + ThaiUtil.Unicode2ASCII(txtOptionName.getText()) + "'";
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                stmt.executeUpdate(sql);
-                stmt.close();
-            } catch (SQLException e) {
-                MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(OptionMenuSet.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(this.getClass());
-            }
-
+            optionMenuSetController.deleteOption(txtPCode.getText(), txtOptionName.getText());
             txtOptionName.setText("");
             LoadOpt();
         }
@@ -380,30 +359,8 @@ public class OptionMenuSet extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void Save(String pcode, String pdesc, String opcode, String opname) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "INSERT INTO optionset "
-                    + "(PCode, PDesc, OptionCode, OptionName) "
-                    + "VALUES ('" + pcode + "', "
-                    + "'" + ThaiUtil.Unicode2ASCII(pdesc) + "', "
-                    + "'" + opcode + "', "
-                    + "'" + ThaiUtil.Unicode2ASCII(opname) + "');";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(OptionMenuSet.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
+        optionMenuSetController.saveOption(pcode, pdesc, opcode, opname);
         LoadOpt();
-
         txtOptionName.setText("");
         txtOptionName.requestFocus();
     }
@@ -415,37 +372,14 @@ public class OptionMenuSet extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             md.removeRow(0);
         }
-
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from optionset "
-                    + "where PCode = '" + txtPCode.getText() + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String PC = ThaiUtil.ASCII2Unicode(rs.getString("PCode"));
-                String PD = ThaiUtil.ASCII2Unicode(rs.getString("PDesc"));
-                txtPDesc.setText(PD);
-                //String OC = ThaiUtil.ASCII2Unicode(rs.getString("OptionCode"));
-                String ON = ThaiUtil.ASCII2Unicode(rs.getString("OptionName"));
-
-                md.addRow(new Object[]{PC, PD, ON});
-
-                tbOption.setToolTipText("");
-
+        List<Object[]> rows = optionMenuSetController.loadOptions(txtPCode.getText());
+        for (Object[] row : rows) {
+            if (row.length >= 2) {
+                txtPDesc.setText(row[1].toString());
             }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(OptionMenuSet.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            md.addRow(row);
+            tbOption.setToolTipText("");
         }
-
     }
 
     private void initTable() {

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class FindProduct extends javax.swing.JDialog {
 

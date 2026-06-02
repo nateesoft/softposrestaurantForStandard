@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.MSG;
 
 public class VoidPopupDialog extends javax.swing.JDialog {
 

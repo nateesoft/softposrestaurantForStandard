@@ -2,7 +2,6 @@ package database;
 
 import com.softpos.pos.core.controller.Value;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,10 +28,8 @@ public class MySQLConnect {
     private Class clazz = null;
 
     static {
-        try {
-            FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
-            DataInputStream ds = new DataInputStream(fs);
-            BufferedReader br = new BufferedReader(new InputStreamReader(ds));
+        try (FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
+             BufferedReader br = new BufferedReader(new InputStreamReader(fs))) {
             String tmp;
             while ((tmp = br.readLine()) != null) {
                 String[] data = tmp.split(",", tmp.length());
@@ -83,9 +80,6 @@ public class MySQLConnect {
                     Value.printerDriverName = data[1];
                 }
             }
-            br.close();
-            ds.close();
-            fs.close();
             DatabasePool.init(HostName, PortNumber, DbName, UserName, Password, CharSet);
         } catch (IOException e) {
             AppLogUtil.log(MySQLConnect.class, "error", e);
@@ -101,13 +95,16 @@ public class MySQLConnect {
     }
 
     public void open(Class clazz) {
+        if (con != null) {
+            close();
+        }
         this.clazz = clazz;
         try {
             con = DatabasePool.getConnection();
             MySQLConstants.MYSQL_CONNECT.put(System.identityHashCode(con), clazz);
         } catch (SQLException e) {
             AppLogUtil.log(MySQLConnect.class, "error", e);
-            System.exit(0);
+            throw new RuntimeException(msgError, e);
         }
     }
 
@@ -136,15 +133,10 @@ public class MySQLConnect {
      * Execute a SELECT query. Statement is stored and closed when close() is
      * called. Caller must still close the returned ResultSet when done.
      */
-    public ResultSet executeQuery(String sql) {
+    public ResultSet executeQuery(String sql) throws SQLException {
         closeCurrentStatement();
-        try {
-            currentStatement = con.createStatement();
-            return currentStatement.executeQuery(sql);
-        } catch (SQLException e) {
-            AppLogUtil.log(MySQLConnect.class, "error", e);
-            return null;
-        }
+        currentStatement = con.createStatement();
+        return currentStatement.executeQuery(sql);
     }
 
     /**

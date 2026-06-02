@@ -1,16 +1,12 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.util.ThaiUtil;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.MemberControl;
 import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class MemberDialog extends javax.swing.JDialog {
 
@@ -18,7 +14,7 @@ public class MemberDialog extends javax.swing.JDialog {
     private String MemName;
     private String tableNo;
     private DecimalFormat df = new DecimalFormat("#,###.00");
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
+    private final MemberControl memberControl = AppContext.getMemberControl();
 
     public MemberDialog(java.awt.Dialog parent, boolean modal, String table) {
         super(parent, modal);
@@ -375,162 +371,46 @@ public class MemberDialog extends javax.swing.JDialog {
     private DefaultTableModel model;
 
     private void loadAllMember() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        try {
-            model = (DefaultTableModel) tbMember.getModel();
-            tbMember.setRowHeight(35);
-
-            int size = model.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model.removeRow(0);
-            }
-
-            mysqlConnect.open(this.getClass());
-            String sql = "select * from " + Value.db_member + ".memmaster order by Member_Code; ";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getString("Member_Code"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
-                        rs.getString("Member_HomeTel"),
-                        "",
-                        rs.getString("Member_Mobile"),
-                        rs.getString("Member_ExpiredDate"),
-                        rs.getString("Member_Fax")
-                    });
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        model = (DefaultTableModel) tbMember.getModel();
+        tbMember.setRowHeight(35);
+        int size = model.getRowCount();
+        for (int i = 0; i < size; i++) {
+            model.removeRow(0);
         }
-
+        List<Object[]> rows = memberControl.findAllMembers(Value.db_member);
+        for (Object[] row : rows) {
+            model.addRow(row);
+        }
         tbMember.requestFocus();
     }
 
     private void loadSearchMember(String memCode, String memName, String memTel) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        try {
-            model = (DefaultTableModel) tbMember.getModel();
-            tbMember.setRowHeight(35);
-
-            int size = model.getRowCount();
-            for (int i = 0; i < size; i++) {
-                model.removeRow(0);
-            }
-
-            mysqlConnect.open(this.getClass());
-            String sql = "";
-            if (!memCode.equals("")) {
-                sql = "select * from " + Value.db_member + ".memmaster "
-                        + "where Member_Code like '%" + memCode + "%' "
-                        + "order by Member_Code ";
-            } else if (!memName.equals("")) {
-                sql = "select * from " + Value.db_member + ".memmaster "
-                        + "where Member_NameThai like '%" + ThaiUtil.Unicode2ASCII(memName) + "%' "
-                        + "order by Member_Code ";
-            } else if (!memTel.equals("")) {
-                sql = "select * from " + Value.db_member + ".memmaster "
-                        + "where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' "
-                        + "order by Member_Code ";
-            }
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getString("Member_Code"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("Member_TitleNameThai") + rs.getString("Member_NameThai") + " " + rs.getString("Member_SurnameThai")),
-                        rs.getString("Member_HomeTel"),
-                        "",
-                        rs.getString("Member_Mobile"),
-                        rs.getString("Member_ExpiredDate"),
-                        rs.getString("member_fax")
-
-                    });
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        model = (DefaultTableModel) tbMember.getModel();
+        tbMember.setRowHeight(35);
+        int size = model.getRowCount();
+        for (int i = 0; i < size; i++) {
+            model.removeRow(0);
         }
-
+        List<Object[]> rows = memberControl.searchMembers(Value.db_member, memCode, memName, memTel);
+        for (Object[] row : rows) {
+            model.addRow(row);
+        }
         tbMember.requestFocus();
     }
 
     private void clearMemberDiscount() {
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        //clear temp cupon
-        try {
-            String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
-                    + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            String sqlUpdate = "update balance "
-                    + "set "
-                    + "r_prsubtype='',"
-                    + "r_prsubcode='',"
-                    + "r_prsubquan='0',"
-                    + "r_prsubdisc='0',"
-                    + "r_prsubamt='0'"
-                    + " where r_table='" + tableNo + "'";
-            mysqlConnect.executeUpdate(sqlUpdate);
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
+        memberControl.clearMemberDiscount(tableNo);
     }
 
     public void UpdateMember(String choice) {
         if (MemCode == null) {
             return;
         }
-
-        try {
-            mysqlConnect.open(this.getClass());
-            String sql;
-            String memCode = MemCode + "";
-            if (memCode.equals("null")) {
-                MemCode = "";
-            }
-            if (choice.equals("Ins")) {
-                sql = "Update tablefile set memcode='" + MemCode + "',memname='" + ThaiUtil.Unicode2ASCII(MemName) + "' where tcode='" + tableNo + "';";
-            } else {
-                sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
-            }
-            switch (choice) {
-                case "Ins":
-                    mysqlConnect.executeUpdate(sql);
-                    break;
-                case "Del":
-                    mysqlConnect.executeUpdate(sql);
-                    break;
-            }
-        } catch (Exception e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(MemberDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        String memCode = MemCode + "";
+        if (memCode.equals("null")) {
+            MemCode = "";
         }
+        memberControl.updateTableFileMember(tableNo, MemCode, MemName, choice.equals("Ins"));
     }
 
 }

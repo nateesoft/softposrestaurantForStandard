@@ -1,20 +1,16 @@
 package com.softpos.main.payment.view;
 
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class FindCredit extends javax.swing.JDialog {
@@ -23,7 +19,6 @@ public class FindCredit extends javax.swing.JDialog {
     private String TCode;
     private double TCharge;
     private DefaultTableModel model2;
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     /**
      * Creates new form FindCredit
@@ -229,72 +224,20 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public String LoadDefaultBank() {
-        String ReturnValues = "";
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String UserGroupFile = "select creditact from branch limit 1";
-            ResultSet rs = stmt.executeQuery(UserGroupFile);
-            if (rs.next()) {
-                ReturnValues = rs.getString("creditact");
-                if (ReturnValues == null) {
-                    ReturnValues = "";
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(FindCredit.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        return ReturnValues;
+        String creditAct = AppContext.getBranchControl().getData().getCreditAct();
+        return creditAct != null ? creditAct : "";
     }
 
-    private void LoadDataToGrid(String DefaultBank) {
-        String SQLQuery;
-        int RowCount = model2.getRowCount();
-        for (int i = 0; i <= RowCount - 1; i++) {
+    private void LoadDataToGrid(String defaultBank) {
+        int rowCount = model2.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
             model2.removeRow(0);
         }
-        /**
-         * * OPEN CONNECTION **
-         */
-        mysqlConnect.open(this.getClass());
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            if (!DefaultBank.equals("")) {
-                SQLQuery = "Select *from creditfile where crbank='" + DefaultBank + "' order by crbank,crcode";
-            } else {
-                SQLQuery = "Select *from creditfile order by crbank,crcode";
-            }
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            while (rs.next()) {
-                Object[] input = {rs.getString("crbank"),
-                    rs.getString("crcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("crname")),
-                    rs.getFloat("crcharge"),
-                    rs.getFloat("crredule"),
-                    rs.getString("crgetcardno")
-                };
-                model2.addRow(input);
-            }
-            showCell(0, 0);
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(FindCredit.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        List<Object[]> rows = AppContext.getCreditFileController().findByBank(defaultBank);
+        for (Object[] row : rows) {
+            model2.addRow(row);
         }
-
+        showCell(0, 0);
         tblShow.requestFocus();
     }
 

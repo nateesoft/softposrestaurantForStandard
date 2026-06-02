@@ -2,7 +2,6 @@ package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
 import com.softpos.pos.core.controller.MgrButtonController;
-import com.softpos.util.ThaiUtil;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;

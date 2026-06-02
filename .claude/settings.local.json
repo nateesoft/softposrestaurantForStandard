@@ -37,7 +37,24 @@
       "Bash(grep -n 'MySQLConnect\\\\|\\\\.open\\(\\\\|\\\\.close\\\\|executeUpdate\\\\|executeQuery\\\\|PreparedStatement\\\\|ResultSet\\\\|Statement\\\\|getConnection\\\\|new MySQLConnect' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/__TRACKED_VAR__)",
       "Bash(sed -n '1,20p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)",
       "Bash(sed -n '34,40p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)",
-      "Bash(sed -n '104,160p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)"
+      "Bash(sed -n '104,160p' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/main/program/DispInv2.java)",
+      "Bash(awk 'NR>=33 && NR<=40 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=269 && NR<=276 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=606 && NR<=613 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=894 && NR<=901 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1009 && NR<=1016 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1258 && NR<=1265 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1322 && NR<=1329 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1449 && NR<=1456 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1560 && NR<=1567 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=490 && NR<=560 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1120 && NR<=1185 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1185 && NR<=1230 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1725 && NR<=1810 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1850 && NR<=1920 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=560 && NR<=605 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(awk 'NR>=1920 && NR<=1950 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
+      "Bash(ant compile *)"
     ]
   }
 }

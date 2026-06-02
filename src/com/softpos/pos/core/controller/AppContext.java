@@ -39,11 +39,21 @@ public class AppContext {
     private static TempCuponController tempCuponController;
     private static WebServiceControl webServiceControl;
     private static sendMenuButttonToBorController sendMenuButttonToBorControllerInstance;
+    private static CreditFileController creditFileController;
     private static DatabaseConnection databaseConnection;
     private static PointTypeController pointTypeController;
     private static TableMoveControl tableMoveControl;
-    
+    private static MgrButtonController mgrButtonController;
+    private static OptionMsgController optionMsgController;
+    private static OptionMenuSetController optionMenuSetController;
+    private static ItemEditQtyController itemEditQtyController;
+
     private AppContext() {}
+
+    public static CreditFileController getCreditFileController() {
+        if (creditFileController == null) creditFileController = new CreditFileController();
+        return creditFileController;
+    }
 
     public static PointTypeController getPointTypeController() {
         if (pointTypeController == null) pointTypeController = new PointTypeController();
@@ -243,5 +253,25 @@ public class AppContext {
     public static DatabaseConnection getDatabaseConnection() {
         if (databaseConnection == null) databaseConnection = new DatabaseConnection();
         return databaseConnection;
+    }
+
+    public static MgrButtonController getMgrButtonController() {
+        if (mgrButtonController == null) mgrButtonController = new MgrButtonController();
+        return mgrButtonController;
+    }
+
+    public static OptionMsgController getOptionMsgController() {
+        if (optionMsgController == null) optionMsgController = new OptionMsgController();
+        return optionMsgController;
+    }
+
+    public static OptionMenuSetController getOptionMenuSetController() {
+        if (optionMenuSetController == null) optionMenuSetController = new OptionMenuSetController();
+        return optionMenuSetController;
+    }
+
+    public static ItemEditQtyController getItemEditQtyController() {
+        if (itemEditQtyController == null) itemEditQtyController = new ItemEditQtyController();
+        return itemEditQtyController;
     }
 }
