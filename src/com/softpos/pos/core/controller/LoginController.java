@@ -15,19 +15,18 @@ import com.softpos.util.AppLogUtil;
  */
 public class LoginController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public LoginBean validateLogin(String username, String password) {
         LoginBean loginBean = new LoginBean();
         loginBean.setValidLogin(false);
 
-        MySQLConnect mysql = new MySQLConnect();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select username,password,name,onact,macno from posuser "
                     + "where username= '" + ThaiUtil.Unicode2ASCII(username) + "' "
                     + "and password='" + ThaiUtil.Unicode2ASCII(password) + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     loginBean.setValidLogin(true);
                     loginBean.setUsername(rs.getString("username"));
@@ -42,7 +41,7 @@ public class LoginController {
         } catch (SQLException e) {
             AppLogUtil.log(Login.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return loginBean;
@@ -53,24 +52,24 @@ public class LoginController {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String SQLQuery = "update posuser set "
                     + "onact='Y',"
                     + "macno='" + Value.MACNO + "' "
                     + "where username='" + UserCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(SQLQuery);
             Value.CASHIER = UserCode;
             String sql = "update posuser set "
                     + "onact='N' "
                     + "where username<>'" + UserCode + "' "
                     + "and macno='" + Value.MACNO + "';";
-            mysql.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

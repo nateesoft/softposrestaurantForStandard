@@ -33,7 +33,7 @@ public class BillControl {
     private final POSConfigSetup posConfig;
     private final MemmaterController memControl = AppContext.getMemmaterController();
     private MemberBean memberBean;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl branchControl = AppContext.getBranchControl();
     private final PosControl PosControl = AppContext.getPosControl();
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
@@ -51,10 +51,10 @@ public class BillControl {
     public String getBillIDCurrent() {
         String ReceNo1 = "";
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "select ReceNo1 from poshwsetup where Terminal='" + getLocalMacNO() + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 ReceNo1 = rs.getString("ReceNo1");
@@ -87,7 +87,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
 
         return ReceNo1;
@@ -125,12 +125,12 @@ public class BillControl {
 
     public void updateNextBill() {
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "UPDATE poshwsetup "
                     + "SET receno1=receno1+1 "
                     + "WHERE terminal='" + getLocalMacNO() + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 if (stmt.executeUpdate(sql) > 0) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
@@ -141,7 +141,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
     }
 
@@ -149,14 +149,14 @@ public class BillControl {
         BranchBean branchBean = branchControl.getData();
         
         BalanceBean blBean = new BalanceBean();
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         DateConvert dc = new DateConvert();
         String sql = "";
         try {
             String sqlGetLoginTime = "select r_time from balance "
                     + "where r_table='" + bean.getB_Table() + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysql.executeQuery(sqlGetLoginTime);
+            ResultSet rs = mysqlConnect.executeQuery(sqlGetLoginTime);
             if (rs.next()) {
                 blBean.setLoginTime(rs.getString("r_time"));
             }
@@ -199,14 +199,13 @@ public class BillControl {
                     + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
                     + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
                     + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
 
             rs.close();
 
             if (bean.getB_AccrAmt() > 0) {
-                MySQLConnect mysql2 = new MySQLConnect();
                 try {
                     String sqlInsAccr = "INSERT INTO accr "
                             + "(ArNo, ArDate, ArCode, ArTotal, ArVat,"
@@ -222,31 +221,31 @@ public class BillControl {
                             + "'', '', '', '','', "
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
-                    mysql2.open(BillControl.class);
-                    mysql2.executeUpdate(sqlInsAccr);
+                    mysqlConnect.open(BillControl.class);
+                    mysqlConnect.executeUpdate(sqlInsAccr);
                 } catch (Exception e) {
 
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(BillControl.class);
+                    mysqlConnect.closeConnection(BillControl.class);
                 }
             }
         } catch (SQLException e) {
 
             AppLogUtil.log(BillControl.class, "error: " + sql, e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
     }
 
     public String getQueUpdate() {
         String q = "";
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "select max(b_refno), max(B_KicQue) maxque from billno";
             int que;
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     try {
                         que = Integer.parseInt(rs.getString("maxque"));
@@ -265,7 +264,7 @@ public class BillControl {
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
 
         return q;
@@ -273,7 +272,7 @@ public class BillControl {
 
     public void saveTSale(TSaleBean bean) {
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         String sqlTSale = "";
         try {
             sqlTSale = "insert into t_sale "
@@ -298,7 +297,7 @@ public class BillControl {
                     + "?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,"
                     + "?,?)";
-            PreparedStatement pre = mysql.getConnection().prepareStatement(sqlTSale);
+            PreparedStatement pre = mysqlConnect.getConnection().prepareStatement(sqlTSale);
             pre.setString(1, bean.getR_Index());
             pre.setString(2, bean.getR_Refno());
             pre.setString(3, bean.getR_Table());
@@ -392,7 +391,7 @@ public class BillControl {
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
     }
 
@@ -588,10 +587,10 @@ public class BillControl {
 
                 //move tempgift
                 
-                mysql.open(BillControl.class);
+                mysqlConnect.open(BillControl.class);
                 try {
                     String sql = "select * from tempgift";
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     try (ResultSet rs = stmt.executeQuery(sql)) {
                         while (rs.next()) {
                             String sqlAdd = "insert into t_gift "
@@ -605,7 +604,7 @@ public class BillControl {
                                     + "'','','',"
                                     + "'','',"
                                     + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                 stmt1.executeUpdate(sqlAdd);
                             }
                         }
@@ -616,7 +615,7 @@ public class BillControl {
 
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 //save t_cupon
@@ -983,16 +982,15 @@ public class BillControl {
                 double ServiceHDDiff = Double.parseDouble(dfFormat.format(billNo.getB_ServiceAmt() - SumR_ServiceAmt));
                 double NettotalHDDiff = Double.parseDouble(dfFormat.format((billNo.getB_NetTotal() - billNo.getB_ServiceAmt()) - SumR_Nettotal));
 
-                MySQLConnect mysql2 = new MySQLConnect();
                 try {
-                    mysql2.open(BillControl.class);
+                    mysqlConnect.open(BillControl.class);
                     String sqlUpdate = "select R_Refno,R_Index,R_Nettotal,R_ServiceAmt from t_sale where r_refno='" + BillNo + "' order by r_index,r_time limit 1;";
-                    Statement stmt = mysql2.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sqlUpdate);
                     if (rs.next()) {
                         String r_index = rs.getString("R_Index");
                         String sqlUpdateT_sale = "update t_sale set R_Nettotal = R_Nettotal+" + NettotalHDDiff + ",R_ServiceAmt = R_ServiceAmt+" + ServiceHDDiff + " where R_Refno='" + BillNo + "' and R_Index='" + r_index + "';";
-                        try (Statement stmt1 = mysql2.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                             stmt1.executeUpdate(sqlUpdateT_sale);
                             stmt1.close();
                         }
@@ -1003,7 +1001,7 @@ public class BillControl {
 
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
-                    mysql2.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 saveBillNo(billNo, memberBean);
@@ -1021,11 +1019,10 @@ public class BillControl {
                 balanceControl.setDefaultBalance(table);
                 tableControl.setDefaultTableFile(table);
 
-                MySQLConnect mysql3 = new MySQLConnect();
                 try {
-                    mysql3.open(BillControl.class);
+                    mysqlConnect.open(BillControl.class);
                     String sql = "select * from tempgift";
-                    Statement stmt = mysql3.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     try (ResultSet rs = stmt.executeQuery(sql)) {
                         while (rs.next()) {
                             String sqlAdd = "insert into t_gift "
@@ -1039,7 +1036,7 @@ public class BillControl {
                                     + "'','','',"
                                     + "'','',"
                                     + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
-                            try (Statement stmt1 = mysql3.getConnection().createStatement()) {
+                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                 stmt1.executeUpdate(sqlAdd);
                             }
                         }
@@ -1050,7 +1047,7 @@ public class BillControl {
 
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
-                    mysql3.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 //save t_cupon
@@ -1100,10 +1097,10 @@ public class BillControl {
         }
 
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         List<TSaleBean> data = new ArrayList<>();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
@@ -1123,7 +1120,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return data;
@@ -1134,9 +1131,9 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
@@ -1226,7 +1223,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return data;
@@ -1237,9 +1234,9 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
                 tsale.setR_Index(rs.getString("R_Index"));
@@ -1326,7 +1323,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return data;
@@ -1338,9 +1335,9 @@ public class BillControl {
         List<TSaleBean> data = new ArrayList<>();
 
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean tsale = new TSaleBean();
@@ -1437,7 +1434,7 @@ public class BillControl {
                     + "and r_void<>'V' "
                     + "and r_plucode='8899' "
                     + "order by R_Index";
-            ResultSet rs1 = mysql.executeQuery(sql1);
+            ResultSet rs1 = mysqlConnect.executeQuery(sql1);
             while (rs1.next()) {
                 TSaleBean tsale = new TSaleBean();
                 tsale.setR_Index(rs1.getString("R_Index"));
@@ -1535,7 +1532,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return data;
@@ -1544,10 +1541,10 @@ public class BillControl {
     public BillNoBean getData(String billNo) {
         BillNoBean bean = new BillNoBean();
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "select * from billno where B_Refno='" + billNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String sql1 = "select t.r_prcutype cutype,t.r_prcucode cucode,c.cuname CuName "
@@ -1555,7 +1552,7 @@ public class BillControl {
                         + "inner join cupon c "
                         + "on t.r_prcucode = c.cucode "
                         + "where r_refno='" + billNo + "' limit 1";
-                Statement stmt2 = mysql.getConnection().createStatement();
+                Statement stmt2 = mysqlConnect.getConnection().createStatement();
                 ResultSet rs1 = stmt2.executeQuery(sql1);
                 if (rs1.next()) {
                     bean.setB_CuponName(rs1.getString(ThaiUtil.ASCII2Unicode("CuName")));
@@ -1669,7 +1666,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -1794,11 +1791,11 @@ public class BillControl {
     public boolean checkBillNoValid(String dateFmt) {
         boolean isValid = false;
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "select b_ondate b_ondate from billno "
                     + "where b_ondate<>'" + dateFmt + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -1808,7 +1805,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -1820,8 +1817,8 @@ public class BillControl {
         
         try {
             String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
-            mysql.open(BillControl.class);
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            mysqlConnect.open(BillControl.class);
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BillNoBean();
                     String tableNo = ThaiUtil.Unicode2ASCII(rs.getString("b_table"));
@@ -1837,7 +1834,7 @@ public class BillControl {
 
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -1846,11 +1843,11 @@ public class BillControl {
     public List<String> getLinkedBalanceIndices(String rIndex) {
         List<String> list = new ArrayList<>();
         
-        mysql.open(BillControl.class);
+        mysqlConnect.open(BillControl.class);
         try {
             String sql = "select R_Index from balance "
                     + "where R_LinkIndex='" + rIndex + "' order by R_Index";
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     list.add(rs.getString("R_Index"));
@@ -1859,7 +1856,7 @@ public class BillControl {
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BillControl.class);
+            mysqlConnect.closeConnection(BillControl.class);
         }
         return list;
     }

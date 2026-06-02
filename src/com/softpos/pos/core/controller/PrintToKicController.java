@@ -15,13 +15,13 @@ import com.softpos.util.AppLogUtil;
  */
 public class PrintToKicController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public BalanceBean getBalaneForPDA() {
         BalanceBean bean = null;
 
         
-        mysql.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicController.class);
         try {
             String sql = "select r_table,macno,"
                     + "sum(b.r_quan) qty,sum(b.r_total) total from balance b "
@@ -29,7 +29,7 @@ public class PrintToKicController {
                     + "and r_kicprint<>'P' and r_void<>'V' "
                     + "and r_kic<>'0' and r_printOK='Y' and r_pause='P' "
                     + "group by r_table order by r_etd,r_index;";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     PrintToKic.kicPrintting = true;
                     bean = new BalanceBean();
@@ -42,7 +42,7 @@ public class PrintToKicController {
         } catch (SQLException e) {
             AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -50,7 +50,7 @@ public class PrintToKicController {
 
     public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo, String macno) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        mysql.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicController.class);
         try {
             String sql = "select r_kic,r_etd from balance "
                     + "where r_table='" + tableNo + "' "
@@ -63,7 +63,7 @@ public class PrintToKicController {
                     + "and macno='" + macno + "' "
                     + "group by r_kic,r_etd "
                     + "order by r_kic, r_etd";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
@@ -76,7 +76,7 @@ public class PrintToKicController {
         } catch (SQLException e) {
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -85,7 +85,7 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm1(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysql.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicController.class);
         try {
             String sql = "select * from balance "
                     + "where trantype='PDA' "
@@ -96,7 +96,7 @@ public class PrintToKicController {
                     + "and R_Void<>'V' "
                     + "and R_kic='" + rKic + "' "
                     + "group by r_plucode";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
@@ -108,7 +108,7 @@ public class PrintToKicController {
         } catch (SQLException e) {
             AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -117,7 +117,7 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm6(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysql.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicController.class);
         try {
             String sql = "select * from balance "
                     + "where r_table='" + tableNo + "' "
@@ -126,7 +126,7 @@ public class PrintToKicController {
                     + "and R_Kic<>'' "
                     + "and R_Void<>'V' "
                     + "and R_Kic='" + rKic + "'";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
@@ -141,7 +141,7 @@ public class PrintToKicController {
         } catch (SQLException e) {
             AppLogUtil.log(PrintToKicController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;

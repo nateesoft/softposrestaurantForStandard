@@ -26,7 +26,7 @@ import com.softpos.util.DateUtil;
  */
 public class MemmaterController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchFileController BranchFileController = AppContext.getBranchFileController();
     private final PointTypeController PointTypeController = AppContext.getPointTypeController();
 
@@ -36,10 +36,10 @@ public class MemmaterController {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterController.class);
         try {
             String sql = "select * from " + Value.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean = new MemberBean();
@@ -143,21 +143,21 @@ public class MemmaterController {
 
             AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
-            mysql.closeConnection(MemmaterController.class);
+            mysqlConnect.closeConnection(MemmaterController.class);
         }
 
         return bean;
     }
 
     void updateMemberPoint(String memberCode, Date lastDateService, double totalScore) {
-        mysql.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterController.class);
 
         try {
             String sql = "update " + Value.db_member + ".memmaster "
                     + "set Member_LastDateService='" + DateUtil.getDateFormat(lastDateService, "yyyy-MM-dd") + "', "
                     + "Member_TotalScore=Member_TotalScore+'" + totalScore + "' "
                     + "where Member_Code='" + memberCode + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -165,7 +165,7 @@ public class MemmaterController {
 
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -277,12 +277,12 @@ public class MemmaterController {
     }
 
     public void updateScoreRefund(String memberCode, double scoreRemove) {
-        mysql.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterController.class);
         try {
             String sql = "update " + Value.db_member + ".memmaster "
                     + "set Member_TotalScore=Member_TotalScore-" + (int) scoreRemove + " "
                     + "where Member_Code='" + memberCode + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -290,7 +290,7 @@ public class MemmaterController {
 
             AppLogUtil.log(MemmaterController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

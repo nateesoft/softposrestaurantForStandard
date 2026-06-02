@@ -34,7 +34,7 @@ public class VoidRep extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     private POSConfigSetup CONFIG;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
@@ -345,9 +345,9 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                      * * OPEN CONNECTION **
                      */
                     
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from t_sale "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                                 + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -368,7 +368,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(VoidRep.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -434,9 +434,9 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from t_sale "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -457,7 +457,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(VoidRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");

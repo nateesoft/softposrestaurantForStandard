@@ -40,7 +40,7 @@ public class MTDCredit extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -337,9 +337,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -348,7 +348,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             DateConvert dc = new DateConvert();
             String SqlQuery = "select B_Refno,B_CrCode1 crcode, B_CardNo1 crid, B_AppCode1 crapp, B_CrAmt1 cramt "
                     + "from s_invoice "
@@ -395,7 +395,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     int SumTotal = 0;
                     Double SumTotalAmt = 0.0;
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -445,7 +445,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -482,7 +482,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         int SumTotal = 0;
         Double SumTotalAmt = 0.0;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from tempcredit order by crcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -529,12 +529,12 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert into tempcredit (terminal,crcode,crid,crapp,cramt) "
                     + "values (?,?,?,?,?)";
-            PreparedStatement prm = mysql.getConnection().prepareStatement(SqlQuery);
+            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
             prm.setString(1, Value.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
@@ -547,7 +547,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

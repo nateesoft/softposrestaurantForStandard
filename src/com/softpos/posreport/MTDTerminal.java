@@ -48,7 +48,7 @@ public class MTDTerminal extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PUtility PUtility = new PUtility();
@@ -443,9 +443,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from s_invoice "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') "
                     + "and (s_date<='" + Datefmt.format(TDate2) + "') "
@@ -454,10 +454,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             ResultSet rs = stmt.executeQuery(SqlQuery);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
-            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
                     + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
-            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
@@ -607,7 +607,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_paidio where (flage='I') and (terminal>='" + txtMacNo1.getText() + "') "
                     + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -621,7 +621,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
         }
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_paidio where (flage='O') and (terminal>='" + txtMacNo1.getText() + "') "
                     + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -635,7 +635,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
         }
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from s_void where (macno>='" + txtMacNo1.getText() + "') and (macno<='" + txtMacNo2.getText() + "') "
                     + "and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -650,7 +650,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_invoice where (b_macno>='" + txtMacNo1.getText() + "') and (b_macno<='" + txtMacNo2.getText() + "') "
                     + "and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (b_void<>'V') and (b_cramt1<>0)";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -758,9 +758,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 /**
                  * * OPEN CONNECTION **
                  */
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
                             + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                             + "and (b_macno>='" + txtMacNo1.getText() + "') and (b_macno<='" + txtMacNo2.getText() + "') "
@@ -799,7 +799,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("----------------------------------------");
 
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_tar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -822,7 +822,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 int CntBill = 0;
 
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select *from s_billar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -839,7 +839,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_tcrar where (fat<>'V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -859,7 +859,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("AR Pay-No    Amount  Mac  User User Void ");
                 prn.print("----------------------------------------");
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_billar where (fat='V') and (terminal>='" + txtMacNo1.getText() + "') "
                             + "and (terminal<='" + txtMacNo2.getText() + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -871,7 +871,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 prn.print("----------------------------------------");
@@ -1009,14 +1009,14 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         prn.print(PUtility.DataFullR("Discount Item                ", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Item_Disc), 13));
                     }
                     if (frec.Cupon_DiscCnt > 0) {
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
                             String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                                     + "from s_cupon "
                                     + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                                     + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                                     + "and cuquan<>'0' and cuamt<>'0'";
-                            ResultSet rs = mysql.executeQuery(sql);
+                            ResultSet rs = mysqlConnect.executeQuery(sql);
                             while (rs.next()) {
                                 double cuamt = rs.getDouble("cuamt");
                                 double quan = rs.getDouble("cuquan");
@@ -1024,7 +1024,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                             }
                             rs.close();
                         } catch (SQLException e) {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     //prn.print(PUtility.DataFullR("หักคืนเงินมัดจำ            ", 20) + PUtility.DataFull(IntFmt.format(frec.EarnestCnt), 6) + PUtility.DataFull(DecFmt.format(frec.Earnest), 13));
@@ -1070,9 +1070,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     /**
                      * * OPEN CONNECTION **
                      */
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
                                 + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                                 + "and (b_macno>='" + txtMacNo1.getText() + "') "
@@ -1087,7 +1087,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -1285,14 +1285,14 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             t += ("colspan=3 align=center><font face=Angsana New size=1>" + PUtility.DataFullR("Discount Item", 20) + PUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + PUtility.DataFullR(DecFmt.format(frec.Item_Disc), 13)) + "_";
         }
         if (frec.Cupon_DiscCnt > 0) {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
                         + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
                         + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = mysql.executeQuery(sql);
+                ResultSet rs = mysqlConnect.executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
@@ -1300,7 +1300,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 }
                 rs.close();
             } catch (SQLException e) {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
@@ -1364,9 +1364,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                     + "and (b_macno>='" + txtMacNo1.getText() + "') "
@@ -1381,7 +1381,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
@@ -1457,9 +1457,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
             int countb_refnoE = 0;
             int countb_refnoT = 0;
@@ -1481,7 +1481,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs4 = stmt.executeQuery(sqlSelectDocTypeT);
             if (rs4.next()) {
                 int countb_refno = rs4.getInt("b_refno");
@@ -1497,7 +1497,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysqlConnect.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");
@@ -1516,7 +1516,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='E' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt.executeQuery(sqlCountBillnoE);
             if (rs1.next()) {
                 countb_refnoE = rs1.getInt("cb_refnoE");
@@ -1531,7 +1531,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='T' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs2 = stmt.executeQuery(sqlCountBillnoT);
             if (rs2.next()) {
                 countb_refnoT = rs2.getInt("cb_refnoT");
@@ -1546,7 +1546,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='D' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs6 = stmt.executeQuery(sqlCountBillnoD);
             if (rs6.next()) {
                 countb_refnoD = rs6.getInt("cb_refnoD");
@@ -1561,7 +1561,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         }
 
-        mysql.closeConnection(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
 
         return listObj;
     }
@@ -1571,10 +1571,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_macno, B_CrCode1,B_cardNo1, sum(B_CrAmt1) B_CrAmt1 "
                     + "from s_invoice "
                     + "where b_macno='" + macNo1 + "' and '" + macNo2 + "' "
@@ -1599,7 +1599,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException ex) {
             MSG.ERR(this, ex.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return list;
@@ -1610,9 +1610,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select count(b_crcode1) b_crcode1,b_crcode1,sum(B_CrAmt1) "
                     + "from S_invoice "
                     + "where b_macno between'" + macNo1 + "' and '" + macNo2 + "' "
@@ -1643,7 +1643,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException ex) {
             MSG.ERR(this, ex.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return credit;

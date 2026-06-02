@@ -53,7 +53,7 @@ public class PrintSimpleForm {
     private final TableFileControl tableFileControl = AppContext.getTableFileControl();
     private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl BranchControl = AppContext.getBranchControl();
 
     public PrintSimpleForm() {
@@ -126,7 +126,7 @@ public class PrintSimpleForm {
          */
 
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         
         itemVoidPrint(printerName, tableNo, PCode, "E");
         try {
@@ -145,7 +145,7 @@ public class PrintSimpleForm {
                     + "and R_VOID<>'V' "
                     //                    + "and trantype='PDA' "
                     + "order by R_Index";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
                     String ETD = rs.getString("R_ETD");
@@ -163,7 +163,7 @@ public class PrintSimpleForm {
                                 + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                                 + "and r_index='" + r_index + "' "
                                 + "and r_void<>'V' ";
-                        Statement stmt2 = mysql.getConnection().createStatement();
+                        Statement stmt2 = mysqlConnect.getConnection().createStatement();
                         ResultSet rsOpt = stmt2.executeQuery(sqlOpt);
                         while (rsOpt.next()) {
                             String Vo = rsOpt.getString("R_Void");
@@ -262,7 +262,7 @@ public class PrintSimpleForm {
                                     + "and pcode='" + rs.getString("R_PluCode") + "' "
                                     + "and pkic='" + rs.getString("R_Kic") + "' "
                                     + "and pflage='N'";
-                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                 stmt1.executeUpdate(SQLQuery2);
                                 stmt1.close();
                             }
@@ -276,7 +276,7 @@ public class PrintSimpleForm {
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                     + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                                 stmt3.executeUpdate(sqlK);
                                 stmt3.close();
                             }
@@ -315,7 +315,7 @@ public class PrintSimpleForm {
                     + "and R_VOID<>'V' "
                     + "group by R_PluCode "
                     + "order by R_Index";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
@@ -334,7 +334,7 @@ public class PrintSimpleForm {
                             + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                             + "and r_index='" + r_index + "'"
                             + "and r_void<>'V' ";
-                    Statement stmt2 = mysql.getConnection().createStatement();
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                     ResultSet rsOpt = stmt2.executeQuery(sqlOpt);
                     while (rsOpt.next()) {
                         String Vo = rsOpt.getString("R_Void");
@@ -431,7 +431,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        Statement stmt1 = mysql.getConnection().createStatement();
+                        Statement stmt1 = mysqlConnect.getConnection().createStatement();
                         stmt1.executeUpdate(SQLQuery2);
                         stmt1.close();
                     } else {
@@ -444,7 +444,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                             stmt3.close();
                         }
@@ -485,7 +485,7 @@ public class PrintSimpleForm {
                     + "and R_VOID<>'V' "
                     + "group by R_PluCode "
                     + "order by R_Index";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
@@ -504,7 +504,7 @@ public class PrintSimpleForm {
                             + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                             + "and r_index='" + r_index + "'"
                             + "and r_void<>'V' ";
-                    Statement stmt2 = mysql.getConnection().createStatement();
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                     ResultSet rsOpt = stmt2.executeQuery(sqlOpt);
                     while (rsOpt.next()) {
                         String Vo = rsOpt.getString("R_Void");
@@ -593,7 +593,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        Statement stmt1 = mysql.getConnection().createStatement();
+                        Statement stmt1 = mysqlConnect.getConnection().createStatement();
                         stmt1.executeUpdate(SQLQuery2);
                         stmt1.close();
                     } else {
@@ -606,7 +606,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                             stmt3.close();
                         }
@@ -620,7 +620,7 @@ public class PrintSimpleForm {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver pd3 = new PrintDriver();
@@ -747,9 +747,9 @@ public class PrintSimpleForm {
             }
             //loop Novoid
             
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sqlNovoid)) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sqlNovoid)) {
                     while (rs.next()) {
                         bean = new BalanceBean();
                         bean.setR_ETD(rs.getString("R_ETD"));
@@ -1083,7 +1083,7 @@ public class PrintSimpleForm {
             } catch (SQLException e) {
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             //loop Void to Print
@@ -1342,9 +1342,9 @@ public class PrintSimpleForm {
             //loop Novoid
             
             try {
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 ResultSet rs;
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     rs = stmt.executeQuery(sqlvoid);
                     while (rs.next()) {
                         bean = new BalanceBean();
@@ -1636,7 +1636,7 @@ public class PrintSimpleForm {
             } catch (SQLException e) {
 
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             textToPrint2 = changeFontSize(textToPrint2);
@@ -1676,7 +1676,7 @@ public class PrintSimpleForm {
                         + "and R_Kic='" + R_Kic + "'"
                         + ";";
                 databaseConnection.execUpdate(sql);
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             } catch (Exception e) {
             }
         }
@@ -1738,9 +1738,9 @@ public class PrintSimpleForm {
                     + " order by r_index";
             //loop Novoid
             
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sqlNovoid)) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sqlNovoid)) {
                     while (rs.next()) {
                         bean = new BalanceBean();
                         bean.setR_ETD(rs.getString("R_ETD"));
@@ -2022,7 +2022,7 @@ public class PrintSimpleForm {
 
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             //loop Void to Print
@@ -2063,9 +2063,9 @@ public class PrintSimpleForm {
             //loop Novoid
             
             try {
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 ResultSet rs;
-                try (Statement stmt = mysql.getConnection().createStatement()) {
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                     rs = stmt.executeQuery(sqlvoid);
                     while (rs.next()) {
                         bean = new BalanceBean();
@@ -2357,7 +2357,7 @@ public class PrintSimpleForm {
             } catch (SQLException e) {
 
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
 
             textToPrint2 = changeFontSize(textToPrint2);
@@ -2383,7 +2383,7 @@ public class PrintSimpleForm {
                     + "and macno='" + macno + "'"
                     + ";";
             databaseConnection.execUpdate(sql);
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 //            }
 //        });
@@ -2392,10 +2392,10 @@ public class PrintSimpleForm {
     public String keepTextShow(String R_Index, int qty, String product) {
         String t = "";
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Index, R_LinkIndex,R_Void from balance where R_Index='" + R_Index + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String r_void = rs.getString("R_void");
@@ -2440,7 +2440,7 @@ public class PrintSimpleForm {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         return t;
     }
@@ -2491,7 +2491,7 @@ public class PrintSimpleForm {
                         Graphics2D g2 = (Graphics2D) g;
                         if (index == 0) {
                             
-                            mysql.open(this.getClass());
+                            mysqlConnect.open(this.getClass());
                             try {
                                 String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                                         + "R_Price, b.Macno,R_Date, R_Time,"
@@ -2504,7 +2504,7 @@ public class PrintSimpleForm {
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
                                         + "group by R_PluCode order by R_Index";
-                                try (Statement stmt = mysql.getConnection().createStatement()) {
+                                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                                     ResultSet rs = stmt.executeQuery(sql);
                                     int line = 0;
                                     String macNo = "";
@@ -2523,7 +2523,7 @@ public class PrintSimpleForm {
                                         try {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
-                                            try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                 ResultSet rsOpt = stmt.executeQuery(sqlOpt);
                                                 while (rsOpt.next()) {
                                                     String Vo = rsOpt.getString("R_Void");
@@ -2606,7 +2606,7 @@ public class PrintSimpleForm {
                                                         + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                         + "and pkic='" + rs.getString("R_Kic") + "' "
                                                         + "and pflage='N'";
-                                                Statement stmt2 = mysql.getConnection().createStatement();
+                                                Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                                 stmt2.executeUpdate(SQLQuery2);
                                                 stmt2.close();
                                             } else {
@@ -2619,7 +2619,7 @@ public class PrintSimpleForm {
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                         + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                                Statement stmt2 = mysql.getConnection().createStatement();
+                                                Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                                 stmt2.executeUpdate(sqlK);
                                                 stmt2.close();
                                             }
@@ -2637,7 +2637,7 @@ public class PrintSimpleForm {
                             } catch (SQLException e) {
                                 
                             } finally {
-                                mysql.closeConnection(this.getClass());
+                                mysqlConnect.closeConnection(this.getClass());
                             }
                             
                             return PAGE_EXISTS;
@@ -2700,7 +2700,7 @@ public class PrintSimpleForm {
                              * * OPEN CONNECTION **
                              */
                             
-                            mysql.open(this.getClass());
+                            mysqlConnect.open(this.getClass());
                             try {
                                 String sql = "select TUser,R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                                         + "R_Price, b.Macno,R_Date, R_Time,"
@@ -2713,7 +2713,7 @@ public class PrintSimpleForm {
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
                                         + "group by R_PluCode order by R_Index";
-                                try (Statement stmt = mysql.getConnection().createStatement()) {
+                                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                                     ResultSet rs = stmt.executeQuery(sql);
                                     int line = 0;
                                     String macNo = "";
@@ -2732,7 +2732,7 @@ public class PrintSimpleForm {
                                         try {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
-                                            Statement stmt1 = mysql.getConnection().createStatement();
+                                            Statement stmt1 = mysqlConnect.getConnection().createStatement();
                                             ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                                             while (rsOpt.next()) {
                                                 String Vo = rsOpt.getString("R_Void");
@@ -2812,7 +2812,7 @@ public class PrintSimpleForm {
                                                         + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                         + "and pkic='" + rs.getString("R_Kic") + "' "
                                                         + "and pflage='N'";
-                                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                                try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt1.executeUpdate(SQLQuery2);
                                                 }
                                             } else {
@@ -2825,7 +2825,7 @@ public class PrintSimpleForm {
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                         + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                                try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt1.executeUpdate(sqlK);
                                                 }
                                             }
@@ -2848,7 +2848,7 @@ public class PrintSimpleForm {
                             } catch (SQLException e) {
                                 
                             } finally {
-                                mysql.closeConnection(this.getClass());
+                                mysqlConnect.closeConnection(this.getClass());
                             }
                             
                             return PAGE_EXISTS;
@@ -2876,7 +2876,7 @@ public class PrintSimpleForm {
                 AppLogUtil.info("KIC_FORM_6 : Start Printing....");
                 String t = "";
                 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, R_Quan,"
                             + "R_Price, b.Macno,R_Date, R_Time,"
@@ -2891,7 +2891,7 @@ public class PrintSimpleForm {
                             + "and R_Index='" + R_Index + "' "
                             + "and R_Kic<>'' "
                             + "order by R_Index";
-                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                    try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                         ResultSet rs = stmt.executeQuery(sql);
                         String TUser;
                         while (rs.next()) {
@@ -2906,7 +2906,7 @@ public class PrintSimpleForm {
                             try {
                                 String sqlOpt = "select * from balance "
                                         + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "' and R_Index='" + R_Index + "'";
-                                Statement stmt1 = mysql.getConnection().createStatement();
+                                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                                 ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                                 while (rsOpt.next()) {
                                     String Vo = rsOpt.getString("R_Void");
@@ -2987,7 +2987,7 @@ public class PrintSimpleForm {
                                             + "and pcode='" + rs.getString("R_PluCode") + "' "
                                             + "and pkic='" + rs.getString("R_Kic") + "' "
                                             + "and pflage='N'";
-                                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                         stmt1.executeUpdate(SQLQuery2);
                                         stmt1.close();
                                     }
@@ -3001,7 +3001,7 @@ public class PrintSimpleForm {
                                             + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                             + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                             + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                         stmt1.executeUpdate(sqlK);
                                         stmt1.close();
                                     }
@@ -3016,7 +3016,7 @@ public class PrintSimpleForm {
                                     + "where r_table='" + tableNo + "' "
                                     + "and r_index='" + R_Index + "' "
                                     + "and r_plucode='" + R_Plucode + "'";
-                            try (Statement stmtUpdate = mysql.getConnection().createStatement()) {
+                            try (Statement stmtUpdate = mysqlConnect.getConnection().createStatement()) {
                                 stmtUpdate.executeUpdate(sqlUPdate);
                                 stmtUpdate.close();
                             }
@@ -3028,7 +3028,7 @@ public class PrintSimpleForm {
                 } catch (SQLException e) {
 
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 AppLogUtil.info("Printting Job Kitchen" + printerName);
@@ -3072,7 +3072,7 @@ public class PrintSimpleForm {
                 /**
                  * * OPEN CONNECTION **
                  */
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, sum(R_Quan) R_Quan,"
                             + "sum(R_Total) R_Price, b.Macno,R_Date, R_Time,"
@@ -3087,7 +3087,7 @@ public class PrintSimpleForm {
                             + "and R_Kic='" + printerName.replace("kic", "") + "' "
                             + "group by b.R_PluCode,r_etd "
                             + "order by R_ETD,R_Index";
-                    try (Statement stmt = mysql.getConnection().createStatement()) {
+                    try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                         ResultSet rs = stmt.executeQuery(sql);
                         String TUser;
                         while (rs.next()) {
@@ -3108,7 +3108,7 @@ public class PrintSimpleForm {
                                             + "where r_table='" + tableNo
                                             + "' and r_pluCode='"
                                             + rs.getString("R_PluCode") + "' and r_index='" + r_index + "' ";
-                                    Statement stmt1 = mysql.getConnection().createStatement();
+                                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                                     ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                                     while (rsOpt.next()) {
                                         String Vo = rsOpt.getString("R_Void");
@@ -3210,7 +3210,7 @@ public class PrintSimpleForm {
                                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                                 + "and pflage='N'";
-                                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                             stmt1.executeUpdate(SQLQuery2);
                                             stmt1.close();
                                         }
@@ -3224,7 +3224,7 @@ public class PrintSimpleForm {
                                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                             stmt1.executeUpdate(sqlK);
                                             stmt1.close();
                                         }
@@ -3238,7 +3238,7 @@ public class PrintSimpleForm {
                                     + "and r_kic='" + printerName.replace("kic", "") + "' "
                                     + "and R_KicPrint<>'P' "
                                     + "and r_pause='P';";
-                            mysql.executeUpdate(sqlUpdateBalance);
+                            mysqlConnect.executeUpdate(sqlUpdateBalance);
                         }
 
                         rs.close();
@@ -3246,7 +3246,7 @@ public class PrintSimpleForm {
                 } catch (SQLException e) {
 
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
             }
@@ -3277,7 +3277,7 @@ public class PrintSimpleForm {
          * * OPEN CONNECTION **
          */
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
 
             String sql = "select "
                     + "TOnact,TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, R_Quan R_Quan,"
@@ -3295,7 +3295,7 @@ public class PrintSimpleForm {
                     + "and r_etd='" + r_etd + "' "
                     + "order by R_Index";
             Statement stmt;
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             String allIndex = "";
             int countRound = 0;
@@ -3325,7 +3325,7 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + " "
                                     + "and r_etd='" + r_etd + "' "
                                     + "and r_index='" + r_index + "' ;";
-                            mysql.executeUpdate(sqlUpdateBalance);
+                            mysqlConnect.executeUpdate(sqlUpdateBalance);
                         }
                     } else {
                         sqlUpdateBalance = "update balance set R_KicPrint='P' "
@@ -3336,7 +3336,7 @@ public class PrintSimpleForm {
                                 + "and r_plucode='" + r_plucode + "' "
                                 + "and r_etd='" + r_etd + "' "
                                 + "and r_index='" + r_index + "' ;";
-                        mysql.executeUpdate(sqlUpdateBalance);
+                        mysqlConnect.executeUpdate(sqlUpdateBalance);
                     }
                 } catch (Exception e) {
                     AppLogUtil.log(PrintSimpleForm.class, "error", e);
@@ -3347,7 +3347,7 @@ public class PrintSimpleForm {
         } catch (Exception e) {
             AppLogUtil.log(PrintSimpleForm.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -3373,7 +3373,7 @@ public class PrintSimpleForm {
     public void KIC_FORM_SaveOrder(final String sql1, final String printerName, final String tableNo, final int R_Kic) {
         String textToPrint = "";
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
@@ -3386,7 +3386,7 @@ public class PrintSimpleForm {
                     + "and R_KicPrint<>'P' "
                     + "group by R_PluCode, R_ETD "
                     + "order by R_ETD, R_Index";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
             String ETD;
@@ -3418,7 +3418,7 @@ public class PrintSimpleForm {
                             + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                             + "and r_index='" + rs.getString("R_Index") + "' "
                             + "and R_KicPrint<>'P'";
-                    Statement stmt1 = mysql.getConnection().createStatement();
+                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                     while (rsOpt.next()) {
                         String Vo = rsOpt.getString("R_Void");
@@ -3508,7 +3508,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                             stmt2.executeUpdate(SQLQuery2);
                             stmt2.close();
                         }
@@ -3522,7 +3522,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt2 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                             stmt2.executeUpdate(sqlK);
                             stmt2.close();
                         }
@@ -3539,7 +3539,7 @@ public class PrintSimpleForm {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver printDriver = new PrintDriver();
@@ -3556,7 +3556,7 @@ public class PrintSimpleForm {
     public void itemVoidPrint(String printerName, final String tableNo, final String[] PCode, String ETD) {
         String t = "";
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
@@ -3573,7 +3573,7 @@ public class PrintSimpleForm {
                     + "and R_VOID='V' "
                     + "group by R_PluCode "
                     + "order by R_Index";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 printerName = rs.getString("R_Kic");
@@ -3592,7 +3592,7 @@ public class PrintSimpleForm {
                             + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                             + "and r_index='" + r_index + "'"
                             + "and r_void='V' ";
-                    Statement stmt2 = mysql.getConnection().createStatement();
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                     ResultSet rsOpt = stmt2.executeQuery(sqlOpt);
                     while (rsOpt.next()) {
                         String Vo = rsOpt.getString("R_Void");
@@ -3690,7 +3690,7 @@ public class PrintSimpleForm {
                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                 + "and pflage='N'";
-                        try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                             stmt1.executeUpdate(SQLQuery2);
                             stmt1.close();
                         }
@@ -3704,7 +3704,7 @@ public class PrintSimpleForm {
                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                 + "'" + rs.getString("R_Table") + "',curtime(),'',"
                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                        try (Statement stmt3 = mysql.getConnection().createStatement()) {
+                        try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                             stmt3.executeUpdate(sqlK);
                             stmt3.close();
                         }
@@ -3718,7 +3718,7 @@ public class PrintSimpleForm {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
@@ -3758,9 +3758,9 @@ public class PrintSimpleForm {
         DecimalFormat QtyIntFmt = new DecimalFormat("###########0");
         BranchBean branchBean = BranchControl.getData();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String SQLQuery = "update branch set kicitemno =" + branchBean.getKicItemNo();
                 stmt.executeUpdate(SQLQuery);
                 stmt.close();
@@ -3769,7 +3769,7 @@ public class PrintSimpleForm {
 
         }
 
-        mysql.closeConnection(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
 
         return QtyIntFmt.format(branchBean.getKicItemNo());
     }
@@ -3791,12 +3791,12 @@ public class PrintSimpleForm {
     public String getEmpBalance(String Code, String r_index, String table) {
         String empName = "";
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select r_emp from balance "
                     + "where r_table='" + table + "' and r_index='" + r_index + "' "
                     + "and r_plucode='" + Code + "' limit 1;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 empName = ThaiUtil.ASCII2Unicode(rs.getString("r_emp"));
@@ -3808,7 +3808,7 @@ public class PrintSimpleForm {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return empName;

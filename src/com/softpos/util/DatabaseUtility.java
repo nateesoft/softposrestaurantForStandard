@@ -13,12 +13,12 @@ import java.util.Map;
 
 public class DatabaseUtility {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public int insert(String sql, Object... args) {
         
-        mysql.open(this.getClass());
-        try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        mysqlConnect.open(this.getClass());
+        try (PreparedStatement pstmt = mysqlConnect.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
             }
@@ -34,13 +34,13 @@ public class DatabaseUtility {
             AppLogUtil.log(DatabaseUtility.class, "error", e);
             return -1;
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
     }
 
     public int executeUpdate(String sql, Object... args) {
-        mysql.open(this.getClass());
-        try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
+        mysqlConnect.open(this.getClass());
+        try (PreparedStatement pstmt = mysqlConnect.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
             }
@@ -50,14 +50,14 @@ public class DatabaseUtility {
             AppLogUtil.log(DatabaseUtility.class, "error", e);
             return -1;
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
     }
 
     public Map<String, Object> querySingle(String sql, Object... args) {
         Map<String, Object> map = new HashMap<>();
-        mysql.open(this.getClass());
-        try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
+        mysqlConnect.open(this.getClass());
+        try (PreparedStatement pstmt = mysqlConnect.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
             }
@@ -83,15 +83,15 @@ public class DatabaseUtility {
 
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
         return map;
     }
 
     public List<Map<String, Object>> queryList(String sql, Object... args) {
         List<Map<String, Object>> list = new ArrayList<>();
-        mysql.open(this.getClass());
-        try (PreparedStatement pstmt = mysql.getConnection().prepareStatement(sql)) {
+        mysqlConnect.open(this.getClass());
+        try (PreparedStatement pstmt = mysqlConnect.getConnection().prepareStatement(sql)) {
             for (int i = 0; i < args.length; i++) {
                 pstmt.setObject(i + 1, args[i]);
             }
@@ -119,7 +119,7 @@ public class DatabaseUtility {
 
             AppLogUtil.log(DatabaseUtility.class, "error", e);
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
         return list;
     }

@@ -13,16 +13,16 @@ import com.softpos.util.AppLogUtil;
  */
 public class BranchFileController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public BranchFileBean getData(String branchCode) {
         BranchFileBean bean = null;
         
         try {
-            mysql.open(BranchFileController.class);
+            mysqlConnect.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -31,7 +31,7 @@ public class BranchFileController {
         } catch (SQLException e) {
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.closeConnection(BranchFileController.class);
+            mysqlConnect.closeConnection(BranchFileController.class);
         }
 
         return bean;
@@ -41,7 +41,7 @@ public class BranchFileController {
         BranchFileBean bean = null;
 
         try {
-            mysql.open(BranchFileController.class);
+            mysqlConnect.open(BranchFileController.class);
             String sql = "select * from " + Value.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' "
                     + "and PointCode_Active='Y' "
@@ -50,7 +50,7 @@ public class BranchFileController {
                     + "or PointCode_Type3 <> '' "
                     + "or PointCode_Type4 <> '' "
                     + "or PointCode_Type5 <> '') limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -59,7 +59,7 @@ public class BranchFileController {
         } catch (SQLException e) {
             AppLogUtil.log(BranchFileController.class, "error", e);
         } finally {
-            mysql.closeConnection(BranchFileController.class);
+            mysqlConnect.closeConnection(BranchFileController.class);
         }
 
         return bean;

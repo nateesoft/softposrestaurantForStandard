@@ -11,15 +11,15 @@ import com.softpos.util.AppLogUtil;
 
 public class VoidMsgController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<String[]> getAll() {
         List<String[]> list = new ArrayList<>();
         
-        mysql.open(VoidMsgController.class);
+        mysqlConnect.open(VoidMsgController.class);
         try {
             String sql = "select * from voidmsg";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 list.add(new String[]{
@@ -32,7 +32,7 @@ public class VoidMsgController {
         } catch (SQLException e) {
             AppLogUtil.log(VoidMsgController.class, "error", e);
         } finally {
-            mysql.closeConnection(VoidMsgController.class);
+            mysqlConnect.closeConnection(VoidMsgController.class);
         }
         return list;
     }

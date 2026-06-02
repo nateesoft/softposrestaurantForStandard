@@ -28,7 +28,7 @@ public final class ViewReport {
     private DecimalFormat doubleFmt = new DecimalFormat("##,###,##0.00");
     private SimpleDateFormat outFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     private SimpleDateFormat inFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void printReportPVat(String vatNo) {
         ResultSet rs1;
@@ -38,9 +38,9 @@ public final class ViewReport {
                 + " FROM company c limit 1";
         
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                rs1 = mysql.executeQuery(sqlCompany);
+                rs1 = mysqlConnect.executeQuery(sqlCompany);
                 if (rs1.next()) {
                     comName = rs1.getString("c.Name");
                     address = rs1.getString("c.Address");
@@ -66,7 +66,7 @@ public final class ViewReport {
             String onDate = "";
             try {
                 String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
-                rs = mysql.executeQuery(sql);
+                rs = mysqlConnect.executeQuery(sql);
                 if (rs.next()) {
                     onDate = rs.getString("InvDate");
                     amount = rs.getString("Amount");
@@ -87,7 +87,7 @@ public final class ViewReport {
                 String sqlBranch = "SELECT * FROM branch limit 1";
                 String branchName = "";
                 try {
-                    rs = mysql.executeQuery(sqlBranch);
+                    rs = mysqlConnect.executeQuery(sqlBranch);
                     if (rs.next()) {
                         branchName = rs.getString("Name");
                     }
@@ -164,7 +164,7 @@ public final class ViewReport {
 
                     }
 
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysqlConnect.getConnection());
                     JasperViewer v = new JasperViewer(jasperPrint, false);
                     JDialog j = new JDialog(new JFrame(), true);
                     j.setTitle("Print");
@@ -181,7 +181,7 @@ public final class ViewReport {
             }
         } catch (Exception e) {
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -193,8 +193,8 @@ public final class ViewReport {
                 + " c.Province, c.City, c.POST, c.Tel, c.Fax, c.Tax"
                 + " FROM company c";
         try {
-            mysql.open(this.getClass());
-            rs1 = mysql.executeQuery(sqlCompany);
+            mysqlConnect.open(this.getClass());
+            rs1 = mysqlConnect.executeQuery(sqlCompany);
             if (rs1.next()) {
                 comName = rs1.getString("c.Name");
                 address = rs1.getString("c.Address");
@@ -231,7 +231,7 @@ public final class ViewReport {
         String ramark = "";
         try {
             String sql = "SELECT * FROM invcashdoc WHERE invNo = '" + vatNo + "' limit 1;";
-            rs = mysql.executeQuery(sql);
+            rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 onDate = rs.getString("InvDate");
                 CustCode = rs.getString("CustCode");
@@ -264,7 +264,7 @@ public final class ViewReport {
             String sqlBranch = "SELECT Name FROM branch limit 1 ";
             String branchName = "";
             try {
-                rs = mysql.executeQuery(sqlBranch);
+                rs = mysqlConnect.executeQuery(sqlBranch);
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
@@ -321,7 +321,7 @@ public final class ViewReport {
                 parameters.put("amount", doubleFmt.format(amt));
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/debtVat.jasper"));
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysqlConnect.getConnection());
                 JasperViewer v = new JasperViewer(jasperPrint, false);
                 JDialog j = new JDialog(new JFrame(), true);
                 j.setTitle("Print");
@@ -338,7 +338,7 @@ public final class ViewReport {
             MSG.ERR(null, "ไมพบข้อมูลที่ต้องการพิมพ์");
         }
 
-        mysql.closeConnection(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
     }
 
     public void printReportPVatDaily(String str, String end) {
@@ -348,10 +348,10 @@ public final class ViewReport {
 
         String branchName = "";
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
                 String sqlBranch = "SELECT * FROM branch limit 1";
-                ResultSet rs = mysql.executeQuery(sqlBranch);
+                ResultSet rs = mysqlConnect.executeQuery(sqlBranch);
                 if (rs.next()) {
                     branchName = rs.getString("Name");
                 }
@@ -382,7 +382,7 @@ public final class ViewReport {
 
                 }
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysqlConnect.getConnection());
                 int pageSize = jasperPrint.getPages().size();
                 if (pageSize > 0) {
                     JasperViewer v = new JasperViewer(jasperPrint, false);
@@ -398,14 +398,14 @@ public final class ViewReport {
                     MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
                 }
 
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             } catch (HeadlessException | JRException e) {
 
             }
         } catch (Exception e) {
             System.err.println(e.toString());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -419,7 +419,7 @@ public final class ViewReport {
         String branchName = "";
 
         try {
-            rs = mysql.executeQuery(sqlBranch);
+            rs = mysqlConnect.executeQuery(sqlBranch);
             if (rs.next()) {
                 branchName = rs.getString("Name");
             }
@@ -451,7 +451,7 @@ public final class ViewReport {
 
             }
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, mysqlConnect.getConnection());
             int pageSize = jasperPrint.getPages().size();
             if (pageSize > 0) {
                 JasperViewer v = new JasperViewer(jasperPrint, false);
@@ -469,7 +469,7 @@ public final class ViewReport {
         } catch (HeadlessException | JRException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -490,7 +490,7 @@ public final class ViewReport {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             Map parameters = new HashMap();
             parameters.put("branchName", "");
@@ -500,11 +500,11 @@ public final class ViewReport {
             parameters.put("companyName", "");
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/report/file/stockInhand_balanceVender.jasper"));
 
-            JasperFillManager.fillReport(jasperReport, parameters, mysql.getConnection());
+            JasperFillManager.fillReport(jasperReport, parameters, mysqlConnect.getConnection());
         } catch (JRException e) {
             AppLogUtil.log(ViewReport.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

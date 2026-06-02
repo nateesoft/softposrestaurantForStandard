@@ -13,16 +13,16 @@ import com.softpos.util.AppLogUtil;
  */
 public class RefundBillController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public BillNoBean checkBillByRefno(String macno, String billNo) {
         BillNoBean bean = null;
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from billno "
                     + "where (b_macno='" + macno + "') and (b_refno='" + billNo + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean = new BillNoBean();
@@ -36,7 +36,7 @@ public class RefundBillController {
         } catch (SQLException e) {
             AppLogUtil.log(RefundBillController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;

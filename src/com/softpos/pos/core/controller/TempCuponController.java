@@ -14,15 +14,15 @@ import com.softpos.util.AppLogUtil;
 
 public class TempCuponController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<TempCuponBean> listTempcupon() {
         List<TempCuponBean> listBean = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempcupon";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TempCuponBean bean = new TempCuponBean();
@@ -49,7 +49,7 @@ public class TempCuponController {
 
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -57,10 +57,10 @@ public class TempCuponController {
 
     public List<TempCuponBean> listTempcupon(String R_Index) {
         List<TempCuponBean> listBean = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TempCuponBean bean = new TempCuponBean();
@@ -87,7 +87,7 @@ public class TempCuponController {
 
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -98,10 +98,10 @@ public class TempCuponController {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean.setR_Index(rs.getString("R_Index"));
@@ -125,7 +125,7 @@ public class TempCuponController {
 
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -140,7 +140,7 @@ public class TempCuponController {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");
             String sql = "insert into tempcupon"
@@ -152,11 +152,11 @@ public class TempCuponController {
                     + "'" + bean.getCuPayment() + "','" + bean.getCuTextCode() + "','" + bean.getCuTextComment() + "')";
 
             String sql1 = "select r_index from tempcupon where r_index='" + bean.getR_Index() + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql1);
             if (rs.next()) {
                 String sqlDel = "delete from tempcupon where r_index='" + bean.getR_Index() + "' ";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 stmt1.executeUpdate(sqlDel);
                 stmt1.close();
             }
@@ -165,14 +165,14 @@ public class TempCuponController {
             stmt.close();
 
             //insert data
-            Statement stmt1 = mysql.getConnection().createStatement();
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
             stmt1.executeUpdate(sql);
             stmt1.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(TempCuponController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

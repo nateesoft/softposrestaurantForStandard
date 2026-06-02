@@ -15,13 +15,13 @@ import com.softpos.util.AppLogUtil;
  */
 public class TableSetupControl {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<FloorPlanBean> getTableSetup(String zone) {
         List<FloorPlanBean> listBean = new ArrayList<>();
 
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select code_id, t1.tcode, tcustomer, tonact, "
                     + "tlogintime, titem, TAmount, PrintChkBill, b.r_time "
@@ -30,7 +30,7 @@ public class TableSetupControl {
                     + "left join balance b on t2.tcode=b.r_table "
                     + "where code_id like '" + zone + "%' "
                     + "order by code_id;";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     FloorPlanBean bean = new FloorPlanBean();
                     bean.setCodeId(rs.getString("code_id"));
@@ -55,7 +55,7 @@ public class TableSetupControl {
 
             AppLogUtil.log(TableSetupControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         return listBean;
     }

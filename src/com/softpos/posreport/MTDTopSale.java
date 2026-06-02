@@ -39,7 +39,7 @@ public class MTDTopSale extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -503,9 +503,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -514,7 +514,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
                     + "and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
@@ -558,7 +558,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 int Cnt = 1;
                 //int CntOrder = 10 ;
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -581,7 +581,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");
@@ -600,9 +600,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     public void PrintTopSaleDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2, String Group1, String Group2, int CntOrder) {
         String t = "";
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -611,7 +611,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') "
                     + "and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
@@ -663,7 +663,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String TempGroup = "";
         int Cnt = 1;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from temptopsale order by r_group,r_quan DESC";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -686,7 +686,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
@@ -704,9 +704,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
                     + "values ('" + Value.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
             stmt.executeUpdate(SqlQuery);
@@ -714,7 +714,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }

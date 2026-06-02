@@ -19,15 +19,15 @@ import com.softpos.util.AppLogUtil;
  */
 public class FloorPlanController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<SPTempRefundBean> getSpTempRefund() {
         List<SPTempRefundBean> listSpTempRefund = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from sp_temp_refund limit 1;";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     SPTempRefundBean bean = new SPTempRefundBean();
@@ -45,33 +45,33 @@ public class FloorPlanController {
 
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listSpTempRefund;
     }
 
     public void deleteSpTempRefund() {
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from sp_temp_refund";
-            mysql.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
 
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     public TempsetBean getPOptionFromTempSet(String rIndex, String pCode) {
         TempsetBean bean = null;
-        mysql.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanController.class);
         try {
             String sql = "select POption from tempset "
                     + "where PIndex='" + rIndex + "' "
                     + "and PCode='" + pCode + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean = new TempsetBean();
@@ -83,7 +83,7 @@ public class FloorPlanController {
 
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -92,10 +92,10 @@ public class FloorPlanController {
     public List<TempsetBean> getTempsetByPIndex(String rIndex) {
         List<TempsetBean> listTempset = new ArrayList<>();
 
-        mysql.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanController.class);
         try {
             String sql = "select * from tempset where PIndex='" + rIndex + "' ";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     TempsetBean bean = new TempsetBean();
                     bean.setPCode(rs.getString("PCode"));
@@ -107,7 +107,7 @@ public class FloorPlanController {
 
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listTempset;
@@ -116,14 +116,14 @@ public class FloorPlanController {
     public List<PIngredientBean> listIngredeint(String pluCode) {
         List<PIngredientBean> listPing = new ArrayList<>();
 
-        mysql.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanController.class);
         try {
             String sql1 = "select i.*,pdesc,PBPack,pstock,pactive "
                     + "from product p, pingredent i "
                     + "where p.pcode=i.pingcode "
                     + "and i.pcode='" + pluCode + "' "
                     + "and PFix='L' and PStock='Y'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql1);
             while (rs.next()) {
                 PIngredientBean bean = new PIngredientBean();
@@ -140,7 +140,7 @@ public class FloorPlanController {
 
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         return listPing;
     }

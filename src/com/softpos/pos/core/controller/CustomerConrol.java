@@ -13,15 +13,15 @@ import com.softpos.util.AppLogUtil;
  */
 public class CustomerConrol {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public CustomerBean getCustomer(String custCode) {
         CustomerBean bean = new CustomerBean();
         String sql = "select * from customer where sp_code='" + custCode + "' limit 1";
         
         try {
-            mysql.open(this.getClass());
-            ResultSet rs = mysql.executeQuery(sql);
+            mysqlConnect.open(this.getClass());
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 bean.setSp_code(rs.getString("sp_code"));
                 bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
@@ -38,7 +38,7 @@ public class CustomerConrol {
         } catch (SQLException e) {
             AppLogUtil.log(CustomerConrol.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;

@@ -16,7 +16,7 @@ public class DiarySale extends javax.swing.JDialog {
     private final SimpleDateFormat dd = new SimpleDateFormat("dd/MM/yyyy ", Locale.ENGLISH);
     private String DD = dd.format(new Date());
     private DecimalFormat DecFormat = new DecimalFormat("#,##0.00");
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public DiarySale(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -231,11 +231,11 @@ public class DiarySale extends javax.swing.JDialog {
 
     private void loadSale() {
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
 
         try {
             String sql = "SELECT sum(r_total) r_total FROM balance where R_VOID <> 'V';";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
             double TS = 0.00;//เอามาจาก Balance ยังไม่ชำระ
@@ -267,7 +267,7 @@ public class DiarySale extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(DiarySale.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

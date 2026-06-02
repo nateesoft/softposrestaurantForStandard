@@ -11,15 +11,15 @@ import com.softpos.util.AppLogUtil;
 
 public class OptionMsgController {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<String> loadOptionsByGroup(String pGroup) {
         List<String> list = new ArrayList<>();
         
-        mysql.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgController.class);
         try {
             String sql = "select * from optionfile where pgroup='" + pGroup + "'";
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     list.add(ThaiUtil.ASCII2Unicode(rs.getString("optionname")));
@@ -28,7 +28,7 @@ public class OptionMsgController {
         } catch (SQLException e) {
             AppLogUtil.log(OptionMsgController.class, "error", e);
         } finally {
-            mysql.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgController.class);
         }
         return list;
     }
@@ -38,7 +38,7 @@ public class OptionMsgController {
         for (int i = 0; i < opts.length && i < 8; i++) {
             o[i] = opts[i];
         }
-        mysql.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgController.class);
         try {
             String sql = "update balance set "
                     + "r_opt1='" + ThaiUtil.Unicode2ASCII(o[0]) + "',"
@@ -51,32 +51,32 @@ public class OptionMsgController {
                     + "r_opt8='" + ThaiUtil.Unicode2ASCII(o[7]) + "' "
                     + "where r_index='" + rIndex + "' "
                     + "and r_table='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             AppLogUtil.log(OptionMsgController.class, "error", e);
         } finally {
-            mysql.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgController.class);
         }
     }
 
     public void addOption(String pGroup, String optionName) {
-        mysql.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgController.class);
         try {
             String sqlDel = "delete from optionfile "
                     + "where PGroup='" + pGroup + "' "
                     + "and OptionName='" + ThaiUtil.Unicode2ASCII(optionName) + "'";
             String sqlIns = "insert into optionfile(PGroup, OptionName) "
                     + "values('" + pGroup + "','" + ThaiUtil.Unicode2ASCII(optionName) + "');";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sqlDel);
                 stmt.executeUpdate(sqlIns);
             }
         } catch (SQLException e) {
             AppLogUtil.log(OptionMsgController.class, "error", e);
         } finally {
-            mysql.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgController.class);
         }
     }
 }

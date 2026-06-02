@@ -14,16 +14,16 @@ import com.softpos.util.DateUtil;
  */
 public class MTranController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MTranBean getData(String branchCode) {
         MTranBean bean = null;
         
 
         try {
-            mysql.open(MTranController.class);
+            mysqlConnect.open(MTranController.class);
             String sql = "select * from " + Value.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -32,7 +32,7 @@ public class MTranController {
         } catch (SQLException e) {
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
-            mysql.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranController.class);
         }
 
         return bean;
@@ -41,10 +41,10 @@ public class MTranController {
     public boolean checkReceiptNoExist(String receiptNo) {
         boolean isNoExist = true;
         try {
-            mysql.open(MTranController.class);
+            mysqlConnect.open(MTranController.class);
             String sql = "select Receipt_No from " + Value.db_member + ".mtran "
                     + "where Receipt_No='" + receiptNo + "' limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     isNoExist = false;
                 }
@@ -53,7 +53,7 @@ public class MTranController {
         } catch (SQLException e) {
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
-            mysql.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranController.class);
         }
         return isNoExist;
     }
@@ -80,7 +80,7 @@ public class MTranController {
     public int create(MTranBean bean) {
         int resultCreate = 0;
 
-        mysql.open(MTranController.class);
+        mysqlConnect.open(MTranController.class);
 
         try {
             String sql = "insert into " + Value.db_member + ".mtran "
@@ -92,33 +92,33 @@ public class MTranController {
                     + "'" + bean.getDiscountAmount() + "', '" + bean.getNetAmount() + "', '" + bean.getMechine_Code() + "', "
                     + "'" + bean.getEmployee_Code() + "', '" + bean.getService_Time() + "', '" + bean.getScore() + "', "
                     + "'" + bean.getTranferFlag() + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 resultCreate = stmt.executeUpdate(sql);
                 stmt.close();
             }
         } catch (SQLException e) {
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
-            mysql.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranController.class);
         }
 
         return resultCreate;
     }
 
     public void refundBill(String receiptNo) {
-        mysql.open(MTranController.class);
+        mysqlConnect.open(MTranController.class);
 
         try {
             String sql = "delete from " + Value.db_member + ".mtran "
                     + "where receipt_no='" + receiptNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
         } catch (SQLException e) {
             AppLogUtil.log(MTranController.class, "error", e);
         } finally {
-            mysql.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranController.class);
         }
     }
 }

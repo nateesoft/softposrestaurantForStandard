@@ -13,7 +13,7 @@ import com.softpos.util.NumberUtil;
 public class ItemDisControl {
     
     private final BalanceControl balanceControl = AppContext.getBalanceControl();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final WebServiceControl WebServiceControl = new WebServiceControl();
 
@@ -109,8 +109,8 @@ public class ItemDisControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.closeConnection(this.getClass());
-        mysql.open(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
                     + "R_PrType = '" + bean.getR_PrType() + "',"
@@ -123,7 +123,7 @@ public class ItemDisControl {
                     + "WHERE R_Index='" + bean.getR_Index() + "' "
                     + "and R_Table='" + bean.getR_Table() + "' "
                     + "and R_PluCode='" + bean.getR_PluCode() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
 
@@ -132,7 +132,7 @@ public class ItemDisControl {
                 String sqlItemDisc = "select (select sum(R_PrAmt) from balance where r_table=tcode) ItemDiscount "
                         + "from tablefile "
                         + "where tcode='" + Table + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 ResultSet rs = stmt1.executeQuery(sqlItemDisc);
                 if (rs.next()) {
                     itemDiscountAll = rs.getDouble("ItemDiscount");
@@ -151,13 +151,13 @@ public class ItemDisControl {
                     + "NetTotal='" + Net_Total + "',"
                     + "ServiceAmt='" + addServiceAmt + "' "
                     + "where Tcode='" + Table + "'";
-            Statement stmt1 = mysql.getConnection().createStatement();
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
             stmt1.executeUpdate(sql);
             stmt1.close();
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         balanceControl.updateProSerTable(Table, memberBean);

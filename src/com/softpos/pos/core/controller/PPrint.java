@@ -82,7 +82,7 @@ public class PPrint {
     private final TableFileControl tableFileControl = AppContext.getTableFileControl();
     private final BalanceControl balanceControl = AppContext.getBalanceControl();
     private final BillControl billControl = AppContext.getBillControl();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility pUtility = new PUtility();
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
     
@@ -585,9 +585,9 @@ public class PPrint {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     
                     try {
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysql.executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysqlConnect.executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         int Q = 0;
                         if (rs.next()) {
@@ -601,7 +601,7 @@ public class PPrint {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
                 Date dateP = new Date();
@@ -799,9 +799,9 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String CheckGift = "select *from t_gift where (refno='" + _RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
                     while (rs.next()) {
@@ -813,7 +813,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
@@ -824,10 +824,10 @@ public class PPrint {
             if (bBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
                         crName = ThaiUtil.ASCII2Unicode(rs.getString("CrName"));
@@ -838,7 +838,7 @@ public class PPrint {
                 } catch (SQLException e) {
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 t += ("colspan=3 align=left><font face=Angsana New size=-> " + crName) + "_";
@@ -921,9 +921,9 @@ public class PPrint {
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
                     try {
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysql.executeQuery(sqlGetCountBillno);
+                        ResultSet rs = mysqlConnect.executeQuery(sqlGetCountBillno);
                         int queue = 0;
                         if (rs.next()) {
                             queue = rs.getInt("cbillno");
@@ -937,7 +937,7 @@ public class PPrint {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                 }
                 Date dateP = new Date();
@@ -1227,9 +1227,9 @@ public class PPrint {
                 t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2> " + "บัตรกำนัล.." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher())) + "_";
 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
                     while (rs.next()) {
@@ -1241,7 +1241,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
             t += ("colspan=3 align=center><font face=Angsana New size=3>" + "-----------------------------------------" + "_");
@@ -1251,10 +1251,10 @@ public class PPrint {
             if (bBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
                         crName = ThaiUtil.ASCII2Unicode(rs.getString("CrName"));
@@ -1264,7 +1264,7 @@ public class PPrint {
                 } catch (SQLException e) {
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + crName) + "_";
                 t += ("colspan=3 align=left><font face=Angsana New size=2> " + "XXXXXXXXXXX" + pUtility.Addzero(bBean.getB_CardNo1(), 16).substring(12, 16) + TAB + bBean.getB_AppCode1()) + "_";
@@ -1483,10 +1483,10 @@ public class PPrint {
                         print("     " + pUtility.DataFullR("บัตรกำนัล               ", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
                         try {
-                            mysql.open(this.getClass());
+                            mysqlConnect.open(this.getClass());
                             String sqlGetGiffNo = "select giftno from t_gift where refno='" + bBean.getB_Refno() + "' limit 1;";
                             String giffno;
-                            ResultSet rsGetGiftno = mysql.executeQuery(sqlGetGiffNo);
+                            ResultSet rsGetGiftno = mysqlConnect.executeQuery(sqlGetGiffNo);
                             if (rsGetGiftno.next()) {
                                 giffno = rsGetGiftno.getString("giftno");
                                 print("Gift-No.    " + pUtility.DataFullR(giffno, 30));
@@ -1496,15 +1496,15 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
                         print("     " + pUtility.DataFullR("ลดบัตรคูปอง      ", SubLength));
                         print("     " + pUtility.DataFullR(bBean.getB_CuponName(), SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_CuponDiscAmt()), AmtLength));
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
@@ -1516,7 +1516,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     } else {
                         List<Object[]> list = printCuponName(_RefNo);
@@ -1556,10 +1556,10 @@ public class PPrint {
                     if (bBean.getB_CrAmt1() > 0) {
                         //get credit name
                         String crName = "";
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
                             String sql = "select CrName from creditfile where crcode='" + bBean.getB_CrCode1() + "' limit 1";
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
                                 crName = ThaiUtil.ASCII2Unicode(rs.getString("CrName"));
@@ -1569,7 +1569,7 @@ public class PPrint {
                         } catch (SQLException e) {
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
 
                         print(bBean.getB_CrCode1() + "  " + crName);
@@ -2389,8 +2389,8 @@ public class PPrint {
                                     String NameVoid = "";
 
                                     try {
-                                        mysql.open(this.getClass());
-                                        ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
+                                        mysqlConnect.open(this.getClass());
+                                        ResultSet rsNameVoid = mysqlConnect.executeQuery(sqlNameVoid);
                                         if (rsNameVoid.next()) {
                                             NameVoid = (rsNameVoid.getString("name"));
                                         }
@@ -2399,7 +2399,7 @@ public class PPrint {
                                         System.err.println(e.getMessage());
                                         AppLogUtil.log(PPrint.class, "error", e);
                                     } finally {
-                                        mysql.closeConnection(this.getClass());
+                                        mysqlConnect.closeConnection(this.getClass());
                                     }
                                     selectStye(12);
                                     print("  VOID...Item by : " + ThaiUtil.ASCII2Unicode(NameVoid));
@@ -2524,8 +2524,8 @@ public class PPrint {
                     String NameVoid = "";
 
                     try {
-                        mysql.open(this.getClass());
-                        ResultSet rsNameVoid = mysql.executeQuery(sqlNameVoid);
+                        mysqlConnect.open(this.getClass());
+                        ResultSet rsNameVoid = mysqlConnect.executeQuery(sqlNameVoid);
                         if (rsNameVoid.next()) {
                             NameVoid = (rsNameVoid.getString("name"));
                         }
@@ -2534,7 +2534,7 @@ public class PPrint {
                         System.err.println(e.getMessage());
                         AppLogUtil.log(PPrint.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     selectStye(12);
@@ -2665,9 +2665,9 @@ public class PPrint {
                 print("----------------------------------------");
                 Double SumTotal = 0.0;
 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
                             + " left join tablefile on balance.r_table=tablefile.tcode "
                             + "where (r_void<>'V') or (r_void is null) "
@@ -2686,7 +2686,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 print("-----------------------------------------");
@@ -2828,7 +2828,7 @@ public class PPrint {
                         print(pUtility.DataFullR("Discount Item          ", 20) + pUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Item_Disc), 13));
                     }
                     if (frec.Cupon_Disc > 0) {
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
                             String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
                                     + " t_cupon.cucode code,cupon.cuname name "
@@ -2838,7 +2838,7 @@ public class PPrint {
                                     + "where t_cupon.cuquan<>'0' "
                                     + "and t_cupon.refund<>'V' "
                                     + "group by t_cupon.cucode";
-                            ResultSet rs = mysql.executeQuery(sql);
+                            ResultSet rs = mysqlConnect.executeQuery(sql);
                             while (rs.next()) {
                                 double amt = rs.getDouble("amt");
                                 String quan = rs.getString("quan");
@@ -2850,7 +2850,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
 
                     }
@@ -3095,7 +3095,7 @@ public class PPrint {
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullR("Discount Item", 20) + pUtility.DataFull(IntFmt.format(frec.Item_DiscCnt), 6) + pUtility.DataFull(DecFmt.format(frec.Item_Disc), 13) + "_");
             }
             if (frec.Cupon_Disc > 0) {
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select sum(cuamt) amt,sum(cuquan) quan,"
                             + " t_cupon.cucode code,cupon.cuname name "
@@ -3105,7 +3105,7 @@ public class PPrint {
                             + "where t_cupon.cuquan<>'0' "
                             + "and t_cupon.refund<>'V' "
                             + "group by t_cupon.cucode";
-                    ResultSet rs = mysql.executeQuery(sql);
+                    ResultSet rs = mysqlConnect.executeQuery(sql);
                     while (rs.next()) {
                         double amt = rs.getDouble("amt");
                         String quan = rs.getString("quan");
@@ -3116,7 +3116,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
 
@@ -3748,9 +3748,9 @@ public class PPrint {
                         print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (tBean.getB_CuponDiscAmt() > 0) {
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
@@ -3766,7 +3766,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     if (tBean.getB_ServiceAmt() > 0) {
@@ -3792,9 +3792,9 @@ public class PPrint {
                     if (tBean.getB_GiftVoucher() > 0) {
                         print("     " + pUtility.DataFullR("บัตรกำนัล..............", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_GiftVoucher()), AmtLength));
 
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
@@ -3806,7 +3806,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     if (tBean.getB_PayAmt() > 0) {
@@ -3815,10 +3815,10 @@ public class PPrint {
                     if (tBean.getB_CrAmt1() > 0) {
                         //get credit name
                         String crName = "";
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
                             String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sql);
                             if (rs.next()) {
                                 crName = ThaiUtil.ASCII2Unicode(rs.getString("CrName"));
@@ -3829,7 +3829,7 @@ public class PPrint {
                         } catch (SQLException e) {
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
 
                         print(tBean.getB_CrCode1() + "  " + crName);
@@ -4064,9 +4064,9 @@ public class PPrint {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + "ลดตามรายการ(Item)" + "</td></font><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_ItemDiscAmt()) + "-_");
             }
             if (tBean.getB_CuponDiscAmt() > 0) {
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
                     ResultSet rs = stmt.executeQuery(CheckCoupon);
                     while (rs.next()) {
@@ -4078,7 +4078,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
             if (tBean.getB_ServiceAmt() > 0) {
@@ -4100,9 +4100,9 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             if (tBean.getB_GiftVoucher() > 0) {
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + "บัตรกำนัล...." + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(tBean.getB_GiftVoucher()) + "_");
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String CheckGift = "select * from t_gift where (refno='" + RefNo + "')";
                     ResultSet rs = stmt.executeQuery(CheckGift);
                     while (rs.next()) {
@@ -4114,7 +4114,7 @@ public class PPrint {
                     System.err.println(e.getMessage());
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
             }
             if (tBean.getB_PayAmt() > 0) {
@@ -4123,10 +4123,10 @@ public class PPrint {
             if (tBean.getB_CrAmt1() > 0) {
                 //get credit name
                 String crName = "";
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select CrName from creditfile where crcode='" + tBean.getB_CrCode1() + "' limit 1";
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     ResultSet rs = stmt.executeQuery(sql);
                     if (rs.next()) {
                         crName = ThaiUtil.ASCII2Unicode(rs.getString("CrName"));
@@ -4137,7 +4137,7 @@ public class PPrint {
                 } catch (SQLException e) {
                     AppLogUtil.log(PPrint.class, "error", e);
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
 
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + tBean.getB_CrCode1() + Space + crName + "_");
@@ -4310,9 +4310,9 @@ public class PPrint {
                         /**
                          * * OPEN CONNECTION **
                          */
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
@@ -4328,7 +4328,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_ServiceAmt() > 0) {
@@ -4357,9 +4357,9 @@ public class PPrint {
                         /**
                          * * OPEN CONNECTION **
                          */
-                        mysql.open(this.getClass());
+                        mysqlConnect.open(this.getClass());
                         try {
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                             ResultSet rs = stmt.executeQuery(CheckGift);
                             while (rs.next()) {
@@ -4371,7 +4371,7 @@ public class PPrint {
                             System.err.println(e.getMessage());
                             AppLogUtil.log(PPrint.class, "error", e);
                         } finally {
-                            mysql.closeConnection(this.getClass());
+                            mysqlConnect.closeConnection(this.getClass());
                         }
                     }
                     if (bBean.getB_PayAmt() > 0) {
@@ -4579,9 +4579,9 @@ public class PPrint {
             t += ("colspan=2 align=left><font face=Angsana New size=-2> " + "ส่วนลดคูปอง  " + DecFmt.format(bBean.getB_SubDiscAmt())) + "_";
         }
         if (bBean.getB_CuponDiscAmt() > 0) {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
                 ResultSet rs = stmt.executeQuery(CheckCoupon);
                 while (rs.next()) {
@@ -4593,7 +4593,7 @@ public class PPrint {
                 System.err.println(e.getMessage());
                 AppLogUtil.log(PPrint.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
         totalDiscount = bBean.getB_ProDiscAmt() + bBean.getB_SpaDiscAmt()
@@ -4625,9 +4625,9 @@ public class PPrint {
         if (bBean.getB_GiftVoucher() > 0) {
             t += ("colspan=2 align=center><font face=Angsana New size=2>" + Space + pUtility.DataFullR("บัตรกำนัล...", SubLength) + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_GiftVoucher()) + "_");
 
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysql.getConnection().createStatement();
+                Statement stmt = mysqlConnect.getConnection().createStatement();
                 String CheckGift = "select * from t_gift where (refno='" + _RefNo + "')";
                 ResultSet rs = stmt.executeQuery(CheckGift);
                 while (rs.next()) {
@@ -4639,7 +4639,7 @@ public class PPrint {
                 System.err.println(e.getMessage());
                 AppLogUtil.log(PPrint.class, "error", e);
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
@@ -4711,9 +4711,9 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
         Double SumTotal = 0.0;
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
                     + " left join tablefile on balance.r_table=tablefile.tcode "
                     + "where (r_void<>'V') or (r_void is null) "
@@ -4733,7 +4733,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
         t += "align=left><font face=Angsana New size=2>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=2" + pUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
@@ -4770,9 +4770,9 @@ public class PPrint {
     }
 
     private void updatePrintCheckBill(String table) {
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String sql = "UPDATE tablefile SET PrintChkBill= 'Y' WHERE Tcode='" + table + "'";
                 stmt.executeUpdate(sql);
             }
@@ -4780,15 +4780,15 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     private List<String[]> creName(String macNo) {
         List<String[]> list = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select B_CrCode1, B_CardNo1, sum(B_CrAmt1) B_CrAmt1 "
                     + "from billno "
                     + "where b_crcode1<>'' "
@@ -4801,7 +4801,7 @@ public class PPrint {
                 String[] CreName = new String[]{"", "", ""};
                 String name = rs.getString("B_CrCode1");
                 String sqlGetCreditName = "select crname from creditfile where crcode='" + name + "' limit 1";
-                ResultSet rs2 = mysql.executeQuery(sqlGetCreditName);
+                ResultSet rs2 = mysqlConnect.executeQuery(sqlGetCreditName);
                 String creditName;
                 if (rs2.next()) {
                     creditName = ThaiUtil.ASCII2Unicode(rs2.getString("crname"));
@@ -4861,7 +4861,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return list;
@@ -4870,9 +4870,9 @@ public class PPrint {
     private String[] credit(String Macno) {
         String[] credit = new String[]{"", ""};
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select  count(b_crcode1) b_crcode1,b_crcode1,sum(b_cramt1) "
                     + "from billno"
                     + " where b_void<>'V' "
@@ -4900,7 +4900,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return credit;
@@ -4940,7 +4940,7 @@ public class PPrint {
                 + "and b_etd='D' "
                 + "group by b_etd";
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             int countb_refnoE = 0;
             int countb_refnoT;
@@ -4948,7 +4948,7 @@ public class PPrint {
             String b_etd;
             String b_cust;
 
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
             if (rs.next()) {
                 int countb_refno = rs.getInt("b_refno");
@@ -4972,7 +4972,7 @@ public class PPrint {
             rs.close();
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs4 = stmt.executeQuery(sqlSelectDocTypeT);
             if (rs4.next()) {
                 int countb_refno = rs4.getInt("b_refno");
@@ -4995,7 +4995,7 @@ public class PPrint {
             rs4.close();
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs5 = stmt.executeQuery(sqlSelectDocTypeD);
             if (rs5.next()) {
                 int countb_refno = rs5.getInt("b_refno");
@@ -5022,7 +5022,7 @@ public class PPrint {
                     + "from billno "
                     + "where b_ondate between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='E' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt.executeQuery(sqlCountBillnoE);
             if (rs1.next()) {
                 countb_refnoE = rs1.getInt("cb_refnoE");
@@ -5037,7 +5037,7 @@ public class PPrint {
                     + "from billno "
                     + "where b_ondate between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='T' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs2 = stmt.executeQuery(sqlCountBillnoT);
             if (rs2.next()) {
                 countb_refnoT = rs2.getInt("cb_refnoT");
@@ -5052,7 +5052,7 @@ public class PPrint {
                     + "from billno "
                     + "where b_ondate between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='T' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs6 = stmt.executeQuery(sqlCountBillnoD);
             if (rs6.next()) {
                 countb_refnoD = rs6.getInt("cb_refnoD");
@@ -5068,14 +5068,14 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listObj;
     }
 
     private void printEntertain(String b_Table) {
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select CuCode, CuName, R_PrCuQuan, CuponDiscAmt "
                     + "from tablefile t,balance b,cupon c "
@@ -5083,7 +5083,7 @@ public class PPrint {
                     + "and b.R_PrCuCode=c.CuCode "
                     + "and r_table='" + b_Table + "' "
                     + "group by R_PrCuCode;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String CuName = ThaiUtil.ASCII2Unicode(rs.getString("CuName"));
@@ -5106,14 +5106,14 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     private String getLastEmployee(String tableNo) {
         String R_EMP = "";
         BillNoBean b = new BillNoBean();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select balance.r_emp r_emp,employ.code R_EmpCode,employ.name R_EmpName "
                     + "from balance "
@@ -5121,7 +5121,7 @@ public class PPrint {
                     + "on balance.r_emp=employ.code"
                     + " where balance.r_table='" + tableNo + "' "
                     + "order by r_index";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     R_EMP = ThaiUtil.ASCII2Unicode(rs.getString("R_EmpName").replace(">", "").replace("<", "").replace("_", ""));
                     b.setEmploy(R_EMP);
@@ -5131,7 +5131,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return R_EMP;
@@ -5139,17 +5139,17 @@ public class PPrint {
 
     public String getLastEmployeeCheckBill(String tableNo, String refno) {
         String R_EMP = "-";
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select r_emp from t_sale "
                     + "where r_table='" + tableNo + "' and r_refno='" + refno + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 R_EMP = rs.getString(ThaiUtil.ASCII2Unicode("r_emp"));
             }
             String sqlGetEmpName = "select code,name name from employ where code='" + R_EMP + "'";
-            ResultSet rs1 = mysql.executeQuery(sqlGetEmpName);
+            ResultSet rs1 = mysqlConnect.executeQuery(sqlGetEmpName);
             if (rs1.next()) {
                 R_EMP = ThaiUtil.ASCII2Unicode(rs1.getString("name").replace("<", "").replace("<", "").replace(" ", ""));
             }
@@ -5160,7 +5160,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return R_EMP;
@@ -5185,8 +5185,8 @@ public class PPrint {
                     + "from t_cupon inner join cupon "
                     + "on t_cupon.cucode = cupon.cucode "
                     + "where r_refno='" + r_refno + "' group by r_refno";
-            mysql.open(this.getClass());
-            ResultSet rs = mysql.executeQuery(sql);
+            mysqlConnect.open(this.getClass());
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 cuname = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
                 total = rs.getDouble("total");
@@ -5196,7 +5196,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listObj;
@@ -5283,9 +5283,9 @@ public class PPrint {
     public String getCuponName(String cuCode) {
         String cuName = "";
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql = "select cuname from cupon where cucode='" + cuCode + "' limit 1";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 cuName = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
             }
@@ -5294,7 +5294,7 @@ public class PPrint {
             System.err.println(e.getMessage());
             AppLogUtil.log(PPrint.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return cuName;

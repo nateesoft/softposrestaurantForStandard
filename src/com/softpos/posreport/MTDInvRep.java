@@ -43,7 +43,7 @@ public class MTDInvRep extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
     DateConvert dc = new DateConvert();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -426,9 +426,9 @@ public class MTDInvRep extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from s_invoice "
                                 + "where (b_macno>='" + MacNo1 + "') "
                                 + "and (b_macno<='" + MacNo2 + "') "
@@ -462,7 +462,7 @@ public class MTDInvRep extends javax.swing.JDialog {
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
                     prn.print("----------------------------------------");
                     prn.print(" ");
@@ -518,9 +518,9 @@ public class MTDInvRep extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_invoice "
                     + "where (b_macno>='" + MacNo1 + "') "
                     + "and (b_macno<='" + MacNo2 + "') "
@@ -554,7 +554,7 @@ public class MTDInvRep extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("-----------------------------------------------" + "_");
         PrintDriver pd = new PrintDriver();

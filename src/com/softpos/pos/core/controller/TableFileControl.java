@@ -19,12 +19,12 @@ public class TableFileControl {
     public static final int TABLE_NOT_SETUP = 0;
     public static final int TABLE_EXIST_DATA = 3;
     public static final int TABLE_EXIST_DATA_IS_ACTIVE = 4;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public TableFileControl() {
         try {
             
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -32,9 +32,9 @@ public class TableFileControl {
 
     public void saveTableFile(TableFileBean tableBean) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "insert into tablefile "
                     + "(Tcode,SoneCode,TLoginDate,MacNo,Cashier,TLoginTime,TCurTime,TCustomer,"
                     + "TItem,TAmount,TOnAct,Service,ServiceAmt,EmpDisc,EmpDiscAmt,FastDisc,"
@@ -66,7 +66,7 @@ public class TableFileControl {
                     + tableBean.getChkBill() + "','" + tableBean.getChkBillTime() + "','"
                     + tableBean.getStkCode1() + "','" + tableBean.getStkCode2() + "','"
                     + tableBean.getTDesk() + "','" + tableBean.getTUser() + "','" + tableBean.getTPause() + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -74,15 +74,15 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void updateTableFile(TableFileBean tableFile) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set "
                     + "Tcode='" + tableFile.getTcode() + "', SoneCode='" + tableFile.getSoneCode() + "', TLoginDate='"
                     + tableFile.getTLoginDate() + "', MacNo='" + tableFile.getMacNo() + "', Cashier='"
@@ -109,7 +109,7 @@ public class TableFileControl {
                     + tableFile.getTDesk() + "', TUser='" + tableFile.getTUser() + "', TPause='' "
                     + tableFile.getTPause() + "' "
                     + "where TCode='" + tableFile + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -117,18 +117,18 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public int checkTableRead(String tableNo, String user) {
         int result;
         
-        mysql.closeConnection(TableFileControl.class);
-        mysql.open(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "select TItem,TOnAct,TUser from tablefile where TCode='" + tableNo + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 String TActive;
                 int TItem;
                 String TUser;
@@ -168,7 +168,7 @@ public class TableFileControl {
             AppLogUtil.log(TableFileControl.class, "error", e);
             result = TABLE_NOT_SETUP;
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return result;
@@ -177,10 +177,10 @@ public class TableFileControl {
     public List<TableFileBean> getALlHoldTable() {
         List<TableFileBean> allTable = new ArrayList<>();
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile where TAmount>0")) {
+            mysqlConnect.open(TableFileControl.class);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile where TAmount>0")) {
                 while (rs.next()) {
                     TableFileBean bean = new TableFileBean();
                     bean.setTcode(rs.getString("Tcode"));
@@ -245,7 +245,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return allTable;
@@ -254,10 +254,10 @@ public class TableFileControl {
     public List<TableFileBean> getALlTable() {
         List<TableFileBean> allTable = new ArrayList<>();
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile")) {
+            mysqlConnect.open(TableFileControl.class);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select * from tablefile")) {
                 while (rs.next()) {
                     TableFileBean bean = new TableFileBean();
                     bean.setTcode(rs.getString("Tcode"));
@@ -323,7 +323,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return allTable;
@@ -332,14 +332,14 @@ public class TableFileControl {
     public List<TableSetup> getTable(String TCode) {
         List<TableSetup> allTable = new ArrayList<>();
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "select t2.Code_ID, t1.TCode from tablefile t1 , tablesetup t2 "
                     + "where t1.TCode=t2.TCode "
                     + "and Code_ID like '" + TCode + "%' "
                     + "order by Code_ID";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     TableSetup bean = new TableSetup();
                     bean.setCode_ID(rs.getString("Code_ID"));
@@ -354,7 +354,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return allTable;
@@ -363,11 +363,11 @@ public class TableFileControl {
     public TableFileBean getData(String table) {
         TableFileBean bean = new TableFileBean();
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "select * from tablefile where Tcode='" + table + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean.setTcode(rs.getString("Tcode"));
                     bean.setSoneCode(rs.getString("SoneCode"));
@@ -434,7 +434,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return bean;
@@ -442,9 +442,9 @@ public class TableFileControl {
 
     public void setDefaultTableFile(String table) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set "
                     + "MacNo='', Cashier='', TLoginTime='00:00:00', TCurTime='00:00', TCustomer='0', TItem='0', TAmount='0.00', TOnAct='N', "
                     + "Service='0.00', ServiceAmt='0.00', EmpDisc='', EmpDiscAmt='0.00', FastDisc='', FastDiscAmt='0.00', TrainDisc='', "
@@ -454,13 +454,13 @@ public class TableFileControl {
                     + "PrintCnt='0', PrintTime1='', PrintTime2='', ChkBill='N', ChkBillTime='00:00:00', StkCode2='', TDesk='0', "
                     + "TUser='', TPause='N' "
                     + "where Tcode='" + table + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
             if (table.contains("-")) {
                 sql = "delete from tablefile where Tcode='" + table + "'";
-                try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                     stmt1.executeUpdate(sql);
                     stmt1.close();
                 }
@@ -470,15 +470,15 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void updateTableActive(String table, String customer, String emp) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set "
                     + "TOnAct='Y',"
                     + "TLoginDate=now(),"
@@ -488,7 +488,7 @@ public class TableFileControl {
                     + "TCurTime=curtime() "
                     + "where tcode='" + table + "' "
                     + "and tOnAct='N'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -503,20 +503,20 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void updateMacno(String table, String username) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set "
                     + "MacNo='" + Value.MACNO + "',"
                     + "TUser='" + username + "' "
                     + "where Tcode='" + table + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -524,17 +524,17 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void createNewTableSplit(TableFileBean table, String newTable) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String chk = "select tcode from tablefile where tcode='" + newTable + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(chk)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(chk)) {
                 if (rs.next()) {
                     // มีตารางในระบบแล้ว
                     AppLogUtil.info("มีตาราง " + newTable + " ในระบบแล้ว");
@@ -551,7 +551,7 @@ public class TableFileControl {
                 } else {
                     String sql = "insert into tablefile (Tcode,SoneCode,StkCode1,StkCode2,TLoginTime, TCurTime, TLoginDate, MemBegin, MemEnd) "
                             + "value('" + newTable + "','" + table.getSoneCode() + "','" + table.getStkCode1() + "',' ',curtime(), curtime(), curdate(),'1899-12-30','1899-12-30');";
-                    try (Statement stmt1 = mysql.getConnection().createStatement()) {
+                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         stmt1.executeUpdate(sql);
                     }
                 }
@@ -559,17 +559,17 @@ public class TableFileControl {
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public String getSplitTable(String tableNo) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "select Tcode from tablefile where Tcode='" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String[] data = rs.getString("Tcode").split("-");
@@ -594,7 +594,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return tableNo;
@@ -602,9 +602,9 @@ public class TableFileControl {
 
     public void updateTableFile(String tableNo) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             double TAmount = 0.00;
             BalanceControl bControl = AppContext.getBalanceControl();
             List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
@@ -619,7 +619,7 @@ public class TableFileControl {
             String sql = "update tablefile "
                     + "set TAmount='" + TAmount + "' "
                     + "where Tcode='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -636,17 +636,17 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public boolean checkTableOpened(String tableNo) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "select Cashier from tablefile where TOnact='Y' and tcode='" + tableNo + "';";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     return true;
                 }
@@ -657,7 +657,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return false;
@@ -665,10 +665,10 @@ public class TableFileControl {
 
     public void createNewTable(String tableTemp) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            mysqlConnect.open(TableFileControl.class);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate("delete from tablefile where tcode='" + tableTemp + "';");
                 stmt.executeUpdate("insert into tablefile(Tcode) values('" + tableTemp + "');");
                 stmt.close();
@@ -679,17 +679,17 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void updateTableNotActive(String TABLE_NO) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set tonact='N' where tcode='" + TABLE_NO + "';";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -697,17 +697,17 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     void updateTableActive(String TABLE_2) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set tonact='Y' where tcode='" + TABLE_2 + "';";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -715,21 +715,21 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public int getItemCount(String tableNo) {
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         int countItem = 0;
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String sql = "select r_linkindex from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_linkindex<>'' "
                     + "group by R_LinkIndex";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     countItem++;
@@ -761,7 +761,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return countItem;
@@ -770,12 +770,12 @@ public class TableFileControl {
     public boolean checkTableMoreItem(String tableNo) {
         boolean isValid = false;
         
-        mysql.closeConnection(TableFileControl.class);
+        mysqlConnect.closeConnection(TableFileControl.class);
         try {
-            mysql.open(TableFileControl.class);
+            mysqlConnect.open(TableFileControl.class);
             String checkTablefile = "select titem from tablefile "
                     + "where tcode = '" + tableNo + "' and titem>'0' limit 1 ";
-            try (ResultSet rs = mysql.executeQuery(checkTablefile)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(checkTablefile)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -784,7 +784,7 @@ public class TableFileControl {
 
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
 
         return isValid;
@@ -792,44 +792,44 @@ public class TableFileControl {
 
     public void updateBalanceType(String rIndex, String rEtd, String tableNo) {
         
-        mysql.open(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "update balance set R_ETD='" + rEtd + "' "
                     + "where R_Index='" + rIndex + "' and R_Table='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public void saveCustomerCount(String tableNo, String cus, String memName) {
         
-        mysql.open(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "UPDATE tablefile SET "
                     + "TCustomer = " + cus + ","
                     + "MemName='" + ThaiUtil.Unicode2ASCII(memName) + "' "
                     + "WHERE Tcode = '" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public String getCustomerName(String tableNo) {
         
-        mysql.open(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "select MemName from tablefile where Tcode = '" + tableNo + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     return rs.getString("MemName") != null ? rs.getString("MemName") : "";
@@ -838,37 +838,37 @@ public class TableFileControl {
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
         return "";
     }
 
     public void setTableNotActive(String tableNo) {
         
-        mysql.open(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "update tablefile set TonAct='N' where (TCode='" + tableNo + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
     }
 
     public List<Object[]> getActiveTables() {
         List<Object[]> list = new ArrayList<>();
         
-        mysql.open(TableFileControl.class);
+        mysqlConnect.open(TableFileControl.class);
         try {
             String sql = "select Tcode, Tlogindate, TCurTime, TCustomer, TItem, TAmount,"
                     + "TOnAct, ChkBill, PrintChkBill"
                     + " from tablefile "
                     + "where tonact='Y' or TAmount>0 or TItem > 0 or Tcustomer > 0 "
                     + "order by tcode";
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     list.add(new Object[]{
@@ -887,7 +887,7 @@ public class TableFileControl {
         } catch (SQLException e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableFileControl.class);
+            mysqlConnect.closeConnection(TableFileControl.class);
         }
         return list;
     }

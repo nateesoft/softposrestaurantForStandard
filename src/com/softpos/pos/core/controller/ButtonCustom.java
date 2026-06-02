@@ -25,7 +25,7 @@ import com.softpos.util.AppLogUtil;
  */
 public class ButtonCustom {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public JButton getButtonLayout(String menuCode, int menuIndex) {
         return new JButton();
@@ -34,12 +34,12 @@ public class ButtonCustom {
     public MenuMGR getDataButtonLayout(String menuCode, int menuIndex) {
         MenuMGR menuMGR = new MenuMGR();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
                     + "and M_Index='" + menuIndex + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 menuMGR.setMenuCode(rs.getString("MenuCode"));
@@ -63,7 +63,7 @@ public class ButtonCustom {
 
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return menuMGR;
@@ -71,11 +71,11 @@ public class ButtonCustom {
 
     public List<MenuMGR> getDataButtonLayout(String menuCode) {
         List<MenuMGR> listMenu = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode like '" + menuCode + "__' order by menucode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 MenuMGR bean = new MenuMGR();
@@ -107,7 +107,7 @@ public class ButtonCustom {
 
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listMenu;

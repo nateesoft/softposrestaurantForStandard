@@ -17,7 +17,7 @@ public class StockControl {
     public static final int STOCK_MAIN = 0;
     public static final int STOCK_TABLE_POS = 1;
     public static final int STOCK_SUB = 2;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public StockControl() {
     }
@@ -25,10 +25,10 @@ public class StockControl {
     public boolean Active(String stock) {
         boolean isActive = false;
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         String sql = "select StkCode from stockfile where StkCode='" + stock + "' and flage='Y' limit 1";
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             isActive = rs.next();
             rs.close();
@@ -37,7 +37,7 @@ public class StockControl {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isActive;
@@ -47,11 +47,11 @@ public class StockControl {
         double qty = 0;
         SimpleDateFormat sp = new SimpleDateFormat("MM");
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             int month = Integer.parseInt(sp.format(new Date())) + 12;
             String sql = "select BQty" + month + " from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     qty = rs.getDouble(1);
                 }
@@ -62,7 +62,7 @@ public class StockControl {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return qty;
@@ -71,9 +71,9 @@ public class StockControl {
     public StkFileBean getDataStkFile(String sql) {
         StkFileBean bean = new StkFileBean();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean.setBPCode(rs.getString("BPCode"));
@@ -113,7 +113,7 @@ public class StockControl {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -140,16 +140,16 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -168,16 +168,16 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -193,13 +193,13 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into stcard (S_Date,S_No,S_SubNo,S_Que,S_PCode,S_Stk,S_In,S_Out,S_InCost,S_OutCost,S_ACost,S_Rem,S_User,S_EntryDate,S_EntryTime,S_Link) "
                     + "values(curdate(),'" + bean.getS_No() + "','" + bean.getS_SubNo() + "','" + bean.getS_Que() + "','" + bean.getS_PCode() + "','" + bean.getS_Stk() + "',"
                     + "'" + bean.getS_In() + "','" + bean.getS_Out() + "','" + bean.getS_InCost() + "','" + bean.getS_OutCost() + "','" + bean.getS_ACost() + "','" + bean.getS_Rem() + "',"
                     + "'" + bean.getS_User() + "',curdate(),curtime(),'" + bean.getS_Link() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             int Update = stmt.executeUpdate(sql);
 
             if (Update > 0) {
@@ -231,7 +231,7 @@ public class StockControl {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
     }
@@ -241,12 +241,12 @@ public class StockControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             //หาว่าสินค้ามีส่วนประกอบหรือไม่ ?
             String sql = "select * from pset "
                     + "where PCode='" + bean.getS_PCode() + "' ";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss");
             boolean isIntoSub = false;
@@ -275,7 +275,7 @@ public class StockControl {
                         + "values(curdate(),'" + stcBean.getS_No() + "','" + stcBean.getS_SubNo() + "','" + stcBean.getS_Que() + "','" + stcBean.getS_PCode() + "','" + stcBean.getS_Stk() + "',"
                         + "'" + stcBean.getS_In() + "','" + stcBean.getS_Out() + "','" + stcBean.getS_InCost() + "','" + stcBean.getS_OutCost() + "','" + stcBean.getS_ACost() + "','',"
                         + "'" + stcBean.getS_User() + "',curdate(),curtime(),'" + stcBean.getS_Link() + "')";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 int Update = stmt1.executeUpdate(sql1);
                 if (Update > 0) {
                     iSubCheck++;
@@ -293,7 +293,7 @@ public class StockControl {
 
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

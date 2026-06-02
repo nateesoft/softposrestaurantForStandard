@@ -36,7 +36,7 @@ public class MTDArPayment extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     private POSHWSetup POSHW;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -351,9 +351,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                  * * OPEN CONNECTION **
                  */
                 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_tar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -373,7 +373,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Double SumCupon = 0.0;
                 int CntBill = 0;
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_billar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -390,7 +390,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_tcrar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') group by crcode";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -408,7 +408,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("AR Pay-No    Amount  Mac  User User Void ");
                 prn.print("----------------------------------------");
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select * from s_billar where (fat='V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "')";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
@@ -419,7 +419,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 } finally{
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
               
                 prn.print("----------------------------------------");

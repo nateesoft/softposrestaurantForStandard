@@ -43,7 +43,7 @@ public class MTDDept extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -137,9 +137,9 @@ public class MTDDept extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') "
                     + "and (s_date<='" + Datefmt.format(TDate2) + "') "
@@ -286,7 +286,7 @@ public class MTDDept extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintGroup(GArray, Found);
@@ -572,9 +572,9 @@ public class MTDDept extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') group by s_dept order by s_dept";
 
@@ -717,7 +717,7 @@ public class MTDDept extends javax.swing.JDialog {
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (Found) {
@@ -1115,9 +1115,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
             int countb_refnoE = 0;
             int countb_refnoT = 0;
@@ -1139,7 +1139,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             rs.close();
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs4 = stmt.executeQuery(sqlSelectDocTypeT);
             if (rs4.next()) {
                 int countb_refno = rs4.getInt("b_refno");
@@ -1155,7 +1155,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysqlConnect.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");
@@ -1174,7 +1174,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='E' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt.executeQuery(sqlCountBillnoE);
             if (rs1.next()) {
                 countb_refnoE = rs1.getInt("cb_refnoE");
@@ -1189,7 +1189,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='T' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs2 = stmt.executeQuery(sqlCountBillnoT);
             if (rs2.next()) {
                 countb_refnoT = rs2.getInt("cb_refnoT");
@@ -1204,7 +1204,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='D' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs6 = stmt.executeQuery(sqlCountBillnoD);
             if (rs6.next()) {
                 countb_refnoD = rs6.getInt("cb_refnoD");
@@ -1218,7 +1218,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listObj;

@@ -23,7 +23,7 @@ import com.softpos.util.DateUtil;
 public class PromotionControl {
 
     private final PosControl posControl;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final DiscountControl DiscountControl = AppContext.getDiscountControl();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
@@ -35,13 +35,13 @@ public class PromotionControl {
 
     public void saveTempPromotion(TempPromotion bean) {
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into temppromotion (TableNo,PrCode,PrType,PCode,PQty,PrTotalAmt,PrAmt) "
                     + "values('" + bean.getTableNo() + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','"
                     + bean.getPCode() + "','" + bean.getPQty() + "','"
                     + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "')";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
@@ -49,7 +49,7 @@ public class PromotionControl {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -135,7 +135,7 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "UPDATE balance set "
                     + "R_Total = '" + bean.getR_Total() + "',"
@@ -148,14 +148,14 @@ public class PromotionControl {
                     + "WHERE R_Index='" + bean.getR_Index() + "' "
                     + "and R_Table='" + bean.getR_Table() + "' "
                     + "and R_PluCode='" + bean.getR_PluCode() + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -166,10 +166,10 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from protab where ProCode='" + proCode + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 proTab.setProCode(rs.getString("ProCode"));
@@ -259,7 +259,7 @@ public class PromotionControl {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -272,9 +272,9 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 proTab.setProCode(rs.getString("ProCode"));
@@ -366,7 +366,7 @@ public class PromotionControl {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -389,7 +389,7 @@ public class PromotionControl {
         double R_Quan = 0.00;
 
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
 
         for (int i = 0; i <= dataBean.size() - 1; i++) {
             BalanceBean balance = (BalanceBean) dataBean.get(i);
@@ -428,7 +428,7 @@ public class PromotionControl {
                                 + "and R_PluCode='" + balance.getR_PluCode() + "' "
                                 + "and R_Void <> 'V' and r_quancandisc>'0' "
                                 + "and R_Index='" + balance.getR_Index() + "'";
-                        Statement stmt1 = mysql.getConnection().createStatement();
+                        Statement stmt1 = mysqlConnect.getConnection().createStatement();
                         int iUpdate = stmt1.executeUpdate(sqlUpdatePro);
                         //Sale Promotion Type 1
                         if (protab1.getPType().equals(Promotion.PROMOTION_TYPE_1)) {
@@ -489,7 +489,7 @@ public class PromotionControl {
                                     + "where R_PluCode='" + balance.getR_PluCode() + "' "
                                     + "and R_Table='" + balance.getR_Table() + "' "
                                     + "and R_Void <> 'V' ";
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sqlCheck);
                             double Total_Qty = 0;
 
@@ -524,7 +524,7 @@ public class PromotionControl {
                                         + "and R_Table='" + balance.getR_Table() + "' "
                                         + "and R_Void <> 'V' "
                                         + "order by R_Index";
-                                Statement stmt2 = mysql.getConnection().createStatement();
+                                Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                 rs = stmt2.executeQuery(sqlCheck);
 
                                 double Customer_Buy_Quantity = 0;
@@ -565,7 +565,7 @@ public class PromotionControl {
                                             + "and R_Index='" + rs.getString("R_Index") + "' "
                                             + "and R_PrType='-P' "
                                             + "and R_Void <> 'V' ";
-                                    Statement stmt3 = mysql.getConnection().createStatement();
+                                    Statement stmt3 = mysqlConnect.getConnection().createStatement();
                                     stmt3.executeUpdate(sqlUpdatePro);
                                     stmt3.close();
                                 }
@@ -598,7 +598,7 @@ public class PromotionControl {
                                     + "and R_QuanCandisc>'0' "
                                     + "and R_PRType='-P'"
                                     + "and R_Void <> 'V' limit " + protab1.getPSum1();
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sqlCheck);
                             double Sum_Total_Qty = 0;
                             double Sum_Total_Price = 0;
@@ -656,7 +656,7 @@ public class PromotionControl {
                                             + "and R_QuanCanDisc>'0' "
                                             + "order by R_Index";
 //                                            + " desc LIMIT 4";//เรียงลำดับแบบย้อนหลัง 6,5,4,3,2,1 (ปกติจะเป็น 1,2,3,4,5,6)
-                                    Statement stmt2 = mysql.getConnection().createStatement();
+                                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                     rs = stmt2.executeQuery(sqlCheck);
 
                                     int Customer_Buy_Quantity = 0;
@@ -703,7 +703,7 @@ public class PromotionControl {
                                                 + "and R_PrType='-P' "
                                                 + "and R_PrCode='" + rs.getString("R_PrCode") + "' "
                                                 + "and R_Void <> 'V' ";
-                                        Statement stmt3 = mysql.getConnection().createStatement();
+                                        Statement stmt3 = mysqlConnect.getConnection().createStatement();
                                         stmt3.executeUpdate(sqlUpdatePro);
                                         stmt3.close();
 
@@ -732,7 +732,7 @@ public class PromotionControl {
                                     + "from balance "
                                     + "where R_Table='" + balance.getR_Table() + "' "
                                     + "and R_Void <> 'V' ";
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sqlCheck);
                             int Total_Qty = 0;
                             double Min_Price = 0;
@@ -777,7 +777,7 @@ public class PromotionControl {
                                         + "and R_QuanCanDisc>'0' "
                                         + "and R_Void <> 'V' "
                                         + "order by R_PluCode";
-                                Statement stmt2 = mysql.getConnection().createStatement();
+                                Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                 rs = stmt2.executeQuery(sqlCheck);
 
                                 int Customer_Buy_Quantity = 0;
@@ -817,7 +817,7 @@ public class PromotionControl {
                                             + "and R_Index='" + rs.getString("R_Index") + "' "
                                             + "and R_Void <> 'V' "
                                             + "and R_PrType='-P' ";
-                                    Statement stmt3 = mysql.getConnection().createStatement();
+                                    Statement stmt3 = mysqlConnect.getConnection().createStatement();
                                     stmt3.executeUpdate(sqlUpdatePro);
                                     stmt3.close();
                                 }
@@ -825,7 +825,7 @@ public class PromotionControl {
                                         + "where R_Table='" + table + "' "
                                         + "and R_PrCode='" + protab1.getProCode() + "' "
                                         + "and R_Void <> 'V' ";
-                                Statement stmt4 = mysql.getConnection().createStatement();
+                                Statement stmt4 = mysqlConnect.getConnection().createStatement();
                                 ResultSet rss = stmt4.executeQuery(sql);
                                 clearTPromotion4(table);
                                 while (rss.next()) {
@@ -858,7 +858,7 @@ public class PromotionControl {
                                     + "where R_Table='" + balance.getR_Table() + "' "
                                     + "and R_PrCode='" + protab1.getProCode() + "' "
                                     + "and R_Void <> 'V' ";
-                            Statement stmt = mysql.getConnection().createStatement();
+                            Statement stmt = mysqlConnect.getConnection().createStatement();
                             ResultSet rs = stmt.executeQuery(sqlCheck);
                             double Sum_Total_Qty = 0;
                             double Sum_Total_Price = 0;
@@ -910,7 +910,7 @@ public class PromotionControl {
                                             + "and R_PrCode='" + protab1.getProCode() + "' "
                                             + "and R_Void <> 'V' "
                                             + "order by R_Index";//เรียงลำดับแบบย้อนหลัง 6,5,4,3,2,1 (ปกติจะเป็น 1,2,3,4,5,6)
-                                    Statement stmt2 = mysql.getConnection().createStatement();
+                                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
                                     rs = stmt2.executeQuery(sqlCheck);
 
                                     double Customer_Buy_Quantity = 0;
@@ -953,7 +953,7 @@ public class PromotionControl {
                                                 + "and R_PrType='-P' "
                                                 + "and R_PrCode='" + rs.getString("R_PrCode") + "' "
                                                 + "and R_Void <> 'V' ";
-                                        Statement stmt3 = mysql.getConnection().createStatement();
+                                        Statement stmt3 = mysqlConnect.getConnection().createStatement();
                                         stmt3.executeUpdate(sqlUpdatePro);
                                         stmt3.close();
                                     }
@@ -990,7 +990,7 @@ public class PromotionControl {
             String sqlTotal = "select sum(R_Price*R_Quan) TAmount,sum(R_PRAmt) R_PRAmt "
                     + "from balance "
                     + "where r_table='" + table + "' and r_void<>'V';";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rsTotal = stmt.executeQuery(sqlTotal);
             if (rsTotal.next()) {
                 TAmount = rsTotal.getDouble("TAmount");
@@ -1008,14 +1008,14 @@ public class PromotionControl {
                     + "ProDiscAmt = '" + ProDiscAmt + "',"
                     + "NetTotal = '" + NetTotal + "' "
                     + "where TCode='" + table + "'";
-            Statement stmt1 = mysql.getConnection().createStatement();
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
             stmt1.executeUpdate(updateTableFile);
             stmt1.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1024,11 +1024,11 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         String sqlGetProtype = "";
         try {
             sqlGetProtype = "select ptype from protab where procode='" + bean.getPrCode() + "' limit 1;";
-            Statement stmtGetPro = mysql.getConnection().createStatement();
+            Statement stmtGetPro = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmtGetPro.executeQuery(sqlGetProtype);
             if (rs.next()) {
                 bean.setPrType(rs.getString("ptype"));
@@ -1046,14 +1046,14 @@ public class PromotionControl {
                     + "values('" + bean.getR_Index() + "','" + bean.getR_RefNo() + "','" + bean.getTerminal() + "','" + bean.getCashier()
                     + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','" + bean.getPCode() + "','" + bean.getPDisc() + "','" + bean.getPDiscBath()
                     + "','" + bean.getPPrice() + "','" + bean.getPQty() + "','" + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "','" + bean.getFlage() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error" + sql, e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1062,20 +1062,20 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into tpromotion2 "
                     + "(TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getTCode() + "','" + bean.getPCode() + "','" + bean.getProCode() + "','"
                     + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1084,16 +1084,16 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate("delete from tpromotion2 where TCode='" + table + "'");
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1102,20 +1102,20 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into tpromotion3 "
                     + "(R_Index,TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getR_Index() + "','" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1124,17 +1124,17 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tpromotion3 where TCode='" + table + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1143,20 +1143,20 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into tpromotion4 "
                     + "(R_Index,TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getR_Index() + "','" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1165,17 +1165,17 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tpromotion4 where TCode='" + table + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1190,20 +1190,20 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into tpromotion5 (TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','"
                     + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1212,17 +1212,17 @@ public class PromotionControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tpromotion5 where TCode='" + table + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -1245,8 +1245,8 @@ public class PromotionControl {
                     + "left join protab pt "
                     + "on p.ppromotion1 = pt.procode "
                     + "where pcode='" + pcode + "' limit 1";
-            mysql.open(this.getClass());
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            mysqlConnect.open(this.getClass());
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     procode = rs.getString("procode");
                     prodesc = rs.getString("prodesc");
@@ -1257,7 +1257,7 @@ public class PromotionControl {
 
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return procode + ":" + prodesc;

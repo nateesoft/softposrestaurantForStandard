@@ -35,7 +35,7 @@ public class MTDInvoice extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     private POSHWSetup POSHW;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -436,9 +436,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                  * * OPEN CONNECTION **
                  */
                 
-                mysql.open(this.getClass());
+                mysqlConnect.open(this.getClass());
                 try {
-                    Statement stmt = mysql.getConnection().createStatement();
+                    Statement stmt = mysqlConnect.getConnection().createStatement();
                     String SqlQuery = "select b_etd,count(*) as billcnt,sum(b_cust),Sum(b_empdiscAmt),Sum(b_memdiscamt),sum(b_cupondiscamt),sum(b_prodiscamt),sum(b_nettotal) from s_invoice where (b_macno>='" + MacNo1 + "') and (b_macno<='" + MacNo2 + "') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (b_void<>'V') Group by b_etd order by b_etd ";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     Double Sum0 = 0.0;
@@ -496,7 +496,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } catch (SQLException e) {
                     MSG.ERR(this, e.getMessage());
                 } finally {
-                    mysql.closeConnection(this.getClass());
+                    mysqlConnect.closeConnection(this.getClass());
                 }
                 prn.print("----------------------------------------");
                 prn.print(" ");

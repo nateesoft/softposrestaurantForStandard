@@ -36,7 +36,7 @@ public class TopSaleRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -485,9 +485,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -497,7 +497,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select r_group,groupName,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale inner join groupfile on t_sale.r_group = groupfile.groupcode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') and (r_refund<>'V') "
                     + "group by r_group,r_plucode order by r_group,r_plucode";
@@ -527,7 +527,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         Jdi_dailyReport_Topsale top = new Jdi_dailyReport_Topsale(new Frame(), true);
@@ -548,9 +548,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate("delete from temptopsale where terminal='" + Value.MACNO + "'");
             stmt.close();
         } catch (SQLException e) {
@@ -559,7 +559,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select r_group,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -609,7 +609,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     int Cnt = 1;
                     //int CntOrder = 10 ;
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -632,7 +632,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(TopSaleRep.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -657,9 +657,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
     public void PrintTopSaleDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2, String Group1, String Group2, int CntOrder) {
         String t = "";
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
@@ -669,7 +669,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select r_group,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -727,7 +727,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         int Cnt = 1;
         //int CntOrder = 10 ;
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -750,7 +750,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
@@ -769,9 +769,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert ignore into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
                     + "values ('" + Value.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
             stmt.executeUpdate(SqlQuery);
@@ -780,7 +780,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TopSaleRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

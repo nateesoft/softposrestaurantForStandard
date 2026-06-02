@@ -42,7 +42,7 @@ public class MTDCoupon extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -388,13 +388,13 @@ public class MTDCoupon extends javax.swing.JDialog {
                      * * OPEN CONNECTION **
                      */
                     
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
                                 + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "'"
                                 + " group by s_cupon.cucode order by s_cupon.cucode";
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
                         while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("cucode"), 3) + "  " + PUtility.DataFullR(rs.getString("cuname"), 30));
@@ -408,7 +408,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                         MSG.ERR(this, e.getMessage());
 
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -461,14 +461,14 @@ public class MTDCoupon extends javax.swing.JDialog {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
                     + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                     + "and refund<>'V' "
                     + " group by s_cupon.cucode order by s_cupon.cucode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + (PUtility.DataFullR(rs.getString("cucode"), 3) + Space + PUtility.DataFullR(rs.getString("cuname"), 30)) + "_";
@@ -482,7 +482,7 @@ public class MTDCoupon extends javax.swing.JDialog {
             MSG.ERR(this, e.getMessage());
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

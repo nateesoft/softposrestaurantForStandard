@@ -13,15 +13,15 @@ import com.softpos.util.AppLogUtil;
  */
 public class PosUserController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PosUserBean getPosUser() {
         PosUserBean bean = null;
         
-        mysql.open(PosUserController.class);
+        mysqlConnect.open(PosUserController.class);
         try {
             String sql = "select Username, Sale2, Sale3 from posuser where username='" + Value.USERCODE + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new PosUserBean();
                     bean.setSale2(rs.getString("Sale2"));
@@ -34,7 +34,7 @@ public class PosUserController {
         } catch (SQLException e) {
             AppLogUtil.log(PosUserController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;

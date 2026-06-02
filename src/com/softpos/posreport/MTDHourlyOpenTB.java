@@ -44,7 +44,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     Date TDate2 = new Date();
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -62,7 +62,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     public List<Object[]> LoadData() {
         List<Object[]> ListObj = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             DecimalFormat df = new DecimalFormat("00.00");
             DecimalFormat df1 = new DecimalFormat("00.00");
@@ -125,7 +125,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                         + "from s_invoice  "
                         + "where s_date between '" + dateFrom + "' and '" + dateTo + "' "
                         + "and b_logintime between'" + time1 + "' and '" + time2 + "' and b_void<>'V' and b_etd='T';";
-                ResultSet rsTypeE = mysql.executeQuery(sqlE);
+                ResultSet rsTypeE = mysqlConnect.executeQuery(sqlE);
                 if (rsTypeE.next()) {
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
@@ -136,7 +136,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
                 }
                 rsTypeE.close();
 
-                ResultSet rsTypeT = mysql.executeQuery(sqlT);
+                ResultSet rsTypeT = mysqlConnect.executeQuery(sqlT);
                 if (rsTypeT.next()) {
                     sumB_custT = rsTypeT.getInt("sumBcustT");
                     sumBillT = rsTypeT.getInt("sumBillT");
@@ -176,7 +176,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         return ListObj;
     }

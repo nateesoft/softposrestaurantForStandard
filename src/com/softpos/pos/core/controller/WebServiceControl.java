@@ -13,7 +13,7 @@ import com.softpos.util.NumberUtil;
 public class WebServiceControl {
 
     private final PosControl posControl;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     public WebServiceControl() {
@@ -85,9 +85,9 @@ public class WebServiceControl {
             /**
              * * OPEN CONNECTION **
              */
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sql = "select TAmount,ProDiscAmt,ItemDiscAmt from tablefile where Tcode='" + table + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 double Product_Price_Total = rs.getDouble("TAmount");
@@ -108,7 +108,7 @@ public class WebServiceControl {
                     + "set ServiceAmt = '" + ServiceAmt + "',"
                     + "NetTotal = " + Total_Vat_Amt + " "
                     + "where Tcode = '" + table + "'";
-            Statement stmt2 = mysql.getConnection().createStatement();
+            Statement stmt2 = mysqlConnect.getConnection().createStatement();
             stmt2.executeUpdate(sqlUpd);
             stmt2.close();
 
@@ -116,7 +116,7 @@ public class WebServiceControl {
 
             AppLogUtil.log(WebServiceControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

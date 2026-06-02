@@ -21,7 +21,7 @@ public class ServiceControl {
     private final PosControl posControl;
     private SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
     private DecimalFormat df = new DecimalFormat("##.00");
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
@@ -119,7 +119,7 @@ public class ServiceControl {
             /**
              * * OPEN CONNECTION **
              */
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
 
             ServiceAmt = getDouble(ServiceAmt, "SERVICE");
             totalDiscount = getDouble(totalDiscount, "DISCOUNT");
@@ -129,7 +129,7 @@ public class ServiceControl {
                     + "TAmount='" + tAmount + "',"
                     + "NetTotal = " + NetTotal + " "
                     + "where Tcode = '" + table + "'";
-            Statement stmt3 = mysql.getConnection().createStatement();
+            Statement stmt3 = mysqlConnect.getConnection().createStatement();
             stmt3.executeUpdate(sqlUpd);
             stmt3.close();
             // update all discount
@@ -138,14 +138,14 @@ public class ServiceControl {
                         + "tlogindate='" + dc.GetCurrentDate() + "', "
                         + "tlogintime='" + Timefmt.format(new Date()) + "' "
                         + "where tcode='" + table + "'";
-                Statement stmt5 = mysql.getConnection().createStatement();
+                Statement stmt5 = mysqlConnect.getConnection().createStatement();
                 stmt5.executeUpdate(sqlUpdateDate);
             }
         } catch (SQLException e) {
 
             AppLogUtil.log(ServiceControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

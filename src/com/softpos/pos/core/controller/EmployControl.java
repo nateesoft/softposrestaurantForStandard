@@ -5,13 +5,13 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 
 public class EmployControl {
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public boolean checkEmployUse() {        
         try {
-            mysql.open();
+            mysqlConnect.open();
             String sql = "select P_EmpUse from posconfigsetup where P_EmpUse='Y';";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 return true;
             }
@@ -20,16 +20,16 @@ public class EmployControl {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
         return false;
     }
 
     public boolean isEmployExists(String empCode) {
         try {
-            mysql.open();
+            mysqlConnect.open();
             String sql = "select * from employ where code='" + empCode + "'";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 return true;
             }
@@ -38,7 +38,7 @@ public class EmployControl {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
         return false;
     }
@@ -46,9 +46,9 @@ public class EmployControl {
     public String empName(String empCode) {
         String empName = "";
         try {
-            mysql.open();
+            mysqlConnect.open();
             String sql = "select name from employ where code='" + empCode + "'";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next() && !rs.wasNull()) {
                 empName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
             } else {
@@ -59,7 +59,7 @@ public class EmployControl {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
 
         return empName;

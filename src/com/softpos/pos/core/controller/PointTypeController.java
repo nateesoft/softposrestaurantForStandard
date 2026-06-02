@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.crm.pos.core.modal.PointTypeBean;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,17 +15,17 @@ import com.softpos.util.DateUtil;
  */
 public class PointTypeController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PointTypeBean getData(String pointTypeCode) {
         PointTypeBean bean = null;
         
         try {
-            mysql.open(PointTypeController.class);
+            mysqlConnect.open(PointTypeController.class);
             String sql = "select * "
                     + "from " + Value.db_member + ".pointtype "
                     + "where Point_TypeCode='" + pointTypeCode + "' limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -36,7 +35,7 @@ public class PointTypeController {
             AppLogUtil.log(PointTypeController.class, "error", e);
 
         } finally {
-            mysql.closeConnection(PointTypeController.class);
+            mysqlConnect.closeConnection(PointTypeController.class);
         }
 
         return bean;
@@ -45,13 +44,13 @@ public class PointTypeController {
     public PointTypeBean getDataBranchPoint() {
         PointTypeBean bean = null;
         try {
-            mysql.open(PointTypeController.class);
+            mysqlConnect.open(PointTypeController.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
             String sql = "SELECT * FROM " + Value.db_member + ".pointtype WHERE 1=1 "
                     + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
                     + "AND (point1>0 or point2>0 or point3>0) "
                     + "AND Point_TypeDateService like '%" + EEE + "%' limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
                 }
@@ -60,7 +59,7 @@ public class PointTypeController {
         } catch (SQLException e) {
             AppLogUtil.log(PointTypeController.class, "error", e);
         } finally {
-            mysql.closeConnection(PointTypeController.class);
+            mysqlConnect.closeConnection(PointTypeController.class);
         }
 
         return bean;

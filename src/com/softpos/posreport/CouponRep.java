@@ -30,7 +30,7 @@ public class CouponRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -231,11 +231,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      * * OPEN CONNECTION **
                      */
                     
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
                                 + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
                         while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("cucode"), 3) + "  " + PUtility.DataFullR(rs.getString("cuname"), 30));
@@ -249,7 +249,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(CouponRep.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -309,11 +309,11 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
                     + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + (PUtility.DataFullR(rs.getString("cucode"), 3) + Space + PUtility.DataFullR(rs.getString("cuname"), 30)) + "_";
@@ -327,7 +327,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

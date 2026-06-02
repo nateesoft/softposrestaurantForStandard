@@ -5,7 +5,6 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.controller.Value;
-import com.softpos.pos.core.model.POSHWSetup;
 import database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -18,7 +17,7 @@ import com.softpos.util.MSG;
 public class DeptRep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
     public DeptRep(java.awt.Frame parent, boolean modal) {
@@ -350,9 +349,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
@@ -532,7 +531,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(DeptRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         Jdi_depReport dept = new Jdi_depReport(new Frame(), true);
@@ -558,9 +557,9 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from t_sale "
                     + "where "
                     + "(macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
@@ -746,7 +745,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(DeptRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         if (Value.useprint) {

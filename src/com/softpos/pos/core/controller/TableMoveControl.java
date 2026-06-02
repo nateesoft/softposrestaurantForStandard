@@ -12,23 +12,23 @@ import com.softpos.util.AppLogUtil;
 public class TableMoveControl {
 
     private static MemberBean memberBean;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
 
     private void updateRLinkIndex(String tableDest) {
         
-        mysql.open(TableMoveControl.class);
+        mysqlConnect.open(TableMoveControl.class);
         try {
             String sql1 = "select R_SPIndex,R_LinkIndex,R_MoveFrom "
                     + "from balance where r_table='" + tableDest + "' "
                     + "and r_movefrom=r_linkindex;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql1);
             while (rs.next()) {
                 String R_SPIndex = rs.getString("R_SPIndex");
                 String R_MoveFrom = rs.getString("R_MoveFrom");
 
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 String sql2 = "update balance set "
                         + "r_movefrom='',"
                         + "r_linkindex='" + R_SPIndex + "' "
@@ -44,7 +44,7 @@ public class TableMoveControl {
 
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableMoveControl.class);
+            mysqlConnect.closeConnection(TableMoveControl.class);
         }
     }
 
@@ -119,9 +119,9 @@ public class TableMoveControl {
     }
 
     public void backupTableData(String table1, String table2) {
-        mysql.open(TableMoveControl.class);
+        mysqlConnect.open(TableMoveControl.class);
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
             stmt.executeUpdate("create table IF NOT EXISTS temp_tablefile select * from tablefile "
                     + "where tcode in('" + table1 + "','" + table2 + "');");
@@ -132,14 +132,14 @@ public class TableMoveControl {
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableMoveControl.class);
+            mysqlConnect.closeConnection(TableMoveControl.class);
         }
     }
 
     public void restoreTableData(String table1, String table2) {
-        mysql.open(TableMoveControl.class);
+        mysqlConnect.open(TableMoveControl.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate("delete from tablefile where tcode in('" + table1 + "','" + table2 + "');");
                 stmt.executeUpdate("delete from balance where r_table in('" + table1 + "','" + table2 + "');");
                 stmt.executeUpdate("insert into tablefile select * from temp_tablefile "
@@ -150,7 +150,7 @@ public class TableMoveControl {
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
-            mysql.closeConnection(TableMoveControl.class);
+            mysqlConnect.closeConnection(TableMoveControl.class);
         }
     }
 }

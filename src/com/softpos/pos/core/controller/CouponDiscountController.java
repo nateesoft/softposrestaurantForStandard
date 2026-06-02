@@ -15,19 +15,19 @@ import com.softpos.util.AppLogUtil;
  */
 public class CouponDiscountController {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<BalanceBean> getBalanceByQuanCanDisc(String tableNo, String pCode) {
         List<BalanceBean> listBalance = new ArrayList<>();
         
         try {
-            mysql.open(CouponDiscountController.class);
+            mysqlConnect.open(CouponDiscountController.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "
                     + "from balance "
                     + "where r_quancandisc>0 "
                     + "and r_table='" + tableNo + "' "
                     + "and r_plucode='" + pCode + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean bean = new BalanceBean();
@@ -43,7 +43,7 @@ public class CouponDiscountController {
         } catch (SQLException e) {
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -52,14 +52,14 @@ public class CouponDiscountController {
     public List<BalanceBean> getBalanceByPrAmt(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
         try {
-            mysql.open(CouponDiscountController.class);
+            mysqlConnect.open(CouponDiscountController.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "
                     + "from balance "
                     + "where R_PRAmt='0' "
                     + "and R_Discount ='Y' "
                     + "and r_table='" + tableNo + "' "
                     + "and r_void<>'V' ";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean bean = new BalanceBean();
@@ -75,7 +75,7 @@ public class CouponDiscountController {
         } catch (SQLException e) {
             AppLogUtil.log(CouponDiscountController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;

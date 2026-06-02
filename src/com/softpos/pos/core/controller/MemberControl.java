@@ -14,7 +14,7 @@ import com.softpos.util.AppLogUtil;
 public class MemberControl {
 
     MemberBean MemberBean = new MemberBean();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void updateMemberDiscount(String table, MemberBean memberBean) {
         String strDisc = "";
@@ -27,19 +27,19 @@ public class MemberControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select sum(R_PrSubAmt) as MemDiscount "
                     + "from balance where r_table='" + table + "' "
                     + "order by R_Index;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String upd = "update tablefile set "
                         + "MemDiscAmt='" + rs.getDouble("MemDiscount") + "',"
                         + "MemDisc='" + strDisc + "' "
                         + "where tcode='" + table + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 stmt1.executeUpdate(upd);
                 stmt1.close();
             }
@@ -49,7 +49,7 @@ public class MemberControl {
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
@@ -57,7 +57,7 @@ public class MemberControl {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             /*
              R_PrSubType = -M
@@ -73,7 +73,7 @@ public class MemberControl {
                     + "and R_Discount='Y' "
                     + "and R_Void<>'V' "
                     + "order by R_Index;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balance = new BalanceBean();
@@ -110,7 +110,7 @@ public class MemberControl {
                             + "R_QuanCanDisc='0' "
                             + "where R_Index='" + rs.getString("R_Index") + "' "
                             + "and R_Table='" + rs.getString("R_Table") + "'";
-                    Statement stmt1 = mysql.getConnection().createStatement();
+                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     stmt1.executeUpdate(sqlUpd);
                     stmt1.close();
                 }
@@ -121,17 +121,17 @@ public class MemberControl {
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 
     /** Returns all rows from memmaster. Each element: {code, fullName, homeTel, "", mobile, expiredDate, fax} */
     public List<Object[]> findAllMembers(String dbMember) {
         List<Object[]> list = new ArrayList<>();
-        mysql.open(MemberControl.class);
+        mysqlConnect.open(MemberControl.class);
         try {
             String sql = "select * from " + dbMember + ".memmaster order by Member_Code";
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     list.add(new Object[]{
@@ -148,7 +148,7 @@ public class MemberControl {
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(MemberControl.class);
+            mysqlConnect.closeConnection(MemberControl.class);
         }
         return list;
     }
@@ -164,9 +164,9 @@ public class MemberControl {
             sql = "select * from " + dbMember + ".memmaster where Member_Mobile like '%" + ThaiUtil.Unicode2ASCII(memTel) + "%' order by Member_Code";
         }
         if (sql.isEmpty()) return list;
-        mysql.open(MemberControl.class);
+        mysqlConnect.open(MemberControl.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     list.add(new Object[]{
@@ -183,32 +183,32 @@ public class MemberControl {
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(MemberControl.class);
+            mysqlConnect.closeConnection(MemberControl.class);
         }
         return list;
     }
 
     public void clearMemberDiscount(String tableNo) {
-        mysql.open(MemberControl.class);
+        mysqlConnect.open(MemberControl.class);
         try {
             String sql = "update tablefile set memdisc='',nettotal= nettotal+memdiscamt,"
                     + " memdiscamt='0',memname='',memcode='' where tcode='" + tableNo + "'";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
             String sqlUpdate = "update balance set r_prsubtype='',r_prsubcode='',"
                     + "r_prsubquan='0',r_prsubdisc='0',r_prsubamt='0'"
                     + " where r_table='" + tableNo + "'";
-            mysql.executeUpdate(sqlUpdate);
+            mysqlConnect.executeUpdate(sqlUpdate);
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(MemberControl.class);
+            mysqlConnect.closeConnection(MemberControl.class);
         }
     }
 
     public void updateTableFileMember(String tableNo, String memCode, String memName, boolean add) {
-        mysql.open(MemberControl.class);
+        mysqlConnect.open(MemberControl.class);
         try {
             String sql;
             if (add) {
@@ -216,11 +216,11 @@ public class MemberControl {
             } else {
                 sql = "Update tablefile set memcode='',memname='',memdisc='',memdiscamt='0',nettotal=tamount where tcode='" + tableNo + "'";
             }
-            mysql.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(MemberControl.class);
+            mysqlConnect.closeConnection(MemberControl.class);
         }
     }
 
@@ -228,7 +228,7 @@ public class MemberControl {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             /*
              R_PrSubType = -M
@@ -243,7 +243,7 @@ public class MemberControl {
                     + "where R_Table='" + table + "' "
                     + "and R_Discount='Y' "
                     + "order by R_Index;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balance = new BalanceBean();
@@ -292,7 +292,7 @@ public class MemberControl {
                         + "R_QuanCanDisc='0' "
                         + "where R_Index='" + rs.getString("R_Index") + "' "
                         + "and R_Table='" + rs.getString("R_Table") + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 stmt1.executeUpdate(sqlUpd);
                 stmt1.close();
             }
@@ -302,7 +302,7 @@ public class MemberControl {
         } catch (SQLException e) {
             AppLogUtil.log(MemberControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

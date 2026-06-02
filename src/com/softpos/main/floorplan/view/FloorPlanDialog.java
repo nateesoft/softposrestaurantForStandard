@@ -411,8 +411,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         });
         jPanel1.add(btnZone7);
 
-        panelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 3));
-        panelMain.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
+        panelMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 3));
+        panelMain.setLayout(new java.awt.GridLayout(10, 10));
 
         btn1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         panelMain.add(btn1);
@@ -2099,6 +2099,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.setIcon(null);
             button.setBackground(null);
             button.setForeground(Color.BLACK);
+            button.setBorderPainted(false);
         }
     }
 

@@ -13,17 +13,17 @@ import java.util.List;
  */
 public class TSaleController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<TSaleBean> listTSaleByRefId(String b_refno) {
         List<TSaleBean> listTsale = new ArrayList<>();
         
-        mysql.open(TSaleController.class);
+        mysqlConnect.open(TSaleController.class);
         try {
             String sql = "select * from t_sale "
                     + "where r_refno='" + b_refno + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 TSaleBean bean = new TSaleBean();
                 String pcode = rs.getString("r_plucode");
@@ -39,7 +39,7 @@ public class TSaleController {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listTsale;

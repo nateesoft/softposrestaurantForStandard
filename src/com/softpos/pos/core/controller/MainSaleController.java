@@ -23,16 +23,16 @@ import com.softpos.util.AppLogUtil;
  */
 public class MainSaleController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MenuListBean getMenuListByMenuItem(String PluCode) {
         MenuListBean bean = null;
         
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String SqlQuery = "select plucode from menulist where menuitem=('" + PluCode + "') "
                     + "and (menuactive='Y') limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
                 if (rs.next()) {
                     bean = new MenuListBean();
@@ -45,7 +45,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -53,10 +53,10 @@ public class MainSaleController {
 
     public boolean checkOutstockList(String TempCode) {
         boolean valid = false;
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select pcode from outstocklist where pcode='" + TempCode + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     valid = true;
@@ -68,7 +68,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return valid;
@@ -77,10 +77,10 @@ public class MainSaleController {
     public List<PSetBean> getPSetByPCode(String pluCode) {
         List<PSetBean> listPset = new ArrayList<>();
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sqlPSET = "select * from pset where pcode='" + pluCode + "';";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlPSET);
             while (rs.next()) {
                 PSetBean bean = new PSetBean();
@@ -95,7 +95,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listPset;
@@ -113,10 +113,10 @@ public class MainSaleController {
 
     public boolean checkCountPrinterTo(String tableNo) {
         boolean isValid = false;
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
-            try (ResultSet rs = mysql.executeQuery(sqlShowKic)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sqlShowKic)) {
                 if (rs.next()) {
                     isValid = true;
                 }
@@ -126,7 +126,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -134,10 +134,10 @@ public class MainSaleController {
 
     public List<BalanceBean> getListAllPrintToKic(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sqlShowKic = getQueryShowKic(tableNo);
-            try (ResultSet rs = mysql.executeQuery(sqlShowKic)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sqlShowKic)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Kic(rs.getString("r_kic"));
@@ -151,7 +151,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -159,7 +159,7 @@ public class MainSaleController {
 
     public List<BalanceBean> printOnlyForm1(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_PluCode from balance "
                     + "where r_table='" + tableNo + "' "
@@ -167,7 +167,7 @@ public class MainSaleController {
                     + "and R_KicPrint<>'P' "
                     + "and R_kic='" + rKic + "' "
                     + "group by r_plucode";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
@@ -180,7 +180,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -188,7 +188,7 @@ public class MainSaleController {
 
     public List<BalanceBean> printOnlyForm6(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
                     + "where r_table='" + tableNo + "' "
@@ -197,7 +197,7 @@ public class MainSaleController {
                     + "and R_Kic<>'' "
                     + "and R_KIC='" + rKic + "' "
                     + "group by r_plucode,r_void order by r_opt1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Index(rs.getString("R_Index"));
@@ -213,7 +213,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -221,10 +221,10 @@ public class MainSaleController {
 
     public TableFileBean getTableFileByCode(String tableNo) {
         TableFileBean bean = null;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select TAmount, TCustomer, tonact from tablefile where tcode='" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new TableFileBean();
@@ -238,7 +238,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -246,10 +246,10 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select r_time,r_date from balance where r_table ='" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BalanceBean();
@@ -262,7 +262,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -270,11 +270,11 @@ public class MainSaleController {
 
     public boolean getBalanceByIndex(String RIndex) {
         boolean isValid = false;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
                     + "and R_QuanCanDisc>0 limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
@@ -286,7 +286,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -294,10 +294,10 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRTable(String tableNo) {
         BalanceBean bean = null;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "SELECT COUNT(R_PName) items FROM balance where r_table = '" + tableNo + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BalanceBean();
@@ -310,7 +310,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -318,10 +318,10 @@ public class MainSaleController {
 
     public List<TempsetBean> getTempsetByPIndex(String PIndex) {
         List<TempsetBean> listPset = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempset where PIndex='" + PIndex + "' ";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TempsetBean bean = new TempsetBean();
@@ -335,7 +335,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listPset;
@@ -343,11 +343,11 @@ public class MainSaleController {
 
     public TempsetBean getTempsetByPIndexPCode(String PIndex, String pCode) {
         TempsetBean bean = null;
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select POption from tempset where PIndex='" + PIndex + "' "
                     + "and PCode='" + pCode + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean = new TempsetBean();
@@ -359,7 +359,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -367,12 +367,12 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRIndex(String rIndex) {
         BalanceBean bean = null;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select r_linkindex from balance "
                     + "where r_index='" + rIndex + "' "
                     + "and r_linkindex<>'' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new BalanceBean();
@@ -385,7 +385,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -393,12 +393,12 @@ public class MainSaleController {
 
     public boolean checkKicPrint(String tableNo) {
         boolean isValid = false;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
                     + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
@@ -410,7 +410,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -418,10 +418,10 @@ public class MainSaleController {
 
     public CompanyBean getHeaderCompany() {
         CompanyBean bean = null;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "SELECT head1, head2, head3, head4 FROM company limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new CompanyBean();
@@ -437,7 +437,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -446,10 +446,10 @@ public class MainSaleController {
     public boolean printBillVoidCheck(String tableNo) {
         boolean isValid = false;
 
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isValid = true;
@@ -461,7 +461,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;
@@ -470,11 +470,11 @@ public class MainSaleController {
     public List<BalanceBean> getBalanceByRLinkIndex(String rLinkIndex) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select R_Index,R_Stock from balance "
                     + "where R_LinkIndex='" + rLinkIndex + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
@@ -489,7 +489,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBalance;
@@ -498,11 +498,11 @@ public class MainSaleController {
     public SoftMenuSetup getMenuShowText(String menuCode) {
         SoftMenuSetup bean = null;
 
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select n.PCode,n.MenuShowText from optionset o,soft_menusetup n "
                     + "where o.pcode = n.pcode and n.menucode='" + menuCode + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new SoftMenuSetup();
@@ -516,7 +516,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -525,11 +525,11 @@ public class MainSaleController {
     public List<MgrButtonSetupBean> getAllMgrButtonSetup(String pCode) {
         List<MgrButtonSetupBean> listMgrButton = new ArrayList<>();
 
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select auto_pcode, auto_pdesc from mgrbuttonsetup "
                     + "where pcode='" + pCode + "' and auto_pcode<>''";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     MgrButtonSetupBean bean = new MgrButtonSetupBean();
@@ -545,7 +545,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listMgrButton;
@@ -554,13 +554,13 @@ public class MainSaleController {
     public MgrButtonSetupBean getMgrButtonAndMenuSetup(String menuCode) {
         MgrButtonSetupBean bean = null;
 
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "select o.PCode,o.PDesc, o.check_before "
                     + "from mgrbuttonsetup o,soft_menusetup n "
                     + "where o.pcode = n.pcode "
                     + "and n.menucode='" + menuCode + "' limit 1";;
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new MgrButtonSetupBean();
@@ -575,7 +575,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;
@@ -583,10 +583,10 @@ public class MainSaleController {
 
     public boolean checkPassBeforeOrder(String tableNo) {
         boolean isFound = false;
-        mysql.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleController.class);
         try {
             String sql = "SELECT 1 FROM balance where r_table = '" + tableNo + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     isFound = true;
@@ -598,7 +598,7 @@ public class MainSaleController {
 
             AppLogUtil.log(MainSaleController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isFound;

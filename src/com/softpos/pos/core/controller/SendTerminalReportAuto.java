@@ -39,7 +39,7 @@ public class SendTerminalReportAuto {
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     public String filePath = "";
     public String fileName = "";
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     
     private final POSHWSetup POSHWSetup = new POSHWSetup();
@@ -56,9 +56,9 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select * from s_invoice "
                     + "where (s_date>='" + dc.GetCurrentDate() + "') "
                     + "and (s_date<='" + dc.GetCurrentDate() + "') "
@@ -67,10 +67,10 @@ public class SendTerminalReportAuto {
             ResultSet rs = stmt.executeQuery(sql);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + dc.GetCurrentDate() + "' and '" + dc.GetCurrentDate() + "';";
-            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
                     + "and s_date between '" + dc.GetCurrentDate() + "' and '" + dc.GetCurrentDate() + "';";
-            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
@@ -220,7 +220,7 @@ public class SendTerminalReportAuto {
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_paidio where (flage='I') and (terminal>='001') and (terminal<='999') and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -235,7 +235,7 @@ public class SendTerminalReportAuto {
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_paidio where (flage='O') and (terminal>='001') and (terminal<='999') "
                     + "and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -251,7 +251,7 @@ public class SendTerminalReportAuto {
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_void where (macno>='001') and (macno<='999') "
                     + "and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -267,7 +267,7 @@ public class SendTerminalReportAuto {
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from s_invoice where (b_macno>='001') and (b_macno<='999') "
                     + "and (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "') and (b_void<>'V') and (b_cramt1<>0)";
             ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -446,14 +446,14 @@ public class SendTerminalReportAuto {
         }
         if (frec.Cupon_DiscCnt > 0) {
             
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
                         + "where s_date between'" + dc.GetCurrentDate() + "' "
                         + "and '" + dc.GetCurrentDate() + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
-                ResultSet rs = mysql.executeQuery(sql);
+                ResultSet rs = mysqlConnect.executeQuery(sql);
                 while (rs.next()) {
                     double cuamt = rs.getDouble("cuamt");
                     double quan = rs.getDouble("cuquan");
@@ -461,7 +461,7 @@ public class SendTerminalReportAuto {
                 }
                 rs.close();
             } catch (SQLException e) {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================") + "_";
@@ -526,9 +526,9 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_macno,min(b_refno),max(b_refno) from s_invoice "
                     + "where (s_date>='" + dc.GetCurrentDate() + "') and (s_date<='" + dc.GetCurrentDate() + "') "
                     + "and (b_macno>='" + "001" + "') "
@@ -544,7 +544,7 @@ public class SendTerminalReportAuto {
 
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "=====================================") + "_";
@@ -624,9 +624,9 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlSelectDocTypeE);
             int countb_refnoE = 0;
             int countb_refnoT = 0;
@@ -648,7 +648,7 @@ public class SendTerminalReportAuto {
             rs.close();
             stmt.close();
 
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs4 = stmt.executeQuery(sqlSelectDocTypeT);
             if (rs4.next()) {
                 int countb_refno = rs4.getInt("b_refno");
@@ -664,7 +664,7 @@ public class SendTerminalReportAuto {
             }
             rs4.close();
             stmt.close();
-            ResultSet rsD = mysql.executeQuery(sqlSelectDocTypeD);
+            ResultSet rsD = mysqlConnect.executeQuery(sqlSelectDocTypeD);
             if (rsD.next()) {
                 int countb_refno = rsD.getInt("b_refno");
                 b_etd = rsD.getString("b_etd");
@@ -683,7 +683,7 @@ public class SendTerminalReportAuto {
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='E' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt.executeQuery(sqlCountBillnoE);
             if (rs1.next()) {
                 countb_refnoE = rs1.getInt("cb_refnoE");
@@ -698,7 +698,7 @@ public class SendTerminalReportAuto {
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='T' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs2 = stmt.executeQuery(sqlCountBillnoT);
             if (rs2.next()) {
                 countb_refnoT = rs2.getInt("cb_refnoT");
@@ -712,7 +712,7 @@ public class SendTerminalReportAuto {
                     + "from s_invoice "
                     + "where s_date between '" + date1 + "' and '" + date2 + "' "
                     + "and b_etd='D' and b_void<>'V'";
-            stmt = mysql.getConnection().createStatement();
+            stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs6 = stmt.executeQuery(sqlCountBillnoD);
             if (rs6.next()) {
                 countb_refnoD = rs6.getInt("cb_refnoD");
@@ -726,7 +726,7 @@ public class SendTerminalReportAuto {
 
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listObj;
@@ -735,10 +735,10 @@ public class SendTerminalReportAuto {
     private List<String[]> CreName(String macNo1, String macNo2) {
         List<String[]> list = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select b_macno, B_CrCode1,B_cardNo1, sum(B_CrAmt1) B_CrAmt1 "
                     + "from s_invoice "
                     + "where b_macno='" + macNo1 + "' and '" + macNo2 + "' "
@@ -764,7 +764,7 @@ public class SendTerminalReportAuto {
 
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return list;
@@ -776,9 +776,9 @@ public class SendTerminalReportAuto {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select count(b_crcode1) b_crcode1,b_crcode1,sum(B_CrAmt1) "
                     + "from S_invoice "
                     + "where b_macno between'" + macNo1 + "' and '" + macNo2 + "' "
@@ -804,7 +804,7 @@ public class SendTerminalReportAuto {
 
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return credit;
@@ -867,15 +867,15 @@ public class SendTerminalReportAuto {
 
         try {
             DateConvert dc1 = new DateConvert();
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             String sqlGetEmailFromTranconfig = "select TranEmailAuto,TimeSend1,EmailAddress from tranconfig limit 1; ";
-            ResultSet rsConfig = mysql.executeQuery(sqlGetEmailFromTranconfig);
+            ResultSet rsConfig = mysqlConnect.executeQuery(sqlGetEmailFromTranconfig);
             if (rsConfig.next()) {
                 String TranEmailAuto = rsConfig.getString("TranEmailAuto");
                 String TimeSend = rsConfig.getString("TimeSend1");
                 try {
                     String sqlAddress = "select address from company limit 1";
-                    ResultSet rsAddress = mysql.executeQuery(sqlAddress);
+                    ResultSet rsAddress = mysqlConnect.executeQuery(sqlAddress);
                     if (rsAddress.next()) {
                         String data[] = rsAddress.getString("Address").split("/");
                         String username = data[0];
@@ -908,7 +908,7 @@ public class SendTerminalReportAuto {
         } catch (SQLException e) {
             AppLogUtil.log(SendTerminalReportAuto.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 

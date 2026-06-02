@@ -18,15 +18,15 @@ import com.softpos.util.AppLogUtil;
  */
 public class ModalPopupController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<OptionSetBean> getListOptionSet(String pCode) {
         List<OptionSetBean> listOption = new ArrayList<>();
 
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select * from optionset where pcode='" + pCode + "';");
             while (rs.next()) {
                 OptionSetBean bean = new OptionSetBean();
@@ -42,7 +42,7 @@ public class ModalPopupController {
 
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listOption;
@@ -51,9 +51,9 @@ public class ModalPopupController {
     public List<MgrButtonSetupBean> getListMgrButtonSetupByPCode(String pCode, String type) {
         List<MgrButtonSetupBean> listOption = new ArrayList<>();
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select * from mgrbuttonsetup "
                     + "where pcode='" + pCode + "' ";
             if (type.equals("sd")) {
@@ -77,7 +77,7 @@ public class ModalPopupController {
 
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listOption;
@@ -86,9 +86,9 @@ public class ModalPopupController {
     public List<SoftMenuSetup> loadSoftMenuSetupByMenuCode(String menuSub) {
         List<SoftMenuSetup> listOption = new ArrayList<>();
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String sql = "select PCode, MenuShowText from soft_menusetup "
                     + "where menucode like '" + menuSub + "%' and menutype='1'";
             ResultSet rs = stmt.executeQuery(sql);
@@ -105,7 +105,7 @@ public class ModalPopupController {
 
             AppLogUtil.log(ModalPopupController.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listOption;

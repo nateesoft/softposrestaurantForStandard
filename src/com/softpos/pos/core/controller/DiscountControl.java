@@ -10,7 +10,7 @@ import com.softpos.util.NumberUtil;
 
 public class DiscountControl {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     
     public double getDouble(double db) {
@@ -24,7 +24,7 @@ public class DiscountControl {
     public void updateDiscount(String tableNo) {
         //หามูลค่าส่วนลดรายการ
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select sum(R_PrAmt) SUM_R_PrAmt "
                     + "from balance "
@@ -32,12 +32,12 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 String sqlUpd = "update tablefile set "
                         + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
                         + "where Tcode = '" + tableNo + "'";
-                Statement stmt1 = mysql.getConnection().createStatement();
+                Statement stmt1 = mysqlConnect.getConnection().createStatement();
                 stmt1.executeUpdate(sqlUpd);
                 stmt1.close();
             }
@@ -56,7 +56,7 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrCuType = '-C'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String sqlUpd;
@@ -69,7 +69,7 @@ public class DiscountControl {
                             + "CuponDiscAmt='" + (rs.getDouble("SUM_R_PrCuAmt")) + "' "
                             + "where Tcode = '" + tableNo + "'";
                 }
-                mysql.executeUpdate(sqlUpd);
+                mysqlConnect.executeUpdate(sqlUpd);
             }
 
             rs.close();
@@ -77,7 +77,7 @@ public class DiscountControl {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
     }
 }

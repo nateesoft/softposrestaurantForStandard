@@ -10,7 +10,7 @@ import com.softpos.util.AppLogUtil;
 public class BranchControl {
 
     private static BranchBean branchBean = null;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void updateKicItemNo() {
         /**
@@ -18,13 +18,13 @@ public class BranchControl {
          */
         
         try {
-            mysql.open(BranchControl.class);
+            mysqlConnect.open(BranchControl.class);
             String sql = "update branch set KicItemNo=KicItemNo+1";
-            mysql.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BranchControl.class);
+            mysqlConnect.closeConnection(BranchControl.class);
         }
     }
 
@@ -33,9 +33,9 @@ public class BranchControl {
             return branchBean;
         }
         try {
-            mysql.open(BranchControl.class);
+            mysqlConnect.open(BranchControl.class);
             String sql = "select * from branch limit 1";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     branchBean = new BranchBean();
                     String bCheck = rs.getString("Code");
@@ -148,7 +148,7 @@ public class BranchControl {
         } catch (SQLException e) {
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BranchControl.class);
+            mysqlConnect.closeConnection(BranchControl.class);
         }
 
         return branchBean;
@@ -169,10 +169,10 @@ public class BranchControl {
         String form = "1";
 
         try {
-            mysql.open(BranchControl.class);
+            mysqlConnect.open(BranchControl.class);
             String sql = "select KICCopy" + kicNo + " from branch limit 1";
             try (
-                    ResultSet rs = mysql.executeQuery(sql)) {
+                    ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     form = rs.getString(1);
                 }
@@ -181,7 +181,7 @@ public class BranchControl {
         } catch (SQLException e) {
             AppLogUtil.log(BranchControl.class, "error", e);
         } finally {
-            mysql.closeConnection(BranchControl.class);
+            mysqlConnect.closeConnection(BranchControl.class);
         }
 
         return form;

@@ -15,7 +15,7 @@ import com.softpos.util.MSG;
 public class TerminalRep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public TerminalRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -170,18 +170,18 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
          * * OPEN CONNECTION **
          */
         
-        mysql.closeConnection(this.getClass());
-        mysql.open(this.getClass());
+        mysqlConnect.closeConnection(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from billno "
                     + "where b_macno='" + txtMacNo.getText() + "' "
                     + "order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT ,sum(B_NetDiff) B_NetDiff from billno where b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
-            ResultSet rsGetEntertain = mysql.executeQuery(sqlGetEntertainPay);
+            ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
             String sqlSumBillno = "select count(B_Refno) b_refno from billno where b_entertain<>'0' and b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
-            ResultSet rsGetSumBillno = mysql.executeQuery(sqlSumBillno);
+            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
@@ -332,7 +332,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile "
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='I' ";
@@ -349,7 +349,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from paidiofile "
                     + "where terminal='" + txtMacNo.getText() + "' "
                     + "and flage='O' ";
@@ -366,7 +366,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         }
 
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_sale where r_void='V' ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
@@ -379,7 +379,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(TerminalRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         prn.printTerminalEngForm(frec, CrArray, txtMacNo.getText());

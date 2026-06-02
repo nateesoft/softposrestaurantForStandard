@@ -11,15 +11,15 @@ import com.softpos.util.AppLogUtil;
 
 public class TCuponControl {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<TCuponBean> listTCupon() {
         List<TCuponBean> listBean = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from t_cupon";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TCuponBean bean = new TCuponBean();
@@ -43,7 +43,7 @@ public class TCuponControl {
 
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -52,11 +52,11 @@ public class TCuponControl {
     public List<TCuponBean> listTCupon(String R_Index) {
         List<TCuponBean> listBean = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from t_cupon "
                     + "where R_Index='" + R_Index + "'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TCuponBean bean = new TCuponBean();
@@ -81,7 +81,7 @@ public class TCuponControl {
 
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listBean;
@@ -93,10 +93,10 @@ public class TCuponControl {
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from t_cupon where R_Index='" + R_Index + "' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 bean = new TCuponBean();
@@ -118,7 +118,7 @@ public class TCuponControl {
 
             AppLogUtil.log(TCuponControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return bean;

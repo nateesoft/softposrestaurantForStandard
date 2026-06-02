@@ -19,7 +19,7 @@ public class PosControl {
     private static POSConfigSetup posConfigSetup = null;
     private static POSHWSetup poshwsetup = null;
     private static PosUserBean posUser = null;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public static void resetPosHwSetup() {
         poshwsetup = null;
@@ -39,9 +39,9 @@ public class PosControl {
 
     public void logout() {
         
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
-            try (Statement stmt = mysql.getConnection().createStatement()) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._RealUser + "')";
                 stmt.executeUpdate(sql1);
 
@@ -57,7 +57,7 @@ public class PosControl {
             AppLogUtil.log(PosControl.class, "error", e);
             System.exit(0);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
     }
 
@@ -69,10 +69,10 @@ public class PosControl {
         if (posUser != null) {
             return posUser;
         }
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
             String sql = "select * from posuser where username='" + username + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     posUser = new PosUserBean();
                     posUser.setUserName(rs.getString("username"));
@@ -250,17 +250,17 @@ public class PosControl {
 
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
 
         return posUser;
     }
 
     public PosUserBean getPosUserToVoid(String username) {
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
             String sql = "select * from posuser where username='" + username + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     posUser = new PosUserBean();
                     posUser.setUserName(rs.getString("username"));
@@ -280,7 +280,7 @@ public class PosControl {
 
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
 
         return posUser;
@@ -290,10 +290,10 @@ public class PosControl {
         if (companyBean != null) {
             return companyBean;
         }
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
             String sql = "select * from company limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     companyBean = new CompanyBean();
                     companyBean.setCode(rs.getString("Code"));
@@ -349,7 +349,7 @@ public class PosControl {
 
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
 
         return companyBean;
@@ -359,10 +359,10 @@ public class PosControl {
         if (posConfigSetup != null) {
             return posConfigSetup;
         }
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
             String sql = "select * from posconfigsetup limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     posConfigSetup = new POSConfigSetup();
                     posConfigSetup.setP_Terminal(rs.getString("P_Terminal"));
@@ -431,7 +431,7 @@ public class PosControl {
         } catch (SQLException e) {
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
 
         return posConfigSetup;
@@ -441,10 +441,10 @@ public class PosControl {
         if (poshwsetup != null) {
             return poshwsetup;
         }
-        mysql.open(PosControl.class);
+        mysqlConnect.open(PosControl.class);
         try {
             String sql = "select * from poshwsetup where terminal='" + macno + "' limit 1";
-            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     poshwsetup = new POSHWSetup();
                     poshwsetup.setTerminal(rs.getString("macno"));
@@ -506,7 +506,7 @@ public class PosControl {
 
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
 
         return poshwsetup;
@@ -552,9 +552,9 @@ public class PosControl {
 
     public void posHwSetupOnAct(String Onact) {
         try {
-            mysql.open(PosControl.class);
+            mysqlConnect.open(PosControl.class);
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             if (stmt.executeUpdate(sql) > 0) {
                 // reset load poshwsetup
                 PosControl.resetPosHwSetup();
@@ -563,7 +563,7 @@ public class PosControl {
         } catch (SQLException e) {
             AppLogUtil.log(ShowTable.class, "error", e);
         } finally {
-            mysql.closeConnection(PosControl.class);
+            mysqlConnect.closeConnection(PosControl.class);
         }
     }
 

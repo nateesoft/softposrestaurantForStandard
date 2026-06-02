@@ -8,18 +8,18 @@ import com.softpos.util.AppLogUtil;
 
 public class DatabaseConnection {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public boolean execUpdate(String sql) {
         
-        mysql.open(DatabaseConnection.class);
+        mysqlConnect.open(DatabaseConnection.class);
         try {
-            return mysql.executeUpdate(sql) > 0;
+            return mysqlConnect.executeUpdate(sql) > 0;
         } catch (Exception e) {
             AppLogUtil.log(DatabaseConnection.class, "error", e);
             return false;
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
     }
 
@@ -27,8 +27,8 @@ public class DatabaseConnection {
         if (sqls == null || sqls.isEmpty()) {
             return true;
         }
-        mysql.open(DatabaseConnection.class);
-        try (Statement stmt = mysql.getConnection().createStatement()) {
+        mysqlConnect.open(DatabaseConnection.class);
+        try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
             for (String sql : sqls) {
                 stmt.addBatch(sql);
             }
@@ -38,7 +38,7 @@ public class DatabaseConnection {
             AppLogUtil.log(DatabaseConnection.class, "error", e);
             return false;
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
     }
 

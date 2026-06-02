@@ -22,15 +22,15 @@ import java.util.List;
  */
 public class sendMenuButttonToBorController {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<sendMgrButtonToBorBean> sendMGRButtonSetupToBor() {
         List listMGRButtonSetup = new ArrayList();
         try {
             
-            mysql.open(sendMenuButttonToBorController.class);
+            mysqlConnect.open(sendMenuButttonToBorController.class);
             String sqlGetMenuLocal = "select * from mgrbuttonsetup;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlGetMenuLocal);
             while (rs.next()) {
                 sendMgrButtonToBorBean bean = mappingBeanMGRButton(rs);
@@ -38,7 +38,7 @@ public class sendMenuButttonToBorController {
             }
             rs.close();
             stmt.close();
-            mysql.close();
+            mysqlConnect.close();
         } catch (SQLException e) {
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }
@@ -68,9 +68,9 @@ public class sendMenuButttonToBorController {
     public List<sendSoft_MenustupBean> sendDataSoft_menusetupToBor() {
         List listSoft_menusetupSetup = new ArrayList();
         try {
-            mysql.open(sendMenuButttonToBorController.class);
+            mysqlConnect.open(sendMenuButttonToBorController.class);
             String sqlGetMenuLocal = "select * from soft_menusetup;";
-            Statement stmt1 = mysql.getConnection().createStatement();
+            Statement stmt1 = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt1.executeQuery(sqlGetMenuLocal);
             while (rs1.next()) {
                 sendSoft_MenustupBean bean = mappingsendSoft_Menusetup(rs1);
@@ -78,7 +78,7 @@ public class sendMenuButttonToBorController {
             }
             rs1.close();
             stmt1.close();
-            mysql.close();
+            mysqlConnect.close();
         } catch (SQLException e) {
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         }

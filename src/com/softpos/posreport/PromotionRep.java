@@ -32,7 +32,7 @@ public class PromotionRep extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     private final Value Value = new Value();
@@ -248,9 +248,9 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                      * * OPEN CONNECTION **
                      */
                     
-                    mysql.open(this.getClass());
+                    mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysql.getConnection().createStatement();
+                        Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select prtype,prcode,sum(pqty),sum(pramt),protab.prodesc from t_promotion left join protab on procode=prcode "
                                 + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by prcode order by prcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
@@ -266,7 +266,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(PromotionRep.class, "error", e);
                     } finally {
-                        mysql.closeConnection(this.getClass());
+                        mysqlConnect.closeConnection(this.getClass());
                     }
 
                     prn.print("----------------------------------------");
@@ -288,7 +288,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     public void PrintPromotionDriver(String MacNo1, String MacNo2) {
         String t = "";
         try {
-            mysql.open(this.getClass());
+            mysqlConnect.open(this.getClass());
 
             if (POSHW.getHeading1().trim().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -326,7 +326,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "left join protab pt on tp.prcode = pt.ProCode "
                     + "where tp.terminal between'" + MacNo1 + "' and'" + MacNo2 + "' "
                     + "group by tp.prcode";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + rs.getString("PrCode") + Space + rs.getString("ProDesc") + "_";
                 t += "colspan=1 align=right><font face=Angsana New size=1>" + Space + rs.getString("PQty") + "</td></font><td colspan=2 align=right><font face=Angsana New size=1>" + rs.getString("PrAmt") + "_";
@@ -338,7 +338,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(PromotionRep.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         PrintDriver pd = new PrintDriver();

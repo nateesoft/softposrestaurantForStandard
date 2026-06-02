@@ -18,7 +18,7 @@ public class ProductControl {
     public static final int PRODUCT_NOT_ACTIVE = 2;
 
     private static List<ProductBean> listAll = null;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public ProductControl() {
         dataProduct = new ArrayList<>();
@@ -61,8 +61,8 @@ public class ProductControl {
             listAll = new ArrayList<>();
             
             try {
-                mysql.open(ProductControl.class);
-                ResultSet rs = mysql.executeQuery("select * from product where pactive='Y'");
+                mysqlConnect.open(ProductControl.class);
+                ResultSet rs = mysqlConnect.executeQuery("select * from product where pactive='Y'");
                 while (rs.next()) {
                     ProductBean bean = new ProductBean();
                     bean.setPCode(rs.getString("PCode"));
@@ -126,7 +126,7 @@ public class ProductControl {
             } catch (SQLException e) {
 
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
 
@@ -139,9 +139,9 @@ public class ProductControl {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 productBean.setPCode(rs.getString("PCode"));
                 productBean.setPFix(rs.getString("PFix"));
@@ -204,20 +204,20 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return productBean;
     }
 
     public List<ProductBean> searchAllProductBy(String PCode) {
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             PCode = ThaiUtil.Unicode2ASCII(PCode);
             String sql = "select * from product "
                     + "where PCode like '%" + PCode + "%' "
                     + "or PDesc like '%" + PCode + "%'";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
                 p = new ProductBean();
@@ -283,7 +283,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -295,7 +295,7 @@ public class ProductControl {
             return arrList;
         }
 
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             key = ThaiUtil.Unicode2ASCII(key);
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
@@ -305,7 +305,7 @@ public class ProductControl {
                     + "and PActive='Y' and PFix='F' "
                     + "group by PCode "
                     + "limit 0, 20";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
                 product.setPCode(rs.getString("PCode"));
@@ -327,7 +327,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return arrList;
@@ -339,7 +339,7 @@ public class ProductControl {
             return arrList;
         }
 
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             key = ThaiUtil.Unicode2ASCII(key);
             String sql = "select MenuItem, PCode, PGroup, PDesc, PUnit1, "
@@ -352,7 +352,7 @@ public class ProductControl {
                     + "and MenuItem like '%" + key + "%' "
                     + "order by MenuItem "
                     + "limit 0,20";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
@@ -375,17 +375,17 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return arrList;
     }
 
     public List<ProductBean> getAllProductByGroup(String PGroup) {
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             ProductBean p;
             while (rs.next()) {
                 p = new ProductBean();
@@ -450,7 +450,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -458,10 +458,10 @@ public class ProductControl {
 
     public boolean productExist(String PCode) {
         boolean isExist = false;
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select PCode from product where PCode='" + PCode + "' limit 1";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
@@ -470,7 +470,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isExist;
@@ -481,10 +481,10 @@ public class ProductControl {
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select PCode from outstocklist where PCode='" + PCode + "' limit 1";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
             }
@@ -493,7 +493,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isExist;
@@ -501,11 +501,11 @@ public class ProductControl {
 
     public boolean checkProductItem(String menuCode) {
         boolean isProduct = false;
-        mysql.open(ProductControl.class);
+        mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
-            try (ResultSet rs = mysql.executeQuery(sql)) {
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     isProduct = true;
                 }
@@ -515,7 +515,7 @@ public class ProductControl {
 
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
-            mysql.closeConnection(ProductControl.class);
+            mysqlConnect.closeConnection(ProductControl.class);
         }
 
         return isProduct;

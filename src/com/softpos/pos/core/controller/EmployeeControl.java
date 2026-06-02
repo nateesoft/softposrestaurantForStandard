@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class EmployeeControl {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private List<EmployeeBean> listAll = null;
 
     public List<EmployeeBean> initLoadEmployeeList() {
@@ -23,8 +23,8 @@ public class EmployeeControl {
             listAll = new ArrayList<>();
             
             try {
-                mysql.open(this.getClass());
-                ResultSet rs = mysql.executeQuery("select * from employ");
+                mysqlConnect.open(this.getClass());
+                ResultSet rs = mysqlConnect.executeQuery("select * from employ");
                 while (rs.next()) {
                     EmployeeBean bean = new EmployeeBean();
                     bean.setCode(rs.getString("code"));
@@ -38,7 +38,7 @@ public class EmployeeControl {
             } catch (SQLException e) {
 
             } finally {
-                mysql.closeConnection(this.getClass());
+                mysqlConnect.closeConnection(this.getClass());
             }
         }
 
@@ -60,11 +60,11 @@ public class EmployeeControl {
 
     public boolean getEmployeeByCode(String code) {
         boolean isValid = false;
-        mysql.open(EmployeeControl.class);
+        mysqlConnect.open(EmployeeControl.class);
         try {
             String sql = "select code,name from employ "
                     + "where Code='" + code + "' limit 1;";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 isValid = true;
@@ -74,7 +74,7 @@ public class EmployeeControl {
         } catch (SQLException e) {
 
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return isValid;

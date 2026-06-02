@@ -16,7 +16,7 @@ public class ControlMenu {
 
     private final List<CompanyMenu> companyMenu;
     private int size;
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PosControl PosControl = AppContext.getPosControl();
 
     public ControlMenu() {
@@ -60,7 +60,7 @@ public class ControlMenu {
     public List<ProductBean> getMenuItem(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
                     + "PPrice14, PPrice15, Code_Type, PPathName "
@@ -68,7 +68,7 @@ public class ControlMenu {
                     + "where m.PCode=p.PCode AND Code_ID like '" + item + "E%' "
                     + "and PActive='Y' and PFix='F' "
                     + "group by PCode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
@@ -93,7 +93,7 @@ public class ControlMenu {
             
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return dataProduct;
@@ -101,14 +101,14 @@ public class ControlMenu {
 
     public List<ProductBean> getMenuItem2(String item) {
         List<ProductBean> dataProduct = new ArrayList<>();
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
                     + "PPrice14, PPrice15, Code_Type, PPathName "
                     + "from menusetup m, product p "
                     + "where m.PCode=p.PCode "
                     + "group by PCode";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 ProductBean product = new ProductBean();
@@ -131,19 +131,19 @@ public class ControlMenu {
             
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return dataProduct;
     }
 
     public List<MenuSetup> menuAt(String index) {
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         String sql = "select * from menusetup where Code_ID like '" + index + "%' "
                 + "and length(Code_ID)=3 group by Code_Id order by Code_Id";
         List<MenuSetup> menuAll = new ArrayList<>();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 MenuSetup ms = new MenuSetup();
@@ -161,17 +161,17 @@ public class ControlMenu {
             
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return menuAll;
     }
 
     public List<MenuSetup> menuItemAt(String Code_ID) {
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID limit 1";
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 String Code_Type = rs.getString("Code_Type");
@@ -203,7 +203,7 @@ public class ControlMenu {
 
         List<MenuSetup> menuAll = new ArrayList<>();
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             String prefix = "TEST";
             int count = 0;
@@ -230,7 +230,7 @@ public class ControlMenu {
             
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return menuAll;
@@ -244,7 +244,7 @@ public class ControlMenu {
             ThaiUtil.ASCII2Unicode(companyBean.getHead3()),
             ThaiUtil.ASCII2Unicode(companyBean.getHead4()),};
 
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql;
             CompanyMenu headMenu;
@@ -260,7 +260,7 @@ public class ControlMenu {
                             + "where code_id like '" + mmenu[index] + "%' "
                             + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
                             + "group by Code_ID";
-                    Statement stmt1 = mysql.getConnection().createStatement();
+                    Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     ResultSet rs1 = stmt1.executeQuery(sql);
                     while (rs1.next()) {
                         MenuSetup menu = new MenuSetup();
@@ -275,7 +275,7 @@ public class ControlMenu {
                                 + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
                                 + "and shortName<>'' "
                                 + "group by Code_ID";
-                        Statement stmt2 = mysql.getConnection().createStatement();
+                        Statement stmt2 = mysqlConnect.getConnection().createStatement();
                         ResultSet rs2 = stmt2.executeQuery(sqlProduct);
                         while (rs2.next()) {
                             ProductBean product = new ProductBean();
@@ -302,7 +302,7 @@ public class ControlMenu {
             
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return companyMenu;
@@ -387,10 +387,10 @@ public class ControlMenu {
 
     public String getMenuItemAt(String pCode) {
         String menuAt = "";
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
             String sql = "select MenuItem from menulist where PLUCode='" + pCode + "' and MenuActive='Y' limit 1";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 menuAt = rs.getString("MenuItem");
@@ -400,7 +400,7 @@ public class ControlMenu {
         } catch (SQLException e) {
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return menuAt;

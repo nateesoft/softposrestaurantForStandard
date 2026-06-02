@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class PKicTran {
     
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl BranchControl = AppContext.getBranchControl();
 
     public void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
@@ -37,7 +37,7 @@ public class PKicTran {
         String time = dc.GetCurrentTime();
         try {
             
-            mysql.open();
+            mysqlConnect.open();
             if (bill.size() > 0) {
                 for (int i = 0; i < bill.size(); i++) {
                     kicItemNo++;
@@ -53,12 +53,12 @@ public class PKicTran {
                             + " '00:00:00', '', '" + bill.get(i).getR_ETD() + "', '" + bill.get(i).getR_Quan() + "', 'N',"
                             + " 'N', '00:00:00', '00:00:00', 'N', '',"
                             + " '00:00:00', '00:00:00', ''); ";
-                    mysql.executeUpdate(sqlINSKictran);
+                    mysqlConnect.executeUpdate(sqlINSKictran);
                     BranchControl.updateKicItemNo();
                 }
             }
 
-            mysql.close();
+            mysqlConnect.close();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -69,14 +69,14 @@ public class PKicTran {
         List<PKicTranBean> list = new ArrayList();
         
         try {
-            mysql.open();
+            mysqlConnect.open();
             String sql = "select pitemno, pcode, pindex, ptable, ptimein, pqty,"
                     + " pflage, petd,R_UrgentFoodItemName "
                     + "from kictran "
                     + "where ptable='" + tableNo + "' "
                     + "and pflage='N' "
                     + "order by pitemno,petd;";
-            ResultSet rs = mysql.executeQuery(sql);
+            ResultSet rs = mysqlConnect.executeQuery(sql);
 
             ProductControl ProductControl = AppContext.getProductControl();
             while (rs.next()) {
@@ -122,7 +122,7 @@ public class PKicTran {
         } catch (SQLException | ParseException e) {
             AppLogUtil.log(PKicTran.class, "error", e);
         } finally {
-            mysql.close();
+            mysqlConnect.close();
         }
         
         return list;
@@ -144,23 +144,23 @@ public class PKicTran {
 
     public void updateKicTranDisplay(String status, String tableNo, String pcode, String pindex) {
         try {
-            mysql.open();
+            mysqlConnect.open();
             String sql = "";
             if (pindex.equals("")) {
                 sql = "update kictran set R_ShowDisplayAlert='" + status + "' where ptable='" + tableNo + "';";
                 if (status.equals("Y")) {
                     sql = "update kictran set R_ShowDisplayAlert='" + status + "',R_AlertKitchen='Y' where ptable='" + tableNo + "';";
                 }
-                mysql.executeUpdate(sql);
+                mysqlConnect.executeUpdate(sql);
             } else {
                 sql = "update kictran set R_ShowDisplayAlert='" + status + "' where ptable='" + tableNo + "'and pcode='" + pcode + "' and pindex='" + pindex + "';";
                 if (status.equals("Y")) {
                     sql = "update kictran set R_ShowDisplayAlert='" + status + "',R_AlertKitchen='Y' where ptable='" + tableNo + "' and pcode='" + pcode + "' and pindex='" + pindex + "';";
                 }
-                mysql.executeUpdate(sql);
+                mysqlConnect.executeUpdate(sql);
             }
 
-            mysql.close();
+            mysqlConnect.close();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

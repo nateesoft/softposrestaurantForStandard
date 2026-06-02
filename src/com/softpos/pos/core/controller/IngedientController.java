@@ -14,19 +14,19 @@ import java.util.List;
  */
 public class IngedientController {
 
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<PIngredientBean> getIngredient(String pluCode) {
         List<PIngredientBean> listIng = new ArrayList<>();
         
         try {
-            mysql.open(IngedientController.class);
+            mysqlConnect.open(IngedientController.class);
             String sql2 = "select i.*,pdesc,PBPack,pstock,pactive "
                     + "from product p, pingredent i "
                     + "where p.pcode=i.pingcode "
                     + "and i.pcode='" + pluCode + "' "
                     + "and PFix='L' and PStock='Y'";
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql2);
             while (rs.next()) {
                 PIngredientBean bean = new PIngredientBean();
@@ -42,7 +42,7 @@ public class IngedientController {
             stmt.close();
         } catch (SQLException e) {
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         return listIng;

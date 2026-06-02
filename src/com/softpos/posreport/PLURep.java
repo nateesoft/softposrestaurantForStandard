@@ -4,7 +4,6 @@ import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PluRec;
-import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -17,7 +16,7 @@ import com.softpos.util.MSG;
 public class PLURep extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
-    private final MySQLConnect mysql = new MySQLConnect();
+    private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
     public PLURep(java.awt.Frame parent, boolean modal) {
@@ -726,9 +725,9 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
          * * OPEN CONNECTION **
          */
         
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select *from t_sale where macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
                     + "and cashier between '" + CashNo1 + "' and '" + CashNo2 + "' "
                     + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
@@ -916,7 +915,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
 
         Jdi_report_SalePLU view = new Jdi_report_SalePLU(null, true);
@@ -1257,9 +1256,9 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         /**
          * * OPEN CONNECTION **
          */
-        mysql.open(this.getClass());
+        mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysql.getConnection().createStatement();
+            Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from t_sale "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
@@ -1451,7 +1450,7 @@ private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
-            mysql.closeConnection(this.getClass());
+            mysqlConnect.closeConnection(this.getClass());
         }
         prn.printPlu(GArray);
         txtMacNo1.requestFocus();
