@@ -68,13 +68,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
+import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.Option;
 
@@ -111,12 +110,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         POSHWSetup poshw;
         POSConfigSetup config;
         PosUserBean posUser;
+        CompanyBean companyBean;
     }
 
     public FloorPlanDialog() {
         setUndecorated(true);
         initComponents();
 
+        // Show loading overlay while DB data loads
+        LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
+        
         // Pure UI setup — no DB calls
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         Value.TableSelected = "";
@@ -128,7 +131,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         MShowDailyEJ1.setVisible(false);
         jMenuItem38.setVisible(false);
 
-        // Load DB data off the EDT
         new SwingWorker<FloorInitData, Void>() {
             @Override
             protected FloorInitData doInBackground() {
@@ -136,18 +138,20 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 d.poshw = POSHWSetup.Bean(Value.MACNO);
                 d.config = POSConfigSetup.Bean();
                 d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
+                d.companyBean = PosControl.getDataCompany();
                 productControl.initLoadProductActive();
                 return d;
             }
 
             @Override
             protected void done() {
+                LoadingOverlay.hide(FloorPlanDialog.this);
                 try {
                     FloorInitData d = get();
                     POSHW = d.poshw;
                     CONFIG = d.config;
                     posUser = d.posUser;
-                    loadHeaderTab();
+                    loadHeaderTab(d.companyBean);
                 } catch (InterruptedException | ExecutionException ex) {
                     AppLogUtil.log(FloorPlanDialog.class, "error", ex);
                 }
@@ -1149,7 +1153,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         SetupFloorPlanHeader setup = new SetupFloorPlanHeader(this, true);
         setup.setVisible(true);
 
-        loadHeaderTab();
+        loadHeaderTab(PosControl.getDataCompany());
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -1821,11 +1825,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     }
 
-    private void loadHeaderTab() {
+    private void loadHeaderTab(CompanyBean companyBean) {
 
         btnZone1.setBackground(Color.green);
 
-        CompanyBean companyBean = PosControl.getDataCompany();
         String[] floorTab = new String[]{
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()),
             ThaiUtil.ASCII2Unicode(companyBean.getFloorTab2()),
@@ -2111,7 +2114,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         for (int i = 0; i < buttons.length; i++) {
             setupButtonStyle(buttons[i], i);
         }
-        resetButton();
     }
 
     private void resetButton() {
@@ -2277,37 +2279,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
             }
         }
-    }
-
-    public JPanel getPanelImage(JLabel lbCust, final JLabel lbTable, JButton btnIcon) {
-        //config layout
-        JPanel pnButton = new JPanel();
-        pnButton.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        lbCust.setFont(new java.awt.Font("Tahoma", 1, 10));
-        lbCust.setForeground(new java.awt.Color(0, 0, 204));
-        lbCust.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbCust.setText("C(0) T(1,500)");
-        pnButton.add(lbCust, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 80, 30));
-
-        lbTable.setFont(new java.awt.Font("Tahoma", 1, 12));
-        lbTable.setForeground(new java.awt.Color(0, 0, 204));
-        lbTable.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTable.setText("TABLE: 101");
-        pnButton.add(lbTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 80, 30));
-
-        btnIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_void.png")));
-        btnIcon.setSize(70, 70);
-        btnIcon.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MSG.ERR(new JFrame(), lbTable.getText());
-            }
-        });
-
-        pnButton.add(btnIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 80));
-
-        return pnButton;
     }
 
     boolean checkEJPath() {

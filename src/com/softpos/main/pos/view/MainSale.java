@@ -79,10 +79,13 @@ import printReport.PrintSimpleForm;
 import soft.virtual.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
+import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.NumberUtil;
 import com.softpos.util.Option;
 import com.softpos.util.ValidateValue;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
 
 public class MainSale extends javax.swing.JDialog {
 
@@ -122,81 +125,112 @@ public class MainSale extends javax.swing.JDialog {
 
     private TableFileBean TableFileBean = null;
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
-    
+
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+
+    private static class MainSaleInitData {
+        PosUserBean posUser;
+        com.softpos.pos.core.model.TableFileBean tbBean;
+        MemberBean memberBean;
+        POSHWSetup poshw;
+        POSConfigSetup config;
+        BranchBean branchBean;
+    }
 
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
 
+        // Pure UI-only setup
         MMainMenu1.setVisible(true);
         jMenu2.setVisible(true);
-        txtDisplayDiscount.setVisible(true);
-        txtDiscount.setVisible(true);
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
 
         PublicVar.countRound = 0;
-        posUser = PosControl.getPosUser(PublicVar.ReturnString);
 
-        if (btnLangTH.isSelected()) {
-            PublicVar.languagePrint = "TH";
-        }
-        if (btnLangEN.isSelected()) {
-            PublicVar.languagePrint = "EN";
-        }
         if (tableNo.contains("(")) {
-            String T1 = tableNo.substring(0, tableNo.indexOf("("));
-            tableNo = T1;
+            tableNo = tableNo.substring(0, tableNo.indexOf("("));
         }
-
-        TableFileBean tbBean = tableFileControl.getData(tableNo);
-        this.memberBean = MemmaterController.getMember(tbBean.getMemCode());
-        if (memberBean == null) {
-            BalanceControl.updateProSerTable(tableNo, memberBean);
-        } else {
-            if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
-                BalanceControl.updateProSerTable(tableNo, memberBean);
-                txtMember1.setText(memberBean.getMember_NameThai());
-                txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
-            } else if (tbBean.getMemDiscAmt() != 0) {
-                BalanceControl.updateProSerTableMemVIP(tableNo, tbBean.getMemDisc());
-            }
-        }
-        txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
-
-        loadButtonProductMenu("A");
-
-        Value.MemberAlready = false;
-
-        POSHW = POSHWSetup.Bean(Value.MACNO);
-        CONFIG = POSConfigSetup.Bean();
-
-        initScreen();
-        BranchBean branchBean = BranchControl.getData();
-        if (branchBean.getLocation_Area().equals("02")) {
-            txtShowETD.setText("T");
-        }
-
-        this.tableNo = tableNo;
-        txtTable.setText(tableNo);
-
-        empControl.initLoadEmployeeList();
-        productControl.initLoadProductActive();
-        loadTableBalance(txtTable.getText());
-
-        historyBack = new ArrayList<>();
 
         java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, screen.width, screen.height);
-        sumSplit();
-        txtProductCode.setEditable(true);
-        txtProductCode.setFocusable(true);
-        txtProductCode.requestFocus();
-        upDateTableFile();
-        showCustomerInput();
+
+        LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
+
+        final String tNo = tableNo;
+        new SwingWorker<MainSaleInitData, Void>() {
+            @Override
+            protected MainSaleInitData doInBackground() {
+                MainSaleInitData d = new MainSaleInitData();
+                d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
+                d.tbBean = tableFileControl.getData(tNo);
+                d.memberBean = MemmaterController.getMember(d.tbBean.getMemCode());
+                d.poshw = POSHWSetup.Bean(Value.MACNO);
+                d.config = POSConfigSetup.Bean();
+                d.branchBean = BranchControl.getData();
+                empControl.initLoadEmployeeList();
+                productControl.initLoadProductActive();
+                return d;
+            }
+
+            @Override
+            protected void done() {
+                LoadingOverlay.hide(MainSale.this);
+                try {
+                    MainSaleInitData d = get();
+                    posUser = d.posUser;
+                    memberBean = d.memberBean;
+                    POSHW = d.poshw;
+                    CONFIG = d.config;
+
+                    if (btnLangTH.isSelected()) {
+                        PublicVar.languagePrint = "TH";
+                    }
+                    if (btnLangEN.isSelected()) {
+                        PublicVar.languagePrint = "EN";
+                    }
+
+                    if (memberBean == null) {
+                        BalanceControl.updateProSerTable(tNo, null);
+                    } else {
+                        if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
+                            BalanceControl.updateProSerTable(tNo, memberBean);
+                            txtMember1.setText(memberBean.getMember_NameThai());
+                            txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
+                        } else if (d.tbBean.getMemDiscAmt() != 0) {
+                            BalanceControl.updateProSerTableMemVIP(tNo, d.tbBean.getMemDisc());
+                        }
+                    }
+                    txtDiscount.setText("- " + BalanceControl.GetDiscount(tNo));
+
+                    loadButtonProductMenu("A");
+                    Value.MemberAlready = false;
+
+                    initScreen();
+                    if (d.branchBean.getLocation_Area().equals("02")) {
+                        txtShowETD.setText("T");
+                    }
+
+                    MainSale.this.tableNo = tNo;
+                    txtTable.setText(tNo);
+
+                    loadTableBalance(tNo);
+                    historyBack = new ArrayList<>();
+                    sumSplit();
+                    txtProductCode.setEditable(true);
+                    txtProductCode.setFocusable(true);
+                    txtProductCode.requestFocus();
+                    upDateTableFile();
+                    showCustomerInput();
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    AppLogUtil.log(MainSale.class, "error", ex);
+                }
+            }
+        }.execute();
     }
 
     @SuppressWarnings("static-access")
@@ -1141,7 +1175,6 @@ public class MainSale extends javax.swing.JDialog {
     private void tableOpened() {
         if (!txtTable.getText().trim().equals("")) {
             txtTableOnExit();
-            showSum();
             if (!CONFIG.getP_EmpUse().equals("Y")) {
                 if (PublicVar.TableRec_TCustomer == 0) {
                     txtCust.setEditable(true);
@@ -2762,6 +2795,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                         + "where tcode='" + txtTable.getText().trim() + "'";
                 databaseConnection.execUpdate(UpdateTable);
                 tbpMain.setSelectedIndex(0);
+
+                //คำนวณ promotion/service/vat ก่อน load ข้อมูล
+                this.memberBean = MemmaterController.getMember(tableFileBean.getMemCode());
+                BalanceControl.updateProSerTable(txtTable.getText().trim(), memberBean);
 
                 //load data to table
                 loadTableBalance(txtTable.getText());

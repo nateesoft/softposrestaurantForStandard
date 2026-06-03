@@ -29,8 +29,6 @@ import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.TableFileBean;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -39,10 +37,14 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import printReport.PrintSimpleForm;
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
+import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.NumberFormat;
 import com.softpos.util.NumberUtil;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
 
 public class CheckBill extends javax.swing.JDialog {
 
@@ -69,18 +71,21 @@ public class CheckBill extends javax.swing.JDialog {
     public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
         initComponents();
-        DecimalFormat intFM = new DecimalFormat("##0");
+
+        // Pure UI setup
+        DecimalFormat scoreFmt = new DecimalFormat("##0");
         lblTableNo.setText(ThaiUtil.ASCII2Unicode(tableNo));
-        setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
-        Dimension d = getMaximumSize();
-        setSize(1024, 768);
-        setLocationRelativeTo(null);
+
+        java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(0, 0, screen.width, screen.height);
+
         PublicVar.temp_table = tableNo;
         this.memberBean = memberBean;
         this.tableNo = tableNo;
+
         if (memberBean != null) {
             txtMember1.setText(ThaiUtil.ASCII2Unicode(memberBean.getMember_NameThai()));
-            txtMember2.setText("แต้มสะสม" + intFM.format(memberBean.getMember_TotalScore()));
+            txtMember2.setText("แต้มสะสม" + scoreFmt.format(memberBean.getMember_TotalScore()));
         } else {
             txtMember1.setText("ค้นหาสมาชิก");
             txtMember2.setText("แต้มสะสม 0 แต้ม");
@@ -94,15 +99,30 @@ public class CheckBill extends javax.swing.JDialog {
         txtTotalService.setVisible(true);
         jPanelDiscount.setVisible(true);
         lbCreditMoney.setVisible(false);
-        jLabel11.setVisible(false);
         lbCreditAmt.setVisible(false);
         jPanel3.setVisible(false);
         bntPrintCheckBill.setVisible(false);
-        BalanceControl.updateProSerTable(tableNo, memberBean);
-        initTable();
 
-        java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(0, 0, screen.width, screen.height);
+        LoadingOverlay.show(this, "กำลังคำนวณยอดบิล...");
+
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                BalanceControl.updateProSerTable(tableNo, memberBean);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                LoadingOverlay.hide(CheckBill.this);
+                try {
+                    get();
+                    initTable();
+                } catch (InterruptedException | ExecutionException ex) {
+                    AppLogUtil.log(CheckBill.class, "error", ex);
+                }
+            }
+        }.execute();
     }
 
     @SuppressWarnings("unchecked")

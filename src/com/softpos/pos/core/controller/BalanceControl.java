@@ -722,55 +722,46 @@ public class BalanceControl {
 
             for (int i = 0; i <= 2; i++) {
                 if (i == 0) {
-                    sql = "select "
-                            + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total,"
-                            + "sum(b.r_pramt) sumr_pramt,"
-                            + "sum(b.R_PrCuAmt) sumr_prcuamt,"
-                            + "r_etd,"
-                            + "b.* "
+                    sql = "select g.sumr_quan,g.sumr_total,g.sumr_pramt,g.sumr_prcuamt,b.* "
                             + "from balance b "
+                            + "inner join ("
+                            + "select min(R_Index) min_index,"
+                            + "sum(r_quan) sumr_quan,sum(r_total) sumr_total,"
+                            + "sum(r_pramt) sumr_pramt,sum(R_PrCuAmt) sumr_prcuamt "
+                            + "from balance "
                             + "where r_table='" + table + "' "
-                            + "and r_void<>'V' "
-                            + "and r_plucode<>'8899' "
-                            + "and r_normal='N' "
-                            + "group by r_plucode,r_pname,r_etd "
-                            + "order by r_etd,r_normal,r_type,r_index,"
-                            + "r_time";
+                            + "and r_void<>'V' and r_plucode<>'8899' and r_normal='N' "
+                            + "group by r_plucode,r_pname,r_etd"
+                            + ") g on b.R_Index=g.min_index "
+                            + "order by b.r_etd,b.r_normal,b.r_type,b.r_index,b.r_time";
                 }
                 if (i == 1) {
-                    sql = "select "
-                            + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total,"
-                            + "sum(b.r_pramt) sumr_pramt,"
-                            + "sum(b.R_PrCuAmt) sumr_prcuamt,"
-                            + "r_etd,"
-                            + "b.* "
+                    sql = "select g.sumr_quan,g.sumr_total,g.sumr_pramt,g.sumr_prcuamt,b.* "
                             + "from balance b "
+                            + "inner join ("
+                            + "select min(R_Index) min_index,"
+                            + "sum(r_quan) sumr_quan,sum(r_total) sumr_total,"
+                            + "sum(r_pramt) sumr_pramt,sum(R_PrCuAmt) sumr_prcuamt "
+                            + "from balance "
                             + "where r_table='" + table + "' "
-                            + "and r_void<>'V' "
-                            + "and r_plucode<>'8899' "
-                            + "and r_normal='C' "
-                            + "group by r_plucode,r_pname,r_etd "
-                            + "order by r_etd,r_normal,r_type,r_index,"
-                            + "r_time";
+                            + "and r_void<>'V' and r_plucode<>'8899' and r_normal='C' "
+                            + "group by r_plucode,r_pname,r_etd"
+                            + ") g on b.R_Index=g.min_index "
+                            + "order by b.r_etd,b.r_normal,b.r_type,b.r_index,b.r_time";
                 }
                 if (i == 2) {
-                    sql = "select "
-                            + "sum(b.r_quan) sumr_quan,"
-                            + "sum(b.r_total) sumr_total"
-                            + ",sum(b.r_pramt) sumr_pramt,"
-                            + "sum(b.R_PrCuAmt) sumr_prcuamt"
-                            + ",r_etd,"
-                            + "b.* "
+                    sql = "select g.sumr_quan,g.sumr_total,g.sumr_pramt,g.sumr_prcuamt,b.* "
                             + "from balance b "
+                            + "inner join ("
+                            + "select min(R_Index) min_index,"
+                            + "sum(r_quan) sumr_quan,sum(r_total) sumr_total,"
+                            + "sum(r_pramt) sumr_pramt,sum(R_PrCuAmt) sumr_prcuamt "
+                            + "from balance "
                             + "where r_table='" + table + "' "
-                            + "and r_void<>'V' "
-                            + "and r_plucode<>'8899' "
-                            + "and r_normal='S' "
-                            + "group by r_plucode,r_pname,r_etd "
-                            + "order by r_etd,r_normal,r_type,r_index,"
-                            + "r_time";
+                            + "and r_void<>'V' and r_plucode<>'8899' and r_normal='S' "
+                            + "group by r_plucode,r_pname,r_etd"
+                            + ") g on b.R_Index=g.min_index "
+                            + "order by b.r_etd,b.r_normal,b.r_type,b.r_index,b.r_time";
                 }
                 try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                     double totalVat = 0;
