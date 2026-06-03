@@ -71,6 +71,7 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.LoadingOverlay;
@@ -95,6 +96,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private JButton[] buttons = new JButton[100];
     private PosUserBean posUser = null;
     private PPrint pPrint = new PPrint();
+    private Timer autoRefreshTimer;
+    private int countdownSeconds = 15;
+    private javax.swing.JLabel lblCountdown;
 
     private final ProductControl productControl = AppContext.getProductControl();
     private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
@@ -116,6 +120,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     public FloorPlanDialog() {
         setUndecorated(true);
         initComponents();
+        setupAutoRefresh();
 
         // Show loading overlay while DB data loads
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
@@ -1863,6 +1868,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         // load in first time
         initLoadButtons();
         loadZone(zoneSelected);
+        autoRefreshTimer.start();
     }
 
     public void printCheckBillFromPDA() {
@@ -2155,6 +2161,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void loadZone(String zone) {
+        countdownSeconds = 15;
+        updateCountdownLabel();
         this.zoneSelected = zone;
         listFloorPlan = tableSetupControl.getTableSetup(zoneSelected);
 
@@ -2176,7 +2184,65 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     public void exit() {
+        if (autoRefreshTimer != null) {
+            autoRefreshTimer.stop();
+        }
         this.setVisible(false);
+    }
+
+    private void setupAutoRefresh() {
+        lblCountdown = new javax.swing.JLabel("  รีเฟรช: 15s  ");
+        lblCountdown.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblCountdown.setForeground(new Color(200, 255, 200));
+        lblCountdown.setOpaque(true);
+        lblCountdown.setBackground(new Color(40, 110, 40));
+        lblCountdown.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            javax.swing.BorderFactory.createLineBorder(new Color(0, 180, 0), 1),
+            javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
+        ));
+        jPanel1.add(lblCountdown);
+
+        autoRefreshTimer = new Timer(1000, e -> {
+            countdownSeconds--;
+            if (countdownSeconds <= 0) {
+                countdownSeconds = 15;
+                autoRefreshData();
+            }
+            updateCountdownLabel();
+        });
+    }
+
+    private void updateCountdownLabel() {
+        if (lblCountdown == null) {
+            return;
+        }
+        lblCountdown.setText("  รีเฟรช: " + countdownSeconds + "s  ");
+        if (countdownSeconds <= 5) {
+            lblCountdown.setBackground(new Color(180, 60, 0));
+            lblCountdown.setForeground(Color.WHITE);
+        } else {
+            lblCountdown.setBackground(new Color(40, 110, 40));
+            lblCountdown.setForeground(new Color(200, 255, 200));
+        }
+    }
+
+    private void autoRefreshData() {
+        new SwingWorker<List<FloorPlanBean>, Void>() {
+            @Override
+            protected List<FloorPlanBean> doInBackground() {
+                return tableSetupControl.getTableSetup(zoneSelected);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    listFloorPlan = get();
+                    addButton();
+                } catch (InterruptedException | ExecutionException ex) {
+                    AppLogUtil.log(FloorPlanDialog.class, "error", ex);
+                }
+            }
+        }.execute();
     }
 
     private class MouseFocusAction implements ActionListener {

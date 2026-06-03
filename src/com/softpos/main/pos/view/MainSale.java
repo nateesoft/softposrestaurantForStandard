@@ -1705,19 +1705,23 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         adjustFullScreenLayout();
-        if (tableNo.contains("T")) {
-            txtShowETD.setText("T");
-            changeSaleType("T");
-            txtTypeDesc.setText(SALE_TAKE_AWAY);
-        } else if (tableNo.contains("DE")) {
-            txtShowETD.setText("D");
-            changeSaleType("D");
-            txtTypeDesc.setText(SALE_Delivery);
-        } else if (tableNo.contains("E")) {
-            txtShowETD.setText("E");
-            changeSaleType("E");
-            txtTypeDesc.setText(SALE_DINE_IN);
+        
+        if(tableNo != null) {
+            if (tableNo.contains("T")) {
+                txtShowETD.setText("T");
+                changeSaleType("T");
+                txtTypeDesc.setText(SALE_TAKE_AWAY);
+            } else if (tableNo.contains("DE")) {
+                txtShowETD.setText("D");
+                changeSaleType("D");
+                txtTypeDesc.setText(SALE_Delivery);
+            } else if (tableNo.contains("E")) {
+                txtShowETD.setText("E");
+                changeSaleType("E");
+                txtTypeDesc.setText(SALE_DINE_IN);
+            }
         }
+        
         pMenu2.setVisible(false);
         pMenu3.setVisible(false);
         pMenu4.setVisible(false);
@@ -1732,10 +1736,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         isTakeOrder();
 
-        if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
-            CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
-            ccd.setVisible(true);
-        }
+//        if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
+//            CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+//            ccd.setVisible(true);
+//        }
     }//GEN-LAST:event_formWindowOpened
 
     private void jMenuBar11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuBar11MouseClicked
