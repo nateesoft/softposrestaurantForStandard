@@ -123,5 +123,10 @@ public class LoadingOverlay extends JPanel {
             ((LoadingOverlay) glass).stop();
         }
         glass.setVisible(false);
+        // Force repaint of content pane — required on Windows where hiding the
+        // glass pane does not automatically repaint the underlying components.
+        java.awt.Container content = container.getContentPane();
+        content.revalidate();
+        content.repaint();
     }
 }

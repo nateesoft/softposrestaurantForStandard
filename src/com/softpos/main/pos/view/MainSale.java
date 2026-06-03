@@ -130,8 +130,9 @@ public class MainSale extends javax.swing.JDialog {
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
     private static class MainSaleInitData {
+
         PosUserBean posUser;
-        com.softpos.pos.core.model.TableFileBean tbBean;
+        TableFileBean tbBean;
         MemberBean memberBean;
         POSHWSetup poshw;
         POSConfigSetup config;
@@ -161,6 +162,8 @@ public class MainSale extends javax.swing.JDialog {
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
 
         final String tNo = tableNo;
+        this.tableNo = tableNo;
+        
         new SwingWorker<MainSaleInitData, Void>() {
             @Override
             protected MainSaleInitData doInBackground() {
@@ -210,12 +213,38 @@ public class MainSale extends javax.swing.JDialog {
                     Value.MemberAlready = false;
 
                     initScreen();
-                    if (d.branchBean.getLocation_Area().equals("02")) {
+
+                    txtTable.setText(tNo);
+
+                    if (tNo.contains("DE")) {
+                        txtShowETD.setText("D");
+                        changeSaleType("D");
+                    } else if (tNo.contains("T")) {
                         txtShowETD.setText("T");
+                        changeSaleType("T");
+                    } else if (d.branchBean.getLocation_Area().equals("02")) {
+                        txtShowETD.setText("T");
+                        changeSaleType("T");
                     }
 
-                    MainSale.this.tableNo = tNo;
-                    txtTable.setText(tNo);
+                    adjustFullScreenLayout();
+                    pMenu2.setVisible(false);
+                    pMenu3.setVisible(false);
+                    pMenu4.setVisible(false);
+                    pMenu5.setVisible(false);
+                    pMenu6.setVisible(false);
+                    pMenu7.setVisible(false);
+                    pMenu8.setVisible(false);
+                    pMenu9.setVisible(false);
+                    pSubMenu1.setVisible(false);
+                    pSubMenu2.setVisible(false);
+                    pSubMenu3.setVisible(false);
+                    isTakeOrder();
+
+                    if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
+                        CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+                        ccd.setVisible(true);
+                    }
 
                     loadTableBalance(tNo);
                     historyBack = new ArrayList<>();
@@ -228,6 +257,8 @@ public class MainSale extends javax.swing.JDialog {
 
                 } catch (InterruptedException | ExecutionException ex) {
                     AppLogUtil.log(MainSale.class, "error", ex);
+                    MSG.ERR(MainSale.this, "ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่");
+                    MainSale.this.setVisible(false);
                 }
             }
         }.execute();
@@ -1195,7 +1226,7 @@ public class MainSale extends javax.swing.JDialog {
         }
     }
 
-private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
+    private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
     switch (evt.getKeyCode()) {
         case KeyEvent.VK_ENTER:
             tableOpened();
@@ -1316,6 +1347,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     }
 
     private void showSum() { //คำสั่งกำหนดให้ไปโชว์ค่ายอดเงินในส่วนต่างๆ
+        if (tableNo == null) return;
         //show sum
         TableFileBean tfBean = tableFileControl.getData(tableNo);
         double totalDiscount;
@@ -1349,7 +1381,7 @@ private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         }
     }
 
-private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed
+    private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         txtProductCode.setEditable(true);
         txtProductCode.requestFocus();
@@ -1381,7 +1413,7 @@ private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         }
     }
 
-private void txtProductCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductCodeKeyPressed
+    private void txtProductCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductCodeKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (!isTakeOrder()) {
         switch (evt.getKeyCode()) {
@@ -1423,7 +1455,7 @@ private void txtProductCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
 
 }//GEN-LAST:event_txtProductCodeKeyPressed
 
-private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
+    private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
     //คำสั่ง Enter,ESCAPE
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         txtProductCode.requestFocus();
@@ -1448,7 +1480,7 @@ private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 
 }//GEN-LAST:event_tbShowBalanceKeyPressed
 
-private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
+    private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
     if (posUser.getSale7().equals("Y")) {
         AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
@@ -1474,7 +1506,7 @@ private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     PublicVar.TUserRec = PublicVar.TempUserRec;
 }//GEN-LAST:event_MAddNewAccr1ActionPerformed
 
-private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArNotPayment1ActionPerformed
+    private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArNotPayment1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
 
     if (posUser.getSale8().equals("Y")) {
@@ -1503,7 +1535,7 @@ private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {/
 
 }//GEN-LAST:event_MRepArNotPayment1ActionPerformed
 
-private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArHistory1ActionPerformed
+    private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArHistory1ActionPerformed
     PublicVar.TempUserRec = PublicVar.TUserRec;
     if (posUser.getSale9().equals("Y")) {
         ArHistory frm = new ArHistory(new JFrame(), true);
@@ -1529,19 +1561,19 @@ private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     PublicVar.TUserRec = PublicVar.TempUserRec;
 }//GEN-LAST:event_MRepArHistory1ActionPerformed
 
-private void MRepMemberHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepMemberHistory1ActionPerformed
+    private void MRepMemberHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepMemberHistory1ActionPerformed
     RepMember frm = new RepMember(new JFrame(), true);
     frm.setVisible(true);
 }//GEN-LAST:event_MRepMemberHistory1ActionPerformed
 
-private void MHeaderBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHeaderBill1ActionPerformed
+    private void MHeaderBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHeaderBill1ActionPerformed
     if (Value.useprint) {
         PPrint prn = new PPrint();
         prn.printHeaderBill();
     }
 }//GEN-LAST:event_MHeaderBill1ActionPerformed
 
-private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepInvCash1ActionPerformed
+    private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepInvCash1ActionPerformed
     PrintInv1 frm = new PrintInv1(new JFrame(), true);
     frm.setVisible(true);
 }//GEN-LAST:event_MRepInvCash1ActionPerformed
@@ -1705,41 +1737,6 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         adjustFullScreenLayout();
-        
-        if(tableNo != null) {
-            if (tableNo.contains("T")) {
-                txtShowETD.setText("T");
-                changeSaleType("T");
-                txtTypeDesc.setText(SALE_TAKE_AWAY);
-            } else if (tableNo.contains("DE")) {
-                txtShowETD.setText("D");
-                changeSaleType("D");
-                txtTypeDesc.setText(SALE_Delivery);
-            } else if (tableNo.contains("E")) {
-                txtShowETD.setText("E");
-                changeSaleType("E");
-                txtTypeDesc.setText(SALE_DINE_IN);
-            }
-        }
-        
-        pMenu2.setVisible(false);
-        pMenu3.setVisible(false);
-        pMenu4.setVisible(false);
-        pMenu5.setVisible(false);
-        pMenu6.setVisible(false);
-        pMenu7.setVisible(false);
-        pMenu8.setVisible(false);
-        pMenu9.setVisible(false);
-        pSubMenu1.setVisible(false);
-        pSubMenu2.setVisible(false);
-        pSubMenu3.setVisible(false);
-
-        isTakeOrder();
-
-//        if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
-//            CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
-//            ccd.setVisible(true);
-//        }
     }//GEN-LAST:event_formWindowOpened
 
     private void jMenuBar11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuBar11MouseClicked
@@ -2432,10 +2429,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void saveMenuToBalance() {
         AppLogUtil.info("saveMenuToBalance: " + txtProductCode.getText());
-        
+
         String PCode = txtProductCode.getText();
         String StkCode = PUtility.GetStkCode();
-        
+
         String emp = Value.EMP_CODE;
         String etd = txtShowETD.getText();
         String[] data = Option.splitPrice(PCode);
@@ -2652,9 +2649,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             }
             printerName = "kic" + rKic;
             String printerForm = BranchControl.getForm(rKic);
-            
-            AppLogUtil.info("kichenPrint (printerName="+printerName+", printerForm="+printerForm+")");
-            
+
+            AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+
             switch (printerForm) {
                 case "1": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
@@ -2811,9 +2808,10 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         } else {
             MSG.ERR(this, "หมายเลขนี้ไม่ได้มีการกำหนดไว้ในการทำงานโต๊ะหลัก !!!");
             TableOpenStatus = false;
-            txtTable.setText("");
+            
             txtTable.setEditable(true);
             txtTable.requestFocus();
+            
             txtTable.setText("");
         }
     }
@@ -2832,15 +2830,15 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
                 databaseConnection.execUpdate(sqlTurnPrintKicOff);
             }
-            
+
             String sql = "update tablefile set tpause='Y', TOnAct='N' where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
-            
+
             kichenPrint();
             holdTableAndSave();
-            
+
             PublicVar.ErrorColect = false;
-            
+
             initScreen();
             return;
         }
@@ -2935,8 +2933,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (txtTable.getText().trim().equals("")) {
                 ShowTable frm = new ShowTable(new JFrame(), true);
                 frm.setVisible(true);
+                
                 if (!PublicVar.ReturnString.equals("")) {
-                    txtTable.setText(PublicVar.ReturnString);
+                    txtTable.setText(Value.TableSelected);
                     if (txtTable.getText().trim().length() > 0) {
                         txtTable.setEditable(false);
                         txtTableOnExit();
@@ -3216,7 +3215,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         AppLogUtil.info("Hold Table: " + tableNo);
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
             AppLogUtil.info("Condition to print bill check: " + tableNo);
-            
+
             printBillCheck();
         }
         tbpMain.setSelectedIndex(0);
@@ -3447,10 +3446,9 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     private void updatetable() {
-        String table = txtTable.getText();
         String cus = txtCust.getText();
 
-        BalanceBean balanceBean = mainSaleControl.getBalanceByRTable(table);
+        BalanceBean balanceBean = mainSaleControl.getBalanceByRTable(tableNo);
         String UpdateTableFile = "update tablefile "
                 + "set tonact='N',"
                 + "macno='" + Value.MACNO + "',"
@@ -3458,7 +3456,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "TCustomer = '" + cus + "',"
                 + "TItem = '" + balanceBean.getR_Total() + "',"
                 + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
-                + "where tcode='" + txtTable.getText() + "'";
+                + "where tcode='" + tableNo + "'";
         databaseConnection.execUpdate(UpdateTableFile);
     }
 
@@ -3731,7 +3729,7 @@ private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 + "TOnAct= 'Y',"
                 + "macno='" + Value.MACNO + "' ,"
                 + "tpause='N' "
-                + "WHERE Tcode='" + txtTable.getText() + "'";
+                + "WHERE Tcode='" + tableNo + "'";
         databaseConnection.execUpdate(sql);
     }
 

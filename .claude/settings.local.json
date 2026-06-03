@@ -54,7 +54,8 @@
       "Bash(awk 'NR>=1850 && NR<=1920 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
       "Bash(awk 'NR>=560 && NR<=605 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
       "Bash(awk 'NR>=1920 && NR<=1950 {print NR\": \"$0}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java)",
-      "Bash(ant compile *)"
+      "Bash(ant compile *)",
+      "Bash(git -C /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard diff HEAD~1 -- src/com/softpos/main/floorplan/view/FloorPlanDialog.java)"
     ]
   }
 }

@@ -1217,8 +1217,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         s.setVisible(true);
         if (!Value.TableSelected.equals("")) {
             setVisible(false);
-
-            AppLogUtil.info("Open Table: " + Value.TableSelected);
+            if (autoRefreshTimer != null) {
+                autoRefreshTimer.stop();
+            }
+            AppLogUtil.info("FloorPlanDialog (select from table list menu) Open Table: " + Value.TableSelected);
             MainSale mainSale = new MainSale(this, true, Value.TableSelected);
             mainSale.setVisible(true);
         }
@@ -1960,6 +1962,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             BalanceControl.updateProSerTable(tableTemp, null);
             Value.TableSelected = tableTemp;
             try {
+                if (autoRefreshTimer != null) {
+                    autoRefreshTimer.stop();
+                }
+                AppLogUtil.info("FloorPlanDialog => returnBill: Open Table: " + tableTemp);
                 MainSale mainSale = new MainSale(this, true, tableTemp);
                 mainSale.setVisible(true);
             } catch (Exception e) {
@@ -2129,6 +2135,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.setBackground(null);
             button.setForeground(Color.BLACK);
             button.setBorderPainted(false);
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
         }
     }
 
@@ -2267,16 +2275,22 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             sql = "delete from tempset where ptableno='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
 
-            exit();
+            if (autoRefreshTimer != null) {
+                autoRefreshTimer.stop();
+            }
 
+            AppLogUtil.info("FloorPlanDialog (MouseFocusAction) => showPOS: Open Table: " + tableNo);
             MainSale mainSale = new MainSale(new JFrame(), true, tableNo);
             mainSale.setVisible(true);
 
+            exit();
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String tableNo = button.getText().trim();
+            AppLogUtil.info("Click Open Table: " + tableNo);
+            
             if (!tableNo.equals("")) {
                 PublicVar.countRound = 0;
                 if (tableNo.contains("(")) {
@@ -2286,9 +2300,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 //check table is available
                 TableFileControl tfCont = AppContext.getTableFileControl();
                 if (!tfCont.checkTableOpened(tableNo)) {
-
+                    AppLogUtil.info("checkTableOpened: " + false);
+                    
                     String P_EmpUse = CONFIG.getP_EmpUse();
                     if (P_EmpUse.equals("Y")) {
+                        AppLogUtil.info("P_EmpUse: " + P_EmpUse);
+                        
                         // get employee password
                         EmployLogin login = new EmployLogin(new JFrame(), true);
                         login.setVisible(true);
@@ -2315,6 +2332,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             }
                         }
                     } else {
+                        AppLogUtil.info("P_EmpUse: " + P_EmpUse);
+                        AppLogUtil.info("Skip input employee code");
                         showPOS(tableNo);
                     }
                 } else {
