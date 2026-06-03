@@ -84,7 +84,6 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(BillControl.class);
@@ -138,7 +137,6 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(BillControl.class);
@@ -224,14 +222,12 @@ public class BillControl {
                     mysqlConnect.open(BillControl.class);
                     mysqlConnect.executeUpdate(sqlInsAccr);
                 } catch (Exception e) {
-
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(BillControl.class);
                 }
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error: " + sql, e);
         } finally {
             mysqlConnect.closeConnection(BillControl.class);
@@ -612,7 +608,6 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(this.getClass());
@@ -998,7 +993,6 @@ public class BillControl {
                     rs.close();
                     stmt.close();
                 } catch (SQLException e) {
-
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(this.getClass());
@@ -1044,7 +1038,6 @@ public class BillControl {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-
                     AppLogUtil.log(BillControl.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(this.getClass());
@@ -1074,11 +1067,11 @@ public class BillControl {
                 updateNextBill();
                 branchControl.updateKicItemNo();
             } catch (NumberFormatException e) {
-
+                AppLogUtil.log(BillControl.class, "error", e);
             }
             return BillNo;
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (NumberFormatException e) {
+            AppLogUtil.log(BillControl.class, "error", e);
         }
 
         return BillNo;
@@ -1117,7 +1110,6 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1220,7 +1212,6 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1320,7 +1311,6 @@ public class BillControl {
             }
             rs.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1529,7 +1519,6 @@ public class BillControl {
             rs1.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1642,7 +1631,8 @@ public class BillControl {
 //                bean.setB_KicQue(rs.getString("B_KicQue"));
                 try {
                     bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
-                } catch (Exception e) {
+                } catch (SQLException e) {
+                    AppLogUtil.log(BillControl.class, "error", e);
                     bean.setB_NetDiff(0);
                 }
 
@@ -1652,7 +1642,6 @@ public class BillControl {
                     bean.setB_MemBegin(rs.getDate("B_MemBegin"));
                     bean.setB_MemEnd(rs.getDate("B_MemEnd"));
                 } catch (SQLException e) {
-
                     AppLogUtil.log(BillControl.class, "error", e);
                 }
 
@@ -1663,7 +1652,6 @@ public class BillControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1678,6 +1666,7 @@ public class BillControl {
             try {
                 tSaleBean.setR_NetDiff(billBean.getB_NetDiff());
             } catch (Exception e) {
+                AppLogUtil.log(BillControl.class, "error", e);
                 tSaleBean.setR_NetDiff(0);
             }
 
@@ -1802,7 +1791,6 @@ public class BillControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1831,7 +1819,6 @@ public class BillControl {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1890,6 +1877,7 @@ public class BillControl {
                 try {
                     row.put("voiddate", rs.getDate("voiddate"));
                 } catch (SQLException e) {
+                    AppLogUtil.log(BillControl.class, "error", e);
                     row.put("voiddate", null);
                 }
                 data.add(row);

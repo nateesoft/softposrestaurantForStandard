@@ -60,7 +60,6 @@ public class ButtonCustom {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -104,7 +103,6 @@ public class ButtonCustom {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

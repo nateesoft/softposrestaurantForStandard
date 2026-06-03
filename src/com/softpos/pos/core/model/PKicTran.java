@@ -60,7 +60,7 @@ public class PKicTran {
 
             mysqlConnect.close();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(PKicTran.class, "error", e);
         }
     }
 
@@ -162,7 +162,7 @@ public class PKicTran {
 
             mysqlConnect.close();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(PKicTran.class, "error", e);
         }
 
     }

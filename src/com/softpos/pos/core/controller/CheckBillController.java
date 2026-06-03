@@ -35,7 +35,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -60,7 +59,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -86,7 +84,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -110,7 +107,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -134,7 +130,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -158,7 +153,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -180,7 +174,6 @@ public class CheckBillController {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(CheckBillController.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

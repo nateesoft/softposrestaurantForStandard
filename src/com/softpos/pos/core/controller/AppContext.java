@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 public class AppContext {
 
-    private static BalanceControl balanceControl;
     private static BillControl billControl;
     private static BranchControl branchControl;
     private static BranchFileController branchFileController;
@@ -66,8 +65,7 @@ public class AppContext {
     }
 
     public static BalanceControl getBalanceControl() {
-        if (balanceControl == null) balanceControl = new BalanceControl();
-        return balanceControl;
+        return new BalanceControl();
     }
 
     public static BillControl getBillControl() {

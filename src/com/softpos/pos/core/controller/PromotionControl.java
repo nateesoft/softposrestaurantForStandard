@@ -34,22 +34,20 @@ public class PromotionControl {
     }
 
     public void saveTempPromotion(TempPromotion bean) {
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
             String sql = "insert into temppromotion (TableNo,PrCode,PrType,PCode,PQty,PrTotalAmt,PrAmt) "
                     + "values('" + bean.getTableNo() + "','" + bean.getPrCode() + "','" + bean.getPrType() + "','"
                     + bean.getPCode() + "','" + bean.getPQty() + "','"
                     + bean.getPrTotalAmt() + "','" + bean.getPrAmt() + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+            try (Statement stmt = local.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
-                stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
     }
 
@@ -267,14 +265,10 @@ public class PromotionControl {
 
     private ProtabBean getDataSql(String sql) {
         ProtabBean proTab = new ProtabBean();
-
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
+            Statement stmt = local.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 proTab.setProCode(rs.getString("ProCode"));
@@ -363,10 +357,9 @@ public class PromotionControl {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -1058,24 +1051,20 @@ public class PromotionControl {
     }
 
     public void saveTPromotion2(TPromotion2 bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
             String sql = "insert into tpromotion2 "
                     + "(TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getTCode() + "','" + bean.getPCode() + "','" + bean.getProCode() + "','"
                     + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = local.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
     }
 
@@ -1098,24 +1087,20 @@ public class PromotionControl {
     }
 
     public void saveTPromotion3(TPromotion3 bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
             String sql = "insert into tpromotion3 "
                     + "(R_Index,TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getR_Index() + "','" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = local.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
     }
 
@@ -1139,24 +1124,20 @@ public class PromotionControl {
     }
 
     public void saveTPromotion4(TPromotion4 bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
             String sql = "insert into tpromotion4 "
                     + "(R_Index,TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getR_Index() + "','" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','" + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = local.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
     }
 
@@ -1186,24 +1167,20 @@ public class PromotionControl {
     }
 
     public void saveTPromotion5(TPromotion5 bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(this.getClass());
+        MySQLConnect local = new MySQLConnect();
+        local.open(this.getClass());
         try {
             String sql = "insert into tpromotion5 (TCode,PCode,ProCode,PQuan,PPrice,MacNo) "
                     + "values('" + bean.getTCode() + "','" + bean.getPCode() + "','"
                     + bean.getProCode() + "','" + bean.getPQuan() + "','"
                     + bean.getPPrice() + "','" + bean.getMacNo() + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = local.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
-
             AppLogUtil.log(PromotionControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            local.closeConnection(this.getClass());
         }
     }
 

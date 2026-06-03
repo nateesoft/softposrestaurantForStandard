@@ -89,8 +89,7 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -127,8 +126,7 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -157,8 +155,7 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -196,8 +193,7 @@ public class ControlMenu {
 
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {            
             AppLogUtil.log(ControlMenu.class, "error", e);
         }
 
@@ -215,6 +211,7 @@ public class ControlMenu {
                 try {
                     CID = rs.getString("Code_ID");
                 } catch (SQLException e) {
+                    AppLogUtil.log(ControlMenu.class, "error", e);
                     CID = prefix + count;
                 }
 
@@ -226,8 +223,7 @@ public class ControlMenu {
             }
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {           
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -298,8 +294,7 @@ public class ControlMenu {
                 }
                 index++;
             }
-        } catch (SQLException e) {
-            
+        } catch (SQLException e) {            
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

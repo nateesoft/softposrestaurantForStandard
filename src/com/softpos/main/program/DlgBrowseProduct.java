@@ -2,6 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.DbGroupfile;
 import com.softpos.pos.core.controller.DbProduct;
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -427,6 +428,7 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         try {
             selectPlu.price = Double.parseDouble(tblPlu.getValueAt(index, 2).toString());
         } catch (NumberFormatException e) {
+            AppLogUtil.log(DlgBrowseProduct.class, "error", e);
             selectPlu.price = -1.0;
         }
     }
@@ -443,6 +445,7 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         try {
             selectPlu.price = Double.parseDouble(tblPlu.getValueAt(index, 2).toString());
         } catch (NumberFormatException e) {
+            AppLogUtil.log(DlgBrowseProduct.class, "error", e);
             selectPlu.price = -1.0;
         }
     }

@@ -26,7 +26,7 @@ public class TableFileControl {
             
             mysqlConnect.closeConnection(TableFileControl.class);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(TableFileControl.class, "error", e);
         }
     }
 

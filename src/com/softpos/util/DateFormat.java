@@ -21,7 +21,7 @@ public class DateFormat {
         try {
             d1 = s.parse(d);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             Calendar c = Calendar.getInstance(Locale.ENGLISH);
             c.set(2015, 0, 1);
             d1 = c.getTime();
@@ -36,7 +36,7 @@ public class DateFormat {
         try {
             d1 = s.parse(d);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             Calendar c = Calendar.getInstance();
             c.set(2015, 0, 1);
             d1 = c.getTime();
@@ -97,7 +97,7 @@ public class DateFormat {
         try {
             return locale_ddMMyyyy.parse(s);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             return null;
         }
     }
@@ -106,7 +106,7 @@ public class DateFormat {
         try {
             return locale_yyyyMMdd.parse(s);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             return null;
         }
     }
@@ -115,7 +115,7 @@ public class DateFormat {
         try {
             return english_ddMMyyyy.parse(s);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             return null;
         }
     }
@@ -124,7 +124,7 @@ public class DateFormat {
         try {
             return english_yyyyMMdd.parse(s);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(DateFormat.class, "error", e);
             return null;
         }
     }

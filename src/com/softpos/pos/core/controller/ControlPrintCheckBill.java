@@ -30,7 +30,6 @@ public class ControlPrintCheckBill {
                         + "and trantype ='PDA';";
                 mysqlConnect.executeUpdate(sql);
             } catch (Exception e) {
-                System.out.println(e.toString());
                 AppLogUtil.log(ControlPrintCheckBill.class, "error", e);
             } finally {
                 mysqlConnect.close();
@@ -45,7 +44,7 @@ public class ControlPrintCheckBill {
             mysqlConnect.open();
             mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
-            System.err.println(e.toString());
+            AppLogUtil.log(ControlPrintCheckBill.class, "error", e);
         } finally {
             mysqlConnect.close();
         }
@@ -57,7 +56,7 @@ public class ControlPrintCheckBill {
             mysqlConnect.open();
             mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(ControlPrintCheckBill.class, "error", e);
         } finally {
             mysqlConnect.close();
         }

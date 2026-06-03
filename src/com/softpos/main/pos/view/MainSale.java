@@ -152,6 +152,12 @@ public class MainSale extends javax.swing.JDialog {
 
         PublicVar.countRound = 0;
 
+        if (tableNo == null || tableNo.trim().isEmpty()) {
+            AppLogUtil.log(MainSale.class, "warn", new Exception("MainSale opened without tableNo — dialog will be disposed"));
+            javax.swing.SwingUtilities.invokeLater(this::dispose);
+            return;
+        }
+
         if (tableNo.contains("(")) {
             tableNo = tableNo.substring(0, tableNo.indexOf("("));
         }
@@ -4036,6 +4042,7 @@ public class MainSale extends javax.swing.JDialog {
         try {
             cc = Integer.parseInt(customerCount);
         } catch (NumberFormatException e) {
+            AppLogUtil.log(MainSale.class, "error", e);
         }
 
         if (PublicVar.defaultCustomer.equals("true")) {

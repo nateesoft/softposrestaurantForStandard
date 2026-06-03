@@ -1,8 +1,10 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import database.MySQLConnect;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +15,14 @@ public class EmployControl {
         try {
             mysqlConnect.open();
             String sql = "select P_EmpUse from posconfigsetup where P_EmpUse='Y';";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next()) {
-                return true;
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    return true;
+                }
             }
-            rs.close();
 
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            AppLogUtil.log(EmployControl.class, "error", e);
         } finally {
             mysqlConnect.close();
         }
@@ -31,14 +33,13 @@ public class EmployControl {
         try {
             mysqlConnect.open();
             String sql = "select * from employ where code='" + empCode + "'";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next()) {
-                return true;
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    return true;
+                }
             }
-            rs.close();
-
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            AppLogUtil.log(EmployControl.class, "error", e);
         } finally {
             mysqlConnect.close();
         }
@@ -50,16 +51,16 @@ public class EmployControl {
         try {
             mysqlConnect.open();
             String sql = "select name from employ where code='" + empCode + "'";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next() && !rs.wasNull()) {
-                empName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
-            } else {
-                empName = "";
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next() && !rs.wasNull()) {
+                    empName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
+                } else {
+                    empName = "";
+                }
             }
-            rs.close();
 
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            AppLogUtil.log(EmployControl.class, "error", e);
         } finally {
             mysqlConnect.close();
         }
@@ -72,15 +73,15 @@ public class EmployControl {
         try {
             mysqlConnect.open();
             String sql = "select * from employ order by code";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            while (rs.next()) {
-                String code = rs.getString("code");
-                String name = ThaiUtil.ASCII2Unicode(rs.getString("name"));
-                employees.add(new String[]{code, name});
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                while (rs.next()) {
+                    String code = rs.getString("code");
+                    String name = ThaiUtil.ASCII2Unicode(rs.getString("name"));
+                    employees.add(new String[]{code, name});
+                }
             }
-            rs.close();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            AppLogUtil.log(EmployControl.class, "error", e);
         } finally {
             mysqlConnect.close();
         }

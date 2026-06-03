@@ -121,7 +121,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-            System.out.println(e.toString());
         }
     }
 
@@ -196,54 +195,48 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     try {
                         controller.markCheckoutPrinted(pTable, pIndex, pcode);
                         Thread.sleep(100);
-                    } catch (Exception e) {
-                        AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                        MSG.NOTICE(this, e.getMessage());
+                    } catch (InterruptedException e) {
                     }
                 } else {
                     try {
                         controller.markCheckoutPrintedNoBalance(pTable, pIndex, pcode);
                     } catch (Exception e) {
-                        System.out.println(e.toString());
-                        MSG.NOTICE(this, e.getMessage());
+                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                     }
                 }
             }
         } catch (Exception e) {
-            MSG.NOTICE(this, e.getMessage());
+            MSG.ERR(this, e.getMessage());
         }
     }
 
     public void printUrgentLog() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DateConvert dcLocal = new DateConvert();
+        new Thread(() -> {
+            DateConvert dcLocal = new DateConvert();
+            try {
+                PrintToKicController controller = AppContext.getPrintToKicController();
+                List<PKicTranBean> logList = controller.getUrgentClickLog(dcLocal.GetCurrentDate());
+                String textToPrint = "";
+                for (PKicTranBean entry : logList) {
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dcLocal.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
+                }
+                textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + logList.size() + " ครั้ง " + "_";
+                PrintDriver printDriver = new PrintDriver();
+                String[] strs = textToPrint.split("_");
+                for (String data1 : strs) {
+                    printDriver.addTextIFont(data1);
+                }
                 try {
-                    PrintToKicController controller = AppContext.getPrintToKicController();
-                    List<PKicTranBean> logList = controller.getUrgentClickLog(dcLocal.GetCurrentDate());
-                    String textToPrint = "";
-                    for (PKicTranBean entry : logList) {
-                        textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dcLocal.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
-                    }
-                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + logList.size() + " ครั้ง " + "_";
-                    PrintDriver printDriver = new PrintDriver();
-                    String[] strs = textToPrint.split("_");
-                    for (String data1 : strs) {
-                        printDriver.addTextIFont(data1);
-                    }
-                    try {
-                        if (printerConfigDriver.equals("true")) {
-                            printDriver.printHTMLKitChenByKictran(ConfigFile.getProperties("printerName"));
-                        }
-                    } catch (Exception e) {
-                        AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
+                    if (printerConfigDriver.equals("true")) {
+                        printDriver.printHTMLKitChenByKictran(ConfigFile.getProperties("printerName"));
                     }
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                    MSG.ERR(new JFrame(), e.getMessage());
                 }
+            } catch (Exception e) {
+                AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
+                MSG.ERR(new JFrame(), e.getMessage());
             }
         }).start();
     }

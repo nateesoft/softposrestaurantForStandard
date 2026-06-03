@@ -5,6 +5,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -21,6 +22,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
+import java.text.ParseException;
 
 public class RepMember extends javax.swing.JDialog {
 
@@ -613,8 +615,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
-
+            } catch (ParseException e) {
+                AppLogUtil.log(RepMember.class, "error", e);
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";

@@ -625,7 +625,8 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
+                AppLogUtil.log(ArHistory.class, "error", e);
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -712,6 +713,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
             } catch (ParseException e) {
+                AppLogUtil.log(ArHistory.class, "error", e);
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
@@ -807,8 +809,8 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
-
+            } catch (ParseException e) {
+                AppLogUtil.log(ArHistory.class, "error", e);
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";

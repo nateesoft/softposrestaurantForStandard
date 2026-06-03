@@ -3,6 +3,7 @@ package com.softpos.main.program;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -72,6 +73,7 @@ public class FindMember extends javax.swing.JDialog {
         try {
             ReturnValue = Datefmtshow.format(tdate);
         } catch (Exception e) {
+            AppLogUtil.log(FindMember.class, "error", e);
             ReturnValue = "00/00/0000";
         }
         return ReturnValue;

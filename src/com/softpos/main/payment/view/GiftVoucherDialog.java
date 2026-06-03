@@ -4,6 +4,7 @@ import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.main.program.GiftDialogList;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.Value;
+import com.softpos.util.AppLogUtil;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -419,6 +420,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 return;
             }
         } catch (NumberFormatException e) {
+            AppLogUtil.log(GiftVoucherDialog.class, "error", e);
             txtGiftMoney.setText("");
             txtGiftMoney.requestFocus();
             return;

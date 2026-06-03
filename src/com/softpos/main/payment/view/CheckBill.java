@@ -1499,7 +1499,7 @@ public class CheckBill extends javax.swing.JDialog {
             cash = Double.parseDouble(txtCashAmount.getText().replace(",", ""));
             amount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         }
 
         if (cash == amount || cash > amount) {
@@ -2038,6 +2038,7 @@ public class CheckBill extends javax.swing.JDialog {
             try {
                 creditDay = Integer.parseInt(lbCredit.getText());
             } catch (NumberFormatException e) {
+                AppLogUtil.log(CheckBill.class, "error", e);
                 creditDay = 0;
             }
             billBean.setB_SubDiscBath(tBean.getDiscBath());
@@ -2128,6 +2129,7 @@ public class CheckBill extends javax.swing.JDialog {
             try {
                 creditDay = Integer.parseInt(lbCredit.getText());
             } catch (NumberFormatException e) {
+                AppLogUtil.log(CheckBill.class, "error", e);
                 creditDay = 0;
             }
             billBean.setB_AccrCr(creditDay);
@@ -2235,7 +2237,7 @@ public class CheckBill extends javax.swing.JDialog {
             txtCreditAmount.setText("" + TotalAmount);
             txtCreditAmount.requestFocus();
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(CheckBill.class, "error", e);
         }
     }
 

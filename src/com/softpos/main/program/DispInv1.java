@@ -4,6 +4,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
 import com.softpos.pos.core.controller.AppContext;
+import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
@@ -88,7 +89,9 @@ public class DispInv1 extends javax.swing.JDialog {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
             } catch (ParseException e) {
+                AppLogUtil.log(DispInv1.class, "error", e);
             }
+            
             int RowCount = model2.getRowCount();
             for (int i = 0; i <= RowCount - 1; i++) {
                 model2.removeRow(0);

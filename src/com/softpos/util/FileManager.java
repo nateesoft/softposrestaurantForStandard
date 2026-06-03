@@ -17,7 +17,7 @@ public class FileManager {
                 os.write(buffer, 0, length);
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(FileManager.class, "error", e);
         }
     }
 

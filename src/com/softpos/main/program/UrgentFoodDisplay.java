@@ -6,6 +6,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.model.PKicTran;
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import database.ConfigFile;
 import java.awt.Color;
@@ -41,6 +42,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
                     try {
                         playSound();
                     } catch (Exception e) {
+                        AppLogUtil.log(UrgentFoodDisplay.class, "error", e);
                     }
                     if (i == 9) {
                         i = 0;
@@ -91,6 +93,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
                         }
                     }
                 } catch (Exception e) {
+                    AppLogUtil.log(UrgentFoodDisplay.class, "error", e);
                 }
             }
         }).start();

@@ -634,8 +634,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
-            } catch (Exception e) {
+            } catch (ParseException e) {
+                AppLogUtil.log(ArNotPay.class, "error", e);
             }
+            
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";
             } else {
@@ -785,6 +787,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 TempDate2 = ShowDatefmt.parse(ardate2.getText());
                 TempDate1 = ShowDatefmt.parse(ardate1.getText());
             } catch (ParseException e) {
+                AppLogUtil.log(ArNotPay.class, "error", e);
             }
             if (arcode2.getText().equals("")) {
                 TempCode2 = "ZZZZ";

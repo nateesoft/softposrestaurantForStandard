@@ -1,5 +1,6 @@
 package database;
 
+import com.softpos.util.AppLogUtil;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -22,7 +23,7 @@ public class ConfigFileServer {
                 }
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(ConfigFileServer.class, "error", e);
         }
         return str.trim();
     }

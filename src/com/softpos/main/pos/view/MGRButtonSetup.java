@@ -2,6 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.main.program.DlgBrowseProduct;
 import com.softpos.pos.core.controller.MgrButtonController;
+import com.softpos.util.AppLogUtil;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
@@ -1037,7 +1038,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         try {
             qtyAmt = Integer.parseInt(txtQty.getText());
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(MGRButtonSetup.class, "error", e);
         }
 
         boolean isAutoCheck = chkAutoSet.isSelected();

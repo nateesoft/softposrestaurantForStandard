@@ -660,7 +660,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         try {
             cuponQty = Integer.parseInt(txtCuQty.getText());
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e);
         }
 
         if (cuponQty <= 0) {
@@ -991,7 +991,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 cuQuan = 0;
             }
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            AppLogUtil.log(CouponDiscount.class, "error", e);
         }
 
         //update tempcupon

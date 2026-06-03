@@ -5,8 +5,6 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.crm.pos.core.modal.CreditRec;
 import com.softpos.crm.pos.core.modal.HourlyRec;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.crm.pos.core.modal.CouponRec;
-import com.softpos.crm.pos.core.modal.CouponDetailRec;
 import com.softpos.crm.pos.core.modal.CreditPaymentRec;
 import com.softpos.crm.pos.core.modal.PluRec;
 import com.softpos.pos.core.model.BalanceSetBean;
@@ -24,7 +22,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +36,6 @@ public class PUtility {
     private List<PSetBean> getPSetByPCode(String TempCode) {
         List<PSetBean> listBean = new ArrayList<>();
 
-        
         mysqlConnect.open(PUtility.class);
         try {
             String sql = "select * from pset where pcode='" + TempCode + "'";
@@ -54,8 +50,7 @@ public class PUtility {
                 }
                 rs.close();
             }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+        } catch (SQLException e) {            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -85,7 +80,6 @@ public class PUtility {
                 stmt.close();
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -99,11 +93,6 @@ public class PUtility {
     SimpleDateFormat DateFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     Date date = new Date();
-
-    public static Boolean CheckEAN13Format(String TempBarcode) {
-
-        return true;
-    }
 
     public int GetActionMon(Date EndofdayDate) {
         CompanyBean companyBean = PosControl.getDataCompany();
@@ -123,17 +112,6 @@ public class PUtility {
             }
         }
         return RetVal;
-    }
-
-    public static boolean CheckEndOfDay() {
-        return true;
-    }
-
-    public static boolean CheckPrintAutoSum() {
-        return true;
-    }
-
-    public static void UpdateRePrintAutoSum() {
     }
 
     public static boolean CheckSaleDateOK() {
@@ -176,7 +154,6 @@ public class PUtility {
                     }
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(PUtility.class);
@@ -271,7 +248,6 @@ public class PUtility {
                 stmt.close();
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -326,7 +302,6 @@ public class PUtility {
                 prm.executeUpdate();
                 prm.close();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
                 AppLogUtil.log(PUtility.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(PUtility.class);
@@ -342,7 +317,7 @@ public class PUtility {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    System.err.println(e.getMessage());
+                    
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(PUtility.class);
@@ -361,108 +336,6 @@ public class PUtility {
                     prm4.executeUpdate();
                     prm4.close();
                 } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                    AppLogUtil.log(PUtility.class, "error", e);
-                } finally {
-                    mysqlConnect.closeConnection(PUtility.class);
-                }
-            }
-        }
-        if (SetProc) {
-            if (!SelectSet) {
-                ProcessSetUpdateStockOut(DocNo, StkCode, PCode, TDate, Stk_Remark, Qty, UserPost);
-            } else {
-                if (SaleOrRefund.equals("1")) {
-                    ProcessSelectSetUpdateStockOut(DocNo, StkCode, PCode, TDate, Stk_Remark, Qty, UserPost, r_index);
-                } else if (SaleOrRefund.equals("2")) {
-                    ProcessSelectSetUpdateStockOutRefund(DocNo, StkCode, PCode, TDate, Stk_Remark, Qty, UserPost, r_index);
-                }
-
-            }
-        }
-    }
-
-    public void ProcessStockIn(String DocNo, String StkCode, String PCode, Date TDate,
-            String Stk_Remark, Double Qty, Double Amount, String UserPost, String PStock,
-            String PSet, String r_index, String SaleOrRefund) {
-        SimpleDateFormat SqlDateFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        SimpleDateFormat TimeFmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
-        Date date = new Date();
-        String TempCode = PCode;
-        Double TempQty = Qty;
-        Double TempAmt = Amount;
-        String T_Rem = Stk_Remark;
-        Boolean StkProc;
-        Boolean SetProc;
-        Boolean SelectSet = false;
-        StkProc = PStock.equals("Y");
-        if (PSet.equals("Y")) {
-            SetProc = true;
-            SelectSet = CheckPSetSelect(PCode);
-        } else {
-            SetProc = false;
-        }
-
-        if (StkProc) {
-            
-            mysqlConnect.open(PUtility.class);
-            try {
-                String InsertQuery = "insert into stcard (s_date,s_no,s_stk,s_pcode,s_que,s_in,s_incost,"
-                        + "s_out,s_outcost,s_rem,s_user,s_entrydate,s_entrytime) "
-                        + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(InsertQuery);
-                prm.setString(1, SqlDateFmt.format(date));
-                prm.setString(2, DocNo);
-                prm.setString(3, StkCode);
-                prm.setString(4, TempCode);
-                prm.setInt(5, 1);
-                prm.setDouble(6, 0);
-                prm.setDouble(7, 0);
-                prm.setDouble(8, TempQty);
-                prm.setDouble(9, TempAmt);
-                prm.setString(10, T_Rem);
-                prm.setString(11, UserPost); //User
-                prm.setString(12, SqlDateFmt.format(date));
-                prm.setString(13, TimeFmt.format(date));
-                prm.executeUpdate();
-                prm.close();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-                AppLogUtil.log(PUtility.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(PUtility.class);
-            }
-
-            int TempAct = GetActionMon(TDate);
-            if (!SeekStkFile(TempCode, StkCode)) {
-                mysqlConnect.open(PUtility.class);
-                try {
-                    String InsertQuery4 = "insert into stkfile (bpcode,bstk) values (?,?)";
-                    PreparedStatement prm4 = mysqlConnect.getConnection().prepareStatement(InsertQuery4);
-                    prm4.setString(1, TempCode);
-                    prm4.setString(2, StkCode);
-                    prm4.executeUpdate();
-                    prm4.close();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                    AppLogUtil.log(PUtility.class, "error", e);
-                } finally {
-                    mysqlConnect.closeConnection(PUtility.class);
-                }
-            }
-            for (int i = TempAct; i <= 24; i++) {
-                String T_Mon = "bqty" + String.valueOf(i);
-                String InsertQuery4 = "update stkfile set " + T_Mon + "=" + T_Mon + "-? where (bpcode=?) and (bstk=?)";
-                mysqlConnect.open(PUtility.class);
-                try {
-                    PreparedStatement prm4 = mysqlConnect.getConnection().prepareStatement(InsertQuery4);
-                    prm4.setDouble(1, TempQty);
-                    prm4.setString(2, TempCode);
-                    prm4.setString(3, StkCode);
-                    prm4.executeUpdate();
-                    prm4.close();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(PUtility.class);
@@ -497,7 +370,6 @@ public class PUtility {
                 stmt.close();
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -546,7 +418,6 @@ public class PUtility {
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
-                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(PUtility.class);
@@ -563,7 +434,6 @@ public class PUtility {
                         prm4.executeUpdate();
                         prm4.close();
                     } catch (SQLException e) {
-                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysqlConnect.closeConnection(PUtility.class);
@@ -586,7 +456,6 @@ public class PUtility {
                     prmt.executeUpdate();
                     prmt.close();
                 } catch (SQLException e) {
-                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(PUtility.class);
@@ -635,7 +504,6 @@ public class PUtility {
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
-                    System.err.println(e.getMessage());
                     AppLogUtil.log(PUtility.class, "error", e);
                 } finally {
                     mysqlConnect.closeConnection(PUtility.class);
@@ -652,7 +520,6 @@ public class PUtility {
                         prmt.executeUpdate();
                         prmt.close();
                     } catch (SQLException e) {
-                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysqlConnect.closeConnection(PUtility.class);
@@ -674,7 +541,6 @@ public class PUtility {
                         prmt.executeUpdate();
                         prmt.close();
                     } catch (SQLException e) {
-                        System.err.println(e.getMessage());
                         AppLogUtil.log(PUtility.class, "error", e);
                     } finally {
                         mysqlConnect.closeConnection(PUtility.class);
@@ -758,137 +624,10 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
         }
-    }
-
-    public String GetKeyAddMemberValue(String MemberCode) {
-        SimpleDateFormat Timefmt = new SimpleDateFormat("hhmmss", Locale.ENGLISH);
-        DecimalFormat IntFmt = new DecimalFormat("##########");
-        Date date2 = new Date();
-        String PTime = Timefmt.format(date2);
-        int Sumx = 0;
-        for (int i = 0; i < PTime.length(); i++) {
-            String ch = PTime.substring(i, i + 1);
-            Sumx = Sumx + Integer.parseInt(ch);
-        }
-        String EndCode = MemberCode.substring(4, 7);
-        int IntEndCode = Integer.parseInt(EndCode);
-        int SumCode = 0;
-        for (int i = 0; i < MemberCode.length(); i++) {
-            String ch = MemberCode.substring(i, i + 1);
-            SumCode = SumCode + (Integer.parseInt(ch) * 3);
-        }
-        int Sum1 = SumCode * Sumx * IntEndCode;
-        String StrSum1 = IntFmt.format(Sum1);
-        String StrSumx = IntFmt.format(Sumx);
-        String Tempcode1;
-        String Tempcode2;
-        if (StrSum1.length() >= 6) {
-            Tempcode1 = StrSum1.substring(0, 6);
-        } else {
-            Tempcode1 = Addzero(StrSum1, 6);
-        }
-        if (StrSumx.length() >= 2) {
-            Tempcode2 = StrSumx.substring(0, 2);
-        } else {
-            Tempcode2 = Addzero(StrSumx, 2);
-        }
-        String XKeyCode = Tempcode1 + Tempcode2;
-        return XKeyCode;
-    }
-
-    public Boolean CheckKeyAddMemberValue(String MemberCode, String KeyCheck) {
-        DecimalFormat IntFmt = new DecimalFormat("##########");
-        String StrSumx = KeyCheck.substring(6, 8);
-        int Sumx = Integer.parseInt(StrSumx);
-        String EndCode = MemberCode.substring(4, 7);
-        int IntEndCode = Integer.parseInt(EndCode);
-        int SumCode = 0;
-        for (int i = 0; i < MemberCode.length(); i++) {
-            String ch = MemberCode.substring(i, i + 1);
-            SumCode = SumCode + (Integer.parseInt(ch) * 3);
-        }
-        int Sum1 = SumCode * Sumx * IntEndCode;
-        String StrSum1 = IntFmt.format(Sum1);
-        String Tempcode1;
-        String Tempcode2;
-        if (StrSum1.length() >= 6) {
-            Tempcode1 = StrSum1.substring(0, 6);
-        } else {
-            Tempcode1 = Addzero(StrSum1, 6);
-        }
-        if (StrSumx.length() >= 2) {
-            Tempcode2 = StrSumx.substring(0, 2);
-        } else {
-            Tempcode2 = Addzero(StrSumx, 2);
-        }
-        String XKeyCode = Tempcode1 + Tempcode2;
-        return XKeyCode.equals(KeyCheck);
-    }
-
-    public boolean CheckCouponRedule(String XCode2) {
-        Boolean ReturnVal = false;
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SQLQuery = "select reduleDiscount from cupon where cucode=" + "'" + XCode2 + "' limit 1";
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            if (rs.next()) {
-                ReturnVal = rs.getString("reduleDiscount").equals("Y");
-            } else {
-                ReturnVal = false;
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return ReturnVal;
-    }
-
-    public int GetUserRound(String XUser) {
-        int ReturnVal = 1;
-        String TempUser;
-
-        
-        mysqlConnect.open(PUtility.class);
-        for (int i = 1; i < 30; i++) {
-            TempUser = XUser + "-" + i;
-            try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SQLQuery = "select b_roundclose from billno where b_cashier=" + "'" + TempUser + "' limit 1";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
-                if (rs.next()) {
-                    if (rs.getString("b_roundclose").equals("Y")) {
-                    } else {
-                        ReturnVal = i;
-                        break;
-                    }
-                } else {
-                    ReturnVal = i;
-                    break;
-                }
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-                AppLogUtil.log(PUtility.class, "error", e);
-            }
-        }
-
-        mysqlConnect.closeConnection(PUtility.class);
-
-        return ReturnVal;
-
     }
 
     public boolean CheckCashierClose(String XUser) {
@@ -907,7 +646,6 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -942,6 +680,7 @@ public class PUtility {
             Dateft.format(tdate);
             ReturnValue = true;
         } catch (Exception e) {
+            AppLogUtil.log(PUtility.class, "error", e);
         }
         return ReturnValue;
     }
@@ -960,42 +699,11 @@ public class PUtility {
             }
         } catch (ParseException ex) {
             System.err.println("กรุณาป้อนวันที่ให้ถูกต้อง...EXP(dd/MM/yyyy)");
+            AppLogUtil.log(PUtility.class, "error", ex);
             ReturnValue = false;
         }
 
         return ReturnValue;
-    }
-
-    public java.util.Calendar StrToCalendar(String tdate) {
-        SimpleDateFormat DateFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        Calendar ca2 = Calendar.getInstance();
-        String[] casplit = tdate.split("/");
-        try {
-            DateFmt.parse(tdate);
-            ca2.set(Integer.parseInt(casplit[2]), Integer.parseInt(casplit[1]) - 1, Integer.parseInt(casplit[0]));
-        } catch (ParseException ex) {
-        }
-        return ca2;
-    }
-
-    public int getDaysBetween(java.util.Calendar d1, java.util.Calendar d2) {
-        if (d1.after(d2)) { // swap dates so that d1 is start and d2 is end
-
-            java.util.Calendar swap = d1;
-            d1 = d2;
-            d2 = swap;
-        }
-        int days = d2.get(java.util.Calendar.DAY_OF_YEAR)
-                - d1.get(java.util.Calendar.DAY_OF_YEAR);
-        int y2 = d2.get(java.util.Calendar.YEAR);
-        if (d1.get(java.util.Calendar.YEAR) != y2) {
-            d1 = (java.util.Calendar) d1.clone();
-            do {
-                days += d1.getActualMaximum(java.util.Calendar.DAY_OF_YEAR);
-                d1.add(java.util.Calendar.YEAR, 1);
-            } while (d1.get(java.util.Calendar.YEAR) != y2);
-        }
-        return days;
     }
 
     public String Addzero(String Str, int Len) {
@@ -1035,17 +743,6 @@ public class PUtility {
             }
         }
         return Num == Str.length() && Str.length() != 0;
-    }
-
-    public boolean ChkIntValue(String Str) {
-        try {
-            Integer.parseInt(Str);
-            return true;
-        } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return false;
     }
 
     public String DataFull2(String Str, int Len) {
@@ -1089,10 +786,6 @@ public class PUtility {
     }
 
     public String TAB = "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;";
-
-    public String DataFullR2(String Str, int Len) {
-        return TAB + Str;
-    }
 
     public String DataFullR(String Str, int Len) {
         String ReturnStr;
@@ -1158,18 +851,6 @@ public class PUtility {
 
     }
 
-    public CouponRec[] addCuArray(CouponRec[] CuArray) {
-        int aSize = CuArray.length;
-        CouponRec[] NewArray;
-        NewArray = new CouponRec[aSize + 1];
-        for (int i = 0; i <= aSize - 1; i++) {
-            NewArray[i] = CuArray[i];
-        }
-        CuArray = NewArray;
-        return CuArray;
-
-    }
-
     public CreditPaymentRec[] addCreditArray(CreditPaymentRec[] CuArray) {
         int aSize = CuArray.length;
         CreditPaymentRec[] NewArray;
@@ -1179,18 +860,6 @@ public class PUtility {
         }
         CuArray = NewArray;
         return CuArray;
-
-    }
-
-    public CouponDetailRec[] addCuDetailArray(CouponDetailRec[] CuDetailArray) {
-        int aSize = CuDetailArray.length;
-        CouponDetailRec[] NewArray;
-        NewArray = new CouponDetailRec[aSize + 1];
-        for (int i = 0; i <= aSize - 1; i++) {
-            NewArray[i] = CuDetailArray[i];
-        }
-        CuDetailArray = NewArray;
-        return CuDetailArray;
 
     }
 
@@ -1215,191 +884,6 @@ public class PUtility {
         }
         MyArray = NewArray;
         return MyArray;
-
-    }
-
-    public String ReadChargeBillNo(String Macno) {
-        String StrRefBillNo = "";
-
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            //Load Data From PosConfigSetup ;
-            String SQLQuery = "select Chargeno1 from branch limit 1";
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            if (rs.next()) {
-                int Refbillno = rs.getInt("Chargeno1");
-                StrRefBillNo = Integer.toString(Refbillno);
-            } else {
-                System.err.println("กรุณากำหนดค่าเริ่มต้นก่อนการใช้งาน !!!!");
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return PublicVar.Branch_Code + Addzero(StrRefBillNo, 7);
-    }
-
-    public Boolean ChkMemPoint(String ProCode) {
-        Boolean ReturnValue = false;
-        if (ProCode.equals("")) {
-            ReturnValue = false;
-        } else {
-            Date CurDate = new Date();
-            SimpleDateFormat SqlDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            SimpleDateFormat DayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
-            SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm");
-            String CurTime = TimeFormat.format(CurDate);
-            String CurDay = DayFormat.format(CurDate);
-
-            
-            mysqlConnect.open(PUtility.class);
-            try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SQLQuery = "select * from mpointtype where ptcode= '" + ProCode + "' limit 1";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
-                if (rs.next()) {
-                    PublicVar.Procode = rs.getString("ptcode");
-                    PublicVar.PDate1 = rs.getDate("ptstartdate");
-                    PublicVar.PDate2 = rs.getDate("ptenddate");
-                    PublicVar.PSTRDay = rs.getString("ptstrday");
-                    PublicVar.PTime1S = rs.getString("ptstarttime1");
-                    PublicVar.PTime1E = rs.getString("ptendtime1");
-                    PublicVar.PDisc1 = rs.getDouble("ptrate1");
-                    PublicVar.PTime2S = rs.getString("ptstarttime2");
-                    PublicVar.PTime2E = rs.getString("ptendtime2");
-                    PublicVar.PDisc2 = rs.getDouble("ptrate2");
-                    PublicVar.PTime3S = rs.getString("ptstarttime3");
-                    PublicVar.PTime3E = rs.getString("ptendtime3");
-                    PublicVar.PDisc3 = rs.getDouble("ptrate3");
-                } else {
-                    System.err.println("ไม่พบตารางสำหรับคำนวณแต้มสะสมของสมาชิก ..." + "Code : " + ProCode);
-                }
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                AppLogUtil.log(PUtility.class, "error", e);
-            } finally {
-                mysqlConnect.closeConnection(PUtility.class);
-            }
-
-            if ((SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate1)) >= 0) && (SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate2)) <= 0)) {
-                //if (!((CurDate.compareTo(PublicVar.PDate1) < 0) || (CurDate.compareTo(PublicVar.PDate2) > 0))) {
-                if (PublicVar.PSTRDay.contains(CurDay)) {
-                    if (!((CurTime.compareTo(PublicVar.PTime1S) < 0) || (CurTime.compareTo(PublicVar.PTime1E) > 0))) {
-                        PublicVar.XPoint = PublicVar.PDisc1;
-                        ReturnValue = true;
-                    } else if (!((CurTime.compareTo(PublicVar.PTime2S) < 0) || (CurTime.compareTo(PublicVar.PTime2E) > 0))) {
-                        PublicVar.XPoint = PublicVar.PDisc2;
-                        ReturnValue = true;
-                    } else if (!((CurTime.compareTo(PublicVar.PTime3S) < 0) || (CurTime.compareTo(PublicVar.PTime3E) > 0))) {
-                        PublicVar.XPoint = PublicVar.PDisc3;
-                        ReturnValue = true;
-                    }
-                }
-            }
-        }
-
-        return ReturnValue;
-    }
-
-    public Boolean SeekPromotion(String XPro1) {
-        Boolean ReturnVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            //Load Data From Promotion ;
-            String SQLQuery = "select * from protab where procode=" + "'" + XPro1 + "' limit 1";
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            if (rs.next()) {
-                String fixbranch = "";
-                if ((fixbranch.length() == 0) || (fixbranch.indexOf(PublicVar.Branch_Code) > 0)) {
-                    PublicVar.Procode = rs.getString("procode");
-                    PublicVar.ProDesc = rs.getString("prodesc");
-                    PublicVar.PDate1 = rs.getDate("pdate1");
-                    PublicVar.PDate2 = rs.getDate("pdate2");
-                    PublicVar.PSTRDay = rs.getString("pstrday");
-                    PublicVar.PTime1S = rs.getString("ptime1s");
-                    PublicVar.PTime1E = rs.getString("ptime1e");
-                    PublicVar.PDisc1 = rs.getDouble("pdisc1");
-                    PublicVar.PSpDisc1 = rs.getDouble("pspdisc1");
-                    PublicVar.PTS1 = rs.getString("pts1");
-                    PublicVar.PTime2S = rs.getString("ptime2s");
-                    PublicVar.PTime2E = rs.getString("ptime2e");
-                    PublicVar.PDisc2 = rs.getDouble("pdisc2");
-                    PublicVar.PSpDisc2 = rs.getDouble("pspdisc2");
-                    PublicVar.PTS2 = rs.getString("pts2");
-                    PublicVar.PTime3S = rs.getString("ptime3s");
-                    PublicVar.PTime3E = rs.getString("ptime3e");
-                    PublicVar.PDisc3 = rs.getDouble("pdisc3");
-                    PublicVar.PSpDisc3 = rs.getDouble("pspdisc3");
-                    PublicVar.PTS3 = rs.getString("pts3");
-                    PublicVar.PType = rs.getString("ptype");
-                    PublicVar.PSale1 = rs.getInt("psale1");
-                    PublicVar.PFree1 = rs.getInt("pfree1");
-                    PublicVar.PSum1 = rs.getInt("psum1");
-                    PublicVar.PDiscFree1 = rs.getDouble("pdiscfree1");
-                    PublicVar.PSale2 = rs.getInt("psale2");
-                    PublicVar.PFree2 = rs.getInt("pfree2");
-                    PublicVar.PSum2 = rs.getInt("psum2");
-                    PublicVar.PDiscFree2 = rs.getDouble("pdiscfree2");
-                    PublicVar.PSale3 = rs.getInt("psale3");
-                    PublicVar.PFree3 = rs.getInt("pfree3");
-                    PublicVar.PSum3 = rs.getInt("psum3");
-                    PublicVar.PDiscFree3 = rs.getDouble("pdiscfree3");
-                    PublicVar.PSale41 = rs.getInt("psale41");
-                    PublicVar.PSale42 = rs.getInt("psale42");
-                    PublicVar.PSale43 = rs.getInt("psale43");
-                    PublicVar.PFree41 = rs.getInt("pfree41");
-                    PublicVar.PFree42 = rs.getInt("pfree42");
-                    PublicVar.PFree43 = rs.getInt("pfree43");
-                    PublicVar.fixbranch = rs.getString("fixbranch");
-                    ReturnVal = true;
-                } else {
-                    ReturnVal = false;
-                }
-            } else {
-                ReturnVal = false;
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-
-            ReturnVal = false;
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return ReturnVal;
-    }
-
-    public void ClearTempPromotion(String Table) {
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                String UpdateQry = "delete from temppromotion where tableonno=" + "'" + Table + "'";
-                stmt.executeUpdate(UpdateQry);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
 
     }
 
@@ -1510,7 +994,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1535,70 +1019,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return ReturnValues;
-    }
-
-    public String SeekProductUnit(String TCode) {
-        String ReturnValues = "";
-
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String UserGroupFile = "select punit1 from product where pcode='" + TCode + "' limit 1";
-            ResultSet rs = stmt.executeQuery(UserGroupFile);
-            if (rs.next()) {
-                ReturnValues = ThaiUtil.ASCII2Unicode(rs.getString("punit1"));
-            } else {
-                ReturnValues = "*****";
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return ReturnValues;
-    }
-
-    public double SeekPluPrice(String TCode, String Etd) {
-        double ReturnValues = 0.0;
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String UserGroupFile = "select pprice11,pprice12,pprice13,pprice14,pprice15 from product where pcode='" + TCode + "' limit 1";
-            ResultSet rs = stmt.executeQuery(UserGroupFile);
-            if (rs.next()) {
-                if (Etd.equals("E")) {
-                    ReturnValues = rs.getDouble("pprice11");
-                }
-                if (Etd.equals("T")) {
-                    ReturnValues = rs.getDouble("pprice12");
-                }
-                if (Etd.equals("D")) {
-                    ReturnValues = rs.getDouble("pprice13");
-                }
-                if (Etd.equals("P")) {
-                    ReturnValues = rs.getDouble("pprice14");
-                }
-                if (Etd.equals("W")) {
-                    ReturnValues = rs.getDouble("pprice15");
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1623,7 +1044,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1648,7 +1069,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1673,7 +1094,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1703,7 +1124,7 @@ public class PUtility {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            
             AppLogUtil.log(PUtility.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PUtility.class);
@@ -1712,100 +1133,4 @@ public class PUtility {
         return ReturnValues;
     }
 
-    public Boolean SeekPromotion2(String Macno, String TCode) {
-        boolean foundData = false;
-        
-        mysqlConnect.open(PUtility.class);
-        try {
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                String SeekPromotion2 = "select pcode from promotion2 where (macno= '" + Macno + "') and (pcode= '" + TCode + "') limit 1";
-                try (ResultSet rs = stmt.executeQuery(SeekPromotion2)) {
-                    foundData = rs.next();
-                    rs.close();
-                }
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            AppLogUtil.log(PUtility.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(PUtility.class);
-        }
-
-        return foundData;
-    }
-
-    public Boolean ChkPromotion(String XPro1, TranRecord TranRec) {
-        Boolean ReturnVal = false;
-        if (XPro1.trim().length() == 0) {
-            ReturnVal = false;
-        } else {
-            Date CurDate = new Date();
-            //-----------------------
-            SimpleDateFormat DayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
-            SimpleDateFormat SqlDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm");
-            String CurTime = TimeFormat.format(CurDate);
-            String CurDay = DayFormat.format(CurDate);
-            if (SeekPromotion(XPro1)) {
-                if ((SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate1)) >= 0) && (SqlDate.format(CurDate).compareTo(SqlDate.format(PublicVar.PDate2)) <= 0)) {
-                    if (PublicVar.PSTRDay.indexOf(CurDay) > 0) {
-                        if (!((CurTime.compareTo(PublicVar.PTime1S) < 0) || (CurTime.compareTo(PublicVar.PTime1E) > 0))) {
-                            if (PublicVar.PTS1.indexOf(TranRec.R_ETD) > 0) {
-                                PublicVar.ProType = PublicVar.PType;
-                                ReturnVal = true;
-                                if (PublicVar.PType.equals("1")) {
-                                    PublicVar.PDisc = PublicVar.PDisc1;
-                                    PublicVar.PSpDisc = PublicVar.PSpDisc1;
-                                    PublicVar.ProType = PublicVar.PType;
-                                    if ((PublicVar.PDisc != 0) || (PublicVar.PSpDisc != 0)) {
-                                        ReturnVal = true;
-                                    } else {
-                                        PublicVar.ProType = PublicVar.PType;
-                                        ReturnVal = true;
-                                    }
-                                }
-                            }
-                        } else if (!((CurTime.compareTo(PublicVar.PTime2S) < 0) || (CurTime.compareTo(PublicVar.PTime2E) > 0))) {
-                            if (PublicVar.PTS2.indexOf(TranRec.R_ETD) > 0) {
-                                ReturnVal = true;
-                                PublicVar.ProType = PublicVar.PType;
-                                if (PublicVar.PType.equals("1")) {
-                                    PublicVar.PDisc = PublicVar.PDisc2;
-                                    PublicVar.PSpDisc = PublicVar.PSpDisc2;
-                                    PublicVar.ProType = PublicVar.PType;
-                                    if ((PublicVar.PDisc != 0) || (PublicVar.PSpDisc != 0)) {
-                                        ReturnVal = true;
-                                    } else {
-                                        PublicVar.ProType = PublicVar.PType;
-                                        ReturnVal = true;
-                                    }
-                                }
-                            }
-                        } else if (!((CurTime.compareTo(PublicVar.PTime3S) < 0) || (CurTime.compareTo(PublicVar.PTime3E) > 0))) {
-                            if (PublicVar.PTS3.indexOf(TranRec.R_ETD) > 0) {
-                                ReturnVal = true;
-                                PublicVar.ProType = PublicVar.PType;
-                                if (PublicVar.PType.equals("1")) {
-                                    PublicVar.PDisc = PublicVar.PDisc3;
-                                    PublicVar.PSpDisc = PublicVar.PSpDisc3;
-                                    PublicVar.ProType = PublicVar.PType;
-                                    if ((PublicVar.PDisc != 0) || (PublicVar.PSpDisc != 0)) {
-                                        ReturnVal = true;
-                                    } else {
-                                        PublicVar.ProType = PublicVar.PType;
-                                        ReturnVal = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                System.err.println("ไม่พบรายการโปรโมชั่น " + XPro1 + " ในแฟ้มข้อมูลโปรโมชั่น !!!");
-                ReturnVal = false;
-            }
-        }
-        return ReturnVal;
-    }
 }

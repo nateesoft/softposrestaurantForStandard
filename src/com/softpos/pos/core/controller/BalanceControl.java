@@ -249,7 +249,6 @@ public class BalanceControl {
             Value.ClearOPT();
             return iUpdate > 0;
         } catch (Exception e) {
-
             AppLogUtil.log(BalanceControl.class, "error", e);
 
             return false;
@@ -481,7 +480,7 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs.getDate("R_Date"));
                 } catch (SQLException e) {
-
+                    AppLogUtil.log(BalanceControl.class, "error", e);
                 }
 
                 beanData.add(balanceBean);
@@ -581,6 +580,7 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs1.getDate("R_Date"));
                 } catch (SQLException e) {
+                    AppLogUtil.log(BalanceControl.class, "error", e);
                 }
 
                 beanData.add(balanceBean);
@@ -696,7 +696,7 @@ public class BalanceControl {
                     try {
                         balanceBean.setR_Date(rs.getDate("R_Date"));
                     } catch (SQLException e) {
-
+                        AppLogUtil.log(BalanceControl.class, "error", e);
                     }
 
                     beanData.add(balanceBean);
@@ -863,7 +863,7 @@ public class BalanceControl {
                         try {
                             balanceBean.setR_Date(rs.getDate("R_Date"));
                         } catch (SQLException e) {
-                            
+                            AppLogUtil.log(BalanceControl.class, "error", e);
                         }
                         
                         beanData.add(balanceBean);
@@ -979,7 +979,7 @@ public class BalanceControl {
                     try {
                         balanceBean.setR_Date(rs1.getDate("R_Date"));
                     } catch (SQLException e) {
-                        
+                        AppLogUtil.log(BalanceControl.class, "error", e);
                     }
                     beanData.add(balanceBean);
                 }
@@ -1088,6 +1088,7 @@ public class BalanceControl {
                     try {
                         balanceBean.setR_Date(rs.getDate("R_Date"));
                     } catch (SQLException e) {
+                        AppLogUtil.log(BalanceControl.class, "error", e);
                     }
 
                     beanData.add(balanceBean);
@@ -1202,6 +1203,7 @@ public class BalanceControl {
                 try {
                     balanceBean.setR_Date(rs.getDate("R_Date"));
                 } catch (SQLException e) {
+                    AppLogUtil.log(BalanceControl.class, "error", e);
                 }
 
                 //balanceBean.setR_CashCard(""+rs.getFloat("R_CashCard"));
@@ -1263,6 +1265,7 @@ public class BalanceControl {
                         id = Integer.parseInt(data[1]);
                         id = id + 1;
                     } catch (NumberFormatException e) {
+                        AppLogUtil.log(BalanceControl.class, "error", e);
                         id = 1;
                     }
                     if (id < 10) {

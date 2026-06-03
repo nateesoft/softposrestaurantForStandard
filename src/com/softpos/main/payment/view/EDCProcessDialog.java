@@ -1,6 +1,7 @@
 package com.softpos.main.payment.view;
 
 import com.softpos.pos.core.controller.PUtility;
+import com.softpos.util.AppLogUtil;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
@@ -58,14 +59,14 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                     try {
                         serialPort = (SerialPort) portId.open("SimpleWriteApp", 1000);
                     } catch (PortInUseException e) {
-
+                        AppLogUtil.log(EDCProcessDialog.class, "error", e);
                     }
 
                     try {
                         outputStream = serialPort.getOutputStream();
                         inputStream = serialPort.getInputStream();
                     } catch (IOException e) {
-
+                        AppLogUtil.log(EDCProcessDialog.class, "error", e);
                     }
 
                     try {
@@ -74,7 +75,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                         serialPort.setOutputBufferSize(2048);
                         openStatus = true;
                     } catch (UnsupportedCommOperationException e) {
-
+                        AppLogUtil.log(EDCProcessDialog.class, "error", e);
                     }
 
                     break;
@@ -94,7 +95,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException e) {
-
+                AppLogUtil.log(EDCProcessDialog.class, "error", e);
             }
             serialPort.close();
         }
@@ -130,13 +131,13 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
             try {
                 serialPort.addEventListener(this);
             } catch (TooManyListenersException e) {
-
+                AppLogUtil.log(EDCProcessDialog.class, "error", e);
             }
 
             try {
                 inputStream = serialPort.getInputStream();
             } catch (IOException e) {
-
+                AppLogUtil.log(EDCProcessDialog.class, "error", e);
             }
             byte[] readBuffer = new byte[2048];
             try {
@@ -145,7 +146,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                 }
                 strRead = new String(readBuffer);
             } catch (IOException e) {
-
+                AppLogUtil.log(EDCProcessDialog.class, "error", e);
             }
             byte chz = (byte) strRead.charAt(0);
             int timeOut = 0;
@@ -156,6 +157,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
                     Thread.sleep(1000);
                 } catch (Exception ex) {
                 }
+                
                 chz = (byte) strRead.charAt(0);
                 timeOut++;
                 if (timeOut > 3000) {
@@ -194,6 +196,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
             Thread.sleep(100);
         } catch (Exception e) {
         }
+        
         if (chkError.equals("Y6")) {
             cardCode = "";
             appCode = "";
@@ -287,6 +290,7 @@ public class EDCProcessDialog extends JDialog implements SerialPortEventListener
         try {
             outputStream.write(ack.getBytes());
         } catch (IOException ex) {
+            AppLogUtil.log(EDCProcessDialog.class, "error", ex);
         }
     }
 

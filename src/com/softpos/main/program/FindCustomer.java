@@ -76,6 +76,7 @@ public class FindCustomer extends javax.swing.JDialog {
         try {
             ReturnValue = Datefmtshow.format(tdate);
         } catch (Exception e) {
+            AppLogUtil.log(FindCustomer.class, "error", e);
             ReturnValue = "00/00/0000";
         }
         return ReturnValue;

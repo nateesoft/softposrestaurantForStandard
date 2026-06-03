@@ -1065,6 +1065,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         try {
             width = Integer.parseInt(txtImgSize.getText());
         } catch (NumberFormatException e) {
+            AppLogUtil.log(MGRButtonMenu.class, "error", e);
             width = 125;
         }
         if (width <= 0) {
@@ -1081,6 +1082,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
         try {
             width = Integer.parseInt(txtImgSize.getText());
         } catch (NumberFormatException e) {
+            AppLogUtil.log(MGRButtonMenu.class, "error", e);
             width = 125;
         }
         if (width <= 0) {
