@@ -5,87 +5,11 @@ import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import com.softpos.util.AppLogUtil;
 
 public class TCuponControl {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
-
-    public List<TCuponBean> listTCupon() {
-        List<TCuponBean> listBean = new ArrayList<>();
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from t_cupon";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TCuponBean bean = new TCuponBean();
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Refno(rs.getString("R_Refno"));
-                bean.setTerminal(rs.getString("Terminal"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTime(rs.getString("Time"));
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setCuQuan(rs.getInt("CuQuan"));
-                bean.setCuAmt(rs.getFloat("CuAmt"));
-                bean.setRefund(rs.getString("Refund"));
-                bean.setCuTextCode(rs.getString("CuTextCode"));
-                bean.setCuTextComment(rs.getString("CuTextComment"));
-
-                listBean.add(bean);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TCuponControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        return listBean;
-    }
-
-    public List<TCuponBean> listTCupon(String R_Index) {
-        List<TCuponBean> listBean = new ArrayList<>();
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from t_cupon "
-                    + "where R_Index='" + R_Index + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TCuponBean bean = new TCuponBean();
-
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Refno(rs.getString("R_Refno"));
-                bean.setTerminal(rs.getString("Terminal"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTime(rs.getString("Time"));
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setCuQuan(rs.getInt("CuQuan"));
-                bean.setCuAmt(rs.getFloat("CuAmt"));
-                bean.setRefund(rs.getString("Refund"));
-                bean.setCuTextCode(rs.getString("CuTextCode"));
-                bean.setCuTextComment(rs.getString("CuTextComment"));
-
-                listBean.add(bean);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TCuponControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        return listBean;
-    }
 
     public TCuponBean getTCupon(String R_Index) {
         TCuponBean bean = null;

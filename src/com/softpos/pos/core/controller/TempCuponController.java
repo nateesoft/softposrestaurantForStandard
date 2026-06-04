@@ -1,97 +1,17 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.pos.core.model.TCuponBean;
 import com.softpos.pos.core.model.TempCuponBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import com.softpos.util.AppLogUtil;
 
 public class TempCuponController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
-
-    public List<TempCuponBean> listTempcupon() {
-        List<TempCuponBean> listBean = new ArrayList<>();
-        
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from tempcupon";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TempCuponBean bean = new TempCuponBean();
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Table(rs.getString("R_Table"));
-                bean.setTerminal(rs.getString("Terminal"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTime(rs.getString("Time"));
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setCuQuan(rs.getInt("CuQuan"));
-                bean.setCuAmt(rs.getFloat("CuAmt"));
-                bean.setCuTotal(rs.getFloat("CuTotal"));
-                bean.setCuDisc(rs.getFloat("CuDisc"));
-                bean.setCuRedule(rs.getFloat("CuRedule"));
-                bean.setCuPayment(rs.getFloat("CuPayment"));
-                bean.setCuTextCode(rs.getString("CuTextCode"));
-                bean.setCuTextComment(rs.getString("CuTextComment"));
-
-                listBean.add(bean);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TempCuponController.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        return listBean;
-    }
-
-    public List<TempCuponBean> listTempcupon(String R_Index) {
-        List<TempCuponBean> listBean = new ArrayList<>();
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from tempcupon where R_Index='" + R_Index + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TempCuponBean bean = new TempCuponBean();
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Table(rs.getString("R_Table"));
-                bean.setTerminal(rs.getString("Terminal"));
-                bean.setCashier(rs.getString("Cashier"));
-                bean.setTime(rs.getString("Time"));
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setCuQuan(rs.getInt("CuQuan"));
-                bean.setCuAmt(rs.getFloat("CuAmt"));
-                bean.setCuTotal(rs.getFloat("CuTotal"));
-                bean.setCuDisc(rs.getFloat("CuDisc"));
-                bean.setCuRedule(rs.getFloat("CuRedule"));
-                bean.setCuPayment(rs.getFloat("CuPayment"));
-                bean.setCuTextCode(rs.getString("CuTextCode"));
-                bean.setCuTextComment(rs.getString("CuTextComment"));
-
-                listBean.add(bean);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TempCuponController.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-
-        return listBean;
-    }
 
     public TempCuponBean getTempcupon(String R_Index) {
         TempCuponBean bean = new TempCuponBean();
@@ -176,21 +96,4 @@ public class TempCuponController {
         }
     }
 
-    public boolean moveToTCupon(TempCuponBean tempcupon, String B_Refno) {
-        TCuponControl tCon = AppContext.getTCuponControl();
-        TCuponBean tBean = new TCuponBean();
-        tBean.setR_Index(B_Refno + "/" + tempcupon.getTerminal());
-        tBean.setTerminal(tempcupon.getTerminal());
-        tBean.setR_Refno(B_Refno);
-        tBean.setCashier(tempcupon.getCashier());
-        tBean.setTime(tempcupon.getTime());
-        tBean.setCuCode(tempcupon.getCuCode());
-        tBean.setCuQuan(tempcupon.getCuQuan());
-        tBean.setCuAmt(tempcupon.getCuAmt());
-        tBean.setRefund("");
-        tBean.setCuTextCode("");
-        tBean.setCuTextComment("");
-
-        return tCon.saveTCupon(tBean);
-    }
 }

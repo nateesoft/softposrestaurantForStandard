@@ -2,7 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableSetup;
-import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.TableFileBean;
 import database.MySQLConnect;
 import java.sql.ResultSet;
@@ -28,150 +27,6 @@ public class TableFileControl {
         } catch (Exception e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
         }
-    }
-
-    public void saveTableFile(TableFileBean tableBean) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            String sql = "insert into tablefile "
-                    + "(Tcode,SoneCode,TLoginDate,MacNo,Cashier,TLoginTime,TCurTime,TCustomer,"
-                    + "TItem,TAmount,TOnAct,Service,ServiceAmt,EmpDisc,EmpDiscAmt,FastDisc,"
-                    + "FastDiscAmt,TrainDisc,TrainDiscAmt,MemDisc,MemDiscAmt,SubDisc,SubDiscAmt,"
-                    + "DiscBath,ProDiscAmt,SpaDiscAmt,CuponDiscAmt,ItemDiscAmt,MemCode,MemCurAmt,"
-                    + "MemName,MemBegin,MemEnd,Food,Drink,Product,NetTotal,PrintTotal,PrintChkBill,"
-                    + "PrintCnt,PrintTime1,PrintTime2,ChkBill,ChkBillTime,StkCode1,StkCode2,TDesk,"
-                    + "TUser,TPause)"
-                    + "values('" + tableBean.getTcode() + "','" + tableBean.getSoneCode() + "','"
-                    + tableBean.getTLoginDate() + "','" + tableBean.getMacNo() + "','"
-                    + tableBean.getCashier() + "','" + tableBean.getTLoginTime() + "','"
-                    + tableBean.getTCurTime() + "','" + tableBean.getTCustomer() + "','"
-                    + tableBean.getTItem() + "','" + tableBean.getTAmount() + "','" + tableBean.getTOnAct() + "','"
-                    + tableBean.getService() + "','" + tableBean.getServiceAmt() + "','"
-                    + tableBean.getEmpDisc() + "','" + tableBean.getEmpDiscAmt() + "','"
-                    + tableBean.getFastDisc() + "','" + tableBean.getFastDiscAmt() + "','"
-                    + tableBean.getTrainDisc() + "','" + tableBean.getTrainDiscAmt() + "','"
-                    + tableBean.getMemDisc() + "','" + tableBean.getMemDiscAmt() + "','"
-                    + tableBean.getSubDisc() + "','" + tableBean.getSubDiscAmt() + "','"
-                    + tableBean.getDiscBath() + "','" + tableBean.getProDiscAmt() + "','"
-                    + tableBean.getSpaDiscAmt() + "','" + tableBean.getCuponDiscAmt() + "','"
-                    + tableBean.getItemDiscAmt() + "','" + tableBean.getMemCode() + "','"
-                    + tableBean.getMemCurAmt() + "','" + tableBean.getMemName() + "','"
-                    + tableBean.getMemBegin() + "','" + tableBean.getMemEnd() + "','"
-                    + tableBean.getFood() + "','" + tableBean.getDrink() + "','" + tableBean.getProduct() + "','"
-                    + tableBean.getNetTotal() + "','" + tableBean.getPrintTotal() + "','"
-                    + tableBean.getPrintChkBill() + "','" + tableBean.getPrintCnt() + "','"
-                    + tableBean.getPrintTime1() + "','" + tableBean.getPrintTime2() + "','"
-                    + tableBean.getChkBill() + "','" + tableBean.getChkBillTime() + "','"
-                    + tableBean.getStkCode1() + "','" + tableBean.getStkCode2() + "','"
-                    + tableBean.getTDesk() + "','" + tableBean.getTUser() + "','" + tableBean.getTPause() + "')";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
-    public void updateTableFile(TableFileBean tableFile) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            String sql = "update tablefile set "
-                    + "Tcode='" + tableFile.getTcode() + "', SoneCode='" + tableFile.getSoneCode() + "', TLoginDate='"
-                    + tableFile.getTLoginDate() + "', MacNo='" + tableFile.getMacNo() + "', Cashier='"
-                    + tableFile.getCashier() + "', TLoginTime='" + tableFile.getTLoginTime() + "', TCurTime='"
-                    + tableFile.getTCurTime() + "', TCustomer='" + tableFile.getTCustomer() + "', TItem='"
-                    + tableFile.getTItem() + "', TAmount='" + tableFile.getTAmount() + "', TOnAct='"
-                    + tableFile.getTOnAct() + "', Service='" + tableFile.getService() + "', ServiceAmt='"
-                    + tableFile.getServiceAmt() + "', EmpDisc='" + tableFile.getEmpDisc() + "', EmpDiscAmt='"
-                    + tableFile.getEmpDiscAmt() + "', FastDisc='" + tableFile.getFastDisc() + "', FastDiscAmt='"
-                    + tableFile.getFastDiscAmt() + "', TrainDisc='" + tableFile.getTrainDisc() + "', TrainDiscAmt='"
-                    + tableFile.getTrainDiscAmt() + "', MemDisc='" + tableFile.getMemDisc() + "', MemDiscAmt='"
-                    + tableFile.getMemDiscAmt() + "', SubDisc='" + tableFile.getSubDisc() + "', SubDiscAmt='"
-                    + tableFile.getSubDiscAmt() + "', DiscBath='" + tableFile.getDiscBath() + "', ProDiscAmt='"
-                    + tableFile.getProDiscAmt() + "', SpaDiscAmt='" + tableFile.getSpaDiscAmt() + "', CuponDiscAmt='"
-                    + tableFile.getCuponDiscAmt() + "', MemCode='"
-                    + tableFile.getMemCode() + "', MemCurAmt='" + tableFile.getMemCurAmt() + "', MemName='"
-                    + tableFile.getMemName() + "', MemBegin='" + tableFile.getMemBegin() + "', MemEnd='"
-                    + tableFile.getMemEnd() + "', Food='" + tableFile.getFood() + "', Drink='"
-                    + tableFile.getDrink() + "', Product='" + tableFile.getProduct() + "', NetTotal='"
-                    + tableFile.getNetTotal() + "', PrintTotal='" + tableFile.getPrintTotal() + "', PrintChkBill='"
-                    + tableFile.getPrintChkBill() + "', PrintCnt='" + tableFile.getPrintCnt() + "', PrintTime1='"
-                    + tableFile.getPrintTime1() + "', PrintTime2='" + tableFile.getPrintTime2() + "', ChkBill='"
-                    + tableFile.getChkBill() + "', ChkBillTime='" + tableFile.getChkBillTime() + "', TDesk='"
-                    + tableFile.getTDesk() + "', TUser='" + tableFile.getTUser() + "', TPause='' "
-                    + tableFile.getTPause() + "' "
-                    + "where TCode='" + tableFile + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
-    public int checkTableRead(String tableNo, String user) {
-        int result;
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        mysqlConnect.open(TableFileControl.class);
-        try {
-            String sql = "select TItem,TOnAct,TUser from tablefile where TCode='" + tableNo + "' limit 1";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                String TActive;
-                int TItem;
-                String TUser;
-                String TOnAct;
-                if (rs.next()) {
-                    //table no is exist
-                    TActive = "Y";//rs.getString("TActive");
-                    if (TActive.equalsIgnoreCase("Y")) {
-                        TItem = rs.getInt("TItem");
-                        TOnAct = rs.getString("TOnAct");
-                        TUser = rs.getString("TUser");
-
-                        if (TItem > 0) {
-                            if (TOnAct.equalsIgnoreCase("Y")) {
-                                if (TUser.equals(user)) {
-                                    result = TABLE_EXIST_DATA;
-                                } else {
-                                    result = TABLE_EXIST_DATA_IS_ACTIVE;
-                                }
-                            } else {
-                                result = TABLE_EXIST_DATA;
-                            }
-                        } else {
-                            result = TABLE_READY;
-                        }
-                    } else {
-                        result = TABLE_NOT_ACTIVE;
-                    }
-                } else {
-                    result = TABLE_NOT_SETUP;
-                }
-                rs.close();
-                stmt.close();
-            }
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-            result = TABLE_NOT_SETUP;
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-
-        return result;
     }
 
     public List<TableFileBean> getALlHoldTable() {
@@ -474,60 +329,6 @@ public class TableFileControl {
         }
     }
 
-    public void updateTableActive(String table, String customer, String emp) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            String sql = "update tablefile set "
-                    + "TOnAct='Y',"
-                    + "TLoginDate=now(),"
-                    + "TLoginTime=curtime(),"
-                    + "TCustomer='" + customer + "',"
-                    + "TUser='" + emp + "',"
-                    + "TCurTime=curtime() "
-                    + "where tcode='" + table + "' "
-                    + "and tOnAct='N'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            PromotionControl proControl = AppContext.getPromotionControl();
-            proControl.updatePromotion(table);
-
-            //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
-            ServiceControl serviceControl = AppContext.getServiceControl();
-            serviceControl.updateService(table);
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
-    public void updateMacno(String table, String username) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            String sql = "update tablefile set "
-                    + "MacNo='" + Value.MACNO + "',"
-                    + "TUser='" + username + "' "
-                    + "where Tcode='" + table + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
     public void createNewTableSplit(TableFileBean table, String newTable) {
         
         mysqlConnect.closeConnection(TableFileControl.class);
@@ -600,46 +401,6 @@ public class TableFileControl {
         return tableNo;
     }
 
-    public void updateTableFile(String tableNo) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            double TAmount = 0.00;
-            BalanceControl bControl = AppContext.getBalanceControl();
-            List<BalanceBean> dataBean = bControl.getAllBalance(tableNo);
-            for (int i = 0; i < dataBean.size(); i++) {
-                BalanceBean bean = (BalanceBean) dataBean.get(i);
-                if (!bean.getR_Void().equals("V")) {
-                    TAmount += bean.getR_Total();
-                }
-            }
-
-            //update tablefile
-            String sql = "update tablefile "
-                    + "set TAmount='" + TAmount + "' "
-                    + "where Tcode='" + tableNo + "'";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-
-            //คำนวณโปรโมชัน + ค่าบริการ และคำนวณภาษีมูลค่าเพิ่ม
-            PromotionControl proControl = AppContext.getPromotionControl();
-            proControl.updatePromotion(tableNo);
-
-            //คำนวณค่าบริการ + คำนวณภาษีมูลค่าเพิ่ม
-            ServiceControl serviceControl = AppContext.getServiceControl();
-            serviceControl.updateService(tableNo);
-
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
     public boolean checkTableOpened(String tableNo) {
         
         mysqlConnect.closeConnection(TableFileControl.class);
@@ -689,24 +450,6 @@ public class TableFileControl {
         try {
             mysqlConnect.open(TableFileControl.class);
             String sql = "update tablefile set tonact='N' where tcode='" + TABLE_NO + "';";
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                stmt.executeUpdate(sql);
-                stmt.close();
-            }
-        } catch (SQLException e) {
-
-            AppLogUtil.log(TableFileControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(TableFileControl.class);
-        }
-    }
-
-    void updateTableActive(String TABLE_2) {
-        
-        mysqlConnect.closeConnection(TableFileControl.class);
-        try {
-            mysqlConnect.open(TableFileControl.class);
-            String sql = "update tablefile set tonact='Y' where tcode='" + TABLE_2 + "';";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
                 stmt.close();

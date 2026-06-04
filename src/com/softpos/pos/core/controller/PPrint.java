@@ -2608,15 +2608,6 @@ public class PPrint {
         return ans;
     }
 
-    public void cutPaperForT70() {
-        try {
-            byte Str[] = {29, 86, 1}; //init Printer
-            outputStream.write(Str);
-        } catch (IOException ex) {
-            AppLogUtil.log(PPrint.class, "error", ex);
-        }
-    }
-
     public void cutPaper() {
         try {
             byte Str[] = {27, 105, 0}; //init Printer

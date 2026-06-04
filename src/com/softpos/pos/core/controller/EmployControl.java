@@ -11,41 +11,6 @@ import java.util.List;
 public class EmployControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
-    public boolean checkEmployUse() {        
-        try {
-            mysqlConnect.open();
-            String sql = "select P_EmpUse from posconfigsetup where P_EmpUse='Y';";
-            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                if (rs.next()) {
-                    return true;
-                }
-            }
-
-        } catch (SQLException e) {
-            AppLogUtil.log(EmployControl.class, "error", e);
-        } finally {
-            mysqlConnect.close();
-        }
-        return false;
-    }
-
-    public boolean isEmployExists(String empCode) {
-        try {
-            mysqlConnect.open();
-            String sql = "select * from employ where code='" + empCode + "'";
-            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                if (rs.next()) {
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            AppLogUtil.log(EmployControl.class, "error", e);
-        } finally {
-            mysqlConnect.close();
-        }
-        return false;
-    }
-
     public String empName(String empCode) {
         String empName = "";
         try {

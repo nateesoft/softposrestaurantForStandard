@@ -9,7 +9,6 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
@@ -25,7 +24,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -36,7 +34,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import soft.virtual.KeyBoardDialog;
-import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 public class RefundBill extends javax.swing.JDialog {

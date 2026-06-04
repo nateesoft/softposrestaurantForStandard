@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+
 public class CheckStockNow extends javax.swing.JDialog {
 
     public CheckStockNow(java.awt.Frame parent, boolean modal) {

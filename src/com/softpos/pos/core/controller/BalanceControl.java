@@ -1304,34 +1304,6 @@ public class BalanceControl {
         }
     }
 
-    public boolean checkQuantity(String table, String R_PluCode, double R_Quan) {
-        
-        try {
-            mysqlConnect.open(this.getClass());
-            String sql = "select sum(R_Quan) R_Quan "
-                    + "from balance "
-                    + "where R_PluCode='" + R_PluCode + "' "
-                    + "and R_Table='" + table + "' "
-                    + "and R_Void<>'V' "
-                    + "group by R_PluCode";
-            double quan;
-            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                quan = R_Quan;
-                if (rs.next()) {
-                    quan = rs.getDouble("R_Quan");
-                    quan += R_Quan;
-                }
-                rs.close();
-            }
-            return quan >= 0;
-        } catch (SQLException e) {
-            AppLogUtil.log(BalanceControl.class, "error", e);
-            return false;
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
-        }
-    }
-
     public BalanceBean getProduct(String PCode, String R_Index) {
         BalanceBean balanceBean = new BalanceBean();
         

@@ -4,7 +4,6 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.EmployeeControl;
-import com.softpos.pos.core.controller.PrintToKicController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.controller.Value;

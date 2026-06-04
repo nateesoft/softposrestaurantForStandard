@@ -26,16 +26,8 @@ public class PosControl {
         poshwsetup = null;
     }
 
-    public static void resetPOSConfigSetup() {
-        posConfigSetup = null;
-    }
-
     public static void resetDataCompany() {
         companyBean = null;
-    }
-
-    public static void resetPosUser() {
-        posUser = null;
     }
 
     public void logout() {

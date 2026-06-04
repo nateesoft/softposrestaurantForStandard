@@ -3,8 +3,6 @@ package com.softpos.main.program;
 import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
