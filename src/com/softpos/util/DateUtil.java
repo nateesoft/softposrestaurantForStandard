@@ -240,38 +240,6 @@ public class DateUtil {
         return cal;
     }
 
-    public static GregorianCalendar showDateChooserDialog(JTextField jtext) {
-        try {
-            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-            GregorianCalendar cal;
-            DateChooserDialog dcd = new DateChooserDialog(null, true);
-            dcd.setVisible(true);
-            cal = (GregorianCalendar) dcd.getSelectedDate();
-            if (cal != null) {
-                jtext.setText(fmt.format(cal.getTime()));
-            }
-            return cal;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static GregorianCalendar showDateChooserDialog(JTextField jtext, SimpleDateFormat format) {
-        try {
-            SimpleDateFormat fmt = format;
-            GregorianCalendar cal;
-            DateChooserDialog dcd = new DateChooserDialog(null, true);
-            dcd.setVisible(true);
-            cal = (GregorianCalendar) dcd.getSelectedDate();
-            if (cal != null) {
-                jtext.setText(fmt.format(cal.getTime()));
-            }
-            return cal;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static Time lunarStay(Calendar lunarLanding, Calendar lunarDeparture) {
 
         long timeInMillis = getDistanceMillis(lunarLanding, lunarDeparture);
