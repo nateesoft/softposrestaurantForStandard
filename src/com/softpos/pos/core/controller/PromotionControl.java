@@ -147,11 +147,10 @@ public class PromotionControl {
         return proTab;
     }
 
-    private ProtabBean getDataSql(String sql) {
+    private ProtabBean getDataSql(String sql, MySQLConnect mysql) {
         ProtabBean proTab = new ProtabBean();
-        mysqlConnect.open(this.getClass());
         try {
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            try (Statement stmt = mysql.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     proTab.setProCode(rs.getString("ProCode"));
                     proTab.setProdesc(ThaiUtil.ASCII2Unicode(rs.getString("Prodesc")));
@@ -239,8 +238,6 @@ public class PromotionControl {
             }
         } catch (SQLException e) {
             AppLogUtil.log(PromotionControl.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
         }
 
         return proTab;
@@ -287,7 +284,7 @@ public class PromotionControl {
                         + "and PStrDay like '%" + E_Format_Date + "%' "
                         + "and PTS1 like '%" + balance.getR_ETD() + "%' ";
 
-                ProtabBean protab1 = getDataSql(sql);
+                ProtabBean protab1 = getDataSql(sql, mysqlConnect);
                 if (protab1 != null) {
                     try {
                         /*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P ก่อน หมายถึงเข้าข่ายโปรโมชัน */
