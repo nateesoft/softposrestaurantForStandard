@@ -2136,27 +2136,30 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         for (JButton button : buttons) {
             button.setText("");
             button.setIcon(null);
-            button.setBackground(null);
-            button.setForeground(Color.BLACK);
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.DARK_GRAY);
             button.setBorderPainted(false);
-            button.setOpaque(false);
-            button.setContentAreaFilled(false);
+            button.setBorder(null);
+            button.setOpaque(true);
+            button.setContentAreaFilled(true);
         }
     }
 
     private void setupButtonStyle(JButton button, int c) {
         if (buttonStyle == 1) {
             button.setFont(fontA);
-            button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            button.setBorder(null);
         } else {
             button.setPreferredSize(new Dimension(50, 50));
             button.setFocusPainted(false);
             button.setMargin(new Insets(0, 0, 0, 0));
-            button.setContentAreaFilled(false);
-            button.setBorderPainted(true);
-            button.setOpaque(false);
+            button.setContentAreaFilled(true);
+            button.setBorderPainted(false);
+            button.setOpaque(true);
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.DARK_GRAY);
             button.setFont(fontA);
-            button.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(180, 180, 180), 1));
+            button.setBorder(null);
         }
         button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
         button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
