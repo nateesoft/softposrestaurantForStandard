@@ -1793,7 +1793,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                             btn.setBorderPainted(true);
-                            btn.setForeground(Color.WHITE);
+                            btn.setForeground(Color.BLACK);
                             btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 150, 0), 2));
                         } else if (bean.getPrintChkBill().equals("Y")) {
                             btn.setOpaque(true);
