@@ -243,7 +243,7 @@ public class Login extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Software Restaurant SOFTPOS©2024 V.9");
+        jLabel6.setText("Software Restaurant ICS©2026 V2.0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -285,7 +285,7 @@ public class Login extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pbCheckUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -592,23 +592,64 @@ public class Login extends javax.swing.JDialog {
             pbCheckUpdate.setStringPainted(true);
             pbCheckUpdate.setMinimum(0);
             pbCheckUpdate.setMaximum(100);
+            pbCheckUpdate.setValue(0);
         });
 
         new Thread(() -> {
+            String[] phaseMessages = {
+                "กำลังเชื่อมต่อระบบ...",
+                "กำลังโหลดข้อมูลสาขา...",
+                "กำลังตรวจสอบอัพเดท...",
+                "เตรียมระบบพร้อมใช้งาน..."
+            };
+            java.awt.Color[] phaseColors = {
+                new java.awt.Color(51, 153, 255),
+                new java.awt.Color(255, 153, 0),
+                new java.awt.Color(255, 204, 0),
+                new java.awt.Color(0, 180, 80)
+            };
+            int[] phaseEnds = {25, 55, 80, 100};
+
             for (int i = 1; i <= 100; i++) {
                 final int progress = i;
+                int phaseIndex = 0;
+                for (int p = 0; p < phaseEnds.length; p++) {
+                    if (progress <= phaseEnds[p]) { phaseIndex = p; break; }
+                }
+                final int idx = phaseIndex;
                 SwingUtilities.invokeLater(() -> {
                     pbCheckUpdate.setValue(progress);
-                    pbCheckUpdate.setString("Check Update: (" + progress + " %)");
+                    pbCheckUpdate.setForeground(phaseColors[idx]);
+                    pbCheckUpdate.setString(phaseMessages[idx] + "  (" + progress + "%)");
                 });
                 try {
-                    Thread.sleep(25);
+                    int delay;
+                    if (progress <= 25) delay = 45;
+                    else if (progress <= 55) delay = 18;
+                    else if (progress <= 80) delay = 14;
+                    else delay = 35;
+                    Thread.sleep(delay);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
                 }
             }
-            SwingUtilities.invokeLater(() -> pbCheckUpdate.setString("SoftPOS Updated 20/09/2022 10:19:00"));
+
+            for (int blink = 0; blink < 4; blink++) {
+                final boolean bright = (blink % 2 == 0);
+                SwingUtilities.invokeLater(() -> {
+                    pbCheckUpdate.setForeground(bright
+                            ? new java.awt.Color(0, 200, 80)
+                            : new java.awt.Color(180, 230, 180));
+                    pbCheckUpdate.setString(bright ? "  ระบบพร้อมใช้งาน!" : "");
+                });
+                try { Thread.sleep(180); } catch (InterruptedException e) { Thread.currentThread().interrupt(); return; }
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                pbCheckUpdate.setForeground(new java.awt.Color(0, 180, 80));
+                pbCheckUpdate.setString("SoftPOS พร้อมใช้งาน - อัพเดทล่าสุด 20/09/2022 10:19:00");
+            });
         }).start();
     }
 

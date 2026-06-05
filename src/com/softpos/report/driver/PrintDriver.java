@@ -32,12 +32,6 @@ public class PrintDriver {
     private float width = 75;
     private float height = 72;
 
-    // Cache result of lookupPrintServices() — the call is expensive (OS-level scan).
-    // Refreshed every 30 s; stale enough to be cheap, fresh enough to catch printer changes.
-    private static volatile PrintService[] serviceCache = null;
-    private static volatile long serviceCacheTime = 0;
-    private static final long SERVICE_CACHE_TTL = 30_000L;
-
     public PrintDriver() {
     }
 
@@ -56,42 +50,35 @@ public class PrintDriver {
         textNormal += str + "\n";
     }
 
-    // -------------------------------------------------------------------------
-    // Public print methods — all return immediately; actual printing is queued.
-    // PrintService is resolved here (on the calling thread) so that side-effects
-    // in getPrinter() (e.g. clearing the printerCheckBill flag) happen synchronously.
-    // -------------------------------------------------------------------------
-
     public void printHTML() {
-        String capturedText = header + textAll + footer;
+        //Print Cashier
+        String text = header + textAll + footer;
         AppLogUtil.info("printHTML: ");
-        AppLogUtil.htmlFile(capturedText);
+        AppLogUtil.htmlFile(text);
 
-        PrintService service = getPrinter();
-        String queueKey = (service != null) ? service.getName() : "cashier";
-        float w = this.width, h = this.height;
+        try {
+            JEditorPane editor = new JEditorPane();
+            editor.setContentType("text/html");
+            editor.setText(text);
 
-        PrintQueueManager.getInstance().submitPrint(queueKey, () -> {
-            try {
-                JEditorPane editor = new JEditorPane();
-                editor.setContentType("text/html");
-                editor.setText(capturedText);
-                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-                attr.add(new MediaPrintableArea(0f, 0f, w, h, MediaPrintableArea.INCH));
-                if (service != null) {
-                    editor.print(null, null, false, service, attr, false);
-                } else {
-                    AppLogUtil.info("Cannot print printHTML:...>>>  ");
-                }
-            } catch (PrinterException e) {
-                AppLogUtil.log(PrintDriver.class, "error", e);
-            } finally {
-                close();
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
+
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printHTML:...>>>  ");
             }
-        });
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
+        }
+
+        close();
     }
 
     public void printHTMLIntoFile() throws FileNotFoundException, UnsupportedEncodingException {
+        //Print Cashier
         String header1 = "<html><head><meta charset=\"UTF-8\"></head><body><table align='center' border=0 cellpadding=0 cellspaceing=0 width=180 height=50>";
         String footer1 = "</table></body></html>";
 
@@ -115,6 +102,7 @@ public class PrintDriver {
             File file = new File(path);
             output = new BufferedWriter(new FileWriter(file));
             output.write(text);
+
         } catch (IOException e) {
             AppLogUtil.log(PrintDriver.class, "error", e);
         } finally {
@@ -128,172 +116,155 @@ public class PrintDriver {
     }
 
     public void printHTMLKitChen(String printerName) {
-        String capturedText = header + textAll + footer;
+        //Print Cashier
+        String text = header + textAll + footer;
         AppLogUtil.info("printHTMLKitChen: " + printerName);
-        AppLogUtil.htmlFile(capturedText);
+        AppLogUtil.htmlFile(text);
+        try {
+            JEditorPane editor = new JEditorPane();
+            editor.setContentType("text/html");
+            editor.setText(text);
 
-        PrintService service = getPrinterKitchen();
-        float w = this.width, h = this.height;
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-        PrintQueueManager.getInstance().submitPrint(printerName, () -> {
-            try {
-                JEditorPane editor = new JEditorPane();
-                editor.setContentType("text/html");
-                editor.setText(capturedText);
-                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-                attr.add(new MediaPrintableArea(0f, 0f, w, h, MediaPrintableArea.INCH));
-                if (service != null) {
-                    AppLogUtil.info("Process Print kic No.:...>>>  " + printerName);
-                    editor.print(null, null, false, service, attr, false);
-                } else {
-                    AppLogUtil.info("Cannot print printHTMLKitChen:...>>>  ");
-                }
-            } catch (PrinterException ex) {
-                AppLogUtil.log(PrintDriver.class, "error", ex);
-            } finally {
-                close();
+            PrintService printService = getPrinterKitchen();
+            if (printService != null) {
+                AppLogUtil.info("Process Print kic No.:...>>>  " + printerName);
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printHTMLKitChen:...>>>  ");
             }
-        });
+        } catch (PrinterException ex) {
+            AppLogUtil.log(PrintDriver.class, "error", ex);
+        }
+
+        close();
     }
 
     public void printHTMLKitChenByKictran(String printerName) {
-        String capturedText = header + textAll + footer;
+        //Print Cashier
+        String text = header + textAll + footer;
         AppLogUtil.info("printHTMLKitChenByKictran: ");
-        AppLogUtil.htmlFile(capturedText);
+        AppLogUtil.htmlFile(text);
+        try {
+            JEditorPane editor = new JEditorPane();
+            editor.setContentType("text/html");
+            editor.setText(text);
 
-        PrintService service = getPrinterKitchenKictran(printerName);
-        float w = this.width, h = this.height;
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-        PrintQueueManager.getInstance().submitPrint(printerName, () -> {
-            try {
-                JEditorPane editor = new JEditorPane();
-                editor.setContentType("text/html");
-                editor.setText(capturedText);
-                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-                attr.add(new MediaPrintableArea(0f, 0f, w, h, MediaPrintableArea.INCH));
-                if (service != null) {
-                    editor.print(null, null, false, service, attr, false);
-                } else {
-                    AppLogUtil.info("Cannot print printHTMLKitChenByKictran:...>>>  " + printerName);
-                }
-            } catch (PrinterException e) {
-                AppLogUtil.log(PrintDriver.class, "error", e);
-            } finally {
-                close();
+            PrintService printService = getPrinterKitchenKictran(printerName);
+            if (printService != null) {
+                editor.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printHTMLKitChenByKictran:...>>>  " + printerName);
             }
-        });
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
+        }
+
+        close();
     }
 
     public void printNormal() {
-        String capturedText = textNormal;
         AppLogUtil.info("printNormal: ");
-        AppLogUtil.htmlFile(capturedText);
+        AppLogUtil.htmlFile(textNormal);
+        try {
+            JTextArea textArea = new JTextArea(textNormal);
+            textArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
 
-        PrintService service = getPrinter();
-        String queueKey = (service != null) ? service.getName() : "cashier";
-        float w = this.width, h = this.height;
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
 
-        PrintQueueManager.getInstance().submitPrint(queueKey, () -> {
-            try {
-                JTextArea textArea = new JTextArea(capturedText);
-                textArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
-                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-                attr.add(new MediaPrintableArea(0f, 0f, w, h, MediaPrintableArea.INCH));
-                if (service != null) {
-                    textArea.print(null, null, false, service, attr, false);
-                } else {
-                    AppLogUtil.info("Cannot print printNormal:...>>>  ");
-                }
-            } catch (PrinterException e) {
-                AppLogUtil.log(PrintDriver.class, "error", e);
-            } finally {
-                close();
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                textArea.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printNormal:...>>>  ");
             }
-        });
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
+        }
+
+        close();
     }
 
     public void printKichen() {
-        String capturedText = textNormal;
         AppLogUtil.info("printKichen: ");
-        AppLogUtil.htmlFile(capturedText);
+        AppLogUtil.htmlFile(textNormal);
 
-        PrintService service = getPrinter();
-        String queueKey = (service != null) ? service.getName() : "cashier";
-        float w = this.width, h = this.height;
+        try {
+            JTextArea textArea = new JTextArea(textNormal);
+            textArea.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-        PrintQueueManager.getInstance().submitPrint(queueKey, () -> {
-            try {
-                JTextArea textArea = new JTextArea(capturedText);
-                textArea.setFont(new Font("Tahoma", Font.PLAIN, 16));
-                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-                attr.add(new MediaPrintableArea(0f, 0f, w, h, MediaPrintableArea.INCH));
-                if (service != null) {
-                    textArea.print(null, null, false, service, attr, false);
-                } else {
-                    AppLogUtil.info("Cannot print printKichen:...>>>  ");
-                }
-            } catch (PrinterException e) {
-                AppLogUtil.log(PrintDriver.class, "error", e);
-            } finally {
-                close();
+            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+            attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
+            PrintService printService = getPrinter();
+            if (printService != null) {
+                textArea.print(null, null, false, printService, attr, false);
+            } else {
+                AppLogUtil.info("Cannot print printKichen:...>>>  ");
             }
-        });
+        } catch (PrinterException e) {
+            AppLogUtil.log(PrintDriver.class, "error", e);
+        }
+
+        close();
     }
 
-    // -------------------------------------------------------------------------
-    // PrintService lookup — uses a 30-second cache to avoid repeated OS scans.
-    // getPrinter() is intentionally NOT moved to async: it reads+clears the
-    // printerCheckBill flag and must run on the caller's thread.
-    // -------------------------------------------------------------------------
-
     private PrintService getPrinter() {
-        PrintService[] services = lookupServices();
-        for (PrintService ps : services) {
-            if (PublicVar.printerCheckBill) {
-                if (ps.getName().equals(PublicVar.printerCheckBillName)) {
+        PrintService[] printService = PrinterJob.lookupPrintServices();
+
+        for (PrintService printService1 : printService) {
+            if (PublicVar.printerCheckBill == true) {
+                if (printService1.getName().equals(PublicVar.printerCheckBillName)) {
                     PublicVar.printerCheckBill = false;
-                    return ps;
+                    return printService1;
                 }
             } else {
-                if (ps.getName().equals(PublicVar.printerDriverName)) {
-                    return ps;
+                if (printService1.getName().equals(PublicVar.printerDriverName)) {
+                    return printService1;
                 }
             }
         }
-        return services.length > 0 ? services[0] : null;
+
+        if (printService.length > 0) {
+            return printService[0];
+        } else {
+            return null;
+        }
     }
 
     private PrintService getPrinterKitchen() {
-        PrintService[] services = lookupServices();
-        for (PrintService ps : services) {
-            if (ps.getName().equals(PublicVar.printerDriverKitChenName)) {
-                return ps;
+        PrintService[] printService = PrinterJob.lookupPrintServices();
+        for (PrintService printService1 : printService) {
+            if (printService1.getName().equals(PublicVar.printerDriverKitChenName)) {
+                return printService1;
             }
         }
-        return services.length > 0 ? services[0] : null;
+
+        if (printService.length > 0) {
+            return printService[0];
+        }
+
+        return null;
     }
 
     private PrintService getPrinterKitchenKictran(String printer) {
-        PrintService[] services = lookupServices();
-        for (PrintService ps : services) {
-            if (ps.getName().equals(printer)) {
-                return ps;
+        PrintService[] printService = PrinterJob.lookupPrintServices();
+        for (PrintService printService1 : printService) {
+            if (printService1.getName().equals(printer)) {
+                return printService1;
             }
         }
-        return services.length > 0 ? services[0] : null;
-    }
 
-    private static PrintService[] lookupServices() {
-        long now = System.currentTimeMillis();
-        if (serviceCache == null || (now - serviceCacheTime) > SERVICE_CACHE_TTL) {
-            synchronized (PrintDriver.class) {
-                if (serviceCache == null || (now - serviceCacheTime) > SERVICE_CACHE_TTL) {
-                    serviceCache = PrinterJob.lookupPrintServices();
-                    serviceCacheTime = now;
-                }
-            }
+        if (printService.length > 0) {
+            return printService[0];
         }
-        return serviceCache;
+
+        return null;
     }
 
     public void close() {

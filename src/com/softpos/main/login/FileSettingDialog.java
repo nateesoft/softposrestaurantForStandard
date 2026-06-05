@@ -2,12 +2,16 @@ package com.softpos.main.login;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
+import com.softpos.report.driver.PrintDriver;
 import com.softpos.util.FileManager;
 import java.awt.event.KeyEvent;
+import java.awt.print.PrinterJob;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.print.PrintService;
+import javax.swing.table.DefaultTableModel;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
@@ -18,6 +22,12 @@ public class FileSettingDialog extends javax.swing.JDialog {
         initComponents();
 
         loadConfig();
+        loadPrinters();
+
+        btnAddItem.addActionListener(e -> btnAddItemActionPerformed());
+        btnClearTable.addActionListener(e -> btnClearTableActionPerformed());
+        btnPrintTest.addActionListener(e -> btnPrintTestActionPerformed());
+        btnExample.addActionListener(e -> btnExampleActionPerformed());
     }
 
     @SuppressWarnings("unchecked")
@@ -61,6 +71,21 @@ public class FileSettingDialog extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         cbPopup = new javax.swing.JComboBox();
         jPanel5 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbData = new javax.swing.JTable();
+        lblItem1 = new javax.swing.JLabel();
+        txtItem1 = new javax.swing.JTextField();
+        btnPrintTest = new javax.swing.JButton();
+        cbListPrinterTest = new javax.swing.JComboBox<>();
+        lblItem2 = new javax.swing.JLabel();
+        txtItem2 = new javax.swing.JTextField();
+        txtItem3 = new javax.swing.JTextField();
+        lblItem3 = new javax.swing.JLabel();
+        lblItem4 = new javax.swing.JLabel();
+        txtItem4 = new javax.swing.JTextField();
+        btnAddItem = new javax.swing.JButton();
+        btnClearTable = new javax.swing.JButton();
+        btnExample = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("File Configuration");
@@ -344,18 +369,108 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("กำหนดค่าการใช้งานระบบ", jPanel4);
 
+        tbData.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Column 1", "Column 2", "Column 3", "Column 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tbData);
+
+        lblItem1.setText("Column 1");
+
+        btnPrintTest.setBackground(new java.awt.Color(51, 102, 255));
+        btnPrintTest.setText("Print Test");
+
+        cbListPrinterTest.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        lblItem2.setText("Column 2");
+
+        lblItem3.setText("Column 3");
+
+        lblItem4.setText("Column 4");
+
+        btnAddItem.setBackground(new java.awt.Color(0, 255, 204));
+        btnAddItem.setText("Add Item");
+
+        btnClearTable.setText("Clear Table");
+
+        btnExample.setText("Example");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(cbListPrinterTest, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPrintTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(lblItem2)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtItem2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(lblItem3)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtItem3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(lblItem4)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtItem4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(lblItem1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtItem1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnClearTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnExample, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 294, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItem1)
+                    .addComponent(txtItem1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExample))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItem2)
+                    .addComponent(txtItem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItem3)
+                    .addComponent(txtItem3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItem4)
+                    .addComponent(txtItem4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddItem)
+                    .addComponent(btnClearTable))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrintTest)
+                    .addComponent(cbListPrinterTest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("ตั้งค่าปริ้นเตอร์", jPanel5);
+        jTabbedPane1.addTab("ทดสอบปริ้นเตอร์", jPanel5);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -390,9 +505,14 @@ public class FileSettingDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_txtServerKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddItem;
+    private javax.swing.JButton btnClearTable;
+    private javax.swing.JButton btnExample;
+    private javax.swing.JButton btnPrintTest;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox cbDriver;
     private javax.swing.JComboBox cbKicPrint;
+    private javax.swing.JComboBox<String> cbListPrinterTest;
     private javax.swing.JComboBox cbPopup;
     private javax.swing.JComboBox cbPrint;
     private javax.swing.JButton jButton1;
@@ -416,9 +536,19 @@ public class FileSettingDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblItem1;
+    private javax.swing.JLabel lblItem2;
+    private javax.swing.JLabel lblItem3;
+    private javax.swing.JLabel lblItem4;
+    private javax.swing.JTable tbData;
     private javax.swing.JTextField txtCharSet;
     private javax.swing.JTextField txtDatabase;
+    private javax.swing.JTextField txtItem1;
+    private javax.swing.JTextField txtItem2;
+    private javax.swing.JTextField txtItem3;
+    private javax.swing.JTextField txtItem4;
     private javax.swing.JTextField txtLang;
     private javax.swing.JTextField txtMacno;
     private javax.swing.JTextField txtMember;
@@ -428,6 +558,81 @@ public class FileSettingDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txtServer;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
+
+    private void loadPrinters() {
+        cbListPrinterTest.removeAllItems();
+        for (PrintService ps : PrinterJob.lookupPrintServices()) {
+            cbListPrinterTest.addItem(ps.getName());
+        }
+    }
+
+    private void btnAddItemActionPerformed() {
+        DefaultTableModel model = (DefaultTableModel) tbData.getModel();
+        model.addRow(new Object[]{
+            txtItem1.getText(),
+            txtItem2.getText(),
+            txtItem3.getText(),
+            txtItem4.getText()
+        });
+        txtItem1.setText("");
+        txtItem2.setText("");
+        txtItem3.setText("");
+        txtItem4.setText("");
+        txtItem1.requestFocus();
+    }
+
+    private void btnClearTableActionPerformed() {
+        ((DefaultTableModel) tbData.getModel()).setRowCount(0);
+        exampleCounter = 1;
+    }
+
+    private static final String[] SAMPLE_ITEMS = {
+        "ข้าวผัดกุ้ง", "ต้มยำกุ้ง", "ผัดไทย", "แกงเขียวหวาน", "ยำวุ้นเส้น",
+        "ข้าวมันไก่", "ผัดกะเพรา", "ต้มข่าไก่", "ผัดซีอิ้ว", "ข้าวหมูแดง"
+    };
+    private int exampleCounter = 1;
+
+    private void btnExampleActionPerformed() {
+        String name = SAMPLE_ITEMS[(exampleCounter - 1) % SAMPLE_ITEMS.length];
+        txtItem1.setText(name + " " + exampleCounter);
+        txtItem2.setText("หมวด " + (char) ('A' + (exampleCounter - 1) % 5));
+        txtItem3.setText("" + exampleCounter);
+        txtItem4.setText(String.format("%.2f", exampleCounter * 50.0));
+        exampleCounter++;
+    }
+
+    private void btnPrintTestActionPerformed() {
+        String printerName = (String) cbListPrinterTest.getSelectedItem();
+        AppLogUtil.info("PrintDriver PrintTest: printer=[" + printerName + "]");
+        if (printerName == null) {
+            MSG.NOTICE(this, "กรุณาเลือก Printer ก่อน");
+            return;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) tbData.getModel();
+        if (model.getRowCount() == 0) {
+            MSG.NOTICE(this, "กรุณาเพิ่มข้อมูลใน Table ก่อน");
+            return;
+        }
+
+        AppLogUtil.info("PrintDriver PrintTest: rows=" + model.getRowCount());
+        PrintDriver pd = new PrintDriver();
+        pd.addTextLn("<b>=== Print Test ===</b>");
+        pd.addTextLn("----------------------------------");
+
+        for (int row = 0; row < model.getRowCount(); row++) {
+            StringBuilder sb = new StringBuilder();
+            for (int col = 0; col < model.getColumnCount(); col++) {
+                Object val = model.getValueAt(row, col);
+                sb.append(val != null ? val.toString() : "").append("  ");
+            }
+            pd.addTextLn(sb.toString().trim());
+        }
+
+        pd.addTextLn("----------------------------------");
+        pd.printHTMLKitChenByKictran(printerName);
+        MSG.NOTICE(this, "ส่งงานพิมพ์ไปที่ [" + printerName + "] แล้ว\nดูผลใน log หากไม่มีงานออกมา");
+    }
 
     private void save() {
         String fileConfig = PublicVar.FILE_CONFIG;

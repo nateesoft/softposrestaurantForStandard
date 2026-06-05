@@ -369,7 +369,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Software Restaurant SOFTPOS&#xa9;2024 V.9"/>
+            <Property name="text" type="java.lang.String" value="Software Restaurant ICS&#xa9;2026 V2.0"/>
           </Properties>
         </Component>
       </SubComponents>
