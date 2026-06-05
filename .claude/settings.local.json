@@ -69,7 +69,10 @@
       "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/byte-buddy-agent-1.12.19.jar \"https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar\")",
       "Bash(which ant *)",
       "Read(//usr/**)",
-      "Read(//opt/**)"
+      "Read(//opt/**)",
+      "Bash(git -C /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard diff src/com/softpos/report/driver/PrintDriver.java)",
+      "Bash(awk '/public void printCheckBillDriver\\\\\\(String tableNo\\\\\\)/{found=1} found{print NR\": \"$0; if\\(/^    \\\\}$/ && found && NR>1622\\){exit}}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/PPrint.java)",
+      "Bash(git -C /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard diff src/com/softpos/report/driver/PrintSimpleForm.java)"
     ],
     "additionalDirectories": [
       "/tmp"

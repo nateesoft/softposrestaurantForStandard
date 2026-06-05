@@ -127,6 +127,47 @@ public class MainSale extends javax.swing.JDialog {
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 
+    private void addProductCode(KeyEvent evt) {
+        //คำสั่ง Enter,ESCAPE
+        if (!isTakeOrder()) {
+            switch (evt.getKeyCode()) {
+                case KeyEvent.VK_ENTER:
+                    pCodeEnter();
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    break;
+                case KeyEvent.VK_F1:
+                    FindProduct find = new FindProduct(new JFrame(), true);
+                    find.setVisible(true);
+                    if (!find.getPCode().equals("")) {
+                        txtProductCode.setText(txtProductCode.getText() + find.getPCode());
+
+                    }
+                    break;
+                case KeyEvent.VK_F3:
+                    actionHoldTable();
+                    break;
+                case KeyEvent.VK_F4:
+                    showCheckBill();
+                    break;
+                case KeyEvent.VK_F6:
+                    showBillCheck();
+                    break;
+                case KeyEvent.VK_F9:
+                    showCustomerInput();
+                    break;
+                case KeyEvent.VK_UP:
+                    selectedTableBalance();
+                    break;
+                case KeyEvent.VK_F11:
+                    showMember();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private static class MainSaleInitData {
 
         PosUserBean posUser;
@@ -167,7 +208,7 @@ public class MainSale extends javax.swing.JDialog {
 
         final String tNo = tableNo;
         this.tableNo = tableNo;
-        
+
         new SwingWorker<MainSaleInitData, Void>() {
             @Override
             protected MainSaleInitData doInBackground() {
@@ -253,12 +294,12 @@ public class MainSale extends javax.swing.JDialog {
                     loadTableBalance(tNo);
                     historyBack = new ArrayList<>();
                     sumSplit();
+                    
+                    showCustomerInput();
+                    
                     txtProductCode.setEditable(true);
                     txtProductCode.setFocusable(true);
                     txtProductCode.requestFocus();
-                    
-                    showCustomerInput();
-                    upDateTableFile();
 
                 } catch (InterruptedException | ExecutionException ex) {
                     AppLogUtil.log(MainSale.class, "error", ex);
@@ -819,11 +860,6 @@ public class MainSale extends javax.swing.JDialog {
                 txtProductCodeFocusGained(evt);
             }
         });
-        txtProductCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtProductCodeActionPerformed(evt);
-            }
-        });
         txtProductCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtProductCodeKeyPressed(evt);
@@ -1232,35 +1268,35 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void txtTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTableKeyPressed
-    switch (evt.getKeyCode()) {
-        case KeyEvent.VK_ENTER:
-            tableOpened();
-            break;
-        case KeyEvent.VK_ESCAPE:
-            txtTable.setText("");
-            bntlogoffuserClick();
-            break;
-        case KeyEvent.VK_F5:
-            showTableAvialble();
-            break;
-        case KeyEvent.VK_F8:
-            showPaidIn();
-            break;
-        case KeyEvent.VK_F9:
-            showPaidOut();
-            break;
-        case KeyEvent.VK_F6:
-            showBillDuplicate();
-            break;
-        case KeyEvent.VK_F7:
-            showRefundBill();
-            break;
-        case KeyEvent.VK_F12:
-            showPayAR();
-            break;
-        default:
-            break;
-    }
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                tableOpened();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                txtTable.setText("");
+                bntlogoffuserClick();
+                break;
+            case KeyEvent.VK_F5:
+                showTableAvialble();
+                break;
+            case KeyEvent.VK_F8:
+                showPaidIn();
+                break;
+            case KeyEvent.VK_F9:
+                showPaidOut();
+                break;
+            case KeyEvent.VK_F6:
+                showBillDuplicate();
+                break;
+            case KeyEvent.VK_F7:
+                showRefundBill();
+                break;
+            case KeyEvent.VK_F12:
+                showPayAR();
+                break;
+            default:
+                break;
+        }
 
 }//GEN-LAST:event_txtTableKeyPressed
 
@@ -1352,7 +1388,9 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void showSum() { //คำสั่งกำหนดให้ไปโชว์ค่ายอดเงินในส่วนต่างๆ
-        if (tableNo == null) return;
+        if (tableNo == null) {
+            return;
+        }
         //show sum
         TableFileBean tfBean = tableFileControl.getData(tableNo);
         double totalDiscount;
@@ -1387,12 +1425,12 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        txtProductCode.setEditable(true);
-        txtProductCode.requestFocus();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtProductCode.setEditable(true);
+            txtProductCode.requestFocus();
 
-        txtCustOnExit();
-    }
+            txtCustOnExit();
+        }
 }//GEN-LAST:event_txtCustKeyPressed
     //คำสั่งกำหนดจำนวนลูกค้า
     private void txtCustOnExit() {
@@ -1419,168 +1457,130 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void txtProductCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductCodeKeyPressed
-    //คำสั่ง Enter,ESCAPE
-    if (!isTakeOrder()) {
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
-                pCodeEnter();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                break;
-            case KeyEvent.VK_F1:
-                FindProduct find = new FindProduct(new JFrame(), true);
-                find.setVisible(true);
-                if (!find.getPCode().equals("")) {
-                    txtProductCode.setText(txtProductCode.getText() + find.getPCode());
-
-                }
-                break;
-            case KeyEvent.VK_F3:
-                actionHoldTable();
-                break;
-            case KeyEvent.VK_F4:
-                showCheckBill();
-                break;
-            case KeyEvent.VK_F6:
-                showBillCheck();
-                break;
-            case KeyEvent.VK_F9:
-                showCustomerInput();
-                break;
-            case KeyEvent.VK_UP:
-                selectedTableBalance();
-                break;
-            case KeyEvent.VK_F11:
-                showMember();
-                break;
-            default:
-                break;
-        }
-    }
-
+        addProductCode(evt);
 }//GEN-LAST:event_txtProductCodeKeyPressed
 
     private void tbShowBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbShowBalanceKeyPressed
-    //คำสั่ง Enter,ESCAPE
-    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        txtProductCode.requestFocus();
-    } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        int row = tbShowBalance.getSelectedRow();
-        if (row != -1) {
-            Object r_index = model.getValueAt(row, 10);
-            Object voidMsg = model.getValueAt(row, 5);
-            String strVoid;
-            if (voidMsg != null) {
-                strVoid = voidMsg.toString();
-            } else {
-                strVoid = "";
-            }
+        //คำสั่ง Enter,ESCAPE
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            txtProductCode.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            int row = tbShowBalance.getSelectedRow();
+            if (row != -1) {
+                Object r_index = model.getValueAt(row, 10);
+                Object voidMsg = model.getValueAt(row, 5);
+                String strVoid;
+                if (voidMsg != null) {
+                    strVoid = voidMsg.toString();
+                } else {
+                    strVoid = "";
+                }
 
-            if (r_index != null && !strVoid.equalsIgnoreCase("V")) {
-                selectedOptionBill();
-                txtProductCode.requestFocus();
+                if (r_index != null && !strVoid.equalsIgnoreCase("V")) {
+                    selectedOptionBill();
+                    txtProductCode.requestFocus();
+                }
             }
         }
-    }
 
 }//GEN-LAST:event_tbShowBalanceKeyPressed
 
     private void MAddNewAccr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MAddNewAccr1ActionPerformed
-    PublicVar.TempUserRec = PublicVar.TUserRec;
-    if (posUser.getSale7().equals("Y")) {
-        AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
-        fmt.setVisible(true);
-    } else {
-        GetUserAction getuser = new GetUserAction(new JFrame(), true);
-        getuser.setVisible(true);
+        PublicVar.TempUserRec = PublicVar.TUserRec;
+        if (posUser.getSale7().equals("Y")) {
+            AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
+            fmt.setVisible(true);
+        } else {
+            GetUserAction getuser = new GetUserAction(new JFrame(), true);
+            getuser.setVisible(true);
 
-        if (!PublicVar.ReturnString.equals("")) {
-            if (posUser.getUserName() != null) {
-                if (posUser.getSale7().equals("Y")) {
-                    PublicVar.TUserRec = posUser;
-                    AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
-                    fmt.setVisible(true);
+            if (!PublicVar.ReturnString.equals("")) {
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale7().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
+                        AddNewArCustomer fmt = new AddNewArCustomer(new JFrame(), true);
+                        fmt.setVisible(true);
+                    } else {
+                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    }
                 } else {
-                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
-            } else {
-                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
             }
         }
-    }
-    PublicVar.TUserRec = PublicVar.TempUserRec;
+        PublicVar.TUserRec = PublicVar.TempUserRec;
 }//GEN-LAST:event_MAddNewAccr1ActionPerformed
 
     private void MRepArNotPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArNotPayment1ActionPerformed
-    PublicVar.TempUserRec = PublicVar.TUserRec;
+        PublicVar.TempUserRec = PublicVar.TUserRec;
 
-    if (posUser.getSale8().equals("Y")) {
-        ArNotPay frm = new ArNotPay(new JFrame(), true);
-        frm.setVisible(true);
-    } else {
-        GetUserAction getuser = new GetUserAction(new JFrame(), true);
-        getuser.setVisible(true);
+        if (posUser.getSale8().equals("Y")) {
+            ArNotPay frm = new ArNotPay(new JFrame(), true);
+            frm.setVisible(true);
+        } else {
+            GetUserAction getuser = new GetUserAction(new JFrame(), true);
+            getuser.setVisible(true);
 
-        if (!PublicVar.ReturnString.equals("")) {
-            if (posUser.getUserName() != null) {
-                if (posUser.getSale8().equals("Y")) {
-                    PublicVar.TUserRec = posUser;
-                    ArNotPay frm = new ArNotPay(new JFrame(), true);
-                    frm.setVisible(true);
+            if (!PublicVar.ReturnString.equals("")) {
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale8().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
+                        ArNotPay frm = new ArNotPay(new JFrame(), true);
+                        frm.setVisible(true);
+                    } else {
+                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    }
                 } else {
-                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
-            } else {
-                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
             }
         }
-    }
 
-    PublicVar.TUserRec = PublicVar.TempUserRec;
+        PublicVar.TUserRec = PublicVar.TempUserRec;
 
 }//GEN-LAST:event_MRepArNotPayment1ActionPerformed
 
     private void MRepArHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepArHistory1ActionPerformed
-    PublicVar.TempUserRec = PublicVar.TUserRec;
-    if (posUser.getSale9().equals("Y")) {
-        ArHistory frm = new ArHistory(new JFrame(), true);
-        frm.setVisible(true);
-    } else {
-        GetUserAction getuser = new GetUserAction(new JFrame(), true);
-        getuser.setVisible(true);
+        PublicVar.TempUserRec = PublicVar.TUserRec;
+        if (posUser.getSale9().equals("Y")) {
+            ArHistory frm = new ArHistory(new JFrame(), true);
+            frm.setVisible(true);
+        } else {
+            GetUserAction getuser = new GetUserAction(new JFrame(), true);
+            getuser.setVisible(true);
 
-        if (!PublicVar.ReturnString.equals("")) {
-            if (posUser.getUserName() != null) {
-                if (posUser.getSale9().equals("Y")) {
-                    PublicVar.TUserRec = posUser;
-                    ArHistory frm = new ArHistory(new JFrame(), true);
-                    frm.setVisible(true);
+            if (!PublicVar.ReturnString.equals("")) {
+                if (posUser.getUserName() != null) {
+                    if (posUser.getSale9().equals("Y")) {
+                        PublicVar.TUserRec = posUser;
+                        ArHistory frm = new ArHistory(new JFrame(), true);
+                        frm.setVisible(true);
+                    } else {
+                        MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    }
                 } else {
-                    MSG.ERR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
+                    MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
                 }
-            } else {
-                MSG.ERR(this, "ไม่สามารถ Load สิทธิ์การใช้งานของผู้ใช้งานคนนี้ได้ ...");
             }
         }
-    }
-    PublicVar.TUserRec = PublicVar.TempUserRec;
+        PublicVar.TUserRec = PublicVar.TempUserRec;
 }//GEN-LAST:event_MRepArHistory1ActionPerformed
 
     private void MRepMemberHistory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepMemberHistory1ActionPerformed
-    RepMember frm = new RepMember(new JFrame(), true);
-    frm.setVisible(true);
+        RepMember frm = new RepMember(new JFrame(), true);
+        frm.setVisible(true);
 }//GEN-LAST:event_MRepMemberHistory1ActionPerformed
 
     private void MHeaderBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHeaderBill1ActionPerformed
-    if (PublicVar.useprint) {
-        PPrint prn = new PPrint();
-        prn.printHeaderBill();
-    }
+        if (PublicVar.useprint) {
+            PPrint prn = new PPrint();
+            prn.printHeaderBill();
+        }
 }//GEN-LAST:event_MHeaderBill1ActionPerformed
 
     private void MRepInvCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MRepInvCash1ActionPerformed
-    PrintInv1 frm = new PrintInv1(new JFrame(), true);
-    frm.setVisible(true);
+        PrintInv1 frm = new PrintInv1(new JFrame(), true);
+        frm.setVisible(true);
 }//GEN-LAST:event_MRepInvCash1ActionPerformed
 
     private void clearTable() {
@@ -1848,10 +1848,6 @@ public class MainSale extends javax.swing.JDialog {
     private void btnLangENItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnLangENItemStateChanged
         PublicVar.languagePrint = "EN";
     }//GEN-LAST:event_btnLangENItemStateChanged
-
-    private void txtProductCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtProductCodeActionPerformed
 
     private void cancelArPaymentClick() {
         PublicVar.TempUserRec = PublicVar.TUserRec;
@@ -2813,10 +2809,10 @@ public class MainSale extends javax.swing.JDialog {
         } else {
             MSG.ERR(this, "หมายเลขนี้ไม่ได้มีการกำหนดไว้ในการทำงานโต๊ะหลัก !!!");
             TableOpenStatus = false;
-            
+
             txtTable.setEditable(true);
             txtTable.requestFocus();
-            
+
             txtTable.setText("");
         }
     }
@@ -2938,7 +2934,7 @@ public class MainSale extends javax.swing.JDialog {
             if (txtTable.getText().trim().equals("")) {
                 ShowTable frm = new ShowTable(new JFrame(), true);
                 frm.setVisible(true);
-                
+
                 if (!PublicVar.ReturnString.equals("")) {
                     txtTable.setText(PublicVar.TableSelected);
                     if (txtTable.getText().trim().length() > 0) {
@@ -3367,6 +3363,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void pCodeEnter() {
         String pluCode = txtProductCode.getText().trim();
+        if(pluCode.endsWith("")){
+            return;
+        }
+        
         String chkOpt = "";
         if (!pluCode.equals("")) {
             chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
@@ -3471,7 +3471,6 @@ public class MainSale extends javax.swing.JDialog {
         if (poshwSetup.getTakeOrderChk().equals("Y")) {
             btnPayment.setVisible(false);
             btnSplit.setVisible(false);
-//            bntPrintCheckBill.setVisible(false);
             isTakeOrder = true;
         }
 
@@ -3733,7 +3732,7 @@ public class MainSale extends javax.swing.JDialog {
         String sql = "UPDATE tablefile SET "
                 + "TOnAct= 'Y',"
                 + "macno='" + PublicVar.MACNO + "',"
-                + "TCustomer='"+txtCust.getText()+"', "
+                + "TCustomer='" + txtCust.getText() + "', "
                 + "tpause='N' "
                 + "WHERE Tcode='" + tableNo + "'";
         databaseConnection.execUpdate(sql);
@@ -4066,6 +4065,8 @@ public class MainSale extends javax.swing.JDialog {
                 txtCustOnExit();
             }
         }
+        
+        upDateTableFile();
     }
 
 }

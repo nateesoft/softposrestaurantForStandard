@@ -18,7 +18,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.OSValidator;
@@ -34,12 +33,6 @@ public class PrintDriver {
     private float height = 72;
 
     public PrintDriver() {
-        if (OSValidator.isWindows()) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-            }
-        }
     }
 
     public void setResolution(float w, float h) {
@@ -125,7 +118,7 @@ public class PrintDriver {
     public void printHTMLKitChen(String printerName) {
         //Print Cashier
         String text = header + textAll + footer;
-        AppLogUtil.info("printHTMLKitChen: ");
+        AppLogUtil.info("printHTMLKitChen: " + printerName);
         AppLogUtil.htmlFile(text);
         try {
             JEditorPane editor = new JEditorPane();
@@ -277,11 +270,8 @@ public class PrintDriver {
     public void close() {
         SwingUtilities.invokeLater(() -> {
             if (OSValidator.isWindows()) {
-                try {
-                    UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
-                            "Tahoma", java.awt.Font.PLAIN, 14)));
-                } catch (Exception e) {
-                }
+                UIManager.put("OptionPane.messageFont", new javax.swing.plaf.FontUIResource(new java.awt.Font(
+                        "Tahoma", java.awt.Font.PLAIN, 14)));
             }
         });
     }

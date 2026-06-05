@@ -75,6 +75,8 @@ import com.softpos.util.DateConvert;
 import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.Option;
+import java.awt.KeyEventDispatcher;
+import javax.swing.JLabel;
 
 public class FloorPlanDialog extends javax.swing.JFrame {
 
@@ -96,7 +98,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private PPrint pPrint = new PPrint();
     private Timer autoRefreshTimer;
     private int countdownSeconds = 15;
-    private javax.swing.JLabel lblCountdown;
+    private JLabel lblCountdown;
+    private final StringBuilder keyBuffer = new StringBuilder();
+    private JLabel lblKeyInput;
+    private KeyEventDispatcher keyDispatcher;
 
     private final ProductControl productControl = AppContext.getProductControl();
     private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
@@ -119,6 +124,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setupAutoRefresh();
+        setupKeyboardShortcuts();
 
         // Show loading overlay while DB data loads
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
@@ -1787,6 +1793,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                             btn.setBorderPainted(true);
+                            btn.setForeground(Color.WHITE);
                             btn.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 150, 0), 2));
                         } else if (bean.getPrintChkBill().equals("Y")) {
                             btn.setOpaque(true);
@@ -1993,7 +2000,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     if (!PublicVar.ReturnString.equals(posUser.getUserName()) && PublicVar.ReturnPermitRefund == true) {
                         RefundBill refund = new RefundBill(this, true);
                         refund.setVisible(true);
-//                        PublicVar.ReturnPermitRefund = false;
                     } else {
                         if (posUser.getSale2().equals("Y")) {
                             RefundBill refund = new RefundBill(this, true);
@@ -2193,6 +2199,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         if (autoRefreshTimer != null) {
             autoRefreshTimer.stop();
         }
+        if (keyDispatcher != null) {
+            java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyDispatcher);
+        }
         this.setVisible(false);
     }
 
@@ -2229,6 +2238,86 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         } else {
             lblCountdown.setBackground(new Color(40, 110, 40));
             lblCountdown.setForeground(new Color(200, 255, 200));
+        }
+    }
+
+    private void setupKeyboardShortcuts() {
+        lblKeyInput = new javax.swing.JLabel("  [พิมพ์เลขโต๊ะ + Enter]  ");
+        lblKeyInput.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblKeyInput.setForeground(Color.WHITE);
+        lblKeyInput.setOpaque(true);
+        lblKeyInput.setBackground(new Color(60, 60, 120));
+        lblKeyInput.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            javax.swing.BorderFactory.createLineBorder(new Color(100, 100, 200), 1),
+            javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
+        ));
+        jPanel1.add(lblKeyInput);
+
+        keyDispatcher = new java.awt.KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(java.awt.event.KeyEvent e) {
+                if (e.getID() != java.awt.event.KeyEvent.KEY_PRESSED || !FloorPlanDialog.this.isActive()) {
+                    return false;
+                }
+                int keyCode = e.getKeyCode();
+                char keyChar = e.getKeyChar();
+                if (Character.isDigit(keyChar)) {
+                    keyBuffer.append(keyChar);
+                    updateKeyInputLabel();
+                    return true;
+                }
+                switch (keyCode) {
+                    case java.awt.event.KeyEvent.VK_BACK_SPACE:
+                        if (keyBuffer.length() > 0) keyBuffer.deleteCharAt(keyBuffer.length() - 1);
+                        updateKeyInputLabel();
+                        return true;
+                    case java.awt.event.KeyEvent.VK_ESCAPE:
+                        keyBuffer.setLength(0);
+                        updateKeyInputLabel();
+                        return true;
+                    case java.awt.event.KeyEvent.VK_ENTER:
+                        fireMatchedButton();
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F1: loadZone("T"); return true;
+                    case java.awt.event.KeyEvent.VK_F2: loadZone("A"); return true;
+                    case java.awt.event.KeyEvent.VK_F3: loadZone("B"); return true;
+                    case java.awt.event.KeyEvent.VK_F4: loadZone("C"); return true;
+                    case java.awt.event.KeyEvent.VK_F5: loadZone("D"); return true;
+                    case java.awt.event.KeyEvent.VK_F6: loadZone("E"); return true;
+                    case java.awt.event.KeyEvent.VK_F7: loadZone("F"); return true;
+                    default: return false;
+                }
+            }
+        };
+        java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyDispatcher);
+    }
+
+    private void updateKeyInputLabel() {
+        if (lblKeyInput == null) return;
+        if (keyBuffer.length() == 0) {
+            lblKeyInput.setText("  [พิมพ์เลขโต๊ะ + Enter]  ");
+            lblKeyInput.setBackground(new Color(60, 60, 120));
+        } else {
+            lblKeyInput.setText("  โต๊ะ: " + keyBuffer.toString() + "  ");
+            lblKeyInput.setBackground(new Color(160, 60, 0));
+        }
+    }
+
+    private void fireMatchedButton() {
+        if (keyBuffer.length() == 0) return;
+        String typed = keyBuffer.toString();
+        keyBuffer.setLength(0);
+        updateKeyInputLabel();
+        for (JButton btn : buttons) {
+            if (btn == null) continue;
+            String text = btn.getText().trim();
+            if (text.isEmpty()) continue;
+            String tableNo = text.contains("(") ? text.substring(0, text.indexOf("(")).trim() : text;
+            String numericPart = tableNo.replaceAll("[^0-9]", "");
+            if (numericPart.equals(typed) || tableNo.equalsIgnoreCase(typed)) {
+                btn.doClick();
+                return;
+            }
         }
     }
 

@@ -1618,16 +1618,14 @@ public class CheckBill extends javax.swing.JDialog {
             txtCreditTrackNo.requestFocus();
             return;
         }
-//        new Thread(() -> {
-        BalanceBean balanceBean = null;
-        balanceBean = checkBillControl.getBalanceByTableNo(tableNo);
+        
+        BalanceBean balanceBean = checkBillControl.getBalanceByTableNo(tableNo);
         boolean isTakeOrder = isTakeOrder();
         if (balanceBean != null && isTakeOrder == true) {
             MSG.WAR(this, "Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
         } else {
             checkBillOK();
         }
-//        }).start();
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void txtCreditTrackNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditTrackNoActionPerformed
@@ -2203,14 +2201,12 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void printBillCheck() {
-        new Thread(new Runnable() {
-            public void run() {
-                PPrint print = new PPrint();
-                if (PublicVar.useprint && PublicVar.printdriver == false) {
-                    print.printCheckBill(tableNo);
-                } else {
-                    print.printCheckBillDriver(tableNo);
-                }
+        new Thread(() -> {
+            PPrint print = new PPrint();
+            if (PublicVar.useprint && PublicVar.printdriver == false) {
+                print.printCheckBill(tableNo);
+            } else {
+                print.printCheckBillDriver(tableNo);
             }
         }).start();
     }

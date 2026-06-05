@@ -14,18 +14,22 @@ public class CustomerCountDialog extends javax.swing.JDialog {
 
     public CustomerCountDialog(java.awt.Dialog parent, boolean modal, String TABLE_NO, String R_ETD) {
         super(parent, modal);
+        this.TABLE_NO = TABLE_NO;
+        this.R_ETD = R_ETD;
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         initComponents();
+        setLocationRelativeTo(parent);
 
         LoadCustomer();
 
-        this.TABLE_NO = TABLE_NO;
-        this.R_ETD = R_ETD;
-
-        if (this.R_ETD.equals("T")) {
-            txtCustomerName.requestFocus();
-        } else {
-            txtAmount.selectAll();
-        }
+        addWindowFocusListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+                txtAmount.selectAll();
+                txtAmount.requestFocusInWindow();
+                removeWindowFocusListener(this);
+            }
+        });
 
     }
 
@@ -60,7 +64,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("เลือกจำนวนลูกค้า");
-        setAutoRequestFocus(false);
+        setAlwaysOnTop(true);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -357,8 +361,7 @@ public class CustomerCountDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        int cust = 0;
-        cust = Integer.parseInt(txtAmount.getText());
+        int cust = Integer.parseInt(txtAmount.getText());
         if (cust < 1 || cust > 999) {
             MSG.WAR(this, "กรุณาใส่จำนวนลูกค้า Please Input Customer !!!");
         } else {
