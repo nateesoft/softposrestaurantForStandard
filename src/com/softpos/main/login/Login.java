@@ -7,7 +7,6 @@ import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.connection.database.ConfigFile;
@@ -421,7 +420,7 @@ public class Login extends javax.swing.JDialog {
         PublicVar.PrintCheckBillFromPDA = ConfigFile.getProperties("PrintCheckBillFromPDA");
         PublicVar.PrintCopyAuto = ConfigFile.getProperties("PrintCopyAuto");
         PublicVar.printerCheckBillName = ConfigFile.getProperties("printerCheckBillName");
-        Value.printdriver = Boolean.parseBoolean(ConfigFile.getProperties("printdriver"));
+        PublicVar.printdriver = Boolean.parseBoolean(ConfigFile.getProperties("printdriver"));
 
         if ((loginname.length() == 0) || (password.length() == 0)) {
             MSG.ERR(this, "กรุณาป้อนรหัสผู้ใช้งาน(Username)/รหัสผ่าน(Password)");
@@ -442,7 +441,7 @@ public class Login extends javax.swing.JDialog {
                 }
                 data.currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
                 data.hasPendingBills = AppContext.getBillControl().checkBillNoValid(data.currentDate);
-                data.posHwSetup = PosControl.getData(Value.MACNO);
+                data.posHwSetup = PosControl.getData(PublicVar.MACNO);
                 data.posUserBean = PosControl.getPosUser(loginname);
                 data.branchCode = BranchControl.getData().getCode();
                 return data;
@@ -480,7 +479,7 @@ public class Login extends javax.swing.JDialog {
         if (data.hasPendingBills) {
             String POSOnActCheck = data.posHwSetup.getOnAct();
             if (POSOnActCheck.equals("Y")) {
-                MSG.WAR(this, "เครื่อง POS " + Value.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
+                MSG.WAR(this, "เครื่อง POS " + PublicVar.MACNO + " เครื่องนี้มีสถานะใช้งานอยู่ "
                         + "หรืออาจเกิดจากการปิดโปรแกรมไม่สมบูรณ์\n "
                         + "กรุณาตรวจสอบฐานข้อมูล");
                 System.exit(0);
@@ -490,7 +489,7 @@ public class Login extends javax.swing.JDialog {
                 GetPassword frm = new GetPassword(null, true);
                 frm.setVisible(true);
                 if (frm.ValidPassword) {
-                    if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                    if (OnAct.equals("Y") && (!MacNoOnAct.equals(PublicVar.MACNO))) {
                         MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                         clearlogin();
                     } else {
@@ -500,7 +499,7 @@ public class Login extends javax.swing.JDialog {
                     System.exit(0);
                 }
             } else {
-                if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+                if (OnAct.equals("Y") && (!MacNoOnAct.equals(PublicVar.MACNO))) {
                     MSG.ERR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                     clearlogin();
                 } else {
@@ -508,7 +507,7 @@ public class Login extends javax.swing.JDialog {
                 }
             }
         } else {
-            if (OnAct.equals("Y") && (!MacNoOnAct.equals(Value.MACNO))) {
+            if (OnAct.equals("Y") && (!MacNoOnAct.equals(PublicVar.MACNO))) {
                 MSG.WAR(this, "รหัสพนักงาน " + loginname + " เข้าใช้งานอยู่แล้วที่เครื่องหมายเลข " + MacNoOnAct);
                 clearlogin();
             } else {
@@ -539,7 +538,7 @@ public class Login extends javax.swing.JDialog {
         }
 
         PublicVar.TUserRec = posUserBean;
-        Value.USERCODE = loginname;
+        PublicVar.USERCODE = loginname;
         PublicVar.Branch_Code = data.branchCode;
 
         btnLogin.setEnabled(false);

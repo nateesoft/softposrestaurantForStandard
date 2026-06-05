@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.controller.AppContext;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -26,7 +26,7 @@ public class CashBackDialog extends javax.swing.JDialog {
     public CashBackDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         txtCash.requestFocus();
     }
 
@@ -169,7 +169,7 @@ public class CashBackDialog extends javax.swing.JDialog {
          * * OPEN CONNECTION **
          */
         
-        String refStr = AppContext.getRefundBillController().saveCashBack(cash, Value.MACNO, Value.CASHIER);
+        String refStr = AppContext.getRefundBillController().saveCashBack(cash, PublicVar.MACNO, PublicVar.CASHIER);
         if (refStr != null) {
             dispose();
             PrintReturnMoney(refStr);
@@ -207,7 +207,7 @@ public class CashBackDialog extends javax.swing.JDialog {
                 t += "colspan=3 align=center><font face=Angsana New size=1>" + ("*** สำเนาใบที่ " + i + "***") + "_";
             }
             t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=2 align=left><font face=Angsana New size=1>" + TAB + ("คืนเงินมัดจำเเป็นเงินสด") + "</td></Font><td align=right><font face=Angsana New size=1>" + DecFmt.format(cash) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";

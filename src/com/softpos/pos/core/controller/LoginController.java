@@ -1,10 +1,11 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.main.login.Login;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -75,15 +76,15 @@ public class LoginController {
         try {
             String SQLQuery = "update posuser set "
                     + "onact='Y',"
-                    + "macno='" + Value.MACNO + "' "
+                    + "macno='" + PublicVar.MACNO + "' "
                     + "where username='" + UserCode + "'";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(SQLQuery);
-            Value.CASHIER = UserCode;
+            PublicVar.CASHIER = UserCode;
             String sql = "update posuser set "
                     + "onact='N' "
                     + "where username<>'" + UserCode + "' "
-                    + "and macno='" + Value.MACNO + "';";
+                    + "and macno='" + PublicVar.MACNO + "';";
             mysqlConnect.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {

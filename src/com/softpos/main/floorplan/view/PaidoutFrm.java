@@ -5,7 +5,6 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -25,12 +24,11 @@ public class PaidoutFrm extends javax.swing.JDialog {
     private String Space = " &nbsp; ";
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
-    private final Value Value = new Value();
 
     public PaidoutFrm(java.awt.Frame parent, boolean modal, String reson) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         this.reson = reson;
     }
 
@@ -61,10 +59,10 @@ public class PaidoutFrm extends javax.swing.JDialog {
             txtAmount.requestFocus();
             return;
         }
-        if (Value.useprint) {
-            if (Value.printdriver) {
+        if (PublicVar.useprint) {
+            if (PublicVar.printdriver) {
                 PrintDriver pd = new PrintDriver();
-                pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + St + " " + "Cashier: " + PublicVar._User + " Mac:" + Value.MACNO);
+                pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + St + " " + "Cashier: " + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------");
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "จำนวนเงินนำออกจากลิ้นชัก " + PUtility.DataFull(Decfmt.format(PaidoutAmt), 12));
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------");
@@ -75,20 +73,20 @@ public class PaidoutFrm extends javax.swing.JDialog {
                 Prn.openDrawerDriver();
                 pd.printHTML();
 
-            } else if (!Value.getComPort().equals("NONE")) {
-                if (Prn.openPrint(Value.getComPort())) {
+            } else if (!POSHW.getPRNPort().equals("NONE")) {
+                if (Prn.openPrint(POSHW.getPRNPort())) {
                     try {
                         //PRINT OUT
                         Prn.initPrinter();
                         Prn.openDrawer();
                         Prn.initPrinter();
-                        Prn.print(St + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        Prn.print(St + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                         Prn.print("------------------------------------------------------------");
                         Prn.print("จำนวนเงินนำออกจากลิ้นชัก    " + PUtility.DataFull(Decfmt.format(PaidoutAmt), 12));
                         Prn.print("------------------------------------------------------------");
                         Prn.print("หมายเหตุการนำเงินออกจากลิ้นชัก :" + reson);
                         Prn.print("");
-                        //Prn.print("REG ID :" + Value.MACNO);
+                        //Prn.print("REG ID :" + PublicVar.MACNO);
                         Prn.print("");
                         Prn.print("");
                         Prn.print("");

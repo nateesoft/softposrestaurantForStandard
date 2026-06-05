@@ -6,7 +6,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -39,7 +39,7 @@ public class TopSaleRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public TopSaleRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -51,7 +51,7 @@ public class TopSaleRep extends javax.swing.JDialog {
         txtGroup1.setText("0000");
         txtGroup2.setText("9999");
         txtCntOrder.setValue(10);
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -488,7 +488,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from temptopsale where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -551,7 +551,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate("delete from temptopsale where terminal='" + Value.MACNO + "'");
+            stmt.executeUpdate("delete from temptopsale where terminal='" + PublicVar.MACNO + "'");
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
@@ -583,24 +583,24 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             AppLogUtil.log(TopSaleRep.class, "error", e);
         }
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintTopSaleDriver(MacNo1, MacNo2, CashNo1, CashNo2, Group1, Group2, CntOrder);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("           รายงานอันดับสินค้าขายดี");
                     prn.print("           (Top Sales Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
                     prn.print("รหัสกลุ่ม/Group  " + Group1 + "..." + Group2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("กลุ่มสินค้า");
                     prn.print("ลำดับ  รหัสสินค้า         จำนวน    จำนวนเงิน ");
@@ -610,7 +610,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     //int CntOrder = 10 ;
                     try {
                         Statement stmt = mysqlConnect.getConnection().createStatement();
-                        String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+                        String SqlQuery = "select * from temptopsale where (terminal='" + PublicVar.MACNO + "') order by r_group,r_quan DESC";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
                             prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
@@ -660,7 +660,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from temptopsale where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -718,7 +718,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         t += "align=left><font face=Angsana New size=1>" + ("รหัสพนักงาน    :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + CashNo1 + " ..." + CashNo2) + "_";
         t += "align=center><font face=Angsana New size=1>" + ("รหัสกลุ่ม/Group  " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + Group1 + "..." + Group2) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "Cashier:" + PublicVar._UserName + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "Cashier:" + PublicVar._UserName + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("กลุ่มสินค้า") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลำดับ" + Space + "รหัสสินค้า" + Space + "จำนวน" + Space + "จำนวนเงิน ") + "_";
@@ -728,7 +728,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         //int CntOrder = 10 ;
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+            String SqlQuery = "select * from temptopsale where (terminal='" + PublicVar.MACNO + "') order by r_group,r_quan DESC";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + ("***" + rs.getString("r_group") + Space + PUtility.SeekGroupName(rs.getString("r_group"))) + "_";
@@ -773,7 +773,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert ignore into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
-                    + "values ('" + Value.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
+                    + "values ('" + PublicVar.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {

@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -45,7 +45,7 @@ public class MTDCoupon extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDCoupon(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -55,7 +55,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -365,22 +365,22 @@ public class MTDCoupon extends javax.swing.JDialog {
         String MacNo2 = txtMacNo2.getText();
         Double SumQty = 0.0;
         Double SumAmt = 0.0;
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintSpecialCuponDriver(MacNo1, MacNo2);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(PublicVar.HWrec_Heading1);
                     prn.print(PublicVar.HWrec_Heading2);
                     prn.print(PublicVar.HWrec_Heading3);
                     prn.print(PublicVar.HWrec_Heading4);
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("      รายงานส่วนลดบัตรคูปองพิเศษ");
                     prn.print("         (Coupon Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("บัตรคูปอง                 จำนวน      ส่วนลด ");
                     prn.print("----------------------------------------");
@@ -454,7 +454,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         t += ("colspan=3 align=center><font face=Angsana New size=1>_");
         t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + MacNo1 + " ..." + MacNo2 + "_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("บัตรคูปอง" + Space + "จำนวน" + Space + "ส่วนลด ") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";

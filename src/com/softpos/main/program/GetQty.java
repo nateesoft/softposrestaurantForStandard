@@ -1,7 +1,8 @@
 package com.softpos.main.program;
 
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.constants.Value;
+
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -690,10 +691,10 @@ private void c_bntclrMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     private void chkAutoQtyItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkAutoQtyItemStateChanged
         if (chkAutoQty.isSelected()) {
             // set fix autoqty = false
-            Value.autoqty = false;
+            PublicVar.autoqty = false;
         } else {
             // set fix autoqty = true;
-            Value.autoqty = true;
+            PublicVar.autoqty = true;
         }
     }//GEN-LAST:event_chkAutoQtyItemStateChanged
 

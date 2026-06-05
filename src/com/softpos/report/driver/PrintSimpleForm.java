@@ -6,13 +6,14 @@ import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.EmployeeControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.EmployeeBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -283,10 +284,10 @@ public class PrintSimpleForm {
                     PrintDriver pd = new PrintDriver();
                     String[] strs = t.split("_");
                     for (String data1 : strs) {
-                        Value.printerDriverKitChenName = "kic" + printerName;
+                        PublicVar.printerDriverKitChenName = "kic" + printerName;
                         pd.addTextIFont(data1);
                     }
-                    pd.printHTMLKitChen(Value.printerDriverKitChenName);
+                    pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
                 }
 
             }
@@ -456,11 +457,11 @@ public class PrintSimpleForm {
         PrintDriver pd2 = new PrintDriver();
         String[] strs1 = tt.split("_");
         for (String data2 : strs1) {
-            Value.printerDriverKitChenName = "kic" + printerName;
+            PublicVar.printerDriverKitChenName = "kic" + printerName;
             pd2.addTextIFont(data2);
         }
 
-        pd2.printHTMLKitChen(Value.printerDriverKitChenName);
+        pd2.printHTMLKitChen(PublicVar.printerDriverKitChenName);
 
         itemVoidPrint(printerName, tableNo, PCode, "D");
         try {
@@ -626,10 +627,10 @@ public class PrintSimpleForm {
         PrintDriver pd3 = new PrintDriver();
         String[] strs3 = td.split("_");
         for (String data3 : strs3) {
-            Value.printerDriverKitChenName = "kic" + printerName;
+            PublicVar.printerDriverKitChenName = "kic" + printerName;
             pd3.addTextIFont(data3);
         }
-        pd3.printHTMLKitChen(Value.printerDriverKitChenName);
+        pd3.printHTMLKitChen(PublicVar.printerDriverKitChenName);
         String sql = "update balance "
                 + "set r_kicprint='P',"
                 + "r_pause='Y' "
@@ -1091,11 +1092,11 @@ public class PrintSimpleForm {
         PrintDriver printDriver = new PrintDriver();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
-            Value.printerDriverKitChenName = printerName;
+            PublicVar.printerDriverKitChenName = printerName;
             printDriver.addTextIFont(data1);
         }
         try {
-            printDriver.printHTMLKitChen(Value.printerDriverKitChenName);
+            printDriver.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             String sql;
             if (!listE.isEmpty()) {
                 for (int i = 0; i < listE.size(); i++) {
@@ -1631,11 +1632,11 @@ public class PrintSimpleForm {
             PrintDriver pd1 = new PrintDriver();
             String[] strs1 = textToPrint2.split("_");
             for (String data2 : strs1) {
-                Value.printerDriverKitChenName = printerName;
+                PublicVar.printerDriverKitChenName = printerName;
                 pd1.addTextIFont(data2);
             }
             try {
-                pd1.printHTMLKitChen(Value.printerDriverKitChenName);
+                pd1.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             } catch (Exception e) {
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             }
@@ -2019,11 +2020,11 @@ public class PrintSimpleForm {
         PrintDriver printDriver = new PrintDriver();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
-            Value.printerDriverKitChenName = printerName;
+            PublicVar.printerDriverKitChenName = printerName;
             printDriver.addTextIFont(data1);
         }
         try {
-            printDriver.printHTMLKitChen(Value.printerDriverKitChenName);
+            printDriver.printHTMLKitChen(PublicVar.printerDriverKitChenName);
         } catch (Exception e) {
             AppLogUtil.log(PrintSimpleForm.class, "error", e);
         }
@@ -2350,11 +2351,11 @@ public class PrintSimpleForm {
             PrintDriver pd1 = new PrintDriver();
             String[] strs1 = textToPrint2.split("_");
             for (String data2 : strs1) {
-                Value.printerDriverKitChenName = printerName;
+                PublicVar.printerDriverKitChenName = printerName;
                 pd1.addTextIFont(data2);
             }
             try {
-                pd1.printHTMLKitChen(Value.printerDriverKitChenName);
+                pd1.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             } catch (Exception e) {
                 AppLogUtil.log(PrintSimpleForm.class, "error", e);
             }
@@ -3012,10 +3013,10 @@ public class PrintSimpleForm {
                 PrintDriver pd = new PrintDriver();
                 String[] strs = t.split("_");
                 for (String data1 : strs) {
-                    Value.printerDriverKitChenName = printerName;
+                    PublicVar.printerDriverKitChenName = printerName;
                     pd.addTextIFont(data1);
                 }
-                pd.printHTMLKitChen(Value.printerDriverKitChenName);
+                pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             }
         });
     }
@@ -3164,11 +3165,11 @@ public class PrintSimpleForm {
                                 PrintDriver pd = new PrintDriver();
                                 String[] strs = t.split("_");
                                 for (String data1 : strs) {
-                                    Value.printerDriverKitChenName = printerName;
+                                    PublicVar.printerDriverKitChenName = printerName;
                                     pd.addTextIFont(data1);
                                 }
 
-                                pd.printHTMLKitChen(Value.printerDriverKitChenName);
+                                pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
                                 //add kictran data
                                 String R_Que = seekKicItemNo();
                                 int TempQue = Integer.parseInt(R_Que);
@@ -3332,7 +3333,7 @@ public class PrintSimpleForm {
             PrintDriver printerDriver = new PrintDriver();
             String[] strs = textToPrint.split("_");
             for (String data1 : strs) {
-                Value.printerDriverKitChenName = "kic" + kicName;
+                PublicVar.printerDriverKitChenName = "kic" + kicName;
                 printerDriver.addTextIFont(data1);
             }
             printerDriver.printHTMLKitChen("kic" + kicName);
@@ -3515,11 +3516,11 @@ public class PrintSimpleForm {
         PrintDriver printDriver = new PrintDriver();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
-            Value.printerDriverKitChenName = printerName;
+            PublicVar.printerDriverKitChenName = printerName;
             printDriver.addTextIFont(data1);
         }
 
-        printDriver.printHTMLKitChen(Value.printerDriverKitChenName);
+        printDriver.printHTMLKitChen(PublicVar.printerDriverKitChenName);
 
     }
 
@@ -3689,11 +3690,11 @@ public class PrintSimpleForm {
         PrintDriver pd = new PrintDriver();
         String[] strs = t.split("_");
         for (String data1 : strs) {
-            Value.printerDriverKitChenName = "kic" + printerName;
+            PublicVar.printerDriverKitChenName = "kic" + printerName;
             pd.addTextIFont(data1);
         }
 
-        pd.printHTMLKitChen(Value.printerDriverKitChenName);
+        pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
 
     }
 

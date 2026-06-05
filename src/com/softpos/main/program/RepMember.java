@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Point;
@@ -629,7 +629,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             }
 
             List<Object[]> rows = AppContext.getMemberControl().getMemberTransactionReport(
-                    Value.db_member, TempCode1, TempCode2,
+                    PublicVar.db_member, TempCode1, TempCode2,
                     Datefmt.format(TempDate1), Datefmt.format(TempDate2));
             for (Object[] row : rows) {
                 XTotalCnt++;

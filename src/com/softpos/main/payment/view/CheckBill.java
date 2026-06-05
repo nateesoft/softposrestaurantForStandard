@@ -19,7 +19,6 @@ import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
@@ -2191,7 +2190,7 @@ public class CheckBill extends javax.swing.JDialog {
             }
             billControl.saveBillNo(tableNo, billBean);
 
-            Value.MemberAlready = false;
+            PublicVar.MemberAlready = false;
             lockScreen1(false);
             UpdateMember("Del");
 
@@ -2207,7 +2206,7 @@ public class CheckBill extends javax.swing.JDialog {
         new Thread(new Runnable() {
             public void run() {
                 PPrint print = new PPrint();
-                if (Value.useprint && Value.printdriver == false) {
+                if (PublicVar.useprint && PublicVar.printdriver == false) {
                     print.printCheckBill(tableNo);
                 } else {
                     print.printCheckBillDriver(tableNo);
@@ -2374,7 +2373,7 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private boolean isTakeOrder() {
-        POSHWSetup posHwSetup = PosControl.getData(Value.MACNO);
+        POSHWSetup posHwSetup = PosControl.getData(PublicVar.MACNO);
         return "Y".equals(posHwSetup.getTakeOrderChk());
     }
 
@@ -2435,7 +2434,7 @@ public class CheckBill extends javax.swing.JDialog {
                             for (BalanceBean balance : listBalanceForm) {
                                 String PCode = balance.getR_PluCode();
                                 if (printerForm.equals("1")) {
-                                    if (Value.printkic) {
+                                    if (PublicVar.printkic) {
                                         printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
                                     }
                                 }
@@ -2443,7 +2442,7 @@ public class CheckBill extends javax.swing.JDialog {
                         } else if (printerForm.equals("6")) {
                             List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(tableNo, rKic);
                             for (BalanceBean balance : listBalanceForm) {
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     String R_Index = balance.getR_Index();
                                     String R_PLUCODE = balance.getR_PluCode();
                                     double qty = balance.getR_Quan();
@@ -2453,7 +2452,7 @@ public class CheckBill extends javax.swing.JDialog {
                             }
                         } else if (printerForm.equals("3") || printerForm.equals("4") || printerForm.equals("5")) {
                             if (printerForm.equals("3")) {
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     String retd = balanceBean.getR_ETD();
                                     printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
                                     String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
@@ -2462,19 +2461,19 @@ public class CheckBill extends javax.swing.JDialog {
                                     }
                                 }
                             } else if (printerForm.equals("4")) {
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     printSimpleForm.KIC_FORM_4(printerName, tableNo);
                                     printBillVoidCheck();
                                 }
                             } else if (printerForm.equals("5")) {
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     printSimpleForm.KIC_FORM_5(printerName, tableNo);
                                     printBillVoidCheck();
                                 }
                             }
 
                         } else if (printerForm.equals("7") || printerForm.equals("2")) {
-                            if (Value.printkic) {
+                            if (PublicVar.printkic) {
                                 printSimpleForm.KIC_FORM_7(printerName, tableNo);
                                 printBillVoidCheck();
                             }
@@ -2510,7 +2509,7 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void printBillVoidCheck() {
-        if (Value.useprint) {
+        if (PublicVar.useprint) {
             if (checkBillControl.readyToPrintVoid(tableNo)) {
                 PPrint print = new PPrint();
                 print.printVoidBill(tableNo);
@@ -2520,7 +2519,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void processEDC() {
         double tempCreditAmount = Double.parseDouble(PUtility.ConvertReal(txtTotalAmount.getText().replace(",", "")));
-        POSHWSetup hw = POSHWSetup.Bean(Value.MACNO);
+        POSHWSetup hw = POSHWSetup.Bean(PublicVar.MACNO);
         if (!hw.getEDCPort().equals("NONE")) {
             try {
                 EDCProcessDialog frm = new EDCProcessDialog(new JFrame(), true);

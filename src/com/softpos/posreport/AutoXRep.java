@@ -8,7 +8,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
@@ -35,7 +35,7 @@ public class AutoXRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form AutoXRep
@@ -43,8 +43,8 @@ public class AutoXRep extends javax.swing.JDialog {
     public AutoXRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        TMacNo.setText("Mac " + Value.MACNO);
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        TMacNo.setText("Mac " + PublicVar.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -518,7 +518,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     public void bntOKClick() {
         if (ChkSaleData()) {
             if (ChkSaleNoCash()) {
-                if (Value.printdriver) {
+                if (PublicVar.printdriver) {
                     if (chkTerminal.isSelected()) {
                         ProcessTerminal();
                     }
@@ -547,8 +547,8 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                         ProcessGiftVoucher();
                     }
 
-                } else if (!Value.getComPort().equals("NONE")) {
-                    if (prn.openPrint(Value.getComPort())) {
+                } else if (!POSHW.getPRNPort().equals("NONE")) {
+                    if (prn.openPrint(POSHW.getPRNPort())) {
                         if (chkTerminal.isSelected()) {
                             ProcessTerminal();
                         }
@@ -649,7 +649,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "' order by b_refno";
+            String SqlQuery = "select * from billno where b_macno='" + PublicVar.MACNO + "' order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.StBill = rs.getString("b_refno");
@@ -787,7 +787,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from paidiofile where (terminal='" + Value.MACNO + "') and (flage='I') ";
+            String SqlQuery = "select * from paidiofile where (terminal='" + PublicVar.MACNO + "') and (flage='I') ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.Paid_InCnt++;
@@ -802,7 +802,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from paidiofile where (terminal='" + Value.MACNO + "') and (flage='O') ";
+            String SqlQuery = "select * from paidiofile where (terminal='" + PublicVar.MACNO + "') and (flage='O') ";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.Paid_OutCnt++;
@@ -817,7 +817,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from t_sale where (r_void='V') and (macno='" + Value.MACNO + "')";
+            String SqlQuery = "select * from t_sale where (r_void='V') and (macno='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.CntVoid++;
@@ -832,8 +832,8 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        if (Value.printdriver) {
-            prn.printTerminalEngForm(frec, CrArray, Value.MACNO);
+        if (PublicVar.printdriver) {
+            prn.printTerminalEngForm(frec, CrArray, PublicVar.MACNO);
         } else {
             PrintTerminal(frec, CrArray);
         }
@@ -844,9 +844,9 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.initPrinter();
         prn.print("   รายงานยอดการเงิน (Terminal Report)");
         prn.print("          Automatic X-Report)   ");
-        prn.print("หมายเลขเครื่อง : " + Value.MACNO);
+        prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
         prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -908,8 +908,8 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         Double SumAmt = 0.0;
         prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
         prn.print("          AR Payment Report");
-        prn.print("หมายเลขเครื่อง : " + Value.MACNO);
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -919,7 +919,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from t_ar where (fat<>'V') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 prn.print(PUtility.DataFull(rs.getString("arcode"), 4) + "  " + rs.getString("billno") + "  " + ShowDatefmt.format(rs.getDate("billdate")) + PUtility.DataFull(DecFmt.format(rs.getDouble("amount")), 9));
@@ -941,7 +941,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         int CntBill = 0;
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from billar where (fat<>'V') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 CntBill++;
@@ -959,7 +959,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from t_crar where (fat<>'V') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));
@@ -980,7 +980,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from billar where (fat='V') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from billar where (fat='V') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 prn.print(rs.getString("ref_no") + "  " + PUtility.DataFull(DecFmt.format(rs.getDouble("stotal")), 9) + "  " + rs.getString("terminal") + "  " + PUtility.DataFull(rs.getString("cashier"), 6) + "  " + PUtility.DataFull(rs.getString("uservoid"), 6));
@@ -1002,7 +1002,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
     }
 
@@ -1013,7 +1013,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select b_cashier,sum(b_nettotal) from billno where b_macno='" + Value.MACNO + "' group by b_cashier order by b_cashier";
+            String SqlQuery = "select b_cashier,sum(b_nettotal) from billno where b_macno='" + PublicVar.MACNO + "' group by b_cashier order by b_cashier";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 ProcessOneCashier(rs.getString("b_cashier"));
@@ -1039,7 +1039,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select *from billno where (b_cashier='" + TempCashNo + "')  and (b_macno='" + Value.MACNO + "')  order by b_refno";
+            String SqlQuery = "select *from billno where (b_cashier='" + TempCashNo + "')  and (b_macno='" + PublicVar.MACNO + "')  order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.StBill = rs.getString("b_refno");
@@ -1178,7 +1178,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='I') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='I') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.Paid_InCnt++;
@@ -1193,7 +1193,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='O') and (terminal='" + Value.MACNO + "')";
+            String SqlQuery = "select * from paidiofile where (cashier='" + TempCashNo + "') and (flage='O') and (terminal='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.Paid_OutCnt++;
@@ -1208,7 +1208,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + TempCashNo + "')  and (macno='" + Value.MACNO + "')";
+            String SqlQuery = "select * from t_sale where (r_void='V') and (cashier='" + TempCashNo + "')  and (macno='" + PublicVar.MACNO + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 frec.CntVoid++;
@@ -1230,10 +1230,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.initPrinter();
         prn.print("   รายงานพนักงานขาย (Cashier Report)");
         prn.print("        (Automatic Xreport)");
-        prn.print("หมายเลขเครื่อง : " + Value.MACNO);
+        prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
         prn.print("รหัสพนักงาน    : " + frec.Cashier1);
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
         prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -1296,7 +1296,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
         prn.print("          AR Payment Report");
         prn.print("รหัสพนักงานขาย : " + frec.Cashier1);
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -1387,7 +1387,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("           Void Report");
             prn.print("รหัสพนักงานขาย : " + frec.Cashier1);
 
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("Mac Cashier Table Time  User-Void T_Void");
             prn.print("    Ref-No  PLU-Code       Qty    Amount");
@@ -1424,7 +1424,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         //Print_Str(" ");
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
         mysqlConnect.closeConnection(this.getClass());
@@ -1443,7 +1443,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select *from t_sale where (macno='" + Value.MACNO + "') "
+            String SqlQuery = "select *from t_sale where (macno='" + PublicVar.MACNO + "') "
                     + "and (r_void<>'V') and (r_refund<>'V') Order by r_group";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             TempGroup = "";
@@ -1623,7 +1623,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             prn.printGroupDriver(GArray);
         } else {
             PrintGroup(GArray);
@@ -1650,10 +1650,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("         รายงานการขายตามกลุ่มสินค้า");
         prn.print("           (Department Report)");
         prn.print("           (Automatic XReport)");
-        prn.print("หมายเลขเครื่อง :" + Value.MACNO);
+        prn.print("หมายเลขเครื่อง :" + PublicVar.MACNO);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("รายละเอียด");
         prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -1696,7 +1696,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
@@ -1716,7 +1716,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select *from t_sale where (macno='" + Value.MACNO + "')"
+            String SqlQuery = "select *from t_sale where (macno='" + PublicVar.MACNO + "')"
                     + "and (r_void<>'V') and (r_refund<>'V') Order by r_group,r_plucode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             TempGroup = "";
@@ -1903,7 +1903,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             prn.printPluDriver(GArray);
         } else {
             PrintPlu(GArray);
@@ -1930,10 +1930,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("         รายงานการขายตามรหัสสินค้า");
         prn.print("              (PLU Report)");
         prn.print("          (Automatic XReport)");
-        prn.print("หมายเลขเครื่อง :" + Value.MACNO);
+        prn.print("หมายเลขเครื่อง :" + PublicVar.MACNO);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("รายละเอียด");
         prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -1984,7 +1984,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
@@ -2008,7 +2008,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("หมายเลขเครื่อง :" + MacNo1);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("เวลา    จำนวนบิล   จำนวนลูกค้า    จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -2033,15 +2033,15 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessInv() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
-        if (Value.printdriver) {
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
+        if (PublicVar.printdriver) {
             InvRep inv = new InvRep(null, true);
             inv.PrintInvDriver(MacNo1, MacNo2);
         } else {
@@ -2052,7 +2052,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("หมายเลขเครื่อง :" + MacNo1);
             prn.print(" ");
             Date dateP = new Date();
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("ใบเสร็จ   เวลาพิมพ์     จำนวนเงิน   ภาษี(Vat)");
             prn.print("----------------------------------------");
@@ -2103,18 +2103,18 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading2());
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
-            prn.print("REG ID :" + Value.MACNO);
+            prn.print("REG ID :" + PublicVar.MACNO);
             prn.cutPaper();
         }
 
     }
 
     public void ProcessVoid() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             VoidRep vrd = new VoidRep(null, true);
             vrd.PrintVoidDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
@@ -2126,7 +2126,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
             prn.print(" ");
             Date dateP = new Date();
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("Mac Cashier Table Time  User-Void T_Void");
             prn.print("    Ref-No  PLU-Code       Qty    Amount");
@@ -2168,19 +2168,19 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading2());
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
-            prn.print("REG ID :" + Value.MACNO);
+            prn.print("REG ID :" + PublicVar.MACNO);
             prn.cutPaper();
         }
 
     }
 
     public void ProcessCredit() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             CreditRep credit = new CreditRep(null, true);
             credit.PrintCreditDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
@@ -2190,7 +2190,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
+                String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
                 stmt.executeUpdate(SqlQuery);
                 stmt.close();
             } catch (SQLException e) {
@@ -2225,7 +2225,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
             prn.print(" ");
             Date dateP = new Date();
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("ประเภทบัตร    ชื่อบัตรเครดิต");
             prn.print("ลำดับ  หมายเลขบัตร     รหัสอนุมัติ    จำนวนเงิน");
@@ -2238,7 +2238,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             Double SumTotalAmt = 0.0;
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+                String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
                 ResultSet rs = stmt.executeQuery(SqlQuery);
                 while (rs.next()) {
                     prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
@@ -2282,7 +2282,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading2());
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
-            prn.print("REG ID :" + Value.MACNO);
+            prn.print("REG ID :" + PublicVar.MACNO);
             prn.cutPaper();
 
         }
@@ -2299,7 +2299,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String SqlQuery = "insert into tempcredit (terminal,crcode,crid,crapp,cramt) "
                     + "values (?,?,?,?,?)";
             PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
-            prm.setString(1, Value.MACNO);
+            prm.setString(1, PublicVar.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
             prm.setString(4, TCrApp);
@@ -2317,11 +2317,11 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void ProcessGiftVoucher() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             GiftVoucherRep gift = new GiftVoucherRep(null, true);
             gift.PrintVoucherRepDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
@@ -2333,7 +2333,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
             prn.print(" ");
             Date dateP = new Date();
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("Code                  NO          Amount");
             prn.print("----------------------------------------");
@@ -2372,7 +2372,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print(POSHW.getHeading2());
             prn.print(POSHW.getHeading3());
             prn.print(POSHW.getHeading4());
-            prn.print("REG ID :" + Value.MACNO);
+            prn.print("REG ID :" + PublicVar.MACNO);
             prn.cutPaper();
         }
 

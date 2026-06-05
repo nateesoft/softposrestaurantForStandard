@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 import com.softpos.connection.database.MySQLConnect;
@@ -38,7 +38,7 @@ public class MTDInvoice extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDInvoice(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -49,7 +49,7 @@ public class MTDInvoice extends javax.swing.JDialog {
         txtMacNo2.setText("");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -412,20 +412,20 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
 
-        if (!Value.getComPort().equals("NONE")) {
-            if (prn.openPrint(Value.getComPort())) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (prn.openPrint(POSHW.getPRNPort())) {
                 prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
                 prn.print(POSHW.getHeading4());
-                prn.print("REG ID :" + Value.MACNO);
+                prn.print("REG ID :" + PublicVar.MACNO);
                 prn.print(" รายงานส่วนลดแยกตามประเภทการขายและส่วนลด");
                 prn.print("          (MTD Receipt Report)");
                 prn.print("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2));
                 prn.print("สำหรับเครื่อง  " + MacNo1 + " ถึง " + MacNo2);
                 Date dateP = new Date();
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print("ประเภทการขาย               จำนวนบิล/ลูกค้า  ");
                 prn.print("      ประเภทส่วนลด        จำนวนเงิน/ส่วนลด  ");

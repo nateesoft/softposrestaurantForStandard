@@ -18,7 +18,6 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.posreport.TerminalRep;
 import com.softpos.posreport.TopSaleRep;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.VoidRep;
 import com.softpos.util.MSG;
@@ -178,7 +177,7 @@ private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     private void FunctionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FunctionListMouseClicked
         if (evt.getClickCount() == 2) {
             if (FunctionList.getSelectedIndex() == 0) {
-                if (Value.useprint) {
+                if (PublicVar.useprint) {
                     prn.printTableAction();
                 }
             }

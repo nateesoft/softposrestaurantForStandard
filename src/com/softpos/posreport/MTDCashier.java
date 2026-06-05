@@ -6,7 +6,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 import com.softpos.connection.database.MySQLConnect;
@@ -40,7 +40,7 @@ public class MTDCashier extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form MTDCashier
@@ -54,7 +54,7 @@ public class MTDCashier extends javax.swing.JDialog {
         txtMacNo2.setText("zzzz");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -667,19 +667,19 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void PrintCashier(FinalcialRec frec, CreditRec[] CrArray) {
-        if (!Value.getComPort().equals("NONE")) {
-            if (prn.openPrint(Value.getComPort())) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (prn.openPrint(POSHW.getPRNPort())) {
                 prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
                 prn.print(POSHW.getHeading4());
-                prn.print("REG ID :" + Value.MACNO);
+                prn.print("REG ID :" + PublicVar.MACNO);
                 prn.print("   รายงานพนักงานขาย (MTD Cashier Report)");
                 prn.print("ช่วงวันที่ : " + DatefmtShow.format(TDate1) + " ถึง " + DatefmtShow.format(TDate2));
                 prn.print("รหัสพนักงานขาย : " + txtMacNo1.getText() + " ถึง " + txtMacNo2.getText());
                 Date dateP = new Date();
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
                 prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -739,8 +739,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Double SumAmt = 0.0;
                 prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
                 prn.print("        MTD AR Payment Report");
-                prn.print("หมายเลขเครื่อง : " + Value.MACNO);
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                 prn.print("----------------------------------------");

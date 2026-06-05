@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.constants.PublicVar;
 import com.softpos.main.floorplan.view.ShowTable;
@@ -39,7 +39,7 @@ public class PosControl {
                 String sql1 = "update posuser set onact='N',macno=''where (username='" + PublicVar._RealUser + "')";
                 stmt.executeUpdate(sql1);
 
-                String sql2 = "update poshwsetup set onact='N' where (terminal='" + Value.MACNO + "')";
+                String sql2 = "update poshwsetup set onact='N' where (terminal='" + PublicVar.MACNO + "')";
                 if (stmt.executeUpdate(sql2) > 0) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
@@ -547,7 +547,7 @@ public class PosControl {
     public void posHwSetupOnAct(String Onact) {
         try {
             mysqlConnect.open(PosControl.class);
-            String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + Value.MACNO + "';";
+            String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + PublicVar.MACNO + "';";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             if (stmt.executeUpdate(sql) > 0) {
                 // reset load poshwsetup
@@ -566,8 +566,8 @@ public class PosControl {
         try {
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
-                    + "values (curdate(),curtime(),'" + Value.CASHIER + "',"
-                    + "'" + Value.MACNO + "','I','" + paidinAmt + "','0.0')";
+                    + "values (curdate(),curtime(),'" + PublicVar.CASHIER + "',"
+                    + "'" + PublicVar.MACNO + "','I','" + paidinAmt + "','0.0')";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
@@ -586,7 +586,7 @@ public class PosControl {
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt,reson) "
                     + "values (curdate(),curtime(),"
-                    + "'" + Value.CASHIER + "','" + Value.MACNO + "',"
+                    + "'" + PublicVar.CASHIER + "','" + PublicVar.MACNO + "',"
                     + "'O','0','0','" + resonEncoded + "')";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sql);

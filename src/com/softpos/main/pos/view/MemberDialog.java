@@ -1,8 +1,8 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.MemberControl;
-import com.softpos.constants.Value;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -377,7 +377,7 @@ public class MemberDialog extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             model.removeRow(0);
         }
-        List<Object[]> rows = memberControl.findAllMembers(Value.db_member);
+        List<Object[]> rows = memberControl.findAllMembers(PublicVar.db_member);
         for (Object[] row : rows) {
             model.addRow(row);
         }
@@ -391,7 +391,7 @@ public class MemberDialog extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             model.removeRow(0);
         }
-        List<Object[]> rows = memberControl.searchMembers(Value.db_member, memCode, memName, memTel);
+        List<Object[]> rows = memberControl.searchMembers(PublicVar.db_member, memCode, memName, memTel);
         for (Object[] row : rows) {
             model.addRow(row);
         }

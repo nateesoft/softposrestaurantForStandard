@@ -1,11 +1,12 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -114,7 +115,7 @@ public class RefundBillController {
             }
 
             if (memcode != null && !memcode.equals("")) {
-                String sqlMem = "update " + Value.db_member + ".memmaster set "
+                String sqlMem = "update " + PublicVar.db_member + ".memmaster set "
                         + "m_sum=m_sum-" + netTotal + " "
                         + "where (m_code='" + memcode + "')";
                 try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -157,7 +158,7 @@ public class RefundBillController {
                             }
                             double rQuanIng = (ingBean.getPingQty() * quantity);
                             pUtility.ProcessStockOut(docNo, stkCode, ingCode, new Date(), stkRemark,
-                                    -rQuanIng, 0.0, Value.USERCODE, "Y", "", "", "");
+                                    -rQuanIng, 0.0, PublicVar.USERCODE, "Y", "", "", "");
                         }
                     }
                 }

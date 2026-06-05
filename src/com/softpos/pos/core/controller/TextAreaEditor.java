@@ -17,6 +17,7 @@ public class TextAreaEditor extends DefaultCellEditor {
       public void setValue(Object value) {
         textArea.setText((value != null) ? value.toString() : "");
       }
+      
       @Override
       public Object getCellEditorValue() {
         return textArea.getText();

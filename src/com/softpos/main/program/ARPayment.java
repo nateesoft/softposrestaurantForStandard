@@ -9,7 +9,6 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.SmpCoupon;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -87,12 +86,11 @@ public class ARPayment extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
-    private final Value Value = new Value();
 
     public ARPayment(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         model1 = (DefaultTableModel) tblAr.getModel();
         tblAr.setShowGrid(true);
         tblAr.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1884,7 +1882,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             mysqlConnect.open(this.getClass());
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadTempGift = "select sum(giftamt) "
-                        + "from tempgift where macno='" + Value.MACNO + "'";
+                        + "from tempgift where macno='" + PublicVar.MACNO + "'";
                 try (ResultSet rs = stmt.executeQuery(LoadTempGift)) {
                     _TGiftvoucher.setValue(0.0);
                     while (rs.next()) {
@@ -1935,7 +1933,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 try {
                     PreparedStatement prm;
                     prm = mysqlConnect.getConnection().prepareStatement("delete from tempgift where (macno=?) ");
-                    prm.setString(1, Value.MACNO);
+                    prm.setString(1, PublicVar.MACNO);
                     prm.executeUpdate();
                     prm.close();
                 } catch (SQLException e) {
@@ -2032,7 +2030,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 prm.setDouble(5, _Cash);
                 prm.setDouble(6, _Gift_Voucher);
                 prm.setDouble(7, _Cr_Amount1);
-                prm.setString(8, Value.MACNO);
+                prm.setString(8, PublicVar.MACNO);
                 prm.setString(9, PublicVar._User);
                 prm.setString(10, "N");
                 prm.setString(11, "");
@@ -2060,7 +2058,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     prm.setString(4, Datefmt.format(rs.getDate("ardate")));
                     prm.setDouble(5, rs.getDouble("arnet"));
                     prm.setString(6, "N");
-                    prm.setString(7, Value.MACNO);
+                    prm.setString(7, PublicVar.MACNO);
                     prm.setString(8, PublicVar._User);
                     prm.executeUpdate();
                     stmt2.close();
@@ -2087,7 +2085,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         prm.setString(5, "N");
                         prm.setString(6, CreditArray[i].TableRec_Cr_CardNo1);
                         prm.setString(7, CreditArray[i].TableRec_Cr_App_Code1);
-                        prm.setString(8, Value.MACNO);
+                        prm.setString(8, PublicVar.MACNO);
                         prm.setString(9, PublicVar._User);
                         prm.executeUpdate();
                         prm.close();
@@ -2132,20 +2130,20 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     public void PrintBillAr(String XRef_No, String ArCode, String ReferentNo) {
         int QtyLength = 5;
         int AmtLength = 10;
-        if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (PublicVar.printdriver) {
                 PrintBillArDriver(XRef_No, ArCode, ReferentNo);
             } else {
-                if (prn.openPrint(Value.getComPort())) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("  รายการรับเงินลูกหนี้ภายนอก..ไม่ใช่ใบกำกับภาษี");
                     prn.print(" ");
-                    prn.print(DateTimeFmt.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DateTimeFmt.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print(PUtility.DataFullR(txtArCode.getText(), 8) + " " + PUtility.DataFullR(txtArName.getText(), 30));
                     prn.print("อ้างถึงใบกำกับภาษีเลขที่             จำนวนเงิน ");
@@ -2247,7 +2245,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "REG.ID :" + Space + (POSHW.getTerminal()) + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         mysqlConnect.open(this.getClass());
         try {
@@ -2336,11 +2334,11 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     public Boolean ChkPrintOK() {
         Boolean RetVal = false;
-        if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (PublicVar.printdriver) {
                 RetVal = true;
             } else {
-                if (prn.openPrint(Value.getComPort())) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.closePrint();
                     RetVal = true;
                 }

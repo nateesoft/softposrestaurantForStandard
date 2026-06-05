@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.constants.Value;
+
 import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -82,7 +82,7 @@ public class FindMember extends javax.swing.JDialog {
     public void bntShowMemberAllClick() {
         int LineCnt = 1;
         ClearGrid();
-        List<Object[]> rows = AppContext.getMemberControl().getAllMembers(Value.db_member);
+        List<Object[]> rows = AppContext.getMemberControl().getAllMembers(PublicVar.db_member);
         for (Object[] row : rows) {
             String TDate1 = ChkValidDate((Date) row[5]);
             String TDate2 = ChkValidDate((Date) row[6]);
@@ -107,7 +107,7 @@ public class FindMember extends javax.swing.JDialog {
             }
             String TempStr = TMemCode.getText();
             ClearGrid();
-            List<Object[]> rows = AppContext.getMemberControl().findMemberByCode(Value.db_member, TempStr);
+            List<Object[]> rows = AppContext.getMemberControl().findMemberByCode(PublicVar.db_member, TempStr);
             for (Object[] row : rows) {
                 LineCnt++;
                 String TDate1 = ChkValidDate((Date) row[5]);
@@ -135,7 +135,7 @@ public class FindMember extends javax.swing.JDialog {
     public void ShowMemberByName() {
         int LineCnt = 0;
         ClearGrid();
-        List<Object[]> rows = AppContext.getMemberControl().findMemberByName(Value.db_member, TMemName.getText());
+        List<Object[]> rows = AppContext.getMemberControl().findMemberByName(PublicVar.db_member, TMemName.getText());
         for (Object[] row : rows) {
             LineCnt++;
             String TDate1 = ChkValidDate((Date) row[5]);
@@ -158,7 +158,7 @@ public class FindMember extends javax.swing.JDialog {
     public void ShowMemberByTel() {
         int LineCnt = 0;
         ClearGrid();
-        List<Object[]> rows = AppContext.getMemberControl().findMemberByTel(Value.db_member, TMemTel.getText());
+        List<Object[]> rows = AppContext.getMemberControl().findMemberByTel(PublicVar.db_member, TMemTel.getText());
         for (Object[] row : rows) {
             LineCnt++;
             String TDate1 = ChkValidDate((Date) row[5]);

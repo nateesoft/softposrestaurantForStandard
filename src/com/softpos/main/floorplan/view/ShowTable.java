@@ -3,7 +3,6 @@ package com.softpos.main.floorplan.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.constants.Value;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -221,15 +220,15 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
         loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
-        Value.TableSelected = "";
+        PublicVar.TableSelected = "";
         if (row != -1) {
             String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
             if (!tableNo.equals("")) {
-                Value.TableSelected = tableNo;
+                PublicVar.TableSelected = tableNo;
                 TableFileControl tfCont = AppContext.getTableFileControl();
                 if (tfCont.checkTableOpened(tableNo)) {
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
-                    Value.TableSelected = "";
+                    PublicVar.TableSelected = "";
                 } else {
                     this.setVisible(false);//dispose();
                 }
@@ -244,7 +243,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         PublicVar.ReturnString = "";
-        Value.TableSelected = "";
+        PublicVar.TableSelected = "";
         this.setVisible(false);//dispose();
         FloorPlanDialog fl = new FloorPlanDialog();
         fl.setVisible(true);
@@ -252,15 +251,15 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int row = ShowTableLogin.getSelectedRow();
-        Value.TableSelected = "";
+        PublicVar.TableSelected = "";
         if (row != -1) {
             String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
             if (!tableNo.equals("")) {
-                Value.TableSelected = tableNo;
+                PublicVar.TableSelected = tableNo;
                 TableFileControl tfCont = AppContext.getTableFileControl();
                 if (tfCont.checkTableOpened(tableNo)) {
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
-                    Value.TableSelected = "";
+                    PublicVar.TableSelected = "";
                 } else {
                     this.setVisible(false);//dispose();
                 }
@@ -273,15 +272,15 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
             jButton1ActionPerformed(null);
         } else if (evt.getClickCount() == 1) {
             int row = ShowTableLogin.getSelectedRow();
-            Value.TableSelected = "";
+            PublicVar.TableSelected = "";
             if (row != -1) {
                 String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
                 if (!tableNo.equals("")) {
-                    Value.TableSelected = tableNo;
+                    PublicVar.TableSelected = tableNo;
                     TableFileControl tfCont = AppContext.getTableFileControl();
                     if (tfCont.checkTableOpened(tableNo)) {
                         MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
-                        Value.TableSelected = "";
+                        PublicVar.TableSelected = "";
                     } else {
                         this.setVisible(false);//dispose();
                     }

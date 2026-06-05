@@ -1,8 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,7 +46,7 @@ public class PosUserController {
         
         mysqlConnect.open(PosUserController.class);
         try {
-            String sql = "select Username, Sale2, Sale3 from posuser where username='" + Value.USERCODE + "' limit 1";
+            String sql = "select Username, Sale2, Sale3 from posuser where username='" + PublicVar.USERCODE + "' limit 1";
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = new PosUserBean();

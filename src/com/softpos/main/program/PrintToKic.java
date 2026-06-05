@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.PrintToKicController;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.connection.database.ConfigFile;
@@ -279,7 +279,7 @@ public class PrintToKic extends javax.swing.JFrame {
                                 for (BalanceBean bean : listForm1) {
                                     String PCode = bean.getR_PluCode();
                                     if (printerForm.equals("1")) {
-                                        if (Value.printkic) {
+                                        if (PublicVar.printkic) {
                                             kicPrintting = true;
                                             printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
                                         }
@@ -290,7 +290,7 @@ public class PrintToKic extends javax.swing.JFrame {
                                 List<BalanceBean> listForm6 = control.getBalancePrintForm6(tableNo, rKic);
                                 for (BalanceBean bean : listForm6) {
                                     kicPrintting = true;
-                                    if (Value.printkic) {
+                                    if (PublicVar.printkic) {
                                         double qty = bean.getR_Quan();
                                         double total = bean.getR_Total();
                                         String r_plucode = bean.getR_PluCode();
@@ -303,32 +303,32 @@ public class PrintToKic extends javax.swing.JFrame {
                             case "4":
                             case "5":
                                 if (printerForm.equals("3")) {
-                                    if (Value.printkic) {
+                                    if (PublicVar.printkic) {
                                         kicPrintting = true;
                                         String retd = balanceBean.getR_ETD();
                                         printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "PDA", macno);
                                     }
                                 } else if (printerForm.equals("4")) {
-                                    if (Value.printkic) {
+                                    if (PublicVar.printkic) {
                                         printSimpleForm.KIC_FORM_4(printerName, tableNo);
                                     }
                                 } else if (printerForm.equals("5")) {
-                                    if (Value.printkic) {
+                                    if (PublicVar.printkic) {
                                         printSimpleForm.KIC_FORM_5(printerName, tableNo);
                                     }
                                 }
                                 break;
                             case "7":
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
                                 }
                             case "8":
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     printSimpleForm.KIC_FORM_8Qrcode(printerName, tableNo, balanceBean.getR_ETD());//print new Jasperfile
                                 }
                                 break;
                             case "2":
-                                if (Value.printkic) {
+                                if (PublicVar.printkic) {
                                     printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
                                 }
                                 break;

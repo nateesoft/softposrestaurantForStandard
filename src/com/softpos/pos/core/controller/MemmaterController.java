@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BranchFileBean;
@@ -39,7 +39,7 @@ public class MemmaterController {
         
         mysqlConnect.open(MemmaterController.class);
         try {
-            String sql = "select * from " + Value.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
+            String sql = "select * from " + PublicVar.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -154,7 +154,7 @@ public class MemmaterController {
         mysqlConnect.open(MemmaterController.class);
 
         try {
-            String sql = "update " + Value.db_member + ".memmaster "
+            String sql = "update " + PublicVar.db_member + ".memmaster "
                     + "set Member_LastDateService='" + DateUtil.getDateFormat(lastDateService, "yyyy-MM-dd") + "', "
                     + "Member_TotalScore=Member_TotalScore+'" + totalScore + "' "
                     + "where Member_Code='" + memberCode + "'";
@@ -187,7 +187,7 @@ public class MemmaterController {
             mTranBean.setDiscountAmount(billBean.getB_MemDiscAmt());
             mTranBean.setNetAmount(billBean.getB_NetTotal());
             mTranBean.setMechine_Code(billBean.getB_MacNo());
-            mTranBean.setEmployee_Code(Value.USERCODE);
+            mTranBean.setEmployee_Code(PublicVar.USERCODE);
             mTranBean.setService_Time(billBean.getB_Ontime());
             mTranBean.setScore(pointTotal);
             mTranBean.setTranferFlag("N");
@@ -280,7 +280,7 @@ public class MemmaterController {
     public void updateScoreRefund(String memberCode, double scoreRemove) {
         mysqlConnect.open(MemmaterController.class);
         try {
-            String sql = "update " + Value.db_member + ".memmaster "
+            String sql = "update " + PublicVar.db_member + ".memmaster "
                     + "set Member_TotalScore=Member_TotalScore-" + (int) scoreRemove + " "
                     + "where Member_Code='" + memberCode + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {

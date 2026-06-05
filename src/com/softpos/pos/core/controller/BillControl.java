@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -96,7 +96,7 @@ public class BillControl {
 
     public String getExistCurrent() {
         String ReceNo1;
-        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+        POSHWSetup poshwSetup = PosControl.getData(PublicVar.MACNO);
         ReceNo1 = "" + (poshwSetup.getReceNo1() - 1);
         switch (ReceNo1.length()) {
             case 1:
@@ -181,7 +181,7 @@ public class BillControl {
                     + "B_Entertain,B_VoucherDiscAmt,B_VoucherOver,B_NetDiff,B_SumSetDiscAmt,"
                     + "B_DetailFood,B_DetailDrink,B_DetailProduct,B_KicQue,B_ROUNDCLOSE)  "
                     + "values('" + bean.getB_Refno() + "','" + bean.getB_CuponDiscAmt() + "',curtime(),'" + blBean.getLoginTime() + "',curdate(),"
-                    + "'" + Value.getDateDefault() + "','" + bean.getB_Table() + "','" + bean.getB_MacNo() + "','" + Value.CASHIER + "','" + bean.getB_Cust() + "',"
+                    + "'" + PublicVar.getDateDefault() + "','" + bean.getB_Table() + "','" + bean.getB_MacNo() + "','" + PublicVar.CASHIER + "','" + bean.getB_Cust() + "',"
                     + "'" + bean.getB_ETD() + "','" + bean.getB_Total() + "','" + bean.getB_Food() + "','" + bean.getB_Drink() + "','" + bean.getB_Product() + "',"
                     + "'" + bean.getB_Service() + "','" + bean.getB_ServiceAmt() + "','" + bean.getB_ItemDiscAmt() + "','" + bean.getB_FastDisc() + "','" + bean.getB_FastDiscAmt() + "',"
                     + "'" + bean.getB_EmpDisc() + "','" + bean.getB_EmpDiscAmt() + "','" + bean.getB_TrainDisc() + "','" + bean.getB_TrainDiscAmt() + "','" + bean.getB_MemDisc() + "',"
@@ -501,7 +501,7 @@ public class BillControl {
 
                 billNo.setB_Table(table);
                 billNo.setB_Refno(BillNo);
-                billNo.setB_MacNo(Value.MACNO);
+                billNo.setB_MacNo(PublicVar.MACNO);
                 billNo.setB_Cashier(tableFile.getCashier());
                 billNo.setB_Cust(tableFile.getTCustomer());
                 billNo.setB_ETD(etdTypeFromTSale);
@@ -574,7 +574,7 @@ public class BillControl {
                 billNo.setStampRate("");
                 
                 saveBillNo(billNo, memberBean);
-                if (Value.useprint) {
+                if (PublicVar.useprint) {
                     PPrint print = new PPrint();
                     print.printSubTotalBill(BillNo, table);
                 }
@@ -598,7 +598,7 @@ public class BillControl {
                                     + "giftexp,giftcode,giftno,"
                                     + "giftamt,fat) "
                                     + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                    + "'" + PublicVar.CASHIER + "','','" + rs.getString("gifttype") + "',"
                                     + "'','','',"
                                     + "'','',"
                                     + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";
@@ -897,7 +897,7 @@ public class BillControl {
 
                 billNo.setB_Table(table);
                 billNo.setB_Refno(BillNo);
-                billNo.setB_MacNo(Value.MACNO);
+                billNo.setB_MacNo(PublicVar.MACNO);
                 billNo.setB_Cashier(tableFile.getCashier());
                 billNo.setB_Cust(tableFile.getTCustomer());
                 billNo.setB_ETD(etdTypeFromTSale);
@@ -1001,7 +1001,7 @@ public class BillControl {
                 }
 
                 saveBillNo(billNo, memberBean);
-                if (Value.useprint) {
+                if (PublicVar.useprint) {
 //                new Thread(() -> {
                     PPrint print = new PPrint();
                     print.printSubTotalBill(BillNo, table);
@@ -1028,7 +1028,7 @@ public class BillControl {
                                     + "giftexp,giftcode,giftno,"
                                     + "giftamt,fat) "
                                     + "values (curdate(),'" + rs.getString("macno") + "','" + BillNo + "',"
-                                    + "'" + Value.CASHIER + "','','" + rs.getString("gifttype") + "',"
+                                    + "'" + PublicVar.CASHIER + "','','" + rs.getString("gifttype") + "',"
                                     + "'','','',"
                                     + "'','',"
                                     + "'" + rs.getString("giftno") + "','" + rs.getDouble("giftamt") + "','')";

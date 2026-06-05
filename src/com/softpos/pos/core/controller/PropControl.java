@@ -1,6 +1,8 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+import com.softpos.constants.PublicVar;
+
+
 
 public class PropControl {
 
@@ -8,7 +10,7 @@ public class PropControl {
     public static String FILE_CONFIG = "softpos/config.properties";
 
     public String getMacNo() {
-        return Value.MACNO;
+        return PublicVar.MACNO;
     }
 
 }

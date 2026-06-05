@@ -5,7 +5,7 @@ import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -40,7 +40,7 @@ public class CopyBill extends javax.swing.JDialog {
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from billno where b_macno='" + Value.MACNO + "'";
+            String SqlQuery = "select * from billno where b_macno='" + PublicVar.MACNO + "'";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 txtBillNo.setText(rs.getString("b_refno"));
@@ -244,7 +244,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         boolean validCopy = false;
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select b_refno from billno where (b_macno='" + Value.MACNO + "') "
+            String SqlQuery = "select b_refno from billno where (b_macno='" + PublicVar.MACNO + "') "
                     + "and (b_refno='" + BillNo + "') limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             if (rs.next()) {
@@ -283,7 +283,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
-                String SqlQuery = "select * from billno where (b_macno='" + Value.MACNO + "') "
+                String SqlQuery = "select * from billno where (b_macno='" + PublicVar.MACNO + "') "
                         + "and (b_refno='" + BillNo + "') limit 1";
                 try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
                     if (rs.next()) {
@@ -385,7 +385,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String LoadBalance = "select * from t_sale "
-                        + "where (macno='" + Value.MACNO + "') "
+                        + "where (macno='" + PublicVar.MACNO + "') "
                         + "and (r_refno='" + BillNo + "')";
                 try (ResultSet rs = stmt.executeQuery(LoadBalance)) {
                     PublicVar.P_ItemCount = 0;
@@ -466,7 +466,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                     String SqlQuery = "update billno set "
                             + "b_billcopy=b_billcopy+1 "
                             + "where (b_refno='" + BillNo + "') "
-                            + "and (b_macno='" + Value.MACNO + "')";
+                            + "and (b_macno='" + PublicVar.MACNO + "')";
                     stmt.executeUpdate(SqlQuery);
                     stmt.close();
                 }

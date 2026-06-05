@@ -9,7 +9,7 @@ import com.softpos.pos.core.controller.PosControl;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.CustomerBean;
@@ -75,7 +75,7 @@ public class PrintInv1 extends javax.swing.JDialog {
      */
     public PrintInv1(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         CONFIG = POSConfigSetup.Bean();
         initComponents();
         ClearVariable();
@@ -2043,7 +2043,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (!txtDocNo.getText().equals("")) {
             bntSaveClick();
             try {
-                if (Value.printdriver) {
+                if (PublicVar.printdriver) {
                     printINVDriver(0);
                     printINVDriver(1);
                 } else {
@@ -2123,7 +2123,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         t += ("colspan=5 align=center><font face=Angsana New size=1>" + "-----------------------------------------------" + "_");
         t += ("colspan=5 align=left><font face=Angsana New size=1>" + "วันที่ออกใบกำกับภาษี" + TAB + DateFmt.format(TempOnDate) + "_");
         t += ("colspan=5 align=left><font face=Angsana New size=1>" + "เวลา(Time)" + TAB + txtTime.getText() + "_");
-        t += ("colspan=5 align=left><font face=Angsana New size=1>" + "ลำดับเครื่องเก็บเงิน" + Space + Value.MACNO + "_");
+        t += ("colspan=5 align=left><font face=Angsana New size=1>" + "ลำดับเครื่องเก็บเงิน" + Space + PublicVar.MACNO + "_");
         t += ("colspan=5 align=left><font face=Angsana New size=1>" + "หมายเลขเครื่องเก็บเงิน" + Space + POSHW.getTerminal() + "_");
         t += ("colspan=5 align=left><font face=Angsana New size=1>" + "เลขที่ใบกำกับภาษีอย่างย่อ" + Space + txtDocNoRef.getText() + "_");
         t += ("colspan=5 align=left><font face=Angsana New size=1>" + "พนักงานเก็บเงิน" + Space + txtCashier.getText() + "_");

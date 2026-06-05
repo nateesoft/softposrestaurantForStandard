@@ -8,7 +8,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
@@ -36,7 +36,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form AutoSumXREp
@@ -44,7 +44,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
     public AutoSumXRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
 
     }
 
@@ -579,8 +579,8 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 if (ChkSaleNoCash()) {
                     if (ChkCashierSignOn()) {
                         if (ChkCashierClose()) {
-                            if (!Value.getComPort().equals("NONE")) {
-                                if (prn.openPrint(Value.getComPort())) {
+                            if (!POSHW.getPRNPort().equals("NONE")) {
+                                if (prn.openPrint(POSHW.getPRNPort())) {
                                     boolean ChkProcess = false;
                                     if (chkTerminal.isSelected()) {
                                         ProcessTerminal();
@@ -685,7 +685,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select macno from posuser where OnAct='Y' and macno<>'" + Value.MACNO + "' limit 1";
+            String SqlQuery = "select macno from posuser where OnAct='Y' and macno<>'" + PublicVar.MACNO + "' limit 1";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             ReturnVal = rs.next();
             rs.close();
@@ -957,7 +957,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("        Automatic Sum X-Report)   ");
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
         prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -1038,7 +1038,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
         prn.print("          AR Payment Report");
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -1126,7 +1126,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
     }
 
@@ -1361,7 +1361,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
         prn.print("รหัสพนักงาน    : " + frec.Cashier1);
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
         prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -1424,7 +1424,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
         prn.print("          AR Payment Report");
         prn.print("รหัสพนักงานขาย : " + frec.Cashier1);
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -1515,7 +1515,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             prn.print("    รายงานการทำรายการ Void ");
             prn.print("           Void Report");
             prn.print("รหัสพนักงานขาย : " + frec.Cashier1);
-            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+            prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
             prn.print("----------------------------------------");
             prn.print("Mac Cashier Table Time  User-Void T_Void");
             prn.print("    Ref-No  PLU-Code       Qty    Amount");
@@ -1554,7 +1554,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
         //Print_Str(" ");
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
     }
 
@@ -1775,7 +1775,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("รายละเอียด");
         prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -1818,7 +1818,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
@@ -2050,7 +2050,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("หมายเลขเครื่อง : รวมทุกเตรื่อง");
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("รายละเอียด");
         prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -2101,14 +2101,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessHourly() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         int C0 = 0;
         int C1 = 0;
         int C2 = 0;
@@ -2544,7 +2544,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("เวลา    จำนวนบิล   จำนวนลูกค้า    จำนวนเงิน");
         prn.print("----------------------------------------");
@@ -2569,14 +2569,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessInv() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
 
         prn.initPrinter();
         prn.print("         รายงานการพิมพ์ใบเสร็จรับเงิน");
@@ -2585,7 +2585,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("หมายเลขเครื่อง : รวมทุกเครื่อง");
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("ใบเสร็จ   เวลาพิมพ์     จำนวนเงิน   ภาษี(Vat)");
         prn.print("----------------------------------------");
@@ -2641,14 +2641,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessVoid() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
 
@@ -2660,7 +2660,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("Mac Cashier Table Time  User-Void T_Void");
         prn.print("    Ref-No  PLU-Code       Qty    Amount");
@@ -2701,14 +2701,14 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessCredit() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
         /**
@@ -2717,7 +2717,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -2751,7 +2751,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("ประเภทบัตร    ชื่อบัตรเครดิต");
         prn.print("ลำดับ  หมายเลขบัตร     รหัสอนุมัติ    จำนวนเงิน");
@@ -2764,7 +2764,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Double SumTotalAmt = 0.0;
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+            String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
@@ -2808,7 +2808,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
@@ -2823,7 +2823,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             String SqlQuery = "insert into tempcredit (terminal,crcode,crid,crapp,cramt) "
                     + "values (?,?,?,?,?)";
             PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
-            prm.setString(1, Value.MACNO);
+            prm.setString(1, PublicVar.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
             prm.setString(4, TCrApp);
@@ -2841,8 +2841,8 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void ProcessGiftVoucher() {
-        String MacNo1 = Value.MACNO;
-        String MacNo2 = Value.MACNO;
+        String MacNo1 = PublicVar.MACNO;
+        String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
 
@@ -2854,7 +2854,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
         prn.print(" ");
         Date dateP = new Date();
-        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+        prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
         prn.print("----------------------------------------");
         prn.print("Code                  NO          Amount");
         prn.print("----------------------------------------");
@@ -2892,33 +2892,33 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print(POSHW.getHeading2());
         prn.print(POSHW.getHeading3());
         prn.print(POSHW.getHeading4());
-        prn.print("REG ID :" + Value.MACNO);
+        prn.print("REG ID :" + PublicVar.MACNO);
         prn.cutPaper();
 
     }
 
     public void ProcessCharge() {
 
-        if (!Value.getComPort().equals("NONE")) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
             double Sum1 = 0.0;
             double Sum2 = 0.0;
             int Cnt1 = 0;
             int Cnt2 = 0;
-            if (Value.printdriver) {
+            if (PublicVar.printdriver) {
 
-            } else if (prn.openPrint(Value.getComPort())) {
+            } else if (prn.openPrint(POSHW.getPRNPort())) {
                 prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
                 prn.print(POSHW.getHeading4());
-                prn.print("REG ID :" + Value.MACNO);
+                prn.print("REG ID :" + PublicVar.MACNO);
                 prn.print(" ");
                 prn.print("        รายงานการเบิกสินค้าประจำวัน");
                 prn.print("       (Automatic Sum X-Report)");
                 prn.print("แสดงรวมทุกเครื่อง");
                 prn.print(" ");
-                prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print("ประเภทการเบิก          เวลาพิมพ์  เลขที่เอกสาร ");
                 prn.print("รหัสหน่วยงาน/พนักงาน    จำนวนเงิน    Cashier ");

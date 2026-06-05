@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
@@ -34,7 +34,7 @@ public class CreditRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public CreditRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -44,7 +44,7 @@ public class CreditRep extends javax.swing.JDialog {
         txtCashNo1.setText("0000");
         txtCashNo2.setText("9999");
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -274,7 +274,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -306,23 +306,23 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
 
         }
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintCreditDriver(MacNo1, MacNo1, CashNo1, CashNo2);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานการรับชำระด้วยบัตรเครดิต");
                     prn.print("               (Credit Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("ประเภทบัตร    ชื่อบัตรเครดิต");
                     prn.print("ลำดับ  หมายเลขบัตร     รหัสอนุมัติ    จำนวนเงิน");
@@ -335,7 +335,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     Double SumTotalAmt = 0.0;
                     try {
                         Statement stmt = mysqlConnect.getConnection().createStatement();
-                        String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+                        String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
                             prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
@@ -393,7 +393,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -452,7 +452,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + MacNo1 + " ..." + MacNo2 + "_");
         t += "align=left><font face=Angsana New size=1>" + ("รหัสพนักงาน    :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + CashNo1 + " ..." + CashNo2 + "_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + Space + " Mac:" + Value.MACNO + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + Space + " Mac:" + PublicVar.MACNO + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("ประเภทบัตร" + Space + "ชื่อบัตรเครดิต") + "_";
         t += "colspan=2 align=left><font face=Angsana New size=1>" + ("ลำดับ" + TAB + "หมายเลขบัตร" + "</td><td align=right><font face=Angsana New size=1>" + "รหัสอนุมัติ" + TAB + "จำนวนเงิน") + "_";
@@ -465,7 +465,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         Double SumTotalAmt = 0.0;
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+            String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
@@ -521,7 +521,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             String SqlQuery = "insert into tempcredit (mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
                     + "values ('CASHIER1',curdate(),?,'" + TRefno + "',?,?,?,?)";
             PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
-            prm.setString(1, Value.MACNO);
+            prm.setString(1, PublicVar.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
             prm.setString(4, TCrApp);

@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -35,14 +35,14 @@ public class PromotionRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public PromotionRep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("001");
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     @SuppressWarnings("unchecked")
@@ -224,22 +224,22 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String MacNo2 = txtMacNo2.getText();
         Double SumQty = 0.0;
         Double SumAmt = 0.0;
-        if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (PublicVar.printdriver) {
                 PrintPromotionDriver(MacNo1, MacNo2);
             } else {
-                if (prn.openPrint(Value.getComPort())) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานส่วนลดโปรโมชั่น");
                     prn.print("         (Promotion Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("โปรโมชั่น                จำนวน      ส่วนลด ");
                     prn.print("----------------------------------------");
@@ -315,7 +315,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + MacNo1 + " ..." + MacNo2 + "_");
             t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
             t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("โปรโมชั่น" + TAB + "จำนวน" + TAB + "ส่วนลด ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";

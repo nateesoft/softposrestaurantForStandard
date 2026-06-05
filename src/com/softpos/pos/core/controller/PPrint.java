@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -91,10 +91,10 @@ public class PPrint {
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final ServiceControl ServiceControl = AppContext.getServiceControl();
     
-    private final Value Value = new Value();
+    
 
     public PPrint() {
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
 
@@ -192,7 +192,7 @@ public class PPrint {
     }
 
     public void openDrawerDriver() {
-        PrinterName = Value.printerDriverName;
+        PrinterName = PublicVar.printerDriverName;
 
         byte[] open = {27, 112, 48, 55, 121};
         PrintServiceAttributeSet printserviceattributeset = new HashPrintServiceAttributeSet();
@@ -482,8 +482,8 @@ public class PPrint {
             }
         }
 
-        POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
-        String TempFile = bean.getEJDailyPath() + "/log" + Value.MACNO + ".gif";
+        POSHWSetup bean = POSHWSetup.Bean(PublicVar.MACNO);
+        String TempFile = bean.getEJDailyPath() + "/log" + PublicVar.MACNO + ".gif";
         TextWriter TextWrite = new TextWriter();
         File fObject = new File(TempFile);
         if (!fObject.canRead()) {
@@ -519,20 +519,20 @@ public class PPrint {
     }
 
     public void printLogout() {
-        if (Value.useprint) {
+        if (PublicVar.useprint) {
             Date dateP = new Date();
 
-            if (Value.printdriver == true) {
+            if (PublicVar.printdriver == true) {
                 PrintDriver pd = new PrintDriver();
-                pd.addTextLn("Log Out User : " + Value.USERCODE);
+                pd.addTextLn("Log Out User : " + PublicVar.USERCODE);
                 pd.addTextLn("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
 
                 pd.printNormal();
             } else {
-                if (!Value.getComPort().equals("NONE")) {
-                    if (openPrint(Value.getComPort())) {
+                if (!POSHW.getPRNPort().equals("NONE")) {
+                    if (openPrint(POSHW.getPRNPort())) {
                         initPrinter();
-                        print("Log Out User : " + Value.USERCODE);
+                        print("Log Out User : " + PublicVar.USERCODE);
                         print("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
                         print("");
                         print("");
@@ -1322,7 +1322,7 @@ public class PPrint {
     }
 
     public void printSubTotalBill(String _RefNo, String tableNo) {
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printSubTotalBillDriver(_RefNo, tableNo);
         } else {
             BillNoBean bBean = billControl.getData(_RefNo);
@@ -1336,8 +1336,8 @@ public class PPrint {
             int SubLength2 = 13;
             int ItemCnt = 0;
             String VatStr;
-            if (!Value.getComPort().equals("NONE")) {
-                if (openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     openDrawer();
                     initPrinter();
@@ -1362,7 +1362,7 @@ public class PPrint {
                         print(" ");
                         print(pUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + pUtility.DataFullR(" TABLE : " + tableNo, 15));
                         print(pUtility.DataFullR("CC : " + IntFmt.format(bBean.getB_Cust()) + " Seat", 15) + pUtility.DataFullR(" ", 11) + pUtility.DataFullR("NAME: " + getLastEmployeeCheckBill(tableNo, _RefNo), 15));
-                        print(pUtility.DataFullR("COM: " + Value.MACNO, 15));
+                        print(pUtility.DataFullR("COM: " + PublicVar.MACNO, 15));
                         if (!tBean.getMemName().trim().equals("")) {
                             print(" ");
                             print(pUtility.DataFullR(" ", 26) + pUtility.DataFullR("NAME CC: " + tBean.getMemName(), 15));
@@ -1432,7 +1432,7 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                         print("----------------------------------------");
                         print("     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
@@ -1819,7 +1819,7 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt() + vatPrint)) + "_";
             }
             t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
-            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + Value.MACNO + " **No Receipt**" + "_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + PublicVar.MACNO + " **No Receipt**" + "_";
             t1 += "colspan=3 align=center>_";
 
             if (!POSHW.getFootting1().equals("")) {
@@ -2017,7 +2017,7 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=3>" + "Net-Total...." + "</td><td align=right ><font face=Angsana New size=3>" + DecFmt.format(NumberUtil.UP_DOWN_NATURAL_BAHT(Math.round(tBean.getTAmount() + tBean.getServiceAmt() + vatPrint))) + "_";
             }
             t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
-            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + Value.MACNO + " **No Recipt**" + "_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "COM: " + PublicVar.MACNO + " **No Recipt**" + "_";
             t1 += "colspan=3 align=center>_";
 
             if (!POSHW.getFootting3().equals("")) {
@@ -2082,9 +2082,9 @@ public class PPrint {
     }
 
     public void printCheckBill(String tableNo) {
-        AppLogUtil.info("printBillCheck printdriver = " + Value.printdriver);
+        AppLogUtil.info("printBillCheck printdriver = " + PublicVar.printdriver);
 
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printCheckBillDriver(tableNo);
         } else {
             List<BalanceBean> listBeanNoVoid = balanceControl.getAllBalanceNoVoid(tableNo);
@@ -2097,8 +2097,8 @@ public class PPrint {
             String VatStr;
             String t1 = "";
             String t2 = "";
-            if (!Value.getComPort().equals("NONE")) {
-                if (openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (openPrint(POSHW.getPRNPort())) {
                     TableFileBean tBean = tableFileControl.getData(tableNo);
                     initPrinter();
                     openDrawer();
@@ -2283,7 +2283,7 @@ public class PPrint {
                     print(pUtility.DataFull(" ", 25) + "TOTAL " + DecFmt.format(tBean.getNetTotal()));
                     print("----------------------------------------");
                     print(" ");
-                    print(pUtility.DataFullR("COM: " + Value.MACNO, 15) + " **No Recipt**");
+                    print(pUtility.DataFullR("COM: " + PublicVar.MACNO, 15) + " **No Recipt**");
                     //print("----------------------------------------");
                     print(" ");
                     selectStye(1);
@@ -2327,7 +2327,7 @@ public class PPrint {
             @Override
             public void run() {
                 AppLogUtil.info("PrintVoidBill : Start Printing....");
-                if (Value.printdriver == true) {
+                if (PublicVar.printdriver == true) {
                     printVoidBillDriver(tableNo);
                 } else {
                     List<BalanceBean> listBean = balanceControl.getAllBalance(tableNo);
@@ -2337,8 +2337,8 @@ public class PPrint {
                     int SubLength = 20;
                     int SubLength2 = 13;
                     String VatStr;
-                    if (!Value.getComPort().equals("NONE")) {
-                        if (openPrint(Value.getComPort())) {
+                    if (!POSHW.getPRNPort().equals("NONE")) {
+                        if (openPrint(POSHW.getPRNPort())) {
                             initPrinter();
                             PublicVar.P_LineCount = 0;
                             for (int i = 0; i < listBean.size(); i++) {
@@ -2355,7 +2355,7 @@ public class PPrint {
                             print(" ");
                             Date dateP = new Date();
                             print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + pUtility.DataFullR(" ", 11) + "NAME:" + getLastEmployee(tableNo));
-                            print("COM: " + Value.MACNO);
+                            print("COM: " + PublicVar.MACNO);
                             print(" ");
                             print("----------------------------------------");
                             for (int i = 0; i < listBean.size(); i++) {
@@ -2465,7 +2465,7 @@ public class PPrint {
         int AmtLength = 10;
         int SubLength = 20;
         int SubLength2 = 13;
-        if (!Value.getComPort().equals("NONE")) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
             PublicVar.P_LineCount = 0;
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
@@ -2495,7 +2495,7 @@ public class PPrint {
             t += "colspan=3 align=center>_";
             Date dateP = new Date();
             t += ("colspan=2 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "</td><td align=right><font face=Angsana New size=2>" + "NAME:" + Space + getLastEmployee(tableNo) + "_");
-            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "COM: " + Value.MACNO + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "COM: " + PublicVar.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             for (int i = 0; i < listBean.size(); i++) {
                 BalanceBean bean = (BalanceBean) listBean.get(i);
@@ -2619,10 +2619,10 @@ public class PPrint {
     }
 
     public void printTableAction() {
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printTableActionDriver();
-        } else if (!Value.getComPort().equals("NONE")) {
-            if (openPrint(Value.getComPort())) {
+        } else if (!POSHW.getPRNPort().equals("NONE")) {
+            if (openPrint(POSHW.getPRNPort())) {
                 initPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
@@ -2634,7 +2634,7 @@ public class PPrint {
                 print("      รายงานโต๊ะค้าง (ยังไม่ได้ชำระเงิน) ");
                 print("               Table Check        ");
                 Date dateP = new Date();
-                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
 
                 print("----------------------------------------");
                 print("Table     Amount    Open-Time  Customer");
@@ -2687,10 +2687,10 @@ public class PPrint {
 
     public void printTerminalEngForm(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         Date dateP = new Date();
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printTerminalEngFormDriver(frec, CrArray, macNo);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
                 List<Object[]> list1 = docAnalyse(Datefmt.format(dateP) + "", Datefmt.format(dateP) + "");
                 double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
                 double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
@@ -2746,7 +2746,7 @@ public class PPrint {
                 } else {
 
                 }
-                if (openPrint(Value.getComPort())) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     print("   Daily Sale (Terminal Report)");
 
@@ -2944,7 +2944,7 @@ public class PPrint {
     private void printTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo) {
         String t = "";
         Date dateP = new Date();
-        if (!Value.getComPort().equals("NONE")) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
             List<Object[]> list1 = docAnalyse(Datefmt.format(dateP) + "", Datefmt.format(dateP) + "");
             double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
             double countCCE = 0.00, countCCT = 0.00, countCCD = 0.00, countBillE = 0.00, countBillT = 0.00, countBillD = 0.00;
@@ -3216,11 +3216,11 @@ public class PPrint {
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printGroupDriver(GArray);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
@@ -3235,7 +3235,7 @@ public class PPrint {
                     print("รหัสกลุ่มสินค้า (Dept/Group) " + GArray[0].Group1 + "..." + GArray[0].Group2);
                     print(" ");
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     print("----------------------------------------");
                     print("รายละเอียด");
                     print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -3331,7 +3331,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("(Daily..Department Report)" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date :" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_");
         t += "align=left><font face=Angsana New size=2>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_");
         t += "align=left><font face=Angsana New size=2>" + ("พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_");
         t += "align=left><font face=Angsana New size=2>" + ("รหัสกลุ่มสินค้า :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_");
@@ -3395,11 +3395,11 @@ public class PPrint {
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
-        if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver == true) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (PublicVar.printdriver == true) {
                 printPluDriver(GArray);
             } else {
-                if (openPrint(Value.getComPort())) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
@@ -3415,7 +3415,7 @@ public class PPrint {
                     print("รหัสสินค้า (PLU) " + GArray[0].Plu1 + "..." + GArray[0].Plu2);
                     print(" ");
                     Date dateP = new Date();
-                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     print("----------------------------------------");
                     print("รายละเอียด");
                     print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -3518,7 +3518,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "(PLU Report)" + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>_";
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + PublicVar._User + " Mac:" + Space + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + Space + PublicVar._User + " Mac:" + Space + PublicVar.MACNO + "_";
         t += "align=left><font face=Angsana New size=2>" + "หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].MacNo1 + " ..." + GArray[0].MacNo2 + "_";
         t += "align=left><font face=Angsana New size=2>" + "พนักงานขาย :" + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Cashier1 + "..." + GArray[0].Cashier2 + "_";
         t += "align=left><font face=Angsana New size=2>" + "รหัสกลุ่มสินค้า : " + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + GArray[0].Group1 + "..." + GArray[0].Group2 + "_";
@@ -3580,7 +3580,7 @@ public class PPrint {
     }
 
     public void printBillCopy(TranRecord[] myArray1, String _RefNo, int ICopy, CreditPaymentRec[] CreditArray1) {
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printBillCopyDriver(_RefNo, ICopy);
         } else {
             List<TSaleBean> listBean = billControl.getAllTSaleNovoid(_RefNo);
@@ -3593,8 +3593,8 @@ public class PPrint {
             String VatStr;
 
             BillNoBean tBean = billControl.getData(_RefNo);
-            if (!Value.getComPort().equals("NONE")) {
-                if (openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
@@ -3612,7 +3612,7 @@ public class PPrint {
                     }
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier" + PublicVar._User + " Mac" + PublicVar.MACNO);
                         print("----------------------------------------");
                         for (int i = 0; i < listBean.size(); i++) {
                             TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -3692,7 +3692,7 @@ public class PPrint {
                     print("----------------------------------------");
 //                print("Sub-TOTAL   " + "(Item" + PUtility.DataFull(IntFmt.format(ItemCnt), QtyLength) + " )     " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     print("Sub-TOTAL         " + pUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
-                    print("COMP NO:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    print("COMP NO:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     if (tBean.getB_ProDiscAmt() > 0) {
                         print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getB_ProDiscAmt()), AmtLength));
                     }
@@ -3724,7 +3724,7 @@ public class PPrint {
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();
-                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + PublicVar.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
                                 print("     " + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
@@ -3857,7 +3857,7 @@ public class PPrint {
 
         BillNoBean tBean = billControl.getData(RefNo);
         PPrint p = new PPrint();
-        if (!Value.getComPort().equals("NONE")) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
             if (POSHW.getHeading1().length() >= 18) {
                 String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
                 for (String data : strs) {
@@ -4038,7 +4038,7 @@ public class PPrint {
                 mysqlConnect.open(this.getClass());
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();
-                    String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                    String CheckCoupon = "select * from t_cupon where (r_refno='" + RefNo + "') and (terminal='" + PublicVar.MACNO + "') ";
                     ResultSet rs = stmt.executeQuery(CheckCoupon);
                     while (rs.next()) {
                         t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
@@ -4144,7 +4144,7 @@ public class PPrint {
     }
 
     public void printBillRefund(String _RefNo) {
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printBillRefundDriver(_RefNo);
         } else {
             List<TSaleBean> listBean = billControl.getAllTSale(_RefNo);
@@ -4156,8 +4156,8 @@ public class PPrint {
             String VatStr;
 
             BillNoBean bBean = billControl.getData(_RefNo);
-            if (!Value.getComPort().equals("NONE")) {
-                if (openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (openPrint(POSHW.getPRNPort())) {
                     initPrinter();
                     print(POSHW.getHeading1());
                     print(POSHW.getHeading2());
@@ -4182,7 +4182,7 @@ public class PPrint {
                     }
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                         print("----------------------------------------");
                         for (int i = 0; i < listBean.size(); i++) {
                             TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -4242,7 +4242,7 @@ public class PPrint {
                         }
                     } else {
                         Date dateP = new Date();
-                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        print(PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                         print("----------------------------------------");
                         print("     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength));
                     }
@@ -4282,7 +4282,7 @@ public class PPrint {
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();
-                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "') ";
+                            String CheckCoupon = "select * from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + PublicVar.MACNO + "') ";
                             ResultSet rs = stmt.executeQuery(CheckCoupon);
                             while (rs.next()) {
                                 print("     " + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength));
@@ -4433,7 +4433,7 @@ public class PPrint {
         }
         if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
             Date dateP = new Date();
-            t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             for (int i = 0; i < listBean.size(); i++) {
                 TSaleBean bean = (TSaleBean) listBean.get(i);
@@ -4511,7 +4511,7 @@ public class PPrint {
             }
         } else {
             Date dateP = new Date();
-            t += ("colspan=3 align=center><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_");
+            t += ("colspan=3 align=center><font face=Angsana New size=2>" + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "     อาหารและเครื่องดื่ม " + pUtility.DataFull(DecFmt.format(bBean.getB_Total()), AmtLength) + "_");
         }
@@ -4549,7 +4549,7 @@ public class PPrint {
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
-                String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + Value.MACNO + "')";
+                String CheckCoupon = "select *from t_cupon where (r_refno='" + _RefNo + "') and (terminal='" + PublicVar.MACNO + "')";
                 ResultSet rs = stmt.executeQuery(CheckCoupon);
                 while (rs.next()) {
                     t += ("colspan=3 align=left><font face=Angsana New size=2>" + TAB + pUtility.DataFullR(pUtility.SeekCuponName(rs.getString("cucode")), 20) + pUtility.DataFull(DecFmt.format(rs.getDouble("cuamt")), AmtLength) + "_");
@@ -4670,7 +4670,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("Daily...Table Check" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=2>_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ")) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=2>" + "Print Date" + Space + (PPrint_DatefmtThai.format(dateP).replace("/", " / ")) + Space + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("Table" + Space + "Amount" + Space + "Open-Time" + Space + "Customer") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
@@ -4712,10 +4712,10 @@ public class PPrint {
     }
 
     public void printHeaderBill() {
-        if (Value.printdriver == true) {
+        if (PublicVar.printdriver == true) {
             printHeaderBillDriver();
-        } else if (!Value.getComPort().equals("NONE")) {
-            if (openPrint(Value.getComPort())) {
+        } else if (!POSHW.getPRNPort().equals("NONE")) {
+            if (openPrint(POSHW.getPRNPort())) {
                 initPrinter();
                 print(POSHW.getHeading1());
                 print(POSHW.getHeading2());
@@ -4730,7 +4730,7 @@ public class PPrint {
     }
 
     private void printHeaderBillDriver() {
-        System.err.println(Value.driverNotSupport);
+        System.err.println(PublicVar.driverNotSupport);
     }
 
     private void updatePrintCheckBill(String table) {

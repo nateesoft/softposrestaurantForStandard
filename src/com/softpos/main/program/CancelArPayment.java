@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
@@ -40,7 +40,7 @@ public class CancelArPayment extends javax.swing.JDialog {
     private String TAB = Space + Space + Space;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form CancelArPaymentClick
@@ -50,7 +50,7 @@ public class CancelArPayment extends javax.swing.JDialog {
 
         initComponents();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
         tblShow.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -166,20 +166,20 @@ public class CancelArPayment extends javax.swing.JDialog {
     }
 
     public void PrintCancelArPayment(String TempBillNo) {
-        if (!Value.getComPort().equals("NONE")) {
-            if (Value.printdriver) {
+        if (!POSHW.getPRNPort().equals("NONE")) {
+            if (PublicVar.printdriver) {
                 PrintCancelArPaymentDriver(TempBillNo);
             } else {
-                if (prn.openPrint(Value.getComPort())) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("***ยกเลิกรายการรับเงินลูกหนี้ภายนอก***");
-                    prn.print("หมายเลขเครื่อง : " + Value.MACNO);
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("อ้างถึงใบเสร็จรับเงินเลขที่           จำนวนเงิน");
                     Double SumAmount = 0.0;
@@ -244,7 +244,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("ยกเลิกรายการรับเงินลูกหนี้ภายนอก") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         try {
             mysqlConnect.open(this.getClass());

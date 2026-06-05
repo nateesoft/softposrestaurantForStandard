@@ -1,6 +1,6 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.constants.PublicVar;
@@ -70,7 +70,7 @@ public class BalanceControl {
         bean.setR_PluCode(bb.getR_PluCode());
         bean.setR_Quan(bb.getR_Quan());
         bean.setR_PrQuan(0);
-        bean.setMacno(Value.MACNO);
+        bean.setMacno(PublicVar.MACNO);
 
         bean.setR_KicPrint(bb.getR_KicPrint());
         bean.setR_Pause(bb.getR_Pause());
@@ -257,7 +257,7 @@ public class BalanceControl {
             String sqlUpNull = "update balance set r_linkindex='' where r_linkindex=''";
             mysqlConnect.executeUpdate(sqlUpNull);
             //clear Option file...
-            Value.ClearOPT();
+            PublicVar.ClearOPT();
             return iUpdate > 0;
         } catch (Exception e) {
             AppLogUtil.log(BalanceControl.class, "error", e);

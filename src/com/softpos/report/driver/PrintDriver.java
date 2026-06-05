@@ -1,7 +1,7 @@
 package com.softpos.report.driver;
 
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import java.awt.Font;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -231,7 +231,7 @@ public class PrintDriver {
                     return printService1;
                 }
             } else {
-                if (printService1.getName().equals(Value.printerDriverName)) {
+                if (printService1.getName().equals(PublicVar.printerDriverName)) {
                     return printService1;
                 }
             }
@@ -247,7 +247,7 @@ public class PrintDriver {
     private PrintService getPrinterKitchen() {
         PrintService[] printService = PrinterJob.lookupPrintServices();
         for (PrintService printService1 : printService) {
-            if (printService1.getName().equals(Value.printerDriverKitChenName)) {
+            if (printService1.getName().equals(PublicVar.printerDriverKitChenName)) {
                 return printService1;
             }
         }

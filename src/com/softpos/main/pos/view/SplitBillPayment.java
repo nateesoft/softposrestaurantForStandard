@@ -1,11 +1,11 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;
@@ -260,7 +260,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         if (tbSecond.getRowCount() > 0) {
-            Value.TableSelected = txtTable2.getText();
+            PublicVar.TableSelected = txtTable2.getText();
             table2 = txtTable2.getText();
             this.setVisible(false);
 //            dispose();

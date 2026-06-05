@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,12 +41,12 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public DailyHourlyOpenTB(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     public List<Object[]> LoadData() {
@@ -352,22 +352,22 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
 
     public void PrintHourlyByCust() {
         List<Object[]> ListObj = LoadData();
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintHourlyByCustDriver();
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("     (Daily Customer count per Hours)");
                     prn.print("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2));
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("    Time       CC       Bill      Amount");
                     prn.print("----------------------------------------");
@@ -436,7 +436,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         t += "colspan=4 align=center><font face=Angsana New size=1>_";
         Date dateP = new Date();
         t += "colspan=4 align=center><font face=Angsana New size=1>" + "Print Date" + (DatefmtThai.format(dateP)) + "_";
-        t += "colspan=4 align=center><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + " Mac:" + Value.MACNO + "_";
+        t += "colspan=4 align=center><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=4 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
         t += "colspan=1 align=center><font face=Angsana New size=1>" + "Time" + "</td></font><td align=center><font face=Angsana New size=1>" + "CC" + "</td></font><td align=center><font face=Angsana New size=1>" + "Bill" + "</td></font><td align=center><font face=Angsana New size=1>" + "Amount" + "_";
         t += "colspan=4 align=center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");

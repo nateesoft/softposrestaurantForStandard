@@ -6,7 +6,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -47,7 +47,7 @@ public class MTDPLU extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDPLU(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -60,7 +60,7 @@ public class MTDPLU extends javax.swing.JDialog {
         txtPlu2.setText("zzz");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -629,17 +629,17 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             MTDPluPrintDriver();
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานการขายตามรหัสสินค้า");
                     prn.print("            (MTD PLU Report)");
                     prn.print("ช่วงวันที่ : " + DatefmtShow.format(TDate1) + "..." + DatefmtShow.format(TDate2));
@@ -647,7 +647,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     prn.print("รหัสสินค้า (PLU Code) " + txtPlu1.getText() + "..." + txtPlu2.getText());
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("รายละเอียด");
                     prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -1196,7 +1196,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("รหัสสินค้า (PLU Code) " + txtPlu1.getText() + "..." + Space + txtPlu2.getText()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Value.MACNO) + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายละเอียด") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + (TAB + ".....EAT IN....." + TAB + "...TAKE AWAY.....") + TAB + "_";

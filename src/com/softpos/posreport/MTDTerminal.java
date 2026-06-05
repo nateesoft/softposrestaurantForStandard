@@ -7,7 +7,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.util.AppLogUtil;
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.connection.database.MySQLConnect;
@@ -52,7 +52,7 @@ public class MTDTerminal extends javax.swing.JDialog {
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDTerminal(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -63,7 +63,7 @@ public class MTDTerminal extends javax.swing.JDialog {
         txtMacNo2.setText("999");
         InitScreen();
         
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
 
@@ -700,21 +700,21 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void PrintTerminal(FinalcialRec frec, CreditRec[] CrArray) {
-        if (Value.printdriver) {
-            MSG.WAR(this, Value.driverNotSupport);
-        } else if (!Value.getComPort().equals("NONE")) {
-            if (prn.openPrint(Value.getComPort())) {
+        if (PublicVar.printdriver) {
+            MSG.WAR(this, PublicVar.driverNotSupport);
+        } else if (!POSHW.getPRNPort().equals("NONE")) {
+            if (prn.openPrint(POSHW.getPRNPort())) {
                 prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
                 prn.print(POSHW.getHeading4());
-                prn.print("REG ID :" + Value.MACNO);
+                prn.print("REG ID :" + PublicVar.MACNO);
                 prn.print("   รายงานยอดการเงิน (MTD Terminal Report)");
                 prn.print("ช่วงวันที่ : " + DatefmtShow.format(TDate1) + " ถึง " + DatefmtShow.format(TDate2));
                 prn.print("หมายเลขเครื่อง : " + txtMacNo1.getText() + " ถึง " + txtMacNo2.getText());
                 Date dateP = new Date();
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print(PUtility.DataFullR("ยอดรวมค่าอาหาร                 ", 26) + PUtility.DataFull(DecFmt.format(frec.Food), 13));
                 prn.print(PUtility.DataFullR("ยอดรวมค่าเครื่องดื่ม               ", 26) + PUtility.DataFull(DecFmt.format(frec.Drink), 13));
@@ -792,8 +792,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Double SumAmt = 0.0;
                 prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
                 prn.print("        MTD AR Payment Report");
-                prn.print("หมายเลขเครื่อง : " + Value.MACNO);
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print("หมายเลขเครื่อง : " + PublicVar.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                 prn.print("----------------------------------------");
@@ -886,10 +886,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void PrintTerminalEngForm(FinalcialRec frec, CreditRec[] CrArray, String macNo1, String macNo2) {
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintTerminalEngFormDriver(frec, CrArray, macNo1, macNo1);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
                 List<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
                 String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
                 double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;
@@ -951,7 +951,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 } else {
 
                 }
-                if (prn.openPrint(Value.getComPort())) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
@@ -964,7 +964,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     prn.print("Terminal : " + txtMacNo1.getText() + " To Terminal : " + txtMacNo2.getText());
                     Date dateP = new Date();
                     prn.print("Print Time :" + DatefmtThai.format(dateP));
-                    prn.print("Print By Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print("Print By Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
 
                     double NetSale_VatExclude = frec.Net_Sale * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
                     double NetSale = frec.Net_Sale - NetSale_VatExclude;
@@ -1241,7 +1241,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 //        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Date To..." + DatefmtShow.format(TDate2) + "_";
         t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Terminal : " + Space + txtMacNo1.getText() + Space + " To : " + txtMacNo2.getText()) + "_";
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Time :" + DatefmtThai.format(dateP) + Space + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Time :" + DatefmtThai.format(dateP) + Space + PublicVar._User + " Mac:" + PublicVar.MACNO + "_";
 
         double NetSale_VatExclude = frec.Net_Sale * CONFIG.getP_Vat() / (100 + CONFIG.getP_Vat());
         double NetSale = frec.Net_Sale - NetSale_VatExclude;

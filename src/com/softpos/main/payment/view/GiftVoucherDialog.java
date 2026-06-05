@@ -3,7 +3,6 @@ package com.softpos.main.payment.view;
 import com.softpos.constants.PublicVar;
 import com.softpos.main.program.GiftDialogList;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.constants.Value;
 import com.softpos.util.AppLogUtil;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -288,7 +287,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             String GAmt = tbGift.getValueAt(i, 1).toString().replace(",", "");
             if (netTotalAmount > 0) {
                 boolean saved = AppContext.getCuponControl().saveTempGift(
-                        GNo, PublicVar.VoucherType, Double.parseDouble(GAmt), Value.MACNO);
+                        GNo, PublicVar.VoucherType, Double.parseDouble(GAmt), PublicVar.MACNO);
                 if (saved) {
                     setTotalAmount(Double.parseDouble(txtTotalAmount.getText().replace(",", "")));
                 }
@@ -442,7 +441,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     }
 
     private void loadData() {
-        List<Object[]> rows = AppContext.getCuponControl().loadTempGift(Value.MACNO);
+        List<Object[]> rows = AppContext.getCuponControl().loadTempGift(PublicVar.MACNO);
         for (Object[] row : rows) {
             model.addRow(new Object[]{
                 row[0],

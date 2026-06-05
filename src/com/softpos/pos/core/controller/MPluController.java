@@ -1,9 +1,10 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.MPluBean;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +26,7 @@ public class MPluController {
         
         try {
             mysqlConnect.open(MPluController.class);
-            String sql = "select * from " + Value.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
+            String sql = "select * from " + PublicVar.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
@@ -64,7 +65,7 @@ public class MPluController {
         int[] resultCreate = new int[0];
         mysqlConnect.open(MPluController.class);
         try {
-            String sql = "insert into " + Value.db_member + ".mplu "
+            String sql = "insert into " + PublicVar.db_member + ".mplu "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, PLU_Group, Sale_Type, "
                     + "PLU_GroupName, PLU_Code, PLU_Name, PLU_Amount, PLU_Quantity, PLU_Price, TranferFlag) "
                     + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -102,7 +103,7 @@ public class MPluController {
         mysqlConnect.open(MPluController.class);
 
         try {
-            String sql = "delete from " + Value.db_member + ".mplu "
+            String sql = "delete from " + PublicVar.db_member + ".mplu "
                     + "where receipt_no='" + receiptNo + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);

@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -43,7 +43,7 @@ public class MTDCredit extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDCredit(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -52,7 +52,7 @@ public class MTDCredit extends javax.swing.JDialog {
         txtDate2.setText(DatefmtShow.format(date));
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -340,7 +340,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -368,23 +368,23 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
         }
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             MTDPrintCreditDriver();
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("       รายงานการรับชำระด้วยบัตรเครดิต");
                     prn.print("          (MTD Credit Report)");
                     prn.print("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2));
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("ประเภทบัตร    ชื่อบัตรเครดิต");
                     prn.print("ลำดับ  หมายเลขบัตร     รหัสอนุมัติ    จำนวนเงิน");
@@ -396,7 +396,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     Double SumTotalAmt = 0.0;
                     try {
                         Statement stmt = mysqlConnect.getConnection().createStatement();
-                        String SqlQuery = "select * from tempcredit where (terminal='" + Value.MACNO + "') order by crcode";
+                        String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
                             prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
@@ -470,7 +470,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("(MTD Credit Report)") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2)) + "_";
         Date dateP = new Date();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date:" + Space + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Value.MACNO) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date:" + Space + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("ประเภทบัตร" + Space + "ชื่อบัตรเครดิต") + "_";
         t += "colspan=2 align=left><font face=Angsana New size=1>" + ("ลำดับ" + TAB + "หมายเลขบัตร" + "</td><td align=right><font face=Angsana New size=1>" + "รหัสอนุมัติ" + TAB + "จำนวนเงิน") + "_";
@@ -535,7 +535,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             String SqlQuery = "insert into tempcredit (terminal,crcode,crid,crapp,cramt) "
                     + "values (?,?,?,?,?)";
             PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
-            prm.setString(1, Value.MACNO);
+            prm.setString(1, PublicVar.MACNO);
             prm.setString(2, TCrCode);
             prm.setString(3, TCrId);
             prm.setString(4, TCrApp);

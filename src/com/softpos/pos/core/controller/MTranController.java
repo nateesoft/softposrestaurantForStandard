@@ -1,8 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.MTranBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,7 +24,7 @@ public class MTranController {
 
         try {
             mysqlConnect.open(MTranController.class);
-            String sql = "select * from " + Value.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
+            String sql = "select * from " + PublicVar.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     bean = mappingBean(rs);
@@ -43,7 +44,7 @@ public class MTranController {
         boolean isNoExist = true;
         try {
             mysqlConnect.open(MTranController.class);
-            String sql = "select Receipt_No from " + Value.db_member + ".mtran "
+            String sql = "select Receipt_No from " + PublicVar.db_member + ".mtran "
                     + "where Receipt_No='" + receiptNo + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -84,7 +85,7 @@ public class MTranController {
         mysqlConnect.open(MTranController.class);
 
         try {
-            String sql = "insert into " + Value.db_member + ".mtran "
+            String sql = "insert into " + PublicVar.db_member + ".mtran "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, Sale_Type, GrossAmount, "
                     + "DiscountAmount, NetAmount, Mechine_Code, Employee_Code, Service_Time, Score, TranferFlag) "
                     + "values ('" + DateUtil.getDateFormat(bean.getService_Date(), "yyyy-MM-dd") + "', "
@@ -110,7 +111,7 @@ public class MTranController {
         mysqlConnect.open(MTranController.class);
 
         try {
-            String sql = "delete from " + Value.db_member + ".mtran "
+            String sql = "delete from " + PublicVar.db_member + ".mtran "
                     + "where receipt_no='" + receiptNo + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);

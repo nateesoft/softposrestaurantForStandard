@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ public class InvRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form InvRep
@@ -44,7 +44,7 @@ public class InvRep extends javax.swing.JDialog {
         initComponents();
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     @SuppressWarnings("unchecked")
@@ -226,22 +226,22 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     public void bntOKClick() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintInvDriver(MacNo1, MacNo2);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานการพิมพ์ใบเสร็จรับเงิน");
                     prn.print("             (Receipt Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("ใบเสร็จ   เวลาพิมพ์     จำนวนเงิน   ภาษี(Vat)");
                     prn.print("----------------------------------------");
@@ -336,7 +336,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("(Daily..Receipt Report)" + "_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + Space + MacNo1 + Space + "ถึง..." + MacNo2 + "_");
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date :" + Space + (DatefmtThai.format(date)) + Space + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date :" + Space + (DatefmtThai.format(date)) + Space + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ใบเสร็จ" + Space + "เวลาพิมพ์" + Space + "จำนวนเงิน" + Space + "ภาษี(Vat)" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";

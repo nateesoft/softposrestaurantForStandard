@@ -1,10 +1,11 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.STCardBean;
 import com.softpos.pos.core.model.StkFileBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -265,7 +266,7 @@ public class StockControl {
 
             //กำหนดราคาเองตามป้าย
             if (product.getPStatus().equals("S")) {
-                price = Value.PRICE_BY_USER;
+                price = PublicVar.PRICE_BY_USER;
             } //กำหนดราคาตาม Plu E,T,D,P,W หรือราคา 1-5
             else if (product.getPStatus().equals("P") || product.getPStatus().equals("T")) {
                 if (ETD.equals("E")) {

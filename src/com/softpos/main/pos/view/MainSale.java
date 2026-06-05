@@ -39,7 +39,6 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosUserController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -176,7 +175,7 @@ public class MainSale extends javax.swing.JDialog {
                 d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
                 d.tbBean = tableFileControl.getData(tNo);
                 d.memberBean = MemmaterController.getMember(d.tbBean.getMemCode());
-                d.poshw = POSHWSetup.Bean(Value.MACNO);
+                d.poshw = POSHWSetup.Bean(PublicVar.MACNO);
                 d.config = POSConfigSetup.Bean();
                 d.branchBean = BranchControl.getData();
                 empControl.initLoadEmployeeList();
@@ -215,7 +214,7 @@ public class MainSale extends javax.swing.JDialog {
                     txtDiscount.setText("- " + BalanceControl.GetDiscount(tNo));
 
                     loadButtonProductMenu("A");
-                    Value.MemberAlready = false;
+                    PublicVar.MemberAlready = false;
 
                     initScreen();
 
@@ -257,8 +256,9 @@ public class MainSale extends javax.swing.JDialog {
                     txtProductCode.setEditable(true);
                     txtProductCode.setFocusable(true);
                     txtProductCode.requestFocus();
-                    upDateTableFile();
+                    
                     showCustomerInput();
+                    upDateTableFile();
 
                 } catch (InterruptedException | ExecutionException ex) {
                     AppLogUtil.log(MainSale.class, "error", ex);
@@ -1379,7 +1379,7 @@ public class MainSale extends javax.swing.JDialog {
         // for member
         String MemberCode = tfBean.getMemCode();
         if (ValidateValue.isNotEmpty(MemberCode)) {
-            Value.MemberAlready = true;
+            PublicVar.MemberAlready = true;
             memberBean = MemmaterController.getMember(MemberCode);
             txtMember1.setText(memberBean.getMember_NameThai());
             txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
@@ -1572,7 +1572,7 @@ public class MainSale extends javax.swing.JDialog {
 }//GEN-LAST:event_MRepMemberHistory1ActionPerformed
 
     private void MHeaderBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHeaderBill1ActionPerformed
-    if (Value.useprint) {
+    if (PublicVar.useprint) {
         PPrint prn = new PPrint();
         prn.printHeaderBill();
     }
@@ -1689,9 +1689,9 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtTableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTableFocusGained
-        if (!Value.TableSelected.equals("")) {
+        if (!PublicVar.TableSelected.equals("")) {
             txtTable.setText(tableNo);
-            Value.TableSelected = "";
+            PublicVar.TableSelected = "";
         }
     }//GEN-LAST:event_txtTableFocusGained
 
@@ -1920,7 +1920,7 @@ public class MainSale extends javax.swing.JDialog {
                 clearTable();
                 txtTable.setText("");
                 tbpMain.setSelectedIndex(0);
-                Value.TableSelected = "";
+                PublicVar.TableSelected = "";
                 showFloorPlan();
             } else {
                 loadTableBalance(txtTable.getText());
@@ -1971,11 +1971,11 @@ public class MainSale extends javax.swing.JDialog {
                     List<BalanceBean> listBalance = balanceControl.getBalanceByRLinkIndex(R_Index);
                     for (BalanceBean balanceBean : listBalance) {
                         hasValue = true;
-                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
+                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], PublicVar.USERCODE);
                     }
 
                     if (!hasValue) {
-                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], Value.USERCODE);
+                        procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], PublicVar.USERCODE);
                     }
                     showCell(row, 0);
                 }
@@ -2146,7 +2146,7 @@ public class MainSale extends javax.swing.JDialog {
         //Update  Balance File For Void
         String updBalance = "update balance "
                 + "set r_void='" + bean.getR_Void() + "',"
-                + "cashier='" + Value.USERCODE + "',"
+                + "cashier='" + PublicVar.USERCODE + "',"
                 + "r_emp='" + bean.getR_Emp() + "',"
                 + "r_voiduser='" + bean.getR_VoidUser() + "',"
                 + "r_voidtime='" + bean.getR_VoidTime() + "',"
@@ -2161,7 +2161,7 @@ public class MainSale extends javax.swing.JDialog {
         if ((bean.getR_Set().equals("Y")) && checkPSetSelect(bean.getR_PluCode())) {
             String updateBalance = "update balance "
                     + "set r_void='" + bean.getR_Void() + "',"
-                    + "cashier='" + Value.USERCODE + "',"
+                    + "cashier='" + PublicVar.USERCODE + "',"
                     + "r_emp='" + bean.getR_Emp() + "',"
                     + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
                     + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
@@ -2438,7 +2438,7 @@ public class MainSale extends javax.swing.JDialog {
         String PCode = txtProductCode.getText();
         String StkCode = PUtility.GetStkCode();
 
-        String emp = Value.EMP_CODE;
+        String emp = PublicVar.EMP_CODE;
         String etd = txtShowETD.getText();
         String[] data = Option.splitPrice(PCode);
         double R_Quan = Double.parseDouble(data[0]);
@@ -2480,8 +2480,8 @@ public class MainSale extends javax.swing.JDialog {
 
         GetQty.clear();//clear temp option
         balance.setR_PrintOK(PublicVar.PrintOK);
-        balance.setMacno(Value.MACNO);
-        balance.setCashier(Value.USERCODE);
+        balance.setMacno(PublicVar.MACNO);
+        balance.setCashier(PublicVar.USERCODE);
         balance.setR_ETD(etd);
         balance.setR_Quan(R_Quan);
         balance.setR_Table(txtTable.getText());
@@ -2537,7 +2537,7 @@ public class MainSale extends javax.swing.JDialog {
         balance.setR_Index(R_Index);
 
         // for member discount
-        if (Value.MemberAlready && balance.getR_Discount().equals("Y")) {
+        if (PublicVar.MemberAlready && balance.getR_Discount().equals("Y")) {
             balance.setR_PrSubType("-M");
             balance.setR_PrSubCode("MEM");
             balance.setR_PrSubQuan(balance.getR_Quan());
@@ -2788,8 +2788,8 @@ public class MainSale extends javax.swing.JDialog {
                 txtCust.setEditable(false);
                 String UpdateTable = "update tablefile set "
                         + "tonact='Y',"
-                        + "macno='" + Value.MACNO + "',"
-                        + "cashier='" + Value.USERCODE + "',"
+                        + "macno='" + PublicVar.MACNO + "',"
+                        + "cashier='" + PublicVar.USERCODE + "',"
                         + "EmpDisc='0',"
                         + "FastDisc='0',"
                         + "TrainDisc='0',"
@@ -2858,7 +2858,7 @@ public class MainSale extends javax.swing.JDialog {
     private void updateCustomerCount(int custCount) {
         String sql = "update tablefile "
                 + "set tcustomer='" + custCount + "',"
-                + "macno='" + Value.MACNO + "' "
+                + "macno='" + PublicVar.MACNO + "' "
                 + "where tcode='" + txtTable.getText() + "'";
         databaseConnection.execUpdate(sql);
         txtProductCode.requestFocus();
@@ -2866,7 +2866,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void holdTableAndSave() {
         String UpdateTableFile = "update tablefile "
-                + "set tonact='N', macno='" + Value.MACNO + "', tpause='Y' "
+                + "set tonact='N', macno='" + PublicVar.MACNO + "', tpause='Y' "
                 + "where tcode='" + txtTable.getText() + "'";
 
         databaseConnection.execUpdate(UpdateTableFile);
@@ -2883,7 +2883,7 @@ public class MainSale extends javax.swing.JDialog {
                 String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
                 databaseConnection.execUpdate(sql1);
 
-                String sql2 = "update poshwsetup set onact='N' where(terminal='" + Value.MACNO + "')";
+                String sql2 = "update poshwsetup set onact='N' where(terminal='" + PublicVar.MACNO + "')";
                 if (databaseConnection.execUpdate(sql2)) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
@@ -2915,7 +2915,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private boolean updateLogout(String UserCode) {
         databaseConnection.execUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
-        Value.CASHIER = "";
+        PublicVar.CASHIER = "";
         return true;
     }
 
@@ -2940,7 +2940,7 @@ public class MainSale extends javax.swing.JDialog {
                 frm.setVisible(true);
                 
                 if (!PublicVar.ReturnString.equals("")) {
-                    txtTable.setText(Value.TableSelected);
+                    txtTable.setText(PublicVar.TableSelected);
                     if (txtTable.getText().trim().length() > 0) {
                         txtTable.setEditable(false);
                         txtTableOnExit();
@@ -3170,10 +3170,10 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void showMember() {
-        if (Value.MemberAlready == true) {
+        if (PublicVar.MemberAlready == true) {
             boolean confirm = MSG.CONF(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
             if (confirm) {
-                Value.MemberAlready = false;
+                PublicVar.MemberAlready = false;
                 String sql = "update tablefile set "
                         + "MemDisc='', "
                         + "MemDiscAmt='0.00', "
@@ -3189,7 +3189,7 @@ public class MainSale extends javax.swing.JDialog {
             frm.setVisible(true);
 
             if (frm.getMemCode() != null) {
-                Value.MemberAlready = true;
+                PublicVar.MemberAlready = true;
                 memberBean = MemmaterController.getMember(frm.getMemCode());
                 // update member in tablefile
                 SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -3231,7 +3231,7 @@ public class MainSale extends javax.swing.JDialog {
 
         clearTable();
         clearHistory();
-        Value.TableSelected = "";
+        PublicVar.TableSelected = "";
 
         this.setVisible(false);
 
@@ -3378,7 +3378,7 @@ public class MainSale extends javax.swing.JDialog {
             pluCode = pluCode.substring(0, pluCode.length() - 1);
 
             int qtySet;
-            if (Value.autoqty) {
+            if (PublicVar.autoqty) {
                 GetQty frm = new GetQty(new JFrame(), true, pluCode);
                 frm.setVisible(true);
 
@@ -3456,7 +3456,7 @@ public class MainSale extends javax.swing.JDialog {
         BalanceBean balanceBean = mainSaleControl.getBalanceByRTable(tableNo);
         String UpdateTableFile = "update tablefile "
                 + "set tonact='N',"
-                + "macno='" + Value.MACNO + "',"
+                + "macno='" + PublicVar.MACNO + "',"
                 + "TCurTime = CurTime(),"
                 + "TCustomer = '" + cus + "',"
                 + "TItem = '" + balanceBean.getR_Total() + "',"
@@ -3467,7 +3467,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private boolean isTakeOrder() {
         boolean isTakeOrder = false;
-        POSHWSetup poshwSetup = PosControl.getData(Value.MACNO);
+        POSHWSetup poshwSetup = PosControl.getData(PublicVar.MACNO);
         if (poshwSetup.getTakeOrderChk().equals("Y")) {
             btnPayment.setVisible(false);
             btnSplit.setVisible(false);
@@ -3492,7 +3492,7 @@ public class MainSale extends javax.swing.JDialog {
                 String PCode = tempBean.getPCode();
                 if (!PCode.equals("")) {
                     String StkCode = PUtility.GetStkCode();
-                    String emp = Value.EMP_CODE;
+                    String emp = PublicVar.EMP_CODE;
                     String etd = txtShowETD.getText();
                     String[] data = Option.splitPrice(PCode);
                     double R_Quan = Double.parseDouble(data[0]);
@@ -3502,8 +3502,8 @@ public class MainSale extends javax.swing.JDialog {
                     BalanceBean balance = new BalanceBean();
                     balance.setStkCode(StkCode);
                     balance.setR_PrintOK(PublicVar.PrintOK);
-                    balance.setMacno(Value.MACNO);
-                    balance.setCashier(Value.USERCODE);
+                    balance.setMacno(PublicVar.MACNO);
+                    balance.setCashier(PublicVar.USERCODE);
                     balance.setR_ETD(etd);
                     balance.setR_Quan(R_Quan);
                     balance.setR_Table(txtTable.getText());
@@ -3732,7 +3732,8 @@ public class MainSale extends javax.swing.JDialog {
     private void upDateTableFile() {
         String sql = "UPDATE tablefile SET "
                 + "TOnAct= 'Y',"
-                + "macno='" + Value.MACNO + "' ,"
+                + "macno='" + PublicVar.MACNO + "',"
+                + "TCustomer='"+txtCust.getText()+"', "
                 + "tpause='N' "
                 + "WHERE Tcode='" + tableNo + "'";
         databaseConnection.execUpdate(sql);
@@ -3901,7 +3902,7 @@ public class MainSale extends javax.swing.JDialog {
 
             //สามารถเลือกจำนวนได้เลย
             double qtySet;
-            if (Value.autoqty) {
+            if (PublicVar.autoqty) {
                 GetQty frm = new GetQty(new JFrame(), true, txtProductCode.getText());
                 frm.setVisible(true);
                 qtySet = frm.ReturnQty;
@@ -3943,17 +3944,17 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void printBillCheck() {
-        if (Value.useprint) {
-            AppLogUtil.info("printBillCheck usePrint = " + Value.useprint);
+        if (PublicVar.useprint) {
+            AppLogUtil.info("printBillCheck usePrint = " + PublicVar.useprint);
             PPrint print = new PPrint();
             print.printCheckBill(txtTable.getText());
         } else {
-            MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + Value.useprint);
+            MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + PublicVar.useprint);
         }
     }
 
     private void printBillVoidCheck() {
-        if (Value.useprint) {
+        if (PublicVar.useprint) {
             if (mainSaleControl.printBillVoidCheck(tableNo)) {
                 PPrint print = new PPrint();
                 print.printVoidBill(tableNo);

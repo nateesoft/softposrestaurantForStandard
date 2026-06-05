@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -42,7 +42,7 @@ public class MTDTopSale extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDTopSale(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -53,7 +53,7 @@ public class MTDTopSale extends javax.swing.JDialog {
         txtMacNo2.setText("9999");
 //        txtCntOrder.setValue(0);
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -533,23 +533,23 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             MSG.ERR(this, e.getMessage());
         }
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintTopSaleDriver("000", "999", "0000", "9999", Group1, Group2, CntOrder);
-        } else if (!Value.getComPort().equals("NONE")) {
-            if (prn.openPrint(Value.getComPort())) {
+        } else if (!POSHW.getPRNPort().equals("NONE")) {
+            if (prn.openPrint(POSHW.getPRNPort())) {
                 prn.initPrinter();
                 prn.print(POSHW.getHeading1());
                 prn.print(POSHW.getHeading2());
                 prn.print(POSHW.getHeading3());
                 prn.print(POSHW.getHeading4());
-                prn.print("REG ID :" + Value.MACNO);
+                prn.print("REG ID :" + PublicVar.MACNO);
                 prn.print("        รายงานอันดับสินค้าขายดี");
                 prn.print("      (MTD Top Sales Report)");
                 prn.print("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2));
                 prn.print("รหัสกลุ่ม/Group  " + Group1 + "..." + Group2);
                 prn.print(" ");
                 Date dateP = new Date();
-                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 prn.print("----------------------------------------");
                 prn.print("กลุ่มสินค้า");
                 prn.print("ลำดับ  รหัสสินค้า         จำนวน    จำนวนเงิน ");
@@ -559,7 +559,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 //int CntOrder = 10 ;
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();
-                    String SqlQuery = "select *from temptopsale where (terminal='" + Value.MACNO + "') order by r_group,r_quan DESC";
+                    String SqlQuery = "select *from temptopsale where (terminal='" + PublicVar.MACNO + "') order by r_group,r_quan DESC";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
                         prn.print("***" + rs.getString("r_group") + "  " + PUtility.SeekGroupName(rs.getString("r_group")));
@@ -603,7 +603,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from temptopsale where terminal='" + Value.MACNO + "'";
+            String SqlQuery = "delete from temptopsale where terminal='" + PublicVar.MACNO + "'";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {
@@ -655,7 +655,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "align=left><font face=Angsana New size=1>" + ("รหัสพนักงาน    :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + CashNo1 + " ..." + CashNo2) + "_";
         t += "align=center><font face=Angsana New size=1>" + ("รหัสกลุ่ม/Group  " + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + Group1 + "..." + Group2) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("กลุ่มสินค้า") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ลำดับ" + Space + "รหัสสินค้า" + Space + "จำนวน" + Space + "จำนวนเงิน ") + "_";
@@ -708,7 +708,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "insert into temptopsale (terminal,r_group,r_plucode,r_pname,r_quan,r_total) "
-                    + "values ('" + Value.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
+                    + "values ('" + PublicVar.MACNO + "','" + TGroup + "','" + TCode + "','" + TName + "'," + TQuan + "," + Tamount + ")";
             stmt.executeUpdate(SqlQuery);
             stmt.close();
         } catch (SQLException e) {

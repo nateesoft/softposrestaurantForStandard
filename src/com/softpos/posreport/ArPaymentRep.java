@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
@@ -35,7 +35,7 @@ public class ArPaymentRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form ArPaymentRep
@@ -46,7 +46,7 @@ public class ArPaymentRep extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("001");
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -211,21 +211,21 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     public void bntOKClick() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
-        if (Value.useprint) {
-            if (Value.printdriver) {
+        if (PublicVar.useprint) {
+            if (PublicVar.printdriver) {
                 ArPaymentPrintDriver(MacNo1, MacNo2);
-            } else if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            } else if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     Double SumAmt = 0.0;
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("    รายงานการรับชำระจากลูกหนี้ภายนอก ");
                     prn.print("          AR Payment Report");
                     prn.print("หมายเลขเครื่อง : " + MacNo1 + "..." + MacNo2);
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                     prn.print("----------------------------------------");
@@ -368,7 +368,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + MacNo1 + " ..." + MacNo2 + "_");
             t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
             t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Ar-Code" + Space + "เลขที่ใบเสร็จรับเงิน/วันที่" + Space + "จำนวนเงิน ") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";

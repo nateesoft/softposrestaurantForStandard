@@ -1,9 +1,10 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.PointTypeBean;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -24,7 +25,7 @@ public class PointTypeController {
         try {
             mysqlConnect.open(PointTypeController.class);
             String sql = "select * "
-                    + "from " + Value.db_member + ".pointtype "
+                    + "from " + PublicVar.db_member + ".pointtype "
                     + "where Point_TypeCode='" + pointTypeCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -47,7 +48,7 @@ public class PointTypeController {
         try {
             mysqlConnect.open(PointTypeController.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
-            String sql = "SELECT * FROM " + Value.db_member + ".pointtype WHERE 1=1 "
+            String sql = "SELECT * FROM " + PublicVar.db_member + ".pointtype WHERE 1=1 "
                     + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
                     + "AND (point1>0 or point2>0 or point3>0) "
                     + "AND Point_TypeDateService like '%" + EEE + "%' limit 1";

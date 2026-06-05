@@ -8,7 +8,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -43,7 +43,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDGiftVoucher(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -55,7 +55,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         txtCashNo1.setText("0000");
         txtCashNo2.setText("9999");
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     /**
@@ -434,23 +434,23 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         String MacNo2 = txtMacNo2.getText();
         String CashNo1 = txtCashNo1.getText();
         String CashNo2 = txtCashNo2.getText();
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintMTDVoucherRepDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("       รายงานการรับชำระด้วยบัตรของขวัญ");
                     prn.print("          (Gift Voucher Report)");
                     prn.print("หมายเลขเครื่อง :" + MacNo1 + " ..." + MacNo2);
                     prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
                     prn.print(" ");
-                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("Code                  NO          Amount");
                     prn.print("----------------------------------------");
@@ -533,7 +533,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         t += "align=left><font face=Angsana New size=1>" + ("หมายเลขเครื่อง :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + MacNo1 + "..." + MacNo2 + "_");
         t += "align=left><font face=Angsana New size=1>" + ("รหัสพนักงาน :" + "</td><td colspan=2 align=left><font face=Angsana New size=1>" + CashNo1 + "..." + CashNo2 + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Value.MACNO + "_");
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(date) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + PublicVar.MACNO + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");
         t += "align=right><font face=Angsana New size=1>" + ("Code NO" + "</td><td align=right><font face=Angsana New size=1>" + "Amount" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");

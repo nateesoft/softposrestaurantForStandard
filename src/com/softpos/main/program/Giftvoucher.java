@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.constants.Value;
+
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -237,7 +237,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public void bntClearAllClick() {
-        AppContext.getCuponControl().clearTempGiftByMacno(Value.MACNO);
+        AppContext.getCuponControl().clearTempGiftByMacno(PublicVar.MACNO);
         clearGrid();
         txtGiftNo.setText("");
     }
@@ -296,12 +296,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         if (!giftExp.equals("000000")) {
                             if (checkExpDate(giftExp, giftExp2)) {
                                 AppContext.getCuponControl().insertTempGift(
-                                        Value.MACNO, giftBarcode, giftType, giftPrice,
+                                        PublicVar.MACNO, giftBarcode, giftType, giftPrice,
                                         giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                             }
                         } else {
                             AppContext.getCuponControl().insertTempGift(
-                                    Value.MACNO, giftBarcode, giftType, giftPrice,
+                                    PublicVar.MACNO, giftBarcode, giftType, giftPrice,
                                     giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                         }
                     }
@@ -312,12 +312,12 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 if (!giftExp.equals("000000")) {
                     if (checkExpDate(giftExp, giftExp2)) {
                         AppContext.getCuponControl().insertTempGift(
-                                Value.MACNO, giftBarcode, giftType, giftPrice,
+                                PublicVar.MACNO, giftBarcode, giftType, giftPrice,
                                 giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                     }
                 } else {
                     AppContext.getCuponControl().insertTempGift(
-                            Value.MACNO, giftBarcode, giftType, giftPrice,
+                            PublicVar.MACNO, giftBarcode, giftType, giftPrice,
                             giftModel, giftLot, giftExp2, giftCode, giftNo, giftAmt);
                 }
             }
@@ -356,7 +356,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void showDataToGrid() {
         clearGrid();
-        Object[] row = AppContext.getCuponControl().getTempGiftByMacno(Value.MACNO);
+        Object[] row = AppContext.getCuponControl().getTempGiftByMacno(PublicVar.MACNO);
         if (row != null) {
             model.addRow(row);
             showCell(0, 0);

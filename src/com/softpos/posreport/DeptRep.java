@@ -4,8 +4,9 @@ import com.softpos.main.program.Jdi_depReport;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -748,7 +749,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        if (Value.useprint) {
+        if (PublicVar.useprint) {
             prn.printGroup(GArray);
         }
         txtMacNo1.requestFocus();

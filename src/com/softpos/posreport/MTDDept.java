@@ -6,7 +6,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.util.AppLogUtil;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
@@ -46,7 +46,7 @@ public class MTDDept extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     /**
      * Creates new form MTDDept
@@ -60,7 +60,7 @@ public class MTDDept extends javax.swing.JDialog {
         txtMacNo2.setText("9999");
         InitScreen();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     public void InitScreen() {
@@ -306,24 +306,24 @@ public class MTDDept extends javax.swing.JDialog {
         Double SumSQty = 0.0;
         Double SumSAmt = 0.0;
         int ArraySize = GArray.length;
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintGroupDriver(GArray, Found);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานการขายตามกลุ่มสินค้า");
                     prn.print("        (MTD Department Report)");
                     prn.print("ช่วงวันที่ : " + DatefmtShow.format(TDate1) + "..." + DatefmtShow.format(TDate2));
                     prn.print("รหัสกลุ่มสินค้า (Dept/Group) " + txtMacNo1.getText() + "..." + txtMacNo2.getText());
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("รายละเอียด");
                     prn.print("    .....EAT IN.....   ...TAKE AWAY.....");
@@ -411,7 +411,7 @@ public class MTDDept extends javax.swing.JDialog {
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("รหัสกลุ่มสินค้า (Dept/Group) " + txtMacNo1.getText() + "..." + txtMacNo2.getText()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
         Date dateP = new Date();
-        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Space + Value.MACNO) + "_";
+        t += "colspan=3 align=left><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Space + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายละเอียด") + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + (TAB + ".....EAT IN....." + TAB + TAB + TAB + "...TAKE AWAY.....") + "_";

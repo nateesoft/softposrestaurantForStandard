@@ -1,6 +1,7 @@
 package com.softpos.main.program;
 
-import com.softpos.constants.Value;
+
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.POSHWSetup;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,8 +33,8 @@ public class DisplayEJ extends javax.swing.JDialog {
         TextArea.selectAll();
         TextArea.cut();
         boolean eof = false;
-        POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
-        String FileName = bean.getEJDailyPath() + "/log" + Value.MACNO + ".gif";
+        POSHWSetup bean = POSHWSetup.Bean(PublicVar.MACNO);
+        String FileName = bean.getEJDailyPath() + "/log" + PublicVar.MACNO + ".gif";
         try {
             FileReader file = new FileReader(FileName);
             BufferedReader buff = new BufferedReader(file);

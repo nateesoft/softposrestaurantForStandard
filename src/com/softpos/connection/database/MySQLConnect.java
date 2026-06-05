@@ -1,6 +1,6 @@
 package com.softpos.connection.database;
 
-import com.softpos.constants.Value;
+import com.softpos.constants.PublicVar;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class MySQLConnect {
     private Class clazz = null;
 
     static {
-        try (FileInputStream fs = new FileInputStream(Value.FILE_CONFIG);
+        try (FileInputStream fs = new FileInputStream(PublicVar.FILE_CONFIG);
              BufferedReader br = new BufferedReader(new InputStreamReader(fs))) {
             String tmp;
             while ((tmp = br.readLine()) != null) {
@@ -37,7 +37,7 @@ public class MySQLConnect {
                     HostName = data[1];
                 } else if (data[0].equalsIgnoreCase("database")) {
                     DbName = data[1];
-                    Value.DATABASE = data[1];
+                    PublicVar.DATABASE = data[1];
                 } else if (data[0].equalsIgnoreCase("user")) {
                     UserName = data[1];
                 } else if (data[0].equalsIgnoreCase("pass")) {
@@ -47,37 +47,37 @@ public class MySQLConnect {
                 } else if (data[0].equalsIgnoreCase("charset")) {
                     CharSet = data[1];
                 } else if (data[0].equalsIgnoreCase("macno")) {
-                    Value.MACNO = data[1];
+                    PublicVar.MACNO = data[1];
                 } else if (data[0].equalsIgnoreCase("language")) {
-                    Value.LANG = data[1];
+                    PublicVar.LANG = data[1];
                 } else if (data[0].equalsIgnoreCase("db_member")) {
-                    Value.db_member = data[1];
+                    PublicVar.db_member = data[1];
                 } else if (data[0].equalsIgnoreCase("useprint")) {
                     try {
-                        Value.useprint = Boolean.parseBoolean(data[1]);
+                        PublicVar.useprint = Boolean.parseBoolean(data[1]);
                     } catch (Exception e) {
-                        Value.useprint = false;
+                        PublicVar.useprint = false;
                     }
                 } else if (data[0].equalsIgnoreCase("printkic")) {
                     try {
-                        Value.printkic = Boolean.parseBoolean(data[1]);
+                        PublicVar.printkic = Boolean.parseBoolean(data[1]);
                     } catch (Exception e) {
-                        Value.printkic = false;
+                        PublicVar.printkic = false;
                     }
                 } else if (data[0].equalsIgnoreCase("autoqty")) {
                     try {
-                        Value.autoqty = Boolean.parseBoolean(data[1]);
+                        PublicVar.autoqty = Boolean.parseBoolean(data[1]);
                     } catch (Exception e) {
-                        Value.autoqty = false;
+                        PublicVar.autoqty = false;
                     }
                 } else if (data[0].equalsIgnoreCase("printdriver")) {
                     try {
-                        Value.printdriver = Boolean.parseBoolean(data[1]);
+                        PublicVar.printdriver = Boolean.parseBoolean(data[1]);
                     } catch (Exception e) {
-                        Value.printdriver = false;
+                        PublicVar.printdriver = false;
                     }
                 } else if (data[0].equalsIgnoreCase("printerName")) {
-                    Value.printerDriverName = data[1];
+                    PublicVar.printerDriverName = data[1];
                 }
             }
             try {

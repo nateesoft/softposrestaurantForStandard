@@ -1,13 +1,13 @@
 package com.softpos.main.login;
 
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import com.softpos.util.FileManager;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.softpos.constants.Value;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
@@ -430,8 +430,8 @@ public class FileSettingDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void save() {
-        String fileConfig = Value.FILE_CONFIG;
-        String fileBackup = Value.FILE_CONFIG + ".bak";
+        String fileConfig = PublicVar.FILE_CONFIG;
+        String fileBackup = PublicVar.FILE_CONFIG + ".bak";
 
         // copy file
         FileManager.copyFileUsingStream(new File(fileConfig), new File(fileBackup));
@@ -489,13 +489,13 @@ public class FileSettingDialog extends javax.swing.JDialog {
         txtPass.setText(MySQLConnect.Password);
         txtPort.setText(MySQLConnect.PortNumber);
         txtCharSet.setText(MySQLConnect.CharSet);
-        txtLang.setText(Value.LANG);
-        txtMacno.setText(Value.MACNO);
-        cbPrint.setSelectedItem("" + Value.useprint);
-        cbKicPrint.setSelectedItem("" + Value.printkic);
-        cbPopup.setSelectedItem("" + Value.autoqty);
-        cbDriver.setSelectedItem("" + Value.printdriver);
-        txtMember.setText(Value.db_member);
-        txtPrinterDriverName.setText(Value.printerDriverName);
+        txtLang.setText(PublicVar.LANG);
+        txtMacno.setText(PublicVar.MACNO);
+        cbPrint.setSelectedItem("" + PublicVar.useprint);
+        cbKicPrint.setSelectedItem("" + PublicVar.printkic);
+        cbPopup.setSelectedItem("" + PublicVar.autoqty);
+        cbDriver.setSelectedItem("" + PublicVar.printdriver);
+        txtMember.setText(PublicVar.db_member);
+        txtPrinterDriverName.setText(PublicVar.printerDriverName);
     }
 }

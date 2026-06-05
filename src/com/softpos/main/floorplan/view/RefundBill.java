@@ -9,7 +9,6 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.pos.core.controller.PosControl;
@@ -395,11 +394,11 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             if (MSG.CONF(this, "ยืนยันการยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " Yes/No ?")) {
                 updateDatabaseForRefund();
 
-                POSHWSetup bean = POSHWSetup.Bean(Value.MACNO);
+                POSHWSetup bean = POSHWSetup.Bean(PublicVar.MACNO);
                 prn.print_Head_EJ();
                 prn.printBillRefund(BillNo);
                 String TempBill = bean.getEJDailyPath() + "/tempbill.txt";
-                String ImageFile = bean.getEJDailyPath() + "/" + PublicVar.Branch_Code + "_" + Value.MACNO + "_RFN" + BillNo + ".gif";
+                String ImageFile = bean.getEJDailyPath() + "/" + PublicVar.Branch_Code + "_" + PublicVar.MACNO + "_RFN" + BillNo + ".gif";
                 TextToImage toImage = new TextToImage();
                 if (!toImage.textToImage(TempBill, ImageFile)) {
                     //MSG.ERR(this, "EJ File Write Error.......");
@@ -450,7 +449,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         //Load Data From BillNo
 
         RefundBillController refundControl = AppContext.getRefundBillController();
-        BillNoBean billNoBean = refundControl.checkBillByRefno(Value.MACNO, BillNo);
+        BillNoBean billNoBean = refundControl.checkBillByRefno(PublicVar.MACNO, BillNo);
         if (billNoBean == null) {
             MSG.WAR(this, "ไม่พบเลขที่ใบเสร็จรับเงินที่ต้องการยกเลิก (Refund) กรุณาตรวจสอบเลขที่ใบเสร็จใหม่...");
             initRefund();
@@ -493,7 +492,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Cleartblshowplu();
 
         RefundBillController refundControl = AppContext.getRefundBillController();
-        List<Object[]> rows = refundControl.loadSaleItemsForRefund(Value.MACNO, BillNo);
+        List<Object[]> rows = refundControl.loadSaleItemsForRefund(PublicVar.MACNO, BillNo);
 
         for (Object[] row : rows) {
             PublicVar.P_ItemCount++;
@@ -587,7 +586,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     private boolean checkPermit() {
         RefundBillController refundControl = AppContext.getRefundBillController();
-        boolean isPermit = refundControl.hasRefundPermission(Value.USERCODE);
+        boolean isPermit = refundControl.hasRefundPermission(PublicVar.USERCODE);
 
         if (isPermit) {
             return true;
@@ -596,7 +595,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         getuser.setVisible(true);
 
         if (!PublicVar.ReturnString.equals("")) {
-            PosUserBean posUser = PosControl.getPosUser(Value.USERCODE);
+            PosUserBean posUser = PosControl.getPosUser(PublicVar.USERCODE);
             if (posUser.getUserName() != null) {
                 if (posUser.getSale2().equals("Y")) {
                     return true;

@@ -1,11 +1,11 @@
 package com.softpos.main.pos.view;
 
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
-import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.TableFileBean;
 import java.awt.Font;
@@ -419,7 +419,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         TABLE_2 = "";
-        Value.TableSelected = TABLE_NO;
+        PublicVar.TableSelected = TABLE_NO;
         restoreData();
         this.setVisible(false);//dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -488,7 +488,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
                 databaseConnection.execUpdate(sql);
 
-                Value.TableSelected = TABLE_2;
+                PublicVar.TableSelected = TABLE_2;
                 this.setVisible(false);//dispose();
             }
         }

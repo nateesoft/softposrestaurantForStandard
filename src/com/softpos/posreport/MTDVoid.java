@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -42,7 +42,7 @@ public class MTDVoid extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     public MTDVoid(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -52,7 +52,7 @@ public class MTDVoid extends javax.swing.JDialog {
         txtMacNo1.setText("000");
         txtMacNo2.setText("999");
         InitScreen();
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
 
     }
 
@@ -434,24 +434,24 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         String CashNo1 = txtMacNo1.getText();
         String CashNo2 = txtMacNo2.getText();
 
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintMTDVoidDriver(CashNo1, CashNo2);
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("         รายงานการทำรายการ Void");
                     prn.print("            (MTD Void Report)");
                     prn.print("ช่วงวันที่  :" + DatefmtShow.format(TDate1) + " ..." + DatefmtShow.format(TDate2));
                     prn.print("รหัสพนักงาน    :" + CashNo1 + " ..." + CashNo2);
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("Mac Cashier Table Time  User-Void T_Void");
                     prn.print("    Ref-No  PLU-Code       Qty    Amount");
@@ -531,7 +531,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "colspan=3 align=left><font face=Angsana New size=1>" + ("รหัสพนักงาน    :" + Space + CashNo1 + TAB + " ..." + CashNo2) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
         Date dateP = new Date();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Mac" + Space + "Cashier" + Space + "Table" + Space + "Time" + Space + "User Void" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Ref-No" + Space + "PLU-Code" + Space + "Qty" + Space + "Amount" + "_");

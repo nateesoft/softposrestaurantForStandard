@@ -5,7 +5,6 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.constants.Value;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
@@ -48,7 +47,6 @@ public class ArHistory extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
-    private final Value Value = new Value();
 
     /**
      * Creates new form ArNotPay
@@ -58,7 +56,7 @@ public class ArHistory extends javax.swing.JDialog {
 
         initComponents();
 
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
 
         model2 = (DefaultTableModel) tblShow.getModel();
         tblShow.setShowGrid(true);
@@ -633,22 +631,22 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             } else {
                 TempCode2 = arcode2.getText();
             }
-            if (!Value.getComPort().equals("NONE")) {
-                if (Value.printdriver) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (PublicVar.printdriver) {
                     PrintARHistoryDriver();
                 } else {
-                    if (prn.openPrint(Value.getComPort())) {
+                    if (prn.openPrint(POSHW.getPRNPort())) {
                         prn.initPrinter();
                         prn.print(POSHW.getHeading1());
                         prn.print(POSHW.getHeading2());
                         prn.print(POSHW.getHeading3());
                         prn.print(POSHW.getHeading4());
-                        prn.print("REG ID :" + Value.MACNO);
+                        prn.print("REG ID :" + PublicVar.MACNO);
                         prn.print("    รายงานประวัติการซื้อของลูกหนี้");
                         prn.print("รหัสลูกหนี้ " + TempCode1 + " ถึง " + TempCode2);
                         prn.print("ช่วงวันที่ " + ShowDatefmt.format(TempDate1) + " ถึง " + ShowDatefmt.format(TempDate2));
                         prn.print("");
-                        prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                        prn.print(DatefmtThai.format(date) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                         prn.print("----------------------------------------");
                         prn.print("ลูกหนี้    วันที่      เลขที่เอกสาร     จำนวนเงิน");
                         prn.print("ชำระเงิน วันที่ชำระ  เลขที่บิล             ");
@@ -742,7 +740,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             t += "colspan=3 align=left><font face=Angsana New size=1>" + ("_");
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("รายงานประวัติการซื้อของลูกหนี้") + "_";
             t += "colspan=3 align=left><font face=Angsana New size=1>" + "Print Date" + Space + (DatefmtThai.format(date)) + "_";
-            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + Value.MACNO + "_";
+            t += "colspan=3 align=left><font face=Angsana New size=1>" + "Cashier:" + PublicVar._UserName + TAB + " Mac:" + PublicVar.MACNO + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
 
             t += "colspan=3 align=left><font face=Angsana New size=1>" + ("รหัสลูกหนี้" + Space + TempCode1 + Space + " ถึง " + Space + TempCode2) + "_";

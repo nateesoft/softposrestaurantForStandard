@@ -1,9 +1,10 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.constants.Value;
+
 import com.softpos.pos.core.model.BranchFileBean;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.constants.PublicVar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.softpos.util.AppLogUtil;
@@ -21,7 +22,7 @@ public class BranchFileController {
         
         try {
             mysqlConnect.open(BranchFileController.class);
-            String sql = "select * from " + Value.db_member + ".branfile "
+            String sql = "select * from " + PublicVar.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -43,7 +44,7 @@ public class BranchFileController {
 
         try {
             mysqlConnect.open(BranchFileController.class);
-            String sql = "select * from " + Value.db_member + ".branfile "
+            String sql = "select * from " + PublicVar.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' "
                     + "and PointCode_Active='Y' "
                     + "and (PointCode_Type1 <> '' "

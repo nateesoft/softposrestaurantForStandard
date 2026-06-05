@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.constants.Value;
+
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
@@ -47,7 +47,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    private final Value Value = new Value();
+    
 
     private POSHWSetup POSHW;
 
@@ -56,7 +56,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         initComponents();
         txtDate1.setText(DatefmtShow.format(date));
         txtDate2.setText(DatefmtShow.format(date));
-        POSHW = POSHWSetup.Bean(Value.MACNO);
+        POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
     public List<Object[]> LoadData() {
@@ -520,22 +520,22 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
 
     public void PrintHourlyByCust() {
         List<Object[]> ListObj = LoadData();
-        if (Value.printdriver) {
+        if (PublicVar.printdriver) {
             PrintHourlyDriverByCust();
         } else {
-            if (!Value.getComPort().equals("NONE")) {
-                if (prn.openPrint(Value.getComPort())) {
+            if (!POSHW.getPRNPort().equals("NONE")) {
+                if (prn.openPrint(POSHW.getPRNPort())) {
                     prn.initPrinter();
                     prn.print(POSHW.getHeading1());
                     prn.print(POSHW.getHeading2());
                     prn.print(POSHW.getHeading3());
                     prn.print(POSHW.getHeading4());
-                    prn.print("REG ID :" + Value.MACNO);
+                    prn.print("REG ID :" + PublicVar.MACNO);
                     prn.print("       (MTD Customer count per Hours)");
                     prn.print("ช่วงวันที่  :" + txtDate1.getText() + " ..." + txtDate2.getText());
                     prn.print(" ");
                     Date dateP = new Date();
-                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + Value.MACNO);
+                    prn.print(DatefmtThai.format(dateP) + " " + "Cashier:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     prn.print("----------------------------------------");
                     prn.print("    Time       CC       Bill      Amount");
                     prn.print("----------------------------------------");
@@ -603,7 +603,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("ช่วงวันที่  :" + txtDate1.getText() + "..." + txtDate2.getText()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + "_";
         Date dateP = new Date();
-        t += "colspan=3 align=center><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Space + Value.MACNO) + "_";
+        t += "colspan=3 align=center><font face=Angsana New size=1>" + (DatefmtThai.format(dateP) + Space + "Cashier:" + PublicVar._User + Space + "Mac:" + Space + PublicVar.MACNO) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("Time" + Space + "CC" + Space + "Bill" + Space + "Amount" + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------" + "_");
