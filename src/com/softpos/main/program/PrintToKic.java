@@ -2,16 +2,16 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.PrintToKicController;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
-import database.ConfigFile;
+import com.softpos.connection.database.ConfigFile;
 import java.awt.Cursor;
 import java.util.List;
 import javax.swing.JFrame;
-import printReport.PrintSimpleForm;
+import com.softpos.report.driver.PrintSimpleForm;
 import com.softpos.util.MSG;
 
 /**

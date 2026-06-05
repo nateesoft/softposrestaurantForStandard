@@ -3,7 +3,7 @@ package com.softpos.pos.core.controller;
 import com.softpos.main.program.PrintToKic;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.PKicTranBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,12 +24,12 @@ public class PrintToKicController {
         
         mysqlConnect.open(PrintToKicController.class);
         try {
-            String sql = "select r_table,macno,"
+            String sql = "select r_table, MIN(macno) macno,"
                     + "sum(b.r_quan) qty,sum(b.r_total) total from balance b "
                     + "where trantype='PDA' "
                     + "and r_kicprint<>'P' and r_void<>'V' "
                     + "and r_kic<>'0' and r_printOK='Y' and r_pause='P' "
-                    + "group by r_table order by r_etd,r_index;";
+                    + "group by r_table order by MIN(r_etd), MIN(r_index);";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
                     PrintToKic.kicPrintting = true;
@@ -88,7 +88,7 @@ public class PrintToKicController {
 
         mysqlConnect.open(PrintToKicController.class);
         try {
-            String sql = "select * from balance "
+            String sql = "select r_plucode from balance "
                     + "where trantype='PDA' "
                     + "and r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "

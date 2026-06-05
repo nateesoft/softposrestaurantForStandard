@@ -1,13 +1,13 @@
 package com.softpos.main.login;
 
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import com.softpos.util.FileManager;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 

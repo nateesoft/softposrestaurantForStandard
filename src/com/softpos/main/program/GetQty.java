@@ -1,14 +1,14 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class GetQty extends javax.swing.JDialog {

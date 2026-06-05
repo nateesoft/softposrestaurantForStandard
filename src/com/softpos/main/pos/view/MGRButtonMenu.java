@@ -3,7 +3,7 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ButtonCustom;
 import com.softpos.pos.core.controller.MgrButtonController;
-import com.softpos.crm.pos.core.modal.MenuMGR;
+import com.softpos.pos.core.model.MenuMGR;
 import com.softpos.main.program.DlgBrowseProduct;
 import com.softpos.util.ThaiUtil;
 import java.awt.Color;

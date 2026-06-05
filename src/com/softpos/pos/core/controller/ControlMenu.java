@@ -1,10 +1,10 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
-import com.softpos.crm.pos.core.modal.MenuSetup;
+import com.softpos.pos.core.model.MenuSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.ProductBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,12 +62,11 @@ public class ControlMenu {
         
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
-                    + "PPrice14, PPrice15, Code_Type, PPathName "
+            String sql = "select distinct p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
+                    + "PPrice14, PPrice15, PPathName "
                     + "from menusetup m, product p "
                     + "where m.PCode=p.PCode AND Code_ID like '" + item + "E%' "
-                    + "and PActive='Y' and PFix='F' "
-                    + "group by PCode";
+                    + "and PActive='Y' and PFix='F'";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -102,11 +101,10 @@ public class ControlMenu {
         List<ProductBean> dataProduct = new ArrayList<>();
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
-                    + "PPrice14, PPrice15, Code_Type, PPathName "
+            String sql = "select distinct p.PCode, PGroup, PDesc, PUnit1, PPrice11, PPrice12, PPrice13,"
+                    + "PPrice14, PPrice15, PPathName "
                     + "from menusetup m, product p "
-                    + "where m.PCode=p.PCode "
-                    + "group by PCode";
+                    + "where m.PCode=p.PCode";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -137,8 +135,8 @@ public class ControlMenu {
 
     public List<MenuSetup> menuAt(String index) {
         mysqlConnect.open(this.getClass());
-        String sql = "select * from menusetup where Code_ID like '" + index + "%' "
-                + "and length(Code_ID)=3 group by Code_Id order by Code_Id";
+        String sql = "select Code_ID, PCode, Code_Type, ShortName, PPathName from menusetup where Code_ID like '" + index + "%' "
+                + "and length(Code_ID)=3 group by Code_ID, PCode, Code_Type, ShortName, PPathName order by Code_Id";
         List<MenuSetup> menuAll = new ArrayList<>();
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -166,7 +164,7 @@ public class ControlMenu {
 
     public List<MenuSetup> menuItemAt(String Code_ID) {
         mysqlConnect.open(this.getClass());
-        String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' group by Code_ID limit 1";
+        String sql = "select Code_Type,PCode from menusetup where Code_ID = '" + Code_ID + "' limit 1";
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -175,7 +173,7 @@ public class ControlMenu {
                 String PCode = rs.getString("PCode");
                 switch (Code_Type) {
                     case "S":
-                        sql = "select Code_ID, PCode, ShortName from menusetup where Code_ID like '" + Code_ID + "%' and Code_Type='P' group by Code_ID";
+                        sql = "select Code_ID, PCode, ShortName from menusetup where Code_ID like '" + Code_ID + "%' and Code_Type='P' group by Code_ID, PCode, ShortName";
                         break;
                     case "P":
                         sql = "";
@@ -252,10 +250,10 @@ public class ControlMenu {
                     headMenu = new CompanyMenu();
                     headMenu.setHeadName(h.trim());
 
-                    sql = "select * from menusetup "
+                    sql = "select Code_ID, Code_Type, PCode, ShortName, PPathName from menusetup "
                             + "where code_id like '" + mmenu[index] + "%' "
                             + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
-                            + "group by Code_ID";
+                            + "group by Code_ID, Code_Type, PCode, ShortName, PPathName";
                     Statement stmt1 = mysqlConnect.getConnection().createStatement();
                     ResultSet rs1 = stmt1.executeQuery(sql);
                     while (rs1.next()) {
@@ -266,11 +264,11 @@ public class ControlMenu {
                         menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
                         menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
 
-                        String sqlProduct = "select * from menusetup "
+                        String sqlProduct = "select Code_ID, ShortName from menusetup "
                                 + "where Code_Id like '" + menu.getCode_ID() + "%' "
                                 + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
                                 + "and shortName<>'' "
-                                + "group by Code_ID";
+                                + "group by Code_ID, ShortName";
                         Statement stmt2 = mysqlConnect.getConnection().createStatement();
                         ResultSet rs2 = stmt2.executeQuery(sqlProduct);
                         while (rs2.next()) {

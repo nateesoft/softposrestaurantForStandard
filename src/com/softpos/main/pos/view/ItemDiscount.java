@@ -10,7 +10,7 @@ import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.controller.ItemDisControl;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class ItemDiscount extends javax.swing.JDialog {

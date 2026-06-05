@@ -1,6 +1,6 @@
 package com.softpos.util;
 
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

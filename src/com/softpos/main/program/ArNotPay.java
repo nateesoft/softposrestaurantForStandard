@@ -3,10 +3,10 @@ package com.softpos.main.program;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
+import com.softpos.constants.Value;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
@@ -25,9 +25,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import printReport.PrintDriver;
+import com.softpos.report.driver.PrintDriver;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateChooseDialog;
+import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 
 public class ArNotPay extends javax.swing.JDialog {

@@ -1,15 +1,15 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.controller.AppContext;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import printReport.PrintDriver;
+import com.softpos.report.driver.PrintDriver;
 import com.softpos.util.MSG;
 
 public class CashBackDialog extends javax.swing.JDialog {

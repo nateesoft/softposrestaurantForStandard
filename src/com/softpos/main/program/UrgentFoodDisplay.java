@@ -3,7 +3,7 @@ package com.softpos.main.program;
 import com.softpos.pos.core.model.PKicTran;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
-import database.ConfigFile;
+import com.softpos.connection.database.ConfigFile;
 import java.awt.Color;
 import java.awt.Toolkit;
 

@@ -7,8 +7,8 @@ import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.model.TableFileBean;
 import java.awt.event.KeyEvent;
-import printReport.PrintSimpleForm;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.report.driver.PrintSimpleForm;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class MoveGroupTable extends javax.swing.JDialog {

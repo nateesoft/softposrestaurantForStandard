@@ -1,12 +1,13 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,8 +23,18 @@ import com.softpos.util.DateFormat;
 public class BalanceControl {
 
     private BalanceBean balanceCurrent = new BalanceBean();
-    private final MySQLConnect mysqlConnect = new MySQLConnect();
-    private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final MySQLConnect mysqlConnect;
+    private final POSConfigSetup POSConfigSetup;
+
+    public BalanceControl() {
+        this.mysqlConnect = new MySQLConnect();
+        this.POSConfigSetup = new POSConfigSetup();
+    }
+
+    BalanceControl(MySQLConnect mysqlConnect) {
+        this.mysqlConnect = mysqlConnect;
+        this.POSConfigSetup = new POSConfigSetup();
+    }
 
     public String getLastIndex(String tableNo) {
         String tempIndex = "";
@@ -380,16 +391,19 @@ public class BalanceControl {
         
         try {
             mysqlConnect.open(this.getClass());
-            String sql = "select sum(b.r_quan) sum_R_Quan, "
-                    + "sum(b.r_total) sum_R_Total, "
-                    + "sum(r_discbath) sum_R_DiscBath,"
-                    + "sum(r_pramt) sum_R_PrAmt,"
-                    + "sum(r_prsubAmt) sum_R_PrsubAmt,"
-                    + "sum(r_prcuamt) sum_R_PrCuAmt, b.* from balance b "
+            String sql = "select g.sum_R_Quan,g.sum_R_Total,g.sum_R_DiscBath,g.sum_R_PrAmt,g.sum_R_PrsubAmt,g.sum_R_PrCuAmt,b.* "
+                    + "from balance b "
+                    + "inner join ("
+                    + "select min(R_Index) min_index,"
+                    + "sum(r_quan) sum_R_Quan,sum(r_total) sum_R_Total,"
+                    + "sum(r_discbath) sum_R_DiscBath,sum(r_pramt) sum_R_PrAmt,"
+                    + "sum(r_prsubAmt) sum_R_PrsubAmt,sum(r_prcuamt) sum_R_PrCuAmt "
+                    + "from balance "
                     + "where r_table='" + table + "' "
                     + "and r_plucode<>'8899' "
-                    + "group by r_plucode,r_etd,r_Pname,r_void,VoidMsg "
-                    + "order by  r_index,r_time";
+                    + "group by r_plucode,r_etd,r_Pname,r_void,VoidMsg"
+                    + ") g on b.R_Index=g.min_index "
+                    + "order by b.r_index,b.r_time";
             ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -1109,12 +1123,16 @@ public class BalanceControl {
         
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select * from balance "
+            String sql = "select b.* from balance b "
+                    + "inner join ("
+                    + "select min(R_Index) min_index "
+                    + "from balance "
                     + "where R_Table='" + table + "' "
                     + "and R_Discount='Y' "
                     + "and R_Void <> 'V' "
-                    + "group by R_PRType "
-                    + "order by R_PluCode, R_Index";
+                    + "group by R_PRType"
+                    + ") g on b.R_Index=g.min_index "
+                    + "order by b.R_PluCode,b.R_Index";
             ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean balanceBean = new BalanceBean();
@@ -1283,7 +1301,6 @@ public class BalanceControl {
             }
         } catch (SQLException e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
-
             index = R_Table + "/001";
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -1817,8 +1834,15 @@ public class BalanceControl {
         
         mysqlConnect.open(BalanceControl.class);
         try {
-            String sql = "select r_table, PDAEMP from balance where PDAPrintCheck='Y' "
-                    + "group by r_table order by r_time;";
+            String sql = "select b.r_table,b.PDAEMP "
+                    + "from balance b "
+                    + "inner join ("
+                    + "select min(R_Index) min_index "
+                    + "from balance "
+                    + "where PDAPrintCheck='Y' "
+                    + "group by r_table"
+                    + ") g on b.R_Index=g.min_index "
+                    + "order by b.r_time";
             ResultSet rs = mysqlConnect.executeQuery(sql);
             while (rs.next()) {
                 BalanceBean bean = new BalanceBean();

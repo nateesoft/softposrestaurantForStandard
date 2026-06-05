@@ -3,10 +3,10 @@ package com.softpos.posreport;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
+import com.softpos.constants.Value;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -18,9 +18,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import printReport.PrintDriver;
-import soft.virtual.KeyBoardDialog;
-import com.softpos.util.DateChooseDialog;
+import com.softpos.report.driver.PrintDriver;
+import com.softpos.util.component.KeyBoardDialog;
+import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 
 public class MTDVoid extends javax.swing.JDialog {

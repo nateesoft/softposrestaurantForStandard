@@ -68,7 +68,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="bntExit" min="-2" pref="126" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jScrollPane1" alignment="1" pref="542" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="1" pref="558" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -78,13 +78,13 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="558" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="567" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="bntOK" min="-2" pref="46" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="bntOK" pref="46" max="32767" attributes="0"/>
                       <Component id="bntExit" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

@@ -1,9 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
-import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
+import com.softpos.pos.core.model.sendMgrButtonToBorBean;
+import com.softpos.pos.core.model.sendSoft_MenustupBean;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

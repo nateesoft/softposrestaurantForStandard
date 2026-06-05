@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;

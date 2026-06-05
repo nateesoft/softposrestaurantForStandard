@@ -1,8 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Rectangle;

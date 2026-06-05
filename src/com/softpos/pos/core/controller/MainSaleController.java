@@ -9,7 +9,7 @@ import com.softpos.pos.core.model.PSetBean;
 import com.softpos.pos.core.model.SoftMenuSetup;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TempsetBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -102,13 +102,18 @@ public class MainSaleController {
     }
 
     public String getQueryShowKic(String tableNo) {
-        return "select r_kic,r_etd,macno from balance "
+        return "select b.r_kic,b.r_etd,b.macno "
+                + "from balance b "
+                + "inner join ("
+                + "select min(R_Index) min_index "
+                + "from balance "
                 + "where r_table='" + tableNo + "' "
                 + "and R_PrintOK='Y' "
                 + "and R_KicPrint<>'P' "
                 + "and R_Kic<>'' "
-                + "group by r_kic,r_etd "
-                + "order by r_kic,r_etd";
+                + "group by r_kic,r_etd"
+                + ") g on b.R_Index=g.min_index "
+                + "order by b.r_kic,b.r_etd";
     }
 
     public boolean checkCountPrinterTo(String tableNo) {
@@ -190,13 +195,19 @@ public class MainSaleController {
         List<BalanceBean> listBalance = new ArrayList<>();
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select sum(b.r_quan) R_Quan,sum(b.r_quan)*b.r_price Total, b.* from balance b "
+            String sql = "select g.R_Quan,g.R_Quan*b.r_price Total,b.R_Index,b.R_PluCode "
+                    + "from balance b "
+                    + "inner join ("
+                    + "select min(R_Index) min_index,sum(r_quan) R_Quan "
+                    + "from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
                     + "and R_Kic<>'' "
                     + "and R_KIC='" + rKic + "' "
-                    + "group by r_plucode,r_void order by r_opt1";
+                    + "group by r_plucode,r_void"
+                    + ") g on b.R_Index=g.min_index "
+                    + "order by b.r_opt1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();

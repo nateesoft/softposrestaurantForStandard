@@ -3,14 +3,14 @@ package com.softpos.posreport;
 import com.softpos.main.program.Jdi_report_SalePLU;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PluRec;
+import com.softpos.constants.PluRec;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class PLURep extends javax.swing.JDialog {

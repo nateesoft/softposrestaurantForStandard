@@ -6,11 +6,11 @@ import com.softpos.main.program.GetPassword;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.pos.core.model.PosUserBean;
-import database.ConfigFile;
+import com.softpos.connection.database.ConfigFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.CheckApplication;
 import com.softpos.util.MSG;
@@ -335,7 +335,6 @@ public class Login extends javax.swing.JDialog {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         checkUserLogin();
-
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMouseClicked

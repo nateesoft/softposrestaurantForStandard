@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.ViewReport;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.util.AppLogUtil;
@@ -20,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.DateChooseDialog;
+import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 
 public class DispInv1 extends javax.swing.JDialog {

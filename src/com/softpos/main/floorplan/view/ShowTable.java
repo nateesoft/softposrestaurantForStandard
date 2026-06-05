@@ -1,9 +1,9 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;

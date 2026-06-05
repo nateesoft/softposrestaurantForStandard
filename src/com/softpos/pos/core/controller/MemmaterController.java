@@ -1,15 +1,16 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.util.ThaiUtil;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.crm.pos.core.modal.BranchFileBean;
-import com.softpos.crm.pos.core.modal.MPluBean;
-import com.softpos.crm.pos.core.modal.MTranBean;
-import com.softpos.crm.pos.core.modal.PointTypeBean;
+import com.softpos.constants.PublicVar;
+import com.softpos.pos.core.model.BranchFileBean;
+import com.softpos.pos.core.model.MPluBean;
+import com.softpos.pos.core.model.MTranBean;
+import com.softpos.pos.core.model.PointTypeBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.TSaleBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

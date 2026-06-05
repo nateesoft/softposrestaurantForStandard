@@ -1,15 +1,15 @@
 package com.softpos.posreport;
 
-import com.softpos.crm.pos.core.modal.CreditRec;
-import com.softpos.crm.pos.core.modal.FinalcialRec;
+import com.softpos.constants.CreditRec;
+import com.softpos.pos.core.model.FinalcialRec;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
-import com.softpos.util.DateChooseDialog;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
+import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -21,7 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 
 public class MTDCashier extends javax.swing.JDialog {
 

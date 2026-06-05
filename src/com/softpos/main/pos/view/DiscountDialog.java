@@ -12,7 +12,7 @@ import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.TableFileBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;

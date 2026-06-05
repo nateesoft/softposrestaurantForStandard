@@ -1,8 +1,8 @@
 package com.softpos.main.program;
 
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;

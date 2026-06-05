@@ -1,7 +1,8 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.PosUserBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

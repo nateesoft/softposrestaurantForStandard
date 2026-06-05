@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CustomerBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;

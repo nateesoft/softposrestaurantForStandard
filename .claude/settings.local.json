@@ -59,7 +59,17 @@
       "Bash(cd /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src && grep -h \"^public class\\\\|^class\" *.java com/**/*.java 2>/dev/null | sed 's/public class //g; s/class //g; s/ .*//' | sort | uniq > /tmp/all_classes.txt && wc -l /tmp/all_classes.txt)",
       "Read(//tmp/**)",
       "Bash(sed 's/\\($//')",
-      "Bash(\npython3 /tmp/find_unused_methods.py > /tmp/unused_methods_report.txt 2>&1\nwc -l /tmp/unused_methods_report.txt\n)"
+      "Bash(\npython3 /tmp/find_unused_methods.py > /tmp/unused_methods_report.txt 2>&1\nwc -l /tmp/unused_methods_report.txt\n)",
+      "Bash(mvn --version)",
+      "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/mockito-core-4.11.0.jar \"https://repo1.maven.org/maven2/org/mockito/mockito-core/4.11.0/mockito-core-4.11.0.jar\")",
+      "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/byte-buddy-1.12.19.jar \"https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.12.19/byte-buddy-1.12.19.jar\")",
+      "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/byte-buddy-agent-1.12.19.jar \"https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-agent-1.12.19.jar\")",
+      "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/objenesis-3.3.jar \"https://repo1.maven.org/maven2/org/objenesis/objenesis/3.3/objenesis-3.3.jar\")",
+      "Bash(wait)",
+      "Bash(curl -fsSL -o /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/byte-buddy-agent-1.12.19.jar \"https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar\")",
+      "Bash(which ant *)",
+      "Read(//usr/**)",
+      "Read(//opt/**)"
     ],
     "additionalDirectories": [
       "/tmp"

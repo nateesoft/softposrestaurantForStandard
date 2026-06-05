@@ -2,7 +2,7 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.EmployeeBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

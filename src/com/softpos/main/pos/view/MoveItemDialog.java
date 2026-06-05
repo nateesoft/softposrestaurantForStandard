@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.TableFileBean;
 import java.awt.Font;
@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class MoveItemDialog extends javax.swing.JDialog {

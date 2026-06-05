@@ -10,7 +10,6 @@ import com.softpos.main.program.GetQty;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.main.pos.view.MainSale;
 import com.softpos.main.program.PrintKicControl;
-import com.softpos.main.program.SetupButtonTable;
 import com.softpos.main.program.UpdateData;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
@@ -19,7 +18,7 @@ import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
@@ -30,7 +29,7 @@ import com.softpos.pos.core.controller.TSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableSetupControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.CompanyBean;
@@ -1775,7 +1774,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
                         btn.setForeground(Color.blue);
                         btn.setFont(fontB);
-                        btn.setIcon(loadIcon("/images/Menu.jpg"));
+                        btn.setIcon(loadIcon("/images/table-empty.jpg"));
                         btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                         btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1784,7 +1783,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     } else {
                         if (bean.getPrintChkBill().equals("N") && bean.getCustomer() > 0) {
                             btn.setFont(fontB);
-                            btn.setIcon(loadIcon("/images/Teble2.png"));
+                            btn.setIcon(loadIcon("/images/checkbill.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1793,7 +1792,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         } else if (bean.getPrintChkBill().equals("Y")) {
                             btn.setOpaque(true);
                             btn.setFont(fontB);
-                            btn.setIcon(loadIcon("/images/checkbill.png"));
+                            btn.setIcon(loadIcon("/images/order-book.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1803,7 +1802,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         } else {
                             btn.setOpaque(true);
                             btn.setFont(fontB);
-                            btn.setIcon(loadIcon("/images/table_1.png"));
+                            btn.setIcon(loadIcon("/images/dining-table.png"));
                             btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                             btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1816,7 +1815,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     btn.setText(bean.getTableNo() + "(" + bean.getCustomer() + ")");
                     btn.setBackground(null);
                     btn.setFont(fontB);
-                    btn.setIcon(loadIcon("/images/table_1.png"));
+                    btn.setIcon(loadIcon("/images/dining-table.png"));
                     btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                     btn.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
                     btn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

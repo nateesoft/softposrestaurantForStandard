@@ -3,7 +3,7 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.AppLogUtil;
 import java.awt.event.KeyEvent;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class CustomerCountDialog extends javax.swing.JDialog {

@@ -1,8 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.crm.pos.core.modal.BranchFileBean;
+import com.softpos.constants.Value;
+import com.softpos.pos.core.model.BranchFileBean;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.softpos.util.AppLogUtil;

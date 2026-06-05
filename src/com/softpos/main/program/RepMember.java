@@ -3,8 +3,8 @@ package com.softpos.main.program;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
 import com.softpos.util.AppLogUtil;
 import java.awt.Color;
 import java.awt.Point;
@@ -20,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.DateChooseDialog;
+import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 import java.text.ParseException;
 
@@ -562,7 +562,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     Point point = cmdDateChoose2.getLocationOnScreen();
     point.setLocation(point.getX(), point.getY());
-    com.softpos.util.DateChooseDialog dcd = new com.softpos.util.DateChooseDialog(new java.awt.Frame(), true, point);
+        com.softpos.util.component.DateChooseDialog dcd = new com.softpos.util.component.DateChooseDialog(new java.awt.Frame(), true, point);
     dcd.setVisible(true);
     //dcd.showDialog(new LookAndFeelFrame(), true, point);
     ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));

@@ -1,7 +1,7 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.util.AppLogUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 
 /**
  *

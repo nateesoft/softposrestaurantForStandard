@@ -8,7 +8,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.MSG;
 

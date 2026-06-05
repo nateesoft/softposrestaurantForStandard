@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.TableFileControl;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class CustomerName extends javax.swing.JDialog {

@@ -1,13 +1,14 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.util.ThaiUtil;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.main.floorplan.view.ShowTable;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.CompanyBean;
 import com.softpos.pos.core.model.PosUserBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

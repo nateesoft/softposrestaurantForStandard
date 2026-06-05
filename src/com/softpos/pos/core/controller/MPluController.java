@@ -1,8 +1,9 @@
 package com.softpos.pos.core.controller;
 
-import com.softpos.crm.pos.core.modal.MPluBean;
+import com.softpos.constants.Value;
+import com.softpos.pos.core.model.MPluBean;
 import com.softpos.util.ThaiUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

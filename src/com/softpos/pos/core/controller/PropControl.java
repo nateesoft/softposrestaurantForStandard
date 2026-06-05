@@ -1,5 +1,7 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
+
 public class PropControl {
 
     public static String PATH_CONFIG = "softpos/";

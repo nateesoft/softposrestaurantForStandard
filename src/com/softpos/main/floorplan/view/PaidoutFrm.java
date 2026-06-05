@@ -4,15 +4,15 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JFrame;
-import printReport.PrintDriver;
+import com.softpos.report.driver.PrintDriver;
 import com.softpos.util.MSG;
 
 public class PaidoutFrm extends javax.swing.JDialog {

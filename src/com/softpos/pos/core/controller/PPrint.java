@@ -1,21 +1,22 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.crm.pos.core.modal.CreditRec;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.crm.pos.core.modal.FinalcialRec;
-import com.softpos.crm.pos.core.modal.CreditPaymentRec;
-import com.softpos.crm.pos.core.modal.PluRec;
+import com.softpos.constants.CreditRec;
+import com.softpos.constants.PublicVar;
+import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.CreditPaymentRec;
+import com.softpos.constants.PluRec;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TranRecord;
-import database.ConfigFile;
-import database.MySQLConnect;
+import com.softpos.connection.database.ConfigFile;
+import com.softpos.connection.database.MySQLConnect;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
@@ -47,7 +48,7 @@ import javax.print.attribute.HashPrintServiceAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
-import printReport.PrintDriver;
+import com.softpos.report.driver.PrintDriver;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateUtil;
 import com.softpos.util.NumberUtil;
@@ -2643,7 +2644,7 @@ public class PPrint {
                 mysqlConnect.open(this.getClass());
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();
-                    String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
+                    String ChkTable = "select r_table,sum(r_total),MIN(r_void) r_void,MIN(TCurTime) TCurTime,MAX(tcustomer) tcustomer from balance"
                             + " left join tablefile on balance.r_table=tablefile.tcode "
                             + "where (r_void<>'V') or (r_void is null) "
                             + "group by r_table";
@@ -2811,7 +2812,7 @@ public class PPrint {
                                     + "on t_cupon.cucode = cupon.cucode "
                                     + "where t_cupon.cuquan<>'0' "
                                     + "and t_cupon.refund<>'V' "
-                                    + "group by t_cupon.cucode";
+                                    + "group by t_cupon.cucode, cupon.cuname";
                             ResultSet rs = mysqlConnect.executeQuery(sql);
                             while (rs.next()) {
                                 double amt = rs.getDouble("amt");
@@ -3077,7 +3078,7 @@ public class PPrint {
                             + "on t_cupon.cucode = cupon.cucode "
                             + "where t_cupon.cuquan<>'0' "
                             + "and t_cupon.refund<>'V' "
-                            + "group by t_cupon.cucode";
+                            + "group by t_cupon.cucode, cupon.cuname";
                     ResultSet rs = mysqlConnect.executeQuery(sql);
                     while (rs.next()) {
                         double amt = rs.getDouble("amt");
@@ -4678,7 +4679,7 @@ public class PPrint {
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String ChkTable = "select r_table,sum(r_total),r_void,TCurTime,tcustomer from balance"
+            String ChkTable = "select r_table,sum(r_total),MIN(r_void) r_void,MIN(TCurTime) TCurTime,MAX(tcustomer) tcustomer from balance"
                     + " left join tablefile on balance.r_table=tablefile.tcode "
                     + "where (r_void<>'V') or (r_void is null) "
                     + "group by r_table";
@@ -4751,7 +4752,7 @@ public class PPrint {
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String sql = "select B_CrCode1, B_CardNo1, sum(B_CrAmt1) B_CrAmt1 "
+            String sql = "select B_CrCode1, sum(B_CrAmt1) B_CrAmt1 "
                     + "from billno "
                     + "where b_crcode1<>'' "
                     + "and b_cramt1 <>'0' "
@@ -4869,8 +4870,6 @@ public class PPrint {
     private List<Object[]> docAnalyse(String date1, String date2) {
         List<Object[]> listObj = new ArrayList<>();
         String sqlSelectDocTypeE = "select count(b_refno)b_refno,"
-                + "b_ondate, "
-                + "b_macno, "
                 + "b_etd,sum(b_cust) b_cust, "
                 + "sum(b_nettotal)-sum(b_serviceamt) b_nettotal,"
                 + " sum(b_vat) b_vat "
@@ -4879,8 +4878,6 @@ public class PPrint {
                 + "and b_etd='E' "
                 + "group by b_etd";
         String sqlSelectDocTypeT = "select count(b_refno)b_refno,"
-                + "b_ondate, "
-                + "b_macno, "
                 + "b_etd,sum(b_cust) b_cust, "
                 + "sum(b_nettotal)-sum(b_serviceamt) b_nettotal,"
                 + " sum(b_vat) b_vat "
@@ -4889,8 +4886,6 @@ public class PPrint {
                 + "and b_etd='T' "
                 + "group by b_etd";
         String sqlSelectDocTypeD = "select count(b_refno)b_refno,"
-                + "b_ondate, "
-                + "b_macno, "
                 + "b_etd,sum(b_cust) b_cust, "
                 + "sum(b_nettotal)-sum(b_serviceamt) b_nettotal,"
                 + " sum(b_vat) b_vat "
@@ -5041,7 +5036,7 @@ public class PPrint {
                     + "where t.tcode=b.r_table "
                     + "and b.R_PrCuCode=c.CuCode "
                     + "and r_table='" + b_Table + "' "
-                    + "group by R_PrCuCode;";
+                    + "group by R_PrCuCode, CuCode, CuName, R_PrCuQuan, CuponDiscAmt;";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -5140,7 +5135,7 @@ public class PPrint {
             String sql = "select t_cupon.r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan, sum(cuamt) total "
                     + "from t_cupon inner join cupon "
                     + "on t_cupon.cucode = cupon.cucode "
-                    + "where r_refno='" + r_refno + "' group by r_refno";
+                    + "where r_refno='" + r_refno + "' group by r_refno, t_cupon.cucode, cupon.cuname, t_cupon.cuquan";
             mysqlConnect.open(this.getClass());
             ResultSet rs = mysqlConnect.executeQuery(sql);
             if (rs.next()) {

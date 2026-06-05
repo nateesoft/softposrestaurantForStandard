@@ -2,10 +2,10 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.sendMenuButttonToBorController;
-import com.softpos.crm.pos.core.modal.sendMgrButtonToBorBean;
-import com.softpos.crm.pos.core.modal.sendSoft_MenustupBean;
+import com.softpos.pos.core.model.sendMgrButtonToBorBean;
+import com.softpos.pos.core.model.sendSoft_MenustupBean;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
-import database.SQLServerConnect;
+import com.softpos.connection.database.SQLServerConnect;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JFrame;

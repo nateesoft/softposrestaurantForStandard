@@ -1,7 +1,7 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.CuponBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -5,7 +5,7 @@ import com.softpos.pos.core.controller.PosControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CompanyBean;
 import java.awt.event.KeyEvent;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 
 public class SetupFloorPlanHeader extends javax.swing.JDialog {
 

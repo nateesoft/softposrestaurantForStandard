@@ -1,15 +1,15 @@
 package com.softpos.posreport;
 
-import com.softpos.crm.pos.core.modal.CreditRec;
-import com.softpos.crm.pos.core.modal.FinalcialRec;
-import com.softpos.crm.pos.core.modal.HourlyRec;
+import com.softpos.constants.CreditRec;
+import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.HourlyRec;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PluRec;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
-import database.MySQLConnect;
+import com.softpos.constants.PluRec;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

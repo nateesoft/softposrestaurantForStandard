@@ -3,7 +3,7 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import java.awt.Color;

@@ -11,7 +11,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.pos.view.MemberDialog;
 import com.softpos.pos.core.controller.CheckBillController;
@@ -19,7 +19,7 @@ import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
@@ -36,7 +36,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import printReport.PrintSimpleForm;
+import com.softpos.report.driver.PrintSimpleForm;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.LoadingOverlay;
@@ -2034,13 +2034,16 @@ public class CheckBill extends javax.swing.JDialog {
             // for AR
             billBean.setB_AccrCode(txtArCode.getText());
             billBean.setB_AccrAmt(saveAR);
-            int creditDay;
-            try {
-                creditDay = Integer.parseInt(lbCredit.getText());
-            } catch (NumberFormatException e) {
-                AppLogUtil.log(CheckBill.class, "error", e);
-                creditDay = 0;
+            int creditDay = 0;
+            if(!lbCredit.getText().trim().equals("")){
+                try {
+                    creditDay = Integer.parseInt(lbCredit.getText());
+                } catch (NumberFormatException e) {
+                    AppLogUtil.log(CheckBill.class, "error", e);
+                    creditDay = 0;
+                }
             }
+            
             billBean.setB_SubDiscBath(tBean.getDiscBath());
             billBean.setB_AccrCr(creditDay);
 

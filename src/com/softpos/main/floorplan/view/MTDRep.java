@@ -8,7 +8,7 @@ import com.softpos.posreport.MTDPLU;
 import com.softpos.posreport.MTDTerminal;
 import com.softpos.posreport.MTDTopSale;
 import com.softpos.posreport.MTDVoid;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.PosUserBean;

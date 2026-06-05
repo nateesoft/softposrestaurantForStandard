@@ -1,9 +1,9 @@
 package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
-import com.softpos.crm.pos.core.modal.MenuMGR;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import database.MySQLConnect;
+import com.softpos.pos.core.model.MenuMGR;
+import com.softpos.constants.PublicVar;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;

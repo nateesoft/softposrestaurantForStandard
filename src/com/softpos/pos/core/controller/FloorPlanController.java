@@ -5,7 +5,7 @@ import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.pos.core.model.PIngredientBean;
 import com.softpos.pos.core.model.SPTempRefundBean;
 import com.softpos.pos.core.model.TempsetBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

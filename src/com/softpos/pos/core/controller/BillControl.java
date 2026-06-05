@@ -1,9 +1,10 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.constants.Value;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.crm.pos.core.modal.PublicVar;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.model.BranchBean;
@@ -15,7 +16,7 @@ import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TempCuponBean;
 import com.softpos.pos.core.model.TranRecord;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1079,15 +1080,18 @@ public class BillControl {
     }
 
     public List<TSaleBean> getAllTSaleToBill(String billNo) {
-        String sql = "select R_Normal, R_PluCode, R_PName, sum(R_Quan) R_Quan, sum(R_Total) R_Total, "
-                + "sum(R_Price) R_Price, R_ETD "
+        String sql = "select g.R_Quan,g.R_Total,g.R_Price,t.R_Normal,t.R_PluCode,t.R_PName,t.R_ETD "
+                + "from t_sale t "
+                + "inner join ("
+                + "select min(R_Index) min_index,sum(R_Quan) R_Quan,sum(R_Total) R_Total,sum(R_Price) R_Price "
                 + "from t_sale "
                 + "where r_refno='" + billNo + "' "
-                + "group by R_PluCode ";
+                + "group by R_PluCode"
+                + ") g on t.R_Index=g.min_index";
         if (POSConfigSetup.Bean().getP_PrintByItemType().equals("T")) {
-            sql += "order by R_Type, R_Index";
+            sql += " order by t.R_Type,t.R_Index";
         } else if (POSConfigSetup.Bean().getP_PrintByItemType().equals("D")) {
-            sql += "order by R_Status, R_Index";
+            sql += " order by t.R_Status,t.R_Index";
         }
 
         

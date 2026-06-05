@@ -8,8 +8,8 @@ import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.PPrint;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.PublicVar;
+import com.softpos.constants.Value;
 import com.softpos.pos.core.model.BillNoBean;
 import com.softpos.pos.core.controller.MemmaterController;
 import com.softpos.pos.core.controller.PosControl;
@@ -33,7 +33,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import soft.virtual.KeyBoardDialog;
+import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
 public class RefundBill extends javax.swing.JDialog {

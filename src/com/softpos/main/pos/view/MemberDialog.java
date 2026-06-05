@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.MemberControl;
-import com.softpos.pos.core.controller.Value;
+import com.softpos.constants.Value;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.List;

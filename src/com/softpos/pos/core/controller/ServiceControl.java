@@ -4,7 +4,7 @@ import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.TableFileBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;

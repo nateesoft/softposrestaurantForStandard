@@ -1,6 +1,6 @@
 package com.softpos.main.program;
 
-import com.softpos.crm.pos.core.modal.PluRec;
+import com.softpos.constants.PluRec;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;

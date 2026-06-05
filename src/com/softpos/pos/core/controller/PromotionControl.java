@@ -11,7 +11,7 @@ import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.pos.core.model.ProtabBean;
 import com.softpos.pos.core.model.TPromotionBean;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;

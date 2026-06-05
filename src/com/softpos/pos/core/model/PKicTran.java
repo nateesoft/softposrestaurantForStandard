@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.util.AppLogUtil;
-import database.MySQLConnect;
+import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
