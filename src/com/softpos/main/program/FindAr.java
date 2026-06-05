@@ -176,9 +176,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         for (int i = 0; i <= RowCount - 1; i++) {
             model2.removeRow(0);
         }
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {

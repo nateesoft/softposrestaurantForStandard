@@ -84,9 +84,7 @@ public class StockControl {
     }
 
     public void saveSubTCard(STCardBean bean, String ETD) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {

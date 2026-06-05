@@ -165,9 +165,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             }
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         String refStr = AppContext.getRefundBillController().saveCashBack(cash, PublicVar.MACNO, PublicVar.CASHIER);
         if (refStr != null) {

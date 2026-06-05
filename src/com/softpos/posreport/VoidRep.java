@@ -341,9 +341,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
                     int SumVoid = 0;
                     Double SumAmount = 0.0;
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {
@@ -431,9 +429,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
         int SumVoid = 0;
         Double SumAmount = 0.0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

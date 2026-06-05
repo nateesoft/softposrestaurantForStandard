@@ -233,9 +233,7 @@ public class PUtility {
 
     public Boolean SeekStkFile(String TempCode, String T_Stk) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(PUtility.class);
         try {

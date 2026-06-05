@@ -166,9 +166,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         //CreditRec CrRec = new CreditRec();
         CrArray = null;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.closeConnection(this.getClass());
         mysqlConnect.open(this.getClass());

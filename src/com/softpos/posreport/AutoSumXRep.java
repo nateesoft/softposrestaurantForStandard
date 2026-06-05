@@ -551,9 +551,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void UpdateLastPrintSaleDate() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -656,9 +654,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public boolean ChkSaleData() {
         boolean ReturnVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -679,9 +675,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public boolean ChkCashierSignOn() {
         boolean ReturnVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -702,9 +696,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public boolean ChkCashierClose() {
         boolean ReturnVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -733,9 +725,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public boolean ChkSaleNoCash() {
         boolean ReturnVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -759,9 +749,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         CreditRec[] CrArray;
         CrArray = null;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1000,9 +988,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("จำนวนลูกค้าทั้งสิ้น                ", 26) + PUtility.DataFull(IntFmt.format(frec.Customer), 8) + " คน");
         prn.print(PUtility.DataFullR("จำนวนใบกำกับภาษีอย่างย่อ         ", 26) + PUtility.DataFull(IntFmt.format(frec.CntBill), 8) + " ใบ");
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1131,9 +1117,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void ProcessCashier() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1158,9 +1142,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         CreditRec[] CrArray;
         CrArray = null;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1429,9 +1411,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1566,9 +1546,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1833,9 +1811,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2186,9 +2162,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Double S22 = 0.0;
         Double S23 = 0.0;
         Double SumS = 0.0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2589,9 +2563,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("----------------------------------------");
         prn.print("ใบเสร็จ   เวลาพิมพ์     จำนวนเงิน   ภาษี(Vat)");
         prn.print("----------------------------------------");
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2667,9 +2639,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("----------------------------------------");
         int SumVoid = 0;
         Double SumAmount = 0.0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2711,9 +2681,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String MacNo2 = PublicVar.MACNO;
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2814,9 +2782,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void InsertTemp(String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2860,9 +2826,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         prn.print("----------------------------------------");
         int Sumtotal = 0;
         Double SumtotalAmount = 0.0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2923,9 +2887,7 @@ private void ChkChargeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 prn.print("ประเภทการเบิก          เวลาพิมพ์  เลขที่เอกสาร ");
                 prn.print("รหัสหน่วยงาน/พนักงาน    จำนวนเงิน    Cashier ");
                 prn.print("----------------------------------------");
-                /**
-                 * * OPEN CONNECTION **
-                 */
+
                 mysqlConnect.open(this.getClass());
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();

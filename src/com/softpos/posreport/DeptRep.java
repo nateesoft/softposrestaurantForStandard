@@ -346,9 +346,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -555,9 +553,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

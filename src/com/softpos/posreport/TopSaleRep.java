@@ -481,9 +481,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String Group2 = txtGroup2.getText();
         List topsale = new ArrayList();
         int CntOrder = Integer.parseInt(txtCntOrder.getText());
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -545,9 +543,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String Group1 = txtGroup1.getText();
         String Group2 = txtGroup2.getText();
         int CntOrder = Integer.parseInt(txtCntOrder.getText());
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -766,9 +762,7 @@ private void bntF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void InsertTemp(String TGroup, String TCode, String TName, Double TQuan, Double Tamount) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

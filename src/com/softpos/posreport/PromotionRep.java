@@ -244,9 +244,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     prn.print("โปรโมชั่น                จำนวน      ส่วนลด ");
                     prn.print("----------------------------------------");
 
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {

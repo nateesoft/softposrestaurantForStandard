@@ -82,9 +82,7 @@ public class WebServiceControl {
 
             double Total_Vat_Amt = 0;
 
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             String sql = "select TAmount,ProDiscAmt,ItemDiscAmt from tablefile where Tcode='" + table + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -14,9 +14,7 @@ public class CuponListControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<CuponlistBean> listCuponlist() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
 
@@ -45,9 +43,7 @@ public class CuponListControl {
     }
 
     public List<CuponlistBean> listCuponlist(String CuCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
 
         List<CuponlistBean> listBean = new ArrayList<>();
@@ -76,9 +72,7 @@ public class CuponListControl {
     }
 
     public CuponlistBean getCuponlist(String CuCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
 
         CuponlistBean bean = new CuponlistBean();

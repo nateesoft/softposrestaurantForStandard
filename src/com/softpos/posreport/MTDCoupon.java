@@ -384,9 +384,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                     prn.print("----------------------------------------");
                     prn.print("บัตรคูปอง                 จำนวน      ส่วนลด ");
                     prn.print("----------------------------------------");
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {
@@ -458,9 +456,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("บัตรคูปอง" + Space + "จำนวน" + Space + "ส่วนลด ") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "

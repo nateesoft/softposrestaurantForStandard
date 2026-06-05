@@ -227,9 +227,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     prn.print("----------------------------------------");
                     prn.print("บัตรคูปอง                 จำนวน      ส่วนลด ");
                     prn.print("----------------------------------------");
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {
@@ -306,9 +304,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("บัตรคูปอง" + Space + "จำนวน" + TAB + "ส่วนลด ") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "

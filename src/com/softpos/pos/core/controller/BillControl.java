@@ -751,7 +751,6 @@ public class BillControl {
                     R_ServiceAmt = Double.parseDouble(dfFormat.format(r_nettotal * posConfig.getP_Service() / 100));
                     tSaleBean.setR_ServiceAmt(R_ServiceAmt);
                     SumR_ServiceAmt += R_ServiceAmt;
-//                tSaleBean.setR_NetTotal(tSaleBean.getR_NetTotal() + R_ServiceAmt);
                 }
 
                 if (etdTypeFromTSale.equals("")) {
@@ -811,13 +810,11 @@ public class BillControl {
 
                 BillNoBean billNo = new BillNoBean();
                 double cashPay = billBean.getB_Cash();
-//            double cashPay = billBean.getB_Cash() + billNo.getB_ServiceAmt();
                 double creditPay = 0;
                 if (cashPay > 0) {
                     creditPay = billBean.getB_CrAmt1();
                 } else {
                     creditPay = billBean.getB_CrAmt1();
-//                creditPay = billBean.getB_CrAmt1() + billNo.getB_ServiceAmt();
                 }
                 double totalSum = tableFile.getNetTotal();
                 double B_Ton = billBean.getB_Ton();
@@ -1002,13 +999,11 @@ public class BillControl {
 
                 saveBillNo(billNo, memberBean);
                 if (PublicVar.useprint) {
-//                new Thread(() -> {
                     PPrint print = new PPrint();
                     print.printSubTotalBill(BillNo, table);
                     if (PublicVar.PrintCopyAuto.equals("true")) {
                         print.printSubTotalBill(BillNo, table);
                     }
-//                }).start();
                 }
 
                 //clear transaction for table (balance, tablefile)
@@ -1633,7 +1628,6 @@ public class BillControl {
                 bean.setB_CrCardAmt(rs.getFloat("B_CrCardAmt"));
                 bean.setB_CrCurPoint(rs.getFloat("B_CrCurPoint"));
                 bean.setB_CrSumPoint(rs.getFloat("B_CrSumPoint"));
-//                bean.setB_KicQue(rs.getString("B_KicQue"));
                 try {
                     bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
                 } catch (SQLException e) {

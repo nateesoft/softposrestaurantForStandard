@@ -17,9 +17,7 @@ public class CuponControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public CuponBean getCupon(String CuCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
 
         CuponBean bean = new CuponBean();
@@ -74,9 +72,7 @@ public class CuponControl {
     }
 
     public void saveCupon(CuponBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into cupon (CuCode,CuName,CuBegin,CuEnd,CuStrDay,CuType,CuADisc,"
@@ -114,9 +110,7 @@ public class CuponControl {
     }
 
     public void updateCupon(CuponBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
 
         try {
@@ -160,9 +154,7 @@ public class CuponControl {
      * Used by GiftVoucherDialog.loadData().
      */
     public List<Object[]> loadTempGift(String macno) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         List<Object[]> rows = new ArrayList<>();
         try {
@@ -188,9 +180,7 @@ public class CuponControl {
      * Used by GiftVoucherDialog.btnExitActionPerformed().
      */
     public boolean saveTempGift(String giftNo, String voucherType, double amt, String macno) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sqlCheckTempGift = "select giftno from tempgift where giftno='" + giftNo + "' limit 1";
@@ -219,9 +209,7 @@ public class CuponControl {
      * Used by GiftVoucherDialog.clearModel().
      */
     public void clearTempGift() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tempgift";
@@ -240,9 +228,7 @@ public class CuponControl {
      * name}. Used by GiftDialogList.loadData().
      */
     public List<Object[]> getGiftTypeList() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         List<Object[]> rows = new ArrayList<>();
         try {
@@ -267,9 +253,7 @@ public class CuponControl {
      * Used by Giftvoucher.bntClearAllClick().
      */
     public void clearTempGiftByMacno(String macno) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(
@@ -291,9 +275,7 @@ public class CuponControl {
     public void insertTempGift(String macno, String giftBarcode, String giftType,
             String giftPrice, String giftModel, String giftLot, String giftExp,
             String giftCode, String giftNo, double giftAmt) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
@@ -323,9 +305,7 @@ public class CuponControl {
      * Returns true if found. Used by Giftvoucher.findGiftStatus().
      */
     public boolean isGiftStatusValid(String giftCode, String giftNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         boolean isValid = false;
         try {
@@ -349,9 +329,7 @@ public class CuponControl {
      * Used by Giftvoucher.findGiftPrice().
      */
     public double getGiftPrice(String priceCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         double priceAmt = -1.0;
         try {
@@ -378,9 +356,7 @@ public class CuponControl {
      * Used by Giftvoucher.showDataToGrid().
      */
     public Object[] getTempGiftByMacno(String macno) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         Object[] row = null;
         try {

@@ -68,9 +68,7 @@ public class LoginController {
     }
 
     public void updateLogin(String UserCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {

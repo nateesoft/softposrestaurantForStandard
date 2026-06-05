@@ -652,9 +652,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         prn.print("ชำระเงิน วันที่ชำระ  เลขที่บิล             ");
                         prn.print("----------------------------------------");
 
-                        /**
-                         * * OPEN CONNECTION **
-                         */
+                        
                         
                         mysqlConnect.open(this.getClass());
                         try {
@@ -751,9 +749,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             t += "colspan=3 align=left><font face=Angsana New size=1>" + Space + ("ชำระเงิน วันที่ชำระ  เลขที่บิล") + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
 
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -820,9 +816,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 model2.removeRow(0);
             }
 
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();

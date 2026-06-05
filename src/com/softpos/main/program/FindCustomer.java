@@ -84,9 +84,7 @@ public class FindCustomer extends javax.swing.JDialog {
 
     public void bntShowMemberAllClick() {
         int LineCnt = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -123,9 +121,7 @@ public class FindCustomer extends javax.swing.JDialog {
     public void ShowMemberByCode() {
         int LineCnt = 0;
         String TempStr = "%" + TMemCode.getText() + "%";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -161,9 +157,7 @@ public class FindCustomer extends javax.swing.JDialog {
     public void ShowMemberByName() {
         int LineCnt = 0;
         String TempStr = "%" + TMemName.getText() + "%";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -199,9 +193,7 @@ public class FindCustomer extends javax.swing.JDialog {
     public void ShowMemberByTel() {
         int LineCnt = 0;
         String TempStr = "%" + TMemTel.getText() + "%";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -1301,9 +1301,7 @@ public class MainSale extends javax.swing.JDialog {
 }//GEN-LAST:event_txtTableKeyPressed
 
     private void loadTableBalance(String tableNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         PublicVar.countRound = 0;
         List<BalanceBean> listBalance = balanceControl.loadTableBalance(tableNo);
         int rowCount = model.getRowCount();
@@ -1761,9 +1759,7 @@ public class MainSale extends javax.swing.JDialog {
                 String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
                 databaseConnection.execUpdate(sql);
             }
-            databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
             kichenPrint();
-            databaseConnection.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
             printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -2242,9 +2238,7 @@ public class MainSale extends javax.swing.JDialog {
                 Qty = 1;
                 PluCode = TempCode;
             }
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             MenuListBean menuListBean = mainSaleControl.getMenuListByMenuItem(PluCode);
             if (Qty > 0) {
                 if (POSHW.getMenuItemList().equals("Y")) {
@@ -2620,6 +2614,8 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void kichenPrint() {
+        databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
+
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
         String printerName;
 
@@ -2711,7 +2707,7 @@ public class MainSale extends javax.swing.JDialog {
             }
         }
 
-        CheckKicPrint();
+        checkKicPrint();
 
         //update r_kicprint
         String sql = "update balance "
@@ -2723,7 +2719,9 @@ public class MainSale extends javax.swing.JDialog {
                 + "and r_printOk='Y' "
                 + "and r_kic<>'' ";
         databaseConnection.execUpdate(sql);
-
+        
+        // update tablefile status
+        databaseConnection.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
     }
 
     private void changeSaleType(String SaleType) {
@@ -3738,7 +3736,7 @@ public class MainSale extends javax.swing.JDialog {
         databaseConnection.execUpdate(sql);
     }
 
-    private void CheckKicPrint() {
+    private void checkKicPrint() {
         if (mainSaleControl.checkKicPrint(tableNo)) {
             String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
             if (CheckBillBeforeCash.equals("Y")) {

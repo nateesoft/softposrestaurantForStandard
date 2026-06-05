@@ -67,24 +67,13 @@ public class PrintKicFormReport {
         TableFileControl tbControl = AppContext.getTableFileControl();
         TableFileBean tbBean = tbControl.getData(tableNo);
 
-        DateConvert dc = new DateConvert();
-//        PosControl control = AppContext.getPosControl();
-//        POSHWSetup POSHWSetup = control.getData(Macno);
-//        POSConfigSetup bean = new POSConfigSetup();
-//        bean = control.getData();
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
-
         try {
-//                    if (tbBean.getTItem() > 0 && ConfigFile.getProperties("printerStation").equals("true")) {
             PrintKicFormReport report = new PrintKicFormReport();
 
-            // open connection
             report.openConnection();
 
             // source file
-//                        String reportJasper = new File(".").getCanonicalPath() + JASPER_FILE;
-//                        String sourceFileName = "D:\\CPS_Restaurant650\\src\\java\\printReport\\printCheckBillReport.jrxml";
-//                        String sourceFileName = "D:\\pdaV.EngTabletOppoA12\\src\\java\\printReport\\printCheckBillReport.jrxml";
             String sourceFileName = "D:\\Source Code Java\\softposrestaurantForStandard\\src\\report\\file\\kicFrom_7Qrcode.jrxml";
             String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
 
@@ -180,7 +169,6 @@ public class PrintKicFormReport {
         try {
             PrintKicFormReport report = new PrintKicFormReport();
 
-            // open connection
             report.openConnection();
 
             String sourceFileName = "D:\\Source Code Java\\softposrestaurantForStandard\\src\\report\\file\\kicFrom_8Qrcode.jrxml";

@@ -412,8 +412,6 @@ public class PosControl {
                     posConfigSetup.setWTime(rs.getString("WTime"));
                     posConfigSetup.setLTime(rs.getString("LTime"));
                     posConfigSetup.setP_PrintProductValue(rs.getString("P_PrintProductValue"));
-//                    posConfigSetup.setP_LimitTime(rs.getInt("P_LimitTime"));
-
                     posConfigSetup.setP_RefreshTime(rs.getInt("P_RefreshTime"));
                     posConfigSetup.setP_SaleDecimal(rs.getString("P_SaleDecimal"));
                     posConfigSetup.setP_PayBahtRound(rs.getString("P_PayBahtRound"));

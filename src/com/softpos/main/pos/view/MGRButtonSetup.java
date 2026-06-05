@@ -984,9 +984,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             model4.removeRow(0);
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         MgrButtonController ctrl = new MgrButtonController();
         for (Object[] row : ctrl.getButtonSetupRows(txtPCode.getText())) {
             if ("Y".equals(row[8])) isBefore = true;

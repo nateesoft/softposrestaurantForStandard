@@ -136,72 +136,68 @@ public class ProductControl {
     public ProductBean getData(String PCode) {
         String sql = "select * from product where PCode='" + PCode + "' limit 1";
         ProductBean productBean = new ProductBean();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(ProductControl.class);
         try {
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next()) {
-                productBean.setPCode(rs.getString("PCode"));
-                productBean.setPFix(rs.getString("PFix"));
-                productBean.setPReferent(rs.getString("PReferent"));
-                productBean.setPAccNo(rs.getString("PAccNo"));
-                productBean.setPGroup(rs.getString("PGroup"));
-                productBean.setPVender(rs.getString("PVender"));
-                productBean.setPType(rs.getString("PType"));
-                productBean.setPNormal(rs.getString("PNormal"));
-                productBean.setPRemark(rs.getString("PRemark"));
-                productBean.setPDiscount(rs.getString("PDiscount"));
-                productBean.setPService(rs.getString("PService"));
-                productBean.setPStatus(rs.getString("PStatus"));
-                productBean.setPStock(rs.getString("PStock"));
-                productBean.setPSet(rs.getString("PSet"));
-                productBean.setPVat(rs.getString("PVat"));
-                productBean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
-                productBean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
-                productBean.setPPack1(rs.getInt("PPack1"));
-                productBean.setPArea(rs.getString("PArea"));
-                productBean.setPKic(rs.getString("PKic"));
-                productBean.setPPrice11(rs.getFloat("PPrice11"));
-                productBean.setPPrice12(rs.getFloat("PPrice12"));
-                productBean.setPPrice13(rs.getFloat("PPrice13"));
-                productBean.setPPrice14(rs.getFloat("PPrice14"));
-                productBean.setPPrice15(rs.getFloat("PPrice15"));
-                productBean.setPPromotion1(rs.getString("PPromotion1"));
-                productBean.setPPromotion2(rs.getString("PPromotion2"));
-                productBean.setPPromotion3(rs.getString("PPromotion3"));
-                productBean.setPMax(rs.getFloat("PMax"));
-                productBean.setPMin(rs.getFloat("PMin"));
-                productBean.setPBUnit(rs.getString("PBUnit"));
-                productBean.setPBPack(rs.getFloat("PBPack"));
-                productBean.setPLCost(rs.getFloat("PLCost"));
-                productBean.setPSCost(rs.getFloat("PSCost"));
-                productBean.setPACost(rs.getFloat("PACost"));
-                productBean.setPLink1(rs.getString("PLink1"));
-                productBean.setPLink2(rs.getString("PLink2"));
-                productBean.setPLastTime(rs.getString("PLastTime"));
-                productBean.setPUserUpdate(rs.getString("PUserUpdate"));
-                productBean.setPBarCode(rs.getString("PBarCode"));
-                productBean.setPActive(rs.getString("PActive"));
-                productBean.setPSPVat(rs.getString("PSPVat"));
-                productBean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
-                productBean.setPOSStk(rs.getString("POSStk"));
-                productBean.setMSStk(rs.getString("MSStk"));
-                productBean.setPTimeCharge(rs.getFloat("PTimeCharge"));
-                productBean.setPOrder(rs.getString("POrder"));
-                productBean.setPFoodType(rs.getString("PFoodType"));
-                productBean.setPPackOld(rs.getInt("PPackOld"));
-                productBean.setPDesc2(rs.getString("PDesc2"));
-                productBean.setPselectItem(rs.getString("PselectItem"));
-                productBean.setPselectNum(rs.getFloat("PselectNum"));
-                productBean.setPShowOption(rs.getString("PShowOption"));
-                productBean.setPEDesc(rs.getString("PEDesc"));
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    productBean.setPCode(rs.getString("PCode"));
+                    productBean.setPFix(rs.getString("PFix"));
+                    productBean.setPReferent(rs.getString("PReferent"));
+                    productBean.setPAccNo(rs.getString("PAccNo"));
+                    productBean.setPGroup(rs.getString("PGroup"));
+                    productBean.setPVender(rs.getString("PVender"));
+                    productBean.setPType(rs.getString("PType"));
+                    productBean.setPNormal(rs.getString("PNormal"));
+                    productBean.setPRemark(rs.getString("PRemark"));
+                    productBean.setPDiscount(rs.getString("PDiscount"));
+                    productBean.setPService(rs.getString("PService"));
+                    productBean.setPStatus(rs.getString("PStatus"));
+                    productBean.setPStock(rs.getString("PStock"));
+                    productBean.setPSet(rs.getString("PSet"));
+                    productBean.setPVat(rs.getString("PVat"));
+                    productBean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                    productBean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                    productBean.setPPack1(rs.getInt("PPack1"));
+                    productBean.setPArea(rs.getString("PArea"));
+                    productBean.setPKic(rs.getString("PKic"));
+                    productBean.setPPrice11(rs.getFloat("PPrice11"));
+                    productBean.setPPrice12(rs.getFloat("PPrice12"));
+                    productBean.setPPrice13(rs.getFloat("PPrice13"));
+                    productBean.setPPrice14(rs.getFloat("PPrice14"));
+                    productBean.setPPrice15(rs.getFloat("PPrice15"));
+                    productBean.setPPromotion1(rs.getString("PPromotion1"));
+                    productBean.setPPromotion2(rs.getString("PPromotion2"));
+                    productBean.setPPromotion3(rs.getString("PPromotion3"));
+                    productBean.setPMax(rs.getFloat("PMax"));
+                    productBean.setPMin(rs.getFloat("PMin"));
+                    productBean.setPBUnit(rs.getString("PBUnit"));
+                    productBean.setPBPack(rs.getFloat("PBPack"));
+                    productBean.setPLCost(rs.getFloat("PLCost"));
+                    productBean.setPSCost(rs.getFloat("PSCost"));
+                    productBean.setPACost(rs.getFloat("PACost"));
+                    productBean.setPLink1(rs.getString("PLink1"));
+                    productBean.setPLink2(rs.getString("PLink2"));
+                    productBean.setPLastTime(rs.getString("PLastTime"));
+                    productBean.setPUserUpdate(rs.getString("PUserUpdate"));
+                    productBean.setPBarCode(rs.getString("PBarCode"));
+                    productBean.setPActive(rs.getString("PActive"));
+                    productBean.setPSPVat(rs.getString("PSPVat"));
+                    productBean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
+                    productBean.setPOSStk(rs.getString("POSStk"));
+                    productBean.setMSStk(rs.getString("MSStk"));
+                    productBean.setPTimeCharge(rs.getFloat("PTimeCharge"));
+                    productBean.setPOrder(rs.getString("POrder"));
+                    productBean.setPFoodType(rs.getString("PFoodType"));
+                    productBean.setPPackOld(rs.getInt("PPackOld"));
+                    productBean.setPDesc2(rs.getString("PDesc2"));
+                    productBean.setPselectItem(rs.getString("PselectItem"));
+                    productBean.setPselectNum(rs.getFloat("PselectNum"));
+                    productBean.setPShowOption(rs.getString("PShowOption"));
+                    productBean.setPEDesc(rs.getString("PEDesc"));
+                }
             }
-            rs.close();
-//            stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -214,69 +210,68 @@ public class ProductControl {
         mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select * from product where PGroup ='" + PGroup + "'";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            ProductBean p;
-            while (rs.next()) {
-                p = new ProductBean();
-                p.setPCode(rs.getString("PCode"));
-                p.setPFix(rs.getString("PFix"));
-                p.setPReferent(rs.getString("PReferent"));
-                p.setPAccNo(rs.getString("PAccNo"));
-                p.setPGroup(rs.getString("PGroup"));
-                p.setPVender(rs.getString("PVender"));
-                p.setPType(rs.getString("PType"));
-                p.setPNormal(rs.getString("PNormal"));
-                p.setPRemark(rs.getString("PRemark"));
-                p.setPDiscount(rs.getString("PDiscount"));
-                p.setPService(rs.getString("PService"));
-                p.setPStatus(rs.getString("PStatus"));
-                p.setPStock(rs.getString("PStock"));
-                p.setPSet(rs.getString("PSet"));
-                p.setPVat(rs.getString("PVat"));
-                p.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
-                p.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
-                p.setPPack1(rs.getInt("PPack1"));
-                p.setPArea(rs.getString("PArea"));
-                p.setPKic(rs.getString("PKic"));
-                p.setPPrice11(rs.getFloat("PPrice11"));
-                p.setPPrice12(rs.getFloat("PPrice12"));
-                p.setPPrice13(rs.getFloat("PPrice13"));
-                p.setPPrice14(rs.getFloat("PPrice14"));
-                p.setPPrice15(rs.getFloat("PPrice15"));
-                p.setPPromotion1(rs.getString("PPromotion1"));
-                p.setPPromotion2(rs.getString("PPromotion2"));
-                p.setPPromotion3(rs.getString("PPromotion3"));
-                p.setPMax(rs.getFloat("PMax"));
-                p.setPMin(rs.getFloat("PMin"));
-                p.setPBUnit(rs.getString("PBUnit"));
-                p.setPBPack(rs.getFloat("PBPack"));
-                p.setPLCost(rs.getFloat("PLCost"));
-                p.setPSCost(rs.getFloat("PSCost"));
-                p.setPACost(rs.getFloat("PACost"));
-                p.setPLink1(rs.getString("PLink1"));
-                p.setPLink2(rs.getString("PLink2"));
-                p.setPLastTime(rs.getString("PLastTime"));
-                p.setPUserUpdate(rs.getString("PUserUpdate"));
-                p.setPBarCode(rs.getString("PBarCode"));
-                p.setPActive(rs.getString("PActive"));
-                p.setPSPVat(rs.getString("PSPVat"));
-                p.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
-                p.setPOSStk(rs.getString("POSStk"));
-                p.setMSStk(rs.getString("MSStk"));
-                p.setPTimeCharge(rs.getFloat("PTimeCharge"));
-                p.setPOrder(rs.getString("POrder"));
-                p.setPFoodType(rs.getString("PFoodType"));
-                p.setPPackOld(rs.getInt("PPackOld"));
-                p.setPDesc2(rs.getString("PDesc2"));
-                p.setPselectItem(rs.getString("PselectItem"));
-                p.setPselectNum(rs.getFloat("PselectNum"));
-                p.setPShowOption(rs.getString("PShowOption"));
-
-                dataProduct.add(p);
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                ProductBean p;
+                while (rs.next()) {
+                    p = new ProductBean();
+                    p.setPCode(rs.getString("PCode"));
+                    p.setPFix(rs.getString("PFix"));
+                    p.setPReferent(rs.getString("PReferent"));
+                    p.setPAccNo(rs.getString("PAccNo"));
+                    p.setPGroup(rs.getString("PGroup"));
+                    p.setPVender(rs.getString("PVender"));
+                    p.setPType(rs.getString("PType"));
+                    p.setPNormal(rs.getString("PNormal"));
+                    p.setPRemark(rs.getString("PRemark"));
+                    p.setPDiscount(rs.getString("PDiscount"));
+                    p.setPService(rs.getString("PService"));
+                    p.setPStatus(rs.getString("PStatus"));
+                    p.setPStock(rs.getString("PStock"));
+                    p.setPSet(rs.getString("PSet"));
+                    p.setPVat(rs.getString("PVat"));
+                    p.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                    p.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                    p.setPPack1(rs.getInt("PPack1"));
+                    p.setPArea(rs.getString("PArea"));
+                    p.setPKic(rs.getString("PKic"));
+                    p.setPPrice11(rs.getFloat("PPrice11"));
+                    p.setPPrice12(rs.getFloat("PPrice12"));
+                    p.setPPrice13(rs.getFloat("PPrice13"));
+                    p.setPPrice14(rs.getFloat("PPrice14"));
+                    p.setPPrice15(rs.getFloat("PPrice15"));
+                    p.setPPromotion1(rs.getString("PPromotion1"));
+                    p.setPPromotion2(rs.getString("PPromotion2"));
+                    p.setPPromotion3(rs.getString("PPromotion3"));
+                    p.setPMax(rs.getFloat("PMax"));
+                    p.setPMin(rs.getFloat("PMin"));
+                    p.setPBUnit(rs.getString("PBUnit"));
+                    p.setPBPack(rs.getFloat("PBPack"));
+                    p.setPLCost(rs.getFloat("PLCost"));
+                    p.setPSCost(rs.getFloat("PSCost"));
+                    p.setPACost(rs.getFloat("PACost"));
+                    p.setPLink1(rs.getString("PLink1"));
+                    p.setPLink2(rs.getString("PLink2"));
+                    p.setPLastTime(rs.getString("PLastTime"));
+                    p.setPUserUpdate(rs.getString("PUserUpdate"));
+                    p.setPBarCode(rs.getString("PBarCode"));
+                    p.setPActive(rs.getString("PActive"));
+                    p.setPSPVat(rs.getString("PSPVat"));
+                    p.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
+                    p.setPOSStk(rs.getString("POSStk"));
+                    p.setMSStk(rs.getString("MSStk"));
+                    p.setPTimeCharge(rs.getFloat("PTimeCharge"));
+                    p.setPOrder(rs.getString("POrder"));
+                    p.setPFoodType(rs.getString("PFoodType"));
+                    p.setPPackOld(rs.getInt("PPackOld"));
+                    p.setPDesc2(rs.getString("PDesc2"));
+                    p.setPselectItem(rs.getString("PselectItem"));
+                    p.setPselectNum(rs.getFloat("PselectNum"));
+                    p.setPShowOption(rs.getString("PShowOption"));
+                    
+                    dataProduct.add(p);
+                }
             }
-            rs.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -315,13 +310,11 @@ public class ProductControl {
                     + "from product p, optionfile o "
                     + "where p.pgroup=o.pgroup "
                     + "and p.pcode='" + pCode + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                list.add(ThaiUtil.ASCII2Unicode(rs.getString("optionname")));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(ThaiUtil.ASCII2Unicode(rs.getString("optionname")));
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
@@ -339,15 +332,15 @@ public class ProductControl {
                     + "where pfix='F' "
                     + "and pgroup <'12' "
                     + "order by pgroup,pcode";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            while (rs.next()) {
-                ProductBean bean = new ProductBean();
-                bean.setPCode(rs.getString("pcode"));
-                bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
-                bean.setPKic(rs.getString("pkic"));
-                list.add(bean);
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                while (rs.next()) {
+                    ProductBean bean = new ProductBean();
+                    bean.setPCode(rs.getString("pcode"));
+                    bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("pdesc")));
+                    bean.setPKic(rs.getString("pkic"));
+                    list.add(bean);
+                }
             }
-            rs.close();
         } catch (SQLException e) {
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {

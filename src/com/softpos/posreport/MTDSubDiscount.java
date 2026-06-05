@@ -454,9 +454,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("----------------------------------------");
                 String TempDate = "";
                 String TempMacNo = "";
-                /**
-         * * OPEN CONNECTION **
-         */
+        
         
         mysqlConnect.open(this.getClass());
                 try {

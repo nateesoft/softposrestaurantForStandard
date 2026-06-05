@@ -15,9 +15,7 @@ public class TempCuponController {
 
     public TempCuponBean getTempcupon(String R_Index) {
         TempCuponBean bean = new TempCuponBean();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tempcupon where R_Index='" + R_Index + "' limit 1";
@@ -57,9 +55,7 @@ public class TempCuponController {
     }
 
     public void saveTempCupon(TempCuponBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             SimpleDateFormat simp = new SimpleDateFormat("HH:mm");

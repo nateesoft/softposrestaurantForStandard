@@ -405,9 +405,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         for (int i = 0; i < size; i++) {
             model.removeRow(0);
         }
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -465,9 +463,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String CuDate = Datefmt.format(new Date());
         SimpleDateFormat DayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
         String CurDay = DayFormat.format(new Date());
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -524,9 +520,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public int SeekTempCoupon(String CuCode) {
         int RetValue = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -552,9 +546,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public String SeekSMS_Code(String CuCode) {
         String RetValue = "";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -582,9 +574,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     public String SeekM_Code(String CuCode) {
         String RetValue = "";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -673,9 +663,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         int itemForDisc = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select count(*) itemCount from balance "
@@ -1020,9 +1008,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void updatePercentCupon(double itemDisc, String cuCode, double percent, BalanceBean balanceBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             double rTotal = balanceBean.getR_Price() * itemDisc;
@@ -1049,9 +1035,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void updateBathCupon(BalanceBean balanceBean, double itemDisc, double bath, String cuCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             double rTotal = balanceBean.getR_Price() * itemDisc;
@@ -1088,9 +1072,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     private int getCountTable(String cuCode) {
         int count = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select sum(r_prcuquan) qty from balance "

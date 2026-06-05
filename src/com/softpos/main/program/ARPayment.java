@@ -2508,9 +2508,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public void LoadArMark(String ArCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2551,9 +2549,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     public void ClearAllArMark(String ArCode) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2614,9 +2610,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         int currow = 0;
         String TableSelected = "";
         maxrow = tblAr.getRowCount();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {
@@ -2663,9 +2657,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         int currow = 0;
         String TableSelected = "";
         maxrow = tblArPay.getRowCount();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         if (maxrow > 0) {
             for (int i = 0; i < maxrow; i++) {

@@ -33,9 +33,7 @@ public class MemmaterController {
 
     public MemberBean getMember(String MemberCode) {
         MemberBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(MemmaterController.class);
         try {

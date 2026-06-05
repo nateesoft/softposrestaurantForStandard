@@ -333,9 +333,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void ProcessProc() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -442,9 +440,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void MTDPrintCreditDriver() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         String t = "";
         if (POSHW.getHeading1().length() >= 18) {
@@ -526,9 +522,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void InsertTemp(String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

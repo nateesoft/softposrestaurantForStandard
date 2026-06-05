@@ -33,9 +33,7 @@ public class CopyBill extends javax.swing.JDialog {
         initComponents();
         PublicVar.SmpCouponArray = null;
         CONFIG = POSConfigSetup.Bean();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -237,9 +235,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     private void actionPrint() {
         String BillNo = txtBillNo.getText();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         boolean validCopy = false;
         try {
@@ -277,9 +273,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
         String BillNo = txtBillNo.getText();
         //Load Data From BillNo
         int billcopy = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {

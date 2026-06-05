@@ -267,9 +267,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         String MacNo2 = txtMacNo2.getText();
         String CashNo1 = txtCashNo1.getText();
         String CashNo2 = txtCashNo2.getText();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -512,9 +510,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     public void InsertTemp(String TRefno, String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -13,9 +13,7 @@ public class TCuponControl {
 
     public TCuponBean getTCupon(String R_Index) {
         TCuponBean bean = null;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {

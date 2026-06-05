@@ -588,9 +588,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     public void bntRemoveClick() {
         String TempCode = sp_code.getText();
-        /**
-         * * OPEN CONNECTION **
-         */
+
 
         if (!TempCode.equals("")) {
             if (MSG.CONF(this, "ยืนยันการลบข้อมูลลูกหนี้การค้า รายการนี้ ?")) {
@@ -617,9 +615,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     public void bntSaveClick() {
         String TempCode = sp_code.getText();
         if (!TempCode.equals("")) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             if (SeekCustFile(TempCode)) {
                 try {
@@ -701,9 +697,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     public void sp_codeExit() {
         String TempCode = sp_code.getText();
         if (!TempCode.equals("")) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -736,9 +730,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     public Boolean SeekCustFile(String TempCode) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

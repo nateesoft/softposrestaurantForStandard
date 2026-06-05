@@ -133,9 +133,7 @@ public class MTDDept extends javax.swing.JDialog {
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -569,9 +567,7 @@ public class MTDDept extends javax.swing.JDialog {
         GArray = new PluRec[1];
         ArraySize = 0;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1112,9 +1108,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 + "and b_void<>'V'"
                 + "and b_etd='D' "
                 + "group by b_etd";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -124,9 +124,7 @@ public class PrintSimpleForm {
         //น้าตะไคร้ใบเตย       2
         //__________________
         //28/04/2014 14:15 001/
-        /**
-         * * OPEN CONNECTION **
-         */
+
 
         mysqlConnect.open(this.getClass());
 
@@ -2725,9 +2723,7 @@ public class PrintSimpleForm {
                     public int print(Graphics g, PageFormat pf, int index) throws PrinterException {
                         Graphics2D g2 = (Graphics2D) g;
                         if (index == 0) {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
+                            
 
                             mysqlConnect.open(this.getClass());
                             try {
@@ -3114,9 +3110,7 @@ public class PrintSimpleForm {
                 //จำนวน  2 ราคา 90.00
                 //__________________
                 //T1 28/04/2014 14:15 001/พนักงาน
-                /**
-                 * * OPEN CONNECTION **
-                 */
+
                 mysqlConnect.open(this.getClass());
                 try {
                     String sql = "select TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, sum(R_Quan) R_Quan,"
@@ -3323,9 +3317,7 @@ public class PrintSimpleForm {
         //จำนวน  2 ราคา 90.00
         //__________________
         //T1 28/04/2014 14:15 001/พนักงาน
-        /**
-         * * OPEN CONNECTION **
-         */
+
         try {
             mysqlConnect.open(this.getClass());
 

@@ -459,9 +459,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     int SumVoid = 0;
                     String TempDate = "";
                     Double SumAmount = 0.0;
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {
@@ -539,9 +537,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         int SumVoid = 0;
         String TempDate = "";
         Double SumAmount = 0.0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

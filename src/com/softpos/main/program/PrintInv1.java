@@ -1071,9 +1071,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         ex.setVisible(true);
 
         if (!ExtItemList.data.equals("")) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             
             mysqlConnect.open(this.getClass());
             try {
@@ -1154,9 +1152,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String TempInvNo = txtDocNo.getText();
         SetReadOnlyOff();
         if (!TempInvNo.equals("")) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1258,9 +1254,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     public void CustCodeExit() {
         if (!txtCode.getText().equals("")) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1300,9 +1294,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     public void CustNameExit() {
         if ((txtAddr1.getText().equals("")) & (PrintOK.equals("N"))) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1335,9 +1327,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String TempInv;
         String TempType;
         if ((!txtMacNo.getText().equals("")) & (!txtDocNoRef.getText().equals("")) & (!NoEdit)) {
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
             try {
                 try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1576,9 +1566,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void addCustomer(CustomerBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into customer "
@@ -1600,9 +1588,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void updateCustomer(CustomerBean bean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "update customer "
@@ -1631,9 +1617,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(this, e.getMessage());
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "delete from invdetail where invno=?";
@@ -1685,9 +1669,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void UpdateBillNo(String MacNo, String RefNo, String InvNo, String InvType) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "update billno set b_invno=?,b_invtype=? where (b_macno=?) and (b_refno=?)";
@@ -1709,9 +1691,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void UpdateAccr(String BillNo, String InvNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "update accr set arinvno=? where arno=?";
@@ -1740,9 +1720,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(this, e.getMessage());
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "insert into invcashdoc (s_bran,invdate,custcode,custname,custaddr1,"
@@ -1812,9 +1790,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             MSG.ERR(this, e.getMessage());
         }
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "update invcashdoc set s_bran=?,invdate=?,custcode=?,custname=?,custaddr1=?,"
@@ -1871,9 +1847,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     public boolean SeekInvNo(String InvNo) {
         boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1897,9 +1871,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     public boolean SeekCustomer(String CustCode) {
         Boolean RetVal = false;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1924,9 +1896,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     public String FindMaxInvNo() {
         String RetVal = "";
         int TempInv = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -1982,9 +1952,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         MSG.ERR(this, "กรุณาป้อนสาเหตุการยกเลิก...");
                     } else {
                         if (MSG.CONF(this, "คุณต้องการยกเลิกใบกำกับภาษี/ใบเสร็จรับเงินนี้หรือไม่ ?")) {
-                            /**
-                             * * OPEN CONNECTION **
-                             */
+                            
                             mysqlConnect.open(this.getClass());
                             try {
                                 String SqlQuery = "update invcashdoc set void=?,uservoid=?,voiddate=?,"
@@ -2062,9 +2030,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     public void UpdatePrintFlage(String InvNo) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String SqlQuery = "update invcashdoc set printok='Y',invuser=? where invno=?";

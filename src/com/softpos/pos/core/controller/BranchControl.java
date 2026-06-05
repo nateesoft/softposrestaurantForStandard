@@ -13,9 +13,7 @@ public class BranchControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void updateKicItemNo() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         try {
             mysqlConnect.open(BranchControl.class);

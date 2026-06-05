@@ -163,9 +163,7 @@ public class CancelCashBack extends javax.swing.JDialog {
         for (int i = 0; i < size; i++) {
             model.removeRow(0);
         }
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         List<Object[]> rows = AppContext.getRefundBillController().listPendingCashBacks();
         for (Object[] row : rows) {
@@ -174,9 +172,7 @@ public class CancelCashBack extends javax.swing.JDialog {
     }
 
     private void updateCashBack(String code) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         int row = table.getSelectedRow();
         if (row != -1) {
             if (AppContext.getRefundBillController().voidCashBack(code)) {

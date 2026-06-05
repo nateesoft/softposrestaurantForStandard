@@ -225,10 +225,6 @@ public class SetupButtonTable extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void deleteItem(String codeId) {
-        /**
-         * * OPEN CONNECTION **
-         */
-        
         mysqlConnect.open(this.getClass());
         try {
             String sql = "delete from tablesetup where TCode='" + txtTable.getText() + "' and Code_Id='" + codeId + "'";
@@ -247,9 +243,6 @@ public class SetupButtonTable extends javax.swing.JDialog {
     }
 
     private void saveItem() {
-        /**
-         * * OPEN CONNECTION **
-         */
         mysqlConnect.open(this.getClass());
         try {
             String tableNo = txtTable.getText();
@@ -302,9 +295,6 @@ public class SetupButtonTable extends javax.swing.JDialog {
     }
 
     private void loadTableNo(String codeid) {
-        /**
-         * * OPEN CONNECTION **
-         */
         mysqlConnect.open(this.getClass());
         try {
             String sql = "SELECT TCode FROM tablesetup where code_id = '" + codeid + "'";

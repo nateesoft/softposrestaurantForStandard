@@ -100,9 +100,7 @@ public class DispInv1 extends javax.swing.JDialog {
             double XAmt1 = 0.0;
             double XAmt2 = 0.0;
             double XAmt3 = 0.0;
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             
             java.util.List<java.util.Map<String, Object>> rows = AppContext.getBillControl()
                     .getInvCashDocByDateAndPrefix(Datefmt.format(TempDate1), Datefmt.format(TempDate2), "P");

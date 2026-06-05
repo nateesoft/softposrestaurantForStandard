@@ -2503,9 +2503,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void updateTempTset(BalanceBean bBean, String r_etd, String tableNo, ProductBean productBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";

@@ -654,9 +654,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     prn.print("    ....DELIVERY....   .....PINTO.......");
                     prn.print("    ...WHOLE SALE...   .....TOTAL.......");
                     prn.print("----------------------------------------");
-                    /**
-                     * * OPEN CONNECTION **
-                     */
+                    
                     
                     mysqlConnect.open(this.getClass());
                     try {
@@ -731,9 +729,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         PluRec[] GArray;
         GArray = new PluRec[1];
         ArraySize = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -935,219 +931,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         }
         InitScreen();
     }
-//    public void ProcessProc2() {
-//
-//        String TempGroup = "";
-//        String TempPlu = "";
-//        String TempName = "";
-//        int ArraySize = 0;
-//        Boolean Found = false;
-//        PluRec[] GArray;
-//        GArray = new PluRec[1];
-//        ArraySize = 0;
-//        /**
-//         * * OPEN CONNECTION **
-//         */
-//        mysql.open(this.getClass());
-//        try {
-//            Statement stmt = mysql.getConnection().createStatement();
-//            String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
-//                    + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
-//                    + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
-//            ResultSet rs = stmt.executeQuery(SqlQuery);
-//            TempGroup = "";
-//            TempPlu = "";
-//            TempName = "";
-//            Double SumEQty = 0.0;
-//            Double SumEAmt = 0.0;
-//            Double SumTQty = 0.0;
-//            Double SumTAmt = 0.0;
-//            Double SumDQty = 0.0;
-//            Double SumDAmt = 0.0;
-//            Double SumPQty = 0.0;
-//            Double SumPAmt = 0.0;
-//            Double SumWQty = 0.0;
-//            Double SumWAmt = 0.0;
-//            Double SumSQty = 0.0;
-//            Double SumSAmt = 0.0;
-//            PluRec GroupRec = new PluRec();
-//            GroupRec.MacNo1 = "";
-//            GroupRec.MacNo2 = "";
-//            GroupRec.Cashier1 = "";
-//            GroupRec.Cashier2 = "";
-//            GroupRec.Group1 = txtMacNo1.getText();
-//            GroupRec.Group2 = txtMacNo2.getText();
-//            GroupRec.Plu1 = txtPlu1.getText();
-//            GroupRec.Plu2 = txtPlu2.getText();
-//            GroupRec.GroupCode = TempGroup;
-//            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-//            GroupRec.PCode = TempPlu;
-//            GroupRec.PName = TempName;
-//
-//            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-//            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-//
-//            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-//            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-//
-//            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-//            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-//
-//            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-//            GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-//
-//            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-//            GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-//
-//            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-//            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-//
-//            GArray[0] = GroupRec;
-//            
-//            while(rs.next()){
-//                TempGroup = rs.getString("s_dept");
-//                TempPlu = rs.getString("s_pcode");
-//                TempName = PUtility.SeekProductName(rs.getString("s_pcode"));
-//                
-//                Found = true;
-//                    if (!TempPlu.equals(rs.getString("s_pcode"))) {
-//                        GroupRec = new PluRec();
-//                        GroupRec.MacNo1 = "";
-//                        GroupRec.MacNo2 = "";
-//                        GroupRec.Cashier1 = "";
-//                        GroupRec.Cashier2 = "";
-//                        GroupRec.Group1 = txtMacNo1.getText();
-//                        GroupRec.Group2 = txtMacNo2.getText();
-//                        GroupRec.Plu1 = txtPlu1.getText();
-//                        GroupRec.Plu2 = txtPlu2.getText();
-//                        GroupRec.GroupCode = TempGroup;
-//                        GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-//                        GroupRec.PCode = TempPlu;
-//                        GroupRec.PName = TempName;
-//
-//                        GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-//                        GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-//
-//                        GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-//                        GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-//
-//                        GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-//                        GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-//
-//                        GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-//                        GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-//
-//                        GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-//                        GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-//
-//                        GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-//                        GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-//                        if (ArraySize == 0) {
-//                            GArray[ArraySize] = GroupRec;
-//                            ArraySize = GArray.length;
-//                        } else {
-//                            GArray = PUtility.addPluArray(GArray);
-//                            ArraySize = GArray.length;
-//                            GArray[ArraySize - 1] = GroupRec;
-//                        }
-//                        TempGroup = rs.getString("s_dept");
-//                        TempPlu = rs.getString("s_pcode");
-//                        TempName = PUtility.SeekProductName(rs.getString("s_pcode"));
-//                        SumEQty = 0.0;
-//                        SumEAmt = 0.0;
-//                        SumTQty = 0.0;
-//                        SumTAmt = 0.0;
-//                        SumDQty = 0.0;
-//                        SumDAmt = 0.0;
-//                        SumPQty = 0.0;
-//                        SumPAmt = 0.0;
-//                        SumWQty = 0.0;
-//                        SumWAmt = 0.0;
-//                        SumSQty = 0.0;
-//                        SumSAmt = 0.0;
-//                    }
-//                    //if (rec.getString("r_etd").equals("E")) {
-//                    SumEQty = SumEQty + rs.getDouble("sum(e_qty)");
-//                    SumEAmt = SumEAmt + rs.getDouble("sum(e_amt)");
-//                    //}
-//                    //if (rec.getString("r_etd").equals("T")) {
-//                    SumTQty = SumTQty + rs.getDouble("sum(t_qty)");
-//                    SumTAmt = SumTAmt + rs.getDouble("sum(t_amt)");
-//                    //}
-//                    //if (rec.getString("r_etd").equals("D")) {
-//                    SumDQty = SumDQty + rs.getDouble("sum(d_qty)");
-//                    SumDAmt = SumDAmt + rs.getDouble("sum(d_amt)");
-//                    //}
-//                    //if (rec.getString("r_etd").equals("P")) {
-//                    SumPQty = SumPQty + rs.getDouble("sum(p_qty)");
-//                    SumPAmt = SumPAmt + rs.getDouble("sum(p_amt)");
-//                    //}
-//                    //if (rec.getString("r_etd").equals("W")) {
-//                    SumWQty = SumWQty + rs.getDouble("sum(w_qty)");
-//                    SumWAmt = SumWAmt + rs.getDouble("sum(w_amt)");
-//                    //}
-//                    SumSQty = SumSQty + rs.getDouble("sum(s_qty)");
-//                    SumSAmt = SumSAmt + rs.getDouble("sum(s_amt)");
-//            }
-//            if (SumSQty > 0) {
-//                    GroupRec = new PluRec();
-//                    GroupRec.MacNo1 = "";
-//                    GroupRec.MacNo2 = "";
-//                    GroupRec.Cashier1 = "";
-//                    GroupRec.Cashier2 = "";
-//                    GroupRec.Group1 = txtMacNo1.getText();
-//                    GroupRec.Group2 = txtMacNo2.getText();
-//                    GroupRec.Plu1 = txtPlu1.getText();
-//                    GroupRec.Plu2 = txtPlu2.getText();
-//                    GroupRec.GroupCode = TempGroup;
-//                    GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-//                    GroupRec.PCode = TempPlu;
-//                    GroupRec.PName = TempName;
-//
-//                    GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-//                    GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-//
-//                    GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-//                    GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-//
-//                    GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-//                    GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-//
-//                    GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-//                    GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-//
-//                    GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-//                    GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-//
-//                    GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-//                    GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-//                    if (ArraySize == 0) {
-//                        GArray[ArraySize] = GroupRec;
-//                        ArraySize = GArray.length;
-//                    } else {
-//                        GArray = PUtility.addPluArray(GArray);
-//                        ArraySize = GArray.length;
-//                        GArray[ArraySize - 1] = GroupRec;
-//                    }
-//                }
-//
-//            rs.close();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            MSG.ERR(this, e.getMessage());
-//        } finally {
-//            mysql.closeConnection(this.getClass());
-//        }
-//        if (Found) {
-//            Jdi_report_MTDSalePLU view = new Jdi_report_MTDSalePLU(null, true);
-//            view.setData(GArray, txtDate1.getText(), txtDate2.getText());
-//            view.setVisible(true);
-//        } else {
-//            MSG.ERR(this, "ไม่พบข้อมูลตามช่วงที่ต้องการ...");
-//        }
-//        InitScreen();
-//    }
-
+    
     public void MTDPluPrintDriver() {
         String MacNo1 = txtMacNo1.getText();
         String MacNo2 = txtMacNo2.getText();
@@ -1203,9 +987,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         t += "colspan=3 align=left><font face=Angsana New size=1>" + (TAB + "....DELIVERY...." + TAB + ".....PINTO.......") + TAB + "_";
         t += "colspan=3 align=left><font face=Angsana New size=1>" + (TAB + "...WHOLE SALE..." + TAB + ".....TOTAL.......") + TAB + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();

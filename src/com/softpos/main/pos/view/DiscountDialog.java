@@ -1724,9 +1724,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
 
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
@@ -1797,9 +1795,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_EE = 0.00;
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
@@ -1870,9 +1866,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_EE = 0.00;
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
@@ -1941,9 +1935,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_EE = 0.00;
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
@@ -2050,9 +2042,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void LoadDist() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from tablefile where Tcode = '" + tableNo + "' limit 1";
@@ -2153,9 +2143,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void clearCuponSpecail() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         //clear temp cupon
         try {
@@ -2203,9 +2191,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     public void clearMemberDiscount() {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         //clear temp cupon
         try {

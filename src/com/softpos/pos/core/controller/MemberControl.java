@@ -23,9 +23,7 @@ public class MemberControl {
                 strDisc = memberBean.getMember_DiscountRate();
             }
         }
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -54,9 +52,7 @@ public class MemberControl {
     }
 
     public void updateMemberAllBalance(String table, MemberBean memberBean) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             /*
@@ -213,9 +209,7 @@ public class MemberControl {
      */
     public List<Object[]> getAllMembers(String dbMember) {
         List<Object[]> list = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from " + dbMember + ".memmaster order by m_name";
@@ -248,9 +242,7 @@ public class MemberControl {
      */
     public List<Object[]> findMemberByCode(String dbMember, String code) {
         List<Object[]> list = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from " + dbMember + ".memmaster where m_code = '" + code + "' order by m_name";
@@ -284,9 +276,7 @@ public class MemberControl {
     public List<Object[]> findMemberByName(String dbMember, String name) {
         List<Object[]> list = new ArrayList<>();
         String pattern = "%" + name + "%";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from " + dbMember + ".memmaster where m_name like '" + pattern + "' order by m_name";
@@ -320,9 +310,7 @@ public class MemberControl {
     public List<Object[]> findMemberByTel(String dbMember, String tel) {
         List<Object[]> list = new ArrayList<>();
         String pattern = "%" + tel + "%";
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from " + dbMember + ".memmaster "
@@ -358,9 +346,7 @@ public class MemberControl {
      */
     public List<Object[]> getMemberTransactionReport(String dbMember, String code1, String code2, String date1, String date2) {
         List<Object[]> list = new ArrayList<>();
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from mtran left join " + dbMember + ".memmaster on mtran.m_code=memmaster.m_code "
@@ -409,9 +395,7 @@ public class MemberControl {
     }
 
     public void updateMemVIPAllBalance(String table, String discountRate) {
-        /**
-         * * OPEN CONNECTION **
-         */
+
         mysqlConnect.open(this.getClass());
         try {
             /*

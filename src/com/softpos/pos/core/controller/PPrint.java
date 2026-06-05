@@ -974,22 +974,14 @@ public class PPrint {
                         t += "colspan=3 align=center><font face=Angsana New size=3>" + POSHW.getHeading4().trim().replace(" ", "&nbsp; ") + "_";
                     }
                 }
-//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading3().trim()) + "_";
-//                t += "colspan=3 align=center><font face=Angsana New size=2>" + (POSHW.getHeading4().trim()) + "_";
-
                 t += "colspan=3 align=center><font face=Angsana New size=2>" + "REG ID :" + POSHW.getMacNo() + "_";
                 t += "colspan=3 align=center><font face=Angsana New size=3> " + "-----------------------------------------_";
-//                t += "colspan=2 align=left><font face=Angsana New size=2> "
-//                        + PPrint_DatefmtThai.format(dateP).replace("/", " / ")
-//                        + "</td><td align=right><font face=Angsana New size=2>"
-//                        + "TABLE :" + Space + tableNo + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + PPrint_DatefmtThai.format(dateP).replace("/", " / ") + "_";
                 t += "colspan=2 align=left><font face=Angsana New size=2> "
                         + "TABLE :" + Space + tableNo + "_";
                 t += "colspan=3 align=left><font face=Angsana New size=2> " + "CC : " + IntFmt.format(bBean.getB_Cust())
                         + " Seat :"
-                        //                        + "</td><td align=left><font face=Angsana New size=2>"
                         + TAB + TAB
                         + "ชื่อ:"
                         + getLastEmployeeCheckBill(tableNo, _RefNo) + "_";
@@ -1161,13 +1153,8 @@ public class PPrint {
             }
 
             if (bBean.getB_CuponDiscAmt() > 0) {
-//                List<Object[]> list = printCuponName(_RefNo);
-//                String CuName;
-//                if (list != null && list.size() > 0) {
-//                    CuName = list.get(0)[0].toString();
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + "**ส่วนลดยกเว้นไวน์ และรายการโปรโมชั่นปกติ**" + "_");
                 t += ("colspan=2 align=left><font face=Angsana New size=2>" + Space + bBean.getB_CuponName() + " : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(bBean.getB_CuponDiscAmt())) + " -" + "_";
-//                }
             }
             totalDiscount = bBean.getB_ProDiscAmt() + bBean.getB_SpaDiscAmt()
                     + bBean.getB_FastDiscAmt() + bBean.getB_EmpDiscAmt() + bBean.getB_TrainDiscAmt()
@@ -1733,9 +1720,6 @@ public class PPrint {
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "colspan=3 align=left><font face=Angsana New size=2>"
                                         + subStringText(ThaiUtil.ASCII2Unicode(TAB + bean.getR_Opt1()), 30) + "_";
-//                                t1 += "></td><td align=left colspan=2>"
-//                                        + "<font face=Angsana New size=2>"
-//                                        + SubStringText(ThaiUtil.ASCII2Unicode(bean.getR_Opt1()), 30) + "_";
                             }
                         }
                     } else {
@@ -1931,7 +1915,6 @@ public class PPrint {
                                     + df.format(bean.getR_Quan())
                                     + "</td></font><td align=left width=-30%><font face=Angsana New size=2>"
                                     + subStringText(bean.getR_PName(), 20)
-                                    //                                + bean.getR_Normal() + VatStr + "" + bean.getR_PName()
                                     + "</td></font><td align=right width=50><font face=Angsana New size=2>"
                                     + DecFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
                             if (!bean.getR_Opt1().equals("")) {
@@ -3541,7 +3524,6 @@ public class PPrint {
                     TempDept = GArray[i].GroupCode;
                 }
 
-//                t += "align=left><font face=Angsana New size=2>" + SubStringText(GArray[i].PCode + Space + GArray[i].PName, 33) + "_";
                 t += "align=left><font face=Angsana New size=2>" + subStringText(GArray[i].PCode, 33) + "_";
                 t += "align=left><font face=Angsana New size=2>" + subStringText(Space + GArray[i].PName, 33) + "_";
                 t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(GArray[i].E_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].E_Amt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(GArray[i].T_Qty), 3) + pUtility.DataFullSpace(DecFmt.format(GArray[i].T_Amt), 10) + "_");
@@ -3690,7 +3672,6 @@ public class PPrint {
                     }
 
                     print("----------------------------------------");
-//                print("Sub-TOTAL   " + "(Item" + PUtility.DataFull(IntFmt.format(ItemCnt), QtyLength) + " )     " + PUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     print("Sub-TOTAL         " + pUtility.DataFull(DecFmt.format(tBean.getB_Total()), AmtLength));
                     print("COMP NO:" + PublicVar._User + " Mac:" + PublicVar.MACNO);
                     if (tBean.getB_ProDiscAmt() > 0) {
@@ -4276,9 +4257,7 @@ public class PPrint {
                         print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
-                        /**
-                         * * OPEN CONNECTION **
-                         */
+                        
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -4322,9 +4301,7 @@ public class PPrint {
                     if (bBean.getB_GiftVoucher() > 0) {
                         print("     " + pUtility.DataFullR("บัตรกำนัล..............", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
-                        /**
-                         * * OPEN CONNECTION **
-                         */
+                        
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -430,9 +430,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         CrArray = null;
 
         int ArraySize = 0;
-        /**
-         * * OPEN CONNECTION **
-         */
+
         
         mysqlConnect.open(this.getClass());
         try {
@@ -744,9 +742,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print("----------------------------------------");
                 prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
                 prn.print("----------------------------------------");
-                /**
-                 * * OPEN CONNECTION **
-                 */
+
                 mysqlConnect.open(this.getClass());
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();

@@ -116,9 +116,7 @@ public class ServiceControl {
             TableFileControl tfc = AppContext.getTableFileControl();
             TableFileBean tBean = tfc.getData(table);
 
-            /**
-             * * OPEN CONNECTION **
-             */
+            
             mysqlConnect.open(this.getClass());
 
             ServiceAmt = getDouble(ServiceAmt, "SERVICE");
