@@ -3,10 +3,10 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
-import com.softpos.main.floorplan.view.PaidinFrm;
-import com.softpos.main.floorplan.view.RefundBill;
+import com.softpos.main.floorplan.view.PaidinFormDialog;
+import com.softpos.main.floorplan.view.RefundBillDialog;
 import com.softpos.main.floorplan.view.SaleInfoPanel;
-import com.softpos.main.floorplan.view.ShowTable;
+import com.softpos.main.floorplan.view.ShowTableDialog;
 import com.softpos.pos.core.controller.MemberControl;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BranchControl;
@@ -25,10 +25,10 @@ import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.program.ArHistory;
 import com.softpos.main.program.ArNotPay;
 import com.softpos.main.program.CancelArPayment;
-import com.softpos.main.program.CancelCashBack;
+import com.softpos.main.program.CancelCashBackDialog;
 import com.softpos.main.program.CashBackDialog;
 import com.softpos.main.payment.view.CheckBill;
-import com.softpos.main.program.CopyBill;
+import com.softpos.main.program.CopyBillDialog;
 import com.softpos.main.program.CustomerName;
 import com.softpos.main.program.GetQty;
 import com.softpos.main.program.GetUserAction;
@@ -1660,7 +1660,7 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        CancelCashBack c = new CancelCashBack(new JFrame(), true);
+        CancelCashBackDialog c = new CancelCashBackDialog(new JFrame(), true);
         c.setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
@@ -2989,7 +2989,7 @@ public class MainSale extends javax.swing.JDialog {
             return;
         }
         if (model.getRowCount() == 0) {
-            PaidinFrm frm = new PaidinFrm(this, true);
+            PaidinFormDialog frm = new PaidinFormDialog(this, true);
             frm.setVisible(true);
         }
     }
@@ -3001,7 +3001,7 @@ public class MainSale extends javax.swing.JDialog {
     private void showTableAvialble() {
         if (!PUtility.CheckCashierClose(PublicVar._User)) {
             if (txtTable.getText().trim().equals("")) {
-                ShowTable frm = new ShowTable(new JFrame(), true);
+                ShowTableDialog frm = new ShowTableDialog(new JFrame(), true);
                 frm.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
@@ -3035,7 +3035,7 @@ public class MainSale extends javax.swing.JDialog {
             return;
         }
         if (model.getRowCount() == 0) {
-            CopyBill frm = new CopyBill(new JFrame(), true);
+            CopyBillDialog frm = new CopyBillDialog(new JFrame(), true);
             frm.setVisible(true);
             initScreen();
         }
@@ -3048,7 +3048,7 @@ public class MainSale extends javax.swing.JDialog {
         PublicVar.TempUserRec = PublicVar.TUserRec;
         if (model.getRowCount() == 0) {
             if (posUser.getSale2().equals("Y")) {
-                RefundBill frm = new RefundBill(new JFrame(), true);
+                RefundBillDialog frm = new RefundBillDialog(new JFrame(), true);
                 frm.setVisible(true);
                 PublicVar.P_ItemCount = 0;
                 initScreen();
@@ -3060,7 +3060,7 @@ public class MainSale extends javax.swing.JDialog {
                     if (posUser.getUserName() != null) {
                         if (posUser.getSale2().equals("Y")) {
                             PublicVar.TUserRec = posUser;
-                            RefundBill frm = new RefundBill(new JFrame(), true);
+                            RefundBillDialog frm = new RefundBillDialog(new JFrame(), true);
                             frm.setVisible(true);
                             PublicVar.P_ItemCount = 0;
                             initScreen();
@@ -3333,7 +3333,6 @@ public class MainSale extends javax.swing.JDialog {
         if (model.getRowCount() > 0) {
             kichenPrint();
             btnPaymentClick();
-            showSum();
         }
     }
 

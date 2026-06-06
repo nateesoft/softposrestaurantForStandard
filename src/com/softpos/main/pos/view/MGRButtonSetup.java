@@ -1,6 +1,6 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.main.program.DlgBrowseProduct;
+import com.softpos.main.program.ShowAllProductDialog;
 import com.softpos.pos.core.controller.MgrButtonController;
 import com.softpos.util.AppLogUtil;
 import java.awt.Font;
@@ -330,8 +330,8 @@ public class MGRButtonSetup extends javax.swing.JDialog {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        btnSave.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnSave.setText("บันทึก / Exit");
+        btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnSave.setText("บันทึก");
         btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSaveMouseClicked(evt);
@@ -348,16 +348,16 @@ public class MGRButtonSetup extends javax.swing.JDialog {
             }
         });
 
-        btnDelete.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnDelete.setText("ลบปุ่ม (Delete)");
+        btnDelete.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnDelete.setText("ลบปุ่ม");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
             }
         });
 
-        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnCancel.setText("ยกเลิก (Cancel)");
+        btnCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCancel.setText("ยกเลิก");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
@@ -368,14 +368,14 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnSave)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDelete)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -650,9 +650,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane6)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -907,7 +905,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
 //            md.removeRow(0);
 //        }
 
-        DlgBrowseProduct browse = new DlgBrowseProduct(null, true);
+        ShowAllProductDialog browse = new ShowAllProductDialog(null, true);
         browse.setVisible(true);
         if (browse.getSelectPlu() != null) {
 
@@ -929,7 +927,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
 //        for (int i = 0; i < size; i++) {
 //            md.removeRow(0);
 //        }
-        DlgBrowseProduct browse = new DlgBrowseProduct(null, true);
+        ShowAllProductDialog browse = new ShowAllProductDialog(null, true);
         browse.setVisible(true);
         if (browse.getSelectPlu() != null) {
 
@@ -953,7 +951,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
 //        }
         try {
 
-            DlgBrowseProduct browse = new DlgBrowseProduct(null, true);
+            ShowAllProductDialog browse = new ShowAllProductDialog(null, true);
             browse.setVisible(true);
 
             if (browse.getSelectPlu() != null) {

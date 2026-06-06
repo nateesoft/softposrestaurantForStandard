@@ -23,7 +23,7 @@ public class GetVoidMsg extends javax.swing.JDialog {
         setTitle("สาเหตุการยกเลิก");
         setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("สาเหตการยกเลิก");
 
         txtVoid.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -41,7 +41,7 @@ public class GetVoidMsg extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtVoid, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addComponent(txtVoid, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

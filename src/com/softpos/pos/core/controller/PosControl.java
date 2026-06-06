@@ -3,7 +3,7 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.util.ThaiUtil;
 import com.softpos.constants.PublicVar;
-import com.softpos.main.floorplan.view.ShowTable;
+import com.softpos.main.floorplan.view.ShowTableDialog;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.model.CompanyBean;
@@ -553,7 +553,7 @@ public class PosControl {
             }
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(ShowTable.class, "error", e);
+            AppLogUtil.log(ShowTableDialog.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
         }

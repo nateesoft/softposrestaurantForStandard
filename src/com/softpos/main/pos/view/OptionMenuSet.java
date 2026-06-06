@@ -1,6 +1,6 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.main.program.DlgBrowseProduct;
+import com.softpos.main.program.ShowAllProductDialog;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.OptionMenuSetController;
 import java.awt.Font;
@@ -53,8 +53,8 @@ public class OptionMenuSet extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton4.setText("ปิดหน้าต่าง (Close)");
+        jButton4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton4.setText("ยกเลิก");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -172,7 +172,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
@@ -216,7 +216,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -272,7 +272,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     }//GEN-LAST:event_btnFindProductMouseClicked
 
     private void btnFindProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindProductActionPerformed
-        DlgBrowseProduct browse = new DlgBrowseProduct(new JFrame(), true);
+        ShowAllProductDialog browse = new ShowAllProductDialog(new JFrame(), true);
         browse.setVisible(true);
         if (browse.getSelectPlu() != null) {
             txtPCode.setText(browse.getSelectPlu().getCode());

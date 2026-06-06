@@ -4,7 +4,7 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.FloorPlanController;
 import com.softpos.main.login.FileSettingDialog;
 import com.softpos.main.program.CheckStockNow;
-import com.softpos.main.program.CopyBill;
+import com.softpos.main.program.CopyBillDialog;
 import com.softpos.main.program.DisplayEJ;
 import com.softpos.main.program.GetQty;
 import com.softpos.main.program.GetUserAction;
@@ -1160,7 +1160,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        SetupFloorPlanHeader setup = new SetupFloorPlanHeader(this, true);
+        SetupFloorPlanHeaderDialog setup = new SetupFloorPlanHeaderDialog(this, true);
         setup.setVisible(true);
 
         loadHeaderTab(PosControl.getDataCompany());
@@ -1168,14 +1168,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         if (checkEJPath()) {
-            DailyRep frm = new DailyRep(this, true);
+            DailyReportDialog frm = new DailyReportDialog(this, true);
             frm.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         if (checkEJPath()) {
-            MTDRep frm = new MTDRep(this, true);
+            MTDReportDialog frm = new MTDReportDialog(this, true);
             frm.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -1203,12 +1203,12 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        PaidinFrm frm = new PaidinFrm(new JDialog(), true);
+        PaidinFormDialog frm = new PaidinFormDialog(new JDialog(), true);
         frm.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        ResonPaidoutFrm frm = new ResonPaidoutFrm(new JDialog(), true);
+        ResonPaidoutFormDialog frm = new ResonPaidoutFormDialog(new JDialog(), true);
         frm.setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
@@ -1217,7 +1217,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        ShowTable s = new ShowTable(this, true);
+        ShowTableDialog s = new ShowTableDialog(this, true);
         setVisible(false);
         s.setVisible(true);
         if (!PublicVar.TableSelected.equals("")) {
@@ -1232,7 +1232,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        MoveGroupTable move = new MoveGroupTable(this, true);
+        MoveGroupTableDialog move = new MoveGroupTableDialog(this, true);
         move.setVisible(true);
         addButton();
     }//GEN-LAST:event_jMenuItem12ActionPerformed
@@ -1276,7 +1276,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem30ActionPerformed
-        CheckProductNotEnough cp = new CheckProductNotEnough(this, true);
+        CheckProductNotEnoughDialog cp = new CheckProductNotEnoughDialog(this, true);
         cp.setVisible(true);
     }//GEN-LAST:event_jMenuItem30ActionPerformed
 
@@ -1306,7 +1306,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        SetupButtonTable setup = new SetupButtonTable(this, true, PublicVar.BTN_FLOORPLAN);
+        SetupButtonTableDialog setup = new SetupButtonTableDialog(this, true, PublicVar.BTN_FLOORPLAN);
         setup.setVisible(true);
 
         if (setup.isActionButton()) {
@@ -1339,8 +1339,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuBar1MouseClicked
 
     private void jMenuItem33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem33ActionPerformed
-        CopyBill c = new CopyBill(this, true);
-        c.setVisible(true);
+        CopyBillDialog copyBillDialog = new CopyBillDialog(this, true);
+        copyBillDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
@@ -1348,7 +1348,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-        DiarySale d = new DiarySale(new JDialog(), true);
+        DiarySaleReportDialog d = new DiarySaleReportDialog(new JDialog(), true);
         d.setVisible(true);
     }//GEN-LAST:event_jMenuItem19ActionPerformed
 
@@ -1999,7 +1999,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         PosUserController posUserControl = AppContext.getPosUserController();
         boolean isPermit = posUserControl.getPosUser().getSale2().equals("Y");
         if (isPermit) {
-            RefundBill refund = new RefundBill(this, true);
+            RefundBillDialog refund = new RefundBillDialog(this, true);
             refund.setVisible(true);
         } else {
             GetUserAction getuser = new GetUserAction(this, true);
@@ -2008,11 +2008,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             if (!PublicVar.ReturnString.equals("")) {
                 if (posUser.getUserName() != null) {
                     if (!PublicVar.ReturnString.equals(posUser.getUserName()) && PublicVar.ReturnPermitRefund == true) {
-                        RefundBill refund = new RefundBill(this, true);
+                        RefundBillDialog refund = new RefundBillDialog(this, true);
                         refund.setVisible(true);
                     } else {
                         if (posUser.getSale2().equals("Y")) {
-                            RefundBill refund = new RefundBill(this, true);
+                            RefundBillDialog refund = new RefundBillDialog(this, true);
                             refund.setVisible(true);
                         } else {
                             MSG.WAR(this, "รหัสพนักงานนี้ไม่สามารถเข้าใช้งาน...รายการนี้ได้...!!!");
@@ -2407,7 +2407,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                         AppLogUtil.info("P_EmpUse: " + P_EmpUse);
                         
                         // get employee password
-                        EmployLogin login = new EmployLogin(new JFrame(), true);
+                        EmployLoginDialog login = new EmployLoginDialog(new JFrame(), true);
                         login.setVisible(true);
 
                         if (!login.getLoginPWD().equals("")) {

@@ -96,8 +96,8 @@ public class AutoSumXRep extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,7 +106,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        chkTerminal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkTerminal.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkTerminal.setText("รายงานยอดการเงินของเครื่อง (Terminal Report)");
         chkTerminal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,7 +119,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkCashier.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkCashier.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkCashier.setText("รายงานยอดขายตามพนักงานขาย (Cashier Report)");
         chkCashier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -132,7 +132,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkGroup.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkGroup.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkGroup.setText("รายงานการขายตามกลุ่มสินค้า (Department/Group Report)");
         chkGroup.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -140,7 +140,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkPlu.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkPlu.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkPlu.setText("รายงานการขายตามรหัสสินค้า (PLU-Code Report)");
         chkPlu.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -148,7 +148,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkHourly.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkHourly.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkHourly.setText("รายงานการขายตามช่วงเวลา (Hourly Report)");
         chkHourly.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -156,7 +156,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkReceipt.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkReceipt.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkReceipt.setText("รายงานการขายตามบิล/ใบกำกับภาษีอย่างย่อ (Receipt Report)");
         chkReceipt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -164,7 +164,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkVoid.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkVoid.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkVoid.setText("รายงานการทำรายการ Void (Void Report)");
         chkVoid.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -172,7 +172,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkCredit.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkCredit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkCredit.setText("รายงานการรับชำระด้วยบัตรเครดิต (Credit Report)");
         chkCredit.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -180,7 +180,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        chkGiftVoucher.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chkGiftVoucher.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chkGiftVoucher.setText("รายงานการรับชำระด้วยบัตรของขวัญ (Gift Voucher Report)");
         chkGiftVoucher.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -188,7 +188,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        ChkCharge.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        ChkCharge.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         ChkCharge.setText("รายงานการใช้ชาร์จประจำวัน (Daily Charge Report)");
         ChkCharge.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -241,8 +241,8 @@ public class AutoSumXRep extends javax.swing.JDialog {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        bntSelectAll.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntSelectAll.setText("F2 เลือกทุกรายงาน");
+        bntSelectAll.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntSelectAll.setText("เลือกทุกรายงาน");
         bntSelectAll.setFocusable(false);
         bntSelectAll.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -250,8 +250,8 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        bntOK.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntOK.setText("F5 พิมพ์");
+        bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK.setText("พิมพ์");
         bntOK.setFocusable(false);
         bntOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -259,8 +259,8 @@ public class AutoSumXRep extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        bntExit.setText("ESC ออก");
+        bntExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntExit.setText("ยกเลิก");
         bntExit.setFocusable(false);
         bntExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -299,15 +299,16 @@ public class AutoSumXRep extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(bntSelectAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bntSelectAll, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -337,7 +338,7 @@ public class AutoSumXRep extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 20, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();

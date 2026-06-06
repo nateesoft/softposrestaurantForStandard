@@ -324,8 +324,8 @@ public class ChangTypeDialog extends javax.swing.JDialog {
         });
         jPanel1.add(bntWholeSale);
 
-        bntCancel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bntCancel.setText("ESC ปิดหน้าจอ");
+        bntCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntCancel.setText("ยกเลิก");
         bntCancel.setRequestFocusEnabled(false);
         bntCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -354,9 +354,9 @@ public class ChangTypeDialog extends javax.swing.JDialog {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(ChkAllType)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntCancel)
+                        .addComponent(bntCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1)

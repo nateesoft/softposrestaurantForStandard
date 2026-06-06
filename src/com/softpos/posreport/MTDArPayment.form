@@ -49,17 +49,14 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jPanel2" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel2" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
-                          <Component id="bntOK" min="-2" pref="120" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                          <Component id="bntExit" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="bntExit" min="-2" pref="120" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="bntOK" min="-2" pref="120" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -85,9 +82,9 @@
         <Component class="javax.swing.JButton" name="bntExit">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="14" style="1"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="ESC- &#xe2d;&#xe2d;&#xe01;"/>
+            <Property name="text" type="java.lang.String" value="&#xe22;&#xe01;&#xe40;&#xe25;&#xe34;&#xe01;"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -99,7 +96,7 @@
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="&#xe0a;&#xe48;&#xe27;&#xe07;&#xe27;&#xe31;&#xe19;&#xe17;&#xe35;&#xe48;&#xe46; &#xe15;&#xe49;&#xe2d;&#xe07;&#xe01;&#xe32;&#xe23; (Date)">
-                  <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
+                  <Font PropertyName="font" name="Tahoma" size="12" style="0"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -127,10 +124,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="txtDate1" alignment="2" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="txtDate1" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
                           <Component id="cmdDateChoose1" alignment="2" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="jLabel5" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtDate2" alignment="2" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="txtDate2" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
                           <Component id="cmdDateChoose2" alignment="2" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -198,9 +195,9 @@
         <Component class="javax.swing.JButton" name="bntOK">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="14" style="1"/>
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="F5- &#xe1e;&#xe34;&#xe21;&#xe1e;&#xe4c;"/>
+            <Property name="text" type="java.lang.String" value="&#xe1e;&#xe34;&#xe21;&#xe1e;&#xe4c;"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
