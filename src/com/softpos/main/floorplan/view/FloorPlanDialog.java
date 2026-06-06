@@ -1335,7 +1335,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        MSG.NOTICE(this, "Software Restaurant SOFTPOS©2024 V.9");
+        MSG.NOTICE(this, "Software Restaurant ICS©2026 V1.0");
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed

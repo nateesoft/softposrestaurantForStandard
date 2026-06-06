@@ -97,6 +97,8 @@ public class MainSale extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private POSConfigSetup CONFIG;
     public static String INDEX_NAME = "";
+    private static final int BACK_BUTTON_SLOT = 15;
+    private static final int MENU_SUFFIX_LEN = 2;
     private List<Integer> historyBack;
     private DecimalFormat dc1 = new DecimalFormat("#,##0.00");
     private MemberBean memberBean;
@@ -1720,7 +1722,6 @@ public class MainSale extends javax.swing.JDialog {
 
     private void txtProductCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductCodeFocusGained
         txtProductCode.setEditable(true);
-        txtProductCode.requestFocus();
     }//GEN-LAST:event_txtProductCodeFocusGained
 
     boolean isSelected = false;
@@ -1737,7 +1738,9 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCustMouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        MGRButtonMenu mgr = new MGRButtonMenu(new JFrame(), true, buttonName, buttonIndex);
+        java.awt.Window parentWindow = this.getOwner();
+        java.awt.Frame parentFrame = (parentWindow instanceof java.awt.Frame) ? (java.awt.Frame) parentWindow : null;
+        MGRButtonMenu mgr = new MGRButtonMenu(parentFrame, true, buttonName, buttonIndex);
         mgr.setVisible(true);
 
         loadButtonProductMenu(refreshMenuButtonGroup(buttonName));
@@ -3444,6 +3447,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private String buttonName;
     private int buttonIndex;
+    private final ButtonCustom buttonCustom = new ButtonCustom();
 
     private void addMouseEvent(final JButton btn, final int index) {
         java.awt.event.MouseListener listener = new java.awt.event.MouseAdapter() {
@@ -3778,7 +3782,7 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private String refreshMenuButtonGroup(String buttonName) {
-        String panelGroup = buttonName.substring(0, buttonName.length() - 2);
+        String panelGroup = buttonName.substring(0, buttonName.length() - MENU_SUFFIX_LEN);
         if (panelGroup.length() <= 0) {
             panelGroup = buttonName;
         }
@@ -3858,7 +3862,6 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void loadButtonProductMenu(String menuCode) {
-        ButtonCustom buttonCustom = new ButtonCustom();
         List<MenuMGR> listMenu = buttonCustom.getDataButtonLayout(menuCode);
         JButton[] btnGrid = new JButton[]{
             btnP1, btnP2, btnP3, btnP4, btnP5, btnP6, btnP7, btnP8,
@@ -3866,23 +3869,20 @@ public class MainSale extends javax.swing.JDialog {
         };
 
         for (int i = 0; i < btnGrid.length; i++) {
-            JButton btn = btnGrid[i];
-            java.awt.event.MouseListener old = (java.awt.event.MouseListener) btn.getClientProperty("rightClickListener");
+            java.awt.event.MouseListener old = (java.awt.event.MouseListener) btnGrid[i].getClientProperty("rightClickListener");
             if (old != null) {
-                btn.removeMouseListener(old);
+                btnGrid[i].removeMouseListener(old);
             }
-            btn = buttonCustom.buttonDefault(btn);
-            String btnIndex = getButtonIndex(i);
-            btn.setName(menuCode + btnIndex);
-            addMouseEvent(btn, i);
+            buttonCustom.buttonDefault(btnGrid[i]);
+            btnGrid[i].setName(menuCode + getButtonIndex(i));
+            addMouseEvent(btnGrid[i], i);
         }
 
-        for (int i = 0; i < listMenu.size(); i++) {
-            final MenuMGR menu = listMenu.get(i);
-            if (menu.getMIndex() >= 15) {
-                continue; // slot 15 reserved for back button
+        for (MenuMGR menu : listMenu) {
+            if (menu.getMIndex() >= BACK_BUTTON_SLOT) {
+                continue;
             }
-            btnGrid[menu.getMIndex()] = buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
+            buttonCustom.getButtonLayout(menu, btnGrid[menu.getMIndex()]);
             btnGrid[menu.getMIndex()].addActionListener((ActionEvent e) -> {
                 JButton btnMenu = (JButton) e.getSource();
                 if (menu.getPCode().equals("")) {
@@ -3893,20 +3893,16 @@ public class MainSale extends javax.swing.JDialog {
             });
         }
 
-        // add back button
-        btnGrid[15].setText("กลับ");
-        btnGrid[15].setName(menuCode);
-        btnGrid[15].setFocusable(false);
-        btnGrid[15].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
-        btnGrid[15].setBackground(Color.GRAY);
-        btnGrid[15].addActionListener((ActionEvent e) -> {
+        btnGrid[BACK_BUTTON_SLOT].setText("กลับ");
+        btnGrid[BACK_BUTTON_SLOT].setName(menuCode);
+        btnGrid[BACK_BUTTON_SLOT].setFocusable(false);
+        btnGrid[BACK_BUTTON_SLOT].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+        btnGrid[BACK_BUTTON_SLOT].setBackground(Color.GRAY);
+        btnGrid[BACK_BUTTON_SLOT].addActionListener((ActionEvent e) -> {
             JButton btn = (JButton) e.getSource();
-            if (btn.getName() != null) {
-                String btnName = btn.getName();
-                if (btnName.length() >= 3) {
-                    String backMenu = btnName.substring(0, btnName.length() - 2);
-                    loadButtonProductMenu(backMenu);
-                }
+            if (btn.getName() != null && btn.getName().length() > MENU_SUFFIX_LEN) {
+                String backMenu = btn.getName().substring(0, btn.getName().length() - MENU_SUFFIX_LEN);
+                loadButtonProductMenu(backMenu);
             }
         });
     }

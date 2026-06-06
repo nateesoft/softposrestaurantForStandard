@@ -31,6 +31,14 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     public MGRButtonMenu(java.awt.Frame parent, boolean modal, String menuCode, int menuIndex) {
         super(parent, modal);
         initComponents();
+        setAlwaysOnTop(false); // macOS: alwaysOnTop breaks keyboard focus in modal dialogs
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                toFront();
+                requestFocus();
+            }
+        });
 
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
@@ -889,7 +897,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     saveMenuAll(mgr);
                 }
                 editOK = true;
-                this.setVisible(false);//dispose();
+                this.setVisible(false);
             }
         } else {
             if (txtPCode.getText().trim().equals("")) {
@@ -900,7 +908,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     saveMenuAll(mgr);
                 }
                 editOK = true;
-                this.setVisible(false);//dispose();
+                this.setVisible(false);
             }
         }
     }
@@ -913,7 +921,6 @@ public class MGRButtonMenu extends javax.swing.JDialog {
 
     private void saveMenu(MenuMGR mgr) {
         if (mgrButtonController.saveMenuSetup(mgr)) {
-            MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
             this.setVisible(false);
         }
     }

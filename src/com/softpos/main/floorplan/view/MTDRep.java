@@ -96,8 +96,8 @@ public class MTDRep extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(FunctionList);
 
-        bntOK.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bntOK.setText("Enter เลือกรายการ");
+        bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK.setText("เลือกรายการ");
         bntOK.setFocusable(false);
         bntOK.setMargin(new java.awt.Insets(1, 1, 1, 1));
         bntOK.setRequestFocusEnabled(false);
@@ -107,8 +107,8 @@ public class MTDRep extends javax.swing.JDialog {
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        bntExit.setText("ESC ออกจากหน้าจอ");
+        bntExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntExit.setText("ยกเลิก");
         bntExit.setFocusable(false);
         bntExit.setMargin(new java.awt.Insets(1, 1, 1, 1));
         bntExit.setRequestFocusEnabled(false);
@@ -129,11 +129,11 @@ public class MTDRep extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1)))
+                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -144,15 +144,15 @@ public class MTDRep extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 554, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                            .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(845, 726));
+        setSize(new java.awt.Dimension(845, 439));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
