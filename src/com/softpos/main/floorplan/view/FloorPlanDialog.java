@@ -131,6 +131,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         
         // Pure UI setup — no DB calls
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        AdvertisingScreen.open();
         PublicVar.TableSelected = "";
         jMenu9.setVisible(false);
         jMenu1.setVisible(true);
@@ -1289,6 +1290,14 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         fd.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            AdvertisingScreen.showAds();
+        }
+        super.setVisible(visible);
+    }
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         jMenuItem6.setVisible(false);
         MShowDailyEJ1.setVisible(false);
@@ -1902,6 +1911,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             PublicVar.CASHIER = "";
             clearTemp();
             PosControl.logout();
+            AdvertisingScreen.close();
             System.exit(0);
         } else {
             PublicVar.countRound = 0;

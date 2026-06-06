@@ -1,9 +1,11 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
+import com.softpos.main.floorplan.view.AdvertisingScreen;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.floorplan.view.PaidinFrm;
 import com.softpos.main.floorplan.view.RefundBill;
+import com.softpos.main.floorplan.view.SaleInfoPanel;
 import com.softpos.main.floorplan.view.ShowTable;
 import com.softpos.pos.core.controller.MemberControl;
 import com.softpos.pos.core.controller.BalanceControl;
@@ -326,6 +328,14 @@ public class MainSale extends javax.swing.JDialog {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            AdvertisingScreen.showAds();
+        }
+        super.setVisible(visible);
     }
 
     private void loadLoginForm() {
@@ -1447,6 +1457,39 @@ public class MainSale extends javax.swing.JDialog {
             txtMember1.setText(memberBean.getMember_NameThai());
             txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
         }
+
+        pushToAdvertisingScreen(tfBean, totalDiscount);
+    }
+
+    private void pushToAdvertisingScreen(TableFileBean tfBean, double totalDiscount) {
+        List<SaleInfoPanel.Item> adsItems = new ArrayList<>();
+        List<BalanceBean> listBalance = balanceControl.loadTableBalance(tableNo);
+        for (BalanceBean b : listBalance) {
+            if ("V".equals(b.getR_Void())) continue;
+            String pluCode = b.getR_PluCode();
+            if (pluCode == null || pluCode.trim().isEmpty()) continue;
+            String name = (b.getR_ETD() + " " + b.getR_PName()).trim();
+            double quan = b.getR_Quan();
+            String qty = (quan == Math.floor(quan)) ? String.valueOf((int) quan) : dc1.format(quan);
+            adsItems.add(new SaleInfoPanel.Item(name, qty, dc1.format(b.getR_Total())));
+        }
+
+        double serviceAmt = tfBean.getServiceAmt();
+        double vatAmt = 0;
+        double grandTotal;
+        double subTotal = tfBean.getTAmount() - totalDiscount;
+
+        if (CONFIG.getP_VatType().equals("I")) {
+            grandTotal = CONFIG.getP_PayBahtRound().equals("O")
+                    ? tfBean.getNetTotal()
+                    : NumberUtil.UP_DOWN_NATURAL_BAHT(tfBean.getNetTotal());
+        } else {
+            vatAmt = (subTotal + serviceAmt) * 7 / 100;
+            grandTotal = subTotal + serviceAmt + vatAmt;
+        }
+
+        AdvertisingScreen.showSaleInfo(tableNo, tfBean.getTCustomer(), adsItems,
+                subTotal, serviceAmt, vatAmt, grandTotal);
     }
 
     private void txtCustKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustKeyPressed

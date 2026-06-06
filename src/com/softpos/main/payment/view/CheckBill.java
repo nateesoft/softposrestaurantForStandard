@@ -18,6 +18,8 @@ import com.softpos.pos.core.controller.CheckBillController;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.main.floorplan.view.AdvertisingScreen;
+import com.softpos.main.floorplan.view.SaleInfoPanel;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
@@ -55,6 +57,7 @@ public class CheckBill extends javax.swing.JDialog {
     private DiscountBean discBean = new DiscountBean();
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
+    private double originalGrandTotal = 0;
     private POSConfigSetup CONFIG;
     private CheckBillController checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
@@ -1951,6 +1954,70 @@ public class CheckBill extends javax.swing.JDialog {
             txtSubTotal.setText(dec.format(totalDiscount));
             bntCashActionPerformed(null);
         }
+        originalGrandTotal = parseAmount(txtTotalAmount.getText());
+        pushPaymentInfo();
+    }
+
+    private double parseAmount(String text) {
+        try {
+            return Double.parseDouble(text.replace(",", ""));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void pushPaymentInfo() {
+        java.util.List<SaleInfoPanel.Item> payLines = new java.util.ArrayList<>();
+
+        double cashAmt = parseAmount(txtCashAmount.getText());
+        if (cashAmt > 0) {
+            payLines.add(new SaleInfoPanel.Item("เงินสด", "", dec.format(cashAmt)));
+        }
+
+        double creditAmt = parseAmount(txtCreditAmount.getText());
+        if (creditAmt > 0) {
+            String cName = txtCreditName.getText().trim().isEmpty() ? "บัตรเครดิต" : "บัตร " + txtCreditName.getText().trim();
+            payLines.add(new SaleInfoPanel.Item(cName, "", dec.format(creditAmt)));
+        }
+
+        double giftAmt = parseAmount(txtGiftVoucherAmount.getText());
+        if (giftAmt > 0) {
+            payLines.add(new SaleInfoPanel.Item("Gift Voucher", "", dec.format(giftAmt)));
+        }
+
+        double arAmt = parseAmount(txtArAmount.getText());
+        if (arAmt > 0) {
+            payLines.add(new SaleInfoPanel.Item("ลูกหนี้ AR", "", dec.format(arAmt)));
+        }
+
+        double entertainAmt = parseAmount(txtEntertainAmount.getText());
+        if (entertainAmt > 0) {
+            payLines.add(new SaleInfoPanel.Item("Entertainment", "", dec.format(entertainAmt)));
+        }
+
+        double returnAmt = parseAmount(txtReturnMoneyAmount.getText());
+        if (returnAmt > 0) {
+            payLines.add(new SaleInfoPanel.Item("หักมัดจำ", "", dec.format(returnAmt)));
+        }
+
+        boolean isPaid = "เงินทอน".equals(Digital_Msg.getText());
+        double change = isPaid ? parseAmount(txtTotalAmount.getText()) : 0;
+
+        AdvertisingScreen.showPaymentInfo(tableNo, payLines, originalGrandTotal, change);
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            AdvertisingScreen.showAds();
+        }
+        super.setVisible(visible);
+    }
+
+    @Override
+    public void dispose() {
+        AdvertisingScreen.showAds();
+        super.dispose();
     }
 
     private void backspaceText() {
@@ -2328,6 +2395,7 @@ public class CheckBill extends javax.swing.JDialog {
         }
 
         checkBillPayment();
+        pushPaymentInfo();
     }
 
     private void backupTempBalance() {
