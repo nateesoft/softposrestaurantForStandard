@@ -149,7 +149,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 d.config = POSConfigSetup.Bean();
                 d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
                 d.companyBean = PosControl.getDataCompany();
-                productControl.initLoadProductActive();
+                productControl.getAllProductActive();
                 return d;
             }
 
@@ -1445,7 +1445,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         double R_Quan = r_quan;
         PCode = data[1];
 
-        ProductBean productBean = productControl.getData(PCode);
+        ProductBean productBean = productControl.getProductByPCode(PCode);
         BalanceBean balance = new BalanceBean();
         balance.setStkCode(StkCode);
 
@@ -1851,13 +1851,13 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         btnZone1.setBackground(Color.green);
 
         String[] floorTab = new String[]{
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab2()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab3()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab4()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab5()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()),
-            ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7())
+            companyBean.getFloorTab1(),
+            companyBean.getFloorTab2(),
+            companyBean.getFloorTab3(),
+            companyBean.getFloorTab4(),
+            companyBean.getFloorTab5(),
+            companyBean.getFloorTab6(),
+            companyBean.getFloorTab7()
         };
 
         btnZone1.setText(floorTab[0]);

@@ -65,7 +65,7 @@ public class PrintKicFormReport {
 //            @Override
 //            public void run() {
         TableFileControl tbControl = AppContext.getTableFileControl();
-        TableFileBean tbBean = tbControl.getData(tableNo);
+        TableFileBean tbBean = tbControl.getDataByTCode(tableNo);
 
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
         try {
@@ -161,7 +161,7 @@ public class PrintKicFormReport {
             final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_Index) throws Exception {
 
         TableFileControl tbControl = AppContext.getTableFileControl();
-        TableFileBean tbBean = tbControl.getData(tableNo);
+        TableFileBean tbBean = tbControl.getDataByTCode(tableNo);
 
         DateConvert dc = new DateConvert();
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();

@@ -439,7 +439,7 @@ public class BillControl {
 
                 //for Billno
                 TableFileControl tableControl = AppContext.getTableFileControl();
-                TableFileBean tableFile = tableControl.getData(table);
+                TableFileBean tableFile = tableControl.getDataByTCode(table);
                 this.memberBean = MemmaterController.getMember(tableFile.getMemCode());
 
                 BillNoBean billNo = new BillNoBean();
@@ -806,7 +806,7 @@ public class BillControl {
             //for Billno
             try {
                 TableFileControl tableControl = AppContext.getTableFileControl();
-                TableFileBean tableFile = tableControl.getData(table);
+                TableFileBean tableFile = tableControl.getDataByTCode(table);
 
                 BillNoBean billNo = new BillNoBean();
                 double cashPay = billBean.getB_Cash();

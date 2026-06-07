@@ -40,6 +40,7 @@ public class DiscountDialog extends javax.swing.JDialog {
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PosControl PosControl = AppContext.getPosControl();
+    private final TableFileControl tableFileControl = AppContext.getTableFileControl();
 
     public DiscountDialog(java.awt.Dialog parent, boolean modal,
             String tableNo, double totalAmount, MemberBean memberBean, String Member1, String Member2, double ServiceAmt) {
@@ -609,6 +610,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         );
 
         btnClose1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnClose1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         btnClose1.setText("ยกเลิก");
         btnClose1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -625,6 +627,7 @@ public class DiscountDialog extends javax.swing.JDialog {
         });
 
         btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         btnSave.setText("บันทึก");
         btnSave.setFocusable(false);
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -672,9 +675,9 @@ public class DiscountDialog extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnClose1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnClose1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -1703,7 +1706,6 @@ public class DiscountDialog extends javax.swing.JDialog {
         double TOTAL_DD = 0.00;
         double TOTAL_TT = 0.00;
 
-
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select R_Normal, sum(R_Total) as R_Total "
@@ -2021,94 +2023,24 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void LoadDist() {
-
-        mysqlConnect.open(this.getClass());
-        try {
-            String sql = "select * from tablefile where Tcode = '" + tableNo + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String FastDisc = ThaiUtil.ASCII2Unicode(rs.getString("FastDisc"));
-                if (FastDisc.equals("0") || FastDisc.equals("")) {
-                    txtFest.setText("");
-                } else {
-                    txtFest.setText(FastDisc);
-                }
-                String FastDiscAmt = ThaiUtil.ASCII2Unicode(rs.getString("FastDiscAmt"));
-                if (FastDiscAmt.equals("0") || FastDiscAmt.equals("")) {
-                    txtFestAmt.setText("0.00");
-                } else {
-                    txtFestAmt.setText(FastDiscAmt);
-                }
-                String EmpDisc = ThaiUtil.ASCII2Unicode(rs.getString("EmpDisc"));
-                if (EmpDisc.equals("0") || EmpDisc.equals("")) {
-                    txtEmp.setText("");
-                } else {
-                    txtEmp.setText(EmpDisc);
-                }
-                String EmpDiscAmt = ThaiUtil.ASCII2Unicode(rs.getString("EmpDiscAmt"));
-                if (EmpDiscAmt.equals("0") || EmpDiscAmt.equals("")) {
-                    txtEmpAmt.setText("0.00");
-                } else {
-                    txtEmpAmt.setText(EmpDiscAmt);
-                }
-                String MemDisc = ThaiUtil.ASCII2Unicode(rs.getString("MemDisc"));
-                if (MemDisc.equals("0") || MemDisc.equals("")) {
-                    txtMem.setText("");
-                } else {
-                    txtMem.setText(MemDisc);
-                }
-                String MemDiscAmt = ThaiUtil.ASCII2Unicode(rs.getString("MemDiscAmt"));
-                if (MemDiscAmt.equals("0") || MemDiscAmt.equals("")) {
-                    txtMemAmt.setText("0.00");
-                } else {
-                    txtMemAmt.setText(MemDiscAmt);
-                }
-                String TrainDisc = ThaiUtil.ASCII2Unicode(rs.getString("TrainDisc"));
-                if (TrainDisc.equals("0")) {
-                    txtTrain.setText("");
-                } else {
-                    txtTrain.setText(TrainDisc);
-                }
-                String TrainDiscAmt = ThaiUtil.ASCII2Unicode(rs.getString("TrainDiscAmt"));
-                if (TrainDiscAmt.equals("0") || TrainDiscAmt.equals("")) {
-                    txtTrainAmt.setText("0.00");
-                } else {
-                    txtTrainAmt.setText(TrainDiscAmt);
-                }
-                String SubDisc = ThaiUtil.ASCII2Unicode(rs.getString("SubDisc"));
-                if (SubDisc.equals("0") || SubDisc.equals("")) {
-                    txtCupon.setText("");
-                } else {
-                    txtCupon.setText(SubDisc);
-                }
-
-                String SubDiscAmt = ThaiUtil.ASCII2Unicode(rs.getString("SubDiscAmt"));
-                if (SubDiscAmt.equals("0") || SubDiscAmt.equals("")) {
-                    txtCuponAmt.setText("0.00");
-                } else {
-                    txtCuponAmt.setText(SubDiscAmt);
-                }
-                String DiscBath = ThaiUtil.ASCII2Unicode(rs.getString("DiscBath"));
-                if (DiscBath.equals("0") || DiscBath.equals("")) {
-                    txtBahtAmt.setText("0.00");
-                } else {
-                    txtBahtAmt.setText(DiscBath);
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(DiscountDialog.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+        TableFileBean bean = tableFileControl.getDataByTCode(tableNo);
+        if (bean != null) {
+            txtFest.setText(bean.getFastDisc());
+            txtFestAmt.setText(NumberFormat.showDouble2(bean.getFastDiscAmt()));
+            txtEmp.setText(bean.getEmpDisc());
+            txtEmpAmt.setText(NumberFormat.showDouble2(bean.getEmpDiscAmt()));
+            txtMem.setText(bean.getMemDisc());
+            txtMemAmt.setText(NumberFormat.showDouble2(bean.getMemDiscAmt()));
+            txtTrain.setText(bean.getTrainDisc());
+            txtTrainAmt.setText(NumberFormat.showDouble2(bean.getTrainDiscAmt()));
+            txtCupon.setText(bean.getSubDisc());
+            txtCuponAmt.setText(NumberFormat.showDouble2(bean.getSubDiscAmt()));
+            txtBahtAmt.setText(NumberFormat.showDouble2(bean.getDiscBath()));
         }
     }
 
     private void loadDataToText() {
-        TableFileControl tfCon = AppContext.getTableFileControl();
-        TableFileBean tBean = tfCon.getData(tableNo);
+        TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
         txtFestAmt.setText(NumberFormat.showDouble2(tBean.getFastDiscAmt()));
         txtEmpAmt.setText(NumberFormat.showDouble2(tBean.getEmpDiscAmt()));
         txtMemAmt.setText(NumberFormat.showDouble2(tBean.getMemDiscAmt()));
@@ -2122,7 +2054,6 @@ public class DiscountDialog extends javax.swing.JDialog {
     }
 
     private void clearCuponSpecail() {
-
         mysqlConnect.open(this.getClass());
         //clear temp cupon
         try {

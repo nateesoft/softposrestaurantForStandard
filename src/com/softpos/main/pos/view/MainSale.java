@@ -145,11 +145,10 @@ public class MainSale extends javax.swing.JDialog {
                     find.setVisible(true);
                     if (!find.getPCode().equals("")) {
                         txtProductCode.setText(txtProductCode.getText() + find.getPCode());
-
                     }
                     break;
                 case KeyEvent.VK_F3:
-                    actionHoldTable();
+                    holdTableProcess();
                     break;
                 case KeyEvent.VK_F4:
                     showCheckBill();
@@ -169,6 +168,56 @@ public class MainSale extends javax.swing.JDialog {
                 default:
                     break;
             }
+        }
+    }
+
+    private void printCheckBillProcess() {
+        AppLogUtil.info("printCheckBillProcess: " + tableNo);
+        
+        // check print to kitchen
+        processPrintBillCheck();
+        
+        double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
+        if (totalCheck > 0) {
+            if (btnClickPrintKic == true) {
+                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
+                databaseConnection.execUpdate(sql);
+            }
+            kichenPrint();
+            printBillCheck();
+        } else {
+            MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
+        }
+    }
+
+    private void paymentBillProcess() {
+        AppLogUtil.info("paymentBillProcess: " + tableNo);
+        
+        // check print to kitchen
+        processPrintBillCheck();
+        
+        if (btnClickPrintKic == true) {
+            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
+            databaseConnection.execUpdate(sqlTurnPrintKicOff);
+        }
+        if (lbTotalAmount.getText().equals("0.00")) {
+            MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
+        } else {
+            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sql);
+            kichenPrint();
+            sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sql);
+
+            showCheckBill();
+        }
+    }
+
+    private void processPrintBillCheck() {
+        if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
+            AppLogUtil.info("Condition to print bill check: " + tableNo);
+
+            printBillCheck();
         }
     }
 
@@ -218,13 +267,13 @@ public class MainSale extends javax.swing.JDialog {
             protected MainSaleInitData doInBackground() {
                 MainSaleInitData d = new MainSaleInitData();
                 d.posUser = PosControl.getPosUser(PublicVar.ReturnString);
-                d.tbBean = tableFileControl.getData(tNo);
+                d.tbBean = tableFileControl.getDataByTCode(tNo);
                 d.memberBean = MemmaterController.getMember(d.tbBean.getMemCode());
                 d.poshw = POSHWSetup.Bean(PublicVar.MACNO);
                 d.config = POSConfigSetup.Bean();
                 d.branchBean = BranchControl.getData();
                 empControl.initLoadEmployeeList();
-                productControl.initLoadProductActive();
+                productControl.getAllProductActive();
                 return d;
             }
 
@@ -1405,7 +1454,7 @@ public class MainSale extends javax.swing.JDialog {
                             str += "  + ";
                         }
                     }
-                    str += ThaiUtil.ASCII2Unicode(R_Opt) + ",";
+                    str += R_Opt + ",";
                 }
             }
 
@@ -1427,7 +1476,7 @@ public class MainSale extends javax.swing.JDialog {
             return;
         }
         //show sum
-        TableFileBean tfBean = tableFileControl.getData(tableNo);
+        TableFileBean tfBean = tableFileControl.getDataByTCode(tableNo);
         double totalDiscount;
         totalDiscount = tfBean.getProDiscAmt() + tfBean.getSpaDiscAmt() + tfBean.getCuponDiscAmt()
                 + tfBean.getFastDiscAmt() + tfBean.getEmpDiscAmt() + tfBean.getTrainDiscAmt()
@@ -1727,29 +1776,15 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_tbShowBalanceMouseClicked
 
     private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
-        actionHoldTable();
+        holdTableProcess();
     }//GEN-LAST:event_btnHoldActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
-        if (btnClickPrintKic == true) {
-            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlTurnPrintKicOff);
-        }
-        if (lbTotalAmount.getText().equals("0.00")) {
-            MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
-        } else {
-            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
-            kichenPrint();
-            sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
-
-            showCheckBill();
-        }
+        paymentBillProcess();
     }//GEN-LAST:event_btnPaymentActionPerformed
 
     private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
-        showSplitBill();
+        splitBillProcess();
     }//GEN-LAST:event_btnSplitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -1824,17 +1859,7 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_jMenuBar11MouseClicked
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
-        double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
-        if (totalCheck > 0) {
-            if (btnClickPrintKic == true) {
-                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
-                databaseConnection.execUpdate(sql);
-            }
-            kichenPrint();
-            printBillCheck();
-        } else {
-            MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
-        }
+        printCheckBillProcess();
     }//GEN-LAST:event_bntPrintCheckBillActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -2326,7 +2351,7 @@ public class MainSale extends javax.swing.JDialog {
                     }
                 }
 
-                ProductBean productBean = productControl.getData(PluCode);
+                ProductBean productBean = productControl.getProductByPCode(PluCode);
                 if (productBean != null && productBean.getPActive().equals("Y")) {
                     found = true;
                     PublicVar.P_Code = PluCode;
@@ -3220,7 +3245,7 @@ public class MainSale extends javax.swing.JDialog {
     private javax.swing.JTextField txtTypeDesc;
     // End of variables declaration//GEN-END:variables
 
-    private void showSplitBill() {
+    private void splitBillProcess() {
         SplitBillPayment sp = new SplitBillPayment(this, true, txtTable.getText());
         sp.setVisible(true);
 
@@ -3281,13 +3306,12 @@ public class MainSale extends javax.swing.JDialog {
         showSum();
     }
 
-    private void actionHoldTable() {
+    private void holdTableProcess() {
         AppLogUtil.info("Hold Table: " + tableNo);
-        if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
-            AppLogUtil.info("Condition to print bill check: " + tableNo);
-
-            printBillCheck();
-        }
+        
+        // check print to kitchen
+        processPrintBillCheck();
+        
         tbpMain.setSelectedIndex(0);
 
         bntHoldTableClick();
@@ -3406,7 +3430,7 @@ public class MainSale extends javax.swing.JDialog {
                         if (!PCode.equals("") && !PVoid.equals("V")) {
                             bntVoidClick();
                             double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
-                            TableFileBean = tableFileControl.getData(tableNo);
+                            TableFileBean = tableFileControl.getDataByTCode(tableNo);
                             DiscountDialog dd = new DiscountDialog(this, true, tableNo, totalAmount, memberBean,
                                     txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
                             dd.clearMemberDiscount();
@@ -3431,18 +3455,13 @@ public class MainSale extends javax.swing.JDialog {
 
     private void pCodeEnter() {
         String pluCode = txtProductCode.getText().trim();
-        if(pluCode.endsWith("")){
+        if(pluCode.equals("")){
             return;
         }
         
-        String chkOpt = "";
-        if (!pluCode.equals("")) {
-            chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
-        }
-
+        String chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
         if (chkOpt.equals("+")) {
             //สามารถเลือกจำนวนได้เลย
-
             pluCode = pluCode.substring(0, pluCode.length() - 1);
 
             int qtySet;
@@ -3565,7 +3584,7 @@ public class MainSale extends javax.swing.JDialog {
                     String[] data = Option.splitPrice(PCode);
                     double R_Quan = Double.parseDouble(data[0]);
                     PCode = data[1];
-                    ProductBean productBean = productControl.getData(PCode);
+                    ProductBean productBean = productControl.getProductByPCode(PCode);
 
                     BalanceBean balance = new BalanceBean();
                     balance.setStkCode(StkCode);

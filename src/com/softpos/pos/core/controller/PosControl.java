@@ -326,13 +326,13 @@ public class PosControl {
                     companyBean.setPdahead1(rs.getString("pdahead1"));
                     companyBean.setPdahead2(rs.getString("pdahead2"));
                     companyBean.setDisplayTextInfo(rs.getString("DisplayTextInfo"));
-                    companyBean.setFloorTab1(rs.getString("FloorTab1"));
-                    companyBean.setFloorTab2(rs.getString("FloorTab2"));
-                    companyBean.setFloorTab3(rs.getString("FloorTab3"));
-                    companyBean.setFloorTab4(rs.getString("FloorTab4"));
-                    companyBean.setFloorTab5(rs.getString("FloorTab5"));
-                    companyBean.setFloorTab6(rs.getString("FloorTab6"));
-                    companyBean.setFloorTab7(rs.getString("FloorTab7"));
+                    companyBean.setFloorTab1(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab1")));
+                    companyBean.setFloorTab2(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab2")));
+                    companyBean.setFloorTab3(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab3")));
+                    companyBean.setFloorTab4(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab4")));
+                    companyBean.setFloorTab5(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab5")));
+                    companyBean.setFloorTab6(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab6")));
+                    companyBean.setFloorTab7(ThaiUtil.ASCII2Unicode(rs.getString("FloorTab7")));
                     companyBean.setPdahead3(rs.getString("pdahead3"));
                     companyBean.setPdahead4(rs.getString("pdahead4"));
                 }

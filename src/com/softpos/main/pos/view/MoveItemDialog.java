@@ -164,6 +164,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         jLabel6.setText("( รายการอาหารของโต๊ะปัจจุบัน )");
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         jButton1.setText("บันทึก");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,6 +173,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         jButton2.setText("ยกเลิก");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -392,8 +394,8 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     .addComponent(jLabel5)
                     .addComponent(txtTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -453,14 +455,14 @@ public class MoveItemDialog extends javax.swing.JDialog {
                     if (R_Void.equalsIgnoreCase("V")) {
                         MSG.WAR(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                     } else {
-                        TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
+                        TableFileBean tableFileBean = tableFileControl.getDataByTCode(txtTable2.getText());
                         if (tableFileBean != null) {
                             //add data
                             TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                         } else {
                             //create table2 before add data
                             TableFileControl tfc = AppContext.getTableFileControl();
-                            tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
+                            tfc.createNewTableSplit(tfc.getDataByTCode(txtTable1.getText()), txtTable2.getText());
 
                             //add data
                             TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
@@ -563,14 +565,14 @@ public class MoveItemDialog extends javax.swing.JDialog {
                         if (R_Void.equalsIgnoreCase("V")) {
                             MSG.WAR(this, "รายการสินค้าเป็นรายการยกเลิก ไม่สามารถย้ายรายการได้ !");
                         } else {
-                            TableFileBean tableFileBean = tableFileControl.getData(txtTable2.getText());
+                            TableFileBean tableFileBean = tableFileControl.getDataByTCode(txtTable2.getText());
                             if (tableFileBean != null) {
                                 //add data
                                 TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);
                             } else {
                                 //create table2 before add data
                                 TableFileControl tfc = AppContext.getTableFileControl();
-                                tfc.createNewTableSplit(tfc.getData(txtTable1.getText()), txtTable2.getText());
+                                tfc.createNewTableSplit(tfc.getDataByTCode(txtTable1.getText()), txtTable2.getText());
 
                                 //add data
                                 TableMoveControl.moveProduct(txtTable1.getText(), txtTable2.getText(), R_Index);

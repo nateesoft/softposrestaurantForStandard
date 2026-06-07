@@ -90,7 +90,7 @@ public class OptionMsg extends javax.swing.JDialog {
             bean.getR_Opt8()
         };
         for (String opt1 : opt) {
-            Object[] input = {ThaiUtil.ASCII2Unicode(opt1)};
+            Object[] input = {opt1};
             if (!opt1.equals("")) {
                 model2.addRow(input);
             }
@@ -361,6 +361,7 @@ public class OptionMsg extends javax.swing.JDialog {
         );
 
         bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         bntOK.setText("บันทึก");
         bntOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -373,6 +374,7 @@ public class OptionMsg extends javax.swing.JDialog {
         jLabel2.setText("เลือก >>");
 
         bntOK1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         bntOK1.setText("ยกเลิก");
         bntOK1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,8 +421,8 @@ public class OptionMsg extends javax.swing.JDialog {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntOK1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bntOK1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 

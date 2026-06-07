@@ -44,6 +44,8 @@ import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.NumberFormat;
 import com.softpos.util.NumberUtil;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
@@ -76,9 +78,9 @@ public class CheckBill extends javax.swing.JDialog {
 
         // Pure UI setup
         DecimalFormat scoreFmt = new DecimalFormat("##0");
-        lblTableNo.setText(ThaiUtil.ASCII2Unicode(tableNo));
+        lblTableNo.setText(tableNo);
 
-        java.awt.Dimension screen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, screen.width, screen.height);
 
         PublicVar.temp_table = tableNo;
@@ -86,7 +88,7 @@ public class CheckBill extends javax.swing.JDialog {
         this.tableNo = tableNo;
 
         if (memberBean != null) {
-            txtMember1.setText(ThaiUtil.ASCII2Unicode(memberBean.getMember_NameThai()));
+            txtMember1.setText(memberBean.getMember_NameThai());
             txtMember2.setText("แต้มสะสม" + scoreFmt.format(memberBean.getMember_TotalScore()));
         } else {
             txtMember1.setText("ค้นหาสมาชิก");
@@ -1891,7 +1893,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void loadTableBill() {
         TableFileControl tfCon = AppContext.getTableFileControl();
-        tBean = tfCon.getData(tableNo);
+        tBean = tfCon.getDataByTCode(tableNo);
         double totalDiscount;
         totalDiscount = tBean.getProDiscAmt() + tBean.getSpaDiscAmt() + tBean.getCuponDiscAmt()
                 + tBean.getFastDiscAmt() + tBean.getEmpDiscAmt() + tBean.getTrainDiscAmt()
@@ -2140,7 +2142,7 @@ public class CheckBill extends javax.swing.JDialog {
             billBean.setB_Earnest(returnMoney);
 
             TableFileControl tfCon = AppContext.getTableFileControl();
-            TableFileBean tableFileBean = tfCon.getData(tableNo);
+            TableFileBean tableFileBean = tfCon.getDataByTCode(tableNo);
 
             //get from bean
             if (tableFileBean.getServiceAmt() < 0) {

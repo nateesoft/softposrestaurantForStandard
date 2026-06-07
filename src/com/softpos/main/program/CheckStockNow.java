@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class CheckStockNow extends javax.swing.JDialog {
+    private final StockControl stockControl = AppContext.getStockControl();
 
     public CheckStockNow(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -134,12 +135,12 @@ public class CheckStockNow extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        StockControl stockControl = AppContext.getStockControl();
+        
         List<String[]> rows = stockControl.listAllStock();
         for (String[] row : rows) {
             model.addRow(new Object[]{
                 row[0],
-                ThaiUtil.ASCII2Unicode(row[1]),
+                row[1],
                 row[2]
             });
         }

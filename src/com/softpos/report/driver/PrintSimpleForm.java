@@ -692,7 +692,7 @@ public class PrintSimpleForm {
 
         tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
 
-        TableFileBean tBean = tableFileControl.getData(tableNo);
+        TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
         List<BalanceBean> listE = new ArrayList<>();
         List<BalanceBean> listT = new ArrayList<>();
@@ -1736,7 +1736,7 @@ public class PrintSimpleForm {
 
         tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
 
-        TableFileBean tBean = tableFileControl.getData(tableNo);
+        TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
         List<BalanceBean> listE = new ArrayList<>();
         List<BalanceBean> listT = new ArrayList<>();

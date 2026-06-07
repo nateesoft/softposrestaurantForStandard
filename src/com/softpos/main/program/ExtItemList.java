@@ -236,7 +236,6 @@ public class ExtItemList extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadData() {
-
         mysqlConnect.open(this.getClass());
         try {
             DefaultTableModel model = (DefaultTableModel) tbCustomer.getModel();

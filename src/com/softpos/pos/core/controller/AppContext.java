@@ -26,6 +26,7 @@ public class AppContext {
     private static PosUserController posUserController;
     private static PrintToKicController printToKicController;
     private static ProductControl productControl;
+    private static GroupFileControl groupFileControl;
     private static PromotionControl promotionControl;
     private static PropControl propControl;
     private static RefundBillController refundBillController;
@@ -186,6 +187,11 @@ public class AppContext {
     public static ProductControl getProductControl() {
         if (productControl == null) productControl = new ProductControl();
         return productControl;
+    }
+    
+    public static GroupFileControl getGroupFileControl() {
+        if (groupFileControl == null) groupFileControl = new GroupFileControl();
+        return groupFileControl;
     }
 
     public static PromotionControl getPromotionControl() {

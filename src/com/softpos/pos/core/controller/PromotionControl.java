@@ -270,7 +270,7 @@ public class PromotionControl {
             }
 
             PCode = balance.getR_PluCode();
-            product = productControl.getData(PCode);
+            product = productControl.getProductByPCode(PCode);
 
             String temp_R_ETD = balance.getR_ETD();
             String temp_P_ProChkBySaleType = POSConfigSetup.Bean().getP_DiscChkBySaleType();

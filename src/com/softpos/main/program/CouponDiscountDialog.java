@@ -967,7 +967,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         BalanceControl.updateProSerTable(tableNo, null);
 
         TableFileControl tfCon = AppContext.getTableFileControl();
-        TableFileBean tBean = tfCon.getData(tableNo);
+        TableFileBean tBean = tfCon.getDataByTCode(tableNo);
 
         CuponControl cuCon = AppContext.getCuponControl();
         CuponBean cuBean = cuCon.getCupon(txtCucode.getText());

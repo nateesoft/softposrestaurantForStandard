@@ -13,6 +13,7 @@ import com.softpos.util.JTableUtility;
 import com.softpos.util.MSG;
 
 public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
+    private final StockControl stockControl = AppContext.getStockControl();
 
     public CheckProductNotEnoughDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -163,6 +164,7 @@ public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
         );
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         jButton2.setText("ยกเลิก");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,7 +192,7 @@ public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -277,11 +279,10 @@ public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void loadProduct() {
-        StockControl stockControl = AppContext.getStockControl();
         String[] product = stockControl.findProductByCode(txtPCode.getText());
         if (product != null) {
             txtPCode.setText(product[0]);
-            txtPDesc.setText(ThaiUtil.ASCII2Unicode(product[1]));
+            txtPDesc.setText(product[1]);
             btnAdd.requestFocus();
         } else {
             MSG.ERR(this, "ไม่พบรายการสินค้ารายการนี้ในระบบ กรุณาป้อนข้อมูลอีกครั้ง");
@@ -291,7 +292,6 @@ public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
     }
 
     private void addProductLost() {
-        StockControl stockControl = AppContext.getStockControl();
         stockControl.addOutStockItem(txtPCode.getText());
         loadData();
     }

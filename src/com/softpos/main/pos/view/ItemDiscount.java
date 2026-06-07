@@ -47,7 +47,7 @@ public class ItemDiscount extends javax.swing.JDialog {
 
         if (balanceBean != null) {
             txtPCode.setText(balanceBean.getR_PluCode());
-            txtPDesc.setText(ThaiUtil.ASCII2Unicode(balanceBean.getR_PName()));
+            txtPDesc.setText(balanceBean.getR_PName());
             txtPQuan.setText("" + balanceBean.getR_Quan());
             txtPrice.setText(dec1.format(balanceBean.getR_Price()));
             txtPAmount.setText(dec1.format(balanceBean.getR_Total()));
@@ -298,6 +298,7 @@ public class ItemDiscount extends javax.swing.JDialog {
         );
 
         btnExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         btnExit.setText("ยกเลิก");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,6 +312,7 @@ public class ItemDiscount extends javax.swing.JDialog {
         });
 
         btnOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         btnOK.setText("บันทึก");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -345,8 +347,8 @@ public class ItemDiscount extends javax.swing.JDialog {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -361,7 +363,7 @@ public class ItemDiscount extends javax.swing.JDialog {
             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(472, 394));
+        setSize(new java.awt.Dimension(489, 403));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

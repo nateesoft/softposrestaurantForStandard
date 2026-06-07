@@ -147,6 +147,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         bntOK.setText("บันทึก");
         bntOK.setFocusable(false);
         bntOK.setRequestFocusEnabled(false);
@@ -157,6 +158,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
         });
 
         bntCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         bntCancel.setText("ยกเลิก");
         bntCancel.setRequestFocusEnabled(false);
         bntCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -208,8 +210,8 @@ public class PaidinFormDialog extends javax.swing.JDialog {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bntCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bntCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 

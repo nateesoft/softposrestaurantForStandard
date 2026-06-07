@@ -1,6 +1,9 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.pos.core.controller.DbProduct;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.pos.core.dto.ProductSearchResponse;
+import com.softpos.pos.core.model.ProductBean;
 import com.softpos.util.ThaiUtil;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -12,6 +15,7 @@ import javax.swing.table.JTableHeader;
 public class FindProduct extends javax.swing.JDialog {
 
     private String PCode = "";
+    private final ProductControl productControl = AppContext.getProductControl();
 
     public FindProduct(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -30,7 +34,6 @@ public class FindProduct extends javax.swing.JDialog {
 
         txtSearch = new javax.swing.JTextField();
         btnFind = new javax.swing.JButton();
-        chkProductExpire = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbProduct = new javax.swing.JTable();
@@ -55,9 +58,6 @@ public class FindProduct extends javax.swing.JDialog {
             }
         });
 
-        chkProductExpire.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        chkProductExpire.setText("ค้นหาสินค้าที่ไม่มีการใช้งาน");
-
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("รหัส/ชื่อ");
 
@@ -68,7 +68,7 @@ public class FindProduct extends javax.swing.JDialog {
 
             },
             new String [] {
-                "PCode", "PDesc", "PUnit1", "PPrice11", "PGroup", "GroupName"
+                "Code", "Name", "Unit", "Price", "Group Code", "Group Name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -92,11 +92,6 @@ public class FindProduct extends javax.swing.JDialog {
             }
         });
         jScrollPane1.setViewportView(tbProduct);
-        if (tbProduct.getColumnModel().getColumnCount() > 0) {
-            tbProduct.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tbProduct.getColumnModel().getColumn(1).setPreferredWidth(250);
-            tbProduct.getColumnModel().getColumn(5).setPreferredWidth(250);
-        }
 
         lbTotal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbTotal.setText("jLabel2");
@@ -117,9 +112,7 @@ public class FindProduct extends javax.swing.JDialog {
                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnFind)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                        .addComponent(chkProductExpire)
-                        .addGap(170, 170, 170))
+                        .addGap(170, 547, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbTotal)
                         .addGap(0, 0, Short.MAX_VALUE))))
@@ -131,7 +124,6 @@ public class FindProduct extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkProductExpire)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -149,13 +141,19 @@ public class FindProduct extends javax.swing.JDialog {
     }//GEN-LAST:event_btnFindActionPerformed
 
     private void txtSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            loadProductAll();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            PCode = "";
-            dispose();
-        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            tbProduct.requestFocus();
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                loadProductAll();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                PCode = "";
+                dispose();
+                break;
+            case KeyEvent.VK_DOWN:
+                tbProduct.requestFocus();
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_txtSearchKeyPressed
 
@@ -188,7 +186,6 @@ public class FindProduct extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFind;
-    private javax.swing.JCheckBox chkProductExpire;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbTotal;
@@ -206,18 +203,16 @@ public class FindProduct extends javax.swing.JDialog {
         JTableHeader tHeader = tbProduct.getTableHeader();
         tHeader.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-        String keyword = ThaiUtil.Unicode2ASCII(txtSearch.getText());
-        boolean includeInactive = chkProductExpire.isSelected();
-
-        List<Map<String, Object>> rows = new DbProduct().searchProducts(keyword, includeInactive);
-        for (Map<String, Object> r : rows) {
+        String keyword = txtSearch.getText();
+        List<ProductSearchResponse> listSearch = productControl.searchProduct(keyword);
+        for (ProductSearchResponse response : listSearch) {
             model.addRow(new Object[]{
-                r.get("PCode"),
-                ThaiUtil.ASCII2Unicode((String) r.get("PDesc")),
-                ThaiUtil.ASCII2Unicode((String) r.get("PUnit1")),
-                r.get("PPrice11"),
-                r.get("PGroup"),
-                ThaiUtil.ASCII2Unicode((String) r.get("GroupName"))
+                response.getCode(),
+                response.getName(),
+                response.getUnit(),
+                response.getPrice(),
+                response.getGroup(),
+                response.getGroupName()
             });
         }
         lbTotal.setText("รวมรายการ " + model.getRowCount() + " รายการ");

@@ -113,6 +113,7 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
         });
 
         btnOk.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         btnOk.setText("บันทึก");
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,6 +122,7 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
         });
 
         btnOk1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnOk1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         btnOk1.setText("ยกเลิก");
         btnOk1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -212,8 +214,8 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
                     .addComponent(txtTab7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOk1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnOk1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -322,12 +324,12 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
 
     private void loadDefaultTab() {
         CompanyBean companyBean = PosControl.getDataCompany();
-        txtTab1.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab1()));
-        txtTab2.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab2()));
-        txtTab3.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab3()));
-        txtTab4.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab4()));
-        txtTab5.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab5()));
-        txtTab6.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab6()));
-        txtTab7.setText(ThaiUtil.ASCII2Unicode(companyBean.getFloorTab7()));
+        txtTab1.setText(companyBean.getFloorTab1());
+        txtTab2.setText(companyBean.getFloorTab2());
+        txtTab3.setText(companyBean.getFloorTab3());
+        txtTab4.setText(companyBean.getFloorTab4());
+        txtTab5.setText(companyBean.getFloorTab5());
+        txtTab6.setText(companyBean.getFloorTab6());
+        txtTab7.setText(companyBean.getFloorTab7());
     }
 }

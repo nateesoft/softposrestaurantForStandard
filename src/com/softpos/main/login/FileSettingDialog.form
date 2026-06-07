@@ -702,6 +702,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Print Test"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintTestActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="cbListPrinterTest">
               <Properties>
@@ -746,16 +749,25 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Add Item"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddItemActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnClearTable">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear Table"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearTableActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnExample">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Example"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExampleActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

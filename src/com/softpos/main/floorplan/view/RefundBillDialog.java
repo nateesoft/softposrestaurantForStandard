@@ -161,6 +161,7 @@ public class RefundBillDialog extends javax.swing.JDialog {
         txtMacNo.setFocusable(false);
 
         bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         bntOK.setText("บันทึก");
         bntOK.setFocusable(false);
         bntOK.addActionListener(new java.awt.event.ActionListener() {
@@ -170,6 +171,7 @@ public class RefundBillDialog extends javax.swing.JDialog {
         });
 
         bntNew.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/new.png"))); // NOI18N
         bntNew.setText("เลขที่ใหม่");
         bntNew.setFocusable(false);
         bntNew.addActionListener(new java.awt.event.ActionListener() {
@@ -179,6 +181,7 @@ public class RefundBillDialog extends javax.swing.JDialog {
         });
 
         bntExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         bntExit.setText("ยกเลิก");
         bntExit.setFocusable(false);
         bntExit.addActionListener(new java.awt.event.ActionListener() {
@@ -294,7 +297,7 @@ public class RefundBillDialog extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntNew, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bntNew, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -311,12 +314,12 @@ public class RefundBillDialog extends javax.swing.JDialog {
                     .addComponent(txtMacNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtBillNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bntNew, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bntNew, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 

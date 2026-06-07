@@ -231,7 +231,7 @@ public class MgrButtonController {
         try {
             String sql = "delete from soft_menusetup "
                     + "where MenuCode ='" + menuCode + "'"
-                    + "AND MenuShowText='" + shortNameAscii + "'";
+                    + "AND MenuShowText='" + ThaiUtil.Unicode2ASCII(shortNameAscii) + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }

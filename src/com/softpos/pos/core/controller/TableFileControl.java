@@ -206,7 +206,6 @@ public class TableFileControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(TableFileControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(TableFileControl.class);
@@ -215,8 +214,8 @@ public class TableFileControl {
         return allTable;
     }
 
-    public TableFileBean getData(String table) {
-        TableFileBean bean = new TableFileBean();
+    public TableFileBean getDataByTCode(String table) {
+        TableFileBean bean = null;
         
         mysqlConnect.closeConnection(TableFileControl.class);
         try {
@@ -224,6 +223,7 @@ public class TableFileControl {
             String sql = "select * from tablefile where Tcode='" + table + "' limit 1";
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
+                    bean = new TableFileBean();                    
                     bean.setTcode(rs.getString("Tcode"));
                     bean.setSoneCode(rs.getString("SoneCode"));
                     bean.setMacNo(rs.getString("MacNo"));

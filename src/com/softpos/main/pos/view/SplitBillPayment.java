@@ -36,7 +36,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
         init();
         table2 = "";
 
-        productControl.initLoadProductActive();
+        productControl.getAllProductActive();
 
         txtTable1.requestFocus();
     }
@@ -87,6 +87,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
         jLabel2.setText("( รายการอาหารของโต๊ะหลัก )");
 
         btnOk.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
         btnOk.setText("บันทึก");
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,6 +96,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
         });
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         btnCancel.setText("ยกเลิก");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,8 +213,8 @@ public class SplitBillPayment extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(txtTable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -421,7 +423,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
             //load data to modal
             model.addRow(new Object[]{
                 "",
-                bean.getR_Void(), bean.getR_ETD(), bean.getR_PluCode(), ThaiUtil.ASCII2Unicode(bean.getR_PName()),
+                bean.getR_Void(), bean.getR_ETD(), bean.getR_PluCode(), bean.getR_PName(),
                 df.format(bean.getR_Quan()), bean.getR_Price(), bean.getR_Total(), bean.getR_PrType(), bean.getR_Discount(), bean.getR_DiscBath(),
                 bean.getR_Index(), bean.getR_LinkIndex()
             });
@@ -451,7 +453,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
             //load data to modal
             model.addRow(new Object[]{
                 "",
-                bean.getR_Void(), bean.getR_ETD(), bean.getR_PluCode(), ThaiUtil.ASCII2Unicode(bean.getR_PName()),
+                bean.getR_Void(), bean.getR_ETD(), bean.getR_PluCode(), bean.getR_PName(),
                 df.format(bean.getR_Quan()), bean.getR_Price(), bean.getR_Total(), bean.getR_PrType(), bean.getR_Discount(), bean.getR_DiscBath(),
                 bean.getR_Index(), bean.getR_LinkIndex()
             });
@@ -464,7 +466,7 @@ public class SplitBillPayment extends javax.swing.JDialog {
 
         //create table split
         TableFileControl tableFile = AppContext.getTableFileControl();
-        TableFileBean tBean = tableFile.getData(txtTable1.getText());
+        TableFileBean tBean = tableFile.getDataByTCode(txtTable1.getText());
         tableFile.createNewTableSplit(tBean, txtTable2.getText());
 
         //backup data to temp balance

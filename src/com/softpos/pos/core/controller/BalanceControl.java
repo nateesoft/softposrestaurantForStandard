@@ -133,7 +133,7 @@ public class BalanceControl {
         bean.setR_MoveFlag("0");
 
         ProductControl productControl = AppContext.getProductControl();
-        ProductBean product = productControl.getData(bb.getR_PluCode());
+        ProductBean product = productControl.getProductByPCode(bb.getR_PluCode());
 
         bean.setR_Index(bb.getR_Index());//หมายเลขโต๊ะ/ลำดับที่รายการอาหาร
         bean.setR_Table(bb.getR_Table());//หมายเลขโต๊ะ

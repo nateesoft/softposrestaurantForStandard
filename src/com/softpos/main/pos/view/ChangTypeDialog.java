@@ -64,8 +64,13 @@ public class ChangTypeDialog extends javax.swing.JDialog {
         for (int i = 0; i < listBalance.size(); i++) {
             BalanceBean bean = (BalanceBean) listBalance.get(i);
 
-            Object[] input = {bean.getR_Index(), bean.getR_Void(), bean.getR_ETD(), bean.getR_PluCode(),
-                ThaiUtil.ASCII2Unicode(bean.getR_PName()), bean.getR_Price()};
+            Object[] input = {
+                bean.getR_Index(),
+                bean.getR_Void(),
+                bean.getR_ETD(),
+                bean.getR_PluCode(),
+                bean.getR_PName(),
+                bean.getR_Price()};
             model.addRow(input);
         }
 
@@ -325,6 +330,7 @@ public class ChangTypeDialog extends javax.swing.JDialog {
         jPanel1.add(bntWholeSale);
 
         bntCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        bntCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/close.png"))); // NOI18N
         bntCancel.setText("ยกเลิก");
         bntCancel.setRequestFocusEnabled(false);
         bntCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -374,8 +380,8 @@ public class ChangTypeDialog extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(bntCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bntCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

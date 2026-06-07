@@ -23,11 +23,6 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
         loadConfig();
         loadPrinters();
-
-        btnAddItem.addActionListener(e -> btnAddItemActionPerformed());
-        btnClearTable.addActionListener(e -> btnClearTableActionPerformed());
-        btnPrintTest.addActionListener(e -> btnPrintTestActionPerformed());
-        btnExample.addActionListener(e -> btnExampleActionPerformed());
     }
 
     @SuppressWarnings("unchecked")
@@ -383,6 +378,11 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
         btnPrintTest.setBackground(new java.awt.Color(51, 102, 255));
         btnPrintTest.setText("Print Test");
+        btnPrintTest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintTestActionPerformed(evt);
+            }
+        });
 
         cbListPrinterTest.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -394,10 +394,25 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
         btnAddItem.setBackground(new java.awt.Color(0, 255, 204));
         btnAddItem.setText("Add Item");
+        btnAddItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddItemActionPerformed(evt);
+            }
+        });
 
         btnClearTable.setText("Clear Table");
+        btnClearTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearTableActionPerformed(evt);
+            }
+        });
 
         btnExample.setText("Example");
+        btnExample.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExampleActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -503,6 +518,22 @@ public class FileSettingDialog extends javax.swing.JDialog {
             dispose();
         }
     }//GEN-LAST:event_txtServerKeyPressed
+
+    private void btnPrintTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintTestActionPerformed
+        btnPrintTestActionPerformed();
+    }//GEN-LAST:event_btnPrintTestActionPerformed
+
+    private void btnClearTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTableActionPerformed
+        btnClearTableActionPerformed();
+    }//GEN-LAST:event_btnClearTableActionPerformed
+
+    private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
+        btnAddItemActionPerformed();
+    }//GEN-LAST:event_btnAddItemActionPerformed
+
+    private void btnExampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExampleActionPerformed
+        btnExampleActionPerformed();
+    }//GEN-LAST:event_btnExampleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddItem;

@@ -192,7 +192,7 @@ public class PUtility {
                 List<PSetBean> listPsetBean = getPSetByPCode(TempCode);
                 for (PSetBean psetBean : listPsetBean) {
                     RetVal = true;
-                    ProductBean proBean = productControl.getData(psetBean.getPsubcode());
+                    ProductBean proBean = productControl.getProductByPCode(psetBean.getPsubcode());
                     StkProc = "Y".equals(proBean.getPStock());
 
                     if (StkProc) {
@@ -388,7 +388,7 @@ public class PUtility {
             Double TempQty = psetBean.getPsubQTY() * XQty;
             String T_Rem = StkRemark;
 
-            ProductBean productBean = productControl.getData(TempCode);
+            ProductBean productBean = productControl.getProductByPCode(TempCode);
             Boolean StkProc = productBean.getPStock().equals("Y");
             Double TempAmt = productBean.getPPrice11() * XQty;
 
@@ -474,7 +474,7 @@ public class PUtility {
             Double TempQty = bean.getR_setqty() * XQty;
             String T_Rem = StkRemark;
 
-            ProductBean proBean = productControl.getData(TempCode);
+            ProductBean proBean = productControl.getProductByPCode(TempCode);
             Boolean StkProc = proBean.getPStock().equals("Y");
             Double TempAmt = proBean.getPPrice11() * XQty;
 

@@ -1,7 +1,10 @@
 package com.softpos.main.program;
 
-import com.softpos.pos.core.controller.DbGroupfile;
-import com.softpos.pos.core.controller.DbProduct;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.GroupFileControl;
+import com.softpos.pos.core.controller.ProductControl;
+import com.softpos.pos.core.model.GroupFileBean;
+import com.softpos.pos.core.model.ProductBean;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import java.awt.Color;
@@ -13,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 import com.softpos.util.JTableUtility;
 
 public class ShowAllProductDialog extends javax.swing.JDialog {
+    private final ProductControl productControl = AppContext.getProductControl();
+    private final GroupFileControl groupFileControl = AppContext.getGroupFileControl();
 
     public ShowAllProductDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -373,13 +378,12 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     private void loadTblGroup() {
         JTableUtility.resetTableModel(mdlGroup);
-        DbGroupfile dgroup = new DbGroupfile();
-        List<Map<String, Object>> list = dgroup.getAllData();
+        List<GroupFileBean> listGroupFile = groupFileControl.getAllData();
 
-        for (Map<String, Object> row : list) {
+        for (GroupFileBean groupFile : listGroupFile) {
             String[] data = new String[tblGroup.getColumnCount()];
-            data[0] = row.get("groupcode").toString();
-            data[1] = ThaiUtil.ASCII2Unicode(row.get("groupname").toString());
+            data[0] = groupFile.getGroupCode();
+            data[1] = groupFile.getGroupName();
             mdlGroup.addRow(data);
         }
 
@@ -389,19 +393,19 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
     }
 
-    private void loadTblPlu(String pgroup) {
+    private void loadTblPlu(String productGroup) {
         JTableUtility.resetTableModel(mdlPlu);
-        DbProduct dproduct = new DbProduct();
-        List<Map<String, Object>> list = dproduct.getAtPgroup(pgroup);
-        for (Map<String, Object> row : list) {
+        
+        List<ProductBean> list = productControl.getProductByPGroup(productGroup);
+        for (ProductBean product : list) {
             String[] data = new String[tblPlu.getColumnCount()];
-            data[0] = row.get("pcode").toString();
-            data[1] = ThaiUtil.ASCII2Unicode(row.get("pdesc").toString());
-            data[2] = row.get("pprice11").toString();
-            data[3] = row.get("pprice12").toString();
-            data[4] = row.get("pprice13").toString();
-            data[5] = row.get("pprice14").toString();
-            data[6] = row.get("pprice15").toString();
+            data[0] = product.getPCode();
+            data[1] = product.getPDesc();
+            data[2] = "" + product.getPPrice11();
+            data[3] = "" + product.getPPrice12();
+            data[4] = "" + product.getPPrice13();
+            data[5] = "" + product.getPPrice14();
+            data[6] = "" + product.getPPrice15();
             mdlPlu.addRow(data);
         }
         if (mdlPlu.getRowCount() != 0) {

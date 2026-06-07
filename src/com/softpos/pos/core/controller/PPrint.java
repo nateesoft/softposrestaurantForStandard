@@ -1314,7 +1314,7 @@ public class PPrint {
         } else {
             BillNoBean bBean = billControl.getData(_RefNo);
 
-            TableFileBean tBean = tableFileControl.getData(tableNo);
+            TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
             List<TSaleBean> listTSale = billControl.getAllTSale(_RefNo);
 
             int QtyLength = 3;
@@ -1618,7 +1618,7 @@ public class PPrint {
 
         if (CONFIG.getP_PrintSum().equals("Y")) {
             List<BalanceBean> listBeanNoVoid = balanceControl.getAllBalanceNoVoidSum(tableNo);
-            TableFileBean tBean = tableFileControl.getData(tableNo);
+            TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
             int ItemCnt = 0;
             String VatStr;
             double totalNonVat = 0;
@@ -1852,7 +1852,7 @@ public class PPrint {
 
         } else {
             List<BalanceBean> listBeanNoVoid = balanceControl.getAllBalanceNoVoid(tableNo);
-            TableFileBean tBean = tableFileControl.getData(tableNo);
+            TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
             int ItemCnt = 0;
             String VatStr;
             double vatPrint = tBean.getNetTotal();
@@ -2082,7 +2082,7 @@ public class PPrint {
             String t2 = "";
             if (!POSHW.getPRNPort().equals("NONE")) {
                 if (openPrint(POSHW.getPRNPort())) {
-                    TableFileBean tBean = tableFileControl.getData(tableNo);
+                    TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
                     initPrinter();
                     openDrawer();
                     PublicVar.P_LineCount = 0;
@@ -2380,7 +2380,7 @@ public class PPrint {
                                 }
                             }
 
-                            TableFileBean tBean = tableFileControl.getData(tableNo);
+                            TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
                             if (tBean.getProDiscAmt() > 0) {
                                 print("    " + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength));
@@ -2514,7 +2514,7 @@ public class PPrint {
                 }
             }
 
-            TableFileBean tBean = tableFileControl.getData(tableNo);
+            TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
             if (tBean.getProDiscAmt() > 0) {
                 t += ("colspan=3 align=left><font face=Angsana New size=2>" + Space + pUtility.DataFullR("ลด Promotion     ", SubLength) + pUtility.DataFull(DecFmt.format(tBean.getProDiscAmt()), AmtLength) + "_");
             }

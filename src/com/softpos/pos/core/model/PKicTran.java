@@ -74,7 +74,7 @@ public class PKicTran {
             ProductControl ProductControl = AppContext.getProductControl();
             while (rs.next()) {
                 PKicTranBean kicTranBean = new PKicTranBean();
-                ProductBean bean = ProductControl.getData(rs.getString("pcode"));
+                ProductBean bean = ProductControl.getProductByPCode(rs.getString("pcode"));
                 kicTranBean.setpItemNo(rs.getString("pitemno"));
                 kicTranBean.setpCode(rs.getString("pcode"));
                 kicTranBean.setpDesc(bean.getPDesc());

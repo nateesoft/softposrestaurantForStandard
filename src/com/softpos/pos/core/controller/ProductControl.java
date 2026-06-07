@@ -3,6 +3,7 @@ package com.softpos.pos.core.controller;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.pos.core.dto.ProductSearchResponse;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,17 +13,13 @@ import com.softpos.util.AppLogUtil;
 
 public class ProductControl {
 
-    private List<ProductBean> dataProduct = null;
+    private List<ProductBean> dataProduct = new ArrayList<>();
     public static final int PRODUCT_NOT_FOUND = 0;
     public static final int PRODUCT_ACTIVE = 1;
     public static final int PRODUCT_NOT_ACTIVE = 2;
 
     private static List<ProductBean> listAll = null;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
-
-    public ProductControl() {
-        dataProduct = new ArrayList<>();
-    }
 
     public ProductBean getProductCodeArray(String pCode) {
         if (pCode == null) {
@@ -56,73 +53,73 @@ public class ProductControl {
         return new ProductBean();
     }
 
-    public List<ProductBean> initLoadProductActive() {
+    public List<ProductBean> getAllProductActive() {
         if (listAll == null) {
             listAll = new ArrayList<>();
-            
+
             try {
                 mysqlConnect.open(ProductControl.class);
-                ResultSet rs = mysqlConnect.executeQuery("select * from product where pactive='Y'");
-                while (rs.next()) {
-                    ProductBean bean = new ProductBean();
-                    bean.setPCode(rs.getString("PCode"));
-                    bean.setPFix(rs.getString("PFix"));
-                    bean.setPReferent(rs.getString("PReferent"));
-                    bean.setPAccNo(rs.getString("PAccNo"));
-                    bean.setPGroup(rs.getString("PGroup"));
-                    bean.setPVender(rs.getString("PVender"));
-                    bean.setPType(rs.getString("PType"));
-                    bean.setPNormal(rs.getString("PNormal"));
-                    bean.setPRemark(rs.getString("PRemark"));
-                    bean.setPDiscount(rs.getString("PDiscount"));
-                    bean.setPService(rs.getString("PService"));
-                    bean.setPStatus(rs.getString("PStatus"));
-                    bean.setPStock(rs.getString("PStock"));
-                    bean.setPSet(rs.getString("PSet"));
-                    bean.setPVat(rs.getString("PVat"));
-                    bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
-                    bean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
-                    bean.setPPack1(rs.getInt("PPack1"));
-                    bean.setPArea(rs.getString("PArea"));
-                    bean.setPKic(rs.getString("PKic"));
-                    bean.setPPrice11(rs.getFloat("PPrice11"));
-                    bean.setPPrice12(rs.getFloat("PPrice12"));
-                    bean.setPPrice13(rs.getFloat("PPrice13"));
-                    bean.setPPrice14(rs.getFloat("PPrice14"));
-                    bean.setPPrice15(rs.getFloat("PPrice15"));
-                    bean.setPPromotion1(rs.getString("PPromotion1"));
-                    bean.setPPromotion2(rs.getString("PPromotion2"));
-                    bean.setPPromotion3(rs.getString("PPromotion3"));
-                    bean.setPMax(rs.getFloat("PMax"));
-                    bean.setPMin(rs.getFloat("PMin"));
-                    bean.setPBUnit(rs.getString("PBUnit"));
-                    bean.setPBPack(rs.getFloat("PBPack"));
-                    bean.setPLCost(rs.getFloat("PLCost"));
-                    bean.setPSCost(rs.getFloat("PSCost"));
-                    bean.setPACost(rs.getFloat("PACost"));
-                    bean.setPLink1(rs.getString("PLink1"));
-                    bean.setPLink2(rs.getString("PLink2"));
-                    bean.setPLastTime(rs.getString("PLastTime"));
-                    bean.setPUserUpdate(rs.getString("PUserUpdate"));
-                    bean.setPBarCode(rs.getString("PBarCode"));
-                    bean.setPActive(rs.getString("PActive"));
-                    bean.setPSPVat(rs.getString("PSPVat"));
-                    bean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
-                    bean.setPOSStk(rs.getString("POSStk"));
-                    bean.setMSStk(rs.getString("MSStk"));
-                    bean.setPTimeCharge(rs.getFloat("PTimeCharge"));
-                    bean.setPOrder(rs.getString("POrder"));
-                    bean.setPFoodType(rs.getString("PFoodType"));
-                    bean.setPPackOld(rs.getInt("PPackOld"));
-                    bean.setPDesc2(rs.getString("PDesc2"));
-                    bean.setPselectItem(rs.getString("PselectItem"));
-                    bean.setPselectNum(rs.getFloat("PselectNum"));
-                    bean.setPShowOption(rs.getString("PShowOption"));
-                    bean.setPEDesc(rs.getString("PEDesc"));
+                try (ResultSet rs = mysqlConnect.executeQuery("select * from product where pactive='Y'")) {
+                    while (rs.next()) {
+                        ProductBean bean = new ProductBean();
+                        bean.setPCode(rs.getString("PCode"));
+                        bean.setPFix(rs.getString("PFix"));
+                        bean.setPReferent(rs.getString("PReferent"));
+                        bean.setPAccNo(rs.getString("PAccNo"));
+                        bean.setPGroup(rs.getString("PGroup"));
+                        bean.setPVender(rs.getString("PVender"));
+                        bean.setPType(rs.getString("PType"));
+                        bean.setPNormal(rs.getString("PNormal"));
+                        bean.setPRemark(rs.getString("PRemark"));
+                        bean.setPDiscount(rs.getString("PDiscount"));
+                        bean.setPService(rs.getString("PService"));
+                        bean.setPStatus(rs.getString("PStatus"));
+                        bean.setPStock(rs.getString("PStock"));
+                        bean.setPSet(rs.getString("PSet"));
+                        bean.setPVat(rs.getString("PVat"));
+                        bean.setPDesc(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                        bean.setPUnit1(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                        bean.setPPack1(rs.getInt("PPack1"));
+                        bean.setPArea(rs.getString("PArea"));
+                        bean.setPKic(rs.getString("PKic"));
+                        bean.setPPrice11(rs.getFloat("PPrice11"));
+                        bean.setPPrice12(rs.getFloat("PPrice12"));
+                        bean.setPPrice13(rs.getFloat("PPrice13"));
+                        bean.setPPrice14(rs.getFloat("PPrice14"));
+                        bean.setPPrice15(rs.getFloat("PPrice15"));
+                        bean.setPPromotion1(rs.getString("PPromotion1"));
+                        bean.setPPromotion2(rs.getString("PPromotion2"));
+                        bean.setPPromotion3(rs.getString("PPromotion3"));
+                        bean.setPMax(rs.getFloat("PMax"));
+                        bean.setPMin(rs.getFloat("PMin"));
+                        bean.setPBUnit(rs.getString("PBUnit"));
+                        bean.setPBPack(rs.getFloat("PBPack"));
+                        bean.setPLCost(rs.getFloat("PLCost"));
+                        bean.setPSCost(rs.getFloat("PSCost"));
+                        bean.setPACost(rs.getFloat("PACost"));
+                        bean.setPLink1(rs.getString("PLink1"));
+                        bean.setPLink2(rs.getString("PLink2"));
+                        bean.setPLastTime(rs.getString("PLastTime"));
+                        bean.setPUserUpdate(rs.getString("PUserUpdate"));
+                        bean.setPBarCode(rs.getString("PBarCode"));
+                        bean.setPActive(rs.getString("PActive"));
+                        bean.setPSPVat(rs.getString("PSPVat"));
+                        bean.setPSPVatAmt(rs.getFloat("PSPVatAmt"));
+                        bean.setPOSStk(rs.getString("POSStk"));
+                        bean.setMSStk(rs.getString("MSStk"));
+                        bean.setPTimeCharge(rs.getFloat("PTimeCharge"));
+                        bean.setPOrder(rs.getString("POrder"));
+                        bean.setPFoodType(rs.getString("PFoodType"));
+                        bean.setPPackOld(rs.getInt("PPackOld"));
+                        bean.setPDesc2(rs.getString("PDesc2"));
+                        bean.setPselectItem(rs.getString("PselectItem"));
+                        bean.setPselectNum(rs.getFloat("PselectNum"));
+                        bean.setPShowOption(rs.getString("PShowOption"));
+                        bean.setPEDesc(rs.getString("PEDesc"));
 
-                    listAll.add(bean);
+                        listAll.add(bean);
+                    }
                 }
-                rs.close();
             } catch (SQLException e) {
 
             } finally {
@@ -133,7 +130,7 @@ public class ProductControl {
         return listAll;
     }
 
-    public ProductBean getData(String PCode) {
+    public ProductBean getProductByPCode(String PCode) {
         String sql = "select * from product where PCode='" + PCode + "' limit 1";
         ProductBean productBean = new ProductBean();
 
@@ -206,10 +203,43 @@ public class ProductControl {
         return productBean;
     }
 
-    public List<ProductBean> getAllProductByGroup(String PGroup) {
+    public List<ProductSearchResponse> searchProduct(String keySearch) {
+        List<ProductSearchResponse> listProduct = new ArrayList<>();
+        String sql = "select p.PCode, p.PDesc, p.PPrice11, p.PUnit1, p.PGroup, g.GroupName "
+                + "from product p "
+                + "inner join groupfile g on p.PGroup = g.GroupCode "
+                + "where p.PActive ='Y' "
+                + "and (p.PCode like '%"+keySearch+"%' or p.PDesc like '%"+keySearch+"%')";
         mysqlConnect.open(ProductControl.class);
         try {
-            String sql = "select * from product where PGroup ='" + PGroup + "'";
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    ProductSearchResponse response = new ProductSearchResponse();
+                    response.setCode(rs.getString("PCode"));
+                    response.setPrice(rs.getDouble("PPrice11"));
+                    response.setName(ThaiUtil.ASCII2Unicode(rs.getString("PDesc")));
+                    response.setUnit(ThaiUtil.ASCII2Unicode(rs.getString("PUnit1")));
+                    response.setGroup(rs.getString("PGroup"));
+                    response.setGroupName(ThaiUtil.ASCII2Unicode(rs.getString("GroupName")));
+
+                    listProduct.add(response);
+                }
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(ProductControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return listProduct;
+    }
+
+    public List<ProductBean> getProductByPGroup(String PGroup) {
+        mysqlConnect.open(ProductControl.class);
+        try {
+            String sql = "select * from product "
+                    + "where PGroup ='" + PGroup + "' AND pactive = 'Y' and pfix='F' "
+                    + "ORDER BY pcode ";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 ProductBean p;
                 while (rs.next()) {
@@ -267,7 +297,7 @@ public class ProductControl {
                     p.setPselectItem(rs.getString("PselectItem"));
                     p.setPselectNum(rs.getFloat("PselectNum"));
                     p.setPShowOption(rs.getString("PShowOption"));
-                    
+
                     dataProduct.add(p);
                 }
             }
@@ -284,7 +314,8 @@ public class ProductControl {
         boolean isProduct = false;
         mysqlConnect.open(ProductControl.class);
         try {
-            String sql = "select pcode from soft_menusetup where menucode='" + menuCode + "' "
+            String sql = "select pcode from soft_menusetup "
+                    + "where menucode='" + menuCode + "' "
                     + "and pcode<>'' limit 1;";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -293,7 +324,6 @@ public class ProductControl {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(ProductControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(ProductControl.class);
