@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
 
@@ -22,7 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
@@ -272,7 +272,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting2().trim()) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + (POSHW.getFootting3().trim()) + "_";
         String[] strs = t.split("_");
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         for (String data : strs) {
             pd.addTextIFont(data);
         }

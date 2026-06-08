@@ -11,7 +11,7 @@ import com.softpos.main.program.GetUserAction;
 import com.softpos.posreport.GiftVoucherRep;
 import com.softpos.posreport.InvRep;
 import com.softpos.posreport.PLURep;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.posreport.PromotionRep;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.controller.AppContext;

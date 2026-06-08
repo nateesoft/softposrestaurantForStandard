@@ -2,7 +2,7 @@ package com.softpos.main.login;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.FileManager;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterJob;
@@ -647,7 +647,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
         }
 
         AppLogUtil.info("PrintDriver PrintTest: rows=" + model.getRowCount());
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         pd.addTextLn("<b>=== Print Test ===</b>");
         pd.addTextLn("----------------------------------");
 

@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
@@ -24,7 +24,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
@@ -762,7 +762,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {

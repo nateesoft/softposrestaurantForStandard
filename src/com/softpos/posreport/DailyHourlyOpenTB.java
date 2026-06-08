@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.MSG;
 import java.util.List;
 
@@ -460,7 +460,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         }
         t += "colspan=4 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
         pd.setResolution(100, 75);
         for (String data1 : strs) {

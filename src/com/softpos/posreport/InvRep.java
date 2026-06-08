@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 
@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
@@ -381,7 +381,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         }
 
         t += "colspan=3 align=Center><font face=Angsana New size=1>" + ("----------------------------------------" + "_");
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {

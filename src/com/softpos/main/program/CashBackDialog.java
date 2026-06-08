@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.MSG;
 
 public class CashBackDialog extends javax.swing.JDialog {
@@ -209,7 +209,7 @@ public class CashBackDialog extends javax.swing.JDialog {
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=2 align=left><font face=Angsana New size=1>" + TAB + ("คืนเงินมัดจำเเป็นเงินสด") + "</td></Font><td align=right><font face=Angsana New size=1>" + DecFmt.format(cash) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
-            PrintDriver pd = new PrintDriver();
+            PrinterDriverControl pd = new PrinterDriverControl();
             t += "colspan=2 align=left><font face=Angsana New size=1>" + ("Net-Total...") + "</td></Font><td align=right><font face=Angsana New size=2>" + DecFmt.format(cash) + "_";
             t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------------") + "_";
             t += "colspan=3 align=right><font face=Angsana New size=1>" + ("RET.-NO.: ") + Refno + TAB + "_";

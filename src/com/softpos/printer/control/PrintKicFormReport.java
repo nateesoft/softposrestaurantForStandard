@@ -1,4 +1,4 @@
-package com.softpos.report.driver;
+package com.softpos.printer.control;
 
 /**
  *

@@ -11,7 +11,7 @@ import com.softpos.connection.database.ConfigFile;
 import java.awt.Cursor;
 import java.util.List;
 import javax.swing.JFrame;
-import com.softpos.report.driver.PrintSimpleForm;
+import com.softpos.printer.control.PrintSimpleForm;
 import com.softpos.util.MSG;
 
 /**

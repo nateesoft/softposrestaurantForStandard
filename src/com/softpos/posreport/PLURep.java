@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.main.program.Jdi_report_SalePLU;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.util.ThaiUtil;

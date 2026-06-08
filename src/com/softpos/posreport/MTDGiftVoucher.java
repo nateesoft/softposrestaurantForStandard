@@ -5,7 +5,7 @@ package com.softpos.posreport;
  * @author Dell-Softpos
  */
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 
@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.DateConvert;
@@ -566,7 +566,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");
         t += "align=right><font face=Angsana New size=1>" + ("Sum-Total Gift " + Space + PUtility.DataFull(IntFmt.format(Sumtotal), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(SumtotalAmount), 13) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------" + "_");
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {

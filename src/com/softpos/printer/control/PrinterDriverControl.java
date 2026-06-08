@@ -1,4 +1,4 @@
-package com.softpos.report.driver;
+package com.softpos.printer.control;
 
 import com.softpos.constants.PublicVar;
 
@@ -22,7 +22,7 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.OSValidator;
 
-public class PrintDriver {
+public class PrinterDriverControl {
 
     private String textAll = "";
     private String textNormal = "";
@@ -32,7 +32,7 @@ public class PrintDriver {
     private float width = 75;
     private float height = 72;
 
-    public PrintDriver() {
+    public PrinterDriverControl() {
     }
 
     public void setResolution(float w, float h) {
@@ -71,7 +71,7 @@ public class PrintDriver {
                 AppLogUtil.info("Cannot print printHTML:...>>>  ");
             }
         } catch (PrinterException e) {
-            AppLogUtil.log(PrintDriver.class, "error", e);
+            AppLogUtil.log(PrinterDriverControl.class, "error", e);
         }
 
         close();
@@ -104,7 +104,7 @@ public class PrintDriver {
             output.write(text);
 
         } catch (IOException e) {
-            AppLogUtil.log(PrintDriver.class, "error", e);
+            AppLogUtil.log(PrinterDriverControl.class, "error", e);
         } finally {
             if (output != null) {
                 try {
@@ -136,7 +136,7 @@ public class PrintDriver {
                 AppLogUtil.info("Cannot print printHTMLKitChen:...>>>  ");
             }
         } catch (PrinterException ex) {
-            AppLogUtil.log(PrintDriver.class, "error", ex);
+            AppLogUtil.log(PrinterDriverControl.class, "error", ex);
         }
 
         close();
@@ -162,7 +162,7 @@ public class PrintDriver {
                 AppLogUtil.info("Cannot print printHTMLKitChenByKictran:...>>>  " + printerName);
             }
         } catch (PrinterException e) {
-            AppLogUtil.log(PrintDriver.class, "error", e);
+            AppLogUtil.log(PrinterDriverControl.class, "error", e);
         }
 
         close();
@@ -185,7 +185,7 @@ public class PrintDriver {
                 AppLogUtil.info("Cannot print printNormal:...>>>  ");
             }
         } catch (PrinterException e) {
-            AppLogUtil.log(PrintDriver.class, "error", e);
+            AppLogUtil.log(PrinterDriverControl.class, "error", e);
         }
 
         close();
@@ -208,7 +208,7 @@ public class PrintDriver {
                 AppLogUtil.info("Cannot print printKichen:...>>>  ");
             }
         } catch (PrinterException e) {
-            AppLogUtil.log(PrintDriver.class, "error", e);
+            AppLogUtil.log(PrinterDriverControl.class, "error", e);
         }
 
         close();

@@ -14,7 +14,7 @@ import com.softpos.main.program.UpdateData;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;

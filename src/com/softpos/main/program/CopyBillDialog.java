@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.constants.CreditPaymentRec;
 import com.softpos.pos.core.model.POSConfigSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 

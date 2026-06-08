@@ -6,7 +6,7 @@ import com.softpos.pos.core.controller.MTranController;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BillNoBean;

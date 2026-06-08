@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
@@ -18,7 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
@@ -568,7 +568,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += "align=left><font face=Angsana New size=1>" + ("จำนวน Void :" + PUtility.DataFull(IntFmt.format(SumVoid), 5) + "</td><td align=center><font face=Angsana New size=1>" + "จำนวนเงิน :" + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(SumAmount), 11) + "_");
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("_");
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {

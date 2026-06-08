@@ -1,4 +1,4 @@
-package com.softpos.report.driver;
+package com.softpos.printer.control;
 
 import com.softpos.util.AppLogUtil;
 import java.util.Map;

@@ -4,7 +4,7 @@ import com.softpos.constants.CreditRec;
 import com.softpos.pos.core.model.FinalcialRec;
 import com.softpos.constants.HourlyRec;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;

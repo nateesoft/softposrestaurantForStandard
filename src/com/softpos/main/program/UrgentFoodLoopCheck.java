@@ -10,7 +10,7 @@ import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.JFrame;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
@@ -169,7 +169,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "จำนวน : " + pQty + "_";
                     textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + pcode + " # " + bean.getR_PName() + "_";
                     textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + dc.dateGetToShow(dc.GetCurrentDate()) + " เวลา " + dc.GetCurrentTime() + "_";
-                    PrintDriver printDriver = new PrintDriver();
+                    PrinterDriverControl printDriver = new PrinterDriverControl();
                     String[] strs = textToPrint.split("_");
                     for (String data1 : strs) {
                         printDriver.addTextIFont(data1);
@@ -217,7 +217,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dcLocal.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
                 }
                 textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + logList.size() + " ครั้ง " + "_";
-                PrintDriver printDriver = new PrintDriver();
+                PrinterDriverControl printDriver = new PrinterDriverControl();
                 String[] strs = textToPrint.split("_");
                 for (String data1 : strs) {
                     printDriver.addTextIFont(data1);

@@ -2,7 +2,7 @@ package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import java.awt.event.KeyEvent;
@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JFrame;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.MSG;
 
 public class PaidoutFormDialog extends javax.swing.JDialog {
@@ -61,7 +61,7 @@ public class PaidoutFormDialog extends javax.swing.JDialog {
         }
         if (PublicVar.useprint) {
             if (PublicVar.printdriver) {
-                PrintDriver pd = new PrintDriver();
+                PrinterDriverControl pd = new PrinterDriverControl();
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + St + " " + "Cashier: " + PublicVar._User + " Mac:" + PublicVar.MACNO);
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "------------------------------------------------------------");
                 pd.addTextIFont("colspan=3 align=center><font face=Angsana New size=2>" + "จำนวนเงินนำออกจากลิ้นชัก " + PUtility.DataFull(Decfmt.format(PaidoutAmt), 12));

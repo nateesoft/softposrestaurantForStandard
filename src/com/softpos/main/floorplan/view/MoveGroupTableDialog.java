@@ -7,7 +7,7 @@ import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableMoveControl;
 import com.softpos.pos.core.model.TableFileBean;
 import java.awt.event.KeyEvent;
-import com.softpos.report.driver.PrintSimpleForm;
+import com.softpos.printer.control.PrintSimpleForm;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 

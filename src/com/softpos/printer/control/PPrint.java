@@ -1,4 +1,4 @@
-package com.softpos.pos.core.controller;
+package com.softpos.printer.control;
 
 
 import com.softpos.util.ThaiUtil;
@@ -17,6 +17,14 @@ import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.BalanceControl;
+import com.softpos.pos.core.controller.BillControl;
+import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.PUtility;
+import com.softpos.pos.core.controller.ServiceControl;
+import com.softpos.pos.core.controller.TableFileControl;
+import com.softpos.pos.core.controller.TextWriter;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
@@ -48,7 +56,7 @@ import javax.print.attribute.HashPrintServiceAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateUtil;
 import com.softpos.util.NumberUtil;
@@ -523,7 +531,7 @@ public class PPrint {
             Date dateP = new Date();
 
             if (PublicVar.printdriver == true) {
-                PrintDriver pd = new PrintDriver();
+                PrinterDriverControl pd = new PrinterDriverControl();
                 pd.addTextLn("Log Out User : " + PublicVar.USERCODE);
                 pd.addTextLn("Log Out Time : " + PPrint_DatefmtThai.format(dateP).replace("/", " / "));
 
@@ -884,7 +892,7 @@ public class PPrint {
             EJPrint = false;
 
             //print
-            PrintDriver pd = new PrintDriver();
+            PrinterDriverControl pd = new PrinterDriverControl();
             String[] strs = t.split("_");
 
             for (String data1 : strs) {
@@ -1289,7 +1297,7 @@ public class PPrint {
             t = changeLanguage(t);
             t1 = changeLanguage(t1);
             //print
-            PrintDriver pd = new PrintDriver();
+            PrinterDriverControl pd = new PrinterDriverControl();
             String[] strs = t.split("_");
             for (String data1 : strs) {
                 pd.addTextIFont(data1);
@@ -1297,7 +1305,7 @@ public class PPrint {
             openDrawerDriver();
             pd.printHTML();
             if (ConfigFile.getProperties("printerStation").equals("true")) {
-                PrintDriver pd1 = new PrintDriver();
+                PrinterDriverControl pd1 = new PrinterDriverControl();
                 String[] strs1 = t1.split("_");
 
                 for (String data2 : strs1) {
@@ -1610,7 +1618,7 @@ public class PPrint {
         AppLogUtil.info("printCheckBillDriver table = " + tableNo);
 
         PublicVar.printerCheckBill = true;
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String t = "";
         String t1 = "";//Header1
         double totalDiscount;
@@ -2048,7 +2056,7 @@ public class PPrint {
     }
 
     public void printCheckBillDriverPDA(String tableNo, String emp) {
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String t = "";
         t += "colspan=3 align=center><font face=Angsana New size=5>" + "-----------------------------------------_";
         t += "colspan=3 align=left><font face=Angsana New size=5>" + "***โต๊ะ " + tableNo + " สั่งเช็คบิล***_";
@@ -2442,7 +2450,7 @@ public class PPrint {
 
     public void printVoidBillDriver(String tableNo) {
         List<BalanceBean> listBean = balanceControl.getAllBalance(tableNo);
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String t = "";
         int QtyLength = 5;
         int AmtLength = 10;
@@ -3176,7 +3184,7 @@ public class PPrint {
 
         }
         t = changeReportLanguage(t);
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {
@@ -3354,7 +3362,7 @@ public class PPrint {
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
         t += "align=center><font face=Angsana New size=2>" + "_";
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {
@@ -3551,7 +3559,7 @@ public class PPrint {
         t += "align=left><font face=Angsana New size=2>" + TAB + (pUtility.DataFullSpace(IntFmt.format(SumWQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumWAmt), 10) + "</td><td colspan=2 align=left><font face=Angsana New size=2>" + pUtility.DataFull(IntFmt.format(SumSQty), 3) + pUtility.DataFullSpace(DecFmt.format(SumSAmt), 10)) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("----------------------------------------") + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + "_";
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {
@@ -4114,7 +4122,7 @@ public class PPrint {
             }
             PublicVar.languagePrint = "TH";
             t = changeLanguage(t);
-            PrintDriver pd = new PrintDriver();
+            PrinterDriverControl pd = new PrinterDriverControl();
             String[] strs = t.split("_");
             for (String data1 : strs) {
                 pd.addTextIFont(data1);
@@ -4610,7 +4618,7 @@ public class PPrint {
         }
         t += (">_");
         EJPrint = false;
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {
@@ -4680,7 +4688,7 @@ public class PPrint {
         t += "align=left><font face=Angsana New size=2>" + ("Total" + "</td><td colspan=2 align=right><font face=Angsana New size=2" + pUtility.DataFull(DecFmt.format(SumTotal), 10)) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=2>" + ("------------------------------------------------------------") + "_";
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
         for (String data1 : strs) {
             pd.addTextIFont(data1);

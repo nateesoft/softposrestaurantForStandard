@@ -73,7 +73,9 @@
       "Bash(git -C /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard diff src/com/softpos/report/driver/PrintDriver.java)",
       "Bash(awk '/public void printCheckBillDriver\\\\\\(String tableNo\\\\\\)/{found=1} found{print NR\": \"$0; if\\(/^    \\\\}$/ && found && NR>1622\\){exit}}' /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/pos/core/controller/PPrint.java)",
       "Bash(git -C /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard diff src/com/softpos/report/driver/PrintSimpleForm.java)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(find /Users/nateelive/Documents/Projects/GithubProject -maxdepth 2 -type d -name \"*findig*\" -o -maxdepth 2 -type d -name \"*sale-online*\" 2>/dev/null | sort)",
+      "Read(//Users/nateelive/Documents/Projects/GithubProject/**)"
     ],
     "additionalDirectories": [
       "/tmp"

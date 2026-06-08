@@ -24,7 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 import com.softpos.util.NumberToString;
@@ -2142,7 +2142,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         t += ("colspan=5 align=center><font face=Angsana New size=1>" + "ลงชื่อ......................................." + "_");
         t += ("colspan=5 align=center><font face=Angsana New size=1>" + "ผู้รับเงิน" + "_");
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {

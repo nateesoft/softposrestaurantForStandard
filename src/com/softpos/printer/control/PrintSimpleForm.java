@@ -1,4 +1,4 @@
-package com.softpos.report.driver;
+package com.softpos.printer.control;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
@@ -285,7 +285,7 @@ public class PrintSimpleForm {
                     } catch (SQLException e) {
                         AppLogUtil.log(PrintSimpleForm.class, "error", e);
                     }
-                    PrintDriver pd = new PrintDriver();
+                    PrinterDriverControl pd = new PrinterDriverControl();
                     String[] strs = t.split("_");
                     for (String data1 : strs) {
                         PublicVar.printerDriverKitChenName = "kic" + printerName;
@@ -462,7 +462,7 @@ public class PrintSimpleForm {
             AppLogUtil.log(PrintSimpleForm.class, "error", e);
         }
 
-        PrintDriver pd2 = new PrintDriver();
+        PrinterDriverControl pd2 = new PrinterDriverControl();
         String[] strs1 = tt.split("_");
         for (String data2 : strs1) {
             PublicVar.printerDriverKitChenName = "kic" + printerName;
@@ -634,7 +634,7 @@ public class PrintSimpleForm {
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        PrintDriver pd3 = new PrintDriver();
+        PrinterDriverControl pd3 = new PrinterDriverControl();
         String[] strs3 = td.split("_");
         for (String data3 : strs3) {
             PublicVar.printerDriverKitChenName = "kic" + printerName;
@@ -1103,7 +1103,7 @@ public class PrintSimpleForm {
             //loop R_Indulgent =  Y : คือใส่จำนวนตามน้ำหนักมา
         }
 
-        PrintDriver printDriver = new PrintDriver();
+        PrinterDriverControl printDriver = new PrinterDriverControl();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
             PublicVar.printerDriverKitChenName = printerName;
@@ -1654,7 +1654,7 @@ public class PrintSimpleForm {
             }
 
             textToPrint2 = changeFontSize(textToPrint2);
-            PrintDriver pd1 = new PrintDriver();
+            PrinterDriverControl pd1 = new PrinterDriverControl();
             String[] strs1 = textToPrint2.split("_");
             for (String data2 : strs1) {
                 PublicVar.printerDriverKitChenName = printerName;
@@ -2051,7 +2051,7 @@ public class PrintSimpleForm {
             //loop Void to Print
             //loop R_Indulgent =  Y : คือใส่จำนวนตามน้ำหนักมา
         }
-        PrintDriver printDriver = new PrintDriver();
+        PrinterDriverControl printDriver = new PrinterDriverControl();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
             PublicVar.printerDriverKitChenName = printerName;
@@ -2383,7 +2383,7 @@ public class PrintSimpleForm {
             }
 
             textToPrint2 = changeFontSize(textToPrint2);
-            PrintDriver pd1 = new PrintDriver();
+            PrinterDriverControl pd1 = new PrinterDriverControl();
             String[] strs1 = textToPrint2.split("_");
             for (String data2 : strs1) {
                 PublicVar.printerDriverKitChenName = printerName;
@@ -3073,7 +3073,7 @@ public class PrintSimpleForm {
 
                 AppLogUtil.info("Printting Job Kitchen" + printerName);
                 t = changeFontSize(t);
-                PrintDriver pd = new PrintDriver();
+                PrinterDriverControl pd = new PrinterDriverControl();
                 String[] strs = t.split("_");
                 for (String data1 : strs) {
                     PublicVar.printerDriverKitChenName = printerName;
@@ -3226,7 +3226,7 @@ public class PrintSimpleForm {
                                 t += "colspan=3 align=left><font face=Angsana New size=2>" + "Mac " + macNo + "/" + TAB + TUser + "_";
                                 t += "<svg id=\"barcode\"></svg>_";
                                 t += "colspan=3 align=left><font face=Code 128 size=2>" + "A10/1234" + "_";
-                                PrintDriver pd = new PrintDriver();
+                                PrinterDriverControl pd = new PrinterDriverControl();
                                 String[] strs = t.split("_");
                                 for (String data1 : strs) {
                                     PublicVar.printerDriverKitChenName = printerName;
@@ -3398,7 +3398,7 @@ public class PrintSimpleForm {
             textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("ไป>>>" + "_");
             textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("โต๊ะ : " + tableto + "_");
             textToPrint += "colspan=3 align=left><font face=Angsana New size=5>" + ("" + simp.format(new Date()) + "(" + kicName + ")" + "_");
-            PrintDriver printerDriver = new PrintDriver();
+            PrinterDriverControl printerDriver = new PrinterDriverControl();
             String[] strs = textToPrint.split("_");
             for (String data1 : strs) {
                 PublicVar.printerDriverKitChenName = "kic" + kicName;
@@ -3585,7 +3585,7 @@ public class PrintSimpleForm {
             mysqlConnect.closeConnection(this.getClass());
         }
 
-        PrintDriver printDriver = new PrintDriver();
+        PrinterDriverControl printDriver = new PrinterDriverControl();
         String[] strs = textToPrint.split("_");
         for (String data1 : strs) {
             PublicVar.printerDriverKitChenName = printerName;
@@ -3763,7 +3763,7 @@ public class PrintSimpleForm {
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
         for (String data1 : strs) {
             PublicVar.printerDriverKitChenName = "kic" + printerName;

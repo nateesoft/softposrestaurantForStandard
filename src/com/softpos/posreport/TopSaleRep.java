@@ -2,7 +2,7 @@ package com.softpos.posreport;
 
 import com.softpos.main.program.Jdi_dailyReport_Topsale;
 import com.softpos.pos.core.model.POSHWSetup;
-import com.softpos.pos.core.controller.PPrint;
+import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.util.ThaiUtil;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import com.softpos.report.driver.PrintDriver;
+import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
@@ -734,7 +734,7 @@ private void txtCntOrderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("----------------------------------------") + "_";
         txtMacNo1.requestFocus();
 
-        PrintDriver pd = new PrintDriver();
+        PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
 
         for (String data1 : strs) {
