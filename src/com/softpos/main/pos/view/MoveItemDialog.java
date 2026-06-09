@@ -486,7 +486,8 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 TableFileControl tfControl = AppContext.getTableFileControl();
                 tfControl.updateTableNotActive(TABLE_NO);
 
-                String sql = "update balance set r_linkindex='' where r_table='" + TABLE_2 + "'";
+                String sql = "update balance set r_linkindex='' "
+                        + "where r_table='" + TABLE_2 + "'";
                 databaseConnection.execUpdate(sql);
 
                 PublicVar.TableSelected = TABLE_2;

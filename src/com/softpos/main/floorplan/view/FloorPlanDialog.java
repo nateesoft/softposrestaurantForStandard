@@ -2646,7 +2646,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         TempsetBean tempsetBean = floorPlanControl.getPOptionFromTempSet(R_Index, PCode);
         if (tempsetBean != null) {
             String sqlUpdate = "update balance "
-                    + "set R_Opt1='" + tempsetBean.getPOption() + "',"
+                    + "set R_Opt1='" + ThaiUtil.Unicode2ASCII(tempsetBean.getPOption()) + "',"
                     + "R_LinkIndex='" + R_Index + "' "
                     + "where R_Table='" + TableNo + "' "
                     + "and R_PluCode='" + PCode + "' "

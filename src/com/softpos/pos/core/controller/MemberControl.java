@@ -192,7 +192,8 @@ public class MemberControl {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);
             }
-            String sqlUpdate = "update balance set r_prsubtype='',r_prsubcode='',"
+            String sqlUpdate = "update balance "
+                    + "set r_prsubtype='',r_prsubcode='',"
                     + "r_prsubquan='0',r_prsubdisc='0',r_prsubamt='0'"
                     + " where r_table='" + tableNo + "'";
             mysqlConnect.executeUpdate(sqlUpdate);

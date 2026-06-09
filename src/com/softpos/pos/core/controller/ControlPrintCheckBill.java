@@ -13,8 +13,10 @@ public class ControlPrintCheckBill {
 
     public void setPrintCheckBillItemAfterSendKic(String tableNO) {
         try {
-            String sql = "update balance set PDAPrintChekItemStation='Y' "
-                    + "where PDAPrintChekItemStation='N' and r_table='" + tableNO + "'";
+            String sql = "update balance "
+                    + "set PDAPrintChekItemStation='Y' "
+                    + "where PDAPrintChekItemStation='N' "
+                    + "and r_table='" + tableNO + "'";
             mysqlConnect.open();
             mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {

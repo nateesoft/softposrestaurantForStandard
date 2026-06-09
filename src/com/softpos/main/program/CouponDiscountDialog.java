@@ -1058,9 +1058,9 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "R_QuanCanDisc=R_QuanCanDisc-" + itemDisc + " "
                     + "where R_Index='" + balanceBean.getR_Index() + "' "
                     + "and R_Table='" + tableNo + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql3);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql3);
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CouponDiscountDialog.class, "error", e);

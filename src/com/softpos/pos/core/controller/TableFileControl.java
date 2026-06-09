@@ -537,7 +537,8 @@ public class TableFileControl {
         
         mysqlConnect.open(TableFileControl.class);
         try {
-            String sql = "update balance set R_ETD='" + rEtd + "' "
+            String sql = "update balance "
+                    + "set R_ETD='" + rEtd + "' "
                     + "where R_Index='" + rIndex + "' and R_Table='" + tableNo + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate(sql);

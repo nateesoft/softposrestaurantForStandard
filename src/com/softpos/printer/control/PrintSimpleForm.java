@@ -1675,8 +1675,7 @@ public class PrintSimpleForm {
                         + "and r_kic<>'' "
                         + "and r_void<>'V' "
                         + "and macno='" + macno + "' "
-                        + "and R_Kic='" + R_Kic + "'"
-                        + ";";
+                        + "and R_Kic='" + R_Kic + "'";
                 AppLogUtil.warn(PrintSimpleForm.class, sql);
                 databaseConnection.execUpdate(sql);
                 sql = "update balance "
@@ -2402,8 +2401,7 @@ public class PrintSimpleForm {
                     + "and r_printOk='Y' "
                     + "and r_kic<>'' "
                     + "and r_void='V' "
-                    + "and macno='" + macno + "'"
-                    + ";";
+                    + "and macno='" + macno + "'";
             AppLogUtil.warn(PrintSimpleForm.class, sql);
             databaseConnection.execUpdate(sql);
             mysqlConnect.closeConnection(this.getClass());
@@ -3357,7 +3355,8 @@ public class PrintSimpleForm {
                     try {
                         String sqlUpdateBalance;
                         if (countRound > 1 && !tempPlucode.equals(r_plucode)) {
-                            sqlUpdateBalance = "update balance set R_KicPrint='P' "
+                            sqlUpdateBalance = "update balance "
+                                    + "set R_KicPrint='P' "
                                     + "where r_table='" + tableNo + "' "
                                     + "and r_kic='" + printerName.replace("kic", "") + "' "
                                     + "and R_KicPrint<>'P' "
@@ -3368,7 +3367,8 @@ public class PrintSimpleForm {
                             AppLogUtil.warn(PrintSimpleForm.class, sqlUpdateBalance);
                             mysqlConnect.executeUpdate(sqlUpdateBalance);
                         } else {
-                            sqlUpdateBalance = "update balance set R_KicPrint='P' "
+                            sqlUpdateBalance = "update balance "
+                                    + "set R_KicPrint='P' "
                                     + "where r_table='" + tableNo + "' "
                                     + "and r_kic='" + printerName.replace("kic", "") + "' "
                                     + "and R_KicPrint<>'P' "

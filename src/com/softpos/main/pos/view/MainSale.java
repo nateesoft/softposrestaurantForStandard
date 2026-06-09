@@ -180,7 +180,9 @@ public class MainSale extends javax.swing.JDialog {
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
-                String sql = "update balance set r_kic='0' where r_kicprint<>'P' and macno='" + PublicVar.MacNo + "';";
+                String sql = "update balance set r_kic='0' "
+                        + "where r_kicprint<>'P' "
+                        + "and macno='" + PublicVar.MacNo + "';";
                 databaseConnection.execUpdate(sql);
             }
             kichenPrint();
@@ -197,16 +199,20 @@ public class MainSale extends javax.swing.JDialog {
         processPrintBillCheck();
         
         if (btnClickPrintKic == true) {
-            String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
+            String sqlTurnPrintKicOff = "update balance set r_kic='0' "
+                    + "where r_kicprint<>'P' "
+                    + "and r_table='" + tableNo + "';";
             databaseConnection.execUpdate(sqlTurnPrintKicOff);
         }
         if (lbTotalAmount.getText().equals("0.00")) {
             MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
-            String sql = "update tablefile set tpause='Y' where tcode='" + tableNo + "';";
+            String sql = "update tablefile "
+                    + "set tpause='Y' where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
             kichenPrint();
-            sql = "update tablefile set tpause='N' where tcode='" + tableNo + "';";
+            sql = "update tablefile "
+                    + "set tpause='N' where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
 
             showCheckBill();
@@ -2035,7 +2041,9 @@ public class MainSale extends javax.swing.JDialog {
                         + "where R_Table='" + tableNo + "' "
                         + "and r_PrCode<>'' ";
                 databaseConnection.execUpdate(sqlUpdatePro);
-                String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+                String sqlUpdateTable = "update tablefile "
+                        + "set nettotal=tamount,ProDiscAmt='0' "
+                        + "where tcode='" + tableNo + "'";
                 databaseConnection.execUpdate(sqlUpdateTable);
             } catch (Exception e) {
                 MSG.ERR(this, e.getMessage());
@@ -2817,7 +2825,9 @@ public class MainSale extends javax.swing.JDialog {
         databaseConnection.execUpdate(sql);
         
         // update tablefile status
-        databaseConnection.execUpdate("update tablefile set tpause='N' where tcode='" + tableNo + "';");
+        databaseConnection.execUpdate("update tablefile "
+                + "set tpause='N' "
+                + "where tcode='" + tableNo + "';");
     }
 
     private void changeSaleType(String SaleType) {
@@ -2922,11 +2932,17 @@ public class MainSale extends javax.swing.JDialog {
     private void bntHoldTableClick() {
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
-                String sqlTurnPrintKicOff = "update balance set r_kic='0' where r_kicprint<>'P' and r_table='" + tableNo + "';";
+                String sqlTurnPrintKicOff = "update balance "
+                        + "set r_kic='0' "
+                        + "where r_kicprint<>'P' "
+                        + "and r_table='" + tableNo + "';";
                 databaseConnection.execUpdate(sqlTurnPrintKicOff);
             }
 
-            String sql = "update tablefile set tpause='Y', TOnAct='N' where tcode='" + tableNo + "';";
+            String sql = "update tablefile "
+                    + "set tpause='Y', "
+                    + "TOnAct='N' "
+                    + "where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
 
             kichenPrint();
@@ -2937,10 +2953,14 @@ public class MainSale extends javax.swing.JDialog {
             initScreen();
             return;
         }
-        String sql = "update tablefile set tonact ='N' where tcode='" + txtTable.getText() + "';";
+        String sql = "update tablefile "
+                + "set tonact ='N' "
+                + "where tcode='" + txtTable.getText() + "';";
         if (lbTotalAmount.getText().equals("0.00")) {
-            sql = "update tablefile set tonact ='N' , TCustomer='0'"
-                    + " where tcode='" + txtTable.getText() + "';";
+            sql = "update tablefile "
+                    + "set tonact ='N', "
+                    + "TCustomer='0' "
+                    + "where tcode='" + txtTable.getText() + "';";
         }
         databaseConnection.execUpdate(sql);
     }
@@ -3715,7 +3735,6 @@ public class MainSale extends javax.swing.JDialog {
     private void cancelItemBeforeHold() {
         try {
             String sqlUpdatePro = "update balance set "
-                    //                    + "R_PrCode='',"
                     + "R_PrType='-P',"
                     + "R_PRDisc='0',"
                     + "R_PRAmt='0',"
@@ -3725,7 +3744,9 @@ public class MainSale extends javax.swing.JDialog {
                     + "where R_Table='" + tableNo + "' "
                     + "and r_PrCode<>'' ";
             databaseConnection.execUpdate(sqlUpdatePro);
-            String sqlUpdateTable = "update tablefile set nettotal=tamount,ProDiscAmt='0' where tcode='" + tableNo + "'";
+            String sqlUpdateTable = "update tablefile "
+                    + "set nettotal=tamount,ProDiscAmt='0' "
+                    + "where tcode='" + tableNo + "'";
             databaseConnection.execUpdate(sqlUpdateTable);
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());

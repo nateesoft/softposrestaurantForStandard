@@ -826,10 +826,13 @@ public class DiscountDialog extends javax.swing.JDialog {
                         stmt.executeUpdate(sqlUpd);
                     }
                     if (discBean.getBahtDiscount() > 0) {
-                        String sqlgetBL = "select count(r_index) r_index from balance where r_table='" + tableNo + "' and r_void<>'V'";
+                        String sqlgetBL = "select count(r_index) r_index from balance "
+                                + "where r_table='" + tableNo + "' and r_void<>'V'";
                         try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rsBL = stmt1.executeQuery(sqlgetBL)) {
                             if (rsBL.next()) {
-                                String sqlUpdate = "update balance set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "' where r_table='" + tableNo + "'";
+                                String sqlUpdate = "update balance "
+                                        + "set r_discbath ='" + discBean.getBahtDiscount() / rsBL.getInt("r_index") + "' "
+                                        + "where r_table='" + tableNo + "'";
                                 try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                                     stmt2.executeUpdate(sqlUpdate);
                                     stmt2.close();
@@ -893,13 +896,15 @@ public class DiscountDialog extends javax.swing.JDialog {
                                 sql = "update balance set "
                                         + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                         + "R_PRSubDisc='" + discForN + "', R_PRSubAmt=(R_Total * " + discForN + ")/100 "
-                                        + "where r_table='" + tableNo + "' and R_ETD='E' and R_Normal='N' and R_Discount='Y';";
+                                        + "where r_table='" + tableNo + "' "
+                                        + "and R_ETD='E' and R_Normal='N' and R_Discount='Y';";
                                 mysqlConnect.executeUpdate(sql);
                             } else if (typeNormalC > 0) {
                                 sql = "update balance set "
                                         + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                         + "R_PRSubDisc='" + discForN + "', R_PRSubAmt=(R_Total * " + discForC + ")/100 "
-                                        + "where r_table='" + tableNo + "' and R_ETD='E' and R_Normal='C' and R_Discount='Y';";
+                                        + "where r_table='" + tableNo + "' "
+                                        + "and R_ETD='E' and R_Normal='C' and R_Discount='Y';";
                                 mysqlConnect.executeUpdate(sql);
                             } else if (typeNormalS > 0) {
                                 sql = "update balance set "
@@ -923,19 +928,22 @@ public class DiscountDialog extends javax.swing.JDialog {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForN + "', R_PRSubAmt=(R_Total * " + discForN + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='T' and R_Normal='N' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' and R_ETD='T' "
+                                            + "and R_Normal='N' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 } else if (typeNormalC > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForC + "', R_PRSubAmt=(R_Total * " + discForC + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='T' and R_Normal='C' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' and R_ETD='T' "
+                                            + "and R_Normal='C' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 } else if (typeNormalS > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForS + "', R_PRSubAmt=(R_Total * " + discForS + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='T' and R_Normal='S' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' and R_ETD='T' "
+                                            + "and R_Normal='S' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 }
                             } catch (Exception e) {
@@ -955,19 +963,22 @@ public class DiscountDialog extends javax.swing.JDialog {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForN + "', R_PRSubAmt=(R_Total * " + discForN + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='D' and R_Normal='N' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' "
+                                            + "and R_ETD='D' and R_Normal='N' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 } else if (typeNormalC > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForC + "', R_PRSubAmt=(R_Total * " + discForC + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='D' and R_Normal='C' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' "
+                                            + "and R_ETD='D' and R_Normal='C' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 } else if (typeNormalS > 0) {
                                     sql = "update balance set "
                                             + "R_PRSubType='-E', R_PRSubCode='EMP', R_PRSubQuan='1', "
                                             + "R_PRSubDisc='" + discForS + "', R_PRSubAmt=(R_Total * " + discForS + ")/100 "
-                                            + "where r_table='" + tableNo + "' and R_ETD='D' and R_Normal='S' and R_Discount='Y';";
+                                            + "where r_table='" + tableNo + "' "
+                                            + "and R_ETD='D' and R_Normal='S' and R_Discount='Y';";
                                     mysqlConnect.executeUpdate(sql);
                                 }
                             } catch (Exception e) {
@@ -2090,7 +2101,9 @@ public class DiscountDialog extends javax.swing.JDialog {
         }
 
         try {
-            String sqlUpdateBalance = "update balance set r_prcuamt='0',r_discbath='0' where r_table='" + tableNo + "'";
+            String sqlUpdateBalance = "update balance "
+                    + "set r_prcuamt='0',r_discbath='0' "
+                    + "where r_table='" + tableNo + "'";
             mysqlConnect.executeUpdate(sqlUpdateBalance);
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());

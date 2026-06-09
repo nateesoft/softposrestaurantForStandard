@@ -219,7 +219,9 @@ public class TableMoveControl {
     public void updateForVoidAfterMoveTable(String table) {
         mysqlConnect.open(TableMoveControl.class);
         try {
-            mysqlConnect.executeUpdate("update balance set r_spindex=r_index ,r_linkIndex=r_index where r_table='" + table + "'");
+            mysqlConnect.executeUpdate("update balance "
+                    + "set r_spindex=r_index ,r_linkIndex=r_index "
+                    + "where r_table='" + table + "'");
         } catch (Exception e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
