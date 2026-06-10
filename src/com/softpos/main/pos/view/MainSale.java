@@ -348,14 +348,13 @@ public class MainSale extends javax.swing.JDialog {
                     if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
                         CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
                         ccd.setVisible(true);
+                        
                     }
-
                     loadTableBalance(tNo);
                     historyBack = new ArrayList<>();
                     sumSplit();
                     
                     showCustomerInput();
-                    
                     txtProductCode.setEditable(true);
                     txtProductCode.setFocusable(true);
                     txtProductCode.requestFocus();
@@ -1438,15 +1437,15 @@ public class MainSale extends javax.swing.JDialog {
 
             //วนหาข้อความพิเศษ
             String[] optList = new String[]{
-                balanceBean.getR_Opt1(),
-                balanceBean.getR_Opt2(),
-                balanceBean.getR_Opt3(),
-                balanceBean.getR_Opt4(),
-                balanceBean.getR_Opt5(),
-                balanceBean.getR_Opt6(),
-                balanceBean.getR_Opt7(),
-                balanceBean.getR_Opt8(),
-                balanceBean.getR_Opt9(),};
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt1()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt2()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt3()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt4()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt5()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt6()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt7()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt8()),
+                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt9()),};
             String str = "";
             for (String R_Opt : optList) {
                 if (R_Opt == null) {
@@ -1866,6 +1865,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
         printCheckBillProcess();
+        
     }//GEN-LAST:event_bntPrintCheckBillActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -2841,6 +2841,12 @@ public class MainSale extends javax.swing.JDialog {
                 break;
             case "D":
                 txtTypeDesc.setText(SALE_Delivery);
+                break;
+            case "P":
+                txtTypeDesc.setText(SALE_Pinto);
+                break;
+            case "W":
+                txtTypeDesc.setText(SALE_WholeSale);
                 break;
             default:
                 break;
@@ -4166,7 +4172,6 @@ public class MainSale extends javax.swing.JDialog {
                 txtCustOnExit();
             }
         }
-        
         upDateTableFile();
     }
 

@@ -11,6 +11,16 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/printer/control/PrintSimpleForm.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/printer/control/PPrint.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/connect.ini</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/payment/view/CheckBill.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/pos/view/MainSale.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/program/CustomerName.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/pos/core/controller/MainSaleController.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BillControl.java</file>
+            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/printer/control/PrinterDriverControl.java</file>
+        </group>
     </open-files>
 </project-private>

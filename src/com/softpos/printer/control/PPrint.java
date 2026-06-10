@@ -1,6 +1,5 @@
 package com.softpos.printer.control;
 
-
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -94,12 +93,10 @@ public class PPrint {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility pUtility = new PUtility();
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
-    
+
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final ServiceControl ServiceControl = AppContext.getServiceControl();
-    
-    
 
     public PPrint() {
         POSHW = POSHWSetup.Bean(PublicVar.MACNO);
@@ -584,7 +581,7 @@ public class PPrint {
             }
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
                 if (ConfigFile.getProperties("PrintQueue").equals("true")) {
-                    
+
                     try {
                         mysqlConnect.open(this.getClass());
                         String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
@@ -1753,9 +1750,9 @@ public class PPrint {
                     cuponCode = bean.getR_PrCuCode();
                 }
             }
-            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+//            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
             t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + ItemCnt + " Item" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getTAmount()) + "_";
-            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+//            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
 
             if (tBean.getProDiscAmt() > 0) {
                 t1 += "colspan=2 align=right><font face=Angsana New size=2>" + TAB + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getProDiscAmt()) + "_";
@@ -1786,7 +1783,10 @@ public class PPrint {
             }
 
             if (tBean.getCuponDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + getCuponName(cuponCode) + "</td><td align=right ><font face=Angsana New size=2> " + DecFmt.format(tBean.getCuponDiscAmt()) + "-_";
+                if (!cuponCode.equals("")) {
+                    t1 += "colspan=2 align=right><font face=Angsana New size=2>" + getCuponName(cuponCode) + "</td><td align=right ><font face=Angsana New size=2> " + DecFmt.format(tBean.getCuponDiscAmt()) + "-_";
+
+                }
             }
             if (tBean.getServiceAmt() > 0) {
                 t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + TAB + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
@@ -1985,10 +1985,10 @@ public class PPrint {
 
             if (tBean.getCuponDiscAmt() > 0) {
                 t1 += "align=center colspan=3>_";
-                t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
+//                t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
                 t1 += "colspan=3 align=right><font face=Angsana New size=3>" + "ส่วนลดคูปอง.." + Space + DecFmt.format(tBean.getCuponDiscAmt()) + "_";
             }
-            t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
+//            t1 += "align=center colspan=3><font face=Angsana New size=3>" + "-----------------------------------------_";
             if (tBean.getTAmount() != tBean.getNetTotal()) {
                 if (tBean.getServiceAmt() > 0) {
                     t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + "</td><td align=right><font face=Angsana New size=2>" + DecFmt.format(Math.round(tBean.getTAmount())) + "_";
@@ -2586,7 +2586,7 @@ public class PPrint {
         if (ChargeType == 5) {
             TempStr = "5) อาหารพนักงาน ";
         }
-        
+
         return TempStr;
     }
 
@@ -4265,7 +4265,7 @@ public class PPrint {
                         print("     " + pUtility.DataFullR("ลดตามรายการ(Item)", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_ItemDiscAmt()), AmtLength));
                     }
                     if (bBean.getB_CuponDiscAmt() > 0) {
-                        
+
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -4309,7 +4309,6 @@ public class PPrint {
                     if (bBean.getB_GiftVoucher() > 0) {
                         print("     " + pUtility.DataFullR("บัตรกำนัล..............", SubLength) + pUtility.DataFull(DecFmt.format(bBean.getB_GiftVoucher()), AmtLength));
 
-                        
                         mysqlConnect.open(this.getClass());
                         try {
                             Statement stmt = mysqlConnect.getConnection().createStatement();
