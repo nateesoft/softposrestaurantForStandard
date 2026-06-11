@@ -28,7 +28,7 @@ public class PrinterDriverControl {
     private String textNormal = "";
     private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100%>";
     private final String footer = "</table></body></html>";
-    private final String fontName = "Angsana New";
+    private final String fontName = "Tahoma";
     private float width = 75;
     private float height = 72;
 
@@ -53,10 +53,7 @@ public class PrinterDriverControl {
     private JEditorPane createRenderedEditor(String text) {
         JEditorPane editor = new JEditorPane();
         editor.setContentType("text/html");
-        // Force synchronous document loading to avoid partial-render prints
-        editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         editor.setText(text);
-        // Trigger full layout pass before returning
         editor.setSize(editor.getPreferredSize());
         return editor;
     }
