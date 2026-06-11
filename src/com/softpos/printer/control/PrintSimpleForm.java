@@ -3641,7 +3641,7 @@ public class PrintSimpleForm {
 
                                         //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                                         line += 25;
-                                        g2.setFont(new Font("AngsanaUPC", Font.PLAIN, 20));
+                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 20));
                                         if (!printTable) {
                                             String tableHead = dataFullR("โต๊ะ " + rs.getString("TCode"), PaperMaxLength - 3);
                                             g2.drawString(tableHead + " C " + custCount, SpaceFront, line);
@@ -3653,7 +3653,7 @@ public class PrintSimpleForm {
                                         printG(g2, ETD, line);
 
                                         line += 25;
-                                        g2.setFont(new Font("AngsanaUPC", Font.PLAIN, 15));
+                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 15));
                                         g2.drawString(productName, SpaceFront, line);
                                         //********* พิมพ์ข้อความพิเศษ *************
                                         for (int x = 0; x < listOpt.size(); x++) {
@@ -3669,7 +3669,7 @@ public class PrintSimpleForm {
                                         }
                                         //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
                                         line += 20;
-                                        g2.setFont(new Font("AngsanaUPC", Font.PLAIN, 15));
+                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 15));
                                         g2.drawString("จำนวน    " + qty + "      ราคา " + rs.getDouble("R_Price"), SpaceFront, line);
                                         line += 20;
                                         g2.drawString("-----------------------------------------", SpaceFront, line);
@@ -3715,7 +3715,7 @@ public class PrintSimpleForm {
                                     }
 
                                     line += 20;
-                                    g2.setFont(new Font("AngsanaUPC", Font.PLAIN, 12));
+                                    g2.setFont(new Font("Tahoma", Font.PLAIN, 12));
                                     g2.drawString("  " + simp.format(new Date()) + "   Mac " + macNo + "/" + TUser, SpaceFront, line);
 
                                 }
