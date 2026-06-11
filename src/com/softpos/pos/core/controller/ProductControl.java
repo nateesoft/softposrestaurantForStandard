@@ -228,7 +228,6 @@ public class ProductControl {
             }
         } catch (SQLException e) {
             AppLogUtil.log(ProductControl.class, "error", e);
-            e.printStackTrace();
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

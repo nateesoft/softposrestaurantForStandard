@@ -4,7 +4,6 @@ import com.softpos.connection.database.MySQLConnect;
 import com.softpos.pos.core.model.GroupFileBean;
 import com.softpos.util.AppLogUtil;
 import java.util.List;
-import java.util.Map;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
