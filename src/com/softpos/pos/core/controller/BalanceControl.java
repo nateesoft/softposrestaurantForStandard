@@ -1901,15 +1901,15 @@ public class BalanceControl {
                 bean.setR_Pause(rs.getString("r_pause"));
                 bean.setR_Emp(rs.getString("r_emp"));
                 bean.setR_Time(rs.getString("r_time"));
-                bean.setR_Opt1(rs.getString("R_Opt1"));
-                bean.setR_Opt2(rs.getString("R_Opt2"));
-                bean.setR_Opt3(rs.getString("R_Opt3"));
-                bean.setR_Opt4(rs.getString("R_Opt4"));
-                bean.setR_Opt5(rs.getString("R_Opt5"));
-                bean.setR_Opt6(rs.getString("R_Opt6"));
-                bean.setR_Opt7(rs.getString("R_Opt7"));
-                bean.setR_Opt8(rs.getString("R_Opt8"));
-                bean.setR_Opt9(rs.getString("R_Opt9"));
+                bean.setR_Opt1(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt1")));
+                bean.setR_Opt2(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt2")));
+                bean.setR_Opt3(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt3")));
+                bean.setR_Opt4(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt4")));
+                bean.setR_Opt5(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt5")));
+                bean.setR_Opt6(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt6")));
+                bean.setR_Opt7(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt7")));
+                bean.setR_Opt8(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt8")));
+                bean.setR_Opt9(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt9")));
 
                 listBalance.add(bean);
             }

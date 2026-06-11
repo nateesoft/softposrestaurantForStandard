@@ -414,19 +414,17 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and CuStrDay like '%" + EE + "%' "
                     + "and ChkMember='N' "
                     + "order by cutype,cucode";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Object[] row = new Object[ShowTable.getColumnCount()];
-                row[0] = rs.getString("cutype");
-                row[1] = rs.getString("cucode");
-                row[2] = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
-                row[3] = getCountTable("" + row[1]);
-
-                model.addRow(row);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    Object[] row = new Object[ShowTable.getColumnCount()];
+                    row[0] = rs.getString("cutype");
+                    row[1] = rs.getString("cucode");
+                    row[2] = ThaiUtil.ASCII2Unicode(rs.getString("cuname"));
+                    row[3] = getCountTable("" + row[1]);
+                    
+                    model.addRow(row);
+                }
             }
-            rs.close();
-            stmt.close();
 
             ShowTable.setToolTipText("");
         } catch (SQLException e) {

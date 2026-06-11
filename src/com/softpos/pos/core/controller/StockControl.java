@@ -212,8 +212,8 @@ public class StockControl {
                 while (rs.next()) {
                     result.add(new String[]{
                         rs.getString("pcode"),
-                        rs.getString("pdesc"),
-                        rs.getString("punit1")
+                        ThaiUtil.ASCII2Unicode(rs.getString("pdesc")),
+                        ThaiUtil.ASCII2Unicode(rs.getString("punit1"))
                     });
                 }
             }

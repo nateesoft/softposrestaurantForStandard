@@ -84,25 +84,25 @@ public class CancelArPayment extends javax.swing.JDialog {
         
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Object[] input = {rs.getString("ref_no"),
-                    rs.getDate("ondate"),
-                    rs.getString("terminal"),
-                    rs.getString("cashier"),
-                    rs.getString("arcode"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
-                    rs.getDouble("stotal"),
-                    rs.getString("fat"),
-                    rs.getString("uservoid")
-                };
-                model2.addRow(input);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                sql = "Select * from billar left join custfile on arcode=sp_code order by ondate,ref_no";
+                try (ResultSet rs = stmt.executeQuery(sql)) {
+                    while (rs.next()) {
+                        Object[] input = {rs.getString("ref_no"),
+                            rs.getDate("ondate"),
+                            rs.getString("terminal"),
+                            rs.getString("cashier"),
+                            rs.getString("arcode"),
+                            ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                            rs.getDouble("stotal"),
+                            rs.getString("fat"),
+                            rs.getString("uservoid")
+                        };
+                        model2.addRow(input);
+                    }
+                    showCell(0, 0);
+                }
             }
-            showCell(0, 0);
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CancelArPayment.class, "error", e);

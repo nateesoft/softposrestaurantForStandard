@@ -171,7 +171,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 }//GEN-LAST:event_bntExitActionPerformed
 
     public void LoadDataToGrid() {
-        String SQLQuery = "";
+        String SQLQuery;
         int RowCount = model2.getRowCount();
         for (int i = 0; i <= RowCount - 1; i++) {
             model2.removeRow(0);
@@ -180,19 +180,19 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            SQLQuery = "Select * from custfile order by sp_desc";
-            ResultSet rs = stmt.executeQuery(SQLQuery);
-            while (rs.next()) {
-                Object[] input = {
-                    rs.getString("sp_code"),
-                    ThaiUtil.ASCII2Unicode(rs.getString("sp_desc"))
-                };
-                model2.addRow(input);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                SQLQuery = "Select * from custfile order by sp_desc";
+                try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
+                    while (rs.next()) {
+                        Object[] input = {
+                            rs.getString("sp_code"),
+                            ThaiUtil.ASCII2Unicode(rs.getString("sp_desc"))
+                        };
+                        model2.addRow(input);
+                    }
+                    showCell(0, 0);
+                }
             }
-            showCell(0, 0);
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FindAr.class, "error", e);

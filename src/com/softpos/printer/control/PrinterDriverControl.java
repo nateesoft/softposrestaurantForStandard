@@ -26,7 +26,7 @@ public class PrinterDriverControl {
 
     private String textAll = "";
     private String textNormal = "";
-    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100% height=50px>";
+    private final String header = "<html><head></head><body><table border=0 cellpadding=0 cellspaceing=0 width=100%>";
     private final String footer = "</table></body></html>";
     private final String fontName = "Angsana New";
     private float width = 75;
@@ -50,6 +50,17 @@ public class PrinterDriverControl {
         textNormal += str + "\n";
     }
 
+    private JEditorPane createRenderedEditor(String text) {
+        JEditorPane editor = new JEditorPane();
+        editor.setContentType("text/html");
+        // Force synchronous document loading to avoid partial-render prints
+        editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        editor.setText(text);
+        // Trigger full layout pass before returning
+        editor.setSize(editor.getPreferredSize());
+        return editor;
+    }
+
     public void printHTML() {
         //Print Cashier
         String text = header + textAll + footer;
@@ -57,9 +68,7 @@ public class PrinterDriverControl {
         AppLogUtil.htmlFile(text);
 
         try {
-            JEditorPane editor = new JEditorPane();
-            editor.setContentType("text/html");
-            editor.setText(text);
+            JEditorPane editor = createRenderedEditor(text);
 
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
@@ -121,9 +130,7 @@ public class PrinterDriverControl {
         AppLogUtil.info("printHTMLKitChen: " + printerName);
         AppLogUtil.htmlFile(text);
         try {
-            JEditorPane editor = new JEditorPane();
-            editor.setContentType("text/html");
-            editor.setText(text);
+            JEditorPane editor = createRenderedEditor(text);
 
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));
@@ -148,9 +155,7 @@ public class PrinterDriverControl {
         AppLogUtil.info("printHTMLKitChenByKictran: ");
         AppLogUtil.htmlFile(text);
         try {
-            JEditorPane editor = new JEditorPane();
-            editor.setContentType("text/html");
-            editor.setText(text);
+            JEditorPane editor = createRenderedEditor(text);
 
             HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
             attr.add(new MediaPrintableArea(0f, 0f, width, height, MediaPrintableArea.INCH));

@@ -700,23 +700,23 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             
             mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
-                if (rs.next()) {
-                    sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
-                    sp_address1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
-                    sp_address2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
-                    sp_zip.setText(rs.getString("sp_zip"));
-                    sp_tel.setText(rs.getString("tel"));
-                    sp_contack.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
-                    sp_remark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
-                    sp_tax.setText(rs.getString("sp_tax"));
-                    sp_cramount.setValue(rs.getDouble("sp_cramt"));
-                    sp_crday.setValue(rs.getInt("sp_cr"));
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                    String SQLQuery = "Select * from custfile where sp_code='" + TempCode + "' limit 1";
+                    try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
+                        if (rs.next()) {
+                            sp_desc.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
+                            sp_address1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
+                            sp_address2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
+                            sp_zip.setText(rs.getString("sp_zip"));
+                            sp_tel.setText(rs.getString("tel"));
+                            sp_contack.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
+                            sp_remark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
+                            sp_tax.setText(rs.getString("sp_tax"));
+                            sp_cramount.setValue(rs.getDouble("sp_cramt"));
+                            sp_crday.setValue(rs.getInt("sp_cr"));
+                        }
+                    }
                 }
-                rs.close();
-                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(AddNewArCustomer.class, "error", e);

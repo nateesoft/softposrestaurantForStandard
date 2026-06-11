@@ -798,30 +798,30 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             
             mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SQLQuery = "select *from accr left join custfile on arcode=sp_code "
-                        + "where (arcode>='" + TempCode1 + "') "
-                        + "and (arcode<='" + TempCode2 + "') "
-                        + "and (ardate>='" + Datefmt.format(TempDate1) + "') "
-                        + "and (ardate<='" + Datefmt.format(TempDate2) + "') "
-                        + "and (arflage='N') "
-                        + "order by arcode";
-                ResultSet rs = stmt.executeQuery(SQLQuery);
-                while (rs.next()) {
-                    XTotalCnt++;
-                    XTotalAmt = XTotalAmt + rs.getDouble("arnet");
-                    Object[] input = {rs.getString("arcode"),
-                        ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
-                        ShowDatefmt.format(rs.getDate("ardate")),
-                        rs.getString("arno"),
-                        rs.getString("arinvno"),
-                        rs.getDouble("arnet")
-                    };
-                    model2.addRow(input);
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                    String SQLQuery = "select * from accr left join custfile on arcode=sp_code "
+                            + "where (arcode>='" + TempCode1 + "') "
+                            + "and (arcode<='" + TempCode2 + "') "
+                            + "and (ardate>='" + Datefmt.format(TempDate1) + "') "
+                            + "and (ardate<='" + Datefmt.format(TempDate2) + "') "
+                            + "and (arflage='N') "
+                            + "order by arcode";
+                    try (ResultSet rs = stmt.executeQuery(SQLQuery)) {
+                        while (rs.next()) {
+                            XTotalCnt++;
+                            XTotalAmt = XTotalAmt + rs.getDouble("arnet");
+                            Object[] input = {rs.getString("arcode"),
+                                ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")),
+                                ShowDatefmt.format(rs.getDate("ardate")),
+                                rs.getString("arno"),
+                                rs.getString("arinvno"),
+                                rs.getDouble("arnet")
+                            };
+                            model2.addRow(input);
+                        }
+                        showCell(0, 0);
+                    }
                 }
-                showCell(0, 0);
-                rs.close();
-                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(ArNotPay.class, "error", e);

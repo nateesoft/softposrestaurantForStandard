@@ -253,41 +253,37 @@ public class ExtItemList extends javax.swing.JDialog {
                 sql += " order by sp_desc";
             }
 
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                CustomerBean bean = new CustomerBean();
-                bean.setSp_code(rs.getString("sp_code"));
-                bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
-                bean.setSp_Addr1(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr1")));
-                bean.setSp_Addr2(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr2")));
-                bean.setSp_zip(rs.getString("sp_zip"));
-                bean.setTel(rs.getString("tel"));
-                bean.setFax(rs.getString("fax"));
-                bean.setContack(ThaiUtil.ASCII2Unicode(rs.getString("Contack")));
-                bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
-                bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
-                //bean.setTaxid(rs.getString("Taxid"));
-                //bean.setCustBranch(rs.getString("CustBranch"));
-
-                model.addRow(new Object[]{
-                    bean.getSp_code(),
-                    bean.getSp_Desc(),
-                    bean.getTel(),
-                    bean.getContack(),
-                    bean.getSp_Addr1(),
-                    bean.getSp_Addr2(),
-                    bean.getSp_zip(),
-                    bean.getFax(),
-                    bean.getRemark()
-                });
-
-                tbCustomer.setRowHeight(30);
-                tbCustomer.setFont(new Font("Tahoma", Font.PLAIN, 14));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    CustomerBean bean = new CustomerBean();
+                    bean.setSp_code(rs.getString("sp_code"));
+                    bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
+                    bean.setSp_Addr1(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr1")));
+                    bean.setSp_Addr2(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr2")));
+                    bean.setSp_zip(rs.getString("sp_zip"));
+                    bean.setTel(rs.getString("tel"));
+                    bean.setFax(rs.getString("fax"));
+                    bean.setContack(ThaiUtil.ASCII2Unicode(rs.getString("Contack")));
+                    bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
+                    bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
+                    
+                    model.addRow(new Object[]{
+                        bean.getSp_code(),
+                        bean.getSp_Desc(),
+                        bean.getTel(),
+                        bean.getContack(),
+                        bean.getSp_Addr1(),
+                        bean.getSp_Addr2(),
+                        bean.getSp_zip(),
+                        bean.getFax(),
+                        bean.getRemark()
+                    });
+                    
+                    tbCustomer.setRowHeight(30);
+                    tbCustomer.setFont(new Font("Tahoma", Font.PLAIN, 14));
+                }
+                
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(ExtItemList.class, "error", e);

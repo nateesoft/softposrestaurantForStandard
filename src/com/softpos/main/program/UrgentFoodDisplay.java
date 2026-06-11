@@ -53,43 +53,37 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
 
     public void getUrgentFoodDisplay(String TableNo, final String pcode, final String pdesc, final String pindex) {
         final String tableNo = TableNo;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                jLabel1.setText("KIC : " + ConfigFile.getProperties("stationKicNo"));
-//                List<PKicTranBean> bean = new ArrayList();
-//                bean = PKicTran.getKicTran(tableNo);
-//                int size = bean.size();
-                jButton2.setText(ThaiUtil.ASCII2Unicode("โต๊ะ : " + tableNo + " ***รอนานแล้ว"));
-                lblTableNo1.setText(ThaiUtil.ASCII2Unicode("รีบทำอาหารส่งด่วน"));
-                if (pindex.equals("")) {
-                    PKicTran.updateKicTranDisplay("Y", ThaiUtil.Unicode2ASCII(tableNo), "ตามทั้งโต๊ะ", "");
-                } else {
-                    PKicTran.updateKicTranDisplay("Y", ThaiUtil.Unicode2ASCII(tableNo), pcode, pindex);
-                }
-
-                lblItemShow.setText(ThaiUtil.ASCII2Unicode(pdesc));
-                UrgentFoodLoopCheck.trickSound = true;
-                try {
-                    for (int i = 0; i < 10; i++) {
-                        jButton2.setForeground(Color.red);
-                        jButton2.setBackground(Color.BLACK);
-                        jButton2.setForeground(Color.blue);
-                        jButton2.setBackground(Color.white);
-                        try {
-                            Thread.sleep(200);
-                        } catch (Exception e) {
-                        }
-                        if (i == 9) {
-                            i = 0;
-                        }
-                        if (AcceptClick == true) {
-                            break;
-                        }
+        new Thread(() -> {
+            jLabel1.setText("KIC : " + ConfigFile.getProperties("stationKicNo"));
+            jButton2.setText(ThaiUtil.ASCII2Unicode("โต๊ะ : " + tableNo + " ***รอนานแล้ว"));
+            lblTableNo1.setText(ThaiUtil.ASCII2Unicode("รีบทำอาหารส่งด่วน"));
+            if (pindex.equals("")) {
+                PKicTran.updateKicTranDisplay("Y", ThaiUtil.Unicode2ASCII(tableNo), "ตามทั้งโต๊ะ", "");
+            } else {
+                PKicTran.updateKicTranDisplay("Y", ThaiUtil.Unicode2ASCII(tableNo), pcode, pindex);
+            }
+            
+            lblItemShow.setText(ThaiUtil.ASCII2Unicode(pdesc));
+            UrgentFoodLoopCheck.trickSound = true;
+            try {
+                for (int i = 0; i < 10; i++) {
+                    jButton2.setForeground(Color.red);
+                    jButton2.setBackground(Color.BLACK);
+                    jButton2.setForeground(Color.blue);
+                    jButton2.setBackground(Color.white);
+                    try {
+                        Thread.sleep(200);
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
-                    AppLogUtil.log(UrgentFoodDisplay.class, "error", e);
+                    if (i == 9) {
+                        i = 0;
+                    }
+                    if (AcceptClick == true) {
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                AppLogUtil.log(UrgentFoodDisplay.class, "error", e);
             }
         }).start();
     }

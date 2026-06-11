@@ -305,13 +305,12 @@ public class CheckProductNotEnoughDialog extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        StockControl stockControl = AppContext.getStockControl();
         List<String[]> rows = stockControl.listOutStockItems();
         for (String[] row : rows) {
             model.addRow(new Object[]{
                 row[0],
-                ThaiUtil.ASCII2Unicode(row[1]),
-                ThaiUtil.ASCII2Unicode(row[2])
+                row[1],
+                row[2]
             });
         }
 

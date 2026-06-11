@@ -1071,29 +1071,25 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         ex.setVisible(true);
 
         if (!ExtItemList.data.equals("")) {
-            
-            
             mysqlConnect.open(this.getClass());
             try {
                 String sql = "select * from customer where sp_code='" + ExtItemList.data + "' limit 1";
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-                if (rs.next()) {
-                    txtCode.setText(rs.getString("sp_code"));
-                    txtName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
-                    txtAddr1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
-                    txtAddr2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
-                    txtTel1.setText(ThaiUtil.ASCII2Unicode(rs.getString("tel")));
-                    txtFax.setText(ThaiUtil.ASCII2Unicode(rs.getString("fax")));
-                    txtContact.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
-                    txtRemark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
-                    txtRemark2.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark2")));
-                    txtCustBranch.setText(ThaiUtil.ASCII2Unicode(rs.getString("CustBranch")));
-                    txtTaxID.setText(ThaiUtil.ASCII2Unicode(rs.getString("TaxID")));
+                try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                    if (rs.next()) {
+                        txtCode.setText(rs.getString("sp_code"));
+                        txtName.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_desc")));
+                        txtAddr1.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr1")));
+                        txtAddr2.setText(ThaiUtil.ASCII2Unicode(rs.getString("sp_addr2")));
+                        txtTel1.setText(ThaiUtil.ASCII2Unicode(rs.getString("tel")));
+                        txtFax.setText(ThaiUtil.ASCII2Unicode(rs.getString("fax")));
+                        txtContact.setText(ThaiUtil.ASCII2Unicode(rs.getString("contack")));
+                        txtRemark.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark")));
+                        txtRemark2.setText(ThaiUtil.ASCII2Unicode(rs.getString("remark2")));
+                        txtCustBranch.setText(ThaiUtil.ASCII2Unicode(rs.getString("CustBranch")));
+                        txtTaxID.setText(ThaiUtil.ASCII2Unicode(rs.getString("TaxID")));
+                    }
+                    
                 }
-
-                rs.close();
-                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
                 AppLogUtil.log(PrintInv1.class, "error", e);

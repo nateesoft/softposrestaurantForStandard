@@ -260,20 +260,20 @@ public class UpdateData extends javax.swing.JDialog {
         try {
             mysqlConnect.open(this.getClass());
             String sqlGetBType = "Select btype btype from tranconfig limit 1";
-            ResultSet rsGetBtype = mysqlConnect.executeQuery(sqlGetBType);
-            if (rsGetBtype.next()) {
-                BType = rsGetBtype.getString("btype");
-            }
-            if (SQLServerConnect.conn != null) {
-                String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
-                try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
-                    while (rs.next()) {
-                        String sqlUpdate = rs.getString("qforbranch");
-                        ListObj.add(new Object[]{sqlUpdate});
+            try (ResultSet rsGetBtype = mysqlConnect.executeQuery(sqlGetBType)) {
+                if (rsGetBtype.next()) {
+                    BType = rsGetBtype.getString("btype");
+                }
+                if (SQLServerConnect.conn != null) {
+                    String sql = "select * from QForBranch where active = 'Y' and btype='" + BType + "';";
+                    try (ResultSet rs = SQLServerConnect.conn.createStatement().executeQuery(sql)) {
+                        while (rs.next()) {
+                            String sqlUpdate = rs.getString("qforbranch");
+                            ListObj.add(new Object[]{sqlUpdate});
+                        }
                     }
                 }
             }
-            rsGetBtype.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(UpdateData.class, "error", e);

@@ -1437,15 +1437,16 @@ public class MainSale extends javax.swing.JDialog {
 
             //วนหาข้อความพิเศษ
             String[] optList = new String[]{
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt1()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt2()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt3()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt4()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt5()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt6()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt7()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt8()),
-                ThaiUtil.ASCII2Unicode(balanceBean.getR_Opt9()),};
+                balanceBean.getR_Opt1(),
+                balanceBean.getR_Opt2(),
+                balanceBean.getR_Opt3(),
+                balanceBean.getR_Opt4(),
+                balanceBean.getR_Opt5(),
+                balanceBean.getR_Opt6(),
+                balanceBean.getR_Opt7(),
+                balanceBean.getR_Opt8(),
+                balanceBean.getR_Opt9()
+            };
             String str = "";
             for (String R_Opt : optList) {
                 if (R_Opt == null) {
