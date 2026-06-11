@@ -43,7 +43,7 @@ public class MTDTerminal extends javax.swing.JDialog {
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
     DateConvert dc = new DateConvert();
-    
+
     private POSConfigSetup CONFIG;
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
@@ -52,7 +52,6 @@ public class MTDTerminal extends javax.swing.JDialog {
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PUtility PUtility = new PUtility();
-    
 
     public MTDTerminal(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -62,7 +61,7 @@ public class MTDTerminal extends javax.swing.JDialog {
         txtMacNo1.setText("001");
         txtMacNo2.setText("999");
         InitScreen();
-        
+
         POSHW = POSHWSetup.Bean(PublicVar.MACNO);
         CONFIG = POSConfigSetup.Bean();
     }
@@ -440,7 +439,6 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         int ArraySize = 0;
 
-        
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -450,18 +448,18 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     + "and (b_macno>='" + txtMacNo1.getText() + "') "
                     + "and (b_macno<='" + txtMacNo2.getText() + "')";
             ResultSet rs = stmt.executeQuery(SqlQuery);
+
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT,sum(B_NetDiff) B_NetDiff from s_invoice where b_void<>'V'  "
                     + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
             ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
-            String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
-                    + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
-            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
             }
             rsGetEntertain.close();
-
+            String sqlSumBillno = "select count(B_Refno) b_refno from s_invoice where b_entertain<>'0' and b_void<>'V' "
+                    + "and s_date between '" + Datefmt.format(TDate1) + "' and '" + Datefmt.format(TDate2) + "';";
+            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
@@ -1063,7 +1061,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                     prn.print(PUtility.DataFullR("MGR Void                    ", 20) + PUtility.DataFull(IntFmt.format(frec.CntVoid), 6) + PUtility.DataFull(DecFmt.format(frec.VoidValue), 13));
                     prn.print("----------------------------------------");
                     prn.print(PUtility.DataFullR("Docket                      ", 26) + PUtility.DataFull(IntFmt.format(frec.CntBill), 8) + " ");
-                    
+
                     mysqlConnect.open(this.getClass());
                     try {
                         Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1143,7 +1141,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void PrintTerminalEngFormDriver(FinalcialRec frec, CreditRec[] CrArray, String macNo1, String macNo2) {
         String t = "";
         double sumCuponAmt = 0.00;
-        
+
         List<Object[]> list1 = DocAnalyse(Datefmt.format(TDate1) + "", Datefmt.format(TDate2) + "");
         String countE = "", countT = "", countD = "", etdE = "", etdT = "", etdD = "";
         double totalE = 0.00, totalT = 0.00, totalD = 0.00, nettotalE = 0.00, nettotalT = 0.00, nettotalD = 0.00;

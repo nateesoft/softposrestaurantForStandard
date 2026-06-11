@@ -10,3 +10,4 @@ connect.ini
 *.running
 connect.ini
 webconnect.ini
+*.jar

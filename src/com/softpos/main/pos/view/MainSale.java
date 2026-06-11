@@ -173,10 +173,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void printCheckBillProcess() {
         AppLogUtil.info("printCheckBillProcess: " + tableNo);
-        
+
         // check print to kitchen
         processPrintBillCheck();
-        
+
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
@@ -185,7 +185,11 @@ public class MainSale extends javax.swing.JDialog {
                         + "and macno='" + PublicVar.MacNo + "';";
                 databaseConnection.execUpdate(sql);
             }
+            String sqlA = "update tablefile set tpause='Y', tonact='N' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sqlA);
             kichenPrint();
+            String sqlB = "update tablefile set tpause='N', tonact='Y' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sqlB);
             printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -194,10 +198,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void paymentBillProcess() {
         AppLogUtil.info("paymentBillProcess: " + tableNo);
-        
+
         // check print to kitchen
         processPrintBillCheck();
-        
+
         if (btnClickPrintKic == true) {
             String sqlTurnPrintKicOff = "update balance set r_kic='0' "
                     + "where r_kicprint<>'P' "
@@ -210,7 +214,11 @@ public class MainSale extends javax.swing.JDialog {
             String sql = "update tablefile "
                     + "set tpause='Y' where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
+            String sqlA = "update tablefile set tpause='Y', tonact='N' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sqlA);
             kichenPrint();
+            String sqlB = "update tablefile set tpause='N', tonact='Y' where tcode='" + tableNo + "';";
+            databaseConnection.execUpdate(sqlA);
             sql = "update tablefile "
                     + "set tpause='N' where tcode='" + tableNo + "';";
             databaseConnection.execUpdate(sql);
@@ -348,12 +356,12 @@ public class MainSale extends javax.swing.JDialog {
                     if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
                         CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
                         ccd.setVisible(true);
-                        
+
                     }
                     loadTableBalance(tNo);
                     historyBack = new ArrayList<>();
                     sumSplit();
-                    
+
                     showCustomerInput();
                     txtProductCode.setEditable(true);
                     txtProductCode.setFocusable(true);
@@ -1520,9 +1528,13 @@ public class MainSale extends javax.swing.JDialog {
         List<SaleInfoPanel.Item> adsItems = new ArrayList<>();
         List<BalanceBean> listBalance = balanceControl.loadTableBalance(tableNo);
         for (BalanceBean b : listBalance) {
-            if ("V".equals(b.getR_Void())) continue;
+            if ("V".equals(b.getR_Void())) {
+                continue;
+            }
             String pluCode = b.getR_PluCode();
-            if (pluCode == null || pluCode.trim().isEmpty()) continue;
+            if (pluCode == null || pluCode.trim().isEmpty()) {
+                continue;
+            }
             String name = (b.getR_ETD() + " " + b.getR_PName()).trim();
             double quan = b.getR_Quan();
             String qty = (quan == Math.floor(quan)) ? String.valueOf((int) quan) : dc1.format(quan);
@@ -1866,7 +1878,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void bntPrintCheckBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPrintCheckBillActionPerformed
         printCheckBillProcess();
-        
+
     }//GEN-LAST:event_bntPrintCheckBillActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -2343,7 +2355,7 @@ public class MainSale extends javax.swing.JDialog {
                 Qty = 1;
                 PluCode = TempCode;
             }
-            
+
             MenuListBean menuListBean = mainSaleControl.getMenuListByMenuItem(PluCode);
             if (Qty > 0) {
                 if (POSHW.getMenuItemList().equals("Y")) {
@@ -2824,7 +2836,120 @@ public class MainSale extends javax.swing.JDialog {
                 + "and r_printOk='Y' "
                 + "and r_kic<>'' ";
         databaseConnection.execUpdate(sql);
-        
+
+        // update tablefile status
+        databaseConnection.execUpdate("update tablefile "
+                + "set tpause='N' "
+                + "where tcode='" + tableNo + "';");
+    }
+
+    private void kichenPrintSkipHoldTable() {
+//        databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
+
+        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
+        String printerName;
+
+        BranchBean branchBean = BranchControl.getData();
+        String config = branchBean.getSaveOrder();
+        if (!config.equals("N")) {
+            PublicVar.Branch_Saveorder = config;
+        }
+
+        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        if (mainSaleControl.checkCountPrinterTo(tableNo)) {
+            if (!PublicVar.Branch_Saveorder.equals("N")) {
+                printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+            }
+        }
+
+        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
+        List<BalanceBean> listToKic = mainSaleControl.getListAllPrintToKic(tableNo);
+        for (BalanceBean balanceBean : listToKic) {
+            String rKic = balanceBean.getR_Kic();
+            if (rKic.equals("")) {
+                continue;
+            }
+            int iKic = Integer.parseInt(rKic);
+            if (iKic - 1 < 0) {
+                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                continue;
+            }
+            printerName = "kic" + rKic;
+            String printerForm = BranchControl.getForm(rKic);
+
+            AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+
+            switch (printerForm) {
+                case "1": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
+                    for (BalanceBean balance : listBalanceForm) {
+                        String PCode = balance.getR_PluCode();
+                        if (printerForm.equals("1")) {
+                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
+                        }
+                    }
+                    break;
+                }
+                case "6": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
+                    for (BalanceBean balance : listBalanceForm) {
+                        String R_Index = balance.getR_Index();
+                        String R_PLUCODE = balance.getR_PluCode();
+                        double qty = balance.getR_Quan();
+                        double priceTotal = balance.getR_Total();
+                        printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
+                    }
+                    break;
+                }
+                case "3":
+                case "4":
+                case "5":
+                    switch (printerForm) {
+                        case "3":
+                            String retd = balanceBean.getR_ETD();
+                            printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+                            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+                            if (CheckBillBeforeCash.equals("Y")) {
+                                printBillVoidCheck();
+                            }
+                            break;
+                        case "4":
+                            printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
+                            printBillVoidCheck();
+                            break;
+                        case "5":
+                            printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
+                            printBillVoidCheck();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "7":
+                case "2":
+                    String retd = balanceBean.getR_ETD();
+                    printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
+                    break;
+                default:
+                    printBillVoidCheck();
+                    MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");
+                    break;
+            }
+        }
+
+        checkKicPrint();
+
+        //update r_kicprint
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + txtTable.getText() + "' "
+                + "and trantype is null "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'' ";
+        databaseConnection.execUpdate(sql);
+
         // update tablefile status
         databaseConnection.execUpdate("update tablefile "
                 + "set tpause='N' "
@@ -3335,10 +3460,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void holdTableProcess() {
         AppLogUtil.info("Hold Table: " + tableNo);
-        
+
         // check print to kitchen
         processPrintBillCheck();
-        
+
         tbpMain.setSelectedIndex(0);
 
         bntHoldTableClick();
@@ -3482,10 +3607,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void pCodeEnter() {
         String pluCode = txtProductCode.getText().trim();
-        if(pluCode.equals("")){
+        if (pluCode.equals("")) {
             return;
         }
-        
+
         String chkOpt = pluCode.substring(pluCode.length() - 1, pluCode.length());
         if (chkOpt.equals("+")) {
             //สามารถเลือกจำนวนได้เลย

@@ -165,9 +165,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         //CreditRec CrRec = new CreditRec();
         CrArray = null;
 
-
-        
-        mysqlConnect.closeConnection(this.getClass());
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -175,15 +172,16 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                     + "where b_macno='" + txtMacNo.getText() + "' "
                     + "order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
+
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT ,sum(B_NetDiff) B_NetDiff from billno where b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
             ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
-            String sqlSumBillno = "select count(B_Refno) b_refno from billno where b_entertain<>'0' and b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
-            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
             if (rsGetEntertain.next()) {
                 frec.Entertain = rsGetEntertain.getDouble("EntertainAMT");
                 frec.B_NetDiff = rsGetEntertain.getDouble("B_NetDiff");
             }
             rsGetEntertain.close();
+            String sqlSumBillno = "select count(B_Refno) b_refno from billno where b_entertain<>'0' and b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
+            ResultSet rsGetSumBillno = mysqlConnect.executeQuery(sqlSumBillno);
 
             if (rsGetSumBillno.next()) {
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");

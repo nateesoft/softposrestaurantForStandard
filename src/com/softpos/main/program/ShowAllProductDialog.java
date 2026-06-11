@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import com.softpos.util.JTableUtility;
 
 public class ShowAllProductDialog extends javax.swing.JDialog {
+
     private final ProductControl productControl = AppContext.getProductControl();
     private final GroupFileControl groupFileControl = AppContext.getGroupFileControl();
 
@@ -324,6 +325,7 @@ private void tblPluKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 }//GEN-LAST:event_tblPluKeyReleased
 
 private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblGroupKeyReleased
+
     if ((evt.getKeyCode() == evt.VK_UP) || (evt.getKeyCode() == evt.VK_DOWN)) {
         onTblGroupSelectEvent();
     } else {
@@ -394,9 +396,9 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void loadTblPlu(String productGroup) {
-        JTableUtility.resetTableModel(mdlPlu);
-        
+
         List<ProductBean> list = productControl.getProductByPGroup(productGroup);
+
         for (ProductBean product : list) {
             String[] data = new String[tblPlu.getColumnCount()];
             data[0] = product.getPCode();
@@ -407,6 +409,7 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             data[5] = "" + product.getPPrice14();
             data[6] = "" + product.getPPrice15();
             mdlPlu.addRow(data);
+            
         }
         if (mdlPlu.getRowCount() != 0) {
             tblPlu.setRowSelectionInterval(0, 0);
@@ -414,6 +417,7 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void onTblGroupSelectEvent() {
+
         int index = tblGroup.getSelectedRow();
         if (index != -1) {
             loadTblPlu(tblGroup.getValueAt(index, 0).toString());

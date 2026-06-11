@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.MSG;
 
 public class ProductControl {
 
@@ -227,6 +228,7 @@ public class ProductControl {
             }
         } catch (SQLException e) {
             AppLogUtil.log(ProductControl.class, "error", e);
+            e.printStackTrace();
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

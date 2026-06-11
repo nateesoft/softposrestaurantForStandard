@@ -1108,26 +1108,25 @@ public class PrintSimpleForm {
             PublicVar.printerDriverKitChenName = printerName;
             printDriver.addTextIFont(data1);
         }
-        
         BranchBean branchBean = BranchControl.getData();
-        PrinterDriverControl printDriverCopy = new PrinterDriverControl();
-        String[] strsCopy = textToPrint.split("_");
         boolean printCopy = false;
         if (branchBean.getKICCopy1().equals("3") && !branchBean.getKIC1().equals("N")) {
             printCopy = true;
+            PrinterDriverControl printDriverCopy = new PrinterDriverControl();
+//            textToPrint += "colspan=3 align=center><font face=Tahoma size=5>" + "สำเนา - COPY_";
+            String[] strsCopy = textToPrint.split("_");
 
             for (String dataCopy : strsCopy) {
                 PublicVar.printerDriverKitChenName = printerName;
                 printDriverCopy.addTextIFont(dataCopy);
             }
-        }
-
-        try {
             printDriver.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             if (printCopy == true) {
                 printDriverCopy.printHTMLKitChen(PublicVar.printerDriverKitChenName);
             }
+        }
 
+        try {
             String sql;
             if (!listE.isEmpty()) {
                 for (int i = 0; i < listE.size(); i++) {
