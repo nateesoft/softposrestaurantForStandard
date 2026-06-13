@@ -3,12 +3,9 @@ package com.softpos.main.pos.view;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.dto.ProductSearchResponse;
-import com.softpos.pos.core.model.ProductBean;
-import com.softpos.util.ThaiUtil;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
-import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -92,6 +89,10 @@ public class FindProduct extends javax.swing.JDialog {
             }
         });
         jScrollPane1.setViewportView(tbProduct);
+        if (tbProduct.getColumnModel().getColumnCount() > 0) {
+            tbProduct.getColumnModel().getColumn(1).setPreferredWidth(250);
+            tbProduct.getColumnModel().getColumn(5).setPreferredWidth(200);
+        }
 
         lbTotal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbTotal.setText("jLabel2");

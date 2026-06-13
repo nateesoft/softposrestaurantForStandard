@@ -208,13 +208,14 @@ public class ProductControl {
         List<ProductSearchResponse> listProduct = new ArrayList<>();
         String sql = "select p.PCode, p.PDesc, p.PPrice11, p.PUnit1, p.PGroup, g.GroupName "
                 + "from product p "
-                + "inner join groupfile g on p.PGroup = g.GroupCode "
+                + "left join groupfile g on p.PGroup = g.GroupCode "
                 + "where p.PActive ='Y' "
-                + "and (p.PCode like '%"+keySearch+"%' or p.PDesc like '%"+keySearch+"%')";
+                + "and (p.PCode like '%"+ThaiUtil.Unicode2ASCII(keySearch)+"%' "
+                + "or p.PDesc like '%"+ThaiUtil.Unicode2ASCII(keySearch)+"%')";
         mysqlConnect.open(ProductControl.class);
         try {
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                if (rs.next()) {
+                while (rs.next()) {
                     ProductSearchResponse response = new ProductSearchResponse();
                     response.setCode(rs.getString("PCode"));
                     response.setPrice(rs.getDouble("PPrice11"));
@@ -236,6 +237,7 @@ public class ProductControl {
     }
 
     public List<ProductBean> getProductByPGroup(String PGroup) {
+        dataProduct = new ArrayList<>();
         mysqlConnect.open(ProductControl.class);
         try {
             String sql = "select * from product "

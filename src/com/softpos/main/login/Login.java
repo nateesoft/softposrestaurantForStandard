@@ -243,7 +243,7 @@ public class Login extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Software Restaurant ICS©2026 V2.0");
+        jLabel6.setText("Software Restaurant ICS©2026 V2.0.1");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

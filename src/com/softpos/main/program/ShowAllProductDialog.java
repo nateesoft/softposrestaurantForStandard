@@ -6,14 +6,13 @@ import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.pos.core.model.GroupFileBean;
 import com.softpos.pos.core.model.ProductBean;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.ThaiUtil;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.softpos.util.JTableUtility;
+import java.awt.event.KeyEvent;
 
 public class ShowAllProductDialog extends javax.swing.JDialog {
 
@@ -24,12 +23,14 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        initTblGroup();
-        initTblPlu();
-        loadTblGroup();
+        initTableGroupList();
+        initTableProductList();
+        loadTableGroupList();
+        
         cmdOk.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmdExit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        tblGroup.setBackground(new Color(231, 231, 253));
+        
+        tbGroupList.setBackground(new Color(231, 231, 253));
     }
 
     @SuppressWarnings("unchecked")
@@ -39,14 +40,14 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblGroup = new javax.swing.JTable();
+        tbGroupList = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblPlu = new javax.swing.JTable();
+        tbProductList = new javax.swing.JTable();
         cmdExit = new javax.swing.JButton();
         cmdOk = new javax.swing.JButton();
 
@@ -58,9 +59,9 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        tblGroup.setBackground(new java.awt.Color(231, 231, 253));
-        tblGroup.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tblGroup.setModel(new javax.swing.table.DefaultTableModel(
+        tbGroupList.setBackground(new java.awt.Color(231, 231, 253));
+        tbGroupList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tbGroupList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -83,18 +84,18 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tblGroup.setRowHeight(25);
-        tblGroup.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                tblGroupMouseReleased(evt);
+        tbGroupList.setRowHeight(25);
+        tbGroupList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbGroupListMouseClicked(evt);
             }
         });
-        tblGroup.addKeyListener(new java.awt.event.KeyAdapter() {
+        tbGroupList.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tblGroupKeyReleased(evt);
+                tbGroupListKeyReleased(evt);
             }
         });
-        jScrollPane1.setViewportView(tblGroup);
+        jScrollPane1.setViewportView(tbGroupList);
 
         jPanel5.setBackground(new java.awt.Color(170, 168, 255));
 
@@ -163,8 +164,8 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
                 .addGap(0, 0, 0))
         );
 
-        tblPlu.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tblPlu.setModel(new javax.swing.table.DefaultTableModel(
+        tbProductList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tbProductList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -187,18 +188,18 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tblPlu.setRowHeight(25);
-        tblPlu.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbProductList.setRowHeight(25);
+        tbProductList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                tblPluMouseReleased(evt);
+                tbProductListMouseReleased(evt);
             }
         });
-        tblPlu.addKeyListener(new java.awt.event.KeyAdapter() {
+        tbProductList.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tblPluKeyReleased(evt);
+                tbProductListKeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(tblPlu);
+        jScrollPane2.setViewportView(tbProductList);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -289,12 +290,6 @@ public class ShowAllProductDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 
-private void tblGroupMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGroupMouseReleased
-    if (evt.getClickCount() == 1) {
-        onTblGroupSelectEvent();
-    }
-}//GEN-LAST:event_tblGroupMouseReleased
-
 private void cmdExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdExitActionPerformed
     dispose();
 }//GEN-LAST:event_cmdExitActionPerformed
@@ -304,39 +299,42 @@ private void cmdOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     dispose();
 }//GEN-LAST:event_cmdOkActionPerformed
 
-private void tblPluMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPluMouseReleased
+private void tbProductListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbProductListMouseReleased
     if (evt.getClickCount() == 2) {
         onOk();
         dispose();
     }
-}//GEN-LAST:event_tblPluMouseReleased
+}//GEN-LAST:event_tbProductListMouseReleased
 
-private void tblPluKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblPluKeyReleased
-    if (evt.getKeyCode() == evt.VK_ENTER) {
+private void tbProductListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbProductListKeyReleased
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         onOkEnter();
         dispose();
     }
-    if (evt.getKeyCode() == evt.VK_ESCAPE) {
+    if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         dispose();
     }
-    if (evt.getKeyCode() == evt.VK_LEFT) {
-        tblGroup.requestFocus();
+    if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+        tbGroupList.requestFocus();
     }
-}//GEN-LAST:event_tblPluKeyReleased
+}//GEN-LAST:event_tbProductListKeyReleased
 
-private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblGroupKeyReleased
-
-    if ((evt.getKeyCode() == evt.VK_UP) || (evt.getKeyCode() == evt.VK_DOWN)) {
-        onTblGroupSelectEvent();
+private void tbGroupListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbGroupListKeyReleased
+    if ((evt.getKeyCode() == KeyEvent.VK_UP) || (evt.getKeyCode() == KeyEvent.VK_DOWN)) {
+        onTableGroupListSelectEvent();
     } else {
-        if (evt.getKeyCode() == evt.VK_RIGHT) {
-            tblPlu.requestFocus();
+        if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+            tbProductList.requestFocus();
         }
-        if (evt.getKeyCode() == evt.VK_ESCAPE) {
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             dispose();
         }
     }
-}//GEN-LAST:event_tblGroupKeyReleased
+}//GEN-LAST:event_tbGroupListKeyReleased
+
+    private void tbGroupListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbGroupListMouseClicked
+        onTableGroupListSelectEvent();
+    }//GEN-LAST:event_tbGroupListMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdExit;
@@ -350,57 +348,55 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tblGroup;
-    private javax.swing.JTable tblPlu;
+    private javax.swing.JTable tbGroupList;
+    private javax.swing.JTable tbProductList;
     // End of variables declaration//GEN-END:variables
 
-    private DefaultTableModel mdlGroup;
-    private DefaultTableModel mdlPlu;
+    private DefaultTableModel modelGroupList;
+    private DefaultTableModel modelProductList;
 
     private ChoosePluBean selectPlu;
 
-    private void initTblGroup() {
-        mdlGroup = (DefaultTableModel) tblGroup.getModel();
-        JTableUtility.initDefaultTable(tblGroup);
+    private void initTableGroupList() {
+        modelGroupList = (DefaultTableModel) tbGroupList.getModel();
+        JTableUtility.initDefaultTable(tbGroupList);
         int[] column = {70, 215};
-        JTableUtility.initColumnSizeTable(tblGroup, column);
-        JTableUtility.initHorizontalAlignmentTable(tblGroup, null, null, null);
-        //tblGroup.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        JTableUtility.initColumnSizeTable(tbGroupList, column);
+        JTableUtility.initHorizontalAlignmentTable(tbGroupList, null, null, null);
     }
 
-    private void initTblPlu() {
-        mdlPlu = (DefaultTableModel) tblPlu.getModel();
-        JTableUtility.initDefaultTable(tblPlu);
+    private void initTableProductList() {
+        modelProductList = (DefaultTableModel) tbProductList.getModel();
+        JTableUtility.initDefaultTable(tbProductList);
         int[] column = {80, 250, 80, 80, 80, 80, 80};
-        JTableUtility.initColumnSizeTable(tblPlu, column);
+        JTableUtility.initColumnSizeTable(tbProductList, column);
         int[] right = {2, 3, 4, 5, 6};
-        JTableUtility.initHorizontalAlignmentTable(tblPlu, null, null, right);
-        //table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        JTableUtility.initHorizontalAlignmentTable(tbProductList, null, null, right);
     }
 
-    private void loadTblGroup() {
-        JTableUtility.resetTableModel(mdlGroup);
+    private void loadTableGroupList() {
+        JTableUtility.resetTableModel(modelGroupList);
         List<GroupFileBean> listGroupFile = groupFileControl.getAllData();
 
         for (GroupFileBean groupFile : listGroupFile) {
-            String[] data = new String[tblGroup.getColumnCount()];
+            String[] data = new String[tbGroupList.getColumnCount()];
             data[0] = groupFile.getGroupCode();
             data[1] = groupFile.getGroupName();
-            mdlGroup.addRow(data);
+            modelGroupList.addRow(data);
         }
 
-        if (mdlGroup.getRowCount() != 0) {
-            tblGroup.setRowSelectionInterval(0, 0);
-            loadTblPlu(tblGroup.getValueAt(0, 0).toString());
+        if (modelGroupList.getRowCount() != 0) {
+            tbGroupList.setRowSelectionInterval(0, 0);
+            loadProductGroupList(tbGroupList.getValueAt(0, 0).toString());
         }
     }
 
-    private void loadTblPlu(String productGroup) {
+    private void loadProductGroupList(String productGroup) {
+        modelProductList.setRowCount(0);
 
         List<ProductBean> list = productControl.getProductByPGroup(productGroup);
-
         for (ProductBean product : list) {
-            String[] data = new String[tblPlu.getColumnCount()];
+            String[] data = new String[tbProductList.getColumnCount()];
             data[0] = product.getPCode();
             data[1] = product.getPDesc();
             data[2] = "" + product.getPPrice11();
@@ -408,34 +404,33 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             data[4] = "" + product.getPPrice13();
             data[5] = "" + product.getPPrice14();
             data[6] = "" + product.getPPrice15();
-            mdlPlu.addRow(data);
             
+            modelProductList.addRow(data);
         }
-        if (mdlPlu.getRowCount() != 0) {
-            tblPlu.setRowSelectionInterval(0, 0);
+        
+        if (modelProductList.getRowCount() != 0) {
+            tbProductList.setRowSelectionInterval(0, 0);
         }
     }
 
-    private void onTblGroupSelectEvent() {
-
-        int index = tblGroup.getSelectedRow();
+    private void onTableGroupListSelectEvent() {
+        int index = tbGroupList.getSelectedRow();
         if (index != -1) {
-            loadTblPlu(tblGroup.getValueAt(index, 0).toString());
+            loadProductGroupList(tbGroupList.getValueAt(index, 0).toString());
         }
-
     }
 
     private void onOk() {
-        int index = tblPlu.getSelectedRow();
+        int index = tbProductList.getSelectedRow();
 
         if (index == -1) {
             index = 0;
         }
         selectPlu = new ChoosePluBean();
-        selectPlu.code = tblPlu.getValueAt(index, 0).toString();
-        selectPlu.name = tblPlu.getValueAt(index, 1).toString();
+        selectPlu.code = tbProductList.getValueAt(index, 0).toString();
+        selectPlu.name = tbProductList.getValueAt(index, 1).toString();
         try {
-            selectPlu.price = Double.parseDouble(tblPlu.getValueAt(index, 2).toString());
+            selectPlu.price = Double.parseDouble(tbProductList.getValueAt(index, 2).toString());
         } catch (NumberFormatException e) {
             AppLogUtil.log(ShowAllProductDialog.class, "error", e);
             selectPlu.price = -1.0;
@@ -443,16 +438,16 @@ private void tblGroupKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void onOkEnter() {
-        int index = tblPlu.getSelectedRow() - 1;
+        int index = tbProductList.getSelectedRow() - 1;
 
         if (index == -1) {
             index = 0;
         }
         selectPlu = new ChoosePluBean();
-        selectPlu.code = tblPlu.getValueAt(index, 0).toString();
-        selectPlu.name = tblPlu.getValueAt(index, 1).toString();
+        selectPlu.code = tbProductList.getValueAt(index, 0).toString();
+        selectPlu.name = tbProductList.getValueAt(index, 1).toString();
         try {
-            selectPlu.price = Double.parseDouble(tblPlu.getValueAt(index, 2).toString());
+            selectPlu.price = Double.parseDouble(tbProductList.getValueAt(index, 2).toString());
         } catch (NumberFormatException e) {
             AppLogUtil.log(ShowAllProductDialog.class, "error", e);
             selectPlu.price = -1.0;
