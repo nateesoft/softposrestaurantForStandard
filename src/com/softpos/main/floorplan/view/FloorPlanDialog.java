@@ -138,7 +138,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jMenu2.setVisible(false);
         jMenu3.setVisible(true);
         jMenu4.setVisible(false);
+        
+        jSeparator3.setVisible(false);
         MShowDailyEJ1.setVisible(false);
+        
         jMenuItem38.setVisible(false);
 
         new SwingWorker<FloorInitData, Void>() {
@@ -183,29 +186,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         btnZone5 = new javax.swing.JButton();
         btnZone6 = new javax.swing.JButton();
         btnZone7 = new javax.swing.JButton();
-        panelMain = new javax.swing.JPanel() {
-            @Override
-            protected void paintComponent(java.awt.Graphics g) {
-                super.paintComponent(g);
-                java.awt.Graphics2D g2d = (java.awt.Graphics2D) g.create();
-                g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
-                int w = getWidth();
-                int h = getHeight();
-                float[] fractions = {0.0f, 0.40f, 0.70f, 1.0f};
-                java.awt.Color[] colors = {
-                    new java.awt.Color(20, 8, 2),
-                    new java.awt.Color(65, 32, 9),
-                    new java.awt.Color(45, 20, 5),
-                    new java.awt.Color(28, 11, 3)
-                };
-                java.awt.LinearGradientPaint lgp = new java.awt.LinearGradientPaint(
-                    0, 0, w, h, fractions, colors
-                );
-                g2d.setPaint(lgp);
-                g2d.fillRect(0, 0, w, h);
-                g2d.dispose();
-            }
-        };
+        panelMain = new javax.swing.JPanel();
         btn1 = new javax.swing.JButton();
         btn2 = new javax.swing.JButton();
         btn3 = new javax.swing.JButton();
@@ -374,7 +355,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         jPopupMenu1.add(jMenuItem1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Restaurant By SoftPOS V7.0");
+        setTitle("Restaurant By SoftPOS V2.0");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -1267,8 +1248,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem28ActionPerformed
 
     private void MShowDailyEJ1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MShowDailyEJ1ActionPerformed
-        DisplayEJ frm2 = new DisplayEJ(this, true);
-        frm2.setVisible(true);
+        DisplayEJ displayEJ = new DisplayEJ(this, true);
+        displayEJ.setVisible(true);
     }//GEN-LAST:event_MShowDailyEJ1ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -1276,18 +1257,18 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem30ActionPerformed
-        CheckProductNotEnoughDialog cp = new CheckProductNotEnoughDialog(this, true);
-        cp.setVisible(true);
+        CheckProductNotEnoughDialog checkProductNotEnoughDialog = new CheckProductNotEnoughDialog(this, true);
+        checkProductNotEnoughDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem30ActionPerformed
 
     private void jMenuItem31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem31ActionPerformed
-        CheckStockNow check = new CheckStockNow(this, true);
-        check.setVisible(true);
+        CheckStockNow checkStockNow = new CheckStockNow(this, true);
+        checkStockNow.setVisible(true);
     }//GEN-LAST:event_jMenuItem31ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        FileSettingDialog fd = new FileSettingDialog(this, true);
-        fd.setVisible(true);
+        FileSettingDialog fileSettingDialog = new FileSettingDialog(this, true);
+        fileSettingDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     @Override
@@ -1306,10 +1287,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        SetupButtonTableDialog setup = new SetupButtonTableDialog(this, true, PublicVar.BTN_FLOORPLAN);
-        setup.setVisible(true);
+        SetupButtonTableDialog setupButtonTableDialog = new SetupButtonTableDialog(this, true, PublicVar.BTN_FLOORPLAN);
+        setupButtonTableDialog.setVisible(true);
 
-        if (setup.isActionButton()) {
+        if (setupButtonTableDialog.isActionButton()) {
             loadZone(zoneSelected);
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -1344,17 +1325,17 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        MSG.NOTICE(this, "Software Restaurant ICS©2026 V1.0");
+        MSG.NOTICE(this, this.getTitle());
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-        DiarySaleReportDialog d = new DiarySaleReportDialog(new JDialog(), true);
-        d.setVisible(true);
+        DiarySaleReportDialog diarySaleReportDialog = new DiarySaleReportDialog(new JDialog(), true);
+        diarySaleReportDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem19ActionPerformed
 
     private void jMenuItem35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem35ActionPerformed
-        PrintKicControl Kic = new PrintKicControl(new JDialog(), true);
-        Kic.setVisible(true);
+        PrintKicControl printKicControl = new PrintKicControl(new JDialog(), true);
+        printKicControl.setVisible(true);
     }//GEN-LAST:event_jMenuItem35ActionPerformed
 
     private void jMenuItem36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem36ActionPerformed
