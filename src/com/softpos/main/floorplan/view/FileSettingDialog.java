@@ -1,4 +1,4 @@
-package com.softpos.main.login;
+package com.softpos.main.floorplan.view;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
@@ -106,6 +106,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
         btnRandomBillInfo = new javax.swing.JButton();
         jLabel20 = new javax.swing.JLabel();
         btnPrintTest = new javax.swing.JButton();
+        cbPrinterTypeForm = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("File Configuration");
@@ -640,6 +641,9 @@ public class FileSettingDialog extends javax.swing.JDialog {
             }
         });
 
+        cbPrinterTypeForm.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cbPrinterTypeForm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Form-1", "Form-2", "Form-3", "Form-4", "Form-5", "Form-6", "Form-7", "Form-8" }));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -650,9 +654,11 @@ public class FileSettingDialog extends javax.swing.JDialog {
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbListPrinterTest, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel20)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbListPrinterTest, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbPrinterTypeForm, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPrintTest, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
@@ -666,10 +672,12 @@ public class FileSettingDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrintTest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20)
-                    .addComponent(cbListPrinterTest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnPrintTest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel20)
+                        .addComponent(cbListPrinterTest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbPrinterTypeForm, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
                 .addContainerGap())
@@ -744,6 +752,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbListPrinterTest;
     private javax.swing.JComboBox cbPopup;
     private javax.swing.JComboBox cbPrint;
+    private javax.swing.JComboBox<String> cbPrinterTypeForm;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -831,6 +840,7 @@ public class FileSettingDialog extends javax.swing.JDialog {
         exampleCounter = 1;
     }
 
+    private static final String SEPARATOR = "…………………………………………………………………………………………………………………….";
     private static final String[] SAMPLE_ITEMS = {
         "ข้าวผัดกุ้ง", "ต้มยำกุ้ง", "ผัดไทย", "แกงเขียวหวาน", "ยำวุ้นเส้น",
         "ข้าวมันไก่", "ผัดกะเพรา", "ต้มข่าไก่", "ผัดซีอิ้ว", "ข้าวหมูแดง"
@@ -850,35 +860,179 @@ public class FileSettingDialog extends javax.swing.JDialog {
 
     private void btnPrintTestActionPerformed() {
         String printerName = (String) cbListPrinterTest.getSelectedItem();
-        AppLogUtil.info("PrintDriver PrintTest: printer=[" + printerName + "]");
         if (printerName == null) {
             MSG.NOTICE(this, "กรุณาเลือก Printer ก่อน");
             return;
         }
-
         DefaultTableModel model = (DefaultTableModel) tbData.getModel();
         if (model.getRowCount() == 0) {
             MSG.NOTICE(this, "กรุณาเพิ่มข้อมูลใน Table ก่อน");
             return;
         }
 
-        AppLogUtil.info("PrintDriver PrintTest: rows=" + model.getRowCount());
-        PrinterDriverControl pd = new PrinterDriverControl();
-        pd.addTextLn("<b>=== Print Test ===</b>");
-        pd.addTextLn("----------------------------------");
+        String tableNo = txtTableNo.getText().trim();
+        String custCount = txtCustomerCount.getText().trim();
+        String dateTime = txtDateBill.getText().trim();
+        String macNo = txtMacNo.getText().trim();
+        String empCode = txtEmpCode.getText().trim();
+        String orderType = "Dine-In";
+        String form = (String) cbPrinterTypeForm.getSelectedItem();
 
-        for (int row = 0; row < model.getRowCount(); row++) {
-            StringBuilder sb = new StringBuilder();
-            for (int col = 0; col < model.getColumnCount(); col++) {
-                Object val = model.getValueAt(row, col);
-                sb.append(val != null ? val.toString() : "").append("  ");
-            }
-            pd.addTextLn(sb.toString().trim());
+        AppLogUtil.info("PrintTest form=" + form + " printer=" + printerName + " rows=" + model.getRowCount());
+
+        switch (form) {
+            case "Form-1": printForm1(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-2": printForm2(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-3": printForm3(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-4": printForm4(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-5": printForm5(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-6": printForm2(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-7": printForm7(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            case "Form-8": printForm8(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
+            default:       printForm1(printerName, model, tableNo, custCount, dateTime, macNo, empCode, orderType); break;
         }
-
-        pd.addTextLn("----------------------------------");
-        pd.printHTMLKitChenByKictran(printerName);
         MSG.NOTICE(this, "ส่งงานพิมพ์ไปที่ [" + printerName + "] แล้ว\nดูผลใน log หากไม่มีงานออกมา");
+    }
+
+    private String getCell(DefaultTableModel model, int row, int col) {
+        Object val = model.getValueAt(row, col);
+        return val != null ? val.toString().trim() : "";
+    }
+
+    private String buildHeaderRow(String tableNo, String custCount) {
+        return "<table width=100%><tr><td>โต๊ะ " + tableNo + "</td><td align=right>C " + custCount + "</td></tr></table>";
+    }
+
+    private String buildFooterRow(String dateTime, String macNo, String empCode) {
+        return dateTime + "&nbsp;&nbsp;&nbsp;" + macNo + "&nbsp;&nbsp;&nbsp;พนักงาน " + empCode;
+    }
+
+    private void addKitchenHeader(PrinterDriverControl pd, String tableNo, String custCount, String orderType) {
+        pd.addTextLn(buildHeaderRow(tableNo, custCount));
+        pd.addTextLn("<b>***** " + orderType + " *****</b>");
+    }
+
+    /** Form-1: พิมพ์ทีละรายการ พร้อมตัดกระดาษ (qty inline) */
+    private void printForm1(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            PrinterDriverControl pd = new PrinterDriverControl();
+            addKitchenHeader(pd, tableNo, custCount, orderType);
+            pd.addTextLn("<b>" + menuName + "</b>");
+            pd.addTextLn("<table width=100%><tr><td>**" + menuOptions + "</td><td align=right>" + menuQty + "</td></tr></table>");
+            pd.addTextLn(SEPARATOR);
+            pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+            pd.printHTMLKitChenByKictran(printer);
+        }
+    }
+
+    /** Form-2: พิมพ์ทีละรายการ พร้อมตัดกระดาษ (qty + price แยกบรรทัด) */
+    private void printForm2(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            String menuPrice   = getCell(model, row, 3);
+            PrinterDriverControl pd = new PrinterDriverControl();
+            addKitchenHeader(pd, tableNo, custCount, orderType);
+            pd.addTextLn("<b>" + menuName + "</b>");
+            pd.addTextLn("**" + menuOptions);
+            pd.addTextLn("<table width=100%><tr><td>จำนวน : " + menuQty + "</td><td align=right>ราคา : " + menuPrice + "</td></tr></table>");
+            pd.addTextLn(SEPARATOR);
+            pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+            pd.printHTMLKitChenByKictran(printer);
+        }
+    }
+
+    /** Form-3: พิมพ์รวมทุกรายการ แล้วตัดกระดาษ (qty inline) */
+    private void printForm3(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        PrinterDriverControl pd = new PrinterDriverControl();
+        addKitchenHeader(pd, tableNo, custCount, orderType);
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            pd.addTextLn("<b>" + menuName + "</b>");
+            pd.addTextLn("<table width=100%><tr><td>**" + menuOptions + "</td><td align=right>" + menuQty + "</td></tr></table>");
+        }
+        pd.addTextLn(SEPARATOR);
+        pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+        pd.printHTMLKitChenByKictran(printer);
+    }
+
+    /** Form-4: พิมพ์รวมทุกรายการ แล้วตัดกระดาษ (qty + price, separator คั่นระหว่างรายการ) */
+    private void printForm4(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        PrinterDriverControl pd = new PrinterDriverControl();
+        addKitchenHeader(pd, tableNo, custCount, orderType);
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            String menuPrice   = getCell(model, row, 3);
+            pd.addTextLn("<b>" + menuName + "</b>");
+            pd.addTextLn("**" + menuOptions);
+            pd.addTextLn("<table width=100%><tr><td>จำนวน : " + menuQty + "</td><td align=right>ราคา : " + menuPrice + "</td></tr></table>");
+            pd.addTextLn(SEPARATOR);
+        }
+        pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+        pd.printHTMLKitChenByKictran(printer);
+    }
+
+    /** Form-5: พิมพ์รวมทุกรายการ แล้วตัดกระดาษ (prefix "--", qty inline) */
+    private void printForm5(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        PrinterDriverControl pd = new PrinterDriverControl();
+        addKitchenHeader(pd, tableNo, custCount, orderType);
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            pd.addTextLn("--<b>" + menuName + "</b>");
+            pd.addTextLn("<table width=100%><tr><td>**" + menuOptions + "</td><td align=right>" + menuQty + "</td></tr></table>");
+        }
+        pd.addTextLn(SEPARATOR);
+        pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+        pd.printHTMLKitChenByKictran(printer);
+    }
+
+    /** Form-7: พิมพ์รวมทุกรายการ แล้วตัดกระดาษ (prefix "*", ไม่มี orderType และ qty) */
+    private void printForm7(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        AppLogUtil.info("printForm7 orderType=" + orderType);
+        PrinterDriverControl pd = new PrinterDriverControl();
+        pd.addTextLn(buildHeaderRow(tableNo, custCount));
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            pd.addTextLn("*<b>" + menuName + "</b>");
+            pd.addTextLn("**" + menuOptions);
+        }
+        pd.addTextLn(SEPARATOR);
+        pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+        pd.printHTMLKitChenByKictran(printer);
+    }
+
+    /** Form-8: คล้าย Form-1 พิมพ์ทีละรายการ และตัดกระดาษ */
+    private void printForm8(String printer, DefaultTableModel model, String tableNo, String custCount,
+                             String dateTime, String macNo, String empCode, String orderType) {
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String menuName    = getCell(model, row, 0);
+            String menuOptions = getCell(model, row, 1);
+            String menuQty     = getCell(model, row, 2);
+            PrinterDriverControl pd = new PrinterDriverControl();
+            addKitchenHeader(pd, tableNo, custCount, orderType);
+            pd.addTextLn("<b>" + menuName + "</b>");
+            pd.addTextLn("<table width=100%><tr><td>**" + menuOptions + "</td><td align=right>" + menuQty + "</td></tr></table>");
+            pd.addTextLn(SEPARATOR);
+            pd.addTextLn(buildFooterRow(dateTime, macNo, empCode));
+            pd.printHTMLKitChenByKictran(printer);
+        }
     }
 
     private void save() {

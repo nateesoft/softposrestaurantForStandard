@@ -2,7 +2,6 @@ package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.FloorPlanController;
-import com.softpos.main.login.FileSettingDialog;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBillDialog;
 import com.softpos.main.program.DisplayEJ;
