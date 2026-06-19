@@ -279,9 +279,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CreditRep.class, "error", e);
         }
-
+        
         try {
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+            mysqlConnect.open(this.getClass());
+            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
                         + "where (B_MacNo>='" + MacNo1 + "') "
@@ -289,7 +290,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         + "and (B_Cashier>='" + CashNo1 + "') "
                         + "and (B_Cashier<='" + CashNo2 + "') "
                         + "and (B_Void<>'V')and (B_CrAmt1<>'0') ";
-                ResultSet rs = stmt.executeQuery(SqlQuery);
+                ResultSet rs = stmt1.executeQuery(SqlQuery);
                 while (rs.next()) {
                     String TRefno = rs.getString("B_Refno");
                     String TCrCode = rs.getString("B_CrCode1");
@@ -299,7 +300,9 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     InsertTemp(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
                 }
                 rs.close();
+                stmt1.close();
             }
+            
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
 
@@ -332,9 +335,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     int SumTotal = 0;
                     Double SumTotalAmt = 0.0;
                     try {
-                        Statement stmt = mysqlConnect.getConnection().createStatement();
+                        mysqlConnect.open(this.getClass());
+                        Statement stmt2 = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
-                        ResultSet rs = stmt.executeQuery(SqlQuery);
+                        ResultSet rs = stmt2.executeQuery(SqlQuery);
                         while (rs.next()) {
                             prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
                             TempCr = rs.getString("crcode");
@@ -355,7 +359,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                             prn.print(PUtility.DataFull(IntFmt.format(SumCard), 5) + "  " + TempCrId.substring(12, 16) + " " + PUtility.DataFullR(rs.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9));
                         }
                         rs.close();
-                        stmt.close();
+                        stmt2.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                     }
@@ -400,7 +404,8 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         }
 
         try {
-            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+             mysqlConnect.open(this.getClass());
+            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
                         + "where (B_MacNo>='" + MacNo1 + "') "
@@ -408,7 +413,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         + "and (B_Cashier>='" + CashNo1 + "') "
                         + "and (B_Cashier<='" + CashNo2 + "') "
                         + "and (B_Void<>'V')and (B_CrAmt1<>'0') ";
-                ResultSet rs = stmt.executeQuery(SqlQuery);
+                ResultSet rs = stmt1.executeQuery(SqlQuery);
                 while (rs.next()) {
                     String TRefno = rs.getString("B_Refno");
                     String TCrCode = rs.getString("B_CrCode1");
@@ -418,6 +423,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     InsertTemp(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
                 }
                 rs.close();
+                stmt1.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
@@ -462,9 +468,10 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         int SumTotal = 0;
         Double SumTotalAmt = 0.0;
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
+            mysqlConnect.open(this.getClass());
+            Statement stmt3 = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
-            ResultSet rs = stmt.executeQuery(SqlQuery);
+            ResultSet rs = stmt3.executeQuery(SqlQuery);
             while (rs.next()) {
                 t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
                 TempCr = rs.getString("crcode");
@@ -484,7 +491,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 t += "colspan=2 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + TAB + TempCrId.substring(12, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(rs.getString("crapp"), 6) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9)) + "_";
             }
             rs.close();
-            stmt.close();
+            stmt3.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CreditRep.class, "error", e);
@@ -527,7 +534,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             prm.close();
             stmt.close();
         } catch (SQLException e) {
-            MSG.ERR(this, e.getMessage());
             AppLogUtil.log(CreditRep.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

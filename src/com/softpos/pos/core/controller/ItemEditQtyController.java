@@ -18,6 +18,7 @@ public class ItemEditQtyController {
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sqlUpdateBalance);
+            System.out.println(sqlUpdateBalance);
             stmt.executeUpdate(sqlUpdateTableFile);
             stmt.executeUpdate(sqlInsertEditQty);
             stmt.close();

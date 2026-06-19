@@ -103,14 +103,15 @@ public class ItemEditQty extends javax.swing.JDialog {
                     if (balanceBean.getR_Price() != 0) {
                         newAmount = balanceBean.getR_Price();
                     }
+                    balanceBean.setR_PName(NewDesc);
                     sqlUpdateBalance = "update balance set "
                             + "r_total='" + balanceBean.getR_Total() + "',"
                             + "r_quan='" + balanceBean.getR_Quan() + "',"
-                            + ThaiUtil.Unicode2ASCII(",r_pname='" + NewDesc + "' ") + ","
+                            + ThaiUtil.Unicode2ASCII("r_pname='" + NewDesc + "' ") + ","
                             + "r_price='" + newAmount + "' "
                             + "where r_index='" + RIndex + "' "
                             + "and r_plucode='" + txtPCode.getText() + "'";
-                    balanceBean.setR_PName(NewDesc);
+                   
                 } else {
                     if (balanceBean.getR_Price() != 0) {
                         newAmount = balanceBean.getR_Price();

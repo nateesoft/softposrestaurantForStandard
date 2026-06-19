@@ -123,7 +123,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         amount = rs.getDouble("amount");
                     }
                     rs.close();
-
+                    
                     sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
                     sumB_custE += cc;
                     sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล

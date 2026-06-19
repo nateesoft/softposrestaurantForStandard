@@ -1750,9 +1750,9 @@ public class PPrint {
                     cuponCode = bean.getR_PrCuCode();
                 }
             }
-//            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
             t1 += "align=left colspan=2><font face=Angsana New size=2>" + "Sub-TOTAL : " + ItemCnt + " Item" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getTAmount()) + "_";
-//            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "-----------------------------------------_";
+            t1 += "align=center colspan=3><font face=Angsana New size=2>" + "----------------------_";
 
             if (tBean.getProDiscAmt() > 0) {
                 t1 += "colspan=2 align=right><font face=Angsana New size=2>" + TAB + "ลด Promotion" + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getProDiscAmt()) + "_";
@@ -1764,7 +1764,7 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=2>" + "ลดสมาชิก.." + tBean.getMemDisc() + "</td><td align=right ><font face=Angsana New size=2> " + DecFmt.format(tBean.getMemDiscAmt()) + "_";
             }
             if (tBean.getFastDiscAmt() > 0) {
-                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดเทศกาล.." + "</td><td align=right ><font face=Angsana New size=2>- " + tBean.getFastDisc() + DecFmt.format(tBean.getFastDiscAmt()) + "_";
+                t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดเทศกาล.." + TAB + tBean.getFastDisc() + "</td><td align=right ><font face=Angsana New size=2>- " + DecFmt.format(tBean.getFastDiscAmt()) + "_";
             }
             if (tBean.getEmpDiscAmt() > 0) {
                 t1 += "colspan=2 align=right><font face=Angsana New size=2>" + "ลดพนักงาน.." + "</td><td align=right ><font face=Angsana New size=2>- " + tBean.getEmpDisc() + DecFmt.format(tBean.getEmpDiscAmt()) + "_";
@@ -1792,7 +1792,7 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + TAB + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
             }
             t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt())) + "_";
-            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
+            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
 
             if (CONFIG.getP_VatType().equals("I")) {
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {

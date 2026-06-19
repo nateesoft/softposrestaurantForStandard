@@ -255,9 +255,11 @@ public class MainSale extends javax.swing.JDialog {
         jPanel5.setVisible(false);
         txtDisplayDiscount.setVisible(false);
         txtDiscount.setVisible(false);
-
+        btnRecalAllItem.setText("RECALL - ALL");
         PublicVar.countRound = 0;
-
+        if (ConfigFile.getProperties("preOrderMachine").equals("true")) {
+            btnPrintKic.setEnabled(false);
+        }
         if (tableNo == null || tableNo.trim().isEmpty()) {
             AppLogUtil.log(MainSale.class, "warn", new Exception("MainSale opened without tableNo — dialog will be disposed"));
             javax.swing.SwingUtilities.invokeLater(this::dispose);
@@ -548,6 +550,7 @@ public class MainSale extends javax.swing.JDialog {
         lbCreditAmt = new javax.swing.JLabel();
         txtMember1 = new javax.swing.JTextField();
         txtMember2 = new javax.swing.JTextField();
+        btnRecalAllItem = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbShowBalance = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
@@ -975,7 +978,7 @@ public class MainSale extends javax.swing.JDialog {
                 btnPrintKicActionPerformed(evt);
             }
         });
-        jPanel6.add(btnPrintKic, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 35, 139, 30));
+        jPanel6.add(btnPrintKic, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 139, 30));
 
         jPanel5.setBackground(new java.awt.Color(51, 51, 51));
         jPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -1071,6 +1074,17 @@ public class MainSale extends javax.swing.JDialog {
         txtMember2.setText(": แต้มสะสม");
         txtMember2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel6.add(txtMember2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 140, 36));
+
+        btnRecalAllItem.setBackground(new java.awt.Color(255, 102, 102));
+        btnRecalAllItem.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnRecalAllItem.setForeground(new java.awt.Color(255, 255, 255));
+        btnRecalAllItem.setText("Print - ON");
+        btnRecalAllItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecalAllItemActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnRecalAllItem, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 139, 30));
 
         tbShowBalance.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tbShowBalance.setModel(new javax.swing.table.DefaultTableModel(
@@ -1959,6 +1973,13 @@ public class MainSale extends javax.swing.JDialog {
     private void btnLangENItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnLangENItemStateChanged
         PublicVar.languagePrint = "EN";
     }//GEN-LAST:event_btnLangENItemStateChanged
+
+    private void btnRecalAllItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecalAllItemActionPerformed
+        btnRecalAllItem.setBackground(Color.GREEN);
+        allItemBalanceRecallPrint();
+        bntHoldTableClick();
+
+    }//GEN-LAST:event_btnRecalAllItemActionPerformed
 
     private void cancelArPaymentClick() {
         PublicVar.TempUserRec = PublicVar.TUserRec;
@@ -3338,6 +3359,7 @@ public class MainSale extends javax.swing.JDialog {
     private javax.swing.JButton btnP9;
     private javax.swing.JButton btnPayment;
     private javax.swing.JButton btnPrintKic;
+    private javax.swing.JButton btnRecalAllItem;
     private javax.swing.JButton btnSplit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
@@ -4299,6 +4321,20 @@ public class MainSale extends javax.swing.JDialog {
             }
         }
         upDateTableFile();
+    }
+
+    private void allItemBalanceRecallPrint() {
+        AppLogUtil.info("allItemBalanceRecallPrint: " + tableNo);
+        try {
+            String sql = "update balance set "
+                    + "R_PrintOK='Y',"
+                    + " R_KicPrint='' where r_table='" + tableNo + "'";
+            databaseConnection.execUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AppLogUtil.log(MainSale.class, "error", e);
+
+        }
     }
 
 }
