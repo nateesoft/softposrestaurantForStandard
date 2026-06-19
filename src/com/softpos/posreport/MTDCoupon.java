@@ -499,41 +499,7 @@ public class MTDCoupon extends javax.swing.JDialog {
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
-    }
-
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-
-    }
-
-    public void ProcessChkKey(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            bntExitClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_F5) {
-            bntOKClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (txtMacNo1.hasFocus()) {
-                txtMacNo2.requestFocus();
-            }
-            if (txtMacNo2.hasFocus()) {
-                txtMacNo1.requestFocus();
-            }
-
-        }
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

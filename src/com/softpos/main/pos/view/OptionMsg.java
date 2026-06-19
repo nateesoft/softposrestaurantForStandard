@@ -158,7 +158,7 @@ public class OptionMsg extends javax.swing.JDialog {
             opt[i] = model2.getValueAt(i, 0).toString();
         }
         optionMsgController.updateBalanceOptions(index, tableNo, opt);
-        this.setVisible(false);
+        this.dispose();
     }
 
     public void bntAddClick() {
@@ -453,7 +453,7 @@ private void bntAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
 private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblOptionMsgKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.setVisible(false);//this.dispose();
+        this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();
@@ -469,7 +469,7 @@ private void tblOptionMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
 private void tblSelectedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblSelectedKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.setVisible(false);//this.dispose();
+        this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

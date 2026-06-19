@@ -12,12 +12,12 @@ import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
-public class TerminalRep extends javax.swing.JDialog {
+public class TerminalReport extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
-    public TerminalRep(java.awt.Frame parent, boolean modal) {
+    public TerminalReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo.setText(ConfigFile.getProperties("macno"));
@@ -156,7 +156,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     }//GEN-LAST:event_bntOKActionPerformed
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void bntOKClick() {
@@ -323,7 +323,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e);
+            AppLogUtil.log(TerminalReport.class, "error", e);
         }
 
         try {
@@ -340,7 +340,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e);
+            AppLogUtil.log(TerminalReport.class, "error", e);
         }
 
         try {
@@ -357,7 +357,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e);
+            AppLogUtil.log(TerminalReport.class, "error", e);
         }
 
         try {
@@ -372,7 +372,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(TerminalRep.class, "error", e);
+            AppLogUtil.log(TerminalReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

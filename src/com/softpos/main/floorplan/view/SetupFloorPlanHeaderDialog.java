@@ -239,7 +239,7 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void btnOk1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOk1ActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_btnOk1ActionPerformed
 
     private void txtTab1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTab1MouseClicked
@@ -286,7 +286,7 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
 
     private void txtTab1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTab1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_txtTab1KeyPressed
 
@@ -319,7 +319,7 @@ public class SetupFloorPlanHeaderDialog extends javax.swing.JDialog {
 
         PosControl.resetDataCompany();
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     private void loadDefaultTab() {

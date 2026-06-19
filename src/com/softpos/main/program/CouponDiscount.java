@@ -310,12 +310,12 @@ public class CouponDiscount extends javax.swing.JDialog {
 
 private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
     cuponBean = null;
-    this.setVisible(false);//dispose();
+    this.dispose();
 }//GEN-LAST:event_bntExitActionPerformed
 
 private void txtCuQtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCuQtyKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.setVisible(false);//dispose();
+        this.dispose();
     } else {
         int row = ShowTable.getSelectedRow();
         String CuQty = txtCuQty.getText();
@@ -362,12 +362,12 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         if (!txtCucode.getText().equals("") || txtCucode.getText().equals(null)) {
             process();
         } else {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntOKKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bntOKKeyPressed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntOKKeyPressed
 
     private void bntOKMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bntOKMouseClicked
@@ -380,7 +380,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         cuponBean = new CuponBean();
         cuponBean.setCuCode(txtCucode.getText());
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntOKMouseClicked
 
     private void txtCucodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCucodeActionPerformed
@@ -394,7 +394,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }//GEN-LAST:event_txtCuQtyMouseClicked
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     private void loadDataToGrid() {
@@ -1015,7 +1015,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         temp.saveTempCupon(bean);
         //end update tempcupon
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     private void updatePercentCupon(double itemDisc, String cuCode, double percent, BalanceBean balanceBean) {

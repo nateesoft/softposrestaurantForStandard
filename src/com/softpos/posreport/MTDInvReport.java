@@ -26,7 +26,7 @@ import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
-public class MTDInvRep extends javax.swing.JDialog {
+public class MTDInvReport extends javax.swing.JDialog {
 
     /**
      * Creates new form MTDInvRep
@@ -48,7 +48,7 @@ public class MTDInvRep extends javax.swing.JDialog {
     private final PUtility PUtility = new PUtility();
     
 
-    public MTDInvRep(java.awt.Dialog parent, boolean modal) {
+    public MTDInvReport(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtDate1.setText(DatefmtShow.format(date));
@@ -564,7 +564,7 @@ public class MTDInvRep extends javax.swing.JDialog {
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

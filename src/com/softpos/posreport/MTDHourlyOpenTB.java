@@ -427,7 +427,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
 
     private void txtDate1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDate1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
         if (evt.getKeyCode() == KeyEvent.VK_F5) {
             //bntOKClick();
@@ -513,7 +513,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
     }
 
     public void btnExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void PrintHourlyByCust() {

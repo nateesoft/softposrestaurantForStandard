@@ -133,7 +133,7 @@ public class ItemEditQty extends javax.swing.JDialog {
             }
 
             BalanceControl.updateProSerTable(tableNo, memberBean);
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else {
             txtPQuanEdit.selectAll();
             txtPQuanEdit.requestFocus();
@@ -412,7 +412,7 @@ public class ItemEditQty extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_CancelActionPerformed
 
     private void txtPQuanEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPQuanEditActionPerformed

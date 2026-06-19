@@ -217,7 +217,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
 
     } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
         PublicVar.ReturnString = "";
-        this.setVisible(false);//dispose();
+        this.dispose();
     } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
         loadDataToGrid();
         int row = ShowTableLogin.getSelectedRow();
@@ -231,7 +231,7 @@ private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     PublicVar.TableSelected = "";
                 } else {
-                    this.setVisible(false);//dispose();
+                    this.dispose();
                 }
             }
         }
@@ -245,7 +245,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         PublicVar.ReturnString = "";
         PublicVar.TableSelected = "";
-        this.setVisible(false);//dispose();
+        this.dispose();
         FloorPlanDialog fl = new FloorPlanDialog();
         fl.setVisible(true);
     }//GEN-LAST:event_bntExitActionPerformed
@@ -262,7 +262,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                     MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                     PublicVar.TableSelected = "";
                 } else {
-                    this.setVisible(false);//dispose();
+                    this.dispose();
                 }
             }
         }
@@ -283,7 +283,7 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
                         MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
                         PublicVar.TableSelected = "";
                     } else {
-                        this.setVisible(false);//dispose();
+                        this.dispose();
                     }
                 }
             }

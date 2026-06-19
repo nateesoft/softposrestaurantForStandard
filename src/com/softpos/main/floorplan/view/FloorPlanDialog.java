@@ -132,6 +132,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         AdvertisingScreen.open();
         PublicVar.TableSelected = "";
+        
         jMenu9.setVisible(false);
         jMenu1.setVisible(true);
         jMenu2.setVisible(false);
@@ -1199,6 +1200,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         ShowTableDialog s = new ShowTableDialog(this, true);
         setVisible(false);
+        
         s.setVisible(true);
         if (!PublicVar.TableSelected.equals("")) {
             setVisible(false);

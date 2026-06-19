@@ -35,14 +35,6 @@ public class PaidoutFormDialog extends javax.swing.JDialog {
     private PaidoutFormDialog(JFrame jFrame, boolean b) {
     }
 
-    public void inputfrombnt(String str) {
-        String tempstr;
-        tempstr = txtAmount.getText();
-        tempstr = tempstr + str;
-        txtAmount.setText(tempstr);
-
-    }
-
     private void SaveDataPaidout() {
         double PaidinAmt = 0.0;
         double PaidoutAmt;
@@ -105,7 +97,7 @@ public class PaidoutFormDialog extends javax.swing.JDialog {
 
         AppContext.getPosControl().savePaidOut(PaidoutAmt, reson);
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -479,7 +471,7 @@ public class PaidoutFormDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtAmountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountKeyPressed
@@ -487,7 +479,7 @@ public class PaidoutFormDialog extends javax.swing.JDialog {
             SaveDataPaidout();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

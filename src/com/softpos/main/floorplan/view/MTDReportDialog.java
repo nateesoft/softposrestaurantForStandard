@@ -15,7 +15,7 @@ import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.posreport.MTDCoupon;
 import com.softpos.posreport.MTDGiftVoucher;
 import com.softpos.posreport.MTDHourlyOpenTB;
-import com.softpos.posreport.MTDInvRep;
+import com.softpos.posreport.MTDInvReport;
 import com.softpos.util.MSG;
 
 public class MTDReportDialog extends javax.swing.JDialog {
@@ -97,7 +97,7 @@ public class MTDReportDialog extends javax.swing.JDialog {
         jScrollPane1.setViewportView(FunctionList);
 
         bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        bntOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/save.png"))); // NOI18N
+        bntOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/check.png"))); // NOI18N
         bntOK.setText("เลือกรายการ");
         bntOK.setFocusable(false);
         bntOK.setMargin(new java.awt.Insets(1, 1, 1, 1));
@@ -128,14 +128,15 @@ public class MTDReportDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
+                .addContainerGap(46, Short.MAX_VALUE))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -149,12 +150,13 @@ public class MTDReportDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 393, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(845, 439));
+        setSize(new java.awt.Dimension(896, 574));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -164,7 +166,7 @@ public class MTDReportDialog extends javax.swing.JDialog {
 
     private void FunctionListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FunctionListKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             bntOkClick();
@@ -172,8 +174,7 @@ public class MTDReportDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_FunctionListKeyPressed
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-//        ClearApp();
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
@@ -292,7 +293,7 @@ public class MTDReportDialog extends javax.swing.JDialog {
         if (FunctionList.getSelectedIndex() == 4) {
             PublicVar.TempUserRec = PublicVar.TUserRec;
             if (posUser.getSale27().equals("Y")) {
-                MTDInvRep frm = new MTDInvRep(null, true);
+                MTDInvReport frm = new MTDInvReport(null, true);
                 frm.setVisible(true);
                 FunctionList.requestFocus();
             } else {
@@ -303,7 +304,7 @@ public class MTDReportDialog extends javax.swing.JDialog {
                     if (posUser.getUserName() != null) {
                         if (posUser.getSale27().equals("Y")) {
                             PublicVar.TUserRec = posUser;
-                            MTDInvRep frm = new MTDInvRep(null, true);
+                            MTDInvReport frm = new MTDInvReport(null, true);
                             frm.setVisible(true);
                             FunctionList.requestFocus();
                         } else {

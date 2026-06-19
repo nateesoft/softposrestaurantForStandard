@@ -437,42 +437,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         txtDate1.requestFocus();
     }
 
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-        if (txtDate1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate1.getText();
-            tempstr = tempstr + str;
-            txtDate1.setText(tempstr);
-        }
-        if (txtDate2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate2.getText();
-            tempstr = tempstr + str;
-            txtDate2.setText(tempstr);
-        }
-        if (txtCntOrder.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCntOrder.getText();
-            tempstr = tempstr + str;
-            txtCntOrder.setText(tempstr);
-        }
-
-    }
-
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void bntOKClick() {

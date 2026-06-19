@@ -13,13 +13,13 @@ import java.sql.Statement;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.MSG;
 
-public class PLURep extends javax.swing.JDialog {
+public class PLUReport extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
-    public PLURep(java.awt.Frame parent, boolean modal) {
+    public PLUReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo1.setText("001");
@@ -906,93 +906,7 @@ private void txtPlu2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
-    }
-
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-        if (txtCashNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCashNo1.getText();
-            tempstr = tempstr + str;
-            txtCashNo1.setText(tempstr);
-        }
-        if (txtCashNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCashNo2.getText();
-            tempstr = tempstr + str;
-            txtCashNo2.setText(tempstr);
-        }
-        if (txtGroup1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtGroup1.getText();
-            tempstr = tempstr + str;
-            txtGroup1.setText(tempstr);
-        }
-        if (txtGroup2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtGroup2.getText();
-            tempstr = tempstr + str;
-            txtGroup2.setText(tempstr);
-        }
-        if (txtPlu1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtPlu1.getText();
-            tempstr = tempstr + str;
-            txtPlu1.setText(tempstr);
-        }
-        if (txtPlu2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtPlu2.getText();
-            tempstr = tempstr + str;
-            txtPlu2.setText(tempstr);
-        }
-    }
-
-    public void ProcessChkKey(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            bntExitClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_F5) {
-            bntOKClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (txtMacNo1.hasFocus()) {
-                txtMacNo2.requestFocus();
-            }
-            if (txtMacNo2.hasFocus()) {
-                txtCashNo1.requestFocus();
-            }
-            if (txtCashNo1.hasFocus()) {
-                txtCashNo2.requestFocus();
-            }
-            if (txtCashNo2.hasFocus()) {
-                txtGroup1.requestFocus();
-            }
-            if (txtGroup1.hasFocus()) {
-                txtGroup2.requestFocus();
-            }
-            if (txtGroup2.hasFocus()) {
-                txtPlu1.requestFocus();
-            }
-            if (txtPlu1.hasFocus()) {
-                txtPlu2.requestFocus();
-            }
-            if (txtPlu2.hasFocus()) {
-                txtMacNo1.requestFocus();
-            }
-        }
+        this.dispose();
     }
 
     public void bntOKClick() {

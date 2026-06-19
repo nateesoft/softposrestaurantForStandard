@@ -24,35 +24,28 @@ import java.util.List;
  */
 public class DailyHourlyOpenTB extends javax.swing.JDialog {
 
-    SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy (HH:mm)", Locale.ENGLISH);
-    DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
-    PPrint prn = new PPrint();
-    Date date = new Date();
-    Date TDate1 = new Date();
-    Date TDate2 = new Date();
+    private SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy (HH:mm)", Locale.ENGLISH);
+    private DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
+    private PPrint prn = new PPrint();
+    private Date TDate1 = new Date();
+    private Date TDate2 = new Date();
     private String Space = " &nbsp; ";
-    private String TAB = Space + Space + Space;
     private POSHWSetup POSHW;
-    private String Regid;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
     
-
     public DailyHourlyOpenTB(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
         POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
-    public List<Object[]> LoadData() {
-        List<Object[]> ListObj = new ArrayList<>();
+    public List<Object[]> loadReportToPrint() {
+        List<Object[]> listData = new ArrayList<>();
 
-        
         mysqlConnect.open(this.getClass());
         try {
             DecimalFormat df = new DecimalFormat("00.00");
@@ -64,10 +57,12 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
             int totalCC = 0;
             double sumNet = 0.00;
             double sumBill = 0.00;
-            int TTLCC = 0;
+            int TTLCC;
+            
             for (int i = 0; i < size1; i++) {
                 model.removeRow(0);//ลบข้อมูลบนตารางจนเหลือ 0 ก่อนที่จะโหลดขึ้นมาใหม่
             }
+            
             int t1 = 05;
             int t2 = 06;
             for (int i = 0; i < 24; i++) {
@@ -77,12 +72,14 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                 if (t1 == 23) {
                     t1 = -1;
                 }
+                
                 t1++;
                 t2++;
                 String time1 = df.format(t1).replace(".", ":");
                 String time2 = df1.format(t2).replace(".", ":");
                 time1 += ":01";
                 time2 += ":00";
+                
                 int sumB_custE = 0;
                 int sumB_custT = 0;
                 double sumNettotalE = 0.00;
@@ -91,18 +88,20 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                 int sumBillT = 0;
 
                 //หาจำนวนบิลที่ชำระเงินในช่วงเวลา E ราคารวม E
-                String sqlE = "select count(b_refno) sumBillE,"
+                String sqlSummaryTypeE = "select count(b_refno) sumBillE,"
                         + "sum(b_cust) sumBcustE,"
                         + "sum(b_nettotal) sumNettotalE "
                         + "from billno  "
                         + "where b_logintime between'" + time1 + "' and '" + time2 + "' and b_void<>'V' and b_etd='E';";
                 //หาจำนวนบิลที่ชำระเงินในช่วงเวลา T ราคารวม T
-                String sqlT = "select count(b_refno) sumBillT,"
+                
+                String sqlSummaryTypeT = "select count(b_refno) sumBillT,"
                         + "sum(b_cust) sumBcustT,"
                         + "sum(b_nettotal) sumNettotalT "
                         + "from billno  "
                         + "where b_logintime between'" + time1 + "' and '" + time2 + "' and b_void<>'V' and b_etd='T';";
                 //หาจำนวนลูกค้า,ราคารวม,ตามช่วงเวลาจาก Tablefile
+                
                 String sqlTableFile = "select count(tcode) bill,"
                         + "sum(tcustomer) cc,"
                         + "sum(tamount) amount "
@@ -110,58 +109,65 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                         + "where tcustomer<>'0' "
                         + "and tamount<>'0' "
                         + "and tlogintime between '" + time1 + "' and '" + time2 + "'";
-
-                ResultSet rsTypeE = mysqlConnect.executeQuery(sqlE);
-                if (rsTypeE.next()) {
-                    ResultSet rs = mysqlConnect.executeQuery(sqlTableFile);
-                    double bill = 0;
-                    double cc = 0;
-                    double amount = 0;
+                double bill;
+                double cc;
+                double amount;
+                try (ResultSet rs = mysqlConnect.executeQuery(sqlTableFile)) {
+                    bill = 0;
+                    cc = 0;
+                    amount = 0;
                     if (rs.next()) {
                         bill = rs.getDouble("bill");
                         cc = rs.getDouble("cc");
                         amount = rs.getDouble("amount");
                     }
-                    rs.close();
-                    
-                    sumB_custE = rsTypeE.getInt("sumBcustE");//จำนวนลูกค้า
-                    sumB_custE += cc;
-                    sumBillE = rsTypeE.getInt("sumBillE");//จำนวนบิล
-                    sumBillE += bill;
-                    sumNettotalE = rsTypeE.getDouble("sumNettotalE");//มูลค่า
-                    sumNettotalE += amount;
-                    sumCustE += sumB_custE;
-                    sumNet += sumNettotalE;
-                    sumBill += sumBillE;
                 }
-                rsTypeE.close();
 
-                ResultSet rsTypeT = mysqlConnect.executeQuery(sqlT);
-                if (rsTypeT.next()) {
-                    sumB_custT = rsTypeT.getInt("sumBcustT");
-                    sumBillT = rsTypeT.getInt("sumBillT");
-                    sumNettotalT = rsTypeT.getDouble("sumNettotalT");
-                    sumCustT += sumB_custT;
-                    sumNet += sumNettotalT;
-                    sumBill += sumBillT;
+                try (ResultSet rsSummaryTypeE = mysqlConnect.executeQuery(sqlSummaryTypeE)) {
+                    if (rsSummaryTypeE.next()) {
+                        sumB_custE = rsSummaryTypeE.getInt("sumBcustE"); //จำนวนลูกค้า
+                        sumBillE = rsSummaryTypeE.getInt("sumBillE"); //จำนวนบิล
+                        sumNettotalE = rsSummaryTypeE.getDouble("sumNettotalE"); //มูลค่า
+                        
+                        sumB_custE += cc;
+                        sumBillE += bill;
+                        sumNettotalE += amount;
+                        sumCustE += sumB_custE;
+                        sumNet += sumNettotalE;
+                        sumBill += sumBillE;
+                    }
                 }
-                rsTypeT.close();
+
+                try (ResultSet rsSummaryTypeT = mysqlConnect.executeQuery(sqlSummaryTypeT)) {
+                    if (rsSummaryTypeT.next()) {
+                        sumB_custT = rsSummaryTypeT.getInt("sumBcustT");
+                        sumBillT = rsSummaryTypeT.getInt("sumBillT");
+                        sumNettotalT = rsSummaryTypeT.getDouble("sumNettotalT");
+                        
+                        sumCustT += sumB_custT;
+                        sumNet += sumNettotalT;
+                        sumBill += sumBillT;
+                    }
+                }
 
                 TTLCC = sumB_custE + sumB_custT;
                 totalCC += TTLCC;
+                
                 model.addRow(new Object[]{
-                    df.format(t1) + " - " + df1.format(t2),//เวลา
-                    IntFmt.format(sumB_custE + sumB_custT),//จำนวนลูกค้า
-                    IntFmt.format(sumBillE + sumBillT),//จำนวนบิล
-                    IntFmt.format(sumNettotalE + sumNettotalT)//มูลค่า
+                    df.format(t1) + " - " + df1.format(t2), //เวลา
+                    IntFmt.format(sumB_custE + sumB_custT), //จำนวนลูกค้า
+                    IntFmt.format(sumBillE + sumBillT), //จำนวนบิล
+                    IntFmt.format(sumNettotalE + sumNettotalT) //มูลค่า
                 });
-                ListObj.add(new Object[]{df.format(t1).replace(".", ":") + " - " + df1.format(t2).replace(".", ":"),
+                
+                listData.add(new Object[]{df.format(t1).replace(".", ":") + " - " + df1.format(t2).replace(".", ":"),
                     IntFmt.format(sumB_custE + sumB_custT),
                     IntFmt.format(sumBillE + sumBillT),
                     IntFmt.format(sumNettotalE + sumNettotalT)
                 });
             }
-            ListObj.add(new Object[]{
+            
+            listData.add(new Object[]{
                 IntFmt.format(totalCC),
                 IntFmt.format(sumBill),
                 IntFmt.format(sumNet)
@@ -173,12 +179,14 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
                 IntFmt.format(sumBill),
                 IntFmt.format(sumNet)
             });
+            
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
-        return ListObj;
+        
+        return listData;
     }
 
     @SuppressWarnings("unchecked")
@@ -327,8 +335,7 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bntOK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOK1ActionPerformed
-        LoadData();
-        ProcessProc();
+        printProcess();
     }//GEN-LAST:event_bntOK1ActionPerformed
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
@@ -336,24 +343,17 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
-        LoadData();
+        loadReportToPrint();
     }//GEN-LAST:event_bntOKActionPerformed
-    public void btnOKClick() {
-
-    }
-
-    public void ProcessProc() {
-        PrintHourlyByCust();
-    }
 
     public void btnExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
-    public void PrintHourlyByCust() {
-        List<Object[]> ListObj = LoadData();
+    public void printReportHourlyByCustomer() {
+        List<Object[]> ListObj = loadReportToPrint();
         if (PublicVar.printdriver) {
-            PrintHourlyByCustDriver();
+            printReportHourlyByCustomerDriver();
         } else {
             if (!POSHW.getPRNPort().equals("NONE")) {
                 if (prn.openPrint(POSHW.getPRNPort())) {
@@ -409,8 +409,8 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
         }
     }
 
-    public void PrintHourlyByCustDriver() {
-        List<Object[]> ListObj = LoadData();
+    public void printReportHourlyByCustomerDriver() {
+        List<Object[]> ListObj = loadReportToPrint();
         String t = "";
         if (POSHW.getHeading1().trim().length() >= 18) {
             String[] strs = POSHW.getHeading1().trim().replace(" ", Space).split("_");
@@ -480,4 +480,9 @@ public class DailyHourlyOpenTB extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblSalePerHour;
     // End of variables declaration//GEN-END:variables
+
+    private void printProcess() {
+        loadReportToPrint();
+        printReportHourlyByCustomer();
+    }
 }

@@ -189,7 +189,7 @@ public class GetUserAction extends javax.swing.JDialog {
 
     private void c_bntlogincancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c_bntlogincancelActionPerformed
         PublicVar.ReturnString = "";
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_c_bntlogincancelActionPerformed
 
     private void c_loginnameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_c_loginnameKeyPressed
@@ -224,29 +224,9 @@ public class GetUserAction extends javax.swing.JDialog {
         } else {
             if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 PublicVar.ReturnString = "";
-                this.setVisible(false);//dispose();
+                this.dispose();
             }
         }
-    }
-
-    public void inputfrombnt(String str) {
-
-        if (c_loginname.hasFocus()) {
-            String tempstr = "";
-            tempstr = c_loginname.getText();
-            tempstr = tempstr + str;
-            c_loginname.setText(tempstr);
-        }
-        if (c_loginpassword.hasFocus()) {
-            char[] pass = c_loginpassword.getPassword();
-            String password = "";
-            for (int i = 0; i < pass.length; i++) {
-                password = password + pass[i];
-            }
-            password = password + str;
-            c_loginpassword.setText(password);
-        }
-
     }
 
     public void checkuserlogin() {
@@ -268,7 +248,7 @@ public class GetUserAction extends javax.swing.JDialog {
             if ("Y".equals(user.getSale2())) {
                 PublicVar.ReturnPermitRefund = true;
             }
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else {
             MSG.ERR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
             clearlogin();

@@ -1312,7 +1312,7 @@ public class DiscountDialog extends javax.swing.JDialog {
                 mysqlConnect.closeConnection(this.getClass());
             }
             this.setVisible(false);
-//            this.setVisible(false);//dispose();
+//            this.dispose();
         }
     }//GEN-LAST:event_btnClose1ActionPerformed
 

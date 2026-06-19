@@ -22,7 +22,7 @@ import java.util.Locale;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
-public class AutoXRep extends javax.swing.JDialog {
+public class AutoXReport extends javax.swing.JDialog {
 
     SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
     SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -40,7 +40,7 @@ public class AutoXRep extends javax.swing.JDialog {
     /**
      * Creates new form AutoXRep
      */
-    public AutoXRep(java.awt.Frame parent, boolean modal) {
+    public AutoXReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         TMacNo.setText("Mac " + PublicVar.MACNO);
@@ -493,7 +493,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSelectAllActionPerformed
@@ -513,7 +513,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void bntOKClick() {
@@ -523,9 +523,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     if (chkTerminal.isSelected()) {
                         ProcessTerminal();
                     }
-//                    if (chkCashier.isSelected()) {
-//                        ProcessCashier();
-//                    }
                     if (chkGroup.isSelected()) {
                         ProcessGroup();
                     }
@@ -607,7 +604,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -627,7 +624,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -777,7 +774,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -792,7 +789,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -807,7 +804,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -822,7 +819,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -922,7 +919,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print("----------------------------------------");
@@ -945,7 +942,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
@@ -961,7 +958,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -982,7 +979,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -1013,7 +1010,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -1162,7 +1159,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -1177,7 +1174,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -1192,7 +1189,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         try {
@@ -1207,7 +1204,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -1304,7 +1301,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
         prn.print("----------------------------------------");
         prn.print(PUtility.DataFullR("Total Amount  ", 26) + PUtility.DataFull(DecFmt.format(SumAmt), 13));
@@ -1326,7 +1323,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
@@ -1342,7 +1339,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -1362,7 +1359,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         }
 
         prn.print("----------------------------------------");
@@ -1396,7 +1393,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             }
 
             prn.print("----------------------------------------");
@@ -1603,7 +1600,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -1881,7 +1878,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -1974,8 +1971,8 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
     public void ProcessHourly() {
         DailyHourlyOpenTB hl = new DailyHourlyOpenTB(null, true);
-        hl.LoadData();
-        hl.ProcessProc();
+        hl.loadReportToPrint();
+        hl.printReportHourlyByCustomer();
     }
 
     public void PrintHourly(HourlyRec[] HArray, String MacNo1, String MacNo2) {
@@ -2025,7 +2022,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String MacNo1 = PublicVar.MACNO;
         String MacNo2 = PublicVar.MACNO;
         if (PublicVar.printdriver) {
-            InvRep inv = new InvRep(null, true);
+            InvReport inv = new InvReport(null, true);
             inv.PrintInvDriver(MacNo1, MacNo2);
         } else {
             prn.initPrinter();
@@ -2071,7 +2068,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -2096,7 +2093,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
         if (PublicVar.printdriver) {
-            VoidRep vrd = new VoidRep(null, true);
+            VoidReport vrd = new VoidReport(null, true);
             vrd.PrintVoidDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
             prn.initPrinter();
@@ -2132,7 +2129,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -2160,38 +2157,37 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String CashNo2 = "ZZZZZZ";
 
         if (PublicVar.printdriver) {
-            CreditRep credit = new CreditRep(null, true);
-            credit.PrintCreditDriver(MacNo1, MacNo2, CashNo1, CashNo2);
+            CreditReport credit = new CreditReport(null, true);
+            credit.printCreditReportDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
             
             mysqlConnect.open(this.getClass());
             try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
-                stmt.executeUpdate(SqlQuery);
-                stmt.close();
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                    String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
+                    stmt.executeUpdate(SqlQuery);
+                }
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             }
 
             try {
-                Statement stmt = mysqlConnect.getConnection().createStatement();
-                String SqlQuery = "select crcode,DECODE(crid,'snpfood') as crno,crapp,cramt from t_crar where (terminal>='" + MacNo1 + "') "
-                        + "and (terminal<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (fat<>'V')";
-                ResultSet rs = stmt.executeQuery(SqlQuery);
-                while (rs.next()) {
-                    String TCrCode = rs.getString("crcode");
-                    String TCrId = rs.getString("crno");
-                    String TCrApp = rs.getString("crapp");
-                    Double TCrAmt = rs.getDouble("cramt");
-                    InsertTemp(TCrCode, TCrId, TCrApp, TCrAmt);
+                try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                    String SqlQuery = "select crcode,DECODE(crid,'snpfood') as crno,crapp,cramt from t_crar where (terminal>='" + MacNo1 + "') "
+                            + "and (terminal<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (fat<>'V')";
+                    ResultSet rs = stmt.executeQuery(SqlQuery);
+                    while (rs.next()) {
+                        String TCrCode = rs.getString("crcode");
+                        String TCrId = rs.getString("crno");
+                        String TCrApp = rs.getString("crapp");
+                        Double TCrAmt = rs.getDouble("cramt");
+                        InsertTemp(TCrCode, TCrId, TCrApp, TCrAmt);
+                    }
                 }
-                rs.close();
-                stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             }
 
             prn.initPrinter();
@@ -2240,7 +2236,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -2285,7 +2281,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(AutoXRep.class, "error", e);
+            AppLogUtil.log(AutoXReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -2297,7 +2293,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         String CashNo1 = "";
         String CashNo2 = "ZZZZZZ";
         if (PublicVar.printdriver) {
-            GiftVoucherRep gift = new GiftVoucherRep(null, true);
+            GiftVoucherReport gift = new GiftVoucherReport(null, true);
             gift.PrintVoucherRepDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
             prn.initPrinter();
@@ -2330,7 +2326,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                 stmt.close();
             } catch (SQLException e) {
                 MSG.ERR(this, e.getMessage());
-                AppLogUtil.log(AutoXRep.class, "error", e);
+                AppLogUtil.log(AutoXReport.class, "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }

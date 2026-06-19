@@ -193,7 +193,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         TCharge = 0.00;
     }
 
-    this.setVisible(false);//dispose();
+    this.dispose();
 }//GEN-LAST:event_bntOKActionPerformed
 
 private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblShowKeyPressed
@@ -216,7 +216,7 @@ private void tblShowKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
     public void bntExitClick() {
         PublicVar.ReturnString = "";
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void bntShowAllClick() {

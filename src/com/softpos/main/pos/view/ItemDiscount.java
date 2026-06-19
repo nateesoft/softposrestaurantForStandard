@@ -470,29 +470,6 @@ private void btnExitKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_b
         this.dispose();
     }
 
-    public void inputfrombnt(String Str) {
-        if (txtDiscPercent.hasFocus()) {
-            String tempstr;
-            tempstr = txtDiscPercent.getText();
-            if (isSelected) {
-                tempstr = "";
-                isSelected = false;
-            }
-            tempstr = tempstr + Str;
-            txtDiscPercent.setText(tempstr);
-        }
-        if (txtDiscBaht.hasFocus()) {
-            String tempstr;
-            tempstr = txtDiscBaht.getText();
-            if (isSelected) {
-                tempstr = "";
-                isSelected = false;
-            }
-            tempstr = tempstr + Str;
-            txtDiscBaht.setText(tempstr);
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnOK;

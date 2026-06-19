@@ -522,52 +522,11 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
     }
 
     public void InitScreen() {
-
         txtDate1.requestFocus();
     }
 
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-        if (txtDate1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate1.getText();
-            tempstr = tempstr + str;
-            txtDate1.setText(tempstr);
-        }
-        if (txtDate2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate2.getText();
-            tempstr = tempstr + str;
-            txtDate2.setText(tempstr);
-        }
-        if (txtPlu1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtPlu1.getText();
-            tempstr = tempstr + str;
-            txtPlu1.setText(tempstr);
-        }
-        if (txtPlu2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtPlu2.getText();
-            tempstr = tempstr + str;
-            txtPlu2.setText(tempstr);
-        }
-
-    }
-
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void Action() {

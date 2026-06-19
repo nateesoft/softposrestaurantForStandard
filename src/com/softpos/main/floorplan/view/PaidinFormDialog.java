@@ -31,13 +31,6 @@ public class PaidinFormDialog extends javax.swing.JDialog {
         POSHW = POSHWSetup.Bean(PublicVar.MACNO);
     }
 
-    public void inputfrombnt(String str) {
-        String tempstr = "";
-        tempstr = txtAmount.getText();
-        tempstr = tempstr + str;
-        txtAmount.setText(tempstr);
-    }
-
     private void SaveDataPaidin() {
         double PaidinAmt;
         double PaidoutAmt = 0.0;
@@ -100,7 +93,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
         }
         AppContext.getPosControl().savePaidIn(PaidinAmt);
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
 
@@ -476,7 +469,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_bntOKActionPerformed
 
     private void bntCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCancelActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntCancelActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -553,7 +546,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
             SaveDataPaidin();
         }
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_txtAmountKeyPressed
 

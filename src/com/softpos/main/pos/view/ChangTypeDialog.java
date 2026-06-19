@@ -202,12 +202,12 @@ public class ChangTypeDialog extends javax.swing.JDialog {
 
     public void bntOKClick() {
         PublicVar.ChangTypeOK = true;
-        this.setVisible(false);//this.dispose();
+        this.dispose();
     }
 
     public void bntCancelClick() {
         PublicVar.ChangTypeOK = false;
-        this.setVisible(false);//this.dispose();
+        this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -426,7 +426,7 @@ private void bntWholeSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void tblshowpluKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblshowpluKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        this.setVisible(false);//this.dispose();
+        this.dispose();
     }
     if (evt.getKeyCode() == KeyEvent.VK_F5) {
         bntOKClick();

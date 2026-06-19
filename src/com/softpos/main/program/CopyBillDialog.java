@@ -364,7 +364,7 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                         billcopy = rs.getInt("b_billcopy");
                     } else {
                         MSG.WAR(this, "ไม่พบใบเสร็จรับเงินเลขที่ " + txtBillNo.getText() + "  ในฐานข้อมูล...");
-                        this.setVisible(false);//dispose();
+                        this.dispose();
                     }
                     rs.close();
                     stmt.close();
@@ -474,12 +474,12 @@ private void txtCopyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
                 mysqlConnect.closeConnection(this.getClass());
             }
 
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }
 
     private void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

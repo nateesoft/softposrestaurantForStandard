@@ -20,7 +20,7 @@ import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
-public class PromotionRep extends javax.swing.JDialog {
+public class PromotionReport extends javax.swing.JDialog {
 
     SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
     SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -37,7 +37,7 @@ public class PromotionRep extends javax.swing.JDialog {
     private final PUtility PUtility = new PUtility();
     
 
-    public PromotionRep(java.awt.Frame parent, boolean modal) {
+    public PromotionReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo1.setText("001");
@@ -206,7 +206,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }//GEN-LAST:event_txtMacNo1MouseClicked
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
@@ -262,7 +262,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(PromotionRep.class, "error", e);
+                        AppLogUtil.log(PromotionReport.class, "error", e);
                     } finally {
                         mysqlConnect.closeConnection(this.getClass());
                     }
@@ -334,7 +334,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(PromotionRep.class, "error", e);
+            AppLogUtil.log(PromotionReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -349,41 +349,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
-    }
-
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-
-    }
-
-    public void ProcessChkKey(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            bntExitClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_F5) {
-            bntOKClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (txtMacNo1.hasFocus()) {
-                txtMacNo2.requestFocus();
-            }
-            if (txtMacNo2.hasFocus()) {
-                txtMacNo1.requestFocus();
-            }
-
-        }
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

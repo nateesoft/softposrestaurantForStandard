@@ -46,12 +46,9 @@ public class DisplayEJ extends javax.swing.JDialog {
                 }
             }
             TextArea.setDocument(doc);
-        } catch (IOException e) {
+        } catch (IOException | BadLocationException e) {
             MSG.ERR(this, " ไม่สามารถอ่านไฟล์การทำงานของเครื่องนี้ได้ !!! ");
-            this.setVisible(false);//dispose();
-        } catch (BadLocationException e) {
-            MSG.ERR(this, " ไม่สามารถอ่านไฟล์การทำงานของเครื่องนี้ได้ !!! ");
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }
 
@@ -149,7 +146,7 @@ public class DisplayEJ extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

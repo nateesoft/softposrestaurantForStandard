@@ -288,25 +288,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         txtDate1.requestFocus();
     }
 
-    public void inputfrombnt(String str) {
-
-        if (txtDate1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate1.getText();
-            tempstr = tempstr + str;
-            txtDate1.setText(tempstr);
-        }
-        if (txtDate2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate2.getText();
-            tempstr = tempstr + str;
-            txtDate2.setText(tempstr);
-        }
-
-    }
-
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     public void bntOKClick() {

@@ -296,7 +296,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             }
         }
 
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -338,7 +338,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         PublicVar.VoucherType = "";
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

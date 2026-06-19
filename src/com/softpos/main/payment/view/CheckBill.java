@@ -1352,7 +1352,7 @@ public class CheckBill extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnAcceptActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_txtCashAmountKeyPressed
 
@@ -1366,7 +1366,7 @@ public class CheckBill extends javax.swing.JDialog {
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         clearTempGift();
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void txtCreditNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreditNoKeyPressed
@@ -2391,7 +2391,7 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
         if (PublicVar.SubTotalOK) {
-            this.setVisible(false);//dispose();
+            this.dispose();
             jPanel6.setVisible(false);
             return;
         }

@@ -86,7 +86,7 @@ public class ResonPaidoutFormDialog extends javax.swing.JDialog {
 
     private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
         saveResonPaidout();
-        this.setVisible(false);//dispose();
+        this.dispose();
 
         PaidoutFormDialog frm = new PaidoutFormDialog(null, true, txtReson.getText());
         frm.setVisible(true);

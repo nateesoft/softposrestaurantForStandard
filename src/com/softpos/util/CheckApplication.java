@@ -1,7 +1,9 @@
 package com.softpos.util;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileLock;
 
 /**
  *
@@ -9,26 +11,36 @@ import java.net.ServerSocket;
  */
 public class CheckApplication {
 
-    // Port เฉพาะของแอปนี้ — ถ้า bind ได้ = ไม่มี instance อื่น
-    private static final int APP_PORT = 49152;
-    private static ServerSocket lockSocket;
+    private static final String LOCK_FILE = System.getProperty("java.io.tmpdir") + File.separator + "softpos_restaurant.lock";
+    private static RandomAccessFile lockRaf;
+    private static FileLock fileLock;
 
     public static boolean isRunning() {
         try {
-            lockSocket = new ServerSocket(APP_PORT);
-            // bind สำเร็จ = เราเป็น instance แรก
+            File file = new File(LOCK_FILE);
+            lockRaf = new RandomAccessFile(file, "rw");
+            fileLock = lockRaf.getChannel().tryLock();
+            if (fileLock == null) {
+                // ไม่สามารถ lock ได้ = มี instance อื่นรันอยู่แล้ว
+                lockRaf.close();
+                return true;
+            }
+            // lock สำเร็จ = เราเป็น instance แรก
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
-                    if (lockSocket != null && !lockSocket.isClosed()) {
-                        lockSocket.close();
+                    if (fileLock != null && fileLock.isValid()) {
+                        fileLock.release();
                     }
+                    if (lockRaf != null) {
+                        lockRaf.close();
+                    }
+                    file.delete();
                 } catch (IOException ignored) {
                 }
             }));
             return false;
         } catch (IOException ex) {
-            // port ถูกใช้งานอยู่ = มี instance อื่นรันอยู่แล้ว
-            return true;
+            return false;
         }
     }
 }

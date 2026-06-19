@@ -496,12 +496,12 @@ public class MoveGroupTableDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTable1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!txtTable1.getText().trim().equals("")) {
                 txtTable1.setText(txtTable1.getText().toUpperCase());
@@ -625,7 +625,7 @@ public class MoveGroupTableDialog extends javax.swing.JDialog {
                 }
 
                 // clear tmp
-                this.setVisible(false);//dispose();
+                this.dispose();
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed

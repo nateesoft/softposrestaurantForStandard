@@ -15,13 +15,13 @@ import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
-public class DeptRep extends javax.swing.JDialog {
+public class DeptReport extends javax.swing.JDialog {
 
     PPrint prn = new PPrint();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 
-    public DeptRep(java.awt.Frame parent, boolean modal) {
+    public DeptReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo1.setText("001");
@@ -510,7 +510,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(DeptRep.class, "error", e);
+            AppLogUtil.log(DeptReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -518,6 +518,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Jdi_depReport dept = new Jdi_depReport(new Frame(), true);
         dept.setData(GArray);
         dept.setHeaderPage(MacNo1, MacNo2, CashNo1, CashNo2, Group1, Group2);
+        
         dept.setVisible(true);
     }
 
@@ -722,7 +723,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(DeptRep.class, "error", e);
+            AppLogUtil.log(DeptReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -734,75 +735,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
-    }
-
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-        if (txtCashNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCashNo1.getText();
-            tempstr = tempstr + str;
-            txtCashNo1.setText(tempstr);
-        }
-        if (txtCashNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCashNo2.getText();
-            tempstr = tempstr + str;
-            txtCashNo2.setText(tempstr);
-        }
-        if (txtGroup1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtGroup1.getText();
-            tempstr = tempstr + str;
-            txtGroup1.setText(tempstr);
-        }
-        if (txtGroup2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtGroup2.getText();
-            tempstr = tempstr + str;
-            txtGroup2.setText(tempstr);
-        }
-    }
-
-    public void ProcessChkKey(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            bntExitClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_F5) {
-            bntOKClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (txtMacNo1.hasFocus()) {
-                txtMacNo2.requestFocus();
-            }
-            if (txtMacNo2.hasFocus()) {
-                txtCashNo1.requestFocus();
-            }
-            if (txtCashNo1.hasFocus()) {
-                txtCashNo2.requestFocus();
-            }
-            if (txtCashNo2.hasFocus()) {
-                txtGroup1.requestFocus();
-            }
-            if (txtGroup1.hasFocus()) {
-                txtGroup2.requestFocus();
-            }
-            if (txtGroup2.hasFocus()) {
-                txtMacNo1.requestFocus();
-            }
-        }
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

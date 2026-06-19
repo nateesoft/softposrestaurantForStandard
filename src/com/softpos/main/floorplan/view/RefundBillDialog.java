@@ -435,7 +435,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }
 
     private void bntExitClick() {
-        this.setVisible(false);//this.setVisible(false);//dispose();
+        this.dispose();
     }
 
     private Boolean loadDataFromBillNo() {

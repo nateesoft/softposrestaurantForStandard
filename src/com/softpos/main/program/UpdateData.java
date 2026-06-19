@@ -214,7 +214,7 @@ public class UpdateData extends javax.swing.JDialog {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
     public void btnUpdate() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));

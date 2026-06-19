@@ -252,6 +252,7 @@ private void cmdDateChoose1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, cmdDateChoose1.getLocationOnScreen());
     dcd.setVisible(true);
+    
     // dcd.showDialog(new LookAndFeelFrame(), true, point);
     txtDate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
     txtDate1.requestFocus();
@@ -262,7 +263,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, cmdDateChoose1.getLocationOnScreen());
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
+    
     txtDate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
     txtDate2.requestFocus();
 }//GEN-LAST:event_cmdDateChoose2ActionPerformed
@@ -282,23 +283,6 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     public void InitScreen() {
 
         txtDate1.requestFocus();
-    }
-
-    public void inputfrombnt(String str) {
-
-        if (txtDate1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate1.getText();
-            tempstr = tempstr + str;
-            txtDate1.setText(tempstr);
-        }
-        if (txtDate2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtDate2.getText();
-            tempstr = tempstr + str;
-            txtDate2.setText(tempstr);
-        }
-
     }
 
     public void bntExitClick() {

@@ -643,7 +643,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        this.setVisible(false);//dispose();
+        this.dispose();
 
     }//GEN-LAST:event_btnCancelActionPerformed
 
@@ -899,7 +899,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     saveMenuAll(mgr);
                 }
                 editOK = true;
-                this.setVisible(false);
+                this.dispose();
             }
         } else {
             if (txtPCode.getText().trim().equals("")) {
@@ -910,7 +910,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
                     saveMenuAll(mgr);
                 }
                 editOK = true;
-                this.setVisible(false);
+                this.dispose();
             }
         }
     }
@@ -918,19 +918,19 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private void delete(String menucode) {
         String ShortName = txtShortName.getText();
         mgrButtonController.deleteMenuSetup(menucode, ShortName);
-        this.setVisible(false);
+        this.dispose();
     }
 
     private void saveMenu(MenuMGR mgr) {
         if (mgrButtonController.saveMenuSetup(mgr)) {
-            this.setVisible(false);
+            this.dispose();
         }
     }
 
     private void saveMenuAll(MenuMGR mgr) {
         if (mgrButtonController.updateMenuSetupAll(mgr)) {
             MSG.NOTICE(this, "บันทึกข้อมูลเมนูเรียบร้อยแล้ว");
-            this.setVisible(false);
+            this.dispose();
         }
     }
 

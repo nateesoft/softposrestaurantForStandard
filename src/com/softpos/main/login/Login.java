@@ -552,8 +552,7 @@ public class Login extends javax.swing.JDialog {
 
             @Override
             protected void done() {
-                Login.this.setVisible(false);
-                
+                setVisible(false);
                 
                 AppLogUtil.info("Login success into floorplan by username: " + loginname);
                 FloorPlanDialog floorPlanDialog = new FloorPlanDialog();

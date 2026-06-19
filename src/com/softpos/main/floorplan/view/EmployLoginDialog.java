@@ -21,12 +21,6 @@ public class EmployLoginDialog extends javax.swing.JDialog {
         this.loginPWD = loginPWD;
     }
 
-    public void inputfrombnt(String str) {
-        String tempstr = txtPassword.getText();
-        tempstr = tempstr + str;
-        txtPassword.setText(tempstr);
-    }
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

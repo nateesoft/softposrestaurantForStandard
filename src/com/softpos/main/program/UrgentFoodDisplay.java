@@ -217,7 +217,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AcceptClick = true;
         PKicTran.updateKicTranDisplay("N", ThaiUtil.Unicode2ASCII(TableNumber), pcode, pindex);
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

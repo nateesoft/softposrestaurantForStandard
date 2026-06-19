@@ -19,7 +19,7 @@ import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
-public class CreditRep extends javax.swing.JDialog {
+public class CreditReport extends javax.swing.JDialog {
 
     SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
     SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -34,9 +34,8 @@ public class CreditRep extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    
 
-    public CreditRep(java.awt.Frame parent, boolean modal) {
+    public CreditReport(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtMacNo1.setText("001");
@@ -57,8 +56,8 @@ public class CreditRep extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        bntOK = new javax.swing.JButton();
-        bntExit = new javax.swing.JButton();
+        btnPrintReport = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtMacNo1 = new javax.swing.JTextField();
@@ -73,21 +72,21 @@ public class CreditRep extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        bntOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        bntOK.setText("พิมพ์");
-        bntOK.setFocusable(false);
-        bntOK.addActionListener(new java.awt.event.ActionListener() {
+        btnPrintReport.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnPrintReport.setText("พิมพ์");
+        btnPrintReport.setFocusable(false);
+        btnPrintReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntOKActionPerformed(evt);
+                btnPrintReportActionPerformed(evt);
             }
         });
 
-        bntExit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        bntExit.setText("ยกเลิก");
-        bntExit.setFocusable(false);
-        bntExit.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCancel.setText("ยกเลิก");
+        btnCancel.setFocusable(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntExitActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -172,9 +171,9 @@ public class CreditRep extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnPrintReport, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -185,8 +184,8 @@ public class CreditRep extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bntOK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrintReport, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -254,13 +253,13 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     }
 }//GEN-LAST:event_txtCashNo2KeyPressed
 
-private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntOKActionPerformed
+private void btnPrintReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintReportActionPerformed
     bntOKClick();
-}//GEN-LAST:event_bntOKActionPerformed
+}//GEN-LAST:event_btnPrintReportActionPerformed
 
-private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
+private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
     bntExitClick();
-}//GEN-LAST:event_bntExitActionPerformed
+}//GEN-LAST:event_btnCancelActionPerformed
 
     public void bntOKClick() {
         String MacNo1 = txtMacNo1.getText();
@@ -268,20 +267,18 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         String CashNo1 = txtCashNo1.getText();
         String CashNo2 = txtCashNo2.getText();
 
-        
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
-            stmt.executeUpdate(SqlQuery);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
+                stmt.executeUpdate(SqlQuery);
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CreditRep.class, "error", e);
+            AppLogUtil.log(CreditReport.class, "error", e);
         }
-        
+
         try {
-            mysqlConnect.open(this.getClass());
             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
@@ -290,25 +287,26 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         + "and (B_Cashier>='" + CashNo1 + "') "
                         + "and (B_Cashier<='" + CashNo2 + "') "
                         + "and (B_Void<>'V')and (B_CrAmt1<>'0') ";
-                ResultSet rs = stmt1.executeQuery(SqlQuery);
-                while (rs.next()) {
-                    String TRefno = rs.getString("B_Refno");
-                    String TCrCode = rs.getString("B_CrCode1");
-                    String TCrNo = rs.getString("B_CardNo1");
-                    String TCrApp = rs.getString("B_AppCode1");
-                    Double TCrAmt = rs.getDouble("B_CrAmt1");
-                    InsertTemp(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
+                try (ResultSet rs = stmt1.executeQuery(SqlQuery)) {
+                    while (rs.next()) {
+                        String TRefno = rs.getString("B_Refno");
+                        String TCrCode = rs.getString("B_CrCode1");
+                        String TCrNo = rs.getString("B_CardNo1");
+                        String TCrApp = rs.getString("B_AppCode1");
+                        Double TCrAmt = rs.getDouble("B_CrAmt1");
+
+                        insertTempCredit(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
+                    }
                 }
-                rs.close();
                 stmt1.close();
             }
-            
+
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-
         }
+
         if (PublicVar.printdriver) {
-            PrintCreditDriver(MacNo1, MacNo1, CashNo1, CashNo2);
+            printCreditReportDriver(MacNo1, MacNo1, CashNo1, CashNo2);
         } else {
             if (!POSHW.getPRNPort().equals("NONE")) {
                 if (prn.openPrint(POSHW.getPRNPort())) {
@@ -336,30 +334,30 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     Double SumTotalAmt = 0.0;
                     try {
                         mysqlConnect.open(this.getClass());
-                        Statement stmt2 = mysqlConnect.getConnection().createStatement();
-                        String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
-                        ResultSet rs = stmt2.executeQuery(SqlQuery);
-                        while (rs.next()) {
-                            prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
-                            TempCr = rs.getString("crcode");
+                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
+                            String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
+                            try (ResultSet rs = stmt2.executeQuery(SqlQuery)) {
+                                while (rs.next()) {
+                                    prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
+                                    TempCr = rs.getString("crcode");
 
-                            if (!rs.getString("crcode").equals(TempCr)) {
-                                prn.print("       Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + "    " + PUtility.DataFull(DecFmt.format(SumCardAmt), 11));
-                                prn.print("" + "----------------------------------------");
-                                SumCard = 0;
-                                SumCardAmt = 0.0;
-                                prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
-                                TempCr = rs.getString("crcode");
+                                    if (!rs.getString("crcode").equals(TempCr)) {
+                                        prn.print("       Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + "    " + PUtility.DataFull(DecFmt.format(SumCardAmt), 11));
+                                        prn.print("" + "----------------------------------------");
+                                        SumCard = 0;
+                                        SumCardAmt = 0.0;
+                                        prn.print(rs.getString("crcode") + "   " + PUtility.SeekCreditName(rs.getString("crcode")));
+                                        TempCr = rs.getString("crcode");
+                                    }
+                                    SumCard++;
+                                    SumCardAmt = SumCardAmt + rs.getDouble("cramt");
+                                    SumTotal++;
+                                    SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
+                                    String TempCrId = PUtility.Addzero(rs.getString("crid"), 16);
+                                    prn.print(PUtility.DataFull(IntFmt.format(SumCard), 5) + "  " + TempCrId.substring(12, 16) + " " + PUtility.DataFullR(rs.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9));
+                                }
                             }
-                            SumCard++;
-                            SumCardAmt = SumCardAmt + rs.getDouble("cramt");
-                            SumTotal++;
-                            SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
-                            String TempCrId = PUtility.Addzero(rs.getString("crid"), 16);
-                            prn.print(PUtility.DataFull(IntFmt.format(SumCard), 5) + "  " + TempCrId.substring(12, 16) + " " + PUtility.DataFullR(rs.getString("crapp"), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9));
                         }
-                        rs.close();
-                        stmt2.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                     }
@@ -391,20 +389,20 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         txtMacNo1.requestFocus();
     }
 
-    public void PrintCreditDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2) {
+    public void printCreditReportDriver(String MacNo1, String MacNo2, String CashNo1, String CashNo2) {
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
-            stmt.executeUpdate(SqlQuery);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                String SqlQuery = "delete from tempcredit where terminal='" + PublicVar.MACNO + "'";
+                stmt.executeUpdate(SqlQuery);
+            }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CreditRep.class, "error", e);
+            AppLogUtil.log(CreditReport.class, "error", e);
         }
 
         try {
-             mysqlConnect.open(this.getClass());
+            mysqlConnect.open(this.getClass());
             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
@@ -413,21 +411,21 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         + "and (B_Cashier>='" + CashNo1 + "') "
                         + "and (B_Cashier<='" + CashNo2 + "') "
                         + "and (B_Void<>'V')and (B_CrAmt1<>'0') ";
-                ResultSet rs = stmt1.executeQuery(SqlQuery);
-                while (rs.next()) {
-                    String TRefno = rs.getString("B_Refno");
-                    String TCrCode = rs.getString("B_CrCode1");
-                    String TCrNo = rs.getString("B_CardNo1");
-                    String TCrApp = rs.getString("B_AppCode1");
-                    Double TCrAmt = rs.getDouble("B_CrAmt1");
-                    InsertTemp(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
+                try (ResultSet rs = stmt1.executeQuery(SqlQuery)) {
+                    while (rs.next()) {
+                        String TRefno = rs.getString("B_Refno");
+                        String TCrCode = rs.getString("B_CrCode1");
+                        String TCrNo = rs.getString("B_CardNo1");
+                        String TCrApp = rs.getString("B_AppCode1");
+                        Double TCrAmt = rs.getDouble("B_CrAmt1");
+                        
+                        insertTempCredit(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
+                    }
                 }
-                rs.close();
-                stmt1.close();
             }
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CreditRep.class, "error", e);
+            AppLogUtil.log(CreditReport.class, "error", e);
         }
 
         String t = "";
@@ -469,32 +467,32 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         Double SumTotalAmt = 0.0;
         try {
             mysqlConnect.open(this.getClass());
-            Statement stmt3 = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
-            ResultSet rs = stmt3.executeQuery(SqlQuery);
-            while (rs.next()) {
-                t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
-                TempCr = rs.getString("crcode");
+            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
+                String SqlQuery = "select * from tempcredit where (terminal='" + PublicVar.MACNO + "') order by crcode";
+                ResultSet rs = stmt3.executeQuery(SqlQuery);
+                while (rs.next()) {
+                    t += "colspan=3 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
+                    TempCr = rs.getString("crcode");
 
-                if (!rs.getString("crcode").equals(TempCr)) {
-                    t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + ("Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + TAB + PUtility.DataFull(DecFmt.format(SumCardAmt), 11)) + "_";
-                    t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
-                    SumCard = 0;
-                    SumCardAmt = 0.0;
-                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
+                    if (!rs.getString("crcode").equals(TempCr)) {
+                        t += "colspan=3 align=left><font face=Angsana New size=1>" + TAB + ("Total Slip " + PUtility.DataFull(IntFmt.format(SumCard), 6) + TAB + PUtility.DataFull(DecFmt.format(SumCardAmt), 11)) + "_";
+                        t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
+                        SumCard = 0;
+                        SumCardAmt = 0.0;
+                        t += "colspan=2 align=left><font face=Angsana New size=1>" + (rs.getString("crcode") + Space + PUtility.SeekCreditName(rs.getString("crcode"))) + "_";
+                    }
+                    SumCard++;
+                    SumCardAmt = SumCardAmt + rs.getDouble("cramt");
+                    SumTotal++;
+                    SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
+                    String TempCrId = PUtility.Addzero(rs.getString("crid"), 16);
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + TAB + TempCrId.substring(12, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(rs.getString("crapp"), 6) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9)) + "_";
                 }
-                SumCard++;
-                SumCardAmt = SumCardAmt + rs.getDouble("cramt");
-                SumTotal++;
-                SumTotalAmt = SumTotalAmt + rs.getDouble("cramt");
-                String TempCrId = PUtility.Addzero(rs.getString("crid"), 16);
-                t += "colspan=2 align=left><font face=Angsana New size=1>" + (PUtility.DataFull(IntFmt.format(SumCard), 5) + TAB + TempCrId.substring(12, 16) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(rs.getString("crapp"), 6) + TAB + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 9)) + "_";
+                rs.close();
             }
-            rs.close();
-            stmt3.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
-            AppLogUtil.log(CreditRep.class, "error", e);
+            AppLogUtil.log(CreditReport.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -516,89 +514,32 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         pd.printHTML();
     }
 
-    public void InsertTemp(String TRefno, String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {
-
-        mysqlConnect.open(this.getClass());
+    private void insertTempCredit(String TRefno, String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "insert into tempcredit (mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
+            String SqlQuery = "insert into tempcredit "
+                    + "(mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
                     + "values ('CASHIER1',curdate(),?,'" + TRefno + "',?,?,?,?)";
-            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery);
-            prm.setString(1, PublicVar.MACNO);
-            prm.setString(2, TCrCode);
-            prm.setString(3, TCrId);
-            prm.setString(4, TCrApp);
-            prm.setDouble(5, TCrAmt);
-            prm.executeUpdate();
-
-            prm.close();
-            stmt.close();
+            try (PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery)) {
+                prm.setString(1, PublicVar.MACNO);
+                prm.setString(2, TCrCode);
+                prm.setString(3, TCrId);
+                prm.setString(4, TCrApp);
+                prm.setDouble(5, TCrAmt);
+                
+                prm.executeUpdate();
+            }
         } catch (SQLException e) {
-            AppLogUtil.log(CreditRep.class, "error", e);
-        } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            AppLogUtil.log(CreditReport.class, "error", e);
         }
     }
 
     public void bntExitClick() {
-        this.setVisible(false);//dispose();
-    }
-
-    public void inputfrombnt(String str) {
-        if (txtMacNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo1.getText();
-            tempstr = tempstr + str;
-            txtMacNo1.setText(tempstr);
-        }
-        if (txtMacNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtMacNo2.setText(tempstr);
-        }
-        if (txtCashNo1.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtCashNo1.getText();
-            tempstr = tempstr + str;
-            txtCashNo1.setText(tempstr);
-        }
-        if (txtCashNo2.hasFocus()) {
-            String tempstr = "";
-            tempstr = txtMacNo2.getText();
-            tempstr = tempstr + str;
-            txtCashNo2.setText(tempstr);
-        }
-
-    }
-
-    public void ProcessChkKey(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            bntExitClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_F5) {
-            bntOKClick();
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (txtMacNo1.hasFocus()) {
-                txtMacNo2.requestFocus();
-            }
-            if (txtMacNo2.hasFocus()) {
-                txtCashNo1.requestFocus();
-            }
-            if (txtCashNo1.hasFocus()) {
-                txtCashNo2.requestFocus();
-            }
-            if (txtCashNo2.hasFocus()) {
-                txtMacNo1.requestFocus();
-            }
-
-        }
+        this.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntExit;
-    private javax.swing.JButton bntOK;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnPrintReport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

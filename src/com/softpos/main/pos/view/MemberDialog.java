@@ -276,7 +276,7 @@ public class MemberDialog extends javax.swing.JDialog {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         setMemCode("");
         setMemName("");
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -295,7 +295,7 @@ public class MemberDialog extends javax.swing.JDialog {
 
     private void txtCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
             jButton5ActionPerformed(null);
         }
@@ -323,7 +323,7 @@ public class MemberDialog extends javax.swing.JDialog {
 //        selectMember();
         UpdateMember("Del");
         clearMemberDiscount();
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelMemberActionPerformed
 
     private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
@@ -340,11 +340,11 @@ public class MemberDialog extends javax.swing.JDialog {
 
             this.MemCode = mCode;
             this.MemName = mName;
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else {
             this.MemCode = "";
             this.MemName = "";
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }
 

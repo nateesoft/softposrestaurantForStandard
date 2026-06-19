@@ -422,12 +422,12 @@ public class MoveItemDialog extends javax.swing.JDialog {
         TABLE_2 = "";
         PublicVar.TableSelected = TABLE_NO;
         restoreData();
-        this.setVisible(false);//dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTable1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             loadTable1();
         }
@@ -437,7 +437,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             checkLoadTable2();
         } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.setVisible(false);//dispose();
+            this.dispose();
         }
     }//GEN-LAST:event_txtTable2KeyPressed
 
@@ -491,7 +491,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
                 databaseConnection.execUpdate(sql);
 
                 PublicVar.TableSelected = TABLE_2;
-                this.setVisible(false);//dispose();
+                this.dispose();
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

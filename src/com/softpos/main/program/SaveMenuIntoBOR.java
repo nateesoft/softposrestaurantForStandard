@@ -89,8 +89,8 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
 
             pbCheckUpdate.setForeground(Color.green);
             MSG.NOTICE(this, "รับส่งข้อมูลเมนูไปยัง BOR เรียบร้อย");
-            this.setVisible(false);
-        } catch (Exception e) {
+            this.dispose();
+        } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(FloorPlanDialog.class, "error", e);
         } finally {
@@ -100,23 +100,20 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
     }
 
     private void checkUpdate() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //check ftp file date
-                try {
-                    pbCheckUpdate.setStringPainted(true);
-                    pbCheckUpdate.setMinimum(0);
-                    pbCheckUpdate.setMaximum(100);
-
-                    for (int i = 1; i <= 100; i++) {
-                        pbCheckUpdate.setValue(i);
-                        pbCheckUpdate.setString("Check Update: (" + i + " %)");
-                    }
-                    pbCheckUpdate.setString("Update Menu To BOR Complete!");
-                } catch (Exception e) {
-                    MSG.ERR(new JFrame(), e.getMessage());
+        new Thread(() -> {
+            //check ftp file date
+            try {
+                pbCheckUpdate.setStringPainted(true);
+                pbCheckUpdate.setMinimum(0);
+                pbCheckUpdate.setMaximum(100);
+                
+                for (int i = 1; i <= 100; i++) {
+                    pbCheckUpdate.setValue(i);
+                    pbCheckUpdate.setString("Check Update: (" + i + " %)");
                 }
+                pbCheckUpdate.setString("Update Menu To BOR Complete!");
+            } catch (Exception e) {
+                MSG.ERR(new JFrame(), e.getMessage());
             }
         }).start();
     }
@@ -187,7 +184,7 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
