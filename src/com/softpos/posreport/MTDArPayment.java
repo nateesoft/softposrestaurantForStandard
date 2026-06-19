@@ -370,7 +370,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
                 try {
                     Statement stmt = mysqlConnect.getConnection().createStatement();
-                    String SqlQuery = "select * from s_tcrar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') group by crcode";
+                    String SqlQuery = "select crcode,sum(crcnt) as crcnt,sum(cramt) as cramt from s_tcrar where (fat<>'V') and (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') group by crcode";
                     ResultSet rs = stmt.executeQuery(SqlQuery);
                     while (rs.next()) {
                         prn.print(PUtility.DataFullR(PUtility.SeekCreditName(rs.getString("crcode") + "                "), 20) + PUtility.DataFull(IntFmt.format(rs.getInt("crcnt")), 6) + PUtility.DataFull(DecFmt.format(rs.getDouble("cramt")), 13));

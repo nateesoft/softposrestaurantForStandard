@@ -77,7 +77,8 @@
       "Bash(find /Users/nateelive/Documents/Projects/GithubProject -maxdepth 2 -type d -name \"*findig*\" -o -maxdepth 2 -type d -name \"*sale-online*\" 2>/dev/null | sort)",
       "Read(//Users/nateelive/Documents/Projects/GithubProject/**)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name',''\\), d.get\\('version',''\\)\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name',''\\), d.get\\('version',''\\)\\)\")",
+      "Bash(grep -v \"^--$\")"
     ],
     "additionalDirectories": [
       "/tmp"

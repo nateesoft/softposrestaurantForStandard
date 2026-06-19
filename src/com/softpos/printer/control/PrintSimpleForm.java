@@ -3577,7 +3577,7 @@ public class PrintSimpleForm {
 
                             mysqlConnect.open(this.getClass());
                             try {
-                                String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
+                                String sql = "select TUser, R_Void,MIN(R_Index) R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                                         + "R_Price, b.Macno,R_Date, R_Time,"
                                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
                                         + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -3587,7 +3587,7 @@ public class PrintSimpleForm {
                                         + "and R_PrintOK='Y' "
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
-                                        + "group by R_PluCode order by R_Index";
+                                        + "group by R_PluCode,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_Kic order by R_Index";
                                 AppLogUtil.warn(PrintSimpleForm.class, sql);
                                 try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                                     int line = 0;
@@ -3786,7 +3786,7 @@ public class PrintSimpleForm {
 
                             mysqlConnect.open(this.getClass());
                             try {
-                                String sql = "select TUser,R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
+                                String sql = "select TUser,R_Void,MIN(R_Index) R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                                         + "R_Price, b.Macno,R_Date, R_Time,"
                                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
                                         + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -3796,7 +3796,7 @@ public class PrintSimpleForm {
                                         + "and R_PrintOK='Y' "
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
-                                        + "group by R_PluCode order by R_Index";
+                                        + "group by R_PluCode,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_Kic order by R_Index";
                                 AppLogUtil.warn(PrintSimpleForm.class, sql);
                                 try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                                     int line = 0;
@@ -4172,7 +4172,7 @@ public class PrintSimpleForm {
 
                 mysqlConnect.open(this.getClass());
                 try {
-                    String sql = "select TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, sum(R_Quan) R_Quan,"
+                    String sql = "select TUser,R_Void,MIN(R_Index) R_Index, R_PluCode, TCode, TCustomer, R_PName, sum(R_Quan) R_Quan,"
                             + "sum(R_Total) R_Price, b.Macno,R_Date, R_Time,"
                             + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
                             + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -4183,7 +4183,7 @@ public class PrintSimpleForm {
                             + "and R_KicPrint<>'P' "
                             + "and R_Kic<>'' "
                             + "and R_Kic='" + printerName.replace("kic", "") + "' "
-                            + "group by b.R_PluCode,r_etd "
+                            + "group by b.R_PluCode,r_etd,TUser,R_Void,TCode,TCustomer,R_PName,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,b.cashier,R_EMP,R_Table,R_Kic "
                             + "order by R_ETD,R_Index";
                     AppLogUtil.warn(PrintSimpleForm.class, sql);
                     try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -4476,7 +4476,7 @@ public class PrintSimpleForm {
 
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select TUser, R_Void,R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
+            String sql = "select TUser, R_Void,MIN(R_Index) R_Index, R_PluCode,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
                     + "R_Price, b.Macno,R_Date, R_Time,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
                     + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
@@ -4485,7 +4485,7 @@ public class PrintSimpleForm {
                     + "and r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
-                    + "group by R_PluCode, R_ETD "
+                    + "group by R_PluCode,R_ETD,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,b.cashier,R_EMP,R_Table,R_Kic "
                     + "order by R_ETD, R_Index";
 
             AppLogUtil.warn(PrintSimpleForm.class, sql);

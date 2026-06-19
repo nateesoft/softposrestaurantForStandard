@@ -392,7 +392,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                         String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
                                 + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "'"
-                                + " group by s_cupon.cucode order by s_cupon.cucode";
+                                + " group by s_cupon.cucode,cupon.cuname order by s_cupon.cucode";
                         Statement stmt = mysqlConnect.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
                         while (rs.next()) {
@@ -464,7 +464,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
                     + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
                     + "and refund<>'V' "
-                    + " group by s_cupon.cucode order by s_cupon.cucode";
+                    + " group by s_cupon.cucode,cupon.cuname order by s_cupon.cucode";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {

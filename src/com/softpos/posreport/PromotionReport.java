@@ -250,7 +250,7 @@ private void txtMacNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     try {
                         Statement stmt = mysqlConnect.getConnection().createStatement();
                         String SqlQuery = "select prtype,prcode,sum(pqty),sum(pramt),protab.prodesc from t_promotion left join protab on procode=prcode "
-                                + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by prcode order by prcode";
+                                + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by prtype,prcode,protab.prodesc order by prcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
                             prn.print(PUtility.DataFullR(rs.getString("prcode"), 3) + "  " + PUtility.DataFullR(ThaiUtil.ASCII2Unicode(rs.getString("prodesc")), 15)

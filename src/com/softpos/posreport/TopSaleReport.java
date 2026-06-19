@@ -480,7 +480,7 @@ private void txtCntOrderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select r_group,groupName,r_plucode,r_pname,sum(r_quan),sum(r_total) from t_sale inner join groupfile on t_sale.r_group = groupfile.groupcode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') and (r_void<>'V') and (r_refund<>'V') "
-                    + "group by r_group,r_plucode order by r_group,r_plucode";
+                    + "group by r_group,groupName,r_plucode,r_pname order by r_group,r_plucode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 String[] data = new String[7];

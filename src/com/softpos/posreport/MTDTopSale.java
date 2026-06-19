@@ -479,9 +479,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
+            String SqlQuery = "select s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') "
-                    + "and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
+                    + "and (s_dept>='" + Group1 + "') and (s_dept<='" + Group2 + "') group by s_dept,s_pcode,pdesc order by s_dept,s_pcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 String TGroup = rs.getString("s_dept");
@@ -576,9 +576,9 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select s_date,s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
+            String SqlQuery = "select s_dept,s_pcode,sum(s_qty),sum(s_amt),pdesc from s_sale left join product on pcode=s_pcode "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + Group1 + "') "
-                    + "and (s_dept<='" + Group2 + "') group by s_dept,s_pcode order by s_dept,s_pcode";
+                    + "and (s_dept<='" + Group2 + "') group by s_dept,s_pcode,pdesc order by s_dept,s_pcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {
                 String TGroup = rs.getString("s_dept");

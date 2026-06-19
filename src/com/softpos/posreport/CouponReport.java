@@ -232,7 +232,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     mysqlConnect.open(this.getClass());
                     try {
                         String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
-                                + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
+                                + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode,cupon.cuname order by t_cupon.cucode";
                         Statement stmt = mysqlConnect.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
                         while (rs.next()) {
@@ -308,7 +308,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select t_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from t_cupon left join cupon on t_cupon.cucode=cupon.cucode "
-                    + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode order by t_cupon.cucode";
+                    + "where (terminal>='" + MacNo1 + "') and (terminal<='" + MacNo2 + "') group by t_cupon.cucode,cupon.cuname order by t_cupon.cucode";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {

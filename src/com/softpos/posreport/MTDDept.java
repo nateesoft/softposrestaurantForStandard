@@ -110,7 +110,7 @@ public class MTDDept extends javax.swing.JDialog {
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
+            String SqlQuery = "select s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') "
                     + "and (s_date<='" + Datefmt.format(TDate2) + "') "
                     + "and (s_dept>='" + txtMacNo1.getText() + "') "
@@ -543,7 +543,7 @@ public class MTDDept extends javax.swing.JDialog {
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select s_date,s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
+            String SqlQuery = "select s_dept,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt),sum(e_disc),sum(t_disc),sum(d_disc),sum(p_disc),sum(w_disc),sum(s_disc) from s_sale "
                     + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') group by s_dept order by s_dept";
 
             ResultSet rs = stmt.executeQuery(SqlQuery);
