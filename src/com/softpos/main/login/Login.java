@@ -23,7 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
-import com.softpos.util.component.KeyBoardDialog;
+import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.CheckApplication;
 import com.softpos.util.MSG;
@@ -40,6 +40,12 @@ public class Login extends javax.swing.JDialog {
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Set component names so SwingTestDriver can locate them by name
+        txtUser.setName("txtUser");
+        txtPass.setName("txtPass");
+        btnLogin.setName("btnLogin");
+        btnCancel.setName("btnCancel");
+        
         txtUser.setText("");
         txtPass.setText("");
         txtMacNo.setText("MAC NO. " + ConfigFile.getProperties("macno"));
@@ -337,11 +343,9 @@ public class Login extends javax.swing.JDialog {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMouseClicked
-        new KeyBoardDialog(null, true, 4).get(txtUser, 4);
     }//GEN-LAST:event_txtUserMouseClicked
 
     private void txtPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPassMouseClicked
-        new KeyBoardDialog(null, true, 4).get(txtPass, 4);
     }//GEN-LAST:event_txtPassMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -413,6 +417,7 @@ public class Login extends javax.swing.JDialog {
         final String password = txtPass.getText();
 
         AppLogUtil.info("Login by username: " + loginname);
+        TestEventBus.fire(TestEventBus.Event.LOGIN_OPEN, "user=" + loginname);
 
         PublicVar.printerStation = ConfigFile.getProperties("printerStation");
         PublicVar.defaultCustomer = ConfigFile.getProperties("defaultCustomer");
@@ -463,6 +468,7 @@ public class Login extends javax.swing.JDialog {
 
     private void applyLoginResult(LoginFetchData data, String loginname) {
         if (!data.loginBean.isValidLogin()) {
+            TestEventBus.fire(TestEventBus.Event.LOGIN_FAIL, "user=" + loginname);
             MSG.WAR(this, "รหัสผู้ใช้งาน (Username) และรหัสผ่าน (Password) ไม่ถูกต้อง !!! ");
             clearlogin();
             return;
@@ -555,6 +561,7 @@ public class Login extends javax.swing.JDialog {
                 setVisible(false);
                 
                 AppLogUtil.info("Login success into floorplan by username: " + loginname);
+                TestEventBus.fire(TestEventBus.Event.LOGIN_SUCCESS, "user=" + loginname);
                 FloorPlanDialog floorPlanDialog = new FloorPlanDialog();
                 floorPlanDialog.setVisible(true);
             }

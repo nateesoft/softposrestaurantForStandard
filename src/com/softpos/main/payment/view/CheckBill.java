@@ -38,6 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import com.softpos.printer.control.PrintSimpleForm;
+import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.LoadingOverlay;
@@ -2270,6 +2271,7 @@ public class CheckBill extends javax.swing.JDialog {
     }
 
     private void printBillCheck() {
+        TestEventBus.fire(TestEventBus.Event.BILL_PRINTED, "table=" + tableNo);
         new Thread(() -> {
             PPrint print = new PPrint();
             if (PublicVar.useprint && PublicVar.printdriver == false) {
@@ -2396,6 +2398,7 @@ public class CheckBill extends javax.swing.JDialog {
             return;
         }
 
+        TestEventBus.fire(TestEventBus.Event.PAYMENT_CONFIRMED, "table=" + tableNo);
         checkBillPayment();
         pushPaymentInfo();
     }

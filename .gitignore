@@ -11,3 +11,4 @@ connect.ini
 connect.ini
 webconnect.ini
 *.jar
+test-reports/*

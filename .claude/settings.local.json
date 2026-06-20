@@ -78,7 +78,11 @@
       "Read(//Users/nateelive/Documents/Projects/GithubProject/**)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name',''\\), d.get\\('version',''\\)\\)\")",
-      "Bash(grep -v \"^--$\")"
+      "Bash(grep -v \"^--$\")",
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/e2e)",
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/test/com/softpos/e2e/model)",
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/test-reports/screenshots)",
+      "Bash(jar tf *)"
     ],
     "additionalDirectories": [
       "/tmp"

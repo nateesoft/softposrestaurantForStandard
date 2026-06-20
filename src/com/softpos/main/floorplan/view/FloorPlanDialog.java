@@ -69,6 +69,7 @@ import javax.swing.JPopupMenu;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
+import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateConvert;
 import com.softpos.util.LoadingOverlay;
@@ -125,6 +126,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         setupAutoRefresh();
         setupKeyboardShortcuts();
 
+        TestEventBus.fire(TestEventBus.Event.FLOOR_PLAN_OPEN);
         // Show loading overlay while DB data loads
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
         
@@ -1208,6 +1210,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 autoRefreshTimer.stop();
             }
             AppLogUtil.info("FloorPlanDialog (select from table list menu) Open Table: " + PublicVar.TableSelected);
+            TestEventBus.fire(TestEventBus.Event.TABLE_SELECTED, "table=" + PublicVar.TableSelected);
             MainSale mainSale = new MainSale(this, true, PublicVar.TableSelected);
             mainSale.setVisible(true);
         }
@@ -1963,6 +1966,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     autoRefreshTimer.stop();
                 }
                 AppLogUtil.info("FloorPlanDialog => returnBill: Open Table: " + tableTemp);
+                TestEventBus.fire(TestEventBus.Event.TABLE_SELECTED, "table=" + tableTemp + " [returnBill]");
                 MainSale mainSale = new MainSale(this, true, tableTemp);
                 mainSale.setVisible(true);
             } catch (Exception e) {
@@ -2362,6 +2366,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             }
 
             AppLogUtil.info("FloorPlanDialog (MouseFocusAction) => showPOS: Open Table: " + tableNo);
+            TestEventBus.fire(TestEventBus.Event.TABLE_SELECTED, "table=" + tableNo + " [click]");
             MainSale mainSale = new MainSale(new JFrame(), true, tableNo);
             mainSale.setVisible(true);
 
