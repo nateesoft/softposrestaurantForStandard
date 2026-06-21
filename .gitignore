@@ -9,6 +9,5 @@ connect.ini
 /connect.ini
 *.running
 connect.ini
-webconnect.ini
 *.jar
 test-reports

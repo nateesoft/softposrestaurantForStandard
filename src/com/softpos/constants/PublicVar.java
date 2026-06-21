@@ -4,7 +4,6 @@ import com.softpos.pos.core.controller.SmpCoupon;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -562,7 +561,6 @@ public class PublicVar {
     public static int countConnectDB = 0;
     public static String MACNO = "";
     public static String FILE_CONFIG = "connect.ini";
-    public static String FILE_CONFIGOnline = "webconnect.ini";
     public static String FILE_LOG = "log.txt";
     public static String FILE_BG = "img/bg.jpg";
     public static String DATABASE = "";
