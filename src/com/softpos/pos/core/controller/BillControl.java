@@ -284,7 +284,7 @@ public class BillControl {
                     + "R_PrSubAmt,R_PrSubAdj,R_PrCuDisc,R_PrCuBath,R_PrCuAdj,R_PrChkType2,R_PrQuan2,"
                     + "R_PrType2,R_PrCode2,R_PrDisc2,R_PrBath2,R_PrAmt2,R_PrAdj2,R_PItemNo,R_PKicQue,"
                     + "R_MoveItem,R_MoveFrom,R_MoveUser,R_MoveFlag, R_Pause, R_SPIndex, R_LinkIndex,"
-                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_VoidPause,R_NetDiff)  "
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_VoidPause)  "
                     + "values("
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
@@ -294,99 +294,97 @@ public class BillControl {
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,"
-                    + "?,?)";
-            PreparedStatement pre = mysqlConnect.getConnection().prepareStatement(sqlTSale);
-            pre.setString(1, bean.getR_Index());
-            pre.setString(2, bean.getR_Refno());
-            pre.setString(3, bean.getR_Table());
-            pre.setString(4, DateFormat.getMySQL_Date(bean.getR_Date()));//R_Date
-            pre.setString(5, bean.getR_Time());//R_Time
-            pre.setString(6, bean.getMacNo());
-            pre.setString(7, bean.getCashier());
-            pre.setString(8, bean.getR_Emp());
-            pre.setString(9, bean.getR_PluCode());
-            pre.setString(10, bean.getR_PName());
-            pre.setString(11, bean.getR_Unit());
-            pre.setString(12, bean.getR_Group());
-            pre.setString(13, bean.getR_Status());
-            pre.setString(14, bean.getR_Normal());
-            pre.setString(15, bean.getR_Discount());
-            pre.setString(16, bean.getR_Service());
-            pre.setString(17, bean.getR_Stock());
-            pre.setString(18, bean.getR_Set());
-            pre.setString(19, bean.getR_Vat());
-            pre.setString(20, bean.getR_Type());
-            pre.setString(21, bean.getR_ETD());
-            pre.setDouble(22, bean.getR_Quan());
-            pre.setDouble(23, bean.getR_Price());
-            pre.setDouble(24, bean.getR_Total());
-            pre.setString(25, bean.getR_PrType());
-            pre.setString(26, bean.getR_PrCode());
-            pre.setDouble(27, bean.getR_PrDisc());
-            pre.setDouble(28, bean.getR_PrBath());
-            pre.setDouble(29, bean.getR_PrAmt());
-            pre.setString(30, bean.getR_PrCuType());
-            pre.setString(31, bean.getR_PrCuCode());
-            pre.setDouble(32, bean.getR_PrCuQuan());
-            pre.setDouble(33, bean.getR_PrCuAmt());
-            pre.setDouble(34, bean.getR_Redule());
-            pre.setDouble(35, bean.getR_DiscBath());
-            pre.setDouble(36, bean.getR_PrAdj());
-            pre.setDouble(37, bean.getR_NetTotal());
-            pre.setString(38, bean.getR_Kic());
-            pre.setString(39, bean.getR_KicPrint());
-            pre.setString(40, bean.getR_Refund());
-            pre.setString(41, bean.getVoidMsg());
-            pre.setString(42, bean.getR_Void());
-            pre.setString(43, bean.getR_VoidUser());
-            pre.setString(44, bean.getR_VoidTime());
-            pre.setString(45, bean.getStkCode());
-            pre.setString(46, bean.getPosStk());
-            pre.setDouble(47, bean.getR_ServiceAmt());
-            pre.setString(48, bean.getR_PrChkType());
-            pre.setDouble(49, bean.getR_PrQuan());
-            pre.setString(50, bean.getR_PrSubType());
-            pre.setString(51, bean.getR_PrSubCode());
-            pre.setDouble(52, bean.getR_PrSubQuan());
-            pre.setDouble(53, bean.getR_PrSubDisc());
-            pre.setDouble(54, bean.getR_PrSubBath());
-            pre.setDouble(55, bean.getR_PrSubAmt());
-            pre.setDouble(56, bean.getR_PrSubAdj());
-            pre.setDouble(57, bean.getR_PrCuDisc());
-            pre.setDouble(58, bean.getR_PrCuBath());
-            pre.setDouble(59, bean.getR_PrCuAdj());
-            pre.setString(60, bean.getR_PrChkType2());
-            pre.setDouble(61, bean.getR_PrQuan2());
-            pre.setString(62, bean.getR_PrType2());
-            pre.setString(63, bean.getR_PrCode2());
-            pre.setDouble(64, bean.getR_PrDisc2());
-            pre.setDouble(65, bean.getR_PrBath2());
-            pre.setDouble(66, bean.getR_PrAmt2());
-            pre.setDouble(67, bean.getR_PrAdj2());
-            pre.setInt(68, bean.getR_PItemNo());
-            pre.setInt(69, bean.getR_PKicQue());
-            pre.setString(70, bean.getR_MoveItem());
-            pre.setString(71, bean.getR_MoveFrom());
-            pre.setString(72, bean.getR_MoveUser());
-            pre.setString(73, bean.getR_MoveFlag());
-            pre.setString(74, bean.getR_Pause());
-            pre.setString(75, bean.getR_SPIndex());
-            pre.setString(76, bean.getR_LinkIndex());
-            pre.setString(77, ThaiUtil.Unicode2ASCII(bean.getR_Opt1()));
-            pre.setString(78, ThaiUtil.Unicode2ASCII(bean.getR_Opt2()));
-            pre.setString(79, ThaiUtil.Unicode2ASCII(bean.getR_Opt3()));
-            pre.setString(80, ThaiUtil.Unicode2ASCII(bean.getR_Opt4()));
-            pre.setString(81, ThaiUtil.Unicode2ASCII(bean.getR_Opt5()));
-            pre.setString(82, ThaiUtil.Unicode2ASCII(bean.getR_Opt6()));
-            pre.setString(83, ThaiUtil.Unicode2ASCII(bean.getR_Opt7()));
-            pre.setString(84, ThaiUtil.Unicode2ASCII(bean.getR_Opt8()));
-            pre.setString(85, ThaiUtil.Unicode2ASCII(bean.getR_Opt9()));
-            pre.setString(86, ThaiUtil.Unicode2ASCII(bean.getR_VoidPause()));
-            pre.setDouble(87, bean.getR_NetDiff());
-
-            pre.executeUpdate();
-            pre.close();
+                    + "?,?,?,?,?,?,?,?,?,?)";
+            try (PreparedStatement pre = mysqlConnect.getConnection().prepareStatement(sqlTSale)) {
+                pre.setString(1, bean.getR_Index());
+                pre.setString(2, bean.getR_Refno());
+                pre.setString(3, bean.getR_Table());
+                pre.setString(4, DateFormat.getMySQL_Date(bean.getR_Date()));//R_Date
+                pre.setString(5, bean.getR_Time());//R_Time
+                pre.setString(6, bean.getMacNo());
+                pre.setString(7, bean.getCashier());
+                pre.setString(8, bean.getR_Emp());
+                pre.setString(9, bean.getR_PluCode());
+                pre.setString(10, bean.getR_PName());
+                pre.setString(11, bean.getR_Unit());
+                pre.setString(12, bean.getR_Group());
+                pre.setString(13, bean.getR_Status());
+                pre.setString(14, bean.getR_Normal());
+                pre.setString(15, bean.getR_Discount());
+                pre.setString(16, bean.getR_Service());
+                pre.setString(17, bean.getR_Stock());
+                pre.setString(18, bean.getR_Set());
+                pre.setString(19, bean.getR_Vat());
+                pre.setString(20, bean.getR_Type());
+                pre.setString(21, bean.getR_ETD());
+                pre.setDouble(22, bean.getR_Quan());
+                pre.setDouble(23, bean.getR_Price());
+                pre.setDouble(24, bean.getR_Total());
+                pre.setString(25, bean.getR_PrType());
+                pre.setString(26, bean.getR_PrCode());
+                pre.setDouble(27, bean.getR_PrDisc());
+                pre.setDouble(28, bean.getR_PrBath());
+                pre.setDouble(29, bean.getR_PrAmt());
+                pre.setString(30, bean.getR_PrCuType());
+                pre.setString(31, bean.getR_PrCuCode());
+                pre.setDouble(32, bean.getR_PrCuQuan());
+                pre.setDouble(33, bean.getR_PrCuAmt());
+                pre.setDouble(34, bean.getR_Redule());
+                pre.setDouble(35, bean.getR_DiscBath());
+                pre.setDouble(36, bean.getR_PrAdj());
+                pre.setDouble(37, bean.getR_NetTotal());
+                pre.setString(38, bean.getR_Kic());
+                pre.setString(39, bean.getR_KicPrint());
+                pre.setString(40, bean.getR_Refund());
+                pre.setString(41, bean.getVoidMsg());
+                pre.setString(42, bean.getR_Void());
+                pre.setString(43, bean.getR_VoidUser());
+                pre.setString(44, bean.getR_VoidTime());
+                pre.setString(45, bean.getStkCode());
+                pre.setString(46, bean.getPosStk());
+                pre.setDouble(47, bean.getR_ServiceAmt());
+                pre.setString(48, bean.getR_PrChkType());
+                pre.setDouble(49, bean.getR_PrQuan());
+                pre.setString(50, bean.getR_PrSubType());
+                pre.setString(51, bean.getR_PrSubCode());
+                pre.setDouble(52, bean.getR_PrSubQuan());
+                pre.setDouble(53, bean.getR_PrSubDisc());
+                pre.setDouble(54, bean.getR_PrSubBath());
+                pre.setDouble(55, bean.getR_PrSubAmt());
+                pre.setDouble(56, bean.getR_PrSubAdj());
+                pre.setDouble(57, bean.getR_PrCuDisc());
+                pre.setDouble(58, bean.getR_PrCuBath());
+                pre.setDouble(59, bean.getR_PrCuAdj());
+                pre.setString(60, bean.getR_PrChkType2());
+                pre.setDouble(61, bean.getR_PrQuan2());
+                pre.setString(62, bean.getR_PrType2());
+                pre.setString(63, bean.getR_PrCode2());
+                pre.setDouble(64, bean.getR_PrDisc2());
+                pre.setDouble(65, bean.getR_PrBath2());
+                pre.setDouble(66, bean.getR_PrAmt2());
+                pre.setDouble(67, bean.getR_PrAdj2());
+                pre.setInt(68, bean.getR_PItemNo());
+                pre.setInt(69, bean.getR_PKicQue());
+                pre.setString(70, bean.getR_MoveItem());
+                pre.setString(71, bean.getR_MoveFrom());
+                pre.setString(72, bean.getR_MoveUser());
+                pre.setString(73, bean.getR_MoveFlag());
+                pre.setString(74, bean.getR_Pause());
+                pre.setString(75, bean.getR_SPIndex());
+                pre.setString(76, bean.getR_LinkIndex());
+                pre.setString(77, ThaiUtil.Unicode2ASCII(bean.getR_Opt1()));
+                pre.setString(78, ThaiUtil.Unicode2ASCII(bean.getR_Opt2()));
+                pre.setString(79, ThaiUtil.Unicode2ASCII(bean.getR_Opt3()));
+                pre.setString(80, ThaiUtil.Unicode2ASCII(bean.getR_Opt4()));
+                pre.setString(81, ThaiUtil.Unicode2ASCII(bean.getR_Opt5()));
+                pre.setString(82, ThaiUtil.Unicode2ASCII(bean.getR_Opt6()));
+                pre.setString(83, ThaiUtil.Unicode2ASCII(bean.getR_Opt7()));
+                pre.setString(84, ThaiUtil.Unicode2ASCII(bean.getR_Opt8()));
+                pre.setString(85, ThaiUtil.Unicode2ASCII(bean.getR_Opt9()));
+                pre.setString(86, ThaiUtil.Unicode2ASCII(bean.getR_VoidPause()));
+                
+                pre.executeUpdate();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error" + sqlTSale, e);
         } finally {

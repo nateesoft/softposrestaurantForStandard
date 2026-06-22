@@ -5,7 +5,7 @@ public class AppContext {
     private static BillControl billControl;
     private static BranchControl branchControl;
     private static BranchFileController branchFileController;
-    private static CheckBillController checkBillController;
+    private static PaymentController checkBillController;
     private static CouponDiscountController couponDiscountController;
     private static CuponControl cuponControl;
     private static CuponListControl cuponListControl;
@@ -84,8 +84,8 @@ public class AppContext {
         return branchFileController;
     }
 
-    public static CheckBillController getCheckBillController() {
-        if (checkBillController == null) checkBillController = new CheckBillController();
+    public static PaymentController getCheckBillController() {
+        if (checkBillController == null) checkBillController = new PaymentController();
         return checkBillController;
     }
 

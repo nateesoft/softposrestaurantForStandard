@@ -128,12 +128,12 @@ public class LoginFlowE2ETest extends E2ETestBase {
         }
 
         // STEP 8 — navigate to CheckBill
-        step("MainSale", "Click Check Bill / Pay", "btnCheckBill or Pay", "CheckBill dialog opens");
+        step("MainSale", "Click Check Bill / Pay", "btnCheckBill or Pay", "PaymentDialog dialog opens");
         screenshot("step08_before_checkbill");
         try {
             // Try common button labels used across locales
             if (hasButton("Pay") || hasButton("ชำระ") || hasButton("CheckBill")) {
-                clickFirstFound("Pay", "ชำระ", "CheckBill", "check bill");
+                clickFirstFound("Pay", "ชำระ", "PaymentDialog", "check bill");
             } else {
                 driver.clickButton("Pay");
             }
@@ -143,17 +143,17 @@ public class LoginFlowE2ETest extends E2ETestBase {
             return;
         }
 
-        boolean checkBillVisible = driver.waitForWindowClass("CheckBill", 6000);
+        boolean checkBillVisible = driver.waitForWindowClass("PaymentDialog", 6000);
         if (checkBillVisible) {
-            pass("CheckBill dialog opened");
+            pass("PaymentDialog dialog opened");
         } else {
-            fail("CheckBill did not open", "Timeout");
+            fail("PaymentDialog did not open", "Timeout");
             logger.endTestCase();
             return;
         }
 
-        // STEP 9 — CheckBill: confirm cash payment
-        step("CheckBill", "Confirm cash payment", "btnCash / Enter", "Bill printed and dialog closed");
+        // STEP 9 — PaymentDialog: confirm cash payment
+        step("PaymentDialog", "Confirm cash payment", "btnCash / Enter", "Bill printed and dialog closed");
         screenshot("step09_checkbill");
         sleep(800);
         try {
@@ -172,7 +172,7 @@ public class LoginFlowE2ETest extends E2ETestBase {
         }
 
         // STEP 10 — bill printed, dialogs closed
-        step("CheckBill", "Bill printed and window closed", "", "Return to FloorPlanDialog");
+        step("PaymentDialog", "Bill printed and window closed", "", "Return to FloorPlanDialog");
         sleep(2000);
         // Dismiss any remaining popups
         JDialog remaining = driver.findTopDialog();

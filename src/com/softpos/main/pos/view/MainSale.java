@@ -27,7 +27,7 @@ import com.softpos.main.program.ArNotPay;
 import com.softpos.main.program.CancelArPayment;
 import com.softpos.main.program.CancelCashBackDialog;
 import com.softpos.main.program.CashBackDialog;
-import com.softpos.main.payment.view.CheckBill;
+import com.softpos.main.payment.view.PaymentDialog;
 import com.softpos.main.program.CopyBillDialog;
 import com.softpos.main.program.CustomerName;
 import com.softpos.main.program.GetQty;
@@ -2019,7 +2019,7 @@ public class MainSale extends javax.swing.JDialog {
         PublicVar.ErrorColect = false;
         PublicVar.ProcessType = "1"; //For Check Bill
 
-        CheckBill frm = new CheckBill(this, true, txtTable.getText(), memberBean, "", "");
+        PaymentDialog frm = new PaymentDialog(this, true, txtTable.getText(), memberBean, "", "");
         frm.setVisible(true);
 
         if (PublicVar.SubTotalOK) {
@@ -2044,7 +2044,7 @@ public class MainSale extends javax.swing.JDialog {
 
             //visible MainSale
             setVisible(false);
-            CheckBill frm = new CheckBill(this, true, txtTable.getText(), memberBean, "", "");
+            PaymentDialog frm = new PaymentDialog(this, true, txtTable.getText(), memberBean, "", "");
             frm.setVisible(true);
             if (PublicVar.SubTotalOK) {
                 initScreen();

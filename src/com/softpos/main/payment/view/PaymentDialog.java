@@ -14,13 +14,12 @@ import com.softpos.pos.core.controller.PosControl;
 import com.softpos.constants.PublicVar;
 import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.pos.view.MemberDialog;
-import com.softpos.pos.core.controller.CheckBillController;
+import com.softpos.pos.core.controller.PaymentController;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleController;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
 import com.softpos.main.floorplan.view.SaleInfoPanel;
-import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BillNoBean;
@@ -50,7 +49,7 @@ import java.awt.Toolkit;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
-public class CheckBill extends javax.swing.JDialog {
+public class PaymentDialog extends javax.swing.JDialog {
 
     public String tableNo;
     private TableFileBean tBean;
@@ -62,7 +61,7 @@ public class CheckBill extends javax.swing.JDialog {
     private double CreditCharge = 0.00;
     private double originalGrandTotal = 0;
     private POSConfigSetup CONFIG;
-    private CheckBillController checkBillControl = AppContext.getCheckBillController();
+    private PaymentController checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
     private final BranchControl BranchControl = AppContext.getBranchControl();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
@@ -73,7 +72,7 @@ public class CheckBill extends javax.swing.JDialog {
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PosControl PosControl = AppContext.getPosControl();
 
-    public CheckBill(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
+    public PaymentDialog(java.awt.Dialog parent, boolean modal, String tableNo, MemberBean memberBean, String member1, String member2) {
         super(parent, modal);
         initComponents();
 
@@ -119,12 +118,12 @@ public class CheckBill extends javax.swing.JDialog {
 
             @Override
             protected void done() {
-                LoadingOverlay.hide(CheckBill.this);
+                LoadingOverlay.hide(PaymentDialog.this);
                 try {
                     get();
                     initTable();
                 } catch (InterruptedException | ExecutionException ex) {
-                    AppLogUtil.log(CheckBill.class, "error", ex);
+                    AppLogUtil.log(PaymentDialog.class, "error", ex);
                 }
             }
         }.execute();
@@ -1325,7 +1324,7 @@ public class CheckBill extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 624, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
         );
 
         pack();
@@ -1509,7 +1508,7 @@ public class CheckBill extends javax.swing.JDialog {
             cash = Double.parseDouble(txtCashAmount.getText().replace(",", ""));
             amount = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
         } catch (NumberFormatException e) {
-            AppLogUtil.log(CheckBill.class, "error", e);
+            AppLogUtil.log(PaymentDialog.class, "error", e);
         }
 
         if (cash == amount || cash > amount) {
@@ -2111,7 +2110,7 @@ public class CheckBill extends javax.swing.JDialog {
                 try {
                     creditDay = Integer.parseInt(lbCredit.getText());
                 } catch (NumberFormatException e) {
-                    AppLogUtil.log(CheckBill.class, "error", e);
+                    AppLogUtil.log(PaymentDialog.class, "error", e);
                     creditDay = 0;
                 }
             }
@@ -2204,7 +2203,7 @@ public class CheckBill extends javax.swing.JDialog {
             try {
                 creditDay = Integer.parseInt(lbCredit.getText());
             } catch (NumberFormatException e) {
-                AppLogUtil.log(CheckBill.class, "error", e);
+                AppLogUtil.log(PaymentDialog.class, "error", e);
                 creditDay = 0;
             }
             billBean.setB_AccrCr(creditDay);
@@ -2311,7 +2310,7 @@ public class CheckBill extends javax.swing.JDialog {
             txtCreditAmount.setText("" + TotalAmount);
             txtCreditAmount.requestFocus();
         } catch (NumberFormatException e) {
-            AppLogUtil.log(CheckBill.class, "error", e);
+            AppLogUtil.log(PaymentDialog.class, "error", e);
         }
     }
 

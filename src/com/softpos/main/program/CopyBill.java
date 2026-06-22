@@ -2,9 +2,9 @@ package com.softpos.main.program;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.CreditPaymentRec;
+import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.PUtility;
-import com.softpos.crm.pos.core.modal.PublicVar;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.printer.control.PPrint;
 import java.awt.event.KeyEvent;
