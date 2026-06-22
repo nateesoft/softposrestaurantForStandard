@@ -20,9 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
 public class MTDPLU extends javax.swing.JDialog {
@@ -41,7 +41,7 @@ public class MTDPLU extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    DateConvert dc = new DateConvert();
+    DateUtil dateUtil = new DateUtil();
     String DateFrom = "";
     String DateTo = "";
     private final MySQLConnect mysqlConnect = new MySQLConnect();
@@ -606,7 +606,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 //                                + "where (s_date>='" + Datefmt.format(TDate1) + "') and (s_date<='" + Datefmt.format(TDate2) + "') and (s_dept>='" + txtMacNo1.getText() + "') and (s_dept<='" + txtMacNo2.getText() + "') "
 //                                + "and (s_pcode>='" + txtPlu1.getText() + "') and (s_pcode<='" + txtPlu2.getText() + "') group  by s_pcode order by s_dept,s_pcode";
                         String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
-                                + "where s_date between'" + dc.dateDatabase(DateFrom) + "' and '" + dc.dateDatabase(DateTo) + "' and s_dept between'" + txtMacNo1.getText() + "' and '" + txtMacNo2.getText() + "' "
+                                + "where s_date between'" + dateUtil.dateDatabase(DateFrom) + "' and '" + dateUtil.dateDatabase(DateTo) + "' and s_dept between'" + txtMacNo1.getText() + "' and '" + txtMacNo2.getText() + "' "
                                 + "and s_pcode between'" + txtPlu1.getText() + "' and '" + txtPlu2.getText() + "' group  by s_pcode order by s_dept,s_pcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         TempGroup = "";
@@ -677,7 +677,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             String SqlQuery = "select s_date,s_dept,s_pcode,sum(e_qty),sum(e_amt),sum(t_qty),sum(t_amt),sum(d_qty),sum(d_amt),sum(p_qty),sum(p_amt),sum(w_qty),sum(w_amt),sum(s_qty),sum(s_amt) from s_sale "
-                    + "where s_date between'" + dc.dateDatabase(DateFrom) + "' and '" + dc.dateDatabase(DateTo) + "' and s_dept between'" + txtMacNo1.getText() + "' and '" + txtMacNo2.getText() + "' "
+                    + "where s_date between'" + dateUtil.dateDatabase(DateFrom) + "' and '" + dateUtil.dateDatabase(DateTo) + "' and s_dept between'" + txtMacNo1.getText() + "' and '" + txtMacNo2.getText() + "' "
                     + "and s_pcode between'" + txtPlu1.getText() + "' and '" + txtPlu2.getText() + "' group  by s_pcode order by s_dept,s_pcode";
             ResultSet rec = stmt.executeQuery(SqlQuery);
             rec.first();

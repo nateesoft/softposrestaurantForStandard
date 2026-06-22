@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateFormat;
+import com.softpos.util.DateUtil;
 import com.softpos.util.ThaiUtil;
 
 public class CuponControl {
@@ -116,8 +116,8 @@ public class CuponControl {
         try {
             String sql = "update cupon set CuCode='" + bean.getCuCode() + "', "
                     + "CuName='" + bean.getCuName() + "', "
-                    + "CuBegin='" + DateFormat.getMySQL_Date(bean.getCuBegin()) + "', "
-                    + "CuEnd='" + DateFormat.getMySQL_Date(bean.getCuEnd()) + "', "
+                    + "CuBegin='" + DateUtil.getMySQL_Date(bean.getCuBegin()) + "', "
+                    + "CuEnd='" + DateUtil.getMySQL_Date(bean.getCuEnd()) + "', "
                     + "CuStrDay='" + bean.getCuStrDay() + "', CuType='" + bean.getCuType() + "', "
                     + "CuADisc='" + bean.getCuADisc() + "', CuADiscBath='" + bean.getCuADiscBath() + "', "
                     + "CuBDisc='" + bean.getCuBDisc() + "', CuBDiscBath='" + bean.getCuBDiscBath() + "', "

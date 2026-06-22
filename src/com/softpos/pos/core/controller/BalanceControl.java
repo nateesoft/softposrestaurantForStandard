@@ -1,6 +1,5 @@
 package com.softpos.pos.core.controller;
 
-
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.constants.PublicVar;
@@ -17,14 +16,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
-import com.softpos.util.DateFormat;
+import com.softpos.util.DateUtil;
 
 public class BalanceControl {
 
     private BalanceBean balanceCurrent = new BalanceBean();
     private final MySQLConnect mysqlConnect;
     private final POSConfigSetup POSConfigSetup;
+    private final DateUtil dateUtil = new DateUtil();
 
     public BalanceControl() {
         this.mysqlConnect = new MySQLConnect();
@@ -227,7 +226,7 @@ public class BalanceControl {
                     + "R_PKicQue,R_MemSum,R_MoveItem,R_MoveFrom,R_MoveUser,R_MoveFlag,"
                     + "R_MovePrint,R_Pause,R_PrVcType,R_PrVcCode,R_LinkIndex,R_VoidPause,R_SPIndex,VoidMSG,R_PEName) "
                     + "values('" + bean.getR_Index() + "','" + bean.getR_Table() + "',"
-                    + "'" + DateFormat.getMySQL_Date(bean.getR_Date()) + "','" + bean.getR_Time() + "','"
+                    + "'" + DateUtil.getMySQL_Date(bean.getR_Date()) + "','" + bean.getR_Time() + "','"
                     + bean.getMacno() + "','" + bean.getCashier() + "','"
                     + bean.getR_Emp() + "','" + bean.getR_PluCode() + "','" + ThaiUtil.Unicode2ASCII(bean.getR_PName()) + "','"
                     + bean.getR_Unit() + "','" + bean.getR_Group() + "','" + bean.getR_Status() + "','"
@@ -1752,15 +1751,13 @@ public class BalanceControl {
 
     public void updateProSerTable(String table, MemberBean memberBean) {
         //คำนวนโปรโมชั่น
-        DateConvert dc = new DateConvert();
-        
         try {
             mysqlConnect.open(BalanceControl.class);
             String sql = "select procode,prodesc,pdate1,pdate2,ptype,psum1 from protab;";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     int dateEXP = Integer.parseInt(rs.getString("pdate2").replace("-", ""));
-                    int nowDate = Integer.parseInt(dc.GetCurrentDate().replace("-", ""));
+                    int nowDate = Integer.parseInt(dateUtil.GetCurrentDate().replace("-", ""));
                     if (dateEXP >= nowDate) {
                         PromotionControl proControl = AppContext.getPromotionControl();
                         proControl.updatePromotion(table);

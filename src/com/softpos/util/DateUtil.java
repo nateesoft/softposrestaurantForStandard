@@ -16,6 +16,13 @@ public class DateUtil {
     public static final SimpleDateFormat F3 = new SimpleDateFormat("E", Locale.ENGLISH);
     public static final SimpleDateFormat T1 = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     public static final SimpleDateFormat T2 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+    static SimpleDateFormat locale_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
+    static SimpleDateFormat locale_yyyyMMdd = new SimpleDateFormat("yyyy/MM/dd");
+    static SimpleDateFormat english_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    static SimpleDateFormat english_yyyyMMdd = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+    static SimpleDateFormat mysql_date_yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    static SimpleDateFormat mysql_datetime_yyyyMMddHHmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
 
     public static String GET_CURRENT_NAME_DAY() {
         return F3.format(new Date());
@@ -64,10 +71,6 @@ public class DateUtil {
     public static String getDateFormat(Date date, String dateFormat) {
         SimpleDateFormat simp = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
         return simp.format(date);
-    }
-
-    private DateUtil() {
-        throw new AssertionError();
     }
 
     public static int getMaxDay(GregorianCalendar month) {
@@ -357,6 +360,243 @@ public class DateUtil {
             count++;
         }
         return count;
+    }
+
+    public String dateDatabase(String date) {
+        date = date.replace("/", "");
+        String dd = date.substring(0, 2);
+        String mm = date.substring(2, 4);
+        String yyyy = date.substring(4, 8);
+        date = yyyy + "-" + mm + "-" + dd;
+        return date;
+    }
+
+    public String dateGetToShow(String date) {
+        date = date.replace("-", "");
+        String yyyy = date.substring(0, 4);
+        String mm = date.substring(4, 6);
+        String dd = date.substring(6, 8);
+        date = dd + " / " + mm + " / " + yyyy;
+        return date;
+    }
+
+    public String GetCurrentDate() {
+        SimpleDateFormat GetLocalDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        Calendar c = new GregorianCalendar();
+        int MM = c.get(Calendar.MONTH);
+        int yyyy = c.get(Calendar.YEAR);
+        int dd = c.get(Calendar.DATE);
+        String dateString = "";
+        String DateOrder = "";
+        Calendar current = Calendar.getInstance();
+        current.add(Calendar.DATE, +2);
+        dateString += ShowDatefmt.format(current.getTime());
+        Calendar current1 = Calendar.getInstance();
+        current1.add(Calendar.DATE, +0);
+        DateOrder += GetLocalDate.format(current1.getTime());
+        return DateOrder;
+    }
+
+    public String GetCurrentDateFM(String FM) {
+        SimpleDateFormat GetLocalDate = new SimpleDateFormat(FM, Locale.ENGLISH);
+        Calendar c = new GregorianCalendar();
+        int MM = c.get(Calendar.MONTH);
+        int yyyy = c.get(Calendar.YEAR);
+        int dd = c.get(Calendar.DATE);
+        String dateString = "";
+        String DateOrder = "";
+        Calendar current = Calendar.getInstance();
+        current.add(Calendar.DATE, +2);
+        Calendar current1 = Calendar.getInstance();
+        current1.add(Calendar.DATE, +0);
+        DateOrder += GetLocalDate.format(current1.getTime());
+
+        return DateOrder;
+    }
+
+    public String minusDate(String dateInput, int i) {
+        String[] dateStr = dateInput.split("-");//2016-12-31
+        int yyyy = Integer.parseInt(dateStr[0]);//2016
+        int MM = Integer.parseInt(dateStr[1]);//12
+        int dd = Integer.parseInt(dateStr[2]);//31
+        Calendar c = Calendar.getInstance(Locale.ENGLISH);
+//        c.set(yyyy, MM - 1, dd - 1);//set back date
+        c.set(yyyy, MM - 1, dd - i);//set back date
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String dateUse = s.format(c.getTime());//use date time (format: yyyy-MM-dd);
+        return dateUse;
+    }
+
+    public String GetCurrentTime() {
+        SimpleDateFormat ShowDatefmt = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+        Calendar c = new GregorianCalendar();
+        String TimeString = "";
+        Calendar current = Calendar.getInstance();
+        current.add(Calendar.DATE, 0);
+        TimeString += ShowDatefmt.format(current.getTime());
+
+        return TimeString;
+    }
+
+    public int getCheckExpireDate(String date) {
+        date = date.replace("-", "");
+        String cur_Date = GetCurrentDate().replace("-", "");
+        int dd = Integer.parseInt(date.substring(6, 8));
+        int MM = Integer.parseInt(date.substring(4, 6));
+        int yyyy = Integer.parseInt(date.substring(0, 4));
+
+        int cur_dd = Integer.parseInt(cur_Date.substring(6, 8));
+        int cur_MM = Integer.parseInt(cur_Date.substring(4, 6));
+        int cur_yyyy = Integer.parseInt(cur_Date.substring(0, 4));
+
+        dd = dd - cur_dd;
+        MM = MM - cur_MM;
+        yyyy = yyyy - cur_yyyy;
+        int sum = dd + MM + yyyy;
+        return sum;
+    }
+
+    public int getCheckExpireTime(String timeStart, String timeExpire) {
+        timeStart = timeStart.replace(":", "");
+        timeExpire = timeExpire.replace(":", "");
+        String cur_Time = GetCurrentTime().replace(":", "");
+        int valueReturn = 0;
+        int start = Integer.parseInt(timeStart);
+        int expire = Integer.parseInt(timeExpire);
+        int now = Integer.parseInt(cur_Time);
+        if (now > start && now < expire) {
+            valueReturn = 1;
+        } else {
+            valueReturn = -1;
+        }
+        return valueReturn;
+
+    }
+    
+    public static Date dateFromJSON(String d) {
+        Date d1;
+        SimpleDateFormat s = new SimpleDateFormat("MMM d, y", Locale.ENGLISH);
+        try {
+            d1 = s.parse(d);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            Calendar c = Calendar.getInstance(Locale.ENGLISH);
+            c.set(2015, 0, 1);
+            d1 = c.getTime();
+        }
+
+        return d1;
+    }
+
+    public static Date dateFromJSONThai(String d) {
+        Date d1;
+        SimpleDateFormat s = new SimpleDateFormat("MMM d, y");
+        try {
+            d1 = s.parse(d);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            Calendar c = Calendar.getInstance();
+            c.set(2015, 0, 1);
+            d1 = c.getTime();
+        }
+
+        return d1;
+    }
+
+    public static String getLocale_ddMMyyyy(Date d) {
+        if (d != null) {
+            return locale_ddMMyyyy.format(d);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getEnglish_ddMMyyyy(Date d) {
+        if (d != null) {
+            return english_ddMMyyyy.format(d);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getMySQL_yyyyMMdd(Date d) {
+        if (d != null) {
+            return mysql_date_yyyyMMdd.format(d);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getMySQL_Date(Date d) {
+        if (d != null) {
+            return mysql_date_yyyyMMdd.format(d);
+        } else {
+            return "0000-00-00";
+        }
+    }
+
+    public static String getMySQL_DateTime(Date d) {
+        if (d != null) {
+            return mysql_datetime_yyyyMMddHHmmss.format(d);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getMyFormat(SimpleDateFormat simp, Date d) {
+        if (d != null) {
+            return simp.format(d);
+        } else {
+            return null;
+        }
+    }
+
+    public static Date getLocal_ddMMyyyy(String s) {
+        try {
+            return locale_ddMMyyyy.parse(s);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            return null;
+        }
+    }
+
+    public static Date getLocal_yyyyMMdd(String s) {
+        try {
+            return locale_yyyyMMdd.parse(s);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            return null;
+        }
+    }
+
+    public static Date getEnglish_ddMMyyyy(String s) {
+        try {
+            return english_ddMMyyyy.parse(s);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            return null;
+        }
+    }
+
+    public static Date getEnglish_yyyyMMdd(String s) {
+        try {
+            return english_yyyyMMdd.parse(s);
+        } catch (ParseException e) {
+            AppLogUtil.log(DateUtil.class, "error", e);
+            return null;
+        }
+    }
+
+    public static String sample() {
+        return ""
+                + "getLocale_ddMMyyyy = 31/12/2557\n"
+                + "getEnglish_ddMMyyyy = 31/12/2014\n"
+                + "getMySQL_Date = 2014-12-31\n"
+                + "getMySQL_DateTime = 2014-12-31 09:09:09\n"
+                + "---------------------------------------\n"
+                + "getLocal_ddMMyyyy(01/01/2558)\n"
+                + "getLocal_yyyyMMdd(2558/01/01)\n";
     }
 
 }

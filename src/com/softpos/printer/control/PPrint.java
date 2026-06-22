@@ -5,7 +5,7 @@ import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.constants.CreditRec;
 import com.softpos.constants.PublicVar;
-import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.FinalcialRec;
 import com.softpos.constants.CreditPaymentRec;
 import com.softpos.constants.PluRec;
 import com.softpos.pos.core.model.BalanceBean;

@@ -27,7 +27,7 @@ import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
-import com.softpos.util.NumberToString;
+import com.softpos.util.NumberUtil;
 
 public class PrintInv1 extends javax.swing.JDialog {
 
@@ -2049,7 +2049,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String t = "";
         Date TempOnDate = DateFmt.parse(txtDateRef.getText());
 
-        NumberToString numToString = new NumberToString();
+        NumberUtil numToString = new NumberUtil();
 
         CustomerConrol custControl = new CustomerConrol();
         CustomerBean custBean = custControl.getCustomer(txtCode.getText());

@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 /**
@@ -28,7 +28,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     public static String printerName = "";
     public static String printerConfigDriver = ConfigFile.getProperties("printdriver");
     public static String stationKicNo = ConfigFile.getProperties("stationKicNo");
-    public static DateConvert dc = new DateConvert();
+    public static DateUtil dateUtil = new DateUtil();
     double countTime = 1;
     double countTime1 = 1;
 
@@ -168,7 +168,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "*** : " + pEtd + " ***_";
                     textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "จำนวน : " + pQty + "_";
                     textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + pcode + " # " + bean.getR_PName() + "_";
-                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + dc.dateGetToShow(dc.GetCurrentDate()) + " เวลา " + dc.GetCurrentTime() + "_";
+                    textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + " เวลา " + dateUtil.GetCurrentTime() + "_";
                     PrinterDriverControl printDriver = new PrinterDriverControl();
                     String[] strs = textToPrint.split("_");
                     for (String data1 : strs) {
@@ -208,13 +208,12 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
 
     public void printUrgentLog() {
         new Thread(() -> {
-            DateConvert dcLocal = new DateConvert();
             try {
                 PrintToKicController controller = AppContext.getPrintToKicController();
-                List<PKicTranBean> logList = controller.getUrgentClickLog(dcLocal.GetCurrentDate());
+                List<PKicTranBean> logList = controller.getUrgentClickLog(dateUtil.GetCurrentDate());
                 String textToPrint = "";
                 for (PKicTranBean entry : logList) {
-                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dcLocal.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
+                    textToPrint += "colspan=3 align=center><font face=Angsana New size=3> " + "โต๊ะ : " + entry.getpTable() + " # " + dateUtil.dateGetToShow(entry.getpDate()) + " เวลา " + entry.getpTime() + "_";
                 }
                 textToPrint += "colspan=3 align=left><font face=Angsana New size=3> " + "รวมทั้งสิ้นวันนี้ :  " + logList.size() + " ครั้ง " + "_";
                 PrinterDriverControl printDriver = new PrinterDriverControl();

@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.constants.CreditRec;
-import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.FinalcialRec;
 import com.softpos.constants.HourlyRec;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.printer.control.PPrint;

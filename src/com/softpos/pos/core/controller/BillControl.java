@@ -1,6 +1,5 @@
 package com.softpos.pos.core.controller;
 
-
 import com.softpos.printer.control.PPrint;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.POSConfigSetup;
@@ -27,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
-import com.softpos.util.DateFormat;
 import com.softpos.util.DateUtil;
 
 public class BillControl {
@@ -41,6 +38,7 @@ public class BillControl {
     private final PosControl PosControl = AppContext.getPosControl();
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final DateUtil dateUtil = new DateUtil();
 
     public BillControl() {
         posConfig = PosControl.getData();
@@ -151,7 +149,7 @@ public class BillControl {
         
         BalanceBean blBean = new BalanceBean();
         mysqlConnect.open(BillControl.class);
-        DateConvert dc = new DateConvert();
+        
         String sql = "";
         try {
             String sqlGetLoginTime = "select r_time from balance "
@@ -216,9 +214,9 @@ public class BillControl {
                             + "ArChqDate, ArAmtPay, ArAmtCr, ArBDate, ArPDate, "
                             + "ArFlage, ArInvNo, ArBran, ArBranPay, ArUserPay) "
                             + "VALUES ("
-                            + "'" + bean.getB_Refno() + "', '" + dc.GetCurrentDate() + "', '" + bean.getB_AccrCode() + "', '" + (bean.getB_AccrAmt() - bean.getB_Vat()) + "', '" + bean.getB_Vat() + "', "
+                            + "'" + bean.getB_Refno() + "', '" + dateUtil.GetCurrentDate() + "', '" + bean.getB_AccrCode() + "', '" + (bean.getB_AccrAmt() - bean.getB_Vat()) + "', '" + bean.getB_Vat() + "', "
                             + "'0', '0', '', 'N', '" + bean.getB_AccrAmt() + "', "
-                            + "'" + bean.getB_AccrAmt() + "', '" + bean.getB_AccrCr() + "', '" + dc.minusDate(dc.GetCurrentDate(), bean.getB_AccrCr()) + "', '" + bean.getB_Cashier() + "', '" + "From POS.." + dc.dateGetToShow(dc.GetCurrentDate()).trim() + "', "
+                            + "'" + bean.getB_AccrAmt() + "', '" + bean.getB_AccrCr() + "', '" + dateUtil.minusDate(dateUtil.GetCurrentDate(), bean.getB_AccrCr()) + "', '" + bean.getB_Cashier() + "', '" + "From POS.." + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()).trim() + "', "
                             + "'', '', '', '','', "
                             + "'0000-00-00', '0', '0', '0000-00-00', '0000-00-00', "
                             + "'N', '', '" + branchBean.getCode() + "', '', '')";
@@ -299,7 +297,7 @@ public class BillControl {
                 pre.setString(1, bean.getR_Index());
                 pre.setString(2, bean.getR_Refno());
                 pre.setString(3, bean.getR_Table());
-                pre.setString(4, DateFormat.getMySQL_Date(bean.getR_Date()));//R_Date
+                pre.setString(4, DateUtil.getMySQL_Date(bean.getR_Date()));//R_Date
                 pre.setString(5, bean.getR_Time());//R_Time
                 pre.setString(6, bean.getMacNo());
                 pre.setString(7, bean.getCashier());

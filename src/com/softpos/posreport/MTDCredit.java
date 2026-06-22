@@ -19,31 +19,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
 public class MTDCredit extends javax.swing.JDialog {
 
-    SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat Timefmt = new SimpleDateFormat("HH:mm:ss");
-    Date date = new Date();
-    Date TDate1 = new Date();
-    Date TDate2 = new Date();
-    PPrint prn = new PPrint();
-    SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy (HH:mm)", Locale.ENGLISH);
-    SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
-    private POSHWSetup POSHW;
-    private String Space = " &nbsp; ";
-    private String TAB = Space + Space + Space;
+    private final SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final Date date = new Date();
+    private Date TDate1 = new Date();
+    private Date TDate2 = new Date();
+    private final PPrint prn = new PPrint();
+    private final SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy (HH:mm)", Locale.ENGLISH);
+    private final SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
+    private final DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
+    private final POSHWSetup POSHW;
+    private final String Space = " &nbsp; ";
+    private final String TAB = Space + Space + Space;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    
+    private final DateUtil dateUtil = new DateUtil();
 
     public MTDCredit(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -327,22 +325,21 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
 
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            DateConvert dc = new DateConvert();
-            String SqlQuery = "select B_Refno,B_CrCode1 crcode, B_CardNo1 crid, B_AppCode1 crapp, B_CrAmt1 cramt "
-                    + "from s_invoice "
-                    + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText())
-                    + "' and (B_CrAmt1<>'0' and (B_Void<>'V')) ";
-            ResultSet rs = stmt.executeQuery(SqlQuery);
-            while (rs.next()) {
-                String TCrCode = rs.getString("crcode");
-                String TCrId = rs.getString("crid");
-                String TCrApp = rs.getString("crapp");
-                Double TCrAmt = rs.getDouble("cramt");
-                InsertTemp(TCrCode, TCrId, TCrApp, TCrAmt);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                String SqlQuery = "select B_Refno,B_CrCode1 crcode, B_CardNo1 crid, B_AppCode1 crapp, B_CrAmt1 cramt "
+                        + "from s_invoice "
+                        + "where s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText())
+                        + "' and (B_CrAmt1<>'0' and (B_Void<>'V')) ";
+                try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
+                    while (rs.next()) {
+                        String TCrCode = rs.getString("crcode");
+                        String TCrId = rs.getString("crid");
+                        String TCrApp = rs.getString("crapp");
+                        Double TCrAmt = rs.getDouble("cramt");
+                        InsertTemp(TCrCode, TCrId, TCrApp, TCrAmt);
+                    }
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         }

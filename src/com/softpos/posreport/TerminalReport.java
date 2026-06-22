@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.constants.CreditRec;
-import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.FinalcialRec;
 import com.softpos.printer.control.PPrint;
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.connection.database.MySQLConnect;

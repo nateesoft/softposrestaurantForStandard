@@ -21,9 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
 public class MTDInvReport extends javax.swing.JDialog {
@@ -42,7 +42,7 @@ public class MTDInvReport extends javax.swing.JDialog {
     private POSHWSetup POSHW;
     private String Space = " &nbsp; ";
     private String TAB = Space + Space + Space;
-    DateConvert dc = new DateConvert();
+    DateUtil dateUtil = new DateUtil();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
@@ -431,7 +431,7 @@ public class MTDInvReport extends javax.swing.JDialog {
                         String SqlQuery = "select * from s_invoice "
                                 + "where (b_macno>='" + MacNo1 + "') "
                                 + "and (b_macno<='" + MacNo2 + "') "
-                                + "and b_ondate between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                                + "and b_ondate between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                                 + "order by b_refno";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -521,7 +521,7 @@ public class MTDInvReport extends javax.swing.JDialog {
             String SqlQuery = "select * from s_invoice "
                     + "where (b_macno>='" + MacNo1 + "') "
                     + "and (b_macno<='" + MacNo2 + "') "
-                    + "and b_ondate between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                    + "and b_ondate between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                     + "order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {

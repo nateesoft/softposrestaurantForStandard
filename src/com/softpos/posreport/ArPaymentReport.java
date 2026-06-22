@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 public class ArPaymentReport extends javax.swing.JDialog {
@@ -34,7 +34,7 @@ public class ArPaymentReport extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    
+    private final DateUtil dateUtil = new DateUtil();
 
     /**
      * Creates new form ArPaymentRep
@@ -331,7 +331,6 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     private void arPaymentPrintDriver(String MacNo1, String MacNo2) {
-        DateConvert dc = new DateConvert();
         String t = "";
         String t1 = "";
         int bill = 0;
@@ -394,7 +393,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         total = rs.getDouble("STotal");
                         amount += total;
                         if (!fat.equals("V")) {
-                            t += "align=left><font face=Angsana New size=1>" + arCode + TAB + terminal + "/" + refno + Space + dc.dateGetToShow(Ondate) + "</td><td align=left><font face=Angsana New size=1>" + DecFmt.format(total) + "_";
+                            t += "align=left><font face=Angsana New size=1>" + arCode + TAB + terminal + "/" + refno + Space + dateUtil.dateGetToShow(Ondate) + "</td><td align=left><font face=Angsana New size=1>" + DecFmt.format(total) + "_";
                         } else {
                             billVoid++;
                             t1 += "align=left><font face=Angsana New size=1>" + refno + TAB + total + TAB + terminal + TAB + cashier + TAB + userVoid + "_";

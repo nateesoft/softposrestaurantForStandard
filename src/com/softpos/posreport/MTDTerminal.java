@@ -1,7 +1,7 @@
 package com.softpos.posreport;
 
 import com.softpos.constants.CreditRec;
-import com.softpos.pos.core.model.FinalcialRec;
+import com.softpos.constants.FinalcialRec;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.printer.control.PPrint;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class MTDTerminal extends javax.swing.JDialog {
     SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
     DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
-    DateConvert dc = new DateConvert();
+    DateUtil dateUtil = new DateUtil();
 
     private POSConfigSetup CONFIG;
     private POSHWSetup POSHW;
@@ -991,8 +991,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
                         try {
                             String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                                     + "from s_cupon "
-                                    + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
-                                    + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                                    + "where s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' "
+                                    + "and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                                     + "and cuquan<>'0' and cuamt<>'0'";
                             ResultSet rs = mysqlConnect.executeQuery(sql);
                             while (rs.next()) {
@@ -1265,8 +1265,8 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 String sql = "select sum(cuquan) cuquan ,sum(cuamt) cuamt "
                         + "from s_cupon "
-                        + "where s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' "
-                        + "and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                        + "where s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' "
+                        + "and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                         + "and cuquan<>'0' and cuamt<>'0' and refund<>'V'";
                 ResultSet rs = mysqlConnect.executeQuery(sql);
                 while (rs.next()) {

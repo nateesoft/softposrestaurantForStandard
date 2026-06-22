@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import com.softpos.util.NumberUtil;
 
 public class ServiceControl {
@@ -25,6 +25,7 @@ public class ServiceControl {
     
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
+    private final DateUtil dateUtil = new DateUtil();
 
     public ServiceControl() {
         posControl = AppContext.getPosControl();
@@ -109,8 +110,6 @@ public class ServiceControl {
             }
             tAmount += balance.getR_Total();
         }
-
-        DateConvert dc = new DateConvert();
         
         try {
             TableFileControl tfc = AppContext.getTableFileControl();
@@ -133,7 +132,7 @@ public class ServiceControl {
             // update all discount
             if (tAmount > 0 && ("00:00:00".equals(tBean.getTLoginTime()) || tBean.getTLoginTime() == null)) {
                 String sqlUpdateDate = "update tablefile set "
-                        + "tlogindate='" + dc.GetCurrentDate() + "', "
+                        + "tlogindate='" + dateUtil.GetCurrentDate() + "', "
                         + "tlogintime='" + Timefmt.format(new Date()) + "' "
                         + "where tcode='" + table + "'";
                 Statement stmt5 = mysqlConnect.getConnection().createStatement();

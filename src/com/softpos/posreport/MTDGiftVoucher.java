@@ -21,29 +21,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
 public class MTDGiftVoucher extends javax.swing.JDialog {
 
-    SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
-    SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
-    Date date = new Date();
-    PPrint prn = new PPrint();
-    private POSHWSetup POSHW;
-    private String Space = " &nbsp; ";
-    private String TAB = Space + Space + Space;
-    DateConvert dc = new DateConvert();
+    private final SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
+    private final SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
+    private final DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
+    private final Date date = new Date();
+    private final PPrint prn = new PPrint();
+    private final POSHWSetup POSHW;
+    private final String Space = " &nbsp; ";
+    private final DateUtil dateUtil = new DateUtil();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    
 
     public MTDGiftVoucher(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
@@ -467,7 +464,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                                 + "and (cashier>='" + CashNo1 + "') "
                                 + "and (cashier<='" + CashNo2 + "') "
                                 + "and (fat<>'V') "
-                                + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                                + "and s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                                 + "order by giftbarcode";
                         ResultSet rs = stmt.executeQuery(SqlQuery);
                         while (rs.next()) {
@@ -547,7 +544,7 @@ public class MTDGiftVoucher extends javax.swing.JDialog {
                     + "and (cashier>='" + CashNo1 + "') "
                     + "and (cashier<='" + CashNo2 + "') "
                     + "and (fat<>'V') "
-                    + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                    + "and s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                     + "order by giftbarcode";
             ResultSet rs = stmt.executeQuery(SqlQuery);
             while (rs.next()) {

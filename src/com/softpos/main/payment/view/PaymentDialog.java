@@ -42,7 +42,7 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
-import com.softpos.util.NumberFormat;
+import com.softpos.util.NumberUtil;
 import com.softpos.util.NumberUtil;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -1566,7 +1566,7 @@ public class PaymentDialog extends javax.swing.JDialog {
             if (c < 0) {
                 c = 0;
             }
-            txtTotalAmount.setText(NumberFormat.showDouble2(c));
+            txtTotalAmount.setText(NumberUtil.showDouble2(c));
             txtCashAmount.requestFocus();
         } else {
             txtGiftVoucherAmount.setText("0.00");
@@ -1665,7 +1665,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         txtEntertainAmount.setText(txtTotalAmount.getText());
         double b = Double.parseDouble(txtEntertainAmount.getText().replace(",", ""));
         double a = Double.parseDouble(txtTotalAmount.getText().replace(",", ""));
-        txtTotalAmount.setText(NumberFormat.showDouble2(a - b));
+        txtTotalAmount.setText(NumberUtil.showDouble2(a - b));
         txtCashAmount.requestFocus();
     }//GEN-LAST:event_jButton1ActionPerformed
 

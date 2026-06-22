@@ -8,7 +8,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import com.softpos.util.NumberFormat;
+import com.softpos.util.NumberUtil;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
 
@@ -447,7 +447,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         for (Object[] row : rows) {
             model.addRow(new Object[]{
                 row[0],
-                NumberFormat.showDouble2((Double) row[1])
+                NumberUtil.showDouble2((Double) row[1])
             });
         }
     }

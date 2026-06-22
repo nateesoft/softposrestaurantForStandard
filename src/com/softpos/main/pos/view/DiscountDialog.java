@@ -21,7 +21,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
-import com.softpos.util.NumberFormat;
+import com.softpos.util.NumberUtil;
 import com.softpos.util.NumberUtil;
 
 public class DiscountDialog extends javax.swing.JDialog {
@@ -2034,26 +2034,26 @@ public class DiscountDialog extends javax.swing.JDialog {
         TableFileBean bean = tableFileControl.getDataByTCode(tableNo);
         if (bean != null) {
             txtFest.setText(bean.getFastDisc());
-            txtFestAmt.setText(NumberFormat.showDouble2(bean.getFastDiscAmt()));
+            txtFestAmt.setText(NumberUtil.showDouble2(bean.getFastDiscAmt()));
             txtEmp.setText(bean.getEmpDisc());
-            txtEmpAmt.setText(NumberFormat.showDouble2(bean.getEmpDiscAmt()));
+            txtEmpAmt.setText(NumberUtil.showDouble2(bean.getEmpDiscAmt()));
             txtMem.setText(bean.getMemDisc());
-            txtMemAmt.setText(NumberFormat.showDouble2(bean.getMemDiscAmt()));
+            txtMemAmt.setText(NumberUtil.showDouble2(bean.getMemDiscAmt()));
             txtTrain.setText(bean.getTrainDisc());
-            txtTrainAmt.setText(NumberFormat.showDouble2(bean.getTrainDiscAmt()));
+            txtTrainAmt.setText(NumberUtil.showDouble2(bean.getTrainDiscAmt()));
             txtCupon.setText(bean.getSubDisc());
-            txtCuponAmt.setText(NumberFormat.showDouble2(bean.getSubDiscAmt()));
-            txtBahtAmt.setText(NumberFormat.showDouble2(bean.getDiscBath()));
+            txtCuponAmt.setText(NumberUtil.showDouble2(bean.getSubDiscAmt()));
+            txtBahtAmt.setText(NumberUtil.showDouble2(bean.getDiscBath()));
         }
     }
 
     private void loadDataToText() {
         TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
-        txtFestAmt.setText(NumberFormat.showDouble2(tBean.getFastDiscAmt()));
-        txtEmpAmt.setText(NumberFormat.showDouble2(tBean.getEmpDiscAmt()));
-        txtMemAmt.setText(NumberFormat.showDouble2(tBean.getMemDiscAmt()));
-        txtTrainAmt.setText(NumberFormat.showDouble2(tBean.getTrainDiscAmt()));
-        txtCuponDiscount.setText(NumberFormat.showDouble2(tBean.getCuponDiscAmt()));
+        txtFestAmt.setText(NumberUtil.showDouble2(tBean.getFastDiscAmt()));
+        txtEmpAmt.setText(NumberUtil.showDouble2(tBean.getEmpDiscAmt()));
+        txtMemAmt.setText(NumberUtil.showDouble2(tBean.getMemDiscAmt()));
+        txtTrainAmt.setText(NumberUtil.showDouble2(tBean.getTrainDiscAmt()));
+        txtCuponDiscount.setText(NumberUtil.showDouble2(tBean.getCuponDiscAmt()));
         if (tBean.getCuponDiscAmt() > 0) {
             btnCuponSpecial.setEnabled(false);
             txtCuponDiscount.setEnabled(false);

@@ -71,7 +71,7 @@ import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
 import com.softpos.util.Option;
@@ -2642,7 +2642,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         }
     }
 
-    private final DateConvert dateConvertTimeShow = new DateConvert();
+    private final DateUtil dateConvertTimeShow = new DateUtil();
 
     public void showTime() {
         jMenu9.setText(dateConvertTimeShow.dateGetToShow(dateConvertTimeShow.GetCurrentDate()).replace(" ", "") + " " + dateConvertTimeShow.GetCurrentTime() + " USER " + PublicVar.CASHIER);

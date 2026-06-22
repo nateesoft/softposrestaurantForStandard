@@ -17,9 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
+import com.softpos.util.DateUtil;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.component.DateChooseDialog;
-import com.softpos.util.DateConvert;
 import com.softpos.util.MSG;
 
 /**
@@ -28,20 +28,17 @@ import com.softpos.util.MSG;
  */
 public class MTDCoupon extends javax.swing.JDialog {
 
-    SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
-    SimpleDateFormat Datefmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
-    DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
-    Date date = new Date();
-    Date TDate1 = new Date();
-    Date TDate2 = new Date();
-    PPrint prn = new PPrint();
-    DateConvert dc = new DateConvert();
-    private POSHWSetup POSHW;
-    private String Space = " &nbsp; ";
-    private String TAB = Space + Space + Space;
+    private final SimpleDateFormat DatefmtThai = new SimpleDateFormat("dd/MM/yyyy(HH:mm)", Locale.ENGLISH);
+    private final SimpleDateFormat ShowDatefmt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final SimpleDateFormat DatefmtShow = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    private final DecimalFormat DecFmt = new DecimalFormat("##,###,##0.00");
+    private final DecimalFormat IntFmt = new DecimalFormat("##,###,##0");
+    private final Date date = new Date();
+    private final PPrint prn = new PPrint();
+    private final DateUtil dateUtil = new DateUtil();
+    private final POSHWSetup POSHW;
+    private final String Space = " &nbsp; ";
+    private final String TAB = Space + Space + Space;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
@@ -391,7 +388,7 @@ public class MTDCoupon extends javax.swing.JDialog {
                     try {
                         String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                                 + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
-                                + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "'"
+                                + "and s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "'"
                                 + " group by s_cupon.cucode,cupon.cuname order by s_cupon.cucode";
                         Statement stmt = mysqlConnect.getConnection().createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
@@ -462,7 +459,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         try {
             String sql = "select s_cupon.cucode,sum(cuquan),sum(cuamt),cupon.cuname from s_cupon left join cupon on s_cupon.cucode=cupon.cucode "
                     + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "')"
-                    + "and s_date between'" + dc.dateDatabase(txtDate1.getText()) + "' and '" + dc.dateDatabase(txtDate2.getText()) + "' "
+                    + "and s_date between'" + dateUtil.dateDatabase(txtDate1.getText()) + "' and '" + dateUtil.dateDatabase(txtDate2.getText()) + "' "
                     + "and refund<>'V' "
                     + " group by s_cupon.cucode,cupon.cuname order by s_cupon.cucode";
             Statement stmt = mysqlConnect.getConnection().createStatement();

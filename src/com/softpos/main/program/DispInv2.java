@@ -19,8 +19,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import com.softpos.util.DateChooseDialog;
 import com.softpos.util.MSG;
+import com.softpos.util.component.DateChooseDialog;
 
 public class DispInv2 extends javax.swing.JDialog {
 

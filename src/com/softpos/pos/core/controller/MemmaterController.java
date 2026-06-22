@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
 import com.softpos.util.DateUtil;
 
 /**
@@ -30,6 +29,7 @@ public class MemmaterController {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchFileController BranchFileController = AppContext.getBranchFileController();
     private final PointTypeController PointTypeController = AppContext.getPointTypeController();
+    private final DateUtil dateUtil = new DateUtil();
 
     public MemberBean getMember(String MemberCode) {
         MemberBean bean = null;
@@ -245,8 +245,7 @@ public class MemmaterController {
         return "";
     }
 
-    private double computeMemberScore(BillNoBean billBean, Date Member_PointExpiredDate) {
-        DateConvert dc = new DateConvert();
+    private double computeMemberScore(BillNoBean billBean, Date Member_PointExpiredDate) {        
         BranchFileBean branchFileBean = BranchFileController.getDataMemberPoint(PublicVar.Branch_Code);
 
         if (branchFileBean == null) {
@@ -254,15 +253,15 @@ public class MemmaterController {
         }
 
         PointTypeBean pointTypeBean = PointTypeController.getDataBranchPoint();
-        int memberExpire = dc.getCheckExpireDate(Member_PointExpiredDate + "");
+        int memberExpire = dateUtil.getCheckExpireDate(Member_PointExpiredDate + "");
         if (memberExpire < 0) {
             return 0.00;
         }
 
         double pointTotal = 0;
-        int timeActive1 = dc.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService1(), pointTypeBean.getPoint_FinishTimeService1());
-        int timeActive2 = dc.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService2(), pointTypeBean.getPoint_FinishTimeService2());
-        int timeActive3 = dc.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService3(), pointTypeBean.getPoint_FinishTimeService3());
+        int timeActive1 = dateUtil.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService1(), pointTypeBean.getPoint_FinishTimeService1());
+        int timeActive2 = dateUtil.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService2(), pointTypeBean.getPoint_FinishTimeService2());
+        int timeActive3 = dateUtil.getCheckExpireTime(pointTypeBean.getPoint_StartTimeService3(), pointTypeBean.getPoint_FinishTimeService3());
 
         if (timeActive1 >= 0) {
             pointTotal = Math.floor(billBean.getB_NetTotal() / pointTypeBean.getBahtRatePerPoint1()) * pointTypeBean.getPoint1();

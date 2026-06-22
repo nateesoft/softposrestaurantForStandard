@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.print.PrintService;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import java.util.Arrays;
 
 public class PrintSimpleForm {
@@ -48,6 +48,7 @@ public class PrintSimpleForm {
     private String TAB2 = TAB + TAB;
     private String ETD = "";
     private String CustomerIn = "";
+    private final DateUtil dateUtil = new DateUtil();
 
     private final EmployeeControl employeeControl = AppContext.getEmployeeControl();
     private final TableFileControl tableFileControl = AppContext.getTableFileControl();
@@ -674,7 +675,7 @@ public class PrintSimpleForm {
         //น้ำตะไคร้ใบเตย       1
         //__________________
         //28/04/2014 14:15 001/
-        DateConvert dc = new DateConvert();
+        
         String textToPrint = "";
         String textToPrint2 = "";
         String tableHead;
@@ -868,7 +869,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -922,7 +923,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -977,7 +978,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1031,7 +1032,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1086,7 +1087,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1457,7 +1458,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1506,7 +1507,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1556,7 +1557,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1606,7 +1607,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1656,7 +1657,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1736,7 +1737,6 @@ public class PrintSimpleForm {
         //น้ำตะไคร้ใบเตย       1
         //__________________
         //28/04/2014 14:15 001/
-        DateConvert dc = new DateConvert();
         String textToPrint = "";
         String textToPrint2 = "";
         String tableHead;
@@ -1931,7 +1931,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -1985,7 +1985,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2040,7 +2040,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2094,7 +2094,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2149,7 +2149,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2503,7 +2503,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2552,7 +2552,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2602,7 +2602,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2652,7 +2652,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2702,7 +2702,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2781,7 +2781,6 @@ public class PrintSimpleForm {
         //น้ำตะไคร้ใบเตย       1
         //__________________
         //28/04/2014 14:15 001/
-        DateConvert dc = new DateConvert();
         String textToPrint = "";
         String textToPrint2 = "";
         String tableHead;
@@ -2905,7 +2904,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -2953,7 +2952,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3001,7 +3000,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3049,7 +3048,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3097,7 +3096,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3231,7 +3230,7 @@ public class PrintSimpleForm {
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                         getEmpName(bean.getR_Emp());
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3280,7 +3279,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3330,7 +3329,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3380,7 +3379,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
@@ -3430,7 +3429,7 @@ public class PrintSimpleForm {
                             }
                         }
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dc.dateGetToShow(dc.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dc.GetCurrentTime() + "_";
+                        textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + dateUtil.dateGetToShow(dateUtil.GetCurrentDate()) + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + dateUtil.GetCurrentTime() + "_";
                         textToPrint2 += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + bean.getR_Emp() + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint2 += "colspan=3 align=center><font face=Tahoma size=3>" + "_";

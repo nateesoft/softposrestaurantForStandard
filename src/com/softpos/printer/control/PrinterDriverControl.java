@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import com.softpos.util.OSValidator;
 
 public class PrinterDriverControl {
@@ -31,6 +31,7 @@ public class PrinterDriverControl {
     private final String fontName = "Tahoma";
     private float width = 75;
     private float height = 72;
+    private final DateUtil dateUtil = new DateUtil();
 
     public PrinterDriverControl() {
     }
@@ -100,9 +101,9 @@ public class PrinterDriverControl {
 
         String text = header1 + textAll + barcode + footer1;
         BufferedWriter output = null;
-        DateConvert dc = new DateConvert();
+        
         try {
-            String filename = dc.dateGetToShow(dc.GetCurrentDate()).replace("/", "").replace(" ", "");
+            String filename = dateUtil.dateGetToShow(dateUtil.GetCurrentDate()).replace("/", "").replace(" ", "");
             String path = "D:/DailySales/" + filename + "MTD.html";
             PublicVar.filePath = path;
             File file = new File(path);

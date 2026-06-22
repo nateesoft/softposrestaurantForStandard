@@ -5,12 +5,12 @@ import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.util.DateUtil;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import com.softpos.util.DateConvert;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,16 +22,15 @@ public class PKicTran {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl BranchControl = AppContext.getBranchControl();
+    private final DateUtil dateUtil = new DateUtil();
 
     public void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
-
-        DateConvert dc = new DateConvert();
-        String today = dc.GetCurrentDate();
-        String time = dc.GetCurrentTime();
+        String today = dateUtil.GetCurrentDate();
+        String time = dateUtil.GetCurrentTime();
+        
         try {
-            
             mysqlConnect.open();
-            if (bill.size() > 0) {
+            if (!bill.isEmpty()) {
                 for (int i = 0; i < bill.size(); i++) {
                     kicItemNo++;
                     String sqlINSKictran = "INSERT INTO kictran ("
@@ -58,7 +57,6 @@ public class PKicTran {
     }
 
     public List<PKicTranBean> getKicTran(String tableNo) {
-        DateConvert dc = new DateConvert();
         List<PKicTranBean> list = new ArrayList();
         
         try {
@@ -106,7 +104,7 @@ public class PKicTran {
                 }
                 kicTranBean.setpEtd(etd);
                 String timeWait;
-                timeWait = getDefferentTime(kicTranBean.getpTimeIn(), dc.GetCurrentTime());
+                timeWait = getDefferentTime(kicTranBean.getpTimeIn(), dateUtil.GetCurrentTime());
                 kicTranBean.setpWaitTime(timeWait);
                 list.add(kicTranBean);
                 rs.close();

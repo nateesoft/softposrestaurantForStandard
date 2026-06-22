@@ -35,7 +35,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import com.softpos.util.DateConvert;
+import com.softpos.util.DateUtil;
 import java.awt.print.PrinterException;
 
 public class PrintKicFormReport {
@@ -163,7 +163,6 @@ public class PrintKicFormReport {
         TableFileControl tbControl = AppContext.getTableFileControl();
         TableFileBean tbBean = tbControl.getDataByTCode(tableNo);
 
-        DateConvert dc = new DateConvert();
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
 
         try {
