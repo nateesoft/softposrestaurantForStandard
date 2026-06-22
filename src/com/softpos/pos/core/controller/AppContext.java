@@ -4,49 +4,49 @@ public class AppContext {
 
     private static BillControl billControl;
     private static BranchControl branchControl;
-    private static BranchFileController branchFileController;
-    private static PaymentController checkBillController;
-    private static CouponDiscountController couponDiscountController;
+    private static BranchFileControl branchFileController;
+    private static PaymentControl checkBillController;
+    private static CouponDiscountControl couponDiscountController;
     private static CuponControl cuponControl;
     private static CuponListControl cuponListControl;
     private static DiscountControl discountControl;
     private static EmployControl employControl;
     private static EmployeeControl employeeControl;
-    private static FloorPlanController floorPlanController;
-    private static IngedientController ingedientController;
+    private static FloorPlanControl floorPlanController;
+    private static IngedientControl ingedientController;
     private static ItemDisControl itemDisControl;
-    private static LoginController loginController;
-    private static MPluController mpluController;
-    private static MTranController mtranController;
-    private static MainSaleController mainSaleController;
+    private static LoginControl loginController;
+    private static MPluControl mpluController;
+    private static MTranControl mtranController;
+    private static MainSaleControl mainSaleController;
     private static MemberControl memberControl;
-    private static MemmaterController memmaterController;
-    private static ModalPopupController modalPopupController;
+    private static MemmaterControl memmaterController;
+    private static ModalPopupControl modalPopupController;
     private static PosControl posControl;
-    private static PosUserController posUserController;
-    private static PrintToKicController printToKicController;
+    private static PosUserControl posUserController;
+    private static PrintToKicControl printToKicController;
     private static ProductControl productControl;
     private static GroupFileControl groupFileControl;
     private static PromotionControl promotionControl;
     private static PropControl propControl;
-    private static RefundBillController refundBillController;
+    private static RefundBillControl refundBillController;
     private static ServiceControl serviceControl;
     private static StockControl stockControl;
     private static TCuponControl tcuponControl;
-    private static TSaleController tsaleController;
+    private static TSaleControl tsaleController;
     private static TableFileControl tableFileControl;
     private static TableSetupControl tableSetupControl;
-    private static TempCuponController tempCuponController;
+    private static TempCuponControl tempCuponController;
     private static WebServiceControl webServiceControl;
-    private static sendMenuButttonToBorController sendMenuButttonToBorControllerInstance;
-    private static CreditFileController creditFileController;
+    private static sendMenuButttonToBorControl sendMenuButttonToBorControllerInstance;
+    private static CreditFileControl creditFileController;
     private static DatabaseConnection databaseConnection;
-    private static PointTypeController pointTypeController;
+    private static PointTypeControl pointTypeController;
     private static TableMoveControl tableMoveControl;
-    private static MgrButtonController mgrButtonController;
-    private static OptionMsgController optionMsgController;
-    private static OptionMenuSetController optionMenuSetController;
-    private static ItemEditQtyController itemEditQtyController;
+    private static MgrButtonControl mgrButtonController;
+    private static OptionMsgControl optionMsgController;
+    private static OptionMenuSetControl optionMenuSetController;
+    private static ItemEditQtyControl itemEditQtyController;
     private static PosHwSetupControl posHwSetupControl;
     private static TempSetControl tempSetControl;
 
@@ -62,13 +62,13 @@ public class AppContext {
         return posHwSetupControl;
     }
 
-    public static CreditFileController getCreditFileController() {
-        if (creditFileController == null) creditFileController = new CreditFileController();
+    public static CreditFileControl getCreditFileController() {
+        if (creditFileController == null) creditFileController = new CreditFileControl();
         return creditFileController;
     }
 
-    public static PointTypeController getPointTypeController() {
-        if (pointTypeController == null) pointTypeController = new PointTypeController();
+    public static PointTypeControl getPointTypeController() {
+        if (pointTypeController == null) pointTypeController = new PointTypeControl();
         return pointTypeController;
     }
 
@@ -91,18 +91,18 @@ public class AppContext {
         return branchControl;
     }
 
-    public static BranchFileController getBranchFileController() {
-        if (branchFileController == null) branchFileController = new BranchFileController();
+    public static BranchFileControl getBranchFileController() {
+        if (branchFileController == null) branchFileController = new BranchFileControl();
         return branchFileController;
     }
 
-    public static PaymentController getCheckBillController() {
-        if (checkBillController == null) checkBillController = new PaymentController();
+    public static PaymentControl getCheckBillController() {
+        if (checkBillController == null) checkBillController = new PaymentControl();
         return checkBillController;
     }
 
-    public static CouponDiscountController getCouponDiscountController() {
-        if (couponDiscountController == null) couponDiscountController = new CouponDiscountController();
+    public static CouponDiscountControl getCouponDiscountController() {
+        if (couponDiscountController == null) couponDiscountController = new CouponDiscountControl();
         return couponDiscountController;
     }
 
@@ -131,13 +131,13 @@ public class AppContext {
         return employeeControl;
     }
 
-    public static FloorPlanController getFloorPlanController() {
-        if (floorPlanController == null) floorPlanController = new FloorPlanController();
+    public static FloorPlanControl getFloorPlanController() {
+        if (floorPlanController == null) floorPlanController = new FloorPlanControl();
         return floorPlanController;
     }
 
-    public static IngedientController getIngedientController() {
-        if (ingedientController == null) ingedientController = new IngedientController();
+    public static IngedientControl getIngedientController() {
+        if (ingedientController == null) ingedientController = new IngedientControl();
         return ingedientController;
     }
 
@@ -146,23 +146,23 @@ public class AppContext {
         return itemDisControl;
     }
 
-    public static LoginController getLoginController() {
-        if (loginController == null) loginController = new LoginController();
+    public static LoginControl getLoginController() {
+        if (loginController == null) loginController = new LoginControl();
         return loginController;
     }
 
-    public static MPluController getMPluController() {
-        if (mpluController == null) mpluController = new MPluController();
+    public static MPluControl getMPluController() {
+        if (mpluController == null) mpluController = new MPluControl();
         return mpluController;
     }
 
-    public static MTranController getMTranController() {
-        if (mtranController == null) mtranController = new MTranController();
+    public static MTranControl getMTranController() {
+        if (mtranController == null) mtranController = new MTranControl();
         return mtranController;
     }
 
-    public static MainSaleController getMainSaleController() {
-        if (mainSaleController == null) mainSaleController = new MainSaleController();
+    public static MainSaleControl getMainSaleController() {
+        if (mainSaleController == null) mainSaleController = new MainSaleControl();
         return mainSaleController;
     }
 
@@ -171,13 +171,13 @@ public class AppContext {
         return memberControl;
     }
 
-    public static MemmaterController getMemmaterController() {
-        if (memmaterController == null) memmaterController = new MemmaterController();
+    public static MemmaterControl getMemmaterController() {
+        if (memmaterController == null) memmaterController = new MemmaterControl();
         return memmaterController;
     }
 
-    public static ModalPopupController getModalPopupController() {
-        if (modalPopupController == null) modalPopupController = new ModalPopupController();
+    public static ModalPopupControl getModalPopupController() {
+        if (modalPopupController == null) modalPopupController = new ModalPopupControl();
         return modalPopupController;
     }
 
@@ -186,13 +186,13 @@ public class AppContext {
         return posControl;
     }
 
-    public static PosUserController getPosUserController() {
-        if (posUserController == null) posUserController = new PosUserController();
+    public static PosUserControl getPosUserController() {
+        if (posUserController == null) posUserController = new PosUserControl();
         return posUserController;
     }
 
-    public static PrintToKicController getPrintToKicController() {
-        if (printToKicController == null) printToKicController = new PrintToKicController();
+    public static PrintToKicControl getPrintToKicController() {
+        if (printToKicController == null) printToKicController = new PrintToKicControl();
         return printToKicController;
     }
 
@@ -216,8 +216,8 @@ public class AppContext {
         return propControl;
     }
 
-    public static RefundBillController getRefundBillController() {
-        if (refundBillController == null) refundBillController = new RefundBillController();
+    public static RefundBillControl getRefundBillController() {
+        if (refundBillController == null) refundBillController = new RefundBillControl();
         return refundBillController;
     }
 
@@ -236,8 +236,8 @@ public class AppContext {
         return tcuponControl;
     }
 
-    public static TSaleController getTSaleController() {
-        if (tsaleController == null) tsaleController = new TSaleController();
+    public static TSaleControl getTSaleController() {
+        if (tsaleController == null) tsaleController = new TSaleControl();
         return tsaleController;
     }
 
@@ -251,8 +251,8 @@ public class AppContext {
         return tableSetupControl;
     }
 
-    public static TempCuponController getTempCuponController() {
-        if (tempCuponController == null) tempCuponController = new TempCuponController();
+    public static TempCuponControl getTempCuponController() {
+        if (tempCuponController == null) tempCuponController = new TempCuponControl();
         return tempCuponController;
     }
 
@@ -261,8 +261,8 @@ public class AppContext {
         return webServiceControl;
     }
 
-    public static sendMenuButttonToBorController getSendMenuButttonToBorController() {
-        if (sendMenuButttonToBorControllerInstance == null) sendMenuButttonToBorControllerInstance = new sendMenuButttonToBorController();
+    public static sendMenuButttonToBorControl getSendMenuButttonToBorController() {
+        if (sendMenuButttonToBorControllerInstance == null) sendMenuButttonToBorControllerInstance = new sendMenuButttonToBorControl();
         return sendMenuButttonToBorControllerInstance;
     }
     
@@ -271,23 +271,23 @@ public class AppContext {
         return databaseConnection;
     }
 
-    public static MgrButtonController getMgrButtonController() {
-        if (mgrButtonController == null) mgrButtonController = new MgrButtonController();
+    public static MgrButtonControl getMgrButtonController() {
+        if (mgrButtonController == null) mgrButtonController = new MgrButtonControl();
         return mgrButtonController;
     }
 
-    public static OptionMsgController getOptionMsgController() {
-        if (optionMsgController == null) optionMsgController = new OptionMsgController();
+    public static OptionMsgControl getOptionMsgController() {
+        if (optionMsgController == null) optionMsgController = new OptionMsgControl();
         return optionMsgController;
     }
 
-    public static OptionMenuSetController getOptionMenuSetController() {
-        if (optionMenuSetController == null) optionMenuSetController = new OptionMenuSetController();
+    public static OptionMenuSetControl getOptionMenuSetController() {
+        if (optionMenuSetController == null) optionMenuSetController = new OptionMenuSetControl();
         return optionMenuSetController;
     }
 
-    public static ItemEditQtyController getItemEditQtyController() {
-        if (itemEditQtyController == null) itemEditQtyController = new ItemEditQtyController();
+    public static ItemEditQtyControl getItemEditQtyController() {
+        if (itemEditQtyController == null) itemEditQtyController = new ItemEditQtyControl();
         return itemEditQtyController;
     }
 }

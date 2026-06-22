@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.ModalPopupController;
+import com.softpos.pos.core.controller.ModalPopupControl;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.MgrButtonSetupBean;
@@ -32,7 +32,7 @@ public class ModalPopup extends javax.swing.JDialog {
     private String PNameSet = "";
     private String Main = "";
     private String TableNo = "";
-    private ModalPopupController modalControl = AppContext.getModalPopupController();
+    private ModalPopupControl modalControl = AppContext.getModalPopupController();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility PUtility = new PUtility();
 

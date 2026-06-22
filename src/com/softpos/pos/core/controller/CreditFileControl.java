@@ -9,13 +9,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreditFileController {
+public class CreditFileControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<Object[]> findByBank(String bank) {
         List<Object[]> rows = new ArrayList<>();
-        mysqlConnect.open(CreditFileController.class);
+        mysqlConnect.open(CreditFileControl.class);
         try {
             String sql;
             if (bank != null && !bank.isEmpty()) {
@@ -38,9 +38,9 @@ public class CreditFileController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(CreditFileController.class, "error", e);
+            AppLogUtil.log(CreditFileControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(CreditFileController.class);
+            mysqlConnect.closeConnection(CreditFileControl.class);
         }
         return rows;
     }

@@ -24,18 +24,18 @@ import com.softpos.util.DateUtil;
  *
  * @author nathee
  */
-public class MemmaterController {
+public class MemmaterControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
-    private final BranchFileController BranchFileController = AppContext.getBranchFileController();
-    private final PointTypeController PointTypeController = AppContext.getPointTypeController();
+    private final BranchFileControl BranchFileController = AppContext.getBranchFileController();
+    private final PointTypeControl PointTypeController = AppContext.getPointTypeController();
     private final DateUtil dateUtil = new DateUtil();
 
     public MemberBean getMember(String MemberCode) {
         MemberBean bean = null;
 
         
-        mysqlConnect.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterControl.class);
         try {
             String sql = "select * from " + PublicVar.db_member + ".memmaster where member_code='" + MemberCode + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -142,14 +142,14 @@ public class MemmaterController {
 
             AppLogUtil.log(MemberBean.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MemmaterController.class);
+            mysqlConnect.closeConnection(MemmaterControl.class);
         }
 
         return bean;
     }
 
     void updateMemberPoint(String memberCode, Date lastDateService, double totalScore) {
-        mysqlConnect.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterControl.class);
 
         try {
             String sql = "update " + PublicVar.db_member + ".memmaster "
@@ -162,7 +162,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MemmaterController.class, "error", e);
+            AppLogUtil.log(MemmaterControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -172,7 +172,7 @@ public class MemmaterController {
         double pointTotal = computeMemberScore(billBean, member.getMember_PointExpiredDate());
 
         // update MTran vs Billno
-        MTranController mTranCon = AppContext.getMTranController();
+        MTranControl mTranCon = AppContext.getMTranController();
 
         if (mTranCon.checkReceiptNoExist(billBean.getB_Refno())) {
             MTranBean mTranBean = new MTranBean();
@@ -196,7 +196,7 @@ public class MemmaterController {
             BillControl billControl = AppContext.getBillControl();
             List<TSaleBean> listTSale = billControl.getAllTSale(billBean.getB_Refno());
 
-            MPluController mPluCon = AppContext.getMPluController();
+            MPluControl mPluCon = AppContext.getMPluController();
             List<MPluBean> listMPlu = new ArrayList<>();
             for (TSaleBean tSaleBean : listTSale) {
                 MPluBean pluBean = new MPluBean();
@@ -275,7 +275,7 @@ public class MemmaterController {
     }
 
     public void updateScoreRefund(String memberCode, double scoreRemove) {
-        mysqlConnect.open(MemmaterController.class);
+        mysqlConnect.open(MemmaterControl.class);
         try {
             String sql = "update " + PublicVar.db_member + ".memmaster "
                     + "set Member_TotalScore=Member_TotalScore-" + (int) scoreRemove + " "
@@ -286,7 +286,7 @@ public class MemmaterController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MemmaterController.class, "error", e);
+            AppLogUtil.log(MemmaterControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

@@ -16,7 +16,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class ModalPopupController {
+public class ModalPopupControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -40,7 +40,7 @@ public class ModalPopupController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(ModalPopupController.class, "error", e);
+            AppLogUtil.log(ModalPopupControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -75,7 +75,7 @@ public class ModalPopupController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(ModalPopupController.class, "error", e);
+            AppLogUtil.log(ModalPopupControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -103,7 +103,7 @@ public class ModalPopupController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(ModalPopupController.class, "error", e);
+            AppLogUtil.log(ModalPopupControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

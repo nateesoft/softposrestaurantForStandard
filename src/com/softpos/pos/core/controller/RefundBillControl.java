@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author nathee
  */
-public class RefundBillController {
+public class RefundBillControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -43,7 +43,7 @@ public class RefundBillController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -148,7 +148,7 @@ public class RefundBillController {
                             user, rs.getString("r_stock"), rs.getString("r_set"), rs.getString("r_index"), "2");
                     double quantity = rs.getDouble("r_quan");
                     String rPluCode = rs.getString("r_plucode");
-                    FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
+                    FloorPlanControl floorPlanControl = AppContext.getFloorPlanController();
                     List<PIngredientBean> listING = floorPlanControl.listIngredeint(rPluCode);
                     for (PIngredientBean ingBean : listING) {
                         if (ingBean.getPstock().equals("Y") && ingBean.getPactive().equals("Y")) {
@@ -165,7 +165,7 @@ public class RefundBillController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
             throw new RuntimeException(e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -231,7 +231,7 @@ public class RefundBillController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -257,7 +257,7 @@ public class RefundBillController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -289,7 +289,7 @@ public class RefundBillController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -312,7 +312,7 @@ public class RefundBillController {
                 updated = rows > 0;
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -368,7 +368,7 @@ public class RefundBillController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(RefundBillController.class, "error", e);
+            AppLogUtil.log(RefundBillControl.class, "error", e);
             refStr = null;
         } finally {
             mysqlConnect.closeConnection(this.getClass());

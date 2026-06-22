@@ -19,7 +19,7 @@ import com.softpos.connection.database.MySQLConnect;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BillControl;
-import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.MemmaterControl;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.pos.core.controller.ServiceControl;
 import com.softpos.pos.core.controller.TableFileControl;
@@ -92,7 +92,7 @@ public class PPrint {
     private final BillControl billControl = AppContext.getBillControl();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final PUtility pUtility = new PUtility();
-    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    private final MemmaterControl MemmaterController = AppContext.getMemmaterController();
 
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();

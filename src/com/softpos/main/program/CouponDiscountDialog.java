@@ -7,9 +7,9 @@ import com.softpos.pos.core.controller.CuponControl;
 import com.softpos.pos.core.controller.CuponListControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.constants.PublicVar;
-import com.softpos.pos.core.controller.CouponDiscountController;
+import com.softpos.pos.core.controller.CouponDiscountControl;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.pos.core.controller.TempCuponController;
+import com.softpos.pos.core.controller.TempCuponControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.CuponBean;
@@ -55,7 +55,7 @@ public class CouponDiscountDialog extends javax.swing.JDialog {
     private String Member1;
     private String Member2;
     private double totalAmount;
-    private CouponDiscountController couponControl = AppContext.getCouponDiscountController();
+    private CouponDiscountControl couponControl = AppContext.getCouponDiscountController();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
@@ -981,7 +981,7 @@ private void txtCucodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         //update tempcupon
-        TempCuponController temp = AppContext.getTempCuponController();
+        TempCuponControl temp = AppContext.getTempCuponController();
         TempCuponBean bean = new TempCuponBean();
         bean.setR_Index(tableNo + tBean.getMacNo());
         bean.setR_Table(tableNo);

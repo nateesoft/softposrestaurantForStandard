@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Dell
  */
-public class sendMenuButttonToBorController {
+public class sendMenuButttonToBorControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -23,7 +23,7 @@ public class sendMenuButttonToBorController {
         List listMGRButtonSetup = new ArrayList();
         try {
             
-            mysqlConnect.open(sendMenuButttonToBorController.class);
+            mysqlConnect.open(sendMenuButttonToBorControl.class);
             String sqlGetMenuLocal = "select * from mgrbuttonsetup;";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sqlGetMenuLocal);
@@ -63,7 +63,7 @@ public class sendMenuButttonToBorController {
     public List<sendSoft_MenustupBean> sendDataSoft_menusetupToBor() {
         List listSoft_menusetupSetup = new ArrayList();
         try {
-            mysqlConnect.open(sendMenuButttonToBorController.class);
+            mysqlConnect.open(sendMenuButttonToBorControl.class);
             String sqlGetMenuLocal = "select * from soft_menusetup;";
             Statement stmt1 = mysqlConnect.getConnection().createStatement();
             ResultSet rs1 = stmt1.executeQuery(sqlGetMenuLocal);

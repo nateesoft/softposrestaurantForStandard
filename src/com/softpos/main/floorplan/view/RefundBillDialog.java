@@ -1,8 +1,8 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.MPluController;
-import com.softpos.pos.core.controller.MTranController;
+import com.softpos.pos.core.controller.MPluControl;
+import com.softpos.pos.core.controller.MTranControl;
 import com.softpos.main.program.GetUserAction;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.model.POSHWSetup;
@@ -10,9 +10,9 @@ import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BillNoBean;
-import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.MemmaterControl;
 import com.softpos.pos.core.controller.PosControl;
-import com.softpos.pos.core.controller.RefundBillController;
+import com.softpos.pos.core.controller.RefundBillControl;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.util.TextToImage;
@@ -406,12 +406,12 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 BillNoBean billBean = billControl.getData(BillNo);
 
                 String receiptNo = billBean.getB_MacNo() + "/" + billBean.getB_Refno();
-                MPluController mpluControl = AppContext.getMPluController();
+                MPluControl mpluControl = AppContext.getMPluController();
                 mpluControl.refundBill(receiptNo);
-                MTranController mtranControl = AppContext.getMTranController();
+                MTranControl mtranControl = AppContext.getMTranController();
                 mtranControl.refundBill(receiptNo);
 
-                MemmaterController memControl = AppContext.getMemmaterController();
+                MemmaterControl memControl = AppContext.getMemmaterController();
                 memControl.updateScoreRefund(billBean.getB_MemCode(), billBean.getB_MemCurSum());
 
                 MSG.NOTICE(this, "การยกเลิกใบเสร็จรับเงินเลขที่ " + BillNo + " เรียบร้อยแล้ว...");
@@ -422,7 +422,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
     private void updateDatabaseForRefund() {
         BillNoBean bBean = billControl.getData(BillNo);
-        RefundBillController refundControl = AppContext.getRefundBillController();
+        RefundBillControl refundControl = AppContext.getRefundBillController();
         refundControl.voidBillForRefund(macno, BillNo, PublicVar.TUserRec.getUserName(),
                 memcode, PublicVar.Branch_Code, bBean.getB_NetTotal(), PUtility);
     }
@@ -443,7 +443,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         BillNo = txtBillNo.getText();
         //Load Data From BillNo
 
-        RefundBillController refundControl = AppContext.getRefundBillController();
+        RefundBillControl refundControl = AppContext.getRefundBillController();
         BillNoBean billNoBean = refundControl.checkBillByRefno(PublicVar.MACNO, BillNo);
         if (billNoBean == null) {
             MSG.WAR(this, "ไม่พบเลขที่ใบเสร็จรับเงินที่ต้องการยกเลิก (Refund) กรุณาตรวจสอบเลขที่ใบเสร็จใหม่...");
@@ -486,7 +486,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         MyArray = new TranRecord[1];
         Cleartblshowplu();
 
-        RefundBillController refundControl = AppContext.getRefundBillController();
+        RefundBillControl refundControl = AppContext.getRefundBillController();
         List<Object[]> rows = refundControl.loadSaleItemsForRefund(PublicVar.MACNO, BillNo);
 
         for (Object[] row : rows) {
@@ -580,7 +580,7 @@ private void txtBillNoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     // End of variables declaration//GEN-END:variables
 
     private boolean checkPermit() {
-        RefundBillController refundControl = AppContext.getRefundBillController();
+        RefundBillControl refundControl = AppContext.getRefundBillController();
         boolean isPermit = refundControl.hasRefundPermission(PublicVar.USERCODE);
 
         if (isPermit) {

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.softpos.util.AppLogUtil;
 
-public class TempCuponController {
+public class TempCuponControl {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -41,7 +41,7 @@ public class TempCuponController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(TempCuponController.class, "error", e);
+            AppLogUtil.log(TempCuponControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -86,7 +86,7 @@ public class TempCuponController {
             stmt1.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(TempCuponController.class, "error", e);
+            AppLogUtil.log(TempCuponControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

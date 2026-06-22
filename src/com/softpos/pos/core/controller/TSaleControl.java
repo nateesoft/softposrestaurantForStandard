@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author nathee
  */
-public class TSaleController {
+public class TSaleControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -26,7 +26,7 @@ public class TSaleController {
         double hold = 0.00;
         double paid = 0.00;
 
-        mysqlConnect.open(TSaleController.class);
+        mysqlConnect.open(TSaleControl.class);
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
 
@@ -48,7 +48,7 @@ public class TSaleController {
         } catch (SQLException e) {
             // caller handles display of errors
         } finally {
-            mysqlConnect.closeConnection(TSaleController.class);
+            mysqlConnect.closeConnection(TSaleControl.class);
         }
 
         return new double[]{hold, paid, hold + paid};
@@ -57,7 +57,7 @@ public class TSaleController {
     public List<TSaleBean> listTSaleByRefId(String b_refno) {
         List<TSaleBean> listTsale = new ArrayList<>();
         
-        mysqlConnect.open(TSaleController.class);
+        mysqlConnect.open(TSaleControl.class);
         try {
             String sql = "select * from t_sale "
                     + "where r_refno='" + b_refno + "' "

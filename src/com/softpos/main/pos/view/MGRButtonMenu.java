@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ButtonCustom;
-import com.softpos.pos.core.controller.MgrButtonController;
+import com.softpos.pos.core.controller.MgrButtonControl;
 import com.softpos.pos.core.model.MenuMGR;
 import com.softpos.main.program.ShowAllProductDialog;
 import com.softpos.util.ThaiUtil;
@@ -26,7 +26,7 @@ public class MGRButtonMenu extends javax.swing.JDialog {
     private String menuCode;
     private int menuIndex;
     private boolean editOK = false;
-    private final MgrButtonController mgrButtonController = AppContext.getMgrButtonController();
+    private final MgrButtonControl mgrButtonController = AppContext.getMgrButtonController();
 
     public MGRButtonMenu(java.awt.Frame parent, boolean modal, String menuCode, int menuIndex) {
         super(parent, modal);

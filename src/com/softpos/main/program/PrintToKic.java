@@ -3,7 +3,7 @@ package com.softpos.main.program;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.constants.PublicVar;
-import com.softpos.pos.core.controller.PrintToKicController;
+import com.softpos.pos.core.controller.PrintToKicControl;
 
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
@@ -24,7 +24,7 @@ public class PrintToKic extends javax.swing.JFrame {
     private int refresh = 15;
     public static boolean kicPrintting = false;
     private boolean printkic = false;
-    private final PrintToKicController control = AppContext.getPrintToKicController();
+    private final PrintToKicControl control = AppContext.getPrintToKicController();
     private final BranchControl BranchControl = AppContext.getBranchControl();
 
     /**

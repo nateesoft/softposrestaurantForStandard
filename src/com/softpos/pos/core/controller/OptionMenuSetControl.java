@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class OptionMenuSetController {
+public class OptionMenuSetControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void saveOption(String pcode, String pdesc, String opcode, String opname) {
-        mysqlConnect.open(OptionMenuSetController.class);
+        mysqlConnect.open(OptionMenuSetControl.class);
         try {
             String sql = "INSERT INTO optionset (PCode, PDesc, OptionCode, OptionName) "
                     + "VALUES ('" + pcode + "', '" + ThaiUtil.Unicode2ASCII(pdesc) + "', "
@@ -23,14 +23,14 @@ public class OptionMenuSetController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMenuSetController.class, "error", e);
+            AppLogUtil.log(OptionMenuSetControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMenuSetController.class);
+            mysqlConnect.closeConnection(OptionMenuSetControl.class);
         }
     }
 
     public void deleteOption(String pcode, String optionname) {
-        mysqlConnect.open(OptionMenuSetController.class);
+        mysqlConnect.open(OptionMenuSetControl.class);
         try {
             String sql = "delete from optionset "
                     + "where pcode='" + pcode + "' "
@@ -39,16 +39,16 @@ public class OptionMenuSetController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMenuSetController.class, "error", e);
+            AppLogUtil.log(OptionMenuSetControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMenuSetController.class);
+            mysqlConnect.closeConnection(OptionMenuSetControl.class);
         }
     }
 
     /** Returns rows from optionset for pCode. Each row: {PCode(unicode), PDesc(unicode), OptionName(unicode)} */
     public List<Object[]> loadOptions(String pcode) {
         List<Object[]> list = new ArrayList<>();
-        mysqlConnect.open(OptionMenuSetController.class);
+        mysqlConnect.open(OptionMenuSetControl.class);
         try {
             String sql = "select * from optionset where PCode = '" + pcode + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -62,9 +62,9 @@ public class OptionMenuSetController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMenuSetController.class, "error", e);
+            AppLogUtil.log(OptionMenuSetControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMenuSetController.class);
+            mysqlConnect.closeConnection(OptionMenuSetControl.class);
         }
         return list;
     }

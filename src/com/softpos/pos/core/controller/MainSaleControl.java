@@ -21,14 +21,14 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class MainSaleController {
+public class MainSaleControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MenuListBean getMenuListByMenuItem(String PluCode) {
         MenuListBean bean = null;
         
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String SqlQuery = "select plucode from menulist where menuitem=('" + PluCode + "') "
                     + "and (menuactive='Y') limit 1";
@@ -43,7 +43,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -66,7 +66,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -93,7 +93,7 @@ public class MainSaleController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -129,7 +129,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -154,7 +154,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -183,7 +183,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -222,7 +222,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -232,7 +232,7 @@ public class MainSaleController {
 
     public TableFileBean getTableFileByCode(String tableNo) {
         TableFileBean bean = null;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select TAmount, TCustomer, tonact from tablefile where tcode='" + tableNo + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -247,7 +247,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -257,7 +257,7 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByTableNo(String tableNo) {
         BalanceBean bean = null;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select r_time,r_date from balance where r_table ='" + tableNo + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -271,7 +271,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -281,7 +281,7 @@ public class MainSaleController {
 
     public boolean getBalanceByIndex(String RIndex) {
         boolean isValid = false;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select R_QuanCanDisc from balance where R_Index='" + RIndex + "' "
                     + "and R_QuanCanDisc>0 limit 1";
@@ -295,7 +295,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -305,7 +305,7 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRTable(String tableNo) {
         BalanceBean bean = null;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "SELECT COUNT(R_PName) items FROM balance where r_table = '" + tableNo + "'";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -319,7 +319,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -344,7 +344,7 @@ public class MainSaleController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -368,7 +368,7 @@ public class MainSaleController {
             stmt.close();
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -378,7 +378,7 @@ public class MainSaleController {
 
     public BalanceBean getBalanceByRIndex(String rIndex) {
         BalanceBean bean = null;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select r_linkindex from balance "
                     + "where r_index='" + rIndex + "' "
@@ -394,7 +394,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -404,7 +404,7 @@ public class MainSaleController {
 
     public boolean checkKicPrint(String tableNo) {
         boolean isValid = false;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
@@ -419,7 +419,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -429,7 +429,7 @@ public class MainSaleController {
 
     public CompanyBean getHeaderCompany() {
         CompanyBean bean = null;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "SELECT head1, head2, head3, head4 FROM company limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -446,7 +446,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -457,7 +457,7 @@ public class MainSaleController {
     public boolean printBillVoidCheck(String tableNo) {
         boolean isValid = false;
 
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -470,7 +470,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -481,7 +481,7 @@ public class MainSaleController {
     public List<BalanceBean> getBalanceByRLinkIndex(String rLinkIndex) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select R_Index,R_Stock from balance "
                     + "where R_LinkIndex='" + rLinkIndex + "'";
@@ -498,7 +498,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -509,7 +509,7 @@ public class MainSaleController {
     public SoftMenuSetup getMenuShowText(String menuCode) {
         SoftMenuSetup bean = null;
 
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select n.PCode,n.MenuShowText from optionset o,soft_menusetup n "
                     + "where o.pcode = n.pcode and n.menucode='" + menuCode + "' limit 1";
@@ -525,7 +525,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -536,7 +536,7 @@ public class MainSaleController {
     public List<MgrButtonSetupBean> getAllMgrButtonSetup(String pCode) {
         List<MgrButtonSetupBean> listMgrButton = new ArrayList<>();
 
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select auto_pcode, auto_pdesc from mgrbuttonsetup "
                     + "where pcode='" + pCode + "' and auto_pcode<>''";
@@ -554,7 +554,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -565,7 +565,7 @@ public class MainSaleController {
     public MgrButtonSetupBean getMgrButtonAndMenuSetup(String menuCode) {
         MgrButtonSetupBean bean = null;
 
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "select o.PCode,o.PDesc, o.check_before "
                     + "from mgrbuttonsetup o,soft_menusetup n "
@@ -584,7 +584,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -594,7 +594,7 @@ public class MainSaleController {
 
     public boolean checkPassBeforeOrder(String tableNo) {
         boolean isFound = false;
-        mysqlConnect.open(MainSaleController.class);
+        mysqlConnect.open(MainSaleControl.class);
         try {
             String sql = "SELECT 1 FROM balance where r_table = '" + tableNo + "' limit 1";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -607,7 +607,7 @@ public class MainSaleController {
             }
         } catch (SQLException e) {
 
-            AppLogUtil.log(MainSaleController.class, "error", e);
+            AppLogUtil.log(MainSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

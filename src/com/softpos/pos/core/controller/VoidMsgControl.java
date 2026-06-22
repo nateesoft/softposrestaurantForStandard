@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class VoidMsgController {
+public class VoidMsgControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public List<String[]> getAll() {
         List<String[]> list = new ArrayList<>();
         
-        mysqlConnect.open(VoidMsgController.class);
+        mysqlConnect.open(VoidMsgControl.class);
         try {
             String sql = "select * from voidmsg";
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -30,9 +30,9 @@ public class VoidMsgController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(VoidMsgController.class, "error", e);
+            AppLogUtil.log(VoidMsgControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(VoidMsgController.class);
+            mysqlConnect.closeConnection(VoidMsgControl.class);
         }
         return list;
     }

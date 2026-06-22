@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class MgrButtonController {
+public class MgrButtonControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
@@ -19,7 +19,7 @@ public class MgrButtonController {
     /** Returns {pcode, pdesc} from soft_menusetup join product for given menuCode, or null if not found */
     public String[] getMenuProductByCode(String menuCode) {
         
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "select p.pcode, p.pdesc "
                     + "from soft_menusetup m, product p "
@@ -36,9 +36,9 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return null;
     }
@@ -46,7 +46,7 @@ public class MgrButtonController {
     /** Returns rows from mgrbuttonsetup for given pCode. Each row: {pcode,pdesc,sd_pcode,sd_pdesc,ex_pcode,ex_pdesc,auto_pcode,auto_pdesc,Check_before,Check_qty,qty,check_autoadd,check_extra} */
     public List<Object[]> getButtonSetupRows(String pCode) {
         List<Object[]> list = new ArrayList<>();
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "select * from mgrbuttonsetup where pcode='" + pCode + "' order by pcode";
             try (Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -70,30 +70,30 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return list;
     }
 
     public void deleteByPCode(String pCode) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 stmt.executeUpdate("delete from mgrbuttonsetup where pcode='" + pCode + "'");
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
     }
 
     public void saveButtonSetupRows(String pCode, String pDesc, String beforeCheck, String qtyCheck,
             String extraCheck, int qtyAmt, String autoCheck,
             List<String[]> sideDishList, List<String[]> extraList, List<String[]> autoAddList) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             for (String[] sd : sideDishList) {
                 String sql = "insert into mgrbuttonsetup"
@@ -131,9 +131,9 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
     }
 
@@ -151,7 +151,7 @@ public class MgrButtonController {
 
     private List<String[]> loadSubList(String pCode, String codeCol, String descCol, String filter) {
         List<String[]> list = new ArrayList<>();
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "select " + codeCol + ", " + descCol + " from mgrbuttonsetup "
                     + "where pcode='" + pCode + "' and " + filter + " order by " + codeCol;
@@ -162,9 +162,9 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return list;
     }
@@ -173,7 +173,7 @@ public class MgrButtonController {
 
     /** Returns MenuMGR from soft_menusetup by menuCode and menuIndex, null if not found */
     public MenuMGR getMenuSetup(String menuCode, int menuIndex) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
@@ -200,16 +200,16 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return null;
     }
 
     /** Returns PDesc of active product, or empty string if not found */
     public String getProductDesc(String pCode) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "select PDesc from product where pcode='" + pCode + "' and PActive='Y' limit 1";
             try (Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -219,15 +219,15 @@ public class MgrButtonController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return "";
     }
 
     public void deleteMenuSetup(String menuCode, String shortNameAscii) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "delete from soft_menusetup "
                     + "where MenuCode ='" + menuCode + "'"
@@ -236,15 +236,15 @@ public class MgrButtonController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
     }
 
     /** Saves (replaces) menu setup; returns true on success */
     public boolean saveMenuSetup(MenuMGR mgr) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "insert into soft_menusetup"
                     + "(MenuCode,MenuType,OptSet,PSet,PCode,MenuShowText,"
@@ -261,16 +261,16 @@ public class MgrButtonController {
                 return stmt.executeUpdate(sql) > 0;
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return false;
     }
 
     /** Updates font/color/layout for all items of a menu type; returns true on success */
     public boolean updateMenuSetupAll(MenuMGR mgr) {
-        mysqlConnect.open(MgrButtonController.class);
+        mysqlConnect.open(MgrButtonControl.class);
         try {
             String sql = "update soft_menusetup "
                     + "set FontColor='" + mgr.getFontColor() + "',"
@@ -284,9 +284,9 @@ public class MgrButtonController {
                 return stmt.executeUpdate(sql) > 0;
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MgrButtonController.class, "error", e);
+            AppLogUtil.log(MgrButtonControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MgrButtonController.class);
+            mysqlConnect.closeConnection(MgrButtonControl.class);
         }
         return false;
     }

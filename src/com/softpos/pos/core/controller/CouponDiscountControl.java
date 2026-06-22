@@ -13,7 +13,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class CouponDiscountController {
+public class CouponDiscountControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
@@ -21,7 +21,7 @@ public class CouponDiscountController {
         List<BalanceBean> listBalance = new ArrayList<>();
         
         try {
-            mysqlConnect.open(CouponDiscountController.class);
+            mysqlConnect.open(CouponDiscountControl.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "
                     + "from balance "
                     + "where r_quancandisc>0 "
@@ -41,7 +41,7 @@ public class CouponDiscountController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(CouponDiscountController.class, "error", e);
+            AppLogUtil.log(CouponDiscountControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -52,7 +52,7 @@ public class CouponDiscountController {
     public List<BalanceBean> getBalanceByPrAmt(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
         try {
-            mysqlConnect.open(CouponDiscountController.class);
+            mysqlConnect.open(CouponDiscountControl.class);
             String sql = "select r_quancandisc, R_Index, R_Price, R_Normal "
                     + "from balance "
                     + "where R_PRAmt='0' "
@@ -73,7 +73,7 @@ public class CouponDiscountController {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(CouponDiscountController.class, "error", e);
+            AppLogUtil.log(CouponDiscountControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

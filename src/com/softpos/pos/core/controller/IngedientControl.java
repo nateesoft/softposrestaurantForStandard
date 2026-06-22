@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author nathee
  */
-public class IngedientController {
+public class IngedientControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
@@ -20,7 +20,7 @@ public class IngedientController {
         List<PIngredientBean> listIng = new ArrayList<>();
         
         try {
-            mysqlConnect.open(IngedientController.class);
+            mysqlConnect.open(IngedientControl.class);
             String sql2 = "select i.*,pdesc,PBPack,pstock,pactive "
                     + "from product p, pingredent i "
                     + "where p.pcode=i.pingcode "

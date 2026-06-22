@@ -1,7 +1,7 @@
 package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.sendMenuButttonToBorController;
+import com.softpos.pos.core.controller.sendMenuButttonToBorControl;
 import com.softpos.pos.core.model.sendMgrButtonToBorBean;
 import com.softpos.pos.core.model.sendSoft_MenustupBean;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
@@ -39,7 +39,7 @@ public class SaveMenuIntoBOR extends javax.swing.JDialog {
     }
 
     public void processSendToBor() throws ClassNotFoundException, SQLException, Exception {
-        sendMenuButttonToBorController sendBor = AppContext.getSendMenuButttonToBorController();
+        sendMenuButttonToBorControl sendBor = AppContext.getSendMenuButttonToBorController();
         List<sendMgrButtonToBorBean> list = sendBor.sendMGRButtonSetupToBor();
         List<sendSoft_MenustupBean> list1 = sendBor.sendDataSoft_menusetupToBor();
         int sizeMGRButton = list.size();

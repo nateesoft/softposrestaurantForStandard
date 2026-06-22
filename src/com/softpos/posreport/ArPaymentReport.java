@@ -5,7 +5,7 @@ import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 
-import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.MemmaterControl;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -273,7 +273,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         }
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(MemmaterController.class, "error", e);
+                        AppLogUtil.log(MemmaterControl.class, "error", e);
                     }
                     prn.print(PUtility.DataFullR("     เงินสด Cash              ", 26) + PUtility.DataFull(DecFmt.format(SumCash), 13));
                     prn.print(PUtility.DataFullR("     บัตรกำนัล Coupon          ", 26) + PUtility.DataFull(DecFmt.format(SumCupon), 13));
@@ -291,7 +291,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         }
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(MemmaterController.class, "error", e);
+                        AppLogUtil.log(MemmaterControl.class, "error", e);
                     }
 
                     prn.print("ยอดรับชำระ AR    : " + PUtility.DataFull(IntFmt.format(CntBill), 6));
@@ -314,7 +314,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         }
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
-                        AppLogUtil.log(MemmaterController.class, "error", e);
+                        AppLogUtil.log(MemmaterControl.class, "error", e);
                     }
 
                     prn.print("----------------------------------------");

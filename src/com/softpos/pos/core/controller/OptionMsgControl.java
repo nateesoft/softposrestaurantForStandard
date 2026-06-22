@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
 
-public class OptionMsgController {
+public class OptionMsgControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<String> loadOptionsByGroup(String pGroup) {
         List<String> list = new ArrayList<>();
         
-        mysqlConnect.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgControl.class);
         try {
             String sql = "select * from optionfile where pgroup='" + pGroup + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -26,9 +26,9 @@ public class OptionMsgController {
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMsgController.class, "error", e);
+            AppLogUtil.log(OptionMsgControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgControl.class);
         }
         return list;
     }
@@ -38,7 +38,7 @@ public class OptionMsgController {
         for (int i = 0; i < opts.length && i < 8; i++) {
             o[i] = opts[i];
         }
-        mysqlConnect.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgControl.class);
         try {
             String sql = "update balance set "
                     + "r_opt1='" + ThaiUtil.Unicode2ASCII(o[0]) + "',"
@@ -55,14 +55,14 @@ public class OptionMsgController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMsgController.class, "error", e);
+            AppLogUtil.log(OptionMsgControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgControl.class);
         }
     }
 
     public void addOption(String pGroup, String optionName) {
-        mysqlConnect.open(OptionMsgController.class);
+        mysqlConnect.open(OptionMsgControl.class);
         try {
             String sqlDel = "delete from optionfile "
                     + "where PGroup='" + pGroup + "' "
@@ -74,9 +74,9 @@ public class OptionMsgController {
                 stmt.executeUpdate(sqlIns);
             }
         } catch (SQLException e) {
-            AppLogUtil.log(OptionMsgController.class, "error", e);
+            AppLogUtil.log(OptionMsgControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(OptionMsgController.class);
+            mysqlConnect.closeConnection(OptionMsgControl.class);
         }
     }
 }

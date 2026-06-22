@@ -17,7 +17,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class FloorPlanController {
+public class FloorPlanControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -66,7 +66,7 @@ public class FloorPlanController {
 
     public TempsetBean getPOptionFromTempSet(String rIndex, String pCode) {
         TempsetBean bean = null;
-        mysqlConnect.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanControl.class);
         try {
             String sql = "select POption from tempset "
                     + "where PIndex='" + rIndex + "' "
@@ -92,7 +92,7 @@ public class FloorPlanController {
     public List<TempsetBean> getTempsetByPIndex(String rIndex) {
         List<TempsetBean> listTempset = new ArrayList<>();
 
-        mysqlConnect.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanControl.class);
         try {
             String sql = "select * from tempset where PIndex='" + rIndex + "' ";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -116,7 +116,7 @@ public class FloorPlanController {
     public List<PIngredientBean> listIngredeint(String pluCode) {
         List<PIngredientBean> listPing = new ArrayList<>();
 
-        mysqlConnect.open(FloorPlanController.class);
+        mysqlConnect.open(FloorPlanControl.class);
         try {
             String sql1 = "select i.*,pdesc,PBPack,pstock,pactive "
                     + "from product p, pingredent i "

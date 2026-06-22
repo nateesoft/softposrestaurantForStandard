@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.OptionMsgController;
+import com.softpos.pos.core.controller.OptionMsgControl;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
@@ -24,7 +24,7 @@ public class OptionMsg extends javax.swing.JDialog {
     private String tableNo;
     private String index;
     private BalanceBean bean;
-    private final OptionMsgController optionMsgController = AppContext.getOptionMsgController();
+    private final OptionMsgControl optionMsgController = AppContext.getOptionMsgController();
     private final PUtility PUtility = new PUtility();
 
     public OptionMsg(java.awt.Frame parent, boolean modal, String tableNo, String index) {

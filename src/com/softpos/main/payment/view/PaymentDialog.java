@@ -5,7 +5,7 @@ import com.softpos.main.pos.view.DiscountDialog;
 import com.softpos.pos.core.controller.BalanceControl;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.BranchControl;
-import com.softpos.pos.core.controller.MemmaterController;
+import com.softpos.pos.core.controller.MemmaterControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.printer.control.PPrint;
@@ -14,9 +14,9 @@ import com.softpos.pos.core.controller.PosControl;
 import com.softpos.constants.PublicVar;
 import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.pos.view.MemberDialog;
-import com.softpos.pos.core.controller.PaymentController;
+import com.softpos.pos.core.controller.PaymentControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
-import com.softpos.pos.core.controller.MainSaleController;
+import com.softpos.pos.core.controller.MainSaleControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
 import com.softpos.main.floorplan.view.SaleInfoPanel;
@@ -61,12 +61,12 @@ public class PaymentDialog extends javax.swing.JDialog {
     private double CreditCharge = 0.00;
     private double originalGrandTotal = 0;
     private POSConfigSetup CONFIG;
-    private PaymentController checkBillControl = AppContext.getCheckBillController();
+    private PaymentControl checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
     private final BranchControl BranchControl = AppContext.getBranchControl();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final PUtility PUtility = new PUtility();
-    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    private final MemmaterControl MemmaterController = AppContext.getMemmaterController();
     
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
@@ -2480,7 +2480,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         }
 
         // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-        MainSaleController mainSaleControl = AppContext.getMainSaleController();
+        MainSaleControl mainSaleControl = AppContext.getMainSaleController();
         if (mainSaleControl.checkCountPrinterTo(tableNo)) {
             if (!PublicVar.Branch_Saveorder.equals("N")) {
                 printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);

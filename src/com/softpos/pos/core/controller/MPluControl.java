@@ -17,7 +17,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class MPluController {
+public class MPluControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -25,7 +25,7 @@ public class MPluController {
         MPluBean bean = null;
         
         try {
-            mysqlConnect.open(MPluController.class);
+            mysqlConnect.open(MPluControl.class);
             String sql = "select * from " + PublicVar.db_member + ".mplu where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -34,9 +34,9 @@ public class MPluController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MPluController.class, "error", e);
+            AppLogUtil.log(MPluControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MPluController.class);
+            mysqlConnect.closeConnection(MPluControl.class);
         }
 
         return bean;
@@ -63,7 +63,7 @@ public class MPluController {
 
     public int create(List<MPluBean> listMPlu) {
         int[] resultCreate = new int[0];
-        mysqlConnect.open(MPluController.class);
+        mysqlConnect.open(MPluControl.class);
         try {
             String sql = "insert into " + PublicVar.db_member + ".mplu "
                     + "(Service_Date, Member_Code, Branch_Code, Receipt_No, PLU_Group, Sale_Type, "
@@ -91,16 +91,16 @@ public class MPluController {
             resultCreate = prm.executeBatch();
             prm.close();
         } catch (SQLException e) {
-            AppLogUtil.log(MPluController.class, "error", e);
+            AppLogUtil.log(MPluControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MPluController.class);
+            mysqlConnect.closeConnection(MPluControl.class);
         }
 
         return resultCreate.length;
     }
 
     public void refundBill(String receiptNo) {
-        mysqlConnect.open(MPluController.class);
+        mysqlConnect.open(MPluControl.class);
 
         try {
             String sql = "delete from " + PublicVar.db_member + ".mplu "
@@ -110,9 +110,9 @@ public class MPluController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MPluController.class, "error", e);
+            AppLogUtil.log(MPluControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MPluController.class);
+            mysqlConnect.closeConnection(MPluControl.class);
         }
     }
 }

@@ -14,7 +14,7 @@ import com.softpos.util.DateUtil;
  *
  * @author nathee
  */
-public class MTranController {
+public class MTranControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -23,7 +23,7 @@ public class MTranController {
         
 
         try {
-            mysqlConnect.open(MTranController.class);
+            mysqlConnect.open(MTranControl.class);
             String sql = "select * from " + PublicVar.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 if (rs.next()) {
@@ -32,9 +32,9 @@ public class MTranController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MTranController.class, "error", e);
+            AppLogUtil.log(MTranControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranControl.class);
         }
 
         return bean;
@@ -43,7 +43,7 @@ public class MTranController {
     public boolean checkReceiptNoExist(String receiptNo) {
         boolean isNoExist = true;
         try {
-            mysqlConnect.open(MTranController.class);
+            mysqlConnect.open(MTranControl.class);
             String sql = "select Receipt_No from " + PublicVar.db_member + ".mtran "
                     + "where Receipt_No='" + receiptNo + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -53,9 +53,9 @@ public class MTranController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MTranController.class, "error", e);
+            AppLogUtil.log(MTranControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranControl.class);
         }
         return isNoExist;
     }
@@ -82,7 +82,7 @@ public class MTranController {
     public int create(MTranBean bean) {
         int resultCreate = 0;
 
-        mysqlConnect.open(MTranController.class);
+        mysqlConnect.open(MTranControl.class);
 
         try {
             String sql = "insert into " + PublicVar.db_member + ".mtran "
@@ -99,16 +99,16 @@ public class MTranController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MTranController.class, "error", e);
+            AppLogUtil.log(MTranControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranControl.class);
         }
 
         return resultCreate;
     }
 
     public void refundBill(String receiptNo) {
-        mysqlConnect.open(MTranController.class);
+        mysqlConnect.open(MTranControl.class);
 
         try {
             String sql = "delete from " + PublicVar.db_member + ".mtran "
@@ -118,9 +118,9 @@ public class MTranController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(MTranController.class, "error", e);
+            AppLogUtil.log(MTranControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(MTranController.class);
+            mysqlConnect.closeConnection(MTranControl.class);
         }
     }
 }

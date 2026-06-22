@@ -2,7 +2,7 @@ package com.softpos.main.program;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.PrintToKicController;
+import com.softpos.pos.core.controller.PrintToKicControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.PKicTranBean;
 import com.softpos.connection.database.ConfigFile;
@@ -82,7 +82,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 System.out.println("Into Method getDataFromKictran() " + countTime + this.getClass());
 
                 try {
-                    PrintToKicController controller = AppContext.getPrintToKicController();
+                    PrintToKicControl controller = AppContext.getPrintToKicController();
                     PKicTranBean bean = controller.getUrgentFoodItem(stationKicNo);
                     if (bean != null) {
                         trickSound = true;
@@ -135,7 +135,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     public void printCheckItOut() {
         try {
             System.out.println("Into Method printCheckItOut() ");
-            PrintToKicController controller = AppContext.getPrintToKicController();
+            PrintToKicControl controller = AppContext.getPrintToKicController();
             countTime1++;
             jLabel2.setText("getDataFromKictran : Loop LEVEL " + countTime1);
 
@@ -209,7 +209,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
     public void printUrgentLog() {
         new Thread(() -> {
             try {
-                PrintToKicController controller = AppContext.getPrintToKicController();
+                PrintToKicControl controller = AppContext.getPrintToKicController();
                 List<PKicTranBean> logList = controller.getUrgentClickLog(dateUtil.GetCurrentDate());
                 String textToPrint = "";
                 for (PKicTranBean entry : logList) {

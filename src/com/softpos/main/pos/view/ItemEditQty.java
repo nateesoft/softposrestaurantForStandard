@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
-import com.softpos.pos.core.controller.ItemEditQtyController;
+import com.softpos.pos.core.controller.ItemEditQtyControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.BalanceBean;
@@ -35,7 +35,7 @@ public class ItemEditQty extends javax.swing.JDialog {
     private DecimalFormat dec1 = new DecimalFormat("#0.00");
     private MemberBean memberBean;
     private String NewDesc;
-    private final ItemEditQtyController itemEditQtyController = AppContext.getItemEditQtyController();
+    private final ItemEditQtyControl itemEditQtyController = AppContext.getItemEditQtyController();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
 

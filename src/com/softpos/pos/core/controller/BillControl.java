@@ -31,12 +31,12 @@ import com.softpos.util.DateUtil;
 public class BillControl {
 
     private final POSConfigSetup posConfig;
-    private final MemmaterController memControl = AppContext.getMemmaterController();
+    private final MemmaterControl memControl = AppContext.getMemmaterController();
     private MemberBean memberBean;
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BranchControl branchControl = AppContext.getBranchControl();
     private final PosControl PosControl = AppContext.getPosControl();
-    private final MemmaterController MemmaterController = AppContext.getMemmaterController();
+    private final MemmaterControl MemmaterController = AppContext.getMemmaterController();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final DateUtil dateUtil = new DateUtil();
 
@@ -613,7 +613,7 @@ public class BillControl {
                 }
 
                 //save t_cupon
-                TempCuponController tcCon = AppContext.getTempCuponController();
+                TempCuponControl tcCon = AppContext.getTempCuponController();
                 TempCuponBean tcBean = null;
                 tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
 
@@ -1038,7 +1038,7 @@ public class BillControl {
                 }
 
                 //save t_cupon
-                TempCuponController tcCon = AppContext.getTempCuponController();
+                TempCuponControl tcCon = AppContext.getTempCuponController();
                 TempCuponBean tcBean = tcCon.getTempcupon(table + tableFile.getMacNo());
 
                 TCuponControl tCon = AppContext.getTCuponControl();

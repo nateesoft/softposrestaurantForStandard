@@ -14,7 +14,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class PrintToKicController {
+public class PrintToKicControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -22,7 +22,7 @@ public class PrintToKicController {
         BalanceBean bean = null;
 
         
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select r_table, MIN(macno) macno,"
                     + "sum(b.r_quan) qty,sum(b.r_total) total from balance b "
@@ -41,7 +41,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error" + " : getBalaneForPDA()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error" + " : getBalaneForPDA()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -51,7 +51,7 @@ public class PrintToKicController {
 
     public List<BalanceBean> getBalaneForPDAByTableNo(String tableNo, String macno) {
         List<BalanceBean> listBalance = new ArrayList<>();
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select r_kic,r_etd from balance "
                     + "where r_table='" + tableNo + "' "
@@ -75,7 +75,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error", e);
+            AppLogUtil.log(PrintToKicControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -86,7 +86,7 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm1(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select r_plucode from balance "
                     + "where trantype='PDA' "
@@ -107,7 +107,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error" + " getBalaneForPDAByTableNo()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error" + " getBalaneForPDAByTableNo()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -118,7 +118,7 @@ public class PrintToKicController {
     public List<BalanceBean> getBalancePrintForm6(String tableNo, String rKic) {
         List<BalanceBean> listBalance = new ArrayList<>();
 
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select * from balance "
                     + "where r_table='" + tableNo + "' "
@@ -140,7 +140,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error", e);
+            AppLogUtil.log(PrintToKicControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -155,7 +155,7 @@ public class PrintToKicController {
      */
     public PKicTranBean getUrgentFoodItem(String stationKicNo) {
         PKicTranBean bean = null;
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select * from kictran "
                     + "where "
@@ -175,7 +175,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error getUrgentFoodItem()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error getUrgentFoodItem()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -189,7 +189,7 @@ public class PrintToKicController {
      */
     public PKicTranBean getPendingCheckout(String stationKicNo) {
         PKicTranBean bean = null;
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select * from kictran "
                     + "where "
@@ -210,7 +210,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error getPendingCheckout()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error getPendingCheckout()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -222,7 +222,7 @@ public class PrintToKicController {
      * Replaces the UPDATE in UrgentFoodLoopCheck.printCheckItOut().
      */
     public void markCheckoutPrinted(String pTable, String pIndex, String pCode) {
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "update kictran set "
                     + "R_PrintCheckOut='Y' "
@@ -232,7 +232,7 @@ public class PrintToKicController {
                     + "and R_PrintCheckOut='N' ;";
             mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
-            AppLogUtil.log(PrintToKicController.class, "error markCheckoutPrinted()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error markCheckoutPrinted()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -243,7 +243,7 @@ public class PrintToKicController {
      * missing (bean was null in UrgentFoodLoopCheck.printCheckItOut()).
      */
     public void markCheckoutPrintedNoBalance(String pTable, String pIndex, String pCode) {
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "update kictran "
                     + "set "
@@ -253,7 +253,7 @@ public class PrintToKicController {
                     + "and pcode='" + pCode + "';";
             mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
-            AppLogUtil.log(PrintToKicController.class, "error markCheckoutPrintedNoBalance()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error markCheckoutPrintedNoBalance()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -265,7 +265,7 @@ public class PrintToKicController {
      */
     public List<PKicTranBean> getUrgentClickLog(String date) {
         List<PKicTranBean> list = new ArrayList<>();
-        mysqlConnect.open(PrintToKicController.class);
+        mysqlConnect.open(PrintToKicControl.class);
         try {
             String sql = "select * from kictran_urgentClick where pdate='" + date + "';";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -279,7 +279,7 @@ public class PrintToKicController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintToKicController.class, "error getUrgentClickLog()", e);
+            AppLogUtil.log(PrintToKicControl.class, "error getUrgentClickLog()", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

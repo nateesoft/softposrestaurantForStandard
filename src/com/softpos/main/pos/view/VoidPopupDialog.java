@@ -1,6 +1,6 @@
 package com.softpos.main.pos.view;
 
-import com.softpos.pos.core.controller.VoidMsgController;
+import com.softpos.pos.core.controller.VoidMsgControl;
 import com.softpos.pos.core.model.MemberBean;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -180,7 +180,7 @@ public class VoidPopupDialog extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        List<String[]> rows = new VoidMsgController().getAll();
+        List<String[]> rows = new VoidMsgControl().getAll();
         for (String[] r : rows) {
             model.addRow(new Object[]{r[0], r[1]});
         }

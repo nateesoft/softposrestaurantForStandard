@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 
-public class ItemEditQtyController {
+public class ItemEditQtyControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -14,7 +14,7 @@ public class ItemEditQtyController {
      * under a single connection.
      */
     public void saveItemEdits(String sqlUpdateBalance, String sqlUpdateTableFile, String sqlInsertEditQty) {
-        mysqlConnect.open(ItemEditQtyController.class);
+        mysqlConnect.open(ItemEditQtyControl.class);
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
             stmt.executeUpdate(sqlUpdateBalance);
@@ -23,9 +23,9 @@ public class ItemEditQtyController {
             stmt.executeUpdate(sqlInsertEditQty);
             stmt.close();
         } catch (SQLException e) {
-            AppLogUtil.log(ItemEditQtyController.class, "error", e);
+            AppLogUtil.log(ItemEditQtyControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(ItemEditQtyController.class);
+            mysqlConnect.closeConnection(ItemEditQtyControl.class);
         }
     }
 }

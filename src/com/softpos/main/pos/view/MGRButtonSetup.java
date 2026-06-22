@@ -1,7 +1,7 @@
 package com.softpos.main.pos.view;
 
 import com.softpos.main.program.ShowAllProductDialog;
-import com.softpos.pos.core.controller.MgrButtonController;
+import com.softpos.pos.core.controller.MgrButtonControl;
 import com.softpos.util.AppLogUtil;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         this.menuCode = menuCode;
         this.menuIndex = menuIndex;
 
-        MgrButtonController mgrCtrl = new MgrButtonController();
+        MgrButtonControl mgrCtrl = new MgrButtonControl();
         String[] product = mgrCtrl.getMenuProductByCode(menuCode);
         if (product != null) {
             txtPCode.setText(product[0]);
@@ -986,7 +986,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         }
 
 
-        MgrButtonController ctrl = new MgrButtonController();
+        MgrButtonControl ctrl = new MgrButtonControl();
         for (Object[] row : ctrl.getButtonSetupRows(txtPCode.getText())) {
             if ("Y".equals(row[8])) isBefore = true;
             if ("Y".equals(row[9])) isQtyCheck = true;
@@ -1010,7 +1010,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     }
 
     private void deleteDataPCode() {
-        new MgrButtonController().deleteByPCode(txtPCode.getText());
+        new MgrButtonControl().deleteByPCode(txtPCode.getText());
     }
 
     private void SaveData() {
@@ -1058,7 +1058,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
         for (int i = 0; i < model3.getRowCount(); i++) {
             atList.add(new String[]{"" + tbAutoAdd.getValueAt(i, 0), "" + tbAutoAdd.getValueAt(i, 1)});
         }
-        new MgrButtonController().saveButtonSetupRows(
+        new MgrButtonControl().saveButtonSetupRows(
                 txtPCode.getText(), txtPDesc.getText(),
                 beforeCheck, qtyCheck, extraCheck, qtyAmt, autocheck,
                 sdList, exList, atList);
@@ -1067,7 +1067,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     private void loadSideDish() {
         int size = model1.getRowCount();
         for (int i = 0; i < size; i++) model1.removeRow(0);
-        for (String[] row : new MgrButtonController().loadSideDish(txtPCode.getText())) {
+        for (String[] row : new MgrButtonControl().loadSideDish(txtPCode.getText())) {
             model1.addRow(new Object[]{row[0], row[1]});
         }
     }
@@ -1075,7 +1075,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     private void loadExtra() {
         int size = model2.getRowCount();
         for (int i = 0; i < size; i++) model2.removeRow(0);
-        for (String[] row : new MgrButtonController().loadExtra(txtPCode.getText())) {
+        for (String[] row : new MgrButtonControl().loadExtra(txtPCode.getText())) {
             model2.addRow(new Object[]{row[0], row[1]});
         }
     }
@@ -1083,7 +1083,7 @@ public class MGRButtonSetup extends javax.swing.JDialog {
     private void loadAutoAdd() {
         int size = model3.getRowCount();
         for (int i = 0; i < size; i++) model3.removeRow(0);
-        for (String[] row : new MgrButtonController().loadAutoAdd(txtPCode.getText())) {
+        for (String[] row : new MgrButtonControl().loadAutoAdd(txtPCode.getText())) {
             model3.addRow(new Object[]{row[0], row[1]});
         }
     }

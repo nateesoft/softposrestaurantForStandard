@@ -15,7 +15,7 @@ import com.softpos.util.DateUtil;
  *
  * @author nathee
  */
-public class PointTypeController {
+public class PointTypeControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -23,7 +23,7 @@ public class PointTypeController {
         PointTypeBean bean = null;
         
         try {
-            mysqlConnect.open(PointTypeController.class);
+            mysqlConnect.open(PointTypeControl.class);
             String sql = "select * "
                     + "from " + PublicVar.db_member + ".pointtype "
                     + "where Point_TypeCode='" + pointTypeCode + "' limit 1";
@@ -34,10 +34,10 @@ public class PointTypeController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PointTypeController.class, "error", e);
+            AppLogUtil.log(PointTypeControl.class, "error", e);
 
         } finally {
-            mysqlConnect.closeConnection(PointTypeController.class);
+            mysqlConnect.closeConnection(PointTypeControl.class);
         }
 
         return bean;
@@ -46,7 +46,7 @@ public class PointTypeController {
     public PointTypeBean getDataBranchPoint() {
         PointTypeBean bean = null;
         try {
-            mysqlConnect.open(PointTypeController.class);
+            mysqlConnect.open(PointTypeControl.class);
             String EEE = DateUtil.getDateFormat(new Date(), "EEE");
             String sql = "SELECT * FROM " + PublicVar.db_member + ".pointtype WHERE 1=1 "
                     + "AND curdate() BETWEEN Point_StartDateService and Point_FinishDateService "
@@ -59,9 +59,9 @@ public class PointTypeController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PointTypeController.class, "error", e);
+            AppLogUtil.log(PointTypeControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(PointTypeController.class);
+            mysqlConnect.closeConnection(PointTypeControl.class);
         }
 
         return bean;

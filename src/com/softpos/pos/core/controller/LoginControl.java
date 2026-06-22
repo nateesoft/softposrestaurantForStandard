@@ -15,7 +15,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class LoginController {
+public class LoginControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 

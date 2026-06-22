@@ -15,7 +15,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class PaymentController {
+public class PaymentControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
@@ -24,7 +24,7 @@ public class PaymentController {
         
         String sql = "";
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' and r_type='1' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -35,7 +35,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error" + sql, e);
+            AppLogUtil.log(PaymentControl.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -46,7 +46,7 @@ public class PaymentController {
     public CustFileBean getCustFileBySpCode(String arCode) {
         CustFileBean bean = null;
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             String sql = "select sp_desc,sp_cr,sp_cramt from custfile "
                     + "where sp_code='" + arCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -59,7 +59,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error", e);
+            AppLogUtil.log(PaymentControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -71,7 +71,7 @@ public class PaymentController {
         AccrBean bean = null;
         String sql = "";
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             sql = "select sum(aramount) total "
                     + "from accr "
                     + "where arcode='" + arCode + "' "
@@ -84,7 +84,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error" + sql, e);
+            AppLogUtil.log(PaymentControl.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -96,7 +96,7 @@ public class PaymentController {
         boolean isValid = false;
         String sql = "";
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             sql = "select r_index from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and r_void='V' limit 1";
@@ -107,7 +107,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error" + sql, e);
+            AppLogUtil.log(PaymentControl.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -119,7 +119,7 @@ public class PaymentController {
         boolean isValid = false;
         String sql = "";
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             sql = "select r_kicprint "
                     + "from balance where r_table='" + tableNo + "' "
                     + "and r_kicprint <> 'P' and R_PName <> '' limit 1";
@@ -130,7 +130,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error" + sql, e);
+            AppLogUtil.log(PaymentControl.class, "error" + sql, e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -153,7 +153,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error", e);
+            AppLogUtil.log(PaymentControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -164,7 +164,7 @@ public class PaymentController {
     public boolean restoreTempBalance(String tableNo) {
         boolean isValid = false;
         try {
-            mysqlConnect.open(PaymentController.class);
+            mysqlConnect.open(PaymentControl.class);
             String sql = "select r_table from temp_balance "
                     + "where r_table ='" + tableNo + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -174,7 +174,7 @@ public class PaymentController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PaymentController.class, "error", e);
+            AppLogUtil.log(PaymentControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

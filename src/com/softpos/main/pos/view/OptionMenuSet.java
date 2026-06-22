@@ -2,7 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.main.program.ShowAllProductDialog;
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.OptionMenuSetController;
+import com.softpos.pos.core.controller.OptionMenuSetControl;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -15,7 +15,7 @@ public class OptionMenuSet extends javax.swing.JDialog {
     private String TableNo;
     private DefaultTableModel model;
     private String index;
-    private final OptionMenuSetController optionMenuSetController = AppContext.getOptionMenuSetController();
+    private final OptionMenuSetControl optionMenuSetController = AppContext.getOptionMenuSetController();
 
     public OptionMenuSet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

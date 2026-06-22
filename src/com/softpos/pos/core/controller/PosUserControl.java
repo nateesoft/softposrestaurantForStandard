@@ -12,14 +12,14 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class PosUserController {
+public class PosUserControl {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PosUserBean authenticate(String username, String password) {
         PosUserBean bean = null;
 
-        mysqlConnect.open(PosUserController.class);
+        mysqlConnect.open(PosUserControl.class);
         try {
             String sql = "select username, sale2 from posuser where (username='" + username + "') and (password='" + password + "') limit 1";
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -32,7 +32,7 @@ public class PosUserController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PosUserController.class, "error", e);
+            AppLogUtil.log(PosUserControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -43,7 +43,7 @@ public class PosUserController {
     public PosUserBean getPosUser() {
         PosUserBean bean = null;
 
-        mysqlConnect.open(PosUserController.class);
+        mysqlConnect.open(PosUserControl.class);
         try {
             String sql = "select Username, Sale2, Sale3 from posuser where username='" + PublicVar.USERCODE + "' limit 1";
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -57,7 +57,7 @@ public class PosUserController {
                 stmt.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PosUserController.class, "error", e);
+            AppLogUtil.log(PosUserControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

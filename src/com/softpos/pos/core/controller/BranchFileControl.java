@@ -13,7 +13,7 @@ import com.softpos.util.AppLogUtil;
  *
  * @author nathee
  */
-public class BranchFileController {
+public class BranchFileControl {
     
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
@@ -21,7 +21,7 @@ public class BranchFileController {
         BranchFileBean bean = null;
         
         try {
-            mysqlConnect.open(BranchFileController.class);
+            mysqlConnect.open(BranchFileControl.class);
             String sql = "select * from " + PublicVar.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' limit 1";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
@@ -31,9 +31,9 @@ public class BranchFileController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(BranchFileController.class, "error", e);
+            AppLogUtil.log(BranchFileControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(BranchFileController.class);
+            mysqlConnect.closeConnection(BranchFileControl.class);
         }
 
         return bean;
@@ -43,7 +43,7 @@ public class BranchFileController {
         BranchFileBean bean = null;
 
         try {
-            mysqlConnect.open(BranchFileController.class);
+            mysqlConnect.open(BranchFileControl.class);
             String sql = "select * from " + PublicVar.db_member + ".branfile "
                     + "where Branch_Code='" + branchCode + "' "
                     + "and PointCode_Active='Y' "
@@ -59,9 +59,9 @@ public class BranchFileController {
                 rs.close();
             }
         } catch (SQLException e) {
-            AppLogUtil.log(BranchFileController.class, "error", e);
+            AppLogUtil.log(BranchFileControl.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(BranchFileController.class);
+            mysqlConnect.closeConnection(BranchFileControl.class);
         }
 
         return bean;

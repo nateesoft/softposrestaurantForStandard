@@ -1,7 +1,7 @@
 package com.softpos.main.floorplan.view;
 
 import com.softpos.pos.core.controller.AppContext;
-import com.softpos.pos.core.controller.FloorPlanController;
+import com.softpos.pos.core.controller.FloorPlanControl;
 import com.softpos.main.program.CheckStockNow;
 import com.softpos.main.program.CopyBillDialog;
 import com.softpos.main.program.DisplayEJ;
@@ -22,9 +22,9 @@ import com.softpos.main.program.SaveMenuIntoBOR;
 import com.softpos.pos.core.controller.BillControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.EmployeeControl;
-import com.softpos.pos.core.controller.IngedientController;
-import com.softpos.pos.core.controller.PosUserController;
-import com.softpos.pos.core.controller.TSaleController;
+import com.softpos.pos.core.controller.IngedientControl;
+import com.softpos.pos.core.controller.PosUserControl;
+import com.softpos.pos.core.controller.TSaleControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.pos.core.controller.TableSetupControl;
 import com.softpos.util.ThaiUtil;
@@ -104,7 +104,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private KeyEventDispatcher keyDispatcher;
 
     private final ProductControl productControl = AppContext.getProductControl();
-    private final FloorPlanController floorPlanControl = AppContext.getFloorPlanController();
+    private final FloorPlanControl floorPlanControl = AppContext.getFloorPlanController();
     private final DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
     private final PUtility PUtility = new PUtility();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
@@ -1366,7 +1366,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 if (isMore) {
                     MSG.WAR(this, "ไม่สามารถทำรายการได้ เนื่องจากโต๊ะนี้ยังมีรายการขายอยู่");
                 } else {
-                    TSaleController tSaleControl = AppContext.getTSaleController();
+                    TSaleControl tSaleControl = AppContext.getTSaleController();
                     List<TSaleBean> lisTSale = tSaleControl.listTSaleByRefId(b_refno);
                     boolean updated = false;
                     for (TSaleBean tSaleBean : lisTSale) {
@@ -1541,7 +1541,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
 
                 //ตัดสต็อกสินค้าที่มี Ingredent
-                IngedientController ingController = AppContext.getIngedientController();
+                IngedientControl ingController = AppContext.getIngedientController();
                 List<PIngredientBean> listIng = ingController.getIngredient(balance.getR_PluCode());
                 for (PIngredientBean bean : listIng) {
                     if (bean.getPstock().equals("Y") && bean.getPactive().equals("Y")) {
@@ -1982,7 +1982,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void refund() {
-        PosUserController posUserControl = AppContext.getPosUserController();
+        PosUserControl posUserControl = AppContext.getPosUserController();
         boolean isPermit = posUserControl.getPosUser().getSale2().equals("Y");
         if (isPermit) {
             RefundBillDialog refund = new RefundBillDialog(this, true);
