@@ -77,6 +77,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import com.softpos.printer.control.PrintSimpleForm;
 import com.softpos.util.component.KeyBoardDialog;
+import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.LoadingOverlay;
@@ -198,6 +199,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void paymentBillProcess() {
         AppLogUtil.info("paymentBillProcess: " + tableNo);
+        TestEventBus.fire(TestEventBus.Event.CHECKBILL_OPEN, "table=" + tableNo);
 
         // check print to kitchen
         processPrintBillCheck();
@@ -260,6 +262,7 @@ public class MainSale extends javax.swing.JDialog {
         if (ConfigFile.getProperties("preOrderMachine").equals("true")) {
             btnPrintKic.setEnabled(false);
         }
+        TestEventBus.fire(TestEventBus.Event.MAIN_SALE_OPEN, "table=" + tableNo);
         if (tableNo == null || tableNo.trim().isEmpty()) {
             AppLogUtil.log(MainSale.class, "warn", new Exception("MainSale opened without tableNo — dialog will be disposed"));
             javax.swing.SwingUtilities.invokeLater(this::dispose);

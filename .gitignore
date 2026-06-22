@@ -9,5 +9,11 @@ connect.ini
 /connect.ini
 *.running
 connect.ini
+<<<<<<< HEAD
 *.jar
 test-reports
+=======
+webconnect.ini
+*.jar
+test-reports/*
+>>>>>>> feature/robot-test-ui

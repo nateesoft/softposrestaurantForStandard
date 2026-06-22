@@ -79,6 +79,7 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name',''\\), d.get\\('version',''\\)\\)\")",
       "Bash(grep -v \"^--$\")",
+<<<<<<< HEAD
       "Bash(jar tf *)",
       "Bash(javap -cp /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/update4j-1.5.9.jar org.update4j.service.UpdateHandler)",
       "Bash(javap -cp /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/update4j-1.5.9.jar org.update4j.Configuration)",
@@ -87,6 +88,12 @@
       "Bash(javap -verbose /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/lib/update4j-1.5.9.jar)",
       "Bash(jar xf *)",
       "Bash(javap -verbose /tmp/u4j/module-info.class)"
+=======
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/src/com/softpos/e2e)",
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/test/com/softpos/e2e/model)",
+      "Bash(mkdir -p /Users/nateelive/Documents/Projects/GithubProject/softposrestaurantForStandard/test-reports/screenshots)",
+      "Bash(jar tf *)"
+>>>>>>> feature/robot-test-ui
     ],
     "additionalDirectories": [
       "/tmp"
