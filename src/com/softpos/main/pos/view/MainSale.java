@@ -69,7 +69,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -78,6 +77,8 @@ import javax.swing.table.JTableHeader;
 import com.softpos.printer.control.PrintSimpleForm;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.e2e.TestEventBus;
+import com.softpos.pos.core.controller.PosHwSetupControl;
+import com.softpos.pos.core.controller.TempSetControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateUtil;
 import com.softpos.util.JTableUtility;
@@ -126,6 +127,9 @@ public class MainSale extends javax.swing.JDialog {
     private final BranchControl BranchControl = AppContext.getBranchControl();
     private final PosControl PosControl = AppContext.getPosControl();
     private final ProductControl ProductControl = AppContext.getProductControl();
+    private final PosUserController posUserControl = AppContext.getPosUserController();
+    private final PosHwSetupControl posHwSetupControl = AppContext.getPosHwSetupControl();
+    private final TempSetControl tempSetControl = AppContext.getTempSetControl();
 
     private TableFileBean TableFileBean = null;
     private final MemmaterController MemmaterController = AppContext.getMemmaterController();
@@ -182,16 +186,15 @@ public class MainSale extends javax.swing.JDialog {
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
-                String sql = "update balance set r_kic='0' "
-                        + "where r_kicprint<>'P' "
-                        + "and macno='" + PublicVar.MacNo + "';";
-                databaseConnection.execUpdate(sql);
+                balanceControl.updateBalanceRKicByMacno(PublicVar.MacNo);
             }
-            String sqlA = "update tablefile set tpause='Y', tonact='N' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlA);
+            
+            tableFileControl.updateTOnActToNByTCode(tableNo);
+            
             kichenPrint();
-            String sqlB = "update tablefile set tpause='N', tonact='Y' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlB);
+            
+            tableFileControl.updateTOnActToYByTCode(tableNo);
+            
             printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -206,25 +209,19 @@ public class MainSale extends javax.swing.JDialog {
         processPrintBillCheck();
 
         if (btnClickPrintKic == true) {
-            String sqlTurnPrintKicOff = "update balance set r_kic='0' "
-                    + "where r_kicprint<>'P' "
-                    + "and r_table='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlTurnPrintKicOff);
+            balanceControl.updateBalanceRKicByTableNo(tableNo);
         }
+        
         if (lbTotalAmount.getText().equals("0.00")) {
             MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
-            String sql = "update tablefile "
-                    + "set tpause='Y' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
-            String sqlA = "update tablefile set tpause='Y', tonact='N' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlA);
+            tableFileControl.updateTPauseYByTableNo(tableNo);
+            tableFileControl.updateTOnActToNByTCode(tableNo);
+            
             kichenPrint();
-            String sqlB = "update tablefile set tpause='N', tonact='Y' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sqlA);
-            sql = "update tablefile "
-                    + "set tpause='N' where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
+            
+            tableFileControl.updateTOnActToYByTCode(tableNo);
+            tableFileControl.updateTPauseNByTableNo(tableNo);
 
             showCheckBill();
         }
@@ -1838,10 +1835,7 @@ public class MainSale extends javax.swing.JDialog {
         txtProductCode.setEditable(true);
     }//GEN-LAST:event_txtProductCodeFocusGained
 
-    boolean isSelected = false;
-
     private void txtCustFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustFocusGained
-        isSelected = true;
     }//GEN-LAST:event_txtCustFocusGained
 
     private void txtCustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCustMouseClicked
@@ -2068,31 +2062,16 @@ public class MainSale extends javax.swing.JDialog {
 
     private void bntVoidClick() {
         try {
-            try {
-                String sqlUpdatePro = "update balance set "
-                        + "R_PrType='-P',"
-                        + "R_PRDisc='0',"
-                        + "R_PRAmt='0',"
-                        + "R_PrQuan='0',"
-                        + "R_PrChkType='',"
-                        + "R_QuanCanDisc=R_Quan "
-                        + "where R_Table='" + tableNo + "' "
-                        + "and r_PrCode<>'' ";
-                databaseConnection.execUpdate(sqlUpdatePro);
-                String sqlUpdateTable = "update tablefile "
-                        + "set nettotal=tamount,ProDiscAmt='0' "
-                        + "where tcode='" + tableNo + "'";
-                databaseConnection.execUpdate(sqlUpdateTable);
-            } catch (Exception e) {
-                MSG.ERR(this, e.getMessage());
-            }
+            balanceControl.updateVoidByTableNoAndPrCode(tableNo);
+            tableFileControl.updateNetTotalByTableNo(tableNo);
+                
             int row = getSelectedRowIndex();
             if (row == -1) {
                 return;
             }
+            
             String R_Index = model.getValueAt(row, 10).toString();
 
-            PosUserController posUserControl = AppContext.getPosUserController();
             PosUserBean posUserbean = posUserControl.getPosUser();
             boolean isPermit = posUserbean.getSale3().equals("Y");
             if (isPermit) {//มีสิทธิ์ Void
@@ -2278,31 +2257,10 @@ public class MainSale extends javax.swing.JDialog {
         }
 
         //Update  Balance File For Void
-        String updBalance = "update balance "
-                + "set r_void='" + bean.getR_Void() + "',"
-                + "cashier='" + PublicVar.USERCODE + "',"
-                + "r_emp='" + bean.getR_Emp() + "',"
-                + "r_voiduser='" + bean.getR_VoidUser() + "',"
-                + "r_voidtime='" + bean.getR_VoidTime() + "',"
-                + "r_discbath='" + bean.getR_DiscBath() + "',"
-                + "r_kicprint='',"
-                + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
-                + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
-                + "where r_index='" + bean.getR_Index() + "' "
-                + "and r_table='" + bean.getR_Table() + "'";
-        databaseConnection.execUpdate(updBalance);
+        balanceControl.updateRVoidByTableNoAndRIndex(bean, voidMsg, PublicVar.USERCODE);
 
         if ((bean.getR_Set().equals("Y")) && checkPSetSelect(bean.getR_PluCode())) {
-            String updateBalance = "update balance "
-                    + "set r_void='" + bean.getR_Void() + "',"
-                    + "cashier='" + PublicVar.USERCODE + "',"
-                    + "r_emp='" + bean.getR_Emp() + "',"
-                    + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
-                    + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
-                    + "r_kicprint='' "
-                    + "where r_index='" + bean.getR_Index() + "' "
-                    + "and r_table='" + bean.getR_Table() + "'";
-            databaseConnection.execUpdate(updateBalance);
+            balanceControl.updateBalanceByRTableRIndex(bean, PublicVar.USERCODE, voidMsg);
         }
 
         //update promotion, discount
@@ -2756,7 +2714,7 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void kichenPrint() {
-        databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
+        tableFileControl.updateTPauseYByTableNo(tableNo);
 
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
         String printerName;
@@ -2852,133 +2810,10 @@ public class MainSale extends javax.swing.JDialog {
         checkKicPrint();
 
         //update r_kicprint
-        String sql = "update balance "
-                + "set r_kicprint='P',"
-                + "r_pause='Y' "
-                + "where r_table='" + txtTable.getText() + "' "
-                + "and trantype is null "
-                + "and r_kicprint<>'P' "
-                + "and r_printOk='Y' "
-                + "and r_kic<>'' ";
-        databaseConnection.execUpdate(sql);
+        balanceControl.updateBalanceByKicPrintIsPAndPrintOKIsY(tableNo);
 
         // update tablefile status
-        databaseConnection.execUpdate("update tablefile "
-                + "set tpause='N' "
-                + "where tcode='" + tableNo + "';");
-    }
-
-    private void kichenPrintSkipHoldTable() {
-//        databaseConnection.execUpdate("update tablefile set tpause='Y' where tcode='" + tableNo + "';");
-
-        PrintSimpleForm printSimpleForm = new PrintSimpleForm();
-        String printerName;
-
-        BranchBean branchBean = BranchControl.getData();
-        String config = branchBean.getSaveOrder();
-        if (!config.equals("N")) {
-            PublicVar.Branch_Saveorder = config;
-        }
-
-        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
-        if (mainSaleControl.checkCountPrinterTo(tableNo)) {
-            if (!PublicVar.Branch_Saveorder.equals("N")) {
-                printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
-            }
-        }
-
-        //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
-        List<BalanceBean> listToKic = mainSaleControl.getListAllPrintToKic(tableNo);
-        for (BalanceBean balanceBean : listToKic) {
-            String rKic = balanceBean.getR_Kic();
-            if (rKic.equals("")) {
-                continue;
-            }
-            int iKic = Integer.parseInt(rKic);
-            if (iKic - 1 < 0) {
-                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
-                continue;
-            }
-            printerName = "kic" + rKic;
-            String printerForm = BranchControl.getForm(rKic);
-
-            AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
-
-            switch (printerForm) {
-                case "1": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
-                    for (BalanceBean balance : listBalanceForm) {
-                        String PCode = balance.getR_PluCode();
-                        if (printerForm.equals("1")) {
-                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
-                        }
-                    }
-                    break;
-                }
-                case "6": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
-                    for (BalanceBean balance : listBalanceForm) {
-                        String R_Index = balance.getR_Index();
-                        String R_PLUCODE = balance.getR_PluCode();
-                        double qty = balance.getR_Quan();
-                        double priceTotal = balance.getR_Total();
-                        printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
-                    }
-                    break;
-                }
-                case "3":
-                case "4":
-                case "5":
-                    switch (printerForm) {
-                        case "3":
-                            String retd = balanceBean.getR_ETD();
-                            printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
-                            String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
-                            if (CheckBillBeforeCash.equals("Y")) {
-                                printBillVoidCheck();
-                            }
-                            break;
-                        case "4":
-                            printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
-                            printBillVoidCheck();
-                            break;
-                        case "5":
-                            printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
-                            printBillVoidCheck();
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case "7":
-                case "2":
-                    String retd = balanceBean.getR_ETD();
-                    printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
-                    break;
-                default:
-                    printBillVoidCheck();
-                    MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");
-                    break;
-            }
-        }
-
-        checkKicPrint();
-
-        //update r_kicprint
-        String sql = "update balance "
-                + "set r_kicprint='P',"
-                + "r_pause='Y' "
-                + "where r_table='" + txtTable.getText() + "' "
-                + "and trantype is null "
-                + "and r_kicprint<>'P' "
-                + "and r_printOk='Y' "
-                + "and r_kic<>'' ";
-        databaseConnection.execUpdate(sql);
-
-        // update tablefile status
-        databaseConnection.execUpdate("update tablefile "
-                + "set tpause='N' "
-                + "where tcode='" + tableNo + "';");
+        tableFileControl.updateTPauseNByTableNo(tableNo);
     }
 
     private void changeSaleType(String SaleType) {
@@ -3043,20 +2878,9 @@ public class MainSale extends javax.swing.JDialog {
                 txtTable.setEditable(false);
                 txtCust.setText("" + tableFileBean.getTCustomer());
                 txtCust.setEditable(false);
-                String UpdateTable = "update tablefile set "
-                        + "tonact='Y',"
-                        + "macno='" + PublicVar.MACNO + "',"
-                        + "cashier='" + PublicVar.USERCODE + "',"
-                        + "EmpDisc='0',"
-                        + "FastDisc='0',"
-                        + "TrainDisc='0',"
-                        + "PrintTime1='',"
-                        + "TUser='',"
-                        + "tlogindate='"+DateUtil.getMySQL_yyyyMMdd()+"',"
-                        + "tlogintime='"+DateUtil.getMySQL_HHmmss()+"',"
-                        + "TCurTime='"+DateUtil.getMySQL_HHmmss()+"' "
-                        + "where tcode='" + txtTable.getText().trim() + "'";
-                databaseConnection.execUpdate(UpdateTable);
+                
+                tableFileControl.updateTOnactYMacnoCashierByTCode(PublicVar.MACNO, PublicVar.USERCODE, DateUtil.getMySQL_yyyyMMdd(), DateUtil.getMySQL_HHmmss(), txtTable.getText().trim());
+                        
                 tbpMain.setSelectedIndex(0);
 
                 //คำนวณ promotion/service/vat ก่อน load ข้อมูล
@@ -3089,18 +2913,10 @@ public class MainSale extends javax.swing.JDialog {
     private void bntHoldTableClick() {
         if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
-                String sqlTurnPrintKicOff = "update balance "
-                        + "set r_kic='0' "
-                        + "where r_kicprint<>'P' "
-                        + "and r_table='" + tableNo + "';";
-                databaseConnection.execUpdate(sqlTurnPrintKicOff);
+                balanceControl.updateRKicByKicPrintNotPAndRTable(tableNo);
             }
-
-            String sql = "update tablefile "
-                    + "set tpause='Y', "
-                    + "TOnAct='N' "
-                    + "where tcode='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
+            
+            tableFileControl.updateTOnActToNByTCode(tableNo);
 
             kichenPrint();
             holdTableAndSave();
@@ -3110,33 +2926,21 @@ public class MainSale extends javax.swing.JDialog {
             initScreen();
             return;
         }
-        String sql = "update tablefile "
-                + "set tonact ='N' "
-                + "where tcode='" + txtTable.getText() + "';";
+        
         if (lbTotalAmount.getText().equals("0.00")) {
-            sql = "update tablefile "
-                    + "set tonact ='N', "
-                    + "TCustomer='0' "
-                    + "where tcode='" + txtTable.getText() + "';";
+            tableFileControl.updateTOnActToNAndCustomerByTCode(tableNo);
         }
-        databaseConnection.execUpdate(sql);
+        
+        tableFileControl.updateOnlyTOnActToNByTCode(tableNo);
     }
 
     private void updateCustomerCount(int custCount) {
-        String sql = "update tablefile "
-                + "set tcustomer='" + custCount + "',"
-                + "macno='" + PublicVar.MACNO + "' "
-                + "where tcode='" + txtTable.getText() + "'";
-        databaseConnection.execUpdate(sql);
+        tableFileControl.updateTOnActAndCustomerByTCode(custCount, PublicVar.MACNO, txtTable.getText());
         txtProductCode.requestFocus();
     }
 
     private void holdTableAndSave() {
-        String UpdateTableFile = "update tablefile "
-                + "set tonact='N', macno='" + PublicVar.MACNO + "', tpause='Y' "
-                + "where tcode='" + txtTable.getText() + "'";
-
-        databaseConnection.execUpdate(UpdateTableFile);
+        tableFileControl.updateTOnActMacNoTPauseByTableNo(PublicVar.MACNO, txtTable.getText());
 
         showSum();
     }
@@ -3147,11 +2951,9 @@ public class MainSale extends javax.swing.JDialog {
                 PublicVar.P_LineCount = 1;
                 PublicVar.P_LogoffOK = false;
 
-                String sql1 = "update posuser set onact='N',macno='' where (username='" + PublicVar._User + "')";
-                databaseConnection.execUpdate(sql1);
+                posUserControl.updateLogout("username");
 
-                String sql2 = "update poshwsetup set onact='N' where(terminal='" + PublicVar.MACNO + "')";
-                if (databaseConnection.execUpdate(sql2)) {
+                if (posHwSetupControl.canUpdateOnActByTerminal(PublicVar.MACNO)) {
                     // reset load poshwsetup
                     PosControl.resetPosHwSetup();
                 }
@@ -3181,7 +2983,8 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private boolean updateLogout(String UserCode) {
-        databaseConnection.execUpdate("update posuser set onact='N',macno='' where username='" + UserCode + "'");
+        posUserControl.updateOnActIsNByUsername(UserCode);
+        
         PublicVar.CASHIER = "";
         return true;
     }
@@ -3442,14 +3245,8 @@ public class MainSale extends javax.swing.JDialog {
             boolean confirm = MSG.CONF(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
             if (confirm) {
                 PublicVar.MemberAlready = false;
-                String sql = "update tablefile set "
-                        + "MemDisc='', "
-                        + "MemDiscAmt='0.00', "
-                        + "MemCode='', "
-                        + "MemCurAmt='0.00', "
-                        + "MemName='' "
-                        + "where TCode='" + txtTable.getText() + "'";
-                databaseConnection.execUpdate(sql);
+                
+                tableFileControl.resetMemberSelect("tableNo");
                 showMember();
             }
         } else {
@@ -3459,18 +3256,9 @@ public class MainSale extends javax.swing.JDialog {
             if (frm.getMemCode() != null) {
                 PublicVar.MemberAlready = true;
                 memberBean = MemmaterController.getMember(frm.getMemCode());
+                
                 // update member in tablefile
-                SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                String sql = "update tablefile set "
-                        + "MemDisc='" + memberBean.getMember_DiscountRate() + "', "
-                        + "MemDiscAmt='0.00', "
-                        + "MemCode='" + memberBean.getMember_Code() + "', "
-                        + "MemCurAmt='" + memberBean.getMember_TotalScore() + "', "
-                        + "MemName='" + ThaiUtil.Unicode2ASCII(memberBean.getMember_NameThai()) + "', "
-                        + "MemBegin='" + simp.format(memberBean.getMember_Brithday()) + "', "
-                        + "MemEnd='" + simp.format(memberBean.getMember_ExpiredDate()) + "' "
-                        + "where TCode='" + txtTable.getText() + "'";
-                databaseConnection.execUpdate(sql);
+                tableFileControl.saveMember(memberBean, "tableNo");
 
                 // update old order
                 MemberControl mc = AppContext.getMemberControl();
@@ -3718,17 +3506,8 @@ public class MainSale extends javax.swing.JDialog {
 
     private void updatetable() {
         String cus = txtCust.getText();
-
         BalanceBean balanceBean = mainSaleControl.getBalanceByRTable(tableNo);
-        String UpdateTableFile = "update tablefile "
-                + "set tonact='N',"
-                + "macno='" + PublicVar.MACNO + "',"
-                + "TCurTime = '"+DateUtil.getMySQL_HHmmss()+"',"
-                + "TCustomer = '" + cus + "',"
-                + "TItem = '" + balanceBean.getR_Total() + "',"
-                + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
-                + "where tcode='" + tableNo + "'";
-        databaseConnection.execUpdate(UpdateTableFile);
+        tableFileControl.updateTableSummary(PublicVar.MACNO, DateUtil.getMySQL_HHmmss(), cus, balanceBean.getR_Total(), POSConfigSetup.Bean().getP_Service(), tableNo);
     }
 
     private boolean isTakeOrder() {
@@ -3744,10 +3523,7 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void updateTempTset(BalanceBean bBean) {
-        String sqlUpd = "update tempset set "
-                + "PIndex='" + bBean.getR_Index() + "' "
-                + "where PTableNo='" + bBean.getR_Table() + "' ";
-        databaseConnection.execUpdate(sqlUpd);
+        tempSetControl.updatePIndexByPTableNo(bBean);
 
         List<TempsetBean> listTempSet = mainSaleControl.getTempsetByPIndex(bBean.getR_Index());
         for (TempsetBean tempBean : listTempSet) {
@@ -3859,21 +3635,14 @@ public class MainSale extends javax.swing.JDialog {
         }
 
         //clear tempset
-        String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-        databaseConnection.execUpdate(sqlClear);
+        tempSetControl.deleteByPTableNo(bBean.getR_Table());
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
         TempsetBean tempBean = mainSaleControl.getTempsetByPIndexPCode(R_Index, PCode);
         if (tempBean != null) {
             String opt = ThaiUtil.Unicode2ASCII(tempBean.getPOption());
-            String sql1 = "update balance "
-                    + "set R_Opt1='" + opt + "',"
-                    + "R_LinkIndex='" + R_Index + "' "
-                    + "where R_Table='" + TableNo + "' "
-                    + "and R_PluCode='" + PCode + "' "
-                    + "and R_LinkIndex=''";
-            databaseConnection.execUpdate(sql1);
+            balanceControl.updateROpt1ByRTable(opt, R_Index, TableNo, PCode);
         }
     }
 
@@ -3892,23 +3661,12 @@ public class MainSale extends javax.swing.JDialog {
 
     private void cancelItemBeforeHold() {
         try {
-            String sqlUpdatePro = "update balance set "
-                    + "R_PrType='-P',"
-                    + "R_PRDisc='0',"
-                    + "R_PRAmt='0',"
-                    + "R_PrQuan='0',"
-                    + "R_PrChkType='',"
-                    + "R_QuanCanDisc=R_Quan "
-                    + "where R_Table='" + tableNo + "' "
-                    + "and r_PrCode<>'' ";
-            databaseConnection.execUpdate(sqlUpdatePro);
-            String sqlUpdateTable = "update tablefile "
-                    + "set nettotal=tamount,ProDiscAmt='0' "
-                    + "where tcode='" + tableNo + "'";
-            databaseConnection.execUpdate(sqlUpdateTable);
+            balanceControl.updateQuanCanDiscByTableAndPrCode(tableNo);
+            tableFileControl.updateNetTotalByTCode(tableNo);
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
         }
+        
         int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
@@ -3935,10 +3693,8 @@ public class MainSale extends javax.swing.JDialog {
                 }
             }
 
-            databaseConnection.execUpdate("delete from tempset where PTableNo='" + txtTable.getText() + "';");
-            boolean canRemoveFromTableBalance = databaseConnection.execUpdate("delete from balance "
-                    + "where r_index='" + r_index + "' "
-                    + "and r_pause='P' and r_kicprint<>'P'");
+            tempSetControl.deleteTempByPTableNo(txtTable.getText());
+            boolean canRemoveFromTableBalance = balanceControl.deleteBalanceByRIndexAndRPause(r_index);
             if (!canRemoveFromTableBalance) {
                 MSG.WAR(this, "รายการอาหาร " + bean.getR_PName() + " ถูกส่งครัวไปแล้ว ไม่สามารถลบออกได้ จะต้อง Void เท่านั้น");
             } else {
@@ -3961,10 +3717,7 @@ public class MainSale extends javax.swing.JDialog {
                     List<BalanceBean> listBalance = mainSaleControl.getBalanceByRLinkIndex(r_index);
                     for (BalanceBean balanceBean : listBalance) {
                         BalanceBean bean2 = balanceControl.getBalanceIndex(txtTable.getText(), balanceBean.getR_Index());
-                        String sqlDel = "delete from balance "
-                                + "where r_index='" + balanceBean.getR_Index() + "' "
-                                + "and r_pause='P'";
-                        databaseConnection.execUpdate(sqlDel);
+                        balanceControl.deleteBalanceWhereRIndexAndRPauseIsP(balanceBean.getR_Index());
 
                         PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), bean2.getR_PluCode(), TDate, StkRemark, -1 * bean2.getR_Quan(),
                                 -1 * bean2.getR_Total(), bean2.getCashier(), bean2.getR_Stock(), bean2.getR_Set(), bean2.getR_Index(), "1");
@@ -3995,14 +3748,8 @@ public class MainSale extends javax.swing.JDialog {
         loadTableBalance(txtTable.getText());
     }
 
-    private void upDateTableFile() {
-        String sql = "UPDATE tablefile SET "
-                + "TOnAct= 'Y',"
-                + "macno='" + PublicVar.MACNO + "',"
-                + "TCustomer='" + txtCust.getText() + "', "
-                + "tpause='N' "
-                + "WHERE Tcode='" + tableNo + "'";
-        databaseConnection.execUpdate(sql);
+    private void updateTableFile() {
+        tableFileControl.updateTableFileByTCode(PublicVar.MACNO, txtCust.getText(), tableNo);
     }
 
     private void checkKicPrint() {
@@ -4284,13 +4031,8 @@ public class MainSale extends javax.swing.JDialog {
 
     private void updateTempmenuset(String Index, String PCode, String PName, String Option, String TryName) {
         String pstock = PUtility.GetStkCode();
-        String sql = "INSERT INTO tempset "
-                + "(PTableNo, PIndex, PCode, PDesc, "
-                + "PPostStock,PProTry, POption, PTime) "
-                + "VALUES ('" + tableNo + "', '" + Index + "', '" + PCode + "', "
-                + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
-                + "'" + ThaiUtil.Unicode2ASCII(Option) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
-        databaseConnection.execUpdate(sql);
+        tempSetControl.addNewData(tableNo, Index, PCode, ThaiUtil.Unicode2ASCII(PName), pstock, 
+                TryName, ThaiUtil.Unicode2ASCII(Option), DateUtil.getMySQL_HHmmss());
     }
 
     private void showCustomerInput() {
@@ -4324,20 +4066,15 @@ public class MainSale extends javax.swing.JDialog {
                 txtCustOnExit();
             }
         }
-        upDateTableFile();
+        updateTableFile();
     }
 
     private void allItemBalanceRecallPrint() {
         AppLogUtil.info("allItemBalanceRecallPrint: " + tableNo);
         try {
-            String sql = "update balance set "
-                    + "R_PrintOK='Y',"
-                    + " R_KicPrint='' where r_table='" + tableNo + "'";
-            databaseConnection.execUpdate(sql);
+            balanceControl.updateRPrintOKKicPrintByRTable(tableNo);
         } catch (Exception e) {
-            e.printStackTrace();
             AppLogUtil.log(MainSale.class, "error", e);
-
         }
     }
 

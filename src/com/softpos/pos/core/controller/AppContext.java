@@ -47,8 +47,20 @@ public class AppContext {
     private static OptionMsgController optionMsgController;
     private static OptionMenuSetController optionMenuSetController;
     private static ItemEditQtyController itemEditQtyController;
+    private static PosHwSetupControl posHwSetupControl;
+    private static TempSetControl tempSetControl;
 
     private AppContext() {}
+    
+    public static TempSetControl getTempSetControl() {
+        if (tempSetControl == null) tempSetControl = new TempSetControl();
+        return tempSetControl;
+    }
+    
+    public static PosHwSetupControl getPosHwSetupControl() {
+        if (posHwSetupControl == null) posHwSetupControl = new PosHwSetupControl();
+        return posHwSetupControl;
+    }
 
     public static CreditFileController getCreditFileController() {
         if (creditFileController == null) creditFileController = new CreditFileController();

@@ -1,6 +1,5 @@
 package com.softpos.pos.core.controller;
 
-
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
@@ -14,7 +13,7 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class PosUserController {
-    
+
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PosUserBean authenticate(String username, String password) {
@@ -43,7 +42,7 @@ public class PosUserController {
 
     public PosUserBean getPosUser() {
         PosUserBean bean = null;
-        
+
         mysqlConnect.open(PosUserController.class);
         try {
             String sql = "select Username, Sale2, Sale3 from posuser where username='" + PublicVar.USERCODE + "' limit 1";
@@ -64,5 +63,15 @@ public class PosUserController {
         }
 
         return bean;
+    }
+
+    public void updateLogout(String username) {
+        String sql1 = "update posuser set onact='N',macno='' where (username='" + username + "')";
+        mysqlConnect.executeUpdate(sql1);
+    }
+
+    public void updateOnActIsNByUsername(String UserCode) {
+        String sql = "update posuser set onact='N', macno='' where username='" + UserCode + "'";
+        mysqlConnect.executeUpdate(sql);
     }
 }

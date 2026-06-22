@@ -37,7 +37,7 @@ public class BalanceControl {
 
     public String getLastIndex(String tableNo) {
         String tempIndex = "";
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select max(R_Index) R_Index from balance "
@@ -270,7 +270,7 @@ public class BalanceControl {
     public List<BalanceBean> getAllBalance(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         beanData.clear();
-        
+
         String sql = "";
         try {
             mysqlConnect.open(this.getClass());
@@ -387,7 +387,7 @@ public class BalanceControl {
     public List<BalanceBean> getAllBalanceSum(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         beanData.clear();
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select g.sum_R_Quan,g.sum_R_Total,g.sum_R_DiscBath,g.sum_R_PrAmt,g.sum_R_PrsubAmt,g.sum_R_PrCuAmt,b.* "
@@ -599,7 +599,9 @@ public class BalanceControl {
                 beanData.add(balanceBean);
             }
 
-            if (rs1 != null) rs1.close();
+            if (rs1 != null) {
+                rs1.close();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
@@ -612,7 +614,7 @@ public class BalanceControl {
     public List<BalanceBean> getAllBalanceNoVoid(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         beanData.clear();
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select * from balance "
@@ -728,7 +730,7 @@ public class BalanceControl {
     public List<BalanceBean> getAllBalanceNoVoidSum(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         beanData.clear();
-        
+
         String sql = "";
         try {
             mysqlConnect.open(this.getClass());
@@ -810,7 +812,7 @@ public class BalanceControl {
                         balanceBean.setR_ETD(rs.getString("R_ETD"));
                         balanceBean.setR_Quan(rs.getFloat("sumr_quan"));
                         balanceBean.setR_Price(rs.getFloat("R_Price"));
-                        
+
                         String R_PrType = rs.getString("R_PrType");
                         if (R_PrType == null) {
                             R_PrType = "";
@@ -878,7 +880,7 @@ public class BalanceControl {
                         } catch (SQLException e) {
                             AppLogUtil.log(BalanceControl.class, "error", e);
                         }
-                        
+
                         beanData.add(balanceBean);
                     }
                 }
@@ -931,7 +933,7 @@ public class BalanceControl {
                         R_PrType = "";
                     }
                     balanceBean.setR_PrType(R_PrType);
-                    
+
                     balanceBean.setR_PrCode(rs1.getString("R_PrCode"));
                     balanceBean.setR_PrDisc(rs1.getFloat("R_PrDisc"));
                     balanceBean.setR_PrBath(rs1.getFloat("R_PrBath"));
@@ -1008,7 +1010,7 @@ public class BalanceControl {
 
     public List<BalanceBean> getBalanceIndex(String R_Index) {
         List<BalanceBean> beanData = new ArrayList<>();
-        
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select * from balance where R_Index='" + R_Index + "'";
@@ -1119,7 +1121,7 @@ public class BalanceControl {
 
     public List<BalanceBean> getAllBalancePromotion(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
-        
+
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select b.* from balance b "
@@ -1227,7 +1229,9 @@ public class BalanceControl {
                 beanData.add(balanceBean);
             }
 
-            if (rs != null) rs.close();
+            if (rs != null) {
+                rs.close();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
@@ -1239,7 +1243,7 @@ public class BalanceControl {
 
     public void updateTableHold(String table, String emp) {
         String date_default = "1899-12-30";
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "update tablefile set "
@@ -1260,7 +1264,7 @@ public class BalanceControl {
 
     public String getIndexBalance(String R_Table) {
         String index = R_Table + "/001";
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select max(R_Index) R_Index "
@@ -1309,7 +1313,7 @@ public class BalanceControl {
     }
 
     public void setDefaultBalance(String table) {
-        
+
         try {
             mysqlConnect.open(this.getClass());
             mysqlConnect.executeUpdate("delete from balance where R_Table='" + table + "'");
@@ -1322,7 +1326,7 @@ public class BalanceControl {
 
     public BalanceBean getProduct(String PCode, String R_Index) {
         BalanceBean balanceBean = new BalanceBean();
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select * from balance "
@@ -1425,7 +1429,7 @@ public class BalanceControl {
 
     public BalanceBean getBalanceIndex(String Table, String R_Index) {
         BalanceBean balanceBean = null;
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select * from balance where R_Table='" + Table + "' "
@@ -1532,7 +1536,7 @@ public class BalanceControl {
 
     public List<BalanceBean> getBalanceIndexVoid(String Table) {
         List<BalanceBean> list = new ArrayList<>();
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select * "
@@ -1640,7 +1644,7 @@ public class BalanceControl {
     }
 
     public void deleteBalance(String r_Table, String r_PluCode, String r_Index) {
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "delete from balance "
@@ -1659,7 +1663,7 @@ public class BalanceControl {
     }
 
     public void deleteProduct(String table, String PCode, String R_Index) {
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "delete from balance "
@@ -1677,7 +1681,7 @@ public class BalanceControl {
     }
 
     public boolean backupBalance(String tableNo) {
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "delete from temp_balance";
@@ -1709,7 +1713,7 @@ public class BalanceControl {
     }
 
     public boolean restoreBalance(String tableNo, String table2) {
-        
+
         try {
             mysqlConnect.open(this.getClass());
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1805,7 +1809,7 @@ public class BalanceControl {
     public String GetDiscount(String table) {
         DecimalFormat df = new DecimalFormat("#,##0.00");
         double discount = 0.00;
-        
+
         try {
             mysqlConnect.open(BalanceControl.class);
             String sql = "select sum(R_PrAmt) + sum(R_Discbath) discount from balance where r_table='" + table + "' and r_void<>'V'";
@@ -1828,7 +1832,7 @@ public class BalanceControl {
 
     public List<BalanceBean> getBalanceForPDA() {
         List<BalanceBean> listBalance = new ArrayList<>();
-        
+
         mysqlConnect.open(BalanceControl.class);
         try {
             String sql = "select b.r_table,b.PDAEMP "
@@ -1848,7 +1852,9 @@ public class BalanceControl {
 
                 listBalance.add(bean);
             }
-            if (rs != null) rs.close();
+            if (rs != null) {
+                rs.close();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
@@ -1859,7 +1865,7 @@ public class BalanceControl {
     }
 
     public void updatePDACheck(String table) {
-        
+
         try {
             mysqlConnect.open(BalanceControl.class);
             String sql = "update balance set PDAPrintCheck='N' where r_table='" + table + "';";
@@ -1874,7 +1880,7 @@ public class BalanceControl {
     public List<BalanceBean> loadTableBalance(String tableNo) {
         List<BalanceBean> listBalance = new ArrayList<>();
         listBalance.clear();
-        
+
         try {
             mysqlConnect.open(this.getClass());
             String sql = "select * from balance where r_table='" + tableNo + "' order by r_index, r_etd limit 500";
@@ -1910,7 +1916,9 @@ public class BalanceControl {
 
                 listBalance.add(bean);
             }
-            if (rs != null) rs.close();
+            if (rs != null) {
+                rs.close();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
@@ -1923,7 +1931,7 @@ public class BalanceControl {
     public List<BalanceBean> getBalanceByRLinkIndex(String R_Index) {
         List<BalanceBean> listBalance = new ArrayList<>();
         listBalance.clear();
-        
+
         mysqlConnect.open(BalanceControl.class);
         try {
             String sql = "select R_Index, R_LinkIndex from balance where R_LinkIndex='" + R_Index + "'";
@@ -1931,7 +1939,7 @@ public class BalanceControl {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_Index(rs.getString("R_Index"));
-                    
+
                     listBalance.add(bean);
                 }
             }
@@ -1942,5 +1950,141 @@ public class BalanceControl {
         }
 
         return listBalance;
+    }
+
+    public void updateBalanceRKicByMacno(String MacNo) {
+        String sql = "update balance set r_kic='0' "
+                + "where r_kicprint<>'P' "
+                + "and macno='" + MacNo + "';";
+        try {
+            mysqlConnect.open(BalanceControl.class);
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+
+    }
+
+    public void updateBalanceRKicByTableNo(String tableNo) {
+        String sql = "update balance set r_kic='0' "
+                + "where r_kicprint<>'P' "
+                + "and r_table='" + tableNo + "';";
+        try {
+            mysqlConnect.open(BalanceControl.class);
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+
+    }
+
+    public void updateVoidByTableNoAndPrCode(String tableNo) {
+        String sqlUpdatePro = "update balance set "
+                + "R_PrType='-P',"
+                + "R_PRDisc='0',"
+                + "R_PRAmt='0',"
+                + "R_PrQuan='0',"
+                + "R_PrChkType='',"
+                + "R_QuanCanDisc=R_Quan "
+                + "where R_Table='" + tableNo + "' "
+                + "and r_PrCode<>'' ";
+        mysqlConnect.executeUpdate(sqlUpdatePro);
+    }
+
+    public void updateRVoidByTableNoAndRIndex(BalanceBean bean, String voidMsg, String cashier) {
+        String updBalance = "update balance "
+                + "set r_void='" + bean.getR_Void() + "',"
+                + "cashier='" + cashier + "',"
+                + "r_emp='" + bean.getR_Emp() + "',"
+                + "r_voiduser='" + bean.getR_VoidUser() + "',"
+                + "r_voidtime='" + bean.getR_VoidTime() + "',"
+                + "r_discbath='" + bean.getR_DiscBath() + "',"
+                + "r_kicprint='',"
+                + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
+                + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
+                + "where r_index='" + bean.getR_Index() + "' "
+                + "and r_table='" + bean.getR_Table() + "'";
+        mysqlConnect.executeUpdate(updBalance);
+    }
+
+    public void updateBalanceByRTableRIndex(BalanceBean bean, String cashier, String voidMsg) {
+        String updateBalance = "update balance "
+                + "set r_void='" + bean.getR_Void() + "',"
+                + "cashier='" + cashier + "',"
+                + "r_emp='" + bean.getR_Emp() + "',"
+                + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
+                + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
+                + "r_kicprint='' "
+                + "where r_index='" + bean.getR_Index() + "' "
+                + "and r_table='" + bean.getR_Table() + "'";
+        mysqlConnect.executeUpdate(updateBalance);
+    }
+
+    public void updateBalanceByKicPrintIsPAndPrintOKIsY(String tableNo) {
+        String sql = "update balance "
+                + "set r_kicprint='P',"
+                + "r_pause='Y' "
+                + "where r_table='" + tableNo + "' "
+                + "and trantype is null "
+                + "and r_kicprint<>'P' "
+                + "and r_printOk='Y' "
+                + "and r_kic<>'' ";
+        mysqlConnect.executeUpdate(sql);
+    }
+
+    public void updateRKicByKicPrintNotPAndRTable(String tableNo) {
+        String sql = "update balance "
+                + "set r_kic='0' "
+                + "where r_kicprint<>'P' "
+                + "and r_table='" + tableNo + "';";
+        mysqlConnect.executeUpdate(sql);
+    }
+
+    public void updateROpt1ByRTable(String opt, String index, String tableNo, String pCode) {
+        String sql = "update balance "
+                + "set R_Opt1='" + opt + "',"
+                + "R_LinkIndex='" + index + "' "
+                + "where R_Table='" + tableNo + "' "
+                + "and R_PluCode='" + pCode + "' "
+                + "and R_LinkIndex=''";
+        mysqlConnect.executeUpdate(sql);
+    }
+
+    public void updateQuanCanDiscByTableAndPrCode(String tableNo) {
+        String sql = "update balance set "
+                + "R_PrType='-P',"
+                + "R_PRDisc='0',"
+                + "R_PRAmt='0',"
+                + "R_PrQuan='0',"
+                + "R_PrChkType='',"
+                + "R_QuanCanDisc=R_Quan "
+                + "where R_Table='" + tableNo + "' "
+                + "and r_PrCode<>'' ";
+        mysqlConnect.executeUpdate(sql);
+    }
+
+    public boolean deleteBalanceByRIndexAndRPause(String r_index) {
+        String sql = "delete from balance "
+                + "where r_index='" + r_index + "' "
+                + "and r_pause='P' and r_kicprint<>'P'";
+        return mysqlConnect.executeUpdate(sql) > 0;
+    }
+
+    public void deleteBalanceWhereRIndexAndRPauseIsP(String r_Index) {
+        String sqlDel = "delete from balance "
+                + "where r_index='" + r_Index + "' "
+                + "and r_pause='P'";
+        mysqlConnect.executeUpdate(sqlDel);
+    }
+
+    public void updateRPrintOKKicPrintByRTable(String tableNo) {
+        String sql = "update balance set "
+                + "R_PrintOK='Y',"
+                + " R_KicPrint='' where r_table='" + tableNo + "'";
+        mysqlConnect.executeUpdate(sql);
     }
 }
