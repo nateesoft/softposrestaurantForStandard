@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 // Panel Option ข้อความพิเศษ สำหรับสินค้าแต่ละรายการ
@@ -288,7 +289,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + Main + "', "
-                                        + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
+                                        + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
                                 mysqlConnect.executeUpdate(tempset);
                             } else {
                                 String pcode = PCode;
@@ -296,7 +297,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','', "
-                                        + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', CURTIME())";
+                                        + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
                                 mysqlConnect.executeUpdate(tempset);
                             }
                             rss.close();
@@ -398,7 +399,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCodeSet + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(PNameSet) + "', '" + pstock + "','" + free + "', "
-                                        + "'" + ThaiUtil.Unicode2ASCII(ProFree) + "', CURTIME())";
+                                        + "'" + ThaiUtil.Unicode2ASCII(ProFree) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
                                 mysqlConnect.executeUpdate(tempset);
                             }
                             rs.close();
@@ -656,7 +657,7 @@ public class ModalPopup extends javax.swing.JDialog {
                             + "PPostStock,PProTry, POption, PTime) "
                             + "VALUES ('" + TableNo + "', '" + Index + "', '" + PCode + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
-                            + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
+                            + "'" + ThaiUtil.Unicode2ASCII(Option) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         stmt1.executeUpdate(tempset);
                         stmt1.close();
@@ -763,7 +764,7 @@ public class ModalPopup extends javax.swing.JDialog {
                                         + "PPostStock,PProTry, POption, PTime) "
                                         + "VALUES ('" + TableNo + "', '" + Index + "', '" + pcode + "', "
                                         + "'" + ThaiUtil.Unicode2ASCII(ProMain) + "', '" + pstock + "','" + Main + "', "
-                                        + "'', CURTIME())";
+                                        + "'', '"+DateUtil.getMySQL_HHmmss()+"')";
                                 try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                     stmt1.executeUpdate(tempset);
                                 }

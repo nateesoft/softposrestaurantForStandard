@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 
 public class StockControl {
 
@@ -111,9 +112,9 @@ public class StockControl {
                     stcBean.setS_Link(addLink);
                     
                     String sql1 = "insert into stcard (S_Date,S_No,S_SubNo,S_Que,S_PCode,S_Stk,S_In,S_Out,S_InCost,S_OutCost,S_ACost,S_Rem,S_User,S_EntryDate,S_EntryTime,S_Link) "
-                            + "values(curdate(),'" + stcBean.getS_No() + "','" + stcBean.getS_SubNo() + "','" + stcBean.getS_Que() + "','" + stcBean.getS_PCode() + "','" + stcBean.getS_Stk() + "',"
+                            + "values('"+DateUtil.getMySQL_yyyyMMdd()+"','" + stcBean.getS_No() + "','" + stcBean.getS_SubNo() + "','" + stcBean.getS_Que() + "','" + stcBean.getS_PCode() + "','" + stcBean.getS_Stk() + "',"
                             + "'" + stcBean.getS_In() + "','" + stcBean.getS_Out() + "','" + stcBean.getS_InCost() + "','" + stcBean.getS_OutCost() + "','" + stcBean.getS_ACost() + "','',"
-                            + "'" + stcBean.getS_User() + "',curdate(),curtime(),'" + stcBean.getS_Link() + "')";
+                            + "'" + stcBean.getS_User() + "','"+DateUtil.getMySQL_yyyyMMdd()+"','"+DateUtil.getMySQL_HHmmss()+"','" + stcBean.getS_Link() + "')";
                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         int Update = stmt1.executeUpdate(sql1);
                         if (Update > 0) {

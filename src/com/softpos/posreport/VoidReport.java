@@ -19,6 +19,7 @@ import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 public class VoidReport extends javax.swing.JDialog {
@@ -343,23 +344,23 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     
                     mysqlConnect.open(this.getClass());
                     try {
-                        Statement stmt = mysqlConnect.getConnection().createStatement();
-                        String SqlQuery = "select * from t_sale "
-                                + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
-                                + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
-                                + "and (r_void='V') "
-                                + "and r_date=curdate() "
-                                + "order by macno,cashier,r_time";
-                        ResultSet rs = stmt.executeQuery(SqlQuery);
-                        while (rs.next()) {
-                            prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
-                            prn.print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
-                            prn.print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
-                            SumVoid++;
-                            SumAmount = SumAmount + rs.getDouble("r_total");
+                        try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                            String SqlQuery = "select * from t_sale "
+                                    + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
+                                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
+                                    + "and (r_void='V') "
+                                    + "and r_date='"+DateUtil.getMySQL_yyyyMMdd()+"' "
+                                    + "order by macno,cashier,r_time";
+                            try (ResultSet rs = stmt.executeQuery(SqlQuery)) {
+                                while (rs.next()) {
+                                    prn.print(rs.getString("macno") + " " + PUtility.DataFullR(rs.getString("cashier"), 6) + " " + PUtility.DataFullR(rs.getString("r_table"), 5) + " " + PUtility.DataFullR(rs.getString("r_time"), 6) + "  " + PUtility.DataFullR(rs.getString("r_voiduser"), 10) + " " + PUtility.DataFullR(rs.getString("r_voidtime"), 6));
+                                    prn.print("     " + PUtility.DataFullR(rs.getString("r_pname"), 35));
+                                    prn.print("     " + rs.getString("r_refno") + " " + PUtility.DataFull(rs.getString("r_plucode"), 13) + " " + PUtility.DataFull(IntFmt.format(rs.getDouble("r_quan")), 4) + " " + PUtility.DataFull(DecFmt.format(rs.getDouble("r_total")), 8));
+                                    SumVoid++;
+                                    SumAmount = SumAmount + rs.getDouble("r_total");
+                                }
+                            }
                         }
-                        rs.close();
-                        stmt.close();
                     } catch (SQLException e) {
                         MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(VoidReport.class, "error", e);

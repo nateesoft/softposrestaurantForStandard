@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 public class PosControl {
@@ -564,11 +565,11 @@ public class PosControl {
         try {
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt) "
-                    + "values (curdate(),curtime(),'" + PublicVar.CASHIER + "',"
+                    + "values ('"+DateUtil.getMySQL_yyyyMMdd()+"', '"+DateUtil.getMySQL_HHmmss()+"','" + PublicVar.CASHIER + "',"
                     + "'" + PublicVar.MACNO + "','I','" + paidinAmt + "','0.0')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
@@ -583,12 +584,12 @@ public class PosControl {
             String resonEncoded = ThaiUtil.Unicode2ASCII(reson);
             String sql = "insert into paidiofile "
                     + "(date,time,cashier,terminal,flage,paidinamt,paidoutamt,reson) "
-                    + "values (curdate(),curtime(),"
+                    + "values ('"+DateUtil.getMySQL_yyyyMMdd()+"','"+DateUtil.getMySQL_HHmmss()+"',"
                     + "'" + PublicVar.CASHIER + "','" + PublicVar.MACNO + "',"
                     + "'O','0','0','" + resonEncoded + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);

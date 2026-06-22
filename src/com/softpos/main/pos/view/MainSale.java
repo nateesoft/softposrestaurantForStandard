@@ -79,6 +79,7 @@ import com.softpos.printer.control.PrintSimpleForm;
 import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.e2e.TestEventBus;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 import com.softpos.util.JTableUtility;
 import com.softpos.util.LoadingOverlay;
 import com.softpos.util.MSG;
@@ -3051,9 +3052,9 @@ public class MainSale extends javax.swing.JDialog {
                         + "TrainDisc='0',"
                         + "PrintTime1='',"
                         + "TUser='',"
-                        + "tlogindate=curdate(),"
-                        + "tlogintime=curtime(),"
-                        + "TCurTime=curtime()"
+                        + "tlogindate='"+DateUtil.getMySQL_yyyyMMdd()+"',"
+                        + "tlogintime='"+DateUtil.getMySQL_HHmmss()+"',"
+                        + "TCurTime='"+DateUtil.getMySQL_HHmmss()+"' "
                         + "where tcode='" + txtTable.getText().trim() + "'";
                 databaseConnection.execUpdate(UpdateTable);
                 tbpMain.setSelectedIndex(0);
@@ -3722,7 +3723,7 @@ public class MainSale extends javax.swing.JDialog {
         String UpdateTableFile = "update tablefile "
                 + "set tonact='N',"
                 + "macno='" + PublicVar.MACNO + "',"
-                + "TCurTime = CurTime(),"
+                + "TCurTime = '"+DateUtil.getMySQL_HHmmss()+"',"
                 + "TCustomer = '" + cus + "',"
                 + "TItem = '" + balanceBean.getR_Total() + "',"
                 + "Service = '" + POSConfigSetup.Bean().getP_Service() + "' "
@@ -4261,7 +4262,7 @@ public class MainSale extends javax.swing.JDialog {
                             + "VALUES ('" + txtTable.getText() + "', '', '" + autoPCode + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(autoPDesc) + "', '" + pstock + "',"
                             + "'auto', '', "
-                            + "CURTIME())";
+                            + "'"+DateUtil.getMySQL_HHmmss()+"')";
                     batchSqls.add(tempset);
                 }
                 databaseConnection.execBatch(batchSqls);
@@ -4288,7 +4289,7 @@ public class MainSale extends javax.swing.JDialog {
                 + "PPostStock,PProTry, POption, PTime) "
                 + "VALUES ('" + tableNo + "', '" + Index + "', '" + PCode + "', "
                 + "'" + ThaiUtil.Unicode2ASCII(PName) + "', '" + pstock + "','" + TryName + "', "
-                + "'" + ThaiUtil.Unicode2ASCII(Option) + "', CURTIME())";
+                + "'" + ThaiUtil.Unicode2ASCII(Option) + "', '"+DateUtil.getMySQL_HHmmss()+"')";
         databaseConnection.execUpdate(sql);
     }
 

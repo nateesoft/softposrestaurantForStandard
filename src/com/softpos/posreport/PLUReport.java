@@ -931,195 +931,192 @@ private void txtPlu2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_t
 
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select * from t_sale "
-                    + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
-                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
-                    + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
-                    //                    + "and (r_plucode>='" + Plu1 + "') and (r_plucode<='" + Plu2 + "') "
-                    + "and (r_void<>'V') and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
-                    + "Order by r_group,r_plucode";
-            ResultSet rec = stmt.executeQuery(SqlQuery);
-            rec.first();
-            TempGroup = "";
-            TempPlu = "";
-            TempName = "";
-            Double SumEQty = 0.0;
-            Double SumEAmt = 0.0;
-            Double SumTQty = 0.0;
-            Double SumTAmt = 0.0;
-            Double SumDQty = 0.0;
-            Double SumDAmt = 0.0;
-            Double SumPQty = 0.0;
-            Double SumPAmt = 0.0;
-            Double SumWQty = 0.0;
-            Double SumWAmt = 0.0;
-            Double SumSQty = 0.0;
-            Double SumSAmt = 0.0;
-            PluRec GroupRec = new PluRec();
-            GroupRec.MacNo1 = MacNo1;
-            GroupRec.MacNo2 = MacNo2;
-            GroupRec.Cashier1 = CashNo1;
-            GroupRec.Cashier2 = CashNo1;
-            GroupRec.Group1 = Group1;
-            GroupRec.Group2 = Group1;
-            GroupRec.Plu1 = Plu1;
-            GroupRec.Plu2 = Plu2;
-            GroupRec.GroupCode = TempGroup;
-            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-            GroupRec.PCode = TempPlu;
-            GroupRec.PName = TempName;
-
-            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
-            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-            GroupRec.P_Amt = GroupRec.P_Qty + SumPAmt;
-
-            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-            GroupRec.W_Amt = GroupRec.W_Qty + SumWAmt;
-
-            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-
-            GArray[0] = GroupRec;
-            if (rec.getRow() == 0) {
-            } else {
-                TempGroup = rec.getString("r_group");
-                TempPlu = rec.getString("r_plucode");
-                TempName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
-                do {
-                    if (!TempPlu.equals(rec.getString("r_plucode"))) {
-                        GroupRec = new PluRec();
-                        GroupRec.MacNo1 = MacNo1;
-                        GroupRec.MacNo2 = MacNo2;
-                        GroupRec.Cashier1 = CashNo1;
-                        GroupRec.Cashier2 = CashNo1;
-                        GroupRec.Group1 = Group1;
-                        GroupRec.Group2 = Group1;
-                        GroupRec.Plu1 = Plu1;
-                        GroupRec.Plu2 = Plu2;
-                        GroupRec.GroupCode = TempGroup;
-                        GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-                        GroupRec.PCode = TempPlu;
-                        GroupRec.PName = TempName;
-
-                        GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-                        GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
-                        GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-                        GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-                        GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-                        GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-                        GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-                        GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
-                        GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-                        GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
-                        GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-                        GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-                        if (ArraySize == 0) {
-                            GArray[ArraySize] = GroupRec;
-                            ArraySize = GArray.length;
-                        } else {
-                            GArray = PUtility.addPluArray(GArray);
-                            ArraySize = GArray.length;
-                            GArray[ArraySize - 1] = GroupRec;
-                        }
-                        TempGroup = rec.getString("r_group");
-                        TempPlu = rec.getString("r_plucode");
-                        TempName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
-                        SumEQty = 0.0;
-                        SumEAmt = 0.0;
-                        SumTQty = 0.0;
-                        SumTAmt = 0.0;
-                        SumDQty = 0.0;
-                        SumDAmt = 0.0;
-                        SumPQty = 0.0;
-                        SumPAmt = 0.0;
-                        SumWQty = 0.0;
-                        SumWAmt = 0.0;
-                        SumSQty = 0.0;
-                        SumSAmt = 0.0;
-                    }
-                    if (rec.getString("r_etd").equals("E")) {
-                        SumEQty = SumEQty + rec.getDouble("r_quan");
-                        SumEAmt = SumEAmt + rec.getDouble("r_total");
-                    }
-                    if (rec.getString("r_etd").equals("T")) {
-                        SumTQty = SumTQty + rec.getDouble("r_quan");
-                        SumTAmt = SumTAmt + rec.getDouble("r_total");
-                    }
-                    if (rec.getString("r_etd").equals("D")) {
-                        SumDQty = SumDQty + rec.getDouble("r_quan");
-                        SumDAmt = SumDAmt + rec.getDouble("r_total");
-                    }
-                    if (rec.getString("r_etd").equals("P")) {
-                        SumPQty = SumPQty + rec.getDouble("r_quan");
-                        SumPAmt = SumPAmt + rec.getDouble("r_total");
-                    }
-                    if (rec.getString("r_etd").equals("W")) {
-                        SumWQty = SumWQty + rec.getDouble("r_quan");
-                        SumWAmt = SumWAmt + rec.getDouble("r_total");
-                    }
-                    SumSQty = SumSQty + rec.getDouble("r_quan");
-                    SumSAmt = SumSAmt + rec.getDouble("r_total");
-                } while (rec.next());
-                if (SumSQty > 0) {
-                    GroupRec = new PluRec();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                String SqlQuery = "select * from t_sale "
+                        + "where (macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
+                        + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
+                        + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
+                        + "and (r_void<>'V') and (r_refund<>'V') "
+                        + "Order by r_group,r_plucode";
+                try (ResultSet rec = stmt.executeQuery(SqlQuery)) {
+                    rec.first();
+                    TempGroup = "";
+                    TempPlu = "";
+                    TempName = "";
+                    Double SumEQty = 0.0;
+                    Double SumEAmt = 0.0;
+                    Double SumTQty = 0.0;
+                    Double SumTAmt = 0.0;
+                    Double SumDQty = 0.0;
+                    Double SumDAmt = 0.0;
+                    Double SumPQty = 0.0;
+                    Double SumPAmt = 0.0;
+                    Double SumWQty = 0.0;
+                    Double SumWAmt = 0.0;
+                    Double SumSQty = 0.0;
+                    Double SumSAmt = 0.0;
+                    PluRec GroupRec = new PluRec();
                     GroupRec.MacNo1 = MacNo1;
                     GroupRec.MacNo2 = MacNo2;
                     GroupRec.Cashier1 = CashNo1;
-                    GroupRec.Cashier2 = CashNo2;
+                    GroupRec.Cashier2 = CashNo1;
                     GroupRec.Group1 = Group1;
-                    GroupRec.Group2 = Group2;
+                    GroupRec.Group2 = Group1;
                     GroupRec.Plu1 = Plu1;
                     GroupRec.Plu2 = Plu2;
                     GroupRec.GroupCode = TempGroup;
                     GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
                     GroupRec.PCode = TempPlu;
                     GroupRec.PName = TempName;
-
+                    
                     GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
                     GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
+                    
                     GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
                     GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
+                    
                     GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
                     GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
+                    
                     GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-                    GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
+                    GroupRec.P_Amt = GroupRec.P_Qty + SumPAmt;
+                    
                     GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-                    GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
+                    GroupRec.W_Amt = GroupRec.W_Qty + SumWAmt;
+                    
                     GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
                     GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-                    if (ArraySize == 0) {
-                        GArray[ArraySize] = GroupRec;
-                        ArraySize = GArray.length;
+                    
+                    GArray[0] = GroupRec;
+                    if (rec.getRow() == 0) {
                     } else {
-                        GArray = PUtility.addPluArray(GArray);
-                        ArraySize = GArray.length;
-                        GArray[ArraySize - 1] = GroupRec;
+                        TempGroup = rec.getString("r_group");
+                        TempPlu = rec.getString("r_plucode");
+                        TempName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
+                        do {
+                            if (!TempPlu.equals(rec.getString("r_plucode"))) {
+                                GroupRec = new PluRec();
+                                GroupRec.MacNo1 = MacNo1;
+                                GroupRec.MacNo2 = MacNo2;
+                                GroupRec.Cashier1 = CashNo1;
+                                GroupRec.Cashier2 = CashNo1;
+                                GroupRec.Group1 = Group1;
+                                GroupRec.Group2 = Group1;
+                                GroupRec.Plu1 = Plu1;
+                                GroupRec.Plu2 = Plu2;
+                                GroupRec.GroupCode = TempGroup;
+                                GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+                                GroupRec.PCode = TempPlu;
+                                GroupRec.PName = TempName;
+                                
+                                GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+                                GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+                                
+                                GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+                                GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+                                
+                                GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+                                GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+                                
+                                GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+                                GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+                                
+                                GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+                                GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+                                
+                                GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+                                GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+                                if (ArraySize == 0) {
+                                    GArray[ArraySize] = GroupRec;
+                                    ArraySize = GArray.length;
+                                } else {
+                                    GArray = PUtility.addPluArray(GArray);
+                                    ArraySize = GArray.length;
+                                    GArray[ArraySize - 1] = GroupRec;
+                                }
+                                TempGroup = rec.getString("r_group");
+                                TempPlu = rec.getString("r_plucode");
+                                TempName = ThaiUtil.ASCII2Unicode(rec.getString("r_pname"));
+                                SumEQty = 0.0;
+                                SumEAmt = 0.0;
+                                SumTQty = 0.0;
+                                SumTAmt = 0.0;
+                                SumDQty = 0.0;
+                                SumDAmt = 0.0;
+                                SumPQty = 0.0;
+                                SumPAmt = 0.0;
+                                SumWQty = 0.0;
+                                SumWAmt = 0.0;
+                                SumSQty = 0.0;
+                                SumSAmt = 0.0;
+                            }
+                            if (rec.getString("r_etd").equals("E")) {
+                                SumEQty = SumEQty + rec.getDouble("r_quan");
+                                SumEAmt = SumEAmt + rec.getDouble("r_total");
+                            }
+                            if (rec.getString("r_etd").equals("T")) {
+                                SumTQty = SumTQty + rec.getDouble("r_quan");
+                                SumTAmt = SumTAmt + rec.getDouble("r_total");
+                            }
+                            if (rec.getString("r_etd").equals("D")) {
+                                SumDQty = SumDQty + rec.getDouble("r_quan");
+                                SumDAmt = SumDAmt + rec.getDouble("r_total");
+                            }
+                            if (rec.getString("r_etd").equals("P")) {
+                                SumPQty = SumPQty + rec.getDouble("r_quan");
+                                SumPAmt = SumPAmt + rec.getDouble("r_total");
+                            }
+                            if (rec.getString("r_etd").equals("W")) {
+                                SumWQty = SumWQty + rec.getDouble("r_quan");
+                                SumWAmt = SumWAmt + rec.getDouble("r_total");
+                            }
+                            SumSQty = SumSQty + rec.getDouble("r_quan");
+                            SumSAmt = SumSAmt + rec.getDouble("r_total");
+                        } while (rec.next());
+                        if (SumSQty > 0) {
+                            GroupRec = new PluRec();
+                            GroupRec.MacNo1 = MacNo1;
+                            GroupRec.MacNo2 = MacNo2;
+                            GroupRec.Cashier1 = CashNo1;
+                            GroupRec.Cashier2 = CashNo2;
+                            GroupRec.Group1 = Group1;
+                            GroupRec.Group2 = Group2;
+                            GroupRec.Plu1 = Plu1;
+                            GroupRec.Plu2 = Plu2;
+                            GroupRec.GroupCode = TempGroup;
+                            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
+                            GroupRec.PCode = TempPlu;
+                            GroupRec.PName = TempName;
+                            
+                            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
+                            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+                            
+                            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
+                            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
+                            
+                            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
+                            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
+                            
+                            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
+                            GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
+                            
+                            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
+                            GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
+                            
+                            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
+                            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
+                            if (ArraySize == 0) {
+                                GArray[ArraySize] = GroupRec;
+                                ArraySize = GArray.length;
+                            } else {
+                                GArray = PUtility.addPluArray(GArray);
+                                ArraySize = GArray.length;
+                                GArray[ArraySize - 1] = GroupRec;
+                            }
+                        }
                     }
                 }
             }
-
-            rec.close();
-            stmt.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
         } finally {

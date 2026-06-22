@@ -129,21 +129,21 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         TestEventBus.fire(TestEventBus.Event.FLOOR_PLAN_OPEN);
         // Show loading overlay while DB data loads
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
-        
+
         // Pure UI setup — no DB calls
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         AdvertisingScreen.open();
         PublicVar.TableSelected = "";
-        
+
         jMenu9.setVisible(false);
         jMenu1.setVisible(true);
         jMenu2.setVisible(false);
         jMenu3.setVisible(true);
         jMenu4.setVisible(false);
-        
+
         jSeparator3.setVisible(false);
         MShowDailyEJ1.setVisible(false);
-        
+
         jMenuItem38.setVisible(false);
 
         new SwingWorker<FloorInitData, Void>() {
@@ -1202,7 +1202,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         ShowTableDialog s = new ShowTableDialog(this, true);
         setVisible(false);
-        
+
         s.setVisible(true);
         if (!PublicVar.TableSelected.equals("")) {
             setVisible(false);
@@ -2211,8 +2211,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         lblCountdown.setOpaque(true);
         lblCountdown.setBackground(new Color(40, 110, 40));
         lblCountdown.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-            javax.swing.BorderFactory.createLineBorder(new Color(0, 180, 0), 1),
-            javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
+                javax.swing.BorderFactory.createLineBorder(new Color(0, 180, 0), 1),
+                javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
         ));
         jPanel1.add(lblCountdown);
 
@@ -2247,8 +2247,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         lblKeyInput.setOpaque(true);
         lblKeyInput.setBackground(new Color(60, 60, 120));
         lblKeyInput.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-            javax.swing.BorderFactory.createLineBorder(new Color(100, 100, 200), 1),
-            javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
+                javax.swing.BorderFactory.createLineBorder(new Color(100, 100, 200), 1),
+                javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8)
         ));
         jPanel1.add(lblKeyInput);
 
@@ -2267,7 +2267,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 }
                 switch (keyCode) {
                     case java.awt.event.KeyEvent.VK_BACK_SPACE:
-                        if (keyBuffer.length() > 0) keyBuffer.deleteCharAt(keyBuffer.length() - 1);
+                        if (keyBuffer.length() > 0) {
+                            keyBuffer.deleteCharAt(keyBuffer.length() - 1);
+                        }
                         updateKeyInputLabel();
                         return true;
                     case java.awt.event.KeyEvent.VK_ESCAPE:
@@ -2277,14 +2279,29 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     case java.awt.event.KeyEvent.VK_ENTER:
                         fireMatchedButton();
                         return true;
-                    case java.awt.event.KeyEvent.VK_F1: loadZone("T"); return true;
-                    case java.awt.event.KeyEvent.VK_F2: loadZone("A"); return true;
-                    case java.awt.event.KeyEvent.VK_F3: loadZone("B"); return true;
-                    case java.awt.event.KeyEvent.VK_F4: loadZone("C"); return true;
-                    case java.awt.event.KeyEvent.VK_F5: loadZone("D"); return true;
-                    case java.awt.event.KeyEvent.VK_F6: loadZone("E"); return true;
-                    case java.awt.event.KeyEvent.VK_F7: loadZone("F"); return true;
-                    default: return false;
+                    case java.awt.event.KeyEvent.VK_F1:
+                        loadZone("T");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F2:
+                        loadZone("A");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F3:
+                        loadZone("B");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F4:
+                        loadZone("C");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F5:
+                        loadZone("D");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F6:
+                        loadZone("E");
+                        return true;
+                    case java.awt.event.KeyEvent.VK_F7:
+                        loadZone("F");
+                        return true;
+                    default:
+                        return false;
                 }
             }
         };
@@ -2292,7 +2309,9 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void updateKeyInputLabel() {
-        if (lblKeyInput == null) return;
+        if (lblKeyInput == null) {
+            return;
+        }
         if (keyBuffer.length() == 0) {
             lblKeyInput.setText("  [พิมพ์เลขโต๊ะ + Enter]  ");
             lblKeyInput.setBackground(new Color(60, 60, 120));
@@ -2303,14 +2322,20 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void fireMatchedButton() {
-        if (keyBuffer.length() == 0) return;
+        if (keyBuffer.length() == 0) {
+            return;
+        }
         String typed = keyBuffer.toString();
         keyBuffer.setLength(0);
         updateKeyInputLabel();
         for (JButton btn : buttons) {
-            if (btn == null) continue;
+            if (btn == null) {
+                continue;
+            }
             String text = btn.getText().trim();
-            if (text.isEmpty()) continue;
+            if (text.isEmpty()) {
+                continue;
+            }
             String tableNo = text.contains("(") ? text.substring(0, text.indexOf("(")).trim() : text;
             String numericPart = tableNo.replaceAll("[^0-9]", "");
             if (numericPart.equals(typed) || tableNo.equalsIgnoreCase(typed)) {
@@ -2352,8 +2377,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         private void showPOS(String tableNo) {
             String sql = "update tablefile "
                     + "set TUser='',"
-                    + "TLoginDate=curdate(),"
-                    + "TLoginTime=curtime(),"
+                    + "TLoginDate='" + DateUtil.getMySQL_yyyyMMdd() + "',"
+                    + "TLoginTime='" + DateUtil.getMySQL_HHmmss() + "',"
                     + "Macno='" + PublicVar.MACNO + "' "
                     + "where TCode = '" + tableNo + "'";
             databaseConnection.execUpdate(sql);
@@ -2377,7 +2402,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent e) {
             String tableNo = button.getText().trim();
             AppLogUtil.info("Click Open Table: " + tableNo);
-            
+
             if (!tableNo.equals("")) {
                 PublicVar.countRound = 0;
                 if (tableNo.contains("(")) {
@@ -2388,11 +2413,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 TableFileControl tfCont = AppContext.getTableFileControl();
                 if (!tfCont.checkTableOpened(tableNo)) {
                     AppLogUtil.info("checkTableOpened: " + false);
-                    
+
                     String P_EmpUse = CONFIG.getP_EmpUse();
                     if (P_EmpUse.equals("Y")) {
                         AppLogUtil.info("P_EmpUse: " + P_EmpUse);
-                        
+
                         // get employee password
                         EmployLoginDialog login = new EmployLoginDialog(new JFrame(), true);
                         login.setVisible(true);
@@ -2404,8 +2429,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
                                 String sql = "update tablefile "
                                         + "set TUser='" + login.getLoginPWD() + "',"
-                                        + "TLoginDate=curdate(),"
-                                        + "TLoginTime=curtime(),"
+                                        + "TLoginDate='"+DateUtil.getMySQL_yyyyMMdd()+"',"
+                                        + "TLoginTime='"+DateUtil.getMySQL_HHmmss()+"',"
                                         + "Macno='" + PublicVar.MACNO + "' "
                                         + "where TCode = '" + tableNo + "'";
                                 databaseConnection.execUpdate(sql);

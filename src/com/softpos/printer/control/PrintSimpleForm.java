@@ -270,11 +270,11 @@ public class PrintSimpleForm {
                             String sqlK = "insert into kictran "
                                     + "(pitemno,pdate,pcode,pqty,pindex,"
                                     + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",curdate(),"
+                                    + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                     + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                     + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                    + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                             AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                             try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
@@ -441,11 +441,11 @@ public class PrintSimpleForm {
                             String sqlK = "insert into kictran "
                                     + "(pitemno,pdate,pcode,pqty,pindex,"
                                     + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",curdate(),"
+                                    + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                     + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                     + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                    + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                             AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                             try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
@@ -611,11 +611,11 @@ public class PrintSimpleForm {
                             String sqlK = "insert into kictran "
                                     + "(pitemno,pdate,pcode,pqty,pindex,"
                                     + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",curdate(),"
+                                    + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                     + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                     + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                    + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                             AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                             try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
@@ -3696,11 +3696,11 @@ public class PrintSimpleForm {
                                                 String sqlK = "insert into kictran "
                                                         + "(pitemno,pdate,pcode,pqty,pindex,"
                                                         + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                                        + "values (" + TempQue + ",curdate(),"
+                                                        + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                                         + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                                         + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                                        + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                                        + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                                                 AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                                                 try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
@@ -3905,11 +3905,11 @@ public class PrintSimpleForm {
                                                 String sqlK = "insert into kictran "
                                                         + "(pitemno,pdate,pcode,pqty,pindex,"
                                                         + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                                        + "values (" + TempQue + ",curdate(),"
+                                                        + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                                         + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                                         + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                                        + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                                        + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                                                 AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                                                 try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
@@ -4091,11 +4091,11 @@ public class PrintSimpleForm {
                                     String sqlK = "insert into kictran "
                                             + "(pitemno,pdate,pcode,pqty,pindex,"
                                             + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                            + "values (" + TempQue + ",curdate(),"
+                                            + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                             + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                             + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                             + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                            + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                            + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                             + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                                     AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
@@ -4317,11 +4317,11 @@ public class PrintSimpleForm {
                                         String sqlK = "insert into kictran "
                                                 + "(pitemno,pdate,pcode,pqty,pindex,"
                                                 + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                                + "values (" + TempQue + ",curdate(),"
+                                                + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                                 + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                                 + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                                + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                                + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                                         AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                                         try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
@@ -4619,11 +4619,11 @@ public class PrintSimpleForm {
                             String sqlK = "insert into kictran "
                                     + "(pitemno,pdate,pcode,pqty,pindex,"
                                     + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",curdate(),"
+                                    + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                     + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                     + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                    + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                             AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                             try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
@@ -4801,11 +4801,11 @@ public class PrintSimpleForm {
                             String sqlK = "insert into kictran "
                                     + "(pitemno,pdate,pcode,pqty,pindex,"
                                     + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",curdate(),"
+                                    + "values (" + TempQue + ",'"+DateUtil.getMySQL_yyyyMMdd()+"',"
                                     + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
                                     + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "',curtime(),'',"
+                                    + "'" + rs.getString("R_Table") + "','"+DateUtil.getMySQL_HHmmss()+"','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
                             AppLogUtil.warn(PrintSimpleForm.class, sqlK);
                             try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {

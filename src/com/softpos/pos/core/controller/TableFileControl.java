@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 
 public class TableFileControl {
 
@@ -351,7 +352,9 @@ public class TableFileControl {
                     }
                 } else {
                     String sql = "insert into tablefile (Tcode,SoneCode,StkCode1,StkCode2,TLoginTime, TCurTime, TLoginDate, MemBegin, MemEnd) "
-                            + "value('" + newTable + "','" + table.getSoneCode() + "','" + table.getStkCode1() + "',' ',curtime(), curtime(), curdate(),'1899-12-30','1899-12-30');";
+                            + "value('" + newTable + "','" + table.getSoneCode() + "','" + table.getStkCode1() + "',' ',"
+                            + "'"+DateUtil.getMySQL_HHmmss()+"', '"+DateUtil.getMySQL_HHmmss()+"', '"+DateUtil.getMySQL_yyyyMMdd()+"',"
+                            + "'1899-12-30','1899-12-30');";
                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                         stmt1.executeUpdate(sql);
                     }

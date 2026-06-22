@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
+import com.softpos.util.DateUtil;
 import com.softpos.util.MSG;
 
 public class CreditReport extends javax.swing.JDialog {
@@ -518,7 +519,7 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         try {
             String SqlQuery = "insert into tempcredit "
                     + "(mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
-                    + "values ('CASHIER1',curdate(),?,'" + TRefno + "',?,?,?,?)";
+                    + "values ('CASHIER1','"+DateUtil.getMySQL_yyyyMMdd()+"',?,'" + TRefno + "',?,?,?,?)";
             try (PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery)) {
                 prm.setString(1, PublicVar.MACNO);
                 prm.setString(2, TCrCode);

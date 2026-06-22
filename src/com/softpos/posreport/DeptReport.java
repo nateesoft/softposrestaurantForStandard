@@ -546,7 +546,6 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
                     + "and (r_void<>'V') and (r_refund<>'V') "
-                    //                    + "and r_date=curdate() "
                     + "Order by r_group";
 
             ResultSet rs = stmt.executeQuery(SqlQuery);

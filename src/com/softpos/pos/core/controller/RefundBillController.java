@@ -7,6 +7,7 @@ import com.softpos.util.AppLogUtil;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
+import com.softpos.util.DateUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -357,7 +358,7 @@ public class RefundBillController {
             }
 
             String sql1 = "insert into billret(Ref_No,OnDate,Stotal,Cash,Cupon,Credit,Terminal,Cashier,Fat,UserVoid) values "
-                    + "('" + refStr + "',curdate(),'" + cash + "','" + cash + "','0','0','" + macno + "','" + cashier + "','N','')";
+                    + "('" + refStr + "','"+DateUtil.getMySQL_yyyyMMdd()+"','" + cash + "','" + cash + "','0','0','" + macno + "','" + cashier + "','N','')";
             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 int i = stmt1.executeUpdate(sql1);
                 if (i > 0) {

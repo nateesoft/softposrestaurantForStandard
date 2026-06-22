@@ -22,7 +22,7 @@ public class DateUtil {
     static SimpleDateFormat english_yyyyMMdd = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
     static SimpleDateFormat mysql_date_yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     static SimpleDateFormat mysql_datetime_yyyyMMddHHmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
+    static SimpleDateFormat mysql_date_HHmmss = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
     public static String GET_CURRENT_NAME_DAY() {
         return F3.format(new Date());
@@ -526,6 +526,13 @@ public class DateUtil {
         } else {
             return null;
         }
+    }
+    
+    public static String getMySQL_yyyyMMdd() {
+        return mysql_date_yyyyMMdd.format(new Date());
+    }
+    public static String getMySQL_HHmmss() {
+        return mysql_date_HHmmss.format(new Date());
     }
 
     public static String getMySQL_Date(Date d) {
