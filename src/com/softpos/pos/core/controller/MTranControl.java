@@ -15,13 +15,11 @@ import com.softpos.util.DateUtil;
  * @author nathee
  */
 public class MTranControl {
-    
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MTranBean getData(String branchCode) {
         MTranBean bean = null;
         
-
         try {
             mysqlConnect.open(MTranControl.class);
             String sql = "select * from " + PublicVar.db_member + ".mtran where Branch_Code='" + branchCode + "' limit 1";
@@ -61,22 +59,22 @@ public class MTranControl {
     }
 
     private static MTranBean mappingBean(ResultSet rs) throws SQLException {
-        MTranBean bean = new MTranBean();
-        bean.setService_Date(rs.getDate("Service_Date"));
-        bean.setMember_Code(rs.getString("Member_Code"));
-        bean.setBranch_Code(rs.getString("Branch_Code"));
-        bean.setReceipt_No(rs.getString("Receipt_No"));
-        bean.setSale_Type(rs.getString("Sale_Type"));
-        bean.setGrossAmount(rs.getFloat("GrossAmount"));
-        bean.setDiscountAmount(rs.getFloat("DiscountAmount"));
-        bean.setNetAmount(rs.getFloat("NetAmount"));
-        bean.setMechine_Code(rs.getString("Mechine_Code"));
-        bean.setEmployee_Code(rs.getString("Employee_Code"));
-        bean.setService_Time(rs.getString("Service_Time"));
-        bean.setScore(rs.getFloat("Score"));
-        bean.setTranferFlag(rs.getString("TranferFlag"));
+        MTranBean mTranBean = new MTranBean();
+        mTranBean.setService_Date(rs.getDate("Service_Date"));
+        mTranBean.setMember_Code(rs.getString("Member_Code"));
+        mTranBean.setBranch_Code(rs.getString("Branch_Code"));
+        mTranBean.setReceipt_No(rs.getString("Receipt_No"));
+        mTranBean.setSale_Type(rs.getString("Sale_Type"));
+        mTranBean.setGrossAmount(rs.getFloat("GrossAmount"));
+        mTranBean.setDiscountAmount(rs.getFloat("DiscountAmount"));
+        mTranBean.setNetAmount(rs.getFloat("NetAmount"));
+        mTranBean.setMechine_Code(rs.getString("Mechine_Code"));
+        mTranBean.setEmployee_Code(rs.getString("Employee_Code"));
+        mTranBean.setService_Time(rs.getString("Service_Time"));
+        mTranBean.setScore(rs.getFloat("Score"));
+        mTranBean.setTranferFlag(rs.getString("TranferFlag"));
 
-        return bean;
+        return mTranBean;
     }
 
     public int create(MTranBean bean) {
