@@ -3362,55 +3362,61 @@ public class MainSale extends javax.swing.JDialog {
                 String RPause = model.getValueAt(row, 11).toString();
                 String RKicPrint = model.getValueAt(row, 7).toString();
 
-                if (typeIndex.equals("ItemOption")) {
-                    bntoptionClick();
-                    loadTableBalance(txtTable.getText());
-                } else if (typeIndex.equals("TypeSale")) {
-                    if (model.getRowCount() > 0) {
-                        if (!PCode.equals("") && !PVoid.equals("V")) {
-                            changTypeClick();
-                        } else {
-                            MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
-                        }
-                    }
-                } else if (typeIndex.equals("ItemDiscount")) {
-                    // ตรวจสอบว่าสามารถให้ส่วนลดได้อีกหรือไม่ ?
-                    if (checkCanDisc(RIndex)) {
+                switch (typeIndex) {
+                    case "ItemOption":
+                        bntoptionClick();
+                        loadTableBalance(txtTable.getText());
+                        break;
+                    case "TypeSale":
                         if (model.getRowCount() > 0) {
                             if (!PCode.equals("") && !PVoid.equals("V")) {
-                                ItemDiscount i = new ItemDiscount(new JFrame(), true, txtTable.getText(), RIndex, memberBean);
-                                i.setVisible(true);
-
-                                loadTableBalance(txtTable.getText());
-                                txtProductCode.setText("");
-                                txtProductCode.requestFocus();
+                                changTypeClick();
+                            } else {
+                                MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
                             }
+                        }   break;
+                    case "ItemDiscount":
+                        // ตรวจสอบว่าสามารถให้ส่วนลดได้อีกหรือไม่ ?
+                        if (checkCanDisc(RIndex)) {
+                            if (model.getRowCount() > 0) {
+                                if (!PCode.equals("") && !PVoid.equals("V")) {
+                                    ItemDiscount i = new ItemDiscount(new JFrame(), true, txtTable.getText(), RIndex, memberBean);
+                                    i.setVisible(true);
+                                    
+                                    loadTableBalance(txtTable.getText());
+                                    txtProductCode.setText("");
+                                    txtProductCode.requestFocus();
+                                }
+                            }
+                        } else {
+                            MSG.WAR(this, "รายการสินค้านี้มีการให้ส่วนลดอื่นไปแล้วไม่สามารถให้ส่วนลดได้อีก");
+                        }   break;
+                    case "ItemVoid":
+                        if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
+                            cancelItemBeforeHold();
+                        } else {
+                            if (!PCode.equals("") && !PVoid.equals("V")) {
+                                bntVoidClick();
+                                double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
+                                TableFileBean = tableFileControl.getDataByTCode(tableNo);
+                                DiscountDialog dd = new DiscountDialog(this, true, tableNo, totalAmount, memberBean,
+                                        txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
+                                dd.clearMemberDiscount();
+                            }
+                            
                         }
-                    } else {
-                        MSG.WAR(this, "รายการสินค้านี้มีการให้ส่วนลดอื่นไปแล้วไม่สามารถให้ส่วนลดได้อีก");
-                    }
-                } else if (typeIndex.equals("ItemVoid")) {
-                    if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
-                        cancelItemBeforeHold();
-                    } else {
-                        if (!PCode.equals("") && !PVoid.equals("V")) {
-                            bntVoidClick();
-                            double totalAmount = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
-                            TableFileBean = tableFileControl.getDataByTCode(tableNo);
-                            DiscountDialog dd = new DiscountDialog(this, true, tableNo, totalAmount, memberBean,
-                                    txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
-                            dd.clearMemberDiscount();
-                        }
-
-                    }
-                    //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
-
-                } else if (typeIndex.equals("ItemMove")) {
-                    MoveItemDialog m = new MoveItemDialog(new JFrame(), true, txtTable.getText());
-                    m.setVisible(true);
-                } else if (typeIndex.equals("EditQty")) {
-                    ItemEditQty itemEditQty = new ItemEditQty(this, true, txtTable.getText(), RIndex, memberBean);
-                    itemEditQty.setVisible(true);
+                        //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
+                        break;
+                    case "ItemMove":
+                        MoveItemDialog m = new MoveItemDialog(new JFrame(), true, txtTable.getText());
+                        m.setVisible(true);
+                        break;
+                    case "EditQty":
+                        ItemEditQty itemEditQty = new ItemEditQty(this, true, txtTable.getText(), RIndex, memberBean);
+                        itemEditQty.setVisible(true);
+                        break;
+                    default:
+                        break;
                 }
             }
             BalanceControl.updateProSerTable(txtTable.getText(), memberBean);

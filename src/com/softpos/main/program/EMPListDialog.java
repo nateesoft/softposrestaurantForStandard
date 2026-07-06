@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class EMPListDialog extends javax.swing.JDialog {
-
     public static String[] data;
 
     public EMPListDialog(java.awt.Frame parent, boolean modal) {
@@ -169,7 +168,7 @@ public class EMPListDialog extends javax.swing.JDialog {
             model.removeRow(0);
         }
 
-        List<String[]> employees = AppContext.getEmployControl().getAllEmployees();
+        List<String[]> employees = AppContext.getEmployeeControl().getAllEmployees();
         for (String[] emp : employees) {
             model.addRow(new Object[]{emp[0], emp[1]});
         }

@@ -2373,7 +2373,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private void clearTempSet(String tableNo) {
         String sql = "delete from tempset "
                 + "where PTableNo='" + tableNo + "'";
-        databaseConnection.execUpdate(sql);
+        databaseConnection.executeUpdate(sql);
     }
 
     private void checkBillOK() {
@@ -2411,21 +2411,21 @@ public class PaymentDialog extends javax.swing.JDialog {
         String sql1 = "delete from temp_balance where r_table='" + tableNo + "'";
         String sql2 = "insert ignore into temp_balance select * from balance "
                 + "where r_table='" + tableNo + "' order by r_index";
-        databaseConnection.execUpdate(sql1);
-        databaseConnection.execUpdate(sql2);
+        databaseConnection.executeUpdate(sql1);
+        databaseConnection.executeUpdate(sql2);
     }
 
     private void restoreTempBalance() {
         if (checkBillControl.restoreTempBalance(tableNo)) {
             String sql1 = "delete from balance where r_table='" + tableNo + "'";
             String sql2 = "insert into balance select * from temp_balance where r_table='" + tableNo + "' order by r_index";
-            databaseConnection.execUpdate(sql1);
-            databaseConnection.execUpdate(sql2);
+            databaseConnection.executeUpdate(sql1);
+            databaseConnection.executeUpdate(sql2);
         }
     }
 
     private void clearTempGift() {
-        databaseConnection.execUpdate("delete from tempgift");
+        databaseConnection.executeUpdate("delete from tempgift");
     }
 
     private boolean checkStatusCreditData() {
@@ -2460,10 +2460,10 @@ public class PaymentDialog extends javax.swing.JDialog {
         }
         switch (choice) {
             case "Ins":
-                databaseConnection.execUpdate(sql);
+                databaseConnection.executeUpdate(sql);
                 break;
             case "Del":
-                databaseConnection.execUpdate(sql);
+                databaseConnection.executeUpdate(sql);
                 break;
         }
     }
@@ -2569,7 +2569,7 @@ public class PaymentDialog extends javax.swing.JDialog {
                 + "and r_kicprint<>'P' "
                 + "and r_printOk='Y' "
                 + "and r_kic<>'';";
-        databaseConnection.execUpdate(sql);
+        databaseConnection.executeUpdate(sql);
     }
 
     private void CheckKicPrint() {

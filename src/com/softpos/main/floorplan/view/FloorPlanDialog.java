@@ -1372,7 +1372,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     for (TSaleBean tSaleBean : lisTSale) {
                         if (!updated) {
                             String sql = "update tablefile set tcustomer='" + b_cust + "' where tcode='" + tableNo + "'";
-                            databaseConnection.execUpdate(sql);
+                            databaseConnection.executeUpdate(sql);
                             updated = true;
                         }
                         String pcode = tSaleBean.getR_PluCode();
@@ -2381,10 +2381,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "TLoginTime='" + DateUtil.getMySQL_HHmmss() + "',"
                     + "Macno='" + PublicVar.MACNO + "' "
                     + "where TCode = '" + tableNo + "'";
-            databaseConnection.execUpdate(sql);
+            databaseConnection.executeUpdate(sql);
 
             sql = "delete from tempset where ptableno='" + tableNo + "';";
-            databaseConnection.execUpdate(sql);
+            databaseConnection.executeUpdate(sql);
 
             if (autoRefreshTimer != null) {
                 autoRefreshTimer.stop();
@@ -2433,7 +2433,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                                         + "TLoginTime='"+DateUtil.getMySQL_HHmmss()+"',"
                                         + "Macno='" + PublicVar.MACNO + "' "
                                         + "where TCode = '" + tableNo + "'";
-                                databaseConnection.execUpdate(sql);
+                                databaseConnection.executeUpdate(sql);
                                 PublicVar.EMP_CODE = login.getLoginPWD();
                                 showPOS(tableNo);
                             } else {
@@ -2532,7 +2532,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String sqlUpd = "update tempset set "
                 + "PIndex='" + bBean.getR_Index() + "' "
                 + "where PTableNo='" + bBean.getR_Table() + "' ";
-        databaseConnection.execUpdate(sqlUpd);
+        databaseConnection.executeUpdate(sqlUpd);
 
         List<TempsetBean> listTempset = floorPlanControl.getTempsetByPIndex(bBean.getR_Index());
         for (TempsetBean tempsetBean : listTempset) {
@@ -2651,7 +2651,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         //clear tempset
         String sqlClear = "delete from tempset where PTableNo='" + bBean.getR_Table() + "'";
-        databaseConnection.execUpdate(sqlClear);
+        databaseConnection.executeUpdate(sqlClear);
     }
 
     private void updateBalanceOptionFromTemp(String R_Index, String TableNo, String PCode) {
@@ -2663,7 +2663,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                     + "where R_Table='" + TableNo + "' "
                     + "and R_PluCode='" + PCode + "' "
                     + "and R_LinkIndex=''";
-            databaseConnection.execUpdate(sqlUpdate);
+            databaseConnection.executeUpdate(sqlUpdate);
         }
     }
 

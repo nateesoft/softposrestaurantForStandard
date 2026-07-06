@@ -21,20 +21,20 @@ public class CustomerConrol {
         
         try {
             mysqlConnect.open(this.getClass());
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next()) {
-                bean.setSp_code(rs.getString("sp_code"));
-                bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
-                bean.setSp_Addr1(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr1")));
-                bean.setSp_Addr2(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr2")));
-                bean.setSp_zip(rs.getString("sp_zip"));
-                bean.setTel(rs.getString("tel"));
-                bean.setFax(rs.getString("fax"));
-                bean.setContack(ThaiUtil.ASCII2Unicode(rs.getString("Contack")));
-                bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
-                bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    bean.setSp_code(rs.getString("sp_code"));
+                    bean.setSp_Desc(ThaiUtil.ASCII2Unicode(rs.getString("sp_Desc")));
+                    bean.setSp_Addr1(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr1")));
+                    bean.setSp_Addr2(ThaiUtil.ASCII2Unicode(rs.getString("sp_Addr2")));
+                    bean.setSp_zip(rs.getString("sp_zip"));
+                    bean.setTel(rs.getString("tel"));
+                    bean.setFax(rs.getString("fax"));
+                    bean.setContack(ThaiUtil.ASCII2Unicode(rs.getString("Contack")));
+                    bean.setRemark(ThaiUtil.ASCII2Unicode(rs.getString("Remark")));
+                    bean.setRemark2(ThaiUtil.ASCII2Unicode(rs.getString("Remark2")));
+                }
             }
-            rs.close();
         } catch (SQLException e) {
             AppLogUtil.log(CustomerConrol.class, "error", e);
         } finally {

@@ -10,8 +10,7 @@ public class DatabaseConnection {
 
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
-    public boolean execUpdate(String sql) {
-        
+    public boolean executeUpdate(String sql) {
         mysqlConnect.open(DatabaseConnection.class);
         try {
             return mysqlConnect.executeUpdate(sql) > 0;

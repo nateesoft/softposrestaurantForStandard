@@ -7,7 +7,7 @@ import com.softpos.pos.core.model.POSHWSetup;
 import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
-import com.softpos.pos.core.controller.SmpCoupon;
+import com.softpos.pos.core.model.SmpCoupon;
 import com.softpos.util.ThaiUtil;
 import com.softpos.connection.database.MySQLConnect;
 import java.awt.Color;

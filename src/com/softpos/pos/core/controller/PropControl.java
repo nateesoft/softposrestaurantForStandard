@@ -2,8 +2,6 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.constants.PublicVar;
 
-
-
 public class PropControl {
 
     public static String PATH_CONFIG = "softpos/";

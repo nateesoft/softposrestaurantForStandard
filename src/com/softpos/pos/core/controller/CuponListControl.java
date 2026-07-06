@@ -14,25 +14,21 @@ public class CuponListControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<CuponlistBean> listCuponlist() {
-
-        
         mysqlConnect.open(this.getClass());
 
         List<CuponlistBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cuponlist";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                CuponlistBean bean = new CuponlistBean();
-
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setPCode(rs.getString("PCode"));
-
-                listBean.add(bean);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    CuponlistBean bean = new CuponlistBean();
+                    
+                    bean.setCuCode(rs.getString("CuCode"));
+                    bean.setPCode(rs.getString("PCode"));
+                    
+                    listBean.add(bean);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally {
@@ -43,25 +39,22 @@ public class CuponListControl {
     }
 
     public List<CuponlistBean> listCuponlist(String CuCode) {
-
         mysqlConnect.open(this.getClass());
 
         List<CuponlistBean> listBean = new ArrayList<>();
         try {
             String sql = "select * from cuponlist "
                     + "where CuCode='" + CuCode + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                CuponlistBean bean = new CuponlistBean();
-
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setPCode(rs.getString("PCode"));
-
-                listBean.add(bean);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    CuponlistBean bean = new CuponlistBean();
+                    
+                    bean.setCuCode(rs.getString("CuCode"));
+                    bean.setPCode(rs.getString("PCode"));
+                    
+                    listBean.add(bean);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally {
@@ -72,20 +65,17 @@ public class CuponListControl {
     }
 
     public CuponlistBean getCuponlist(String CuCode) {
-
         mysqlConnect.open(this.getClass());
 
         CuponlistBean bean = new CuponlistBean();
         try {
             String sql = "select * from cuponlist where CuCode='" + CuCode + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setPCode(rs.getString("PCode"));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    bean.setCuCode(rs.getString("CuCode"));
+                    bean.setPCode(rs.getString("PCode"));
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponListControl.class, "error", e);
         } finally {

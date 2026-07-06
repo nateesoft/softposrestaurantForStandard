@@ -10,7 +10,6 @@ import java.util.List;
 import com.softpos.util.AppLogUtil;
 
 public class OptionMsgControl {
-
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public List<String> loadOptionsByGroup(String pGroup) {

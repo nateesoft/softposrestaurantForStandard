@@ -31,17 +31,15 @@ public class RefundBillControl {
         try {
             String sql = "select * from billno "
                     + "where (b_macno='" + macno + "') and (b_refno='" + billNo + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                bean = new BillNoBean();
-                bean.setB_Void(rs.getString("b_void"));
-                bean.setB_InvNo(rs.getString("b_invno"));
-                bean.setB_MacNo(rs.getString("b_macno"));
-                bean.setB_MemCode(rs.getString("b_memcode"));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    bean = new BillNoBean();
+                    bean.setB_Void(rs.getString("b_void"));
+                    bean.setB_InvNo(rs.getString("b_invno"));
+                    bean.setB_MacNo(rs.getString("b_macno"));
+                    bean.setB_MemCode(rs.getString("b_memcode"));
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(RefundBillControl.class, "error", e);
         } finally {

@@ -32,17 +32,16 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrType = '-I'";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            if (rs.next()) {
-                String sqlUpd = "update tablefile set "
-                        + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
-                        + "where Tcode = '" + tableNo + "'";
-                Statement stmt1 = mysqlConnect.getConnection().createStatement();
-                stmt1.executeUpdate(sqlUpd);
-                stmt1.close();
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                if (rs.next()) {
+                    String sqlUpd = "update tablefile set "
+                            + "ItemDiscAmt='" + rs.getDouble("SUM_R_PrAmt") + "' "
+                            + "where Tcode = '" + tableNo + "'";
+                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
+                        stmt1.executeUpdate(sqlUpd);
+                    }
+                }
             }
-
-            rs.close();
         } catch (SQLException e) {
             AppLogUtil.log(DiscountControl.class, "error", e);
         }
@@ -55,24 +54,22 @@ public class DiscountControl {
                     + "and R_Void<>'V' "
                     + "and R_Discount='Y' "
                     + "and R_PrCuType = '-C'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String sqlUpd;
-                if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
-                    sqlUpd = "update tablefile set "
-                            + "CuponDiscAmt='" + NumberUtil.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
-                            + "where Tcode = '" + tableNo + "'";
-                } else {
-                    sqlUpd = "update tablefile set "
-                            + "CuponDiscAmt='" + (rs.getDouble("SUM_R_PrCuAmt")) + "' "
-                            + "where Tcode = '" + tableNo + "'";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    String sqlUpd;
+                    if (!POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
+                        sqlUpd = "update tablefile set "
+                                + "CuponDiscAmt='" + NumberUtil.UP_DOWN_NATURAL_BAHT(rs.getDouble("SUM_R_PrCuAmt")) + "' "
+                                + "where Tcode = '" + tableNo + "'";
+                    } else {
+                        sqlUpd = "update tablefile set "
+                                + "CuponDiscAmt='" + (rs.getDouble("SUM_R_PrCuAmt")) + "' "
+                                + "where Tcode = '" + tableNo + "'";
+                    }
+                    mysqlConnect.executeUpdate(sqlUpd);
                 }
-                mysqlConnect.executeUpdate(sqlUpd);
-            }
 
-            rs.close();
-            stmt.close();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(ControlMenu.class, "error", e);
         } finally {

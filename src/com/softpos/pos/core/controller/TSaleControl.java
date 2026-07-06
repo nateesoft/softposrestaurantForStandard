@@ -2,6 +2,7 @@ package com.softpos.pos.core.controller;
 
 import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.util.AppLogUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,7 +47,7 @@ public class TSaleControl {
 
             stmt.close();
         } catch (SQLException e) {
-            // caller handles display of errors
+            AppLogUtil.log(TSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(TSaleControl.class);
         }
@@ -62,21 +63,21 @@ public class TSaleControl {
             String sql = "select * from t_sale "
                     + "where r_refno='" + b_refno + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            while (rs.next()) {
-                TSaleBean bean = new TSaleBean();
-                String pcode = rs.getString("r_plucode");
-                String r_etd = rs.getString("r_etd");
-                double r_quan = rs.getDouble("r_quan");
-                bean.setR_PluCode(pcode);
-                bean.setR_ETD(r_etd);
-                bean.setR_Quan(r_quan);
-
-                listTsale.add(bean);
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                while (rs.next()) {
+                    TSaleBean bean = new TSaleBean();
+                    String pcode = rs.getString("r_plucode");
+                    String r_etd = rs.getString("r_etd");
+                    double r_quan = rs.getDouble("r_quan");
+                    bean.setR_PluCode(pcode);
+                    bean.setR_ETD(r_etd);
+                    bean.setR_Quan(r_quan);
+                    
+                    listTsale.add(bean);
+                }
             }
-            rs.close();
         } catch (SQLException e) {
-
+            AppLogUtil.log(TSaleControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

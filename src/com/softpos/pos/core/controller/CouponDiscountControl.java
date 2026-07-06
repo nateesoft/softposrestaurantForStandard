@@ -27,19 +27,17 @@ public class CouponDiscountControl {
                     + "where r_quancandisc>0 "
                     + "and r_table='" + tableNo + "' "
                     + "and r_plucode='" + pCode + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                BalanceBean bean = new BalanceBean();
-                bean.setR_QuanCanDisc(rs.getDouble("r_quancandisc"));
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Price(rs.getDouble("R_Price"));
-                bean.setR_Normal(rs.getString("R_Normal"));
-
-                listBalance.add(bean);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    BalanceBean bean = new BalanceBean();
+                    bean.setR_QuanCanDisc(rs.getDouble("r_quancandisc"));
+                    bean.setR_Index(rs.getString("R_Index"));
+                    bean.setR_Price(rs.getDouble("R_Price"));
+                    bean.setR_Normal(rs.getString("R_Normal"));
+                    
+                    listBalance.add(bean);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CouponDiscountControl.class, "error", e);
         } finally {
@@ -59,19 +57,17 @@ public class CouponDiscountControl {
                     + "and R_Discount ='Y' "
                     + "and r_table='" + tableNo + "' "
                     + "and r_void<>'V' ";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                BalanceBean bean = new BalanceBean();
-                bean.setR_QuanCanDisc(rs.getDouble("r_quancandisc"));
-                bean.setR_Index(rs.getString("R_Index"));
-                bean.setR_Price(rs.getDouble("R_Price"));
-                bean.setR_Normal(rs.getString("R_Normal"));
-
-                listBalance.add(bean);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    BalanceBean bean = new BalanceBean();
+                    bean.setR_QuanCanDisc(rs.getDouble("r_quancandisc"));
+                    bean.setR_Index(rs.getString("R_Index"));
+                    bean.setR_Price(rs.getDouble("R_Price"));
+                    bean.setR_Normal(rs.getString("R_Normal"));
+                    
+                    listBalance.add(bean);
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CouponDiscountControl.class, "error", e);
         } finally {

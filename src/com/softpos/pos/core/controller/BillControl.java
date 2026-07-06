@@ -55,35 +55,33 @@ public class BillControl {
         mysqlConnect.open(BillControl.class);
         try {
             String sql = "select ReceNo1 from poshwsetup where Terminal='" + getLocalMacNO() + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                ReceNo1 = rs.getString("ReceNo1");
-                switch (ReceNo1.length()) {
-                    case 1:
-                        ReceNo1 = "000000" + ReceNo1;
-                        break;
-                    case 2:
-                        ReceNo1 = "00000" + ReceNo1;
-                        break;
-                    case 3:
-                        ReceNo1 = "0000" + ReceNo1;
-                        break;
-                    case 4:
-                        ReceNo1 = "000" + ReceNo1;
-                        break;
-                    case 5:
-                        ReceNo1 = "00" + ReceNo1;
-                        break;
-                    case 6:
-                        ReceNo1 = "0" + ReceNo1;
-                        break;
-                    default:
-                        break;
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    ReceNo1 = rs.getString("ReceNo1");
+                    switch (ReceNo1.length()) {
+                        case 1:
+                            ReceNo1 = "000000" + ReceNo1;
+                            break;
+                        case 2:
+                            ReceNo1 = "00000" + ReceNo1;
+                            break;
+                        case 3:
+                            ReceNo1 = "0000" + ReceNo1;
+                            break;
+                        case 4:
+                            ReceNo1 = "000" + ReceNo1;
+                            break;
+                        case 5:
+                            ReceNo1 = "00" + ReceNo1;
+                            break;
+                        case 6:
+                            ReceNo1 = "0" + ReceNo1;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
@@ -124,7 +122,6 @@ public class BillControl {
     }
 
     public void updateNextBill() {
-        
         mysqlConnect.open(BillControl.class);
         try {
             String sql = "UPDATE poshwsetup "
@@ -155,54 +152,53 @@ public class BillControl {
             String sqlGetLoginTime = "select r_time from balance "
                     + "where r_table='" + bean.getB_Table() + "' "
                     + "order by r_index limit 1;";
-            ResultSet rs = mysqlConnect.executeQuery(sqlGetLoginTime);
-            if (rs.next()) {
-                blBean.setLoginTime(rs.getString("r_time"));
+            try (ResultSet rs = mysqlConnect.executeQuery(sqlGetLoginTime)) {
+                if (rs.next()) {
+                    blBean.setLoginTime(rs.getString("r_time"));
+                }
+                sql = "insert into billno "
+                        + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,"
+                        + "B_PostDate,B_Table,B_MacNo,B_Cashier,B_Cust,"
+                        + "B_ETD,B_Total,B_Food,B_Drink,B_Product,"
+                        + "B_Service,B_ServiceAmt,B_ItemDiscAmt,B_FastDisc,B_FastDiscAmt,"
+                        + "B_EmpDisc,B_EmpDiscAmt,B_TrainDisc,B_TrainDiscAmt,B_MemDisc,"
+                        + "B_MemDiscAmt,B_SubDisc,B_SubDiscAmt,B_SubDiscBath,B_ProDiscAmt,"
+                        + "B_SpaDiscAmt,B_AdjAmt,B_PreDisAmt,B_NetTotal,B_NetFood,"
+                        + "B_NetDrink,B_NetProduct,B_NetVat,B_NetNonVat,B_Vat,"
+                        + "B_PayAmt,B_Cash,B_GiftVoucher,B_Earnest,B_Ton,"
+                        + "B_CrCode1,B_CardNo1,B_AppCode1,B_CrCharge1,B_CrChargeAmt1,"
+                        + "B_CrAmt1,B_AccrCode,B_AccrAmt,B_AccrCr,B_MemCode,"
+                        + "B_MemName,B_MemBegin,B_MemEnd,B_MemCurSum,B_Void,"
+                        + "B_VoidUser,B_VoidTime,B_BillCopy,B_PrnCnt,B_PrnTime1,"
+                        + "B_PrnTime2,B_InvNo,B_InvType,B_Bran,B_BranName,"
+                        + "B_Tel,B_RecTime,MStamp,MScore,CurStamp,"
+                        + "StampRate,B_ChkBill,B_ChkBillTime,B_CashTime,B_WaitTime,"
+                        + "B_SumScore,B_CrBank,B_CrCardAmt,B_CrCurPoint,B_CrSumPoint,"
+                        + "B_Entertain,B_VoucherDiscAmt,B_VoucherOver,B_NetDiff,B_SumSetDiscAmt,"
+                        + "B_DetailFood,B_DetailDrink,B_DetailProduct,B_KicQue,B_ROUNDCLOSE)  "
+                        + "values('" + bean.getB_Refno() + "','" + bean.getB_CuponDiscAmt() + "', '"+DateUtil.getMySQL_HHmmss()+"', '" + blBean.getLoginTime() + "', '"+DateUtil.getMySQL_yyyyMMdd()+"',"
+                        + "'" + PublicVar.getDateDefault() + "','" + bean.getB_Table() + "','" + bean.getB_MacNo() + "','" + PublicVar.CASHIER + "','" + bean.getB_Cust() + "',"
+                        + "'" + bean.getB_ETD() + "','" + bean.getB_Total() + "','" + bean.getB_Food() + "','" + bean.getB_Drink() + "','" + bean.getB_Product() + "',"
+                        + "'" + bean.getB_Service() + "','" + bean.getB_ServiceAmt() + "','" + bean.getB_ItemDiscAmt() + "','" + bean.getB_FastDisc() + "','" + bean.getB_FastDiscAmt() + "',"
+                        + "'" + bean.getB_EmpDisc() + "','" + bean.getB_EmpDiscAmt() + "','" + bean.getB_TrainDisc() + "','" + bean.getB_TrainDiscAmt() + "','" + bean.getB_MemDisc() + "',"
+                        + "'" + bean.getB_MemDiscAmt() + "','" + bean.getB_SubDisc() + "','" + bean.getB_SubDiscAmt() + "','" + bean.getB_SubDiscBath() + "','" + bean.getB_ProDiscAmt() + "',"
+                        + "'" + bean.getB_SpaDiscAmt() + "','" + bean.getB_AdjAmt() + "','" + bean.getB_PreDisAmt() + "','" + bean.getB_NetTotal() + "','" + bean.getB_NetFood() + "',"
+                        + "'" + bean.getB_NetDrink() + "','" + bean.getB_NetProduct() + "','" + bean.getB_NetVat() + "','" + bean.getB_NetNonVat() + "','" + bean.getB_Vat() + "',"
+                        + "'" + bean.getB_PayAmt() + "','" + bean.getB_Cash() + "','" + bean.getB_GiftVoucher() + "','" + bean.getB_Earnest() + "','" + bean.getB_Ton() + "',"
+                        + "'" + bean.getB_CrCode1() + "','" + bean.getB_CardNo1() + "','" + bean.getB_AppCode1() + "','" + bean.getB_CrCharge1() + "','" + bean.getB_CrChargeAmt1() + "',"
+                        + "'" + bean.getB_CrAmt1() + "','" + bean.getB_AccrCode() + "','" + bean.getB_AccrAmt() + "','" + bean.getB_AccrCr() + "','" + bean.getB_MemCode() + "',"
+                        + "'" + bean.getB_MemName() + "','" + DateUtil.toMySqlInsert(bean.getB_MemBegin()) + "','" + DateUtil.toMySqlInsert(bean.getB_MemEnd()) + "','" + bean.getB_MemCurSum() + "','" + bean.getB_Void() + "',"
+                        + "'" + bean.getB_VoidUser() + "','" + bean.getB_VoidTime() + "','" + bean.getB_BillCopy() + "','" + bean.getB_PrnCnt() + "','" + bean.getB_PrnTime1() + "',"
+                        + "'" + bean.getB_PrnTime2() + "','" + bean.getB_InvNo() + "','" + bean.getB_InvType() + "','" + bean.getB_Bran() + "','" + bean.getB_BranName() + "',"
+                        + "'" + bean.getB_Tel() + "','" + bean.getB_RecTime() + "','" + bean.getMStamp() + "','" + bean.getMScore() + "','" + bean.getCurStamp() + "',"
+                        + "'" + bean.getStampRate() + "','" + bean.getB_ChkBill() + "','" + bean.getB_ChkBillTime() + "','" + bean.getB_CashTime() + "','" + bean.getB_WaitTime() + "',"
+                        + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
+                        + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
+                        + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
+                Statement stmt = mysqlConnect.getConnection().createStatement();
+                stmt.executeUpdate(sql);
+                stmt.close();
             }
-            sql = "insert into billno "
-                    + "(B_Refno,B_CuponDiscAmt,B_Ontime,B_LoginTime,B_OnDate,"
-                    + "B_PostDate,B_Table,B_MacNo,B_Cashier,B_Cust,"
-                    + "B_ETD,B_Total,B_Food,B_Drink,B_Product,"
-                    + "B_Service,B_ServiceAmt,B_ItemDiscAmt,B_FastDisc,B_FastDiscAmt,"
-                    + "B_EmpDisc,B_EmpDiscAmt,B_TrainDisc,B_TrainDiscAmt,B_MemDisc,"
-                    + "B_MemDiscAmt,B_SubDisc,B_SubDiscAmt,B_SubDiscBath,B_ProDiscAmt,"
-                    + "B_SpaDiscAmt,B_AdjAmt,B_PreDisAmt,B_NetTotal,B_NetFood,"
-                    + "B_NetDrink,B_NetProduct,B_NetVat,B_NetNonVat,B_Vat,"
-                    + "B_PayAmt,B_Cash,B_GiftVoucher,B_Earnest,B_Ton,"
-                    + "B_CrCode1,B_CardNo1,B_AppCode1,B_CrCharge1,B_CrChargeAmt1,"
-                    + "B_CrAmt1,B_AccrCode,B_AccrAmt,B_AccrCr,B_MemCode,"
-                    + "B_MemName,B_MemBegin,B_MemEnd,B_MemCurSum,B_Void,"
-                    + "B_VoidUser,B_VoidTime,B_BillCopy,B_PrnCnt,B_PrnTime1,"
-                    + "B_PrnTime2,B_InvNo,B_InvType,B_Bran,B_BranName,"
-                    + "B_Tel,B_RecTime,MStamp,MScore,CurStamp,"
-                    + "StampRate,B_ChkBill,B_ChkBillTime,B_CashTime,B_WaitTime,"
-                    + "B_SumScore,B_CrBank,B_CrCardAmt,B_CrCurPoint,B_CrSumPoint,"
-                    + "B_Entertain,B_VoucherDiscAmt,B_VoucherOver,B_NetDiff,B_SumSetDiscAmt,"
-                    + "B_DetailFood,B_DetailDrink,B_DetailProduct,B_KicQue,B_ROUNDCLOSE)  "
-                    + "values('" + bean.getB_Refno() + "','" + bean.getB_CuponDiscAmt() + "', '"+DateUtil.getMySQL_HHmmss()+"', '" + blBean.getLoginTime() + "', '"+DateUtil.getMySQL_yyyyMMdd()+"',"
-                    + "'" + PublicVar.getDateDefault() + "','" + bean.getB_Table() + "','" + bean.getB_MacNo() + "','" + PublicVar.CASHIER + "','" + bean.getB_Cust() + "',"
-                    + "'" + bean.getB_ETD() + "','" + bean.getB_Total() + "','" + bean.getB_Food() + "','" + bean.getB_Drink() + "','" + bean.getB_Product() + "',"
-                    + "'" + bean.getB_Service() + "','" + bean.getB_ServiceAmt() + "','" + bean.getB_ItemDiscAmt() + "','" + bean.getB_FastDisc() + "','" + bean.getB_FastDiscAmt() + "',"
-                    + "'" + bean.getB_EmpDisc() + "','" + bean.getB_EmpDiscAmt() + "','" + bean.getB_TrainDisc() + "','" + bean.getB_TrainDiscAmt() + "','" + bean.getB_MemDisc() + "',"
-                    + "'" + bean.getB_MemDiscAmt() + "','" + bean.getB_SubDisc() + "','" + bean.getB_SubDiscAmt() + "','" + bean.getB_SubDiscBath() + "','" + bean.getB_ProDiscAmt() + "',"
-                    + "'" + bean.getB_SpaDiscAmt() + "','" + bean.getB_AdjAmt() + "','" + bean.getB_PreDisAmt() + "','" + bean.getB_NetTotal() + "','" + bean.getB_NetFood() + "',"
-                    + "'" + bean.getB_NetDrink() + "','" + bean.getB_NetProduct() + "','" + bean.getB_NetVat() + "','" + bean.getB_NetNonVat() + "','" + bean.getB_Vat() + "',"
-                    + "'" + bean.getB_PayAmt() + "','" + bean.getB_Cash() + "','" + bean.getB_GiftVoucher() + "','" + bean.getB_Earnest() + "','" + bean.getB_Ton() + "',"
-                    + "'" + bean.getB_CrCode1() + "','" + bean.getB_CardNo1() + "','" + bean.getB_AppCode1() + "','" + bean.getB_CrCharge1() + "','" + bean.getB_CrChargeAmt1() + "',"
-                    + "'" + bean.getB_CrAmt1() + "','" + bean.getB_AccrCode() + "','" + bean.getB_AccrAmt() + "','" + bean.getB_AccrCr() + "','" + bean.getB_MemCode() + "',"
-                    + "'" + bean.getB_MemName() + "','" + DateUtil.toMySqlInsert(bean.getB_MemBegin()) + "','" + DateUtil.toMySqlInsert(bean.getB_MemEnd()) + "','" + bean.getB_MemCurSum() + "','" + bean.getB_Void() + "',"
-                    + "'" + bean.getB_VoidUser() + "','" + bean.getB_VoidTime() + "','" + bean.getB_BillCopy() + "','" + bean.getB_PrnCnt() + "','" + bean.getB_PrnTime1() + "',"
-                    + "'" + bean.getB_PrnTime2() + "','" + bean.getB_InvNo() + "','" + bean.getB_InvType() + "','" + bean.getB_Bran() + "','" + bean.getB_BranName() + "',"
-                    + "'" + bean.getB_Tel() + "','" + bean.getB_RecTime() + "','" + bean.getMStamp() + "','" + bean.getMScore() + "','" + bean.getCurStamp() + "',"
-                    + "'" + bean.getStampRate() + "','" + bean.getB_ChkBill() + "','" + bean.getB_ChkBillTime() + "','" + bean.getB_CashTime() + "','" + bean.getB_WaitTime() + "',"
-                    + "'" + bean.getB_SumScore() + "','" + bean.getB_CrBank() + "','" + bean.getB_CrCardAmt() + "','" + bean.getB_CrCurPoint() + "','" + bean.getB_CrSumPoint() + "',"
-                    + "'" + bean.getB_Entertain1() + "','" + bean.getB_VoucherDiscAmt() + "','" + bean.getB_VoucherOver() + "','" + bean.getB_NetDiff() + "','" + bean.getB_SumSetDiscAmt() + "',"
-                    + "'" + bean.getB_DetailFood() + "','" + bean.getB_DetailDrink() + "','" + bean.getB_DetailProduct() + "','" + bean.getB_KicQue() + "','" + bean.getB_ROUNDCLOSE() + "')";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-
-            rs.close();
 
             if (bean.getB_AccrAmt() > 0) {
                 try {
@@ -1221,92 +1217,91 @@ public class BillControl {
         String sql = "select * from t_sale where R_Refno='" + billNo + "' and r_void<>'V' order by R_Index";
         List<TSaleBean> data = new ArrayList<>();
 
-        
         mysqlConnect.open(BillControl.class);
         try {
-            ResultSet rs = mysqlConnect.executeQuery(sql);
-            while (rs.next()) {
-                TSaleBean tsale = new TSaleBean();
-                tsale.setR_Index(rs.getString("R_Index"));
-                tsale.setR_Refno(rs.getString("R_Refno"));
-                tsale.setR_Table(rs.getString("R_Table"));
-                tsale.setR_Time(rs.getString("R_Time"));
-                tsale.setMacNo(rs.getString("MacNo"));
-                tsale.setCashier(rs.getString("Cashier"));
-                tsale.setR_Emp(rs.getString("R_Emp"));
-                tsale.setR_PluCode(rs.getString("R_PluCode"));
-                tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
-                tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs.getString("R_Unit")));
-                tsale.setR_Group(rs.getString("R_Group"));
-                tsale.setR_Status(rs.getString("R_Status"));
-                tsale.setR_Normal(rs.getString("R_Normal"));
-                tsale.setR_Discount(rs.getString("R_Discount"));
-                tsale.setR_Service(rs.getString("R_Service"));
-                tsale.setR_Stock(rs.getString("R_Stock"));
-                tsale.setR_Set(rs.getString("R_Set"));
-                tsale.setR_Vat(rs.getString("R_Vat"));
-                tsale.setR_Type(rs.getString("R_Type"));
-                tsale.setR_ETD(rs.getString("R_ETD"));
-                tsale.setR_Quan(rs.getFloat("R_Quan"));
-                tsale.setR_Price(rs.getFloat("R_Price"));
-                tsale.setR_Total(rs.getFloat("R_Total"));
-                String R_PrType = rs.getString("R_PrType");
-                if (R_PrType == null) {
-                    R_PrType = "";
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                while (rs.next()) {
+                    TSaleBean tsale = new TSaleBean();
+                    tsale.setR_Index(rs.getString("R_Index"));
+                    tsale.setR_Refno(rs.getString("R_Refno"));
+                    tsale.setR_Table(rs.getString("R_Table"));
+                    tsale.setR_Time(rs.getString("R_Time"));
+                    tsale.setMacNo(rs.getString("MacNo"));
+                    tsale.setCashier(rs.getString("Cashier"));
+                    tsale.setR_Emp(rs.getString("R_Emp"));
+                    tsale.setR_PluCode(rs.getString("R_PluCode"));
+                    tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                    tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs.getString("R_Unit")));
+                    tsale.setR_Group(rs.getString("R_Group"));
+                    tsale.setR_Status(rs.getString("R_Status"));
+                    tsale.setR_Normal(rs.getString("R_Normal"));
+                    tsale.setR_Discount(rs.getString("R_Discount"));
+                    tsale.setR_Service(rs.getString("R_Service"));
+                    tsale.setR_Stock(rs.getString("R_Stock"));
+                    tsale.setR_Set(rs.getString("R_Set"));
+                    tsale.setR_Vat(rs.getString("R_Vat"));
+                    tsale.setR_Type(rs.getString("R_Type"));
+                    tsale.setR_ETD(rs.getString("R_ETD"));
+                    tsale.setR_Quan(rs.getFloat("R_Quan"));
+                    tsale.setR_Price(rs.getFloat("R_Price"));
+                    tsale.setR_Total(rs.getFloat("R_Total"));
+                    String R_PrType = rs.getString("R_PrType");
+                    if (R_PrType == null) {
+                        R_PrType = "";
+                    }
+                    tsale.setR_PrType(R_PrType);
+                    tsale.setR_PrCode(rs.getString("R_PrCode"));
+                    tsale.setR_PrDisc(rs.getFloat("R_PrDisc"));
+                    tsale.setR_PrBath(rs.getFloat("R_PrBath"));
+                    tsale.setR_PrAmt(rs.getFloat("R_PrAmt"));
+                    tsale.setR_PrCuType(rs.getString("R_PrCuType"));
+                    tsale.setR_PrCuCode(rs.getString("R_PrCuCode"));
+                    tsale.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
+                    tsale.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
+                    tsale.setR_Redule(rs.getFloat("R_Redule"));
+                    tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
+                    tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
+                    tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
+                    tsale.setR_Kic(rs.getString("R_Kic"));
+                    tsale.setR_KicPrint(rs.getString("R_KicPrint"));
+                    tsale.setR_Refund(rs.getString("R_Refund"));
+                    tsale.setVoidMsg(rs.getString("VoidMsg"));
+                    tsale.setR_Void(rs.getString("R_Void"));
+                    tsale.setR_VoidUser(rs.getString("R_VoidUser"));
+                    tsale.setR_VoidTime(rs.getString("R_VoidTime"));
+                    tsale.setStkCode(rs.getString("StkCode"));
+                    tsale.setPosStk(rs.getString("PosStk"));
+                    tsale.setR_ServiceAmt(rs.getFloat("R_ServiceAmt"));
+                    tsale.setR_PrChkType(rs.getString("R_PrChkType"));
+                    tsale.setR_PrQuan(rs.getFloat("R_PrQuan"));
+                    tsale.setR_PrSubType(rs.getString("R_PrSubType"));
+                    tsale.setR_PrSubCode(rs.getString("R_PrSubCode"));
+                    tsale.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
+                    tsale.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
+                    tsale.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
+                    tsale.setR_PrSubAmt(rs.getFloat("R_PrSubAmt"));
+                    tsale.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
+                    tsale.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
+                    tsale.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
+                    tsale.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
+                    tsale.setR_PrChkType2(rs.getString("R_PrChkType2"));
+                    tsale.setR_PrQuan2(rs.getFloat("R_PrQuan2"));
+                    tsale.setR_PrType2(rs.getString("R_PrType2"));
+                    tsale.setR_PrCode2(rs.getString("R_PrCode2"));
+                    tsale.setR_PrDisc2(rs.getFloat("R_PrDisc2"));
+                    tsale.setR_PrBath2(rs.getFloat("R_PrBath2"));
+                    tsale.setR_PrAmt2(rs.getFloat("R_PrAmt2"));
+                    tsale.setR_PrAdj2(rs.getFloat("R_PrAdj2"));
+                    tsale.setR_PItemNo(rs.getInt("R_PItemNo"));
+                    tsale.setR_PKicQue(rs.getInt("R_PKicQue"));
+                    tsale.setR_MoveItem(rs.getString("R_MoveItem"));
+                    tsale.setR_MoveFrom(rs.getString("R_MoveFrom"));
+                    tsale.setR_MoveUser(rs.getString("R_MoveUser"));
+                    tsale.setR_MoveFlag(rs.getString("R_MoveFlag"));
+                    
+                    data.add(tsale);
                 }
-                tsale.setR_PrType(R_PrType);
-                tsale.setR_PrCode(rs.getString("R_PrCode"));
-                tsale.setR_PrDisc(rs.getFloat("R_PrDisc"));
-                tsale.setR_PrBath(rs.getFloat("R_PrBath"));
-                tsale.setR_PrAmt(rs.getFloat("R_PrAmt"));
-                tsale.setR_PrCuType(rs.getString("R_PrCuType"));
-                tsale.setR_PrCuCode(rs.getString("R_PrCuCode"));
-                tsale.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
-                tsale.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
-                tsale.setR_Redule(rs.getFloat("R_Redule"));
-                tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
-                tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
-                tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
-                tsale.setR_Kic(rs.getString("R_Kic"));
-                tsale.setR_KicPrint(rs.getString("R_KicPrint"));
-                tsale.setR_Refund(rs.getString("R_Refund"));
-                tsale.setVoidMsg(rs.getString("VoidMsg"));
-                tsale.setR_Void(rs.getString("R_Void"));
-                tsale.setR_VoidUser(rs.getString("R_VoidUser"));
-                tsale.setR_VoidTime(rs.getString("R_VoidTime"));
-                tsale.setStkCode(rs.getString("StkCode"));
-                tsale.setPosStk(rs.getString("PosStk"));
-                tsale.setR_ServiceAmt(rs.getFloat("R_ServiceAmt"));
-                tsale.setR_PrChkType(rs.getString("R_PrChkType"));
-                tsale.setR_PrQuan(rs.getFloat("R_PrQuan"));
-                tsale.setR_PrSubType(rs.getString("R_PrSubType"));
-                tsale.setR_PrSubCode(rs.getString("R_PrSubCode"));
-                tsale.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
-                tsale.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
-                tsale.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
-                tsale.setR_PrSubAmt(rs.getFloat("R_PrSubAmt"));
-                tsale.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
-                tsale.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
-                tsale.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
-                tsale.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
-                tsale.setR_PrChkType2(rs.getString("R_PrChkType2"));
-                tsale.setR_PrQuan2(rs.getFloat("R_PrQuan2"));
-                tsale.setR_PrType2(rs.getString("R_PrType2"));
-                tsale.setR_PrCode2(rs.getString("R_PrCode2"));
-                tsale.setR_PrDisc2(rs.getFloat("R_PrDisc2"));
-                tsale.setR_PrBath2(rs.getFloat("R_PrBath2"));
-                tsale.setR_PrAmt2(rs.getFloat("R_PrAmt2"));
-                tsale.setR_PrAdj2(rs.getFloat("R_PrAdj2"));
-                tsale.setR_PItemNo(rs.getInt("R_PItemNo"));
-                tsale.setR_PKicQue(rs.getInt("R_PKicQue"));
-                tsale.setR_MoveItem(rs.getString("R_MoveItem"));
-                tsale.setR_MoveFrom(rs.getString("R_MoveFrom"));
-                tsale.setR_MoveUser(rs.getString("R_MoveUser"));
-                tsale.setR_MoveFlag(rs.getString("R_MoveFlag"));
-
-                data.add(tsale);
             }
-            rs.close();
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
@@ -1324,197 +1319,197 @@ public class BillControl {
         
         mysqlConnect.open(BillControl.class);
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                TSaleBean tsale = new TSaleBean();
-                tsale.setR_Index(rs.getString("R_Index"));
-                tsale.setR_Refno(rs.getString("R_Refno"));
-                tsale.setR_Table(rs.getString("R_Table"));
-                tsale.setR_Time(rs.getString("R_Time"));
-                tsale.setMacNo(rs.getString("MacNo"));
-                tsale.setCashier(rs.getString("Cashier"));
-                tsale.setR_Emp(rs.getString("R_Emp"));
-                tsale.setR_PluCode(rs.getString("R_PluCode"));
-                tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
-                tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs.getString("R_Unit")));
-                tsale.setR_Group(rs.getString("R_Group"));
-                tsale.setR_Status(rs.getString("R_Status"));
-                tsale.setR_Normal(rs.getString("R_Normal"));
-                tsale.setR_Discount(rs.getString("R_Discount"));
-                tsale.setR_Service(rs.getString("R_Service"));
-                tsale.setR_Stock(rs.getString("R_Stock"));
-                tsale.setR_Set(rs.getString("R_Set"));
-                tsale.setR_Vat(rs.getString("R_Vat"));
-                tsale.setR_Type(rs.getString("R_Type"));
-                tsale.setR_ETD(rs.getString("R_ETD"));
-                tsale.setR_Quan(rs.getFloat("R_Quan"));
-                tsale.setR_Price(rs.getFloat("R_Price"));
-                tsale.setR_Total(rs.getFloat("R_Total"));
-                String R_PrType = rs.getString("R_PrType");
-                if (R_PrType == null) {
-                    R_PrType = "";
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    TSaleBean tsale = new TSaleBean();
+                    tsale.setR_Index(rs.getString("R_Index"));
+                    tsale.setR_Refno(rs.getString("R_Refno"));
+                    tsale.setR_Table(rs.getString("R_Table"));
+                    tsale.setR_Time(rs.getString("R_Time"));
+                    tsale.setMacNo(rs.getString("MacNo"));
+                    tsale.setCashier(rs.getString("Cashier"));
+                    tsale.setR_Emp(rs.getString("R_Emp"));
+                    tsale.setR_PluCode(rs.getString("R_PluCode"));
+                    tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                    tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs.getString("R_Unit")));
+                    tsale.setR_Group(rs.getString("R_Group"));
+                    tsale.setR_Status(rs.getString("R_Status"));
+                    tsale.setR_Normal(rs.getString("R_Normal"));
+                    tsale.setR_Discount(rs.getString("R_Discount"));
+                    tsale.setR_Service(rs.getString("R_Service"));
+                    tsale.setR_Stock(rs.getString("R_Stock"));
+                    tsale.setR_Set(rs.getString("R_Set"));
+                    tsale.setR_Vat(rs.getString("R_Vat"));
+                    tsale.setR_Type(rs.getString("R_Type"));
+                    tsale.setR_ETD(rs.getString("R_ETD"));
+                    tsale.setR_Quan(rs.getFloat("R_Quan"));
+                    tsale.setR_Price(rs.getFloat("R_Price"));
+                    tsale.setR_Total(rs.getFloat("R_Total"));
+                    String R_PrType = rs.getString("R_PrType");
+                    if (R_PrType == null) {
+                        R_PrType = "";
+                    }
+                    tsale.setR_PrType(R_PrType);
+                    tsale.setR_PrCode(rs.getString("R_PrCode"));
+                    tsale.setR_PrDisc(rs.getFloat("R_PrDisc"));
+                    tsale.setR_PrBath(rs.getFloat("R_PrBath"));
+                    tsale.setR_PrAmt(rs.getFloat("R_PrAmt"));
+                    tsale.setR_PrCuType(rs.getString("R_PrCuType"));
+                    tsale.setR_PrCuCode(rs.getString("R_PrCuCode"));
+                    tsale.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
+                    tsale.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
+                    tsale.setR_Redule(rs.getFloat("R_Redule"));
+                    tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
+                    tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
+                    tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
+                    tsale.setR_Kic(rs.getString("R_Kic"));
+                    tsale.setR_KicPrint(rs.getString("R_KicPrint"));
+                    tsale.setR_Refund(rs.getString("R_Refund"));
+                    tsale.setVoidMsg(rs.getString("VoidMsg"));
+                    tsale.setR_Void(rs.getString("R_Void"));
+                    tsale.setR_VoidUser(rs.getString("R_VoidUser"));
+                    tsale.setR_VoidTime(rs.getString("R_VoidTime"));
+                    tsale.setStkCode(rs.getString("StkCode"));
+                    tsale.setPosStk(rs.getString("PosStk"));
+                    tsale.setR_ServiceAmt(rs.getFloat("R_ServiceAmt"));
+                    tsale.setR_PrChkType(rs.getString("R_PrChkType"));
+                    tsale.setR_PrQuan(rs.getFloat("R_PrQuan"));
+                    tsale.setR_PrSubType(rs.getString("R_PrSubType"));
+                    tsale.setR_PrSubCode(rs.getString("R_PrSubCode"));
+                    tsale.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
+                    tsale.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
+                    tsale.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
+                    tsale.setR_PrSubAmt(rs.getFloat("R_PrSubAmt"));
+                    tsale.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
+                    tsale.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
+                    tsale.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
+                    tsale.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
+                    tsale.setR_PrChkType2(rs.getString("R_PrChkType2"));
+                    tsale.setR_PrQuan2(rs.getFloat("R_PrQuan2"));
+                    tsale.setR_PrType2(rs.getString("R_PrType2"));
+                    tsale.setR_PrCode2(rs.getString("R_PrCode2"));
+                    tsale.setR_PrDisc2(rs.getFloat("R_PrDisc2"));
+                    tsale.setR_PrBath2(rs.getFloat("R_PrBath2"));
+                    tsale.setR_PrAmt2(rs.getFloat("R_PrAmt2"));
+                    tsale.setR_PrAdj2(rs.getFloat("R_PrAdj2"));
+                    tsale.setR_PItemNo(rs.getInt("R_PItemNo"));
+                    tsale.setR_PKicQue(rs.getInt("R_PKicQue"));
+                    tsale.setR_MoveItem(rs.getString("R_MoveItem"));
+                    tsale.setR_MoveFrom(rs.getString("R_MoveFrom"));
+                    tsale.setR_MoveUser(rs.getString("R_MoveUser"));
+                    tsale.setR_MoveFlag(rs.getString("R_MoveFlag"));
+                    tsale.setR_Opt1(rs.getString("R_Opt1"));
+                    tsale.setR_Opt2(rs.getString("R_Opt2"));
+                    tsale.setR_Opt3(rs.getString("R_Opt3"));
+                    tsale.setR_Opt4(rs.getString("R_Opt4"));
+                    tsale.setR_Opt5(rs.getString("R_Opt5"));
+                    tsale.setR_Opt6(rs.getString("R_Opt6"));
+                    tsale.setR_Opt7(rs.getString("R_Opt7"));
+                    tsale.setR_Opt8(rs.getString("R_Opt8"));
+                    tsale.setR_Opt9(rs.getString("R_Opt9"));
+                    
+                    data.add(tsale);
                 }
-                tsale.setR_PrType(R_PrType);
-                tsale.setR_PrCode(rs.getString("R_PrCode"));
-                tsale.setR_PrDisc(rs.getFloat("R_PrDisc"));
-                tsale.setR_PrBath(rs.getFloat("R_PrBath"));
-                tsale.setR_PrAmt(rs.getFloat("R_PrAmt"));
-                tsale.setR_PrCuType(rs.getString("R_PrCuType"));
-                tsale.setR_PrCuCode(rs.getString("R_PrCuCode"));
-                tsale.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
-                tsale.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
-                tsale.setR_Redule(rs.getFloat("R_Redule"));
-                tsale.setR_DiscBath(rs.getFloat("R_DiscBath"));
-                tsale.setR_PrAdj(rs.getFloat("R_PrAdj"));
-                tsale.setR_NetTotal(rs.getFloat("R_NetTotal"));
-                tsale.setR_Kic(rs.getString("R_Kic"));
-                tsale.setR_KicPrint(rs.getString("R_KicPrint"));
-                tsale.setR_Refund(rs.getString("R_Refund"));
-                tsale.setVoidMsg(rs.getString("VoidMsg"));
-                tsale.setR_Void(rs.getString("R_Void"));
-                tsale.setR_VoidUser(rs.getString("R_VoidUser"));
-                tsale.setR_VoidTime(rs.getString("R_VoidTime"));
-                tsale.setStkCode(rs.getString("StkCode"));
-                tsale.setPosStk(rs.getString("PosStk"));
-                tsale.setR_ServiceAmt(rs.getFloat("R_ServiceAmt"));
-                tsale.setR_PrChkType(rs.getString("R_PrChkType"));
-                tsale.setR_PrQuan(rs.getFloat("R_PrQuan"));
-                tsale.setR_PrSubType(rs.getString("R_PrSubType"));
-                tsale.setR_PrSubCode(rs.getString("R_PrSubCode"));
-                tsale.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
-                tsale.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
-                tsale.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
-                tsale.setR_PrSubAmt(rs.getFloat("R_PrSubAmt"));
-                tsale.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
-                tsale.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
-                tsale.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
-                tsale.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
-                tsale.setR_PrChkType2(rs.getString("R_PrChkType2"));
-                tsale.setR_PrQuan2(rs.getFloat("R_PrQuan2"));
-                tsale.setR_PrType2(rs.getString("R_PrType2"));
-                tsale.setR_PrCode2(rs.getString("R_PrCode2"));
-                tsale.setR_PrDisc2(rs.getFloat("R_PrDisc2"));
-                tsale.setR_PrBath2(rs.getFloat("R_PrBath2"));
-                tsale.setR_PrAmt2(rs.getFloat("R_PrAmt2"));
-                tsale.setR_PrAdj2(rs.getFloat("R_PrAdj2"));
-                tsale.setR_PItemNo(rs.getInt("R_PItemNo"));
-                tsale.setR_PKicQue(rs.getInt("R_PKicQue"));
-                tsale.setR_MoveItem(rs.getString("R_MoveItem"));
-                tsale.setR_MoveFrom(rs.getString("R_MoveFrom"));
-                tsale.setR_MoveUser(rs.getString("R_MoveUser"));
-                tsale.setR_MoveFlag(rs.getString("R_MoveFlag"));
-                tsale.setR_Opt1(rs.getString("R_Opt1"));
-                tsale.setR_Opt2(rs.getString("R_Opt2"));
-                tsale.setR_Opt3(rs.getString("R_Opt3"));
-                tsale.setR_Opt4(rs.getString("R_Opt4"));
-                tsale.setR_Opt5(rs.getString("R_Opt5"));
-                tsale.setR_Opt6(rs.getString("R_Opt6"));
-                tsale.setR_Opt7(rs.getString("R_Opt7"));
-                tsale.setR_Opt8(rs.getString("R_Opt8"));
-                tsale.setR_Opt9(rs.getString("R_Opt9"));
-
-                data.add(tsale);
-            }
-            String sql1 = "select * from t_sale "
-                    + "where R_Refno='" + billNo + "' "
-                    + "and r_void<>'V' "
-                    + "and r_plucode='8899' "
-                    + "order by R_Index";
-            ResultSet rs1 = mysqlConnect.executeQuery(sql1);
-            while (rs1.next()) {
-                TSaleBean tsale = new TSaleBean();
-                tsale.setR_Index(rs1.getString("R_Index"));
-                tsale.setR_Refno(rs1.getString("R_Refno"));
-                tsale.setR_Table(rs1.getString("R_Table"));
-                tsale.setR_Time(rs1.getString("R_Time"));
-                tsale.setMacNo(rs1.getString("MacNo"));
-                tsale.setCashier(rs1.getString("Cashier"));
-                tsale.setR_Emp(rs1.getString("R_Emp"));
-                tsale.setR_PluCode(rs1.getString("R_PluCode"));
-                tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs1.getString("R_PName")));
-                tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs1.getString("R_Unit")));
-                tsale.setR_Group(rs1.getString("R_Group"));
-                tsale.setR_Status(rs1.getString("R_Status"));
-                tsale.setR_Normal(rs1.getString("R_Normal"));
-                tsale.setR_Discount(rs1.getString("R_Discount"));
-                tsale.setR_Service(rs1.getString("R_Service"));
-                tsale.setR_Stock(rs1.getString("R_Stock"));
-                tsale.setR_Set(rs1.getString("R_Set"));
-                tsale.setR_Vat(rs1.getString("R_Vat"));
-                tsale.setR_Type(rs1.getString("R_Type"));
-                tsale.setR_ETD(rs1.getString("R_ETD"));
-                tsale.setR_Quan(rs1.getFloat("R_Quan"));
-                tsale.setR_Price(rs1.getFloat("R_Price"));
-                tsale.setR_Total(rs1.getFloat("R_Total"));
-                String R_PrType = rs1.getString("R_PrType");
-                if (R_PrType == null) {
-                    R_PrType = "";
+                String sql1 = "select * from t_sale "
+                        + "where R_Refno='" + billNo + "' "
+                        + "and r_void<>'V' "
+                        + "and r_plucode='8899' "
+                        + "order by R_Index";
+                ResultSet rs1 = mysqlConnect.executeQuery(sql1);
+                while (rs1.next()) {
+                    TSaleBean tsale = new TSaleBean();
+                    tsale.setR_Index(rs1.getString("R_Index"));
+                    tsale.setR_Refno(rs1.getString("R_Refno"));
+                    tsale.setR_Table(rs1.getString("R_Table"));
+                    tsale.setR_Time(rs1.getString("R_Time"));
+                    tsale.setMacNo(rs1.getString("MacNo"));
+                    tsale.setCashier(rs1.getString("Cashier"));
+                    tsale.setR_Emp(rs1.getString("R_Emp"));
+                    tsale.setR_PluCode(rs1.getString("R_PluCode"));
+                    tsale.setR_PName(ThaiUtil.ASCII2Unicode(rs1.getString("R_PName")));
+                    tsale.setR_Unit(ThaiUtil.ASCII2Unicode(rs1.getString("R_Unit")));
+                    tsale.setR_Group(rs1.getString("R_Group"));
+                    tsale.setR_Status(rs1.getString("R_Status"));
+                    tsale.setR_Normal(rs1.getString("R_Normal"));
+                    tsale.setR_Discount(rs1.getString("R_Discount"));
+                    tsale.setR_Service(rs1.getString("R_Service"));
+                    tsale.setR_Stock(rs1.getString("R_Stock"));
+                    tsale.setR_Set(rs1.getString("R_Set"));
+                    tsale.setR_Vat(rs1.getString("R_Vat"));
+                    tsale.setR_Type(rs1.getString("R_Type"));
+                    tsale.setR_ETD(rs1.getString("R_ETD"));
+                    tsale.setR_Quan(rs1.getFloat("R_Quan"));
+                    tsale.setR_Price(rs1.getFloat("R_Price"));
+                    tsale.setR_Total(rs1.getFloat("R_Total"));
+                    String R_PrType = rs1.getString("R_PrType");
+                    if (R_PrType == null) {
+                        R_PrType = "";
+                    }
+                    tsale.setR_PrType(R_PrType);
+                    tsale.setR_PrCode(rs1.getString("R_PrCode"));
+                    tsale.setR_PrDisc(rs1.getFloat("R_PrDisc"));
+                    tsale.setR_PrBath(rs1.getFloat("R_PrBath"));
+                    tsale.setR_PrAmt(rs1.getFloat("R_PrAmt"));
+                    tsale.setR_PrCuType(rs1.getString("R_PrCuType"));
+                    tsale.setR_PrCuCode(rs1.getString("R_PrCuCode"));
+                    tsale.setR_PrCuQuan(rs1.getFloat("R_PrCuQuan"));
+                    tsale.setR_PrCuAmt(rs1.getFloat("R_PrCuAmt"));
+                    tsale.setR_Redule(rs1.getFloat("R_Redule"));
+                    tsale.setR_DiscBath(rs1.getFloat("R_DiscBath"));
+                    tsale.setR_PrAdj(rs1.getFloat("R_PrAdj"));
+                    tsale.setR_NetTotal(rs1.getFloat("R_NetTotal"));
+                    tsale.setR_Kic(rs1.getString("R_Kic"));
+                    tsale.setR_KicPrint(rs1.getString("R_KicPrint"));
+                    tsale.setR_Refund(rs1.getString("R_Refund"));
+                    tsale.setVoidMsg(rs1.getString("VoidMsg"));
+                    tsale.setR_Void(rs1.getString("R_Void"));
+                    tsale.setR_VoidUser(rs1.getString("R_VoidUser"));
+                    tsale.setR_VoidTime(rs1.getString("R_VoidTime"));
+                    tsale.setStkCode(rs1.getString("StkCode"));
+                    tsale.setPosStk(rs1.getString("PosStk"));
+                    tsale.setR_ServiceAmt(rs1.getFloat("R_ServiceAmt"));
+                    tsale.setR_PrChkType(rs1.getString("R_PrChkType"));
+                    tsale.setR_PrQuan(rs1.getFloat("R_PrQuan"));
+                    tsale.setR_PrSubType(rs1.getString("R_PrSubType"));
+                    tsale.setR_PrSubCode(rs1.getString("R_PrSubCode"));
+                    tsale.setR_PrSubQuan(rs1.getFloat("R_PrSubQuan"));
+                    tsale.setR_PrSubDisc(rs1.getFloat("R_PrSubDisc"));
+                    tsale.setR_PrSubBath(rs1.getFloat("R_PrSubBath"));
+                    tsale.setR_PrSubAmt(rs1.getFloat("R_PrSubAmt"));
+                    tsale.setR_PrSubAdj(rs1.getFloat("R_PrSubAdj"));
+                    tsale.setR_PrCuDisc(rs1.getFloat("R_PrCuDisc"));
+                    tsale.setR_PrCuBath(rs1.getFloat("R_PrCuBath"));
+                    tsale.setR_PrCuAdj(rs1.getFloat("R_PrCuAdj"));
+                    tsale.setR_PrChkType2(rs1.getString("R_PrChkType2"));
+                    tsale.setR_PrQuan2(rs1.getFloat("R_PrQuan2"));
+                    tsale.setR_PrType2(rs1.getString("R_PrType2"));
+                    tsale.setR_PrCode2(rs1.getString("R_PrCode2"));
+                    tsale.setR_PrDisc2(rs1.getFloat("R_PrDisc2"));
+                    tsale.setR_PrBath2(rs1.getFloat("R_PrBath2"));
+                    tsale.setR_PrAmt2(rs1.getFloat("R_PrAmt2"));
+                    tsale.setR_PrAdj2(rs1.getFloat("R_PrAdj2"));
+                    tsale.setR_PItemNo(rs1.getInt("R_PItemNo"));
+                    tsale.setR_PKicQue(rs1.getInt("R_PKicQue"));
+                    tsale.setR_MoveItem(rs1.getString("R_MoveItem"));
+                    tsale.setR_MoveFrom(rs1.getString("R_MoveFrom"));
+                    tsale.setR_MoveUser(rs1.getString("R_MoveUser"));
+                    tsale.setR_MoveFlag(rs1.getString("R_MoveFlag"));
+                    tsale.setR_Opt1(rs1.getString("R_Opt1"));
+                    tsale.setR_Opt2(rs1.getString("R_Opt2"));
+                    tsale.setR_Opt3(rs1.getString("R_Opt3"));
+                    tsale.setR_Opt4(rs1.getString("R_Opt4"));
+                    tsale.setR_Opt5(rs1.getString("R_Opt5"));
+                    tsale.setR_Opt6(rs1.getString("R_Opt6"));
+                    tsale.setR_Opt7(rs1.getString("R_Opt7"));
+                    tsale.setR_Opt8(rs1.getString("R_Opt8"));
+                    tsale.setR_Opt9(rs1.getString("R_Opt9"));
+                    data.add(tsale);
                 }
-                tsale.setR_PrType(R_PrType);
-                tsale.setR_PrCode(rs1.getString("R_PrCode"));
-                tsale.setR_PrDisc(rs1.getFloat("R_PrDisc"));
-                tsale.setR_PrBath(rs1.getFloat("R_PrBath"));
-                tsale.setR_PrAmt(rs1.getFloat("R_PrAmt"));
-                tsale.setR_PrCuType(rs1.getString("R_PrCuType"));
-                tsale.setR_PrCuCode(rs1.getString("R_PrCuCode"));
-                tsale.setR_PrCuQuan(rs1.getFloat("R_PrCuQuan"));
-                tsale.setR_PrCuAmt(rs1.getFloat("R_PrCuAmt"));
-                tsale.setR_Redule(rs1.getFloat("R_Redule"));
-                tsale.setR_DiscBath(rs1.getFloat("R_DiscBath"));
-                tsale.setR_PrAdj(rs1.getFloat("R_PrAdj"));
-                tsale.setR_NetTotal(rs1.getFloat("R_NetTotal"));
-                tsale.setR_Kic(rs1.getString("R_Kic"));
-                tsale.setR_KicPrint(rs1.getString("R_KicPrint"));
-                tsale.setR_Refund(rs1.getString("R_Refund"));
-                tsale.setVoidMsg(rs1.getString("VoidMsg"));
-                tsale.setR_Void(rs1.getString("R_Void"));
-                tsale.setR_VoidUser(rs1.getString("R_VoidUser"));
-                tsale.setR_VoidTime(rs1.getString("R_VoidTime"));
-                tsale.setStkCode(rs1.getString("StkCode"));
-                tsale.setPosStk(rs1.getString("PosStk"));
-                tsale.setR_ServiceAmt(rs1.getFloat("R_ServiceAmt"));
-                tsale.setR_PrChkType(rs1.getString("R_PrChkType"));
-                tsale.setR_PrQuan(rs1.getFloat("R_PrQuan"));
-                tsale.setR_PrSubType(rs1.getString("R_PrSubType"));
-                tsale.setR_PrSubCode(rs1.getString("R_PrSubCode"));
-                tsale.setR_PrSubQuan(rs1.getFloat("R_PrSubQuan"));
-                tsale.setR_PrSubDisc(rs1.getFloat("R_PrSubDisc"));
-                tsale.setR_PrSubBath(rs1.getFloat("R_PrSubBath"));
-                tsale.setR_PrSubAmt(rs1.getFloat("R_PrSubAmt"));
-                tsale.setR_PrSubAdj(rs1.getFloat("R_PrSubAdj"));
-                tsale.setR_PrCuDisc(rs1.getFloat("R_PrCuDisc"));
-                tsale.setR_PrCuBath(rs1.getFloat("R_PrCuBath"));
-                tsale.setR_PrCuAdj(rs1.getFloat("R_PrCuAdj"));
-                tsale.setR_PrChkType2(rs1.getString("R_PrChkType2"));
-                tsale.setR_PrQuan2(rs1.getFloat("R_PrQuan2"));
-                tsale.setR_PrType2(rs1.getString("R_PrType2"));
-                tsale.setR_PrCode2(rs1.getString("R_PrCode2"));
-                tsale.setR_PrDisc2(rs1.getFloat("R_PrDisc2"));
-                tsale.setR_PrBath2(rs1.getFloat("R_PrBath2"));
-                tsale.setR_PrAmt2(rs1.getFloat("R_PrAmt2"));
-                tsale.setR_PrAdj2(rs1.getFloat("R_PrAdj2"));
-                tsale.setR_PItemNo(rs1.getInt("R_PItemNo"));
-                tsale.setR_PKicQue(rs1.getInt("R_PKicQue"));
-                tsale.setR_MoveItem(rs1.getString("R_MoveItem"));
-                tsale.setR_MoveFrom(rs1.getString("R_MoveFrom"));
-                tsale.setR_MoveUser(rs1.getString("R_MoveUser"));
-                tsale.setR_MoveFlag(rs1.getString("R_MoveFlag"));
-                tsale.setR_Opt1(rs1.getString("R_Opt1"));
-                tsale.setR_Opt2(rs1.getString("R_Opt2"));
-                tsale.setR_Opt3(rs1.getString("R_Opt3"));
-                tsale.setR_Opt4(rs1.getString("R_Opt4"));
-                tsale.setR_Opt5(rs1.getString("R_Opt5"));
-                tsale.setR_Opt6(rs1.getString("R_Opt6"));
-                tsale.setR_Opt7(rs1.getString("R_Opt7"));
-                tsale.setR_Opt8(rs1.getString("R_Opt8"));
-                tsale.setR_Opt9(rs1.getString("R_Opt9"));
-                data.add(tsale);
+                
+                rs.close();
+                rs1.close();
             }
-
-            rs.close();
-            rs1.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
@@ -1530,123 +1525,123 @@ public class BillControl {
         mysqlConnect.open(BillControl.class);
         try {
             String sql = "select * from billno where B_Refno='" + billNo + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                String sql1 = "select t.r_prcutype cutype,t.r_prcucode cucode,c.cuname CuName "
-                        + "from t_sale t "
-                        + "inner join cupon c "
-                        + "on t.r_prcucode = c.cucode "
-                        + "where r_refno='" + billNo + "' limit 1";
-                Statement stmt2 = mysqlConnect.getConnection().createStatement();
-                ResultSet rs1 = stmt2.executeQuery(sql1);
-                if (rs1.next()) {
-                    bean.setB_CuponName(rs1.getString(ThaiUtil.ASCII2Unicode("CuName")));
-                } else {
-                    bean.setB_CuponName("");
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    String sql1 = "select t.r_prcutype cutype,t.r_prcucode cucode,c.cuname CuName "
+                            + "from t_sale t "
+                            + "inner join cupon c "
+                            + "on t.r_prcucode = c.cucode "
+                            + "where r_refno='" + billNo + "' limit 1";
+                    Statement stmt2 = mysqlConnect.getConnection().createStatement();
+                    ResultSet rs1 = stmt2.executeQuery(sql1);
+                    if (rs1.next()) {
+                        bean.setB_CuponName(rs1.getString(ThaiUtil.ASCII2Unicode("CuName")));
+                    } else {
+                        bean.setB_CuponName("");
+                    }
+                    bean.setB_Refno(rs.getString("B_Refno"));
+                    bean.setB_CuponDiscAmt(rs.getFloat("B_CuponDiscAmt"));
+                    bean.setB_Ontime(rs.getString("B_Ontime"));
+                    bean.setB_LoginTime(rs.getString("B_LoginTime"));
+                    bean.setB_Table(rs.getString("B_Table"));
+                    bean.setB_MacNo(rs.getString("B_MacNo"));
+                    bean.setB_Cashier(rs.getString("B_Cashier"));
+                    bean.setB_Cust(rs.getInt("B_Cust"));
+                    bean.setB_ETD(rs.getString("B_ETD"));
+                    bean.setB_Total(rs.getFloat("B_Total"));
+                    bean.setB_Food(rs.getFloat("B_Food"));
+                    bean.setB_Drink(rs.getFloat("B_Drink"));
+                    bean.setB_Product(rs.getFloat("B_Product"));
+                    bean.setB_Service(rs.getFloat("B_Service"));
+                    bean.setB_ServiceAmt(rs.getFloat("B_ServiceAmt"));
+                    bean.setB_ItemDiscAmt(rs.getFloat("B_ItemDiscAmt"));
+                    bean.setB_FastDisc(rs.getString("B_FastDisc"));
+                    bean.setB_FastDiscAmt(rs.getFloat("B_FastDiscAmt"));
+                    bean.setB_EmpDisc(rs.getString("B_EmpDisc"));
+                    bean.setB_EmpDiscAmt(rs.getFloat("B_EmpDiscAmt"));
+                    bean.setB_TrainDisc(rs.getString("B_TrainDisc"));
+                    bean.setB_TrainDiscAmt(rs.getFloat("B_TrainDiscAmt"));
+                    bean.setB_MemDisc(rs.getString("B_MemDisc"));
+                    bean.setB_MemDiscAmt(rs.getFloat("B_MemDiscAmt"));
+                    bean.setB_SubDisc(rs.getString("B_SubDisc"));
+                    bean.setB_SubDiscAmt(rs.getFloat("B_SubDiscAmt"));
+                    bean.setB_SubDiscBath(rs.getFloat("B_SubDiscBath"));
+                    bean.setB_ProDiscAmt(rs.getFloat("B_ProDiscAmt"));
+                    bean.setB_SpaDiscAmt(rs.getFloat("B_SpaDiscAmt"));
+                    bean.setB_AdjAmt(rs.getFloat("B_AdjAmt"));
+                    bean.setB_NetTotal(rs.getFloat("B_NetTotal"));
+                    bean.setB_NetFood(rs.getFloat("B_NetFood"));
+                    bean.setB_NetDrink(rs.getFloat("B_NetDrink"));
+                    bean.setB_NetProduct(rs.getFloat("B_NetProduct"));
+                    bean.setB_NetVat(rs.getFloat("B_NetVat"));
+                    bean.setB_NetNonVat(rs.getFloat("B_NetNonVat"));
+                    bean.setB_Vat(rs.getFloat("B_Vat"));
+                    bean.setB_PayAmt(rs.getFloat("B_PayAmt"));
+                    bean.setB_Cash(rs.getFloat("B_Cash"));
+                    bean.setB_GiftVoucher(rs.getFloat("B_GiftVoucher"));
+                    bean.setB_Earnest(rs.getFloat("B_Earnest"));
+                    bean.setB_Ton(rs.getFloat("B_Ton"));
+                    bean.setB_CrCode1(rs.getString("B_CrCode1"));
+                    bean.setB_CardNo1(rs.getString("B_CardNo1"));
+                    bean.setB_AppCode1(rs.getString("B_AppCode1"));
+                    bean.setB_CrCharge1(rs.getFloat("B_CrCharge1"));
+                    bean.setB_CrChargeAmt1(rs.getFloat("B_CrChargeAmt1"));
+                    bean.setB_CrAmt1(rs.getFloat("B_CrAmt1"));
+                    bean.setB_AccrCode(rs.getString("B_AccrCode"));
+                    bean.setB_AccrAmt(rs.getFloat("B_AccrAmt"));
+                    bean.setB_AccrCr(rs.getInt("B_AccrCr"));
+                    bean.setB_MemCode(rs.getString("B_MemCode"));
+                    bean.setB_MemName(rs.getString("B_MemName"));
+                    bean.setB_MemCurSum(rs.getFloat("B_MemCurSum"));
+                    bean.setB_Void(rs.getString("B_Void"));
+                    bean.setB_VoidUser(rs.getString("B_VoidUser"));
+                    bean.setB_VoidTime(rs.getString("B_VoidTime"));
+                    bean.setB_BillCopy(rs.getInt("B_BillCopy"));
+                    bean.setB_PrnCnt(rs.getInt("B_PrnCnt"));
+                    bean.setB_PrnTime1(rs.getString("B_PrnTime1"));
+                    bean.setB_PrnTime2(rs.getString("B_PrnTime2"));
+                    bean.setB_InvNo(rs.getString("B_InvNo"));
+                    bean.setB_InvType(rs.getString("B_InvType"));
+                    bean.setB_Bran(rs.getString("B_Bran"));
+                    bean.setB_BranName(ThaiUtil.ASCII2Unicode(rs.getString("B_BranName")));
+                    bean.setB_Tel(rs.getString("B_Tel"));
+                    bean.setB_RecTime(rs.getString("B_RecTime"));
+                    bean.setMStamp(rs.getString("MStamp"));
+                    bean.setMScore(rs.getString("MScore"));
+                    bean.setCurStamp(rs.getString("CurStamp"));
+                    bean.setStampRate(rs.getString("StampRate"));
+                    bean.setB_ChkBill(rs.getString("B_ChkBill"));
+                    bean.setB_ChkBillTime(rs.getString("B_ChkBillTime"));
+                    bean.setB_CashTime(rs.getString("B_CashTime"));
+                    bean.setB_WaitTime(rs.getString("B_WaitTime"));
+                    bean.setB_SumScore(rs.getFloat("B_SumScore"));
+                    bean.setB_CrBank(rs.getString("B_CrBank"));
+                    bean.setB_CrCardAmt(rs.getFloat("B_CrCardAmt"));
+                    bean.setB_CrCurPoint(rs.getFloat("B_CrCurPoint"));
+                    bean.setB_CrSumPoint(rs.getFloat("B_CrSumPoint"));
+                    try {
+                        bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
+                    } catch (SQLException e) {
+                        AppLogUtil.log(BillControl.class, "error", e);
+                        bean.setB_NetDiff(0);
+                    }
+                    
+                    try {
+                        bean.setB_OnDate(rs.getDate("B_OnDate"));
+                        bean.setB_PostDate(rs.getDate("B_PostDate"));
+                        bean.setB_MemBegin(rs.getDate("B_MemBegin"));
+                        bean.setB_MemEnd(rs.getDate("B_MemEnd"));
+                    } catch (SQLException e) {
+                        AppLogUtil.log(BillControl.class, "error", e);
+                    }
+                    
+                    rs1.close();
+                    stmt2.close();
                 }
-                bean.setB_Refno(rs.getString("B_Refno"));
-                bean.setB_CuponDiscAmt(rs.getFloat("B_CuponDiscAmt"));
-                bean.setB_Ontime(rs.getString("B_Ontime"));
-                bean.setB_LoginTime(rs.getString("B_LoginTime"));
-                bean.setB_Table(rs.getString("B_Table"));
-                bean.setB_MacNo(rs.getString("B_MacNo"));
-                bean.setB_Cashier(rs.getString("B_Cashier"));
-                bean.setB_Cust(rs.getInt("B_Cust"));
-                bean.setB_ETD(rs.getString("B_ETD"));
-                bean.setB_Total(rs.getFloat("B_Total"));
-                bean.setB_Food(rs.getFloat("B_Food"));
-                bean.setB_Drink(rs.getFloat("B_Drink"));
-                bean.setB_Product(rs.getFloat("B_Product"));
-                bean.setB_Service(rs.getFloat("B_Service"));
-                bean.setB_ServiceAmt(rs.getFloat("B_ServiceAmt"));
-                bean.setB_ItemDiscAmt(rs.getFloat("B_ItemDiscAmt"));
-                bean.setB_FastDisc(rs.getString("B_FastDisc"));
-                bean.setB_FastDiscAmt(rs.getFloat("B_FastDiscAmt"));
-                bean.setB_EmpDisc(rs.getString("B_EmpDisc"));
-                bean.setB_EmpDiscAmt(rs.getFloat("B_EmpDiscAmt"));
-                bean.setB_TrainDisc(rs.getString("B_TrainDisc"));
-                bean.setB_TrainDiscAmt(rs.getFloat("B_TrainDiscAmt"));
-                bean.setB_MemDisc(rs.getString("B_MemDisc"));
-                bean.setB_MemDiscAmt(rs.getFloat("B_MemDiscAmt"));
-                bean.setB_SubDisc(rs.getString("B_SubDisc"));
-                bean.setB_SubDiscAmt(rs.getFloat("B_SubDiscAmt"));
-                bean.setB_SubDiscBath(rs.getFloat("B_SubDiscBath"));
-                bean.setB_ProDiscAmt(rs.getFloat("B_ProDiscAmt"));
-                bean.setB_SpaDiscAmt(rs.getFloat("B_SpaDiscAmt"));
-                bean.setB_AdjAmt(rs.getFloat("B_AdjAmt"));
-                bean.setB_NetTotal(rs.getFloat("B_NetTotal"));
-                bean.setB_NetFood(rs.getFloat("B_NetFood"));
-                bean.setB_NetDrink(rs.getFloat("B_NetDrink"));
-                bean.setB_NetProduct(rs.getFloat("B_NetProduct"));
-                bean.setB_NetVat(rs.getFloat("B_NetVat"));
-                bean.setB_NetNonVat(rs.getFloat("B_NetNonVat"));
-                bean.setB_Vat(rs.getFloat("B_Vat"));
-                bean.setB_PayAmt(rs.getFloat("B_PayAmt"));
-                bean.setB_Cash(rs.getFloat("B_Cash"));
-                bean.setB_GiftVoucher(rs.getFloat("B_GiftVoucher"));
-                bean.setB_Earnest(rs.getFloat("B_Earnest"));
-                bean.setB_Ton(rs.getFloat("B_Ton"));
-                bean.setB_CrCode1(rs.getString("B_CrCode1"));
-                bean.setB_CardNo1(rs.getString("B_CardNo1"));
-                bean.setB_AppCode1(rs.getString("B_AppCode1"));
-                bean.setB_CrCharge1(rs.getFloat("B_CrCharge1"));
-                bean.setB_CrChargeAmt1(rs.getFloat("B_CrChargeAmt1"));
-                bean.setB_CrAmt1(rs.getFloat("B_CrAmt1"));
-                bean.setB_AccrCode(rs.getString("B_AccrCode"));
-                bean.setB_AccrAmt(rs.getFloat("B_AccrAmt"));
-                bean.setB_AccrCr(rs.getInt("B_AccrCr"));
-                bean.setB_MemCode(rs.getString("B_MemCode"));
-                bean.setB_MemName(rs.getString("B_MemName"));
-                bean.setB_MemCurSum(rs.getFloat("B_MemCurSum"));
-                bean.setB_Void(rs.getString("B_Void"));
-                bean.setB_VoidUser(rs.getString("B_VoidUser"));
-                bean.setB_VoidTime(rs.getString("B_VoidTime"));
-                bean.setB_BillCopy(rs.getInt("B_BillCopy"));
-                bean.setB_PrnCnt(rs.getInt("B_PrnCnt"));
-                bean.setB_PrnTime1(rs.getString("B_PrnTime1"));
-                bean.setB_PrnTime2(rs.getString("B_PrnTime2"));
-                bean.setB_InvNo(rs.getString("B_InvNo"));
-                bean.setB_InvType(rs.getString("B_InvType"));
-                bean.setB_Bran(rs.getString("B_Bran"));
-                bean.setB_BranName(ThaiUtil.ASCII2Unicode(rs.getString("B_BranName")));
-                bean.setB_Tel(rs.getString("B_Tel"));
-                bean.setB_RecTime(rs.getString("B_RecTime"));
-                bean.setMStamp(rs.getString("MStamp"));
-                bean.setMScore(rs.getString("MScore"));
-                bean.setCurStamp(rs.getString("CurStamp"));
-                bean.setStampRate(rs.getString("StampRate"));
-                bean.setB_ChkBill(rs.getString("B_ChkBill"));
-                bean.setB_ChkBillTime(rs.getString("B_ChkBillTime"));
-                bean.setB_CashTime(rs.getString("B_CashTime"));
-                bean.setB_WaitTime(rs.getString("B_WaitTime"));
-                bean.setB_SumScore(rs.getFloat("B_SumScore"));
-                bean.setB_CrBank(rs.getString("B_CrBank"));
-                bean.setB_CrCardAmt(rs.getFloat("B_CrCardAmt"));
-                bean.setB_CrCurPoint(rs.getFloat("B_CrCurPoint"));
-                bean.setB_CrSumPoint(rs.getFloat("B_CrSumPoint"));
-                try {
-                    bean.setB_NetDiff(rs.getFloat("B_NetDiff"));
-                } catch (SQLException e) {
-                    AppLogUtil.log(BillControl.class, "error", e);
-                    bean.setB_NetDiff(0);
-                }
-
-                try {
-                    bean.setB_OnDate(rs.getDate("B_OnDate"));
-                    bean.setB_PostDate(rs.getDate("B_PostDate"));
-                    bean.setB_MemBegin(rs.getDate("B_MemBegin"));
-                    bean.setB_MemEnd(rs.getDate("B_MemEnd"));
-                } catch (SQLException e) {
-                    AppLogUtil.log(BillControl.class, "error", e);
-                }
-
-                rs1.close();
-                stmt2.close();
+                
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(BillControl.class, "error", e);
         } finally {
@@ -1798,7 +1793,6 @@ public class BillControl {
     public BillNoBean getLastBillNo() {
         BillNoBean bean = null;
 
-        
         try {
             String sql = "SELECT * FROM billno where b_void='V' ORDER BY b_refno DESC LIMIT 1";
             mysqlConnect.open(BillControl.class);

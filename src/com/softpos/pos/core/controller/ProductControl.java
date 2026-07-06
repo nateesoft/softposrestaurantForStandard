@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.softpos.util.AppLogUtil;
-import com.softpos.util.MSG;
 
 public class ProductControl {
 

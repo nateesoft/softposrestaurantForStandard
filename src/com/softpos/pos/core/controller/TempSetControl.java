@@ -26,25 +26,47 @@ public class TempSetControl {
     }
 
     public void deleteByPTableNo(String tableNo) {
-        String sql = "delete from tempset "
+        mysqlConnect.open();
+        try {
+            String sql = "delete from tempset "
                 + "where PTableNo='" + tableNo + "'";
-        mysqlConnect.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
     }
 
     public void deleteTempByPTableNo(String tableNo) {
-        String sql = "delete from tempset where PTableNo='" + tableNo + "';";
-        mysqlConnect.executeUpdate(sql);
+        mysqlConnect.open();
+        try {
+            String sql = "delete from tempset where PTableNo='" + tableNo + "';";
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(TempSetControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
     }
 
     public void addNewData(String tableNo, String index, String pCode, String pName, 
             String pstock, String tryName, String option, String pTime) {
-        String sql = "INSERT INTO tempset "
+        mysqlConnect.open();
+        try {
+            String sql = "INSERT INTO tempset "
                 + "(PTableNo, PIndex, PCode, PDesc, "
                 + "PPostStock,PProTry, POption, PTime) "
                 + "VALUES ('" + tableNo + "', '" + index + "', '" + pCode + "', "
                 + "'" + ThaiUtil.Unicode2ASCII(pName) + "', '" + pstock + "','" + tryName + "', "
                 + "'" + ThaiUtil.Unicode2ASCII(option) + "', '"+pTime+"')";
-        mysqlConnect.executeUpdate(sql);
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(TempSetControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+        
     }
     
 }

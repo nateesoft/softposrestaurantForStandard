@@ -65,7 +65,6 @@ public class StockControl {
                 }
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(StockControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
@@ -76,7 +75,6 @@ public class StockControl {
 
     public StkFileBean getDataStkFile(String PCode, String stockCode) {
         String sql = "select * from stkfile where BPCode='" + PCode + "' and BStk='" + stockCode + "'";
-
         return getDataStkFile(sql);
     }
 

@@ -81,7 +81,6 @@ public final class ViewReport {
                     j.setLocationRelativeTo(null);
                     j.setVisible(true);
                     v.setTitle("Report...");
-
                 } else {
                     MSG.ERR(null, "ไม่พบข้อมูลที่ต้องการพิมพ์");
                 }

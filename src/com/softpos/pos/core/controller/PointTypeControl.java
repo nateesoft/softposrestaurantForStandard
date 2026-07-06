@@ -16,7 +16,6 @@ import com.softpos.util.DateUtil;
  * @author nathee
  */
 public class PointTypeControl {
-    
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public PointTypeBean getData(String pointTypeCode) {
@@ -35,7 +34,6 @@ public class PointTypeControl {
             }
         } catch (SQLException e) {
             AppLogUtil.log(PointTypeControl.class, "error", e);
-
         } finally {
             mysqlConnect.closeConnection(PointTypeControl.class);
         }

@@ -15,47 +15,43 @@ public class TableMoveControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
 
+    public TableMoveControl() {
+    }
+
     private void updateRLinkIndex(String tableDest) {
-        
         mysqlConnect.open(TableMoveControl.class);
         try {
             String sql1 = "select R_SPIndex,R_LinkIndex,R_MoveFrom "
                     + "from balance where r_table='" + tableDest + "' "
                     + "and r_movefrom=r_linkindex;";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql1);
-            while (rs.next()) {
-                String R_SPIndex = rs.getString("R_SPIndex");
-                String R_MoveFrom = rs.getString("R_MoveFrom");
-
-                Statement stmt1 = mysqlConnect.getConnection().createStatement();
-                String sql2 = "update balance set "
-                        + "r_movefrom='',"
-                        + "r_linkindex='" + R_SPIndex + "' "
-                        + "where r_linkindex='" + R_MoveFrom + "' "
-                        + "and r_movefrom<>'' "
-                        + "and r_table='" + tableDest + "'";
-                stmt1.executeUpdate(sql2);
-                stmt1.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql1)) {
+                while (rs.next()) {
+                    String R_SPIndex = rs.getString("R_SPIndex");
+                    String R_MoveFrom = rs.getString("R_MoveFrom");
+                    
+                    try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
+                        String sql2 = "update balance set "
+                                + "r_movefrom='',"
+                                + "r_linkindex='" + R_SPIndex + "' "
+                                + "where r_linkindex='" + R_MoveFrom + "' "
+                                + "and r_movefrom<>'' "
+                                + "and r_table='" + tableDest + "'";
+                        stmt1.executeUpdate(sql2);
+                    }
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
-
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(TableMoveControl.class);
         }
     }
-
-    public TableMoveControl() {}
     
     public TableMoveControl(MemberBean memberBean) {
         this.memberBean = memberBean;
     }
 
     public void moveTable(String tableFrom, String tableDest) {
-
         // Check table are same
         if (tableFrom.equals(tableDest)) {
             //keyMoveTable.put("Table invalid move !", false);
@@ -121,14 +117,14 @@ public class TableMoveControl {
     public void backupTableData(String table1, String table2) {
         mysqlConnect.open(TableMoveControl.class);
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
-            stmt.executeUpdate("create table IF NOT EXISTS temp_tablefile select * from tablefile "
-                    + "where tcode in('" + table1 + "','" + table2 + "');");
-            stmt.executeUpdate("drop table IF EXISTS temp_balance;");
-            stmt.executeUpdate("create table IF NOT EXISTS temp_balance select * from balance "
-                    + "where R_Table in('" + table1 + "','" + table2 + "');");
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate("drop table IF EXISTS temp_tablefile;");
+                stmt.executeUpdate("create table IF NOT EXISTS temp_tablefile select * from tablefile "
+                        + "where tcode in('" + table1 + "','" + table2 + "');");
+                stmt.executeUpdate("drop table IF EXISTS temp_balance;");
+                stmt.executeUpdate("create table IF NOT EXISTS temp_balance select * from balance "
+                        + "where R_Table in('" + table1 + "','" + table2 + "');");
+            }
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
@@ -158,21 +154,17 @@ public class TableMoveControl {
         mysqlConnect.open(TableMoveControl.class);
         try {
             int ct1 = 0, ct2 = 0;
-            Statement stmt1 = mysqlConnect.getConnection().createStatement();
-            ResultSet rs1 = stmt1.executeQuery("select tcustomer from tablefile where tcode='" + tableFrom + "' limit 1");
-            if (rs1.next()) ct1 = rs1.getInt("tcustomer");
-            rs1.close();
-            stmt1.close();
+            try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rs1 = stmt1.executeQuery("select tcustomer from tablefile where tcode='" + tableFrom + "' limit 1")) {
+                if (rs1.next()) ct1 = rs1.getInt("tcustomer");
+            }
 
-            Statement stmt2 = mysqlConnect.getConnection().createStatement();
-            ResultSet rs2 = stmt2.executeQuery("select tcustomer from tablefile where tcode='" + tableTo + "' limit 1");
-            if (rs2.next()) ct2 = rs2.getInt("tcustomer");
-            rs2.close();
-            stmt2.close();
+            try (Statement stmt2 = mysqlConnect.getConnection().createStatement(); ResultSet rs2 = stmt2.executeQuery("select tcustomer from tablefile where tcode='" + tableTo + "' limit 1")) {
+                if (rs2.next()) ct2 = rs2.getInt("tcustomer");
+            }
 
-            Statement stmt3 = mysqlConnect.getConnection().createStatement();
-            stmt3.executeUpdate("update tablefile set tcustomer='" + (ct1 + ct2) + "' where tcode='" + tableTo.toUpperCase() + "'");
-            stmt3.close();
+            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
+                stmt3.executeUpdate("update tablefile set tcustomer='" + (ct1 + ct2) + "' where tcode='" + tableTo.toUpperCase() + "'");
+            }
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
@@ -184,13 +176,11 @@ public class TableMoveControl {
         mysqlConnect.open(TableMoveControl.class);
         StringBuilder sb = new StringBuilder();
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select r_kic from balance where r_table='" + table + "' group by r_kic;");
-            while (rs.next()) {
-                sb.append("kic").append(rs.getString("r_kic")).append(",");
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select r_kic from balance where r_table='" + table + "' group by r_kic;")) {
+                while (rs.next()) {
+                    sb.append("kic").append(rs.getString("r_kic")).append(",");
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);
         } finally {
@@ -202,11 +192,10 @@ public class TableMoveControl {
     public boolean verifyEmployeeCode(String code) {
         mysqlConnect.open(TableMoveControl.class);
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select code from employ where code='" + code + "' limit 1");
-            boolean found = rs.next();
-            rs.close();
-            stmt.close();
+            boolean found;
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery("select code from employ where code='" + code + "' limit 1")) {
+                found = rs.next();
+            }
             return found;
         } catch (SQLException e) {
             AppLogUtil.log(TableMoveControl.class, "error", e);

@@ -66,12 +66,28 @@ public class PosUserControl {
     }
 
     public void updateLogout(String username) {
-        String sql1 = "update posuser set onact='N',macno='' where (username='" + username + "')";
-        mysqlConnect.executeUpdate(sql1);
+        mysqlConnect.open();
+        try {
+            String sql1 = "update posuser set onact='N',macno='' where (username='" + username + "')";
+            mysqlConnect.executeUpdate(sql1);
+        } catch (Exception e) {
+            AppLogUtil.log(PosUserControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+        
     }
 
     public void updateOnActIsNByUsername(String UserCode) {
-        String sql = "update posuser set onact='N', macno='' where username='" + UserCode + "'";
-        mysqlConnect.executeUpdate(sql);
+        mysqlConnect.open();
+        try {
+            String sql = "update posuser set onact='N', macno='' where username='" + UserCode + "'";
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(PosUserControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+        
     }
 }

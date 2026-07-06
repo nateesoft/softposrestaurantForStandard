@@ -1,6 +1,6 @@
 package com.softpos.constants;
 
-import com.softpos.pos.core.controller.SmpCoupon;
+import com.softpos.pos.core.model.SmpCoupon;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.pos.core.model.TranRecord;
 import java.sql.Time;

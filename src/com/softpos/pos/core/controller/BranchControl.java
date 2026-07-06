@@ -13,8 +13,6 @@ public class BranchControl {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public void updateKicItemNo() {
-
-        
         try {
             mysqlConnect.open(BranchControl.class);
             String sql = "update branch set KicItemNo=KicItemNo+1";

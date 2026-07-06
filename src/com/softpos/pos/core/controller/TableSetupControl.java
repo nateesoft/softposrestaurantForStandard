@@ -20,7 +20,6 @@ public class TableSetupControl {
     public List<FloorPlanBean> getTableSetup(String zone) {
         List<FloorPlanBean> listBean = new ArrayList<>();
 
-        
         mysqlConnect.open(this.getClass());
         try {
             String sql = "select code_id, t1.tcode, tcustomer, tonact, "
@@ -52,7 +51,6 @@ public class TableSetupControl {
                 rs.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(TableSetupControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());

@@ -23,45 +23,43 @@ public class CuponControl {
         CuponBean bean = new CuponBean();
         try {
             String sql = "select * from cupon where CuCode='" + CuCode + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                bean.setCuCode(rs.getString("CuCode"));
-                bean.setCuName(rs.getString("CuName"));
-                bean.setCuBegin(rs.getDate("CuBegin"));
-                bean.setCuEnd(rs.getDate("CuEnd"));
-                bean.setCuStrDay(rs.getString("CuStrDay"));
-                bean.setCuType(rs.getString("CuType"));
-                bean.setCuADisc(rs.getString("CuADisc"));
-                bean.setCuADiscBath(rs.getFloat("CuADiscBath"));
-                bean.setCuBDisc(rs.getString("CuBDisc"));
-                bean.setCuBDiscBath(rs.getFloat("CuBDiscBath"));
-                bean.setCuPLUList(rs.getString("CuPLUList"));
-                bean.setCuPLU1(rs.getString("CuPLU1"));
-                bean.setCuPLU2(rs.getString("CuPLU2"));
-                bean.setCuPLU3(rs.getString("CuPLU3"));
-                bean.setCuPLU4(rs.getString("CuPLU4"));
-                bean.setCuPLU5(rs.getString("CuPLU5"));
-                bean.setCuPLU6(rs.getString("CuPLU6"));
-                bean.setCuPLU7(rs.getString("CuPLU7"));
-                bean.setCuPLU8(rs.getString("CuPLU8"));
-                bean.setCuPLU9(rs.getString("CuPLU9"));
-                bean.setCuPLU10(rs.getString("CuPLU10"));
-                bean.setCuDisc(rs.getFloat("CuDisc"));
-                bean.setCuDiscBath(rs.getFloat("CuDiscBath"));
-                bean.setChkMember(rs.getString("ChkMember"));
-                bean.setCuDisc2(rs.getFloat("CuDisc2"));
-                bean.setCuDiscBath2(rs.getFloat("CuDiscBath2"));
-                bean.setCuDisc3(rs.getFloat("CuDisc3"));
-                bean.setCuDiscBath3(rs.getFloat("CuDiscBath3"));
-                bean.setCuDisc1(rs.getFloat("CuDisc1"));
-                bean.setCuDiscBath1(rs.getFloat("CuDiscBath1"));
-                bean.setCuSelectDisc(rs.getString("CuSelectDisc"));
-                bean.setCuEDiscount(rs.getFloat("CuEDiscount"));
-                bean.setCuEPayment(rs.getFloat("CuEPayment"));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    bean.setCuCode(rs.getString("CuCode"));
+                    bean.setCuName(rs.getString("CuName"));
+                    bean.setCuBegin(rs.getDate("CuBegin"));
+                    bean.setCuEnd(rs.getDate("CuEnd"));
+                    bean.setCuStrDay(rs.getString("CuStrDay"));
+                    bean.setCuType(rs.getString("CuType"));
+                    bean.setCuADisc(rs.getString("CuADisc"));
+                    bean.setCuADiscBath(rs.getFloat("CuADiscBath"));
+                    bean.setCuBDisc(rs.getString("CuBDisc"));
+                    bean.setCuBDiscBath(rs.getFloat("CuBDiscBath"));
+                    bean.setCuPLUList(rs.getString("CuPLUList"));
+                    bean.setCuPLU1(rs.getString("CuPLU1"));
+                    bean.setCuPLU2(rs.getString("CuPLU2"));
+                    bean.setCuPLU3(rs.getString("CuPLU3"));
+                    bean.setCuPLU4(rs.getString("CuPLU4"));
+                    bean.setCuPLU5(rs.getString("CuPLU5"));
+                    bean.setCuPLU6(rs.getString("CuPLU6"));
+                    bean.setCuPLU7(rs.getString("CuPLU7"));
+                    bean.setCuPLU8(rs.getString("CuPLU8"));
+                    bean.setCuPLU9(rs.getString("CuPLU9"));
+                    bean.setCuPLU10(rs.getString("CuPLU10"));
+                    bean.setCuDisc(rs.getFloat("CuDisc"));
+                    bean.setCuDiscBath(rs.getFloat("CuDiscBath"));
+                    bean.setChkMember(rs.getString("ChkMember"));
+                    bean.setCuDisc2(rs.getFloat("CuDisc2"));
+                    bean.setCuDiscBath2(rs.getFloat("CuDiscBath2"));
+                    bean.setCuDisc3(rs.getFloat("CuDisc3"));
+                    bean.setCuDiscBath3(rs.getFloat("CuDiscBath3"));
+                    bean.setCuDisc1(rs.getFloat("CuDisc1"));
+                    bean.setCuDiscBath1(rs.getFloat("CuDiscBath1"));
+                    bean.setCuSelectDisc(rs.getString("CuSelectDisc"));
+                    bean.setCuEDiscount(rs.getFloat("CuEDiscount"));
+                    bean.setCuEPayment(rs.getFloat("CuEPayment"));
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -72,7 +70,6 @@ public class CuponControl {
     }
 
     public void saveCupon(CuponBean bean) {
-
         mysqlConnect.open(this.getClass());
         try {
             String sql = "insert into cupon (CuCode,CuName,CuBegin,CuEnd,CuStrDay,CuType,CuADisc,"
@@ -92,15 +89,15 @@ public class CuponControl {
                     + "'" + bean.getCuDiscBath1() + "','" + bean.getCuSelectDisc() + "',"
                     + "'" + bean.getCuEDiscount() + "','" + bean.getCuEPayment() + "')";
             String sqlChk = "select CuCode from cupon where CuCode='" + bean.getCuCode() + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sqlChk);
-            if (rs.next()) {
-                updateCupon(bean);
-            } else {
-                stmt.executeUpdate(sql);
+            ResultSet rs;
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                rs = stmt.executeQuery(sqlChk);
+                if (rs.next()) {
+                    updateCupon(bean);
+                } else {
+                    stmt.executeUpdate(sql);
+                }
             }
-
-            stmt.close();
             rs.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
@@ -110,7 +107,6 @@ public class CuponControl {
     }
 
     public void updateCupon(CuponBean bean) {
-
         mysqlConnect.open(this.getClass());
 
         try {
@@ -134,9 +130,9 @@ public class CuponControl {
                     + "CuSelectDisc='" + bean.getCuSelectDisc() + "', "
                     + "CuEDiscount='" + bean.getCuEDiscount() + "', CuEPayment='" + bean.getCuEPayment() + "' "
                     + "where CuCode='" + bean.getCuCode() + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -159,13 +155,11 @@ public class CuponControl {
         List<Object[]> rows = new ArrayList<>();
         try {
             String sql = "select * from tempgift where macno='" + macno + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                rows.add(new Object[]{rs.getString("giftno"), rs.getDouble("giftamt")});
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    rows.add(new Object[]{rs.getString("giftno"), rs.getDouble("giftamt")});
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -184,17 +178,18 @@ public class CuponControl {
         mysqlConnect.open(this.getClass());
         try {
             String sqlCheckTempGift = "select giftno from tempgift where giftno='" + giftNo + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sqlCheckTempGift);
-            boolean alreadyExists = rs.next();
-            rs.close();
-            if (!alreadyExists) {
-                String sqlAdd = "insert into tempgift"
-                        + "(macno,gifttype,giftno,giftamt) "
-                        + "values('" + macno + "','" + voucherType + "','" + giftNo + "','" + amt + "')";
-                stmt.executeUpdate(sqlAdd);
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                boolean alreadyExists;
+                try (ResultSet rs = stmt.executeQuery(sqlCheckTempGift)) {
+                    alreadyExists = rs.next();
+                }
+                if (!alreadyExists) {
+                    String sqlAdd = "insert into tempgift"
+                            + "(macno,gifttype,giftno,giftamt) "
+                            + "values('" + macno + "','" + voucherType + "','" + giftNo + "','" + amt + "')";
+                    stmt.executeUpdate(sqlAdd);
+                }
             }
-            stmt.close();
             return true;
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
@@ -233,13 +228,11 @@ public class CuponControl {
         List<Object[]> rows = new ArrayList<>();
         try {
             String sql = "select * from gifttype";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                rows.add(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    rows.add(new Object[]{rs.getString(1), ThaiUtil.ASCII2Unicode(rs.getString(2))});
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -256,11 +249,11 @@ public class CuponControl {
 
         mysqlConnect.open(this.getClass());
         try {
-            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(
-                    "delete from tempgift where (macno=?) ");
-            prm.setString(1, macno);
-            prm.executeUpdate();
-            prm.close();
+            try (PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(
+                    "delete from tempgift where (macno=?) ")) {
+                prm.setString(1, macno);
+                prm.executeUpdate();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -280,19 +273,19 @@ public class CuponControl {
         try {
             String sql = "insert into tempgift (macno,giftbarcode,gifttype,giftprice,giftmodel,giftlot,giftexp,giftcode,giftno,giftamt) "
                     + "values (?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(sql);
-            prm.setString(1, macno);
-            prm.setString(2, giftBarcode);
-            prm.setString(3, giftType);
-            prm.setString(4, giftPrice);
-            prm.setString(5, giftModel);
-            prm.setString(6, giftLot);
-            prm.setString(7, giftExp);
-            prm.setString(8, giftCode);
-            prm.setString(9, giftNo);
-            prm.setDouble(10, giftAmt);
-            prm.executeUpdate();
-            prm.close();
+            try (PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(sql)) {
+                prm.setString(1, macno);
+                prm.setString(2, giftBarcode);
+                prm.setString(3, giftType);
+                prm.setString(4, giftPrice);
+                prm.setString(5, giftModel);
+                prm.setString(6, giftLot);
+                prm.setString(7, giftExp);
+                prm.setString(8, giftCode);
+                prm.setString(9, giftNo);
+                prm.setDouble(10, giftAmt);
+                prm.executeUpdate();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -310,11 +303,9 @@ public class CuponControl {
         boolean isValid = false;
         try {
             String sql = "select gcode from giftstatus where (gcode='" + giftCode + "') and (gno= '" + giftNo + "') limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            isValid = rs.next();
-            rs.close();
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                isValid = rs.next();
+            }
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -333,14 +324,12 @@ public class CuponControl {
         mysqlConnect.open(this.getClass());
         double priceAmt = -1.0;
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "select priceamt from giftprice where (pricecode='" + priceCode + "') limit 1");
-            if (rs.next()) {
-                priceAmt = rs.getDouble("priceamt");
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(
+                    "select priceamt from giftprice where (pricecode='" + priceCode + "') limit 1")) {
+                if (rs.next()) {
+                    priceAmt = rs.getDouble("priceamt");
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {
@@ -361,21 +350,19 @@ public class CuponControl {
         Object[] row = null;
         try {
             String sql = "select * from tempgift where macno='" + macno + "' limit 1";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                row = new Object[]{
-                    rs.getString("gifttype"),
-                    rs.getString("giftmodel"),
-                    rs.getString("giftlot"),
-                    rs.getString("giftexp"),
-                    rs.getString("giftbarcode"),
-                    rs.getString("giftno"),
-                    rs.getDouble("giftamt")
-                };
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    row = new Object[]{
+                        rs.getString("gifttype"),
+                        rs.getString("giftmodel"),
+                        rs.getString("giftlot"),
+                        rs.getString("giftexp"),
+                        rs.getString("giftbarcode"),
+                        rs.getString("giftno"),
+                        rs.getDouble("giftamt")
+                    };
+                }
             }
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(CuponControl.class, "error", e);
         } finally {

@@ -48,7 +48,6 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PosControl.class, "error", e);
             System.exit(0);
         } finally {
@@ -242,7 +241,6 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -272,7 +270,6 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -341,7 +338,6 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -496,7 +492,6 @@ public class PosControl {
                 stmt.close();
             }
         } catch (SQLException e) {
-
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -547,12 +542,12 @@ public class PosControl {
         try {
             mysqlConnect.open(PosControl.class);
             String sql = "update poshwsetup set onact='" + Onact + "' where terminal='" + PublicVar.MACNO + "';";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            if (stmt.executeUpdate(sql) > 0) {
-                // reset load poshwsetup
-                PosControl.resetPosHwSetup();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                if (stmt.executeUpdate(sql) > 0) {
+                    // reset load poshwsetup
+                    PosControl.resetPosHwSetup();
+                }
             }
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(ShowTableDialog.class, "error", e);
         } finally {
@@ -571,7 +566,6 @@ public class PosControl {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -591,7 +585,6 @@ public class PosControl {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -603,11 +596,10 @@ public class PosControl {
         try {
             String sql = "UPDATE paidiofile SET PaidOutAmt= '" + paidoutAmt + "' "
                     + "WHERE reson='" + ThaiUtil.Unicode2ASCII(reson) + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                stmt.executeUpdate(sql);
+            }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);
@@ -630,7 +622,6 @@ public class PosControl {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            MSG.ERR(null, e.getMessage());
             AppLogUtil.log(PosControl.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(PosControl.class);

@@ -15,12 +15,10 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class PrintToKicControl {
-    
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public BalanceBean getBalaneForPDA() {
         BalanceBean bean = null;
-
         
         mysqlConnect.open(PrintToKicControl.class);
         try {

@@ -10,7 +10,6 @@ public class AppContext {
     private static CuponControl cuponControl;
     private static CuponListControl cuponListControl;
     private static DiscountControl discountControl;
-    private static EmployControl employControl;
     private static EmployeeControl employeeControl;
     private static FloorPlanControl floorPlanController;
     private static IngedientControl ingedientController;
@@ -119,11 +118,6 @@ public class AppContext {
     public static DiscountControl getDiscountControl() {
         if (discountControl == null) discountControl = new DiscountControl();
         return discountControl;
-    }
-
-    public static EmployControl getEmployControl() {
-        if (employControl == null) employControl = new EmployControl();
-        return employControl;
     }
 
     public static EmployeeControl getEmployeeControl() {

@@ -488,7 +488,7 @@ public class MoveItemDialog extends javax.swing.JDialog {
 
                 String sql = "update balance set r_linkindex='' "
                         + "where r_table='" + TABLE_2 + "'";
-                databaseConnection.execUpdate(sql);
+                databaseConnection.executeUpdate(sql);
 
                 PublicVar.TableSelected = TABLE_2;
                 this.dispose();

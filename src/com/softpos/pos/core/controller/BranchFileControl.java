@@ -14,7 +14,6 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class BranchFileControl {
-    
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public BranchFileBean getData(String branchCode) {

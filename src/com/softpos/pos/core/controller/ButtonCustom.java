@@ -24,7 +24,6 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class ButtonCustom {
-
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     
     public JButton getButtonLayout(String menuCode, int menuIndex) {
@@ -39,26 +38,26 @@ public class ButtonCustom {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode='" + menuCode + "' "
                     + "and M_Index='" + menuIndex + "'";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                menuMGR.setMenuCode(rs.getString("MenuCode"));
-                menuMGR.setMenuType(rs.getInt("MenuType"));
-                menuMGR.setPCode(rs.getString("PCode"));
-                menuMGR.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                menuMGR.setIMG(rs.getString("IMG"));
-                menuMGR.setFontColor(rs.getString("FontColor"));
-                menuMGR.setBGColor(rs.getString("BGColor"));
-                menuMGR.setLayout(rs.getInt("Layout"));
-                menuMGR.setFontSize(rs.getInt("FontSize"));
-                menuMGR.setFontName(rs.getString("FontName"));
-                menuMGR.setMIndex(rs.getInt("M_Index"));
-                menuMGR.setFontAttr(rs.getString("FontAttr"));
-                menuMGR.setImgSize(rs.getInt("IMG_SIZE"));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    menuMGR.setMenuCode(rs.getString("MenuCode"));
+                    menuMGR.setMenuType(rs.getInt("MenuType"));
+                    menuMGR.setPCode(rs.getString("PCode"));
+                    menuMGR.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                    menuMGR.setIMG(rs.getString("IMG"));
+                    menuMGR.setFontColor(rs.getString("FontColor"));
+                    menuMGR.setBGColor(rs.getString("BGColor"));
+                    menuMGR.setLayout(rs.getInt("Layout"));
+                    menuMGR.setFontSize(rs.getInt("FontSize"));
+                    menuMGR.setFontName(rs.getString("FontName"));
+                    menuMGR.setMIndex(rs.getInt("M_Index"));
+                    menuMGR.setFontAttr(rs.getString("FontAttr"));
+                    menuMGR.setImgSize(rs.getInt("IMG_SIZE"));
+                }
+                
+                rs.close();
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
@@ -74,34 +73,32 @@ public class ButtonCustom {
         try {
             String sql = "select * from soft_menusetup "
                     + "where MenuCode like '" + menuCode + "__' order by menucode";
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                MenuMGR bean = new MenuMGR();
-                bean.setMenuCode(rs.getString("MenuCode"));
-                bean.setMenuType(rs.getInt("MenuType"));
-                bean.setPCode(rs.getString("PCode"));
-                bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
-                if (PublicVar.loadFromDelphiBOR == true) {
-                    bean.setIMG(PublicVar.picturePath + rs.getString("IMG"));
-                } else {
-                    bean.setIMG(rs.getString("IMG"));
+            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    MenuMGR bean = new MenuMGR();
+                    bean.setMenuCode(rs.getString("MenuCode"));
+                    bean.setMenuType(rs.getInt("MenuType"));
+                    bean.setPCode(rs.getString("PCode"));
+                    bean.setMenuShowText(ThaiUtil.ASCII2Unicode(rs.getString("MenuShowText")));
+                    if (PublicVar.loadFromDelphiBOR == true) {
+                        bean.setIMG(PublicVar.picturePath + rs.getString("IMG"));
+                    } else {
+                        bean.setIMG(rs.getString("IMG"));
+                    }
+                    
+                    bean.setFontColor(rs.getString("FontColor"));
+                    bean.setBGColor(rs.getString("BGColor"));
+                    bean.setLayout(rs.getInt("Layout"));
+                    bean.setFontSize(rs.getInt("FontSize"));
+                    bean.setFontName(rs.getString("FontName"));
+                    bean.setMIndex(rs.getInt("M_Index"));
+                    bean.setFontAttr(rs.getString("FontAttr"));
+                    bean.setImgSize(rs.getInt("IMG_SIZE"));
+                    
+                    listMenu.add(bean);
                 }
-
-                bean.setFontColor(rs.getString("FontColor"));
-                bean.setBGColor(rs.getString("BGColor"));
-                bean.setLayout(rs.getInt("Layout"));
-                bean.setFontSize(rs.getInt("FontSize"));
-                bean.setFontName(rs.getString("FontName"));
-                bean.setMIndex(rs.getInt("M_Index"));
-                bean.setFontAttr(rs.getString("FontAttr"));
-                bean.setImgSize(rs.getInt("IMG_SIZE"));
-
-                listMenu.add(bean);
+                
             }
-
-            rs.close();
-            stmt.close();
         } catch (SQLException e) {
             AppLogUtil.log(ButtonCustom.class, "error", e);
         } finally {
