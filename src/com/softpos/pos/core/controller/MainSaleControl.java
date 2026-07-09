@@ -459,7 +459,7 @@ public class MainSaleControl {
 
         mysqlConnect.open(MainSaleControl.class);
         try {
-            String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' limit 1";
+            String sql = "select r_index from balance where r_table='" + tableNo + "' and r_void='V' and R_kicPrint<>'P' and r_pause<>'Y' ;";
             Statement stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {

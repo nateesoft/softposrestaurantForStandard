@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateUtil;
-import com.softpos.util.MSG;
 
 public class PosControl {
 

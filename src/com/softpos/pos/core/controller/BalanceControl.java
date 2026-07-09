@@ -383,6 +383,123 @@ public class BalanceControl {
         return beanData;
     }
 
+    public List<BalanceBean> getAllBalanceNewItemToKicTran(String table) {
+        List<BalanceBean> beanData = new ArrayList<>();
+        beanData.clear();
+
+        String sql = "";
+        try {
+            mysqlConnect.open(this.getClass());
+            sql = "select * from balance "
+                    + "where R_Table='" + table + "' and r_pause='P' and r_kicPrint='' "
+                    + "order by R_Index";
+            try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
+                while (rs.next()) {
+                    BalanceBean balanceBean = new BalanceBean();
+                    balanceBean.setR_Index(rs.getString("R_Index"));
+                    balanceBean.setR_Table(rs.getString("R_Table"));
+                    balanceBean.setR_Time(rs.getString("R_Time"));
+                    balanceBean.setMacno(rs.getString("Macno"));
+                    balanceBean.setCashier(rs.getString("Cashier"));
+                    balanceBean.setR_Emp(rs.getString("R_Emp"));
+                    balanceBean.setR_PluCode(rs.getString("R_PluCode"));
+                    balanceBean.setR_PName(ThaiUtil.ASCII2Unicode(rs.getString("R_PName")));
+                    balanceBean.setR_Unit(rs.getString("R_Unit"));
+                    balanceBean.setR_Group(rs.getString("R_Group"));
+                    balanceBean.setR_Status(rs.getString("R_Status"));
+                    balanceBean.setR_Normal(rs.getString("R_Normal"));
+                    balanceBean.setR_Discount(rs.getString("R_Discount"));
+                    balanceBean.setR_Service(rs.getString("R_Service"));
+                    balanceBean.setR_Stock(rs.getString("R_Stock"));
+                    balanceBean.setR_Set(rs.getString("R_Set"));
+                    balanceBean.setR_Vat(rs.getString("R_Vat"));
+                    balanceBean.setR_Type(rs.getString("R_Type"));
+                    balanceBean.setR_ETD(rs.getString("R_ETD"));
+                    balanceBean.setR_Quan(rs.getFloat("R_Quan"));
+                    balanceBean.setR_Price(rs.getFloat("R_Price"));
+                    balanceBean.setR_Total(rs.getFloat("R_Total"));
+                    String R_PrType = rs.getString("R_PrType");
+                    if (R_PrType == null) {
+                        R_PrType = "";
+                    }
+                    balanceBean.setR_PrType(R_PrType);
+
+                    balanceBean.setR_PrCode(rs.getString("R_PrCode"));
+                    balanceBean.setR_PrDisc(rs.getFloat("R_PrDisc"));
+                    balanceBean.setR_PrBath(rs.getFloat("R_PrBath"));
+                    balanceBean.setR_PrAmt(rs.getFloat("R_PrAmt"));
+                    balanceBean.setR_DiscBath(rs.getFloat("R_DiscBath"));
+                    balanceBean.setR_PrCuType(rs.getString("R_PrCuType"));
+                    balanceBean.setR_PrCuQuan(rs.getFloat("R_PrCuQuan"));
+                    balanceBean.setR_PrCuAmt(rs.getFloat("R_PrCuAmt"));
+                    balanceBean.setR_Redule(rs.getFloat("R_Redule"));
+                    balanceBean.setR_Kic(rs.getString("R_Kic"));
+                    balanceBean.setR_KicPrint(rs.getString("R_KicPrint"));
+                    balanceBean.setR_Void(rs.getString("R_Void"));
+                    balanceBean.setR_VoidUser(rs.getString("R_VoidUser"));
+                    balanceBean.setR_VoidTime(rs.getString("R_VoidTime"));
+                    balanceBean.setR_Opt1(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt1")));
+                    balanceBean.setR_Opt2(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt2")));
+                    balanceBean.setR_Opt3(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt3")));
+                    balanceBean.setR_Opt4(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt4")));
+                    balanceBean.setR_Opt5(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt5")));
+                    balanceBean.setR_Opt6(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt6")));
+                    balanceBean.setR_Opt7(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt7")));
+                    balanceBean.setR_Opt8(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt8")));
+                    balanceBean.setR_Opt9(ThaiUtil.ASCII2Unicode(rs.getString("R_Opt9")));
+                    balanceBean.setVoidMSG(ThaiUtil.ASCII2Unicode(rs.getString("VoidMSG")));
+                    balanceBean.setR_PrCuCode(rs.getString("R_PrCuCode"));
+                    balanceBean.setR_Serve(rs.getString("R_Serve"));
+                    balanceBean.setR_PrintOK(rs.getString("R_PrintOK"));
+                    balanceBean.setR_KicOK(rs.getString("R_KicOK"));
+                    balanceBean.setStkCode(rs.getString("StkCode"));
+                    balanceBean.setPosStk(rs.getString("PosStk"));
+                    balanceBean.setR_PrChkType(rs.getString("R_PrChkType"));
+                    balanceBean.setR_PrQuan(rs.getFloat("R_PrQuan"));
+                    balanceBean.setR_PrSubType(rs.getString("R_PrSubType"));
+                    balanceBean.setR_PrSubCode(rs.getString("R_PrSubCode"));
+                    balanceBean.setR_PrSubQuan(rs.getFloat("R_PrSubQuan"));
+                    balanceBean.setR_PrSubDisc(rs.getFloat("R_PrSubDisc"));
+                    balanceBean.setR_PrSubBath(rs.getFloat("R_PrSubBath"));
+                    balanceBean.setR_PrSubAmt(rs.getFloat("R_PrSubAmt"));
+                    balanceBean.setR_PrSubAdj(rs.getFloat("R_PrSubAdj"));
+                    balanceBean.setR_PrCuDisc(rs.getFloat("R_PrCuDisc"));
+                    balanceBean.setR_PrCuBath(rs.getFloat("R_PrCuBath"));
+                    balanceBean.setR_PrCuAdj(rs.getFloat("R_PrCuAdj"));
+                    balanceBean.setR_QuanCanDisc(rs.getFloat("R_QuanCanDisc"));
+                    balanceBean.setR_Order(rs.getString("R_Order"));
+                    balanceBean.setR_PItemNo(rs.getInt("R_PItemNo"));
+                    balanceBean.setR_PKicQue(rs.getInt("R_PKicQue"));
+                    balanceBean.setR_MemSum(rs.getString("R_MemSum"));
+                    balanceBean.setR_MoveItem(rs.getString("R_MoveItem"));
+                    balanceBean.setR_MoveFrom(rs.getString("R_MoveFrom"));
+                    balanceBean.setR_MoveUser(rs.getString("R_MoveUser"));
+                    balanceBean.setR_MoveFlag(rs.getString("R_MoveFlag"));
+                    balanceBean.setR_MovePrint(rs.getString("R_MovePrint"));
+                    balanceBean.setR_Pause(rs.getString("R_Pause"));
+                    String r_linkIndex = rs.getString("R_LinkIndex");
+                    if (r_linkIndex == null || r_linkIndex.equals("null")) {
+                        r_linkIndex = "";
+                    }
+                    balanceBean.setR_LinkIndex(r_linkIndex);
+                    try {
+                        balanceBean.setR_Date(rs.getDate("R_Date"));
+                    } catch (SQLException e) {
+                        AppLogUtil.log(BalanceControl.class, "error" + sql, e);
+                    }
+                    beanData.add(balanceBean);
+                }
+                rs.close();
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(BalanceControl.class, "error" + sql, e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return beanData;
+    }
+
     public List<BalanceBean> getAllBalanceSum(String table) {
         List<BalanceBean> beanData = new ArrayList<>();
         beanData.clear();
@@ -1979,37 +2096,45 @@ public class BalanceControl {
         mysqlConnect.open();
         try {
             String sqlUpdatePro = "update balance set "
-                + "R_PrType='-P',"
-                + "R_PRDisc='0',"
-                + "R_PRAmt='0',"
-                + "R_PrQuan='0',"
-                + "R_PrChkType='',"
-                + "R_QuanCanDisc=R_Quan "
-                + "where R_Table='" + tableNo + "' "
-                + "and r_PrCode<>'' ";
+                    + "R_PrType='-P',"
+                    + "R_PRDisc='0',"
+                    + "R_PRAmt='0',"
+                    + "R_PrQuan='0',"
+                    + "R_PrChkType='',"
+                    + "R_QuanCanDisc=R_Quan "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and r_PrCode<>'' ";
             mysqlConnect.executeUpdate(sqlUpdatePro);
         } catch (Exception e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
             mysqlConnect.close();
         }
-        
+
     }
 
     public void updateRVoidByTableNoAndRIndex(BalanceBean bean, String voidMsg, String cashier) {
-        String updBalance = "update balance "
-                + "set r_void='" + bean.getR_Void() + "',"
-                + "cashier='" + cashier + "',"
-                + "r_emp='" + bean.getR_Emp() + "',"
-                + "r_voiduser='" + bean.getR_VoidUser() + "',"
-                + "r_voidtime='" + bean.getR_VoidTime() + "',"
-                + "r_discbath='" + bean.getR_DiscBath() + "',"
-                + "r_kicprint='',"
-                + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
-                + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
-                + "where r_index='" + bean.getR_Index() + "' "
-                + "and r_table='" + bean.getR_Table() + "'";
-        mysqlConnect.executeUpdate(updBalance);
+        mysqlConnect.open(BalanceControl.class);
+        try {
+            String updBalance = "update balance "
+                    + "set r_void='" + bean.getR_Void() + "',"
+                    + "cashier='" + cashier + "',"
+                    + "r_emp='" + bean.getR_Emp() + "',"
+                    + "r_voiduser='" + bean.getR_VoidUser() + "',"
+                    + "r_voidtime='" + bean.getR_VoidTime() + "',"
+                    + "r_discbath='" + bean.getR_DiscBath() + "',"
+                    + "r_kicprint='',"
+                    + "r_opt9='" + ThaiUtil.Unicode2ASCII(voidMsg) + "',"
+                    + "voidmsg='" + ThaiUtil.Unicode2ASCII(voidMsg) + "' "
+                    + "where r_index='" + bean.getR_Index() + "' "
+                    + "and r_table='" + bean.getR_Table() + "'";
+            mysqlConnect.executeUpdate(updBalance);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+
     }
 
     public void updateBalanceByRTableRIndex(BalanceBean bean, String cashier, String voidMsg) {
@@ -2029,52 +2154,67 @@ public class BalanceControl {
         mysqlConnect.open();
         try {
             String sql = "update balance "
-                + "set r_kicprint='P',"
-                + "r_pause='Y' "
-                + "where r_table='" + tableNo + "' "
-                + "and trantype is null "
-                + "and r_kicprint<>'P' "
-                + "and r_printOk='Y' "
-                + "and r_kic<>'' ";
-        mysqlConnect.executeUpdate(sql);
+                    + "set r_kicprint='P',"
+                    + "r_pause='Y' "
+                    + "where r_table='" + tableNo + "' "
+                    + "and trantype is null "
+                    + "and r_kicprint<>'P' "
+                    + "and r_printOk='Y' "
+                    + "and r_kic<>'' ";
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
             mysqlConnect.close();
-        }        
+        }
     }
 
     public void updateRKicByKicPrintNotPAndRTable(String tableNo) {
-        String sql = "update balance "
-                + "set r_kic='0' "
-                + "where r_kicprint<>'P' "
-                + "and r_table='" + tableNo + "';";
-        mysqlConnect.executeUpdate(sql);
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "update balance "
+                    + "set R_Kicprint='P' "
+                    + "where r_kicprint<>'P' "
+                    + "and r_table='" + tableNo + "';";
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
     }
 
     public void updateROpt1ByRTable(String opt, String index, String tableNo, String pCode) {
-        String sql = "update balance "
-                + "set R_Opt1='" + opt + "',"
-                + "R_LinkIndex='" + index + "' "
-                + "where R_Table='" + tableNo + "' "
-                + "and R_PluCode='" + pCode + "' "
-                + "and R_LinkIndex=''";
-        mysqlConnect.executeUpdate(sql);
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "update balance "
+                    + "set R_Opt1='" + opt + "',"
+                    + "R_LinkIndex='" + index + "' "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and R_PluCode='" + pCode + "' "
+                    + "and R_LinkIndex=''";
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+
     }
 
     public void updateQuanCanDiscByTableAndPrCode(String tableNo) {
         mysqlConnect.open();
         try {
             String sql = "update balance set "
-                + "R_PrType='-P',"
-                + "R_PRDisc='0',"
-                + "R_PRAmt='0',"
-                + "R_PrQuan='0',"
-                + "R_PrChkType='',"
-                + "R_QuanCanDisc=R_Quan "
-                + "where R_Table='" + tableNo + "' "
-                + "and r_PrCode<>'' ";
-        mysqlConnect.executeUpdate(sql);
+                    + "R_PrType='-P',"
+                    + "R_PRDisc='0',"
+                    + "R_PRAmt='0',"
+                    + "R_PrQuan='0',"
+                    + "R_PrChkType='',"
+                    + "R_QuanCanDisc=R_Quan "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and r_PrCode<>'' ";
+            mysqlConnect.executeUpdate(sql);
         } catch (Exception e) {
             AppLogUtil.log(BalanceControl.class, "error", e);
         } finally {
@@ -2086,8 +2226,8 @@ public class BalanceControl {
         mysqlConnect.open();
         try {
             String sql = "delete from balance "
-                + "where r_index='" + r_index + "' "
-                + "and r_pause='P' and r_kicprint<>'P'";
+                    + "where r_index='" + r_index + "' "
+                    + "and r_pause='P' and r_kicprint<>'P'";
             return mysqlConnect.executeUpdate(sql) > 0;
         } catch (Exception e) {
             AppLogUtil.log(TableFileControl.class, "error", e);
@@ -2105,9 +2245,19 @@ public class BalanceControl {
     }
 
     public void updateRPrintOKKicPrintByRTable(String tableNo) {
-        String sql = "update balance set "
-                + "R_PrintOK='Y',"
-                + " R_KicPrint='' where r_table='" + tableNo + "'";
-        mysqlConnect.executeUpdate(sql);
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "update balance set "
+                    + "R_PrintOK='Y', "
+                    + "R_KicPrint='' ,"
+                    + "r_pause='P' "
+                    + "where r_table='" + tableNo + "' ";
+            mysqlConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            AppLogUtil.log(TableFileControl.class, "error", e);
+        } finally {
+            mysqlConnect.close();
+        }
+
     }
 }

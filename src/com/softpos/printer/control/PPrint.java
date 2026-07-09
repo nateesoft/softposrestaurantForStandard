@@ -1792,7 +1792,9 @@ public class PPrint {
                 t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Service :" + TAB + DecFmt.format(CONFIG.getP_Service()) + " %" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(tBean.getServiceAmt()) + " +_";
             }
             t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "Net-Amount.." + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format((tBean.getTAmount() - totalDiscount + tBean.getServiceAmt())) + "_";
-            t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
+            if (CONFIG.getP_VatPrn().equals("Y")) {
+                t1 += "colspan=2 align=left><font face=Angsana New size=2>" + Space + "VAT.." + IntFmt.format(CONFIG.getP_Vat()) + "%" + "</td><td align=right ><font face=Angsana New size=2>" + DecFmt.format(vatPrint) + "_";
+            }
 
             if (CONFIG.getP_VatType().equals("I")) {
                 if (!CONFIG.getP_PayBahtRound().equals("O")) {

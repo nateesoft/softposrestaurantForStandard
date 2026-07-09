@@ -79,6 +79,7 @@ import com.softpos.util.component.KeyBoardDialog;
 import com.softpos.e2e.TestEventBus;
 import com.softpos.pos.core.controller.PosHwSetupControl;
 import com.softpos.pos.core.controller.TempSetControl;
+import com.softpos.pos.core.model.PKicTran;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.DateUtil;
 import com.softpos.util.JTableUtility;
@@ -188,13 +189,13 @@ public class MainSale extends javax.swing.JDialog {
             if (btnClickPrintKic == true) {
                 balanceControl.updateBalanceRKicByMacno(PublicVar.MacNo);
             }
-            
+
             tableFileControl.updateTOnActToNByTCode(tableNo);
-            
+
             kichenPrint();
-            
+
             tableFileControl.updateTOnActToYByTCode(tableNo);
-            
+
             printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
@@ -211,15 +212,15 @@ public class MainSale extends javax.swing.JDialog {
         if (btnClickPrintKic == true) {
             balanceControl.updateBalanceRKicByTableNo(tableNo);
         }
-        
+
         if (lbTotalAmount.getText().equals("0.00")) {
             MSG.WAR(this, "ไม่สามารถชำระเงินที่มูลค่าเป็น 0 ได้");
         } else {
             tableFileControl.updateTPauseYByTableNo(tableNo);
             tableFileControl.updateTOnActToNByTCode(tableNo);
-            
+
             kichenPrint();
-            
+
             tableFileControl.updateTOnActToYByTCode(tableNo);
             tableFileControl.updateTPauseNByTableNo(tableNo);
 
@@ -230,7 +231,6 @@ public class MainSale extends javax.swing.JDialog {
     private void processPrintBillCheck() {
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
             AppLogUtil.info("Condition to print bill check: " + tableNo);
-
             printBillCheck();
         }
     }
@@ -259,6 +259,16 @@ public class MainSale extends javax.swing.JDialog {
         PublicVar.countRound = 0;
         if (ConfigFile.getProperties("preOrderMachine").equals("true")) {
             btnPrintKic.setEnabled(false);
+            btnPrintKic.setText("Print - OFF");
+            btnClickPrintKic = true;
+            btnPrintKic.setBackground(Color.red);
+        } else {
+
+            btnRecalAllItem.setVisible(false);
+            btnPrintKic.setEnabled(true);
+            btnPrintKic.setText("Print - ON");
+            btnClickPrintKic = false;
+            btnPrintKic.setBackground(Color.blue);
         }
         TestEventBus.fire(TestEventBus.Event.MAIN_SALE_OPEN, "table=" + tableNo);
         if (tableNo == null || tableNo.trim().isEmpty()) {
@@ -1974,8 +1984,10 @@ public class MainSale extends javax.swing.JDialog {
 
     private void btnRecalAllItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecalAllItemActionPerformed
         btnRecalAllItem.setBackground(Color.GREEN);
+//        btnPrintKic.setText("Print - ON");
+        btnClickPrintKic = false;
+        btnPrintKic.setBackground(Color.blue);
         allItemBalanceRecallPrint();
-        bntHoldTableClick();
 
     }//GEN-LAST:event_btnRecalAllItemActionPerformed
 
@@ -2064,12 +2076,12 @@ public class MainSale extends javax.swing.JDialog {
         try {
             balanceControl.updateVoidByTableNoAndPrCode(tableNo);
             tableFileControl.updateNetTotalByTableNo(tableNo);
-                
+
             int row = getSelectedRowIndex();
             if (row == -1) {
                 return;
             }
-            
+
             String R_Index = model.getValueAt(row, 10).toString();
 
             PosUserBean posUserbean = posUserControl.getPosUser();
@@ -2725,6 +2737,10 @@ public class MainSale extends javax.swing.JDialog {
             PublicVar.Branch_Saveorder = config;
         }
 
+        PKicTran kictran = new PKicTran();
+        List<BalanceBean> listToKicTran = BalanceControl.getAllBalanceNewItemToKicTran(tableNo);
+        kictran.setPKicTran(listToKicTran, branchBean.getKicItemNo());
+
         // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
         if (mainSaleControl.checkCountPrinterTo(tableNo)) {
             if (!PublicVar.Branch_Saveorder.equals("N")) {
@@ -2779,6 +2795,7 @@ public class MainSale extends javax.swing.JDialog {
                             String retd = balanceBean.getR_ETD();
                             printSimpleForm.KIC_FORM_3New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
                             String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
+
                             if (CheckBillBeforeCash.equals("Y")) {
                                 printBillVoidCheck();
                             }
@@ -2878,9 +2895,9 @@ public class MainSale extends javax.swing.JDialog {
                 txtTable.setEditable(false);
                 txtCust.setText("" + tableFileBean.getTCustomer());
                 txtCust.setEditable(false);
-                
+
                 tableFileControl.updateTOnactYMacnoCashierByTCode(PublicVar.MACNO, PublicVar.USERCODE, DateUtil.getMySQL_yyyyMMdd(), DateUtil.getMySQL_HHmmss(), txtTable.getText().trim());
-                        
+
                 tbpMain.setSelectedIndex(0);
 
                 //คำนวณ promotion/service/vat ก่อน load ข้อมูล
@@ -2915,7 +2932,7 @@ public class MainSale extends javax.swing.JDialog {
             if (btnClickPrintKic == true) {
                 balanceControl.updateRKicByKicPrintNotPAndRTable(tableNo);
             }
-            
+
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
             kichenPrint();
@@ -2926,11 +2943,11 @@ public class MainSale extends javax.swing.JDialog {
             initScreen();
             return;
         }
-        
+
         if (lbTotalAmount.getText().equals("0.00")) {
             tableFileControl.updateTOnActToNAndCustomerByTCode(tableNo);
         }
-        
+
         tableFileControl.updateOnlyTOnActToNByTCode(tableNo);
     }
 
@@ -2984,7 +3001,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private boolean updateLogout(String UserCode) {
         posUserControl.updateOnActIsNByUsername(UserCode);
-        
+
         PublicVar.CASHIER = "";
         return true;
     }
@@ -3245,7 +3262,7 @@ public class MainSale extends javax.swing.JDialog {
             boolean confirm = MSG.CONF(this, "มีการป้อนรหัสสมาชิกไว้แล้วต้องการเปลี่ยนใหม่หรือไม่...?");
             if (confirm) {
                 PublicVar.MemberAlready = false;
-                
+
                 tableFileControl.resetMemberSelect("tableNo");
                 showMember();
             }
@@ -3256,7 +3273,7 @@ public class MainSale extends javax.swing.JDialog {
             if (frm.getMemCode() != null) {
                 PublicVar.MemberAlready = true;
                 memberBean = MemmaterController.getMember(frm.getMemCode());
-                
+
                 // update member in tablefile
                 tableFileControl.saveMember(memberBean, "tableNo");
 
@@ -3374,7 +3391,8 @@ public class MainSale extends javax.swing.JDialog {
                             } else {
                                 MSG.WAR(this, "รายการนี้ได้มีการพิมพ์ออกครัวไปแล้ว...\nไม่สามารถเปลี่ยนประเภทการขายได้...");
                             }
-                        }   break;
+                        }
+                        break;
                     case "ItemDiscount":
                         // ตรวจสอบว่าสามารถให้ส่วนลดได้อีกหรือไม่ ?
                         if (checkCanDisc(RIndex)) {
@@ -3382,7 +3400,7 @@ public class MainSale extends javax.swing.JDialog {
                                 if (!PCode.equals("") && !PVoid.equals("V")) {
                                     ItemDiscount i = new ItemDiscount(new JFrame(), true, txtTable.getText(), RIndex, memberBean);
                                     i.setVisible(true);
-                                    
+
                                     loadTableBalance(txtTable.getText());
                                     txtProductCode.setText("");
                                     txtProductCode.requestFocus();
@@ -3390,7 +3408,8 @@ public class MainSale extends javax.swing.JDialog {
                             }
                         } else {
                             MSG.WAR(this, "รายการสินค้านี้มีการให้ส่วนลดอื่นไปแล้วไม่สามารถให้ส่วนลดได้อีก");
-                        }   break;
+                        }
+                        break;
                     case "ItemVoid":
                         if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
                             cancelItemBeforeHold();
@@ -3403,7 +3422,7 @@ public class MainSale extends javax.swing.JDialog {
                                         txtMember1.getText(), txtMember2.getText(), TableFileBean.getServiceAmt());
                                 dd.clearMemberDiscount();
                             }
-                            
+
                         }
                         //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
                         break;
@@ -3672,7 +3691,7 @@ public class MainSale extends javax.swing.JDialog {
         } catch (Exception e) {
             MSG.ERR(this, e.getMessage());
         }
-        
+
         int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
@@ -4015,7 +4034,7 @@ public class MainSale extends javax.swing.JDialog {
                             + "VALUES ('" + txtTable.getText() + "', '', '" + autoPCode + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(autoPDesc) + "', '" + pstock + "',"
                             + "'auto', '', "
-                            + "'"+DateUtil.getMySQL_HHmmss()+"')";
+                            + "'" + DateUtil.getMySQL_HHmmss() + "')";
                     batchSqls.add(tempset);
                 }
                 databaseConnection.execBatch(batchSqls);
@@ -4037,7 +4056,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void updateTempmenuset(String Index, String PCode, String PName, String Option, String TryName) {
         String pstock = PUtility.GetStkCode();
-        tempSetControl.addNewData(tableNo, Index, PCode, ThaiUtil.Unicode2ASCII(PName), pstock, 
+        tempSetControl.addNewData(tableNo, Index, PCode, ThaiUtil.Unicode2ASCII(PName), pstock,
                 TryName, ThaiUtil.Unicode2ASCII(Option), DateUtil.getMySQL_HHmmss());
     }
 
@@ -4077,11 +4096,8 @@ public class MainSale extends javax.swing.JDialog {
 
     private void allItemBalanceRecallPrint() {
         AppLogUtil.info("allItemBalanceRecallPrint: " + tableNo);
-        try {
-            balanceControl.updateRPrintOKKicPrintByRTable(tableNo);
-        } catch (Exception e) {
-            AppLogUtil.log(MainSale.class, "error", e);
-        }
+        balanceControl.updateRPrintOKKicPrintByRTable(tableNo);
+
     }
 
 }

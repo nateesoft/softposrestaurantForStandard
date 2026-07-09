@@ -6,6 +6,7 @@ import com.softpos.pos.core.controller.PUtility;
 import com.softpos.constants.PublicVar;
 
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.pos.core.controller.ThaiUtil;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -403,7 +404,7 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         }
 
         try {
-            mysqlConnect.open(this.getClass());
+            mysqlConnect.open(CreditReport.class);
             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                 String SqlQuery = "select B_Refno,B_CrCode1,B_CardNo1,B_AppCode1,B_CrAmt1 "
                         + "from billno "
@@ -419,7 +420,7 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         String TCrNo = rs.getString("B_CardNo1");
                         String TCrApp = rs.getString("B_AppCode1");
                         Double TCrAmt = rs.getDouble("B_CrAmt1");
-                        
+
                         insertTempCredit(TRefno, TCrCode, TCrNo, TCrApp, TCrAmt);
                     }
                 }
@@ -504,6 +505,20 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------") + "_";
         t += "colspan=2 align=left><font face=Angsana New size=1>" + ("Sum-Total Slip  " + Space + PUtility.DataFull(IntFmt.format(SumTotal), 6) + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(SumTotalAmt), 13)) + "_";
         t += "colspan=3 align=center><font face=Angsana New size=1>" + ("-----------------------------------------------------" + "_");
+       
+        mysqlConnect.open(CreditReport.class);
+        try (Statement stmtGroupSum = mysqlConnect.getConnection().createStatement()) {
+            String sql = "select b_crcode1 creditCode,sum(b_crAmt1) total from billno where b_void<>'V' and b_crcode1<>'' group by b_crcode1";
+            try (ResultSet rsSum = stmtGroupSum.executeQuery(sql)) {
+                while (rsSum.next()) {
+                    t += "colspan=2 align=left><font face=Angsana New size=1>" + ("**" + Space + rsSum.getString(ThaiUtil.ASCII2Unicode("creditCode"))
+                            + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFull(DecFmt.format(rsSum.getDouble("total")), 13)) + "_";
+                }
+            }
+        } catch (Exception e) {
+            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(CreditReport.class, "error", e);
+        }
 
         PrinterDriverControl pd = new PrinterDriverControl();
         String[] strs = t.split("_");
@@ -519,14 +534,14 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         try {
             String SqlQuery = "insert into tempcredit "
                     + "(mac_no,s_date,terminal,ref_no,crcode,crid,crapp,cramt) "
-                    + "values ('CASHIER1','"+DateUtil.getMySQL_yyyyMMdd()+"',?,'" + TRefno + "',?,?,?,?)";
+                    + "values ('CASHIER1','" + DateUtil.getMySQL_yyyyMMdd() + "',?,'" + TRefno + "',?,?,?,?)";
             try (PreparedStatement prm = mysqlConnect.getConnection().prepareStatement(SqlQuery)) {
                 prm.setString(1, PublicVar.MACNO);
                 prm.setString(2, TCrCode);
                 prm.setString(3, TCrId);
                 prm.setString(4, TCrApp);
                 prm.setDouble(5, TCrAmt);
-                
+
                 prm.executeUpdate();
             }
         } catch (SQLException e) {
