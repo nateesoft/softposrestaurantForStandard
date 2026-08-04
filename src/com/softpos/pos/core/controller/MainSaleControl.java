@@ -22,12 +22,12 @@ import com.softpos.util.AppLogUtil;
  * @author nathee
  */
 public class MainSaleControl {
-    
+
     private final MySQLConnect mysqlConnect = new MySQLConnect();
 
     public MenuListBean getMenuListByMenuItem(String PluCode) {
         MenuListBean bean = null;
-        
+
         mysqlConnect.open(MainSaleControl.class);
         try {
             String SqlQuery = "select plucode from menulist where menuitem=('" + PluCode + "') "
@@ -102,7 +102,7 @@ public class MainSaleControl {
     }
 
     public String getQueryShowKic(String tableNo) {
-        return "select b.r_kic,b.r_etd,b.macno "
+        return "select b.r_kic,b.r_etd,b.macno,b.r_etd "
                 + "from balance b "
                 + "inner join ("
                 + "select min(R_Index) min_index "
@@ -114,6 +114,15 @@ public class MainSaleControl {
                 + "group by r_kic,r_etd"
                 + ") g on b.R_Index=g.min_index "
                 + "order by b.r_kic,b.r_etd";
+    }
+
+    public String getQueryShowKicForm1(String tableNo, String MachineType) {
+        if (MachineType.equals("PDA")) {
+            return "select * from balance b where r_table='" + tableNo + "' and trantype='PDA' group by r_kic order by r_etd,r_index ;";
+        } else {
+            return "select * from balance b where r_table='" + tableNo + "' group by r_kic order by r_etd,r_index ;";
+        }
+
     }
 
     public boolean checkCountPrinterTo(String tableNo) {
@@ -162,21 +171,54 @@ public class MainSaleControl {
         return listBalance;
     }
 
-    public List<BalanceBean> printOnlyForm1(String tableNo, String rKic) {
+    public List<BalanceBean> getListAllPrintToKicForm_1(String tableNo, String MachineType) {
         List<BalanceBean> listBalance = new ArrayList<>();
         mysqlConnect.open(this.getClass());
         try {
-            String sql = "select R_PluCode from balance "
+            String sqlShowKic = getQueryShowKicForm1(tableNo, MachineType);
+            try (ResultSet rs = mysqlConnect.executeQuery(sqlShowKic)) {
+                while (rs.next()) {
+                    BalanceBean bean = new BalanceBean();
+                    bean.setR_Kic(rs.getString("r_kic"));
+                    bean.setR_ETD(rs.getString("r_etd"));
+                    bean.setMacno(rs.getString("macno"));
+                    listBalance.add(bean);
+                }
+                rs.close();
+            }
+        } catch (SQLException e) {
+
+            AppLogUtil.log(MainSaleControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+
+        return listBalance;
+    }
+
+    public List<BalanceBean> printOnlyForm1(String tableNo, String rKic, String R_ETD, String MachineType) {
+        List<BalanceBean> listBalance = new ArrayList<>();
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "select R_PluCode,R_ETD from balance "
                     + "where r_table='" + tableNo + "' "
                     + "and R_PrintOK='Y' "
                     + "and R_KicPrint<>'P' "
-                    + "and R_kic='" + rKic + "' "
-                    + "group by r_plucode";
+                    + "and R_kic='" + rKic + "' ";
+//                    + "group by r_plucode";
+            if (MachineType.equals("PDA")) {
+                sql = "select R_PluCode,R_ETD from balance "
+                        + "where r_table='" + tableNo + "' "
+                        + "and R_PrintOK='Y' "
+                        + "and R_KicPrint<>'P' "
+                        + "and R_kic='" + rKic + "' "
+                        + "and Trantype='PDA';";
+            }
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
                 while (rs.next()) {
                     BalanceBean bean = new BalanceBean();
                     bean.setR_PluCode(rs.getString("R_PluCode"));
-
+                    bean.setR_ETD(rs.getString("R_ETD"));
                     listBalance.add(bean);
                 }
                 rs.close();

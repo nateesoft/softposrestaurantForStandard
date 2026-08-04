@@ -8,10 +8,12 @@ import com.softpos.pos.core.controller.PrintToKicControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.connection.database.ConfigFile;
+import com.softpos.pos.core.controller.MainSaleControl;
 import java.awt.Cursor;
 import java.util.List;
 import javax.swing.JFrame;
 import com.softpos.printer.control.PrintSimpleForm;
+import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 
 /**
@@ -26,6 +28,7 @@ public class PrintToKic extends javax.swing.JFrame {
     private boolean printkic = false;
     private final PrintToKicControl control = AppContext.getPrintToKicController();
     private final BranchControl BranchControl = AppContext.getBranchControl();
+    private final MainSaleControl mainSaleControl = AppContext.getMainSaleController();
 
     /**
      * Creates new form PrintToKic
@@ -256,6 +259,38 @@ public class PrintToKic extends javax.swing.JFrame {
         // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
         List<BalanceBean> listBalance = control.getBalaneForPDAByTableNo(tableNo, macno);
 
+        //สำหรับ From1Only ซึ่งไม่สามารถใช้ Query รวมได้
+        List<BalanceBean> listToKicFrom1 = mainSaleControl.getListAllPrintToKicForm_1(tableNo,"PDA");
+        for (BalanceBean balanceBean : listToKicFrom1) {
+            String rKic = balanceBean.getR_Kic();
+            if (rKic.equals("")) {
+                continue;
+            }
+            int iKic = Integer.parseInt(rKic);
+            if (iKic - 1 < 0) {
+                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                continue;
+            }
+            printerName = "kic" + rKic;
+            String printerForm = BranchControl.getForm(rKic);
+
+            AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+
+            switch (printerForm) {
+                case "1": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic, balanceBean.getR_ETD(), "PDA");
+                    for (BalanceBean balance : listBalanceForm) {
+                        String PCode = balance.getR_PluCode();
+                        String R_ETD = balance.getR_ETD();
+                        if (printerForm.equals("1")) {
+                            printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode}, R_ETD, "PDA");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
         //วนคำสั่งเพื่อพิมพ์ให้ครบทุกครัว
         for (BalanceBean balanceBean : listBalance) {
             kicPrintting = true;
@@ -273,19 +308,6 @@ public class PrintToKic extends javax.swing.JFrame {
                         printerName = "kic" + rKic;
                         String printerForm = BranchControl.getForm(rKic);
                         switch (printerForm) {
-                            case "1":
-                                List<BalanceBean> listForm1 = control.getBalancePrintForm1(tableNo, rKic);
-                                printerName = "kic" + rKic;
-                                for (BalanceBean bean : listForm1) {
-                                    String PCode = bean.getR_PluCode();
-                                    if (printerForm.equals("1")) {
-                                        if (PublicVar.printkic) {
-                                            kicPrintting = true;
-                                            printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
-                                        }
-                                    }
-                                }
-                                break;
                             case "6":
                                 List<BalanceBean> listForm6 = control.getBalancePrintForm6(tableNo, rKic);
                                 for (BalanceBean bean : listForm6) {
@@ -332,9 +354,6 @@ public class PrintToKic extends javax.swing.JFrame {
                                     printSimpleForm.KIC_FORM_7(printerName, tableNo);//print new Jasperfile
                                 }
                                 break;
-                            default:
-                                MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");
-                                break;
                         }
                     }
                 }
@@ -343,9 +362,21 @@ public class PrintToKic extends javax.swing.JFrame {
         if (!PublicVar.Branch_Saveorder.equals("N")) {
             printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
         }
-        
+
         kicPrintting = false;
     }
+
+    public static void main(String args[]) {
+        PrintToKic dialog = new PrintToKic(new javax.swing.JFrame(), true);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        dialog.setVisible(true);
+    }
+    ;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -192,7 +192,7 @@ public class MainSale extends javax.swing.JDialog {
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint();
+            kichenPrint("POS");
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
 
@@ -219,7 +219,7 @@ public class MainSale extends javax.swing.JDialog {
             tableFileControl.updateTPauseYByTableNo(tableNo);
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint();
+            kichenPrint("POS");
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
             tableFileControl.updateTPauseNByTableNo(tableNo);
@@ -2725,7 +2725,7 @@ public class MainSale extends javax.swing.JDialog {
         PublicVar.ErrorColect = true;
     }
 
-    private void kichenPrint() {
+    private void kichenPrint(String MachineType) {
         tableFileControl.updateTPauseYByTableNo(tableNo);
 
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
@@ -2741,10 +2741,41 @@ public class MainSale extends javax.swing.JDialog {
         List<BalanceBean> listToKicTran = BalanceControl.getAllBalanceNewItemToKicTran(tableNo);
         kictran.setPKicTran(listToKicTran, branchBean.getKicItemNo());
 
-        // หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
+        // 1.หาจำนวนปริ้นเตอร์ว่าต้องออกกี่เครื่อง
         if (mainSaleControl.checkCountPrinterTo(tableNo)) {
             if (!PublicVar.Branch_Saveorder.equals("N")) {
                 printSimpleForm.KIC_FORM_SaveOrder("", "SaveOrder", tableNo, 0);
+            }
+        }
+        //สำหรับ From1Only ซึ่งไม่สามารถใช้ Query รวมได้
+        List<BalanceBean> listToKicFrom1 = mainSaleControl.getListAllPrintToKicForm_1(tableNo,"POS");
+        for (BalanceBean balanceBean : listToKicFrom1) {
+            String rKic = balanceBean.getR_Kic();
+            if (rKic.equals("")) {
+                continue;
+            }
+            int iKic = Integer.parseInt(rKic);
+            if (iKic - 1 < 0) {
+                //ถ้าเป็น iKic=0 จะเป็นการไม่กำหนดให้ปริ้นออกครัว
+                continue;
+            }
+            printerName = "kic" + rKic;
+            String printerForm = BranchControl.getForm(rKic);
+
+            AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+
+            switch (printerForm) {
+                case "1": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic, balanceBean.getR_ETD(),"POS");
+                    for (BalanceBean balance : listBalanceForm) {
+                        String PCode = balance.getR_PluCode();
+                        String R_ETD = balance.getR_ETD();
+                        if (printerForm.equals("1")) {
+                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode}, R_ETD,"POS");
+                        }
+                    }
+                    break;
+                }
             }
         }
 
@@ -2767,15 +2798,16 @@ public class MainSale extends javax.swing.JDialog {
 
             switch (printerForm) {
                 case "1": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic);
-                    for (BalanceBean balance : listBalanceForm) {
-                        String PCode = balance.getR_PluCode();
-                        if (printerForm.equals("1")) {
-                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
-                        }
+//                    List<BalanceBean> listBalanceForm = mainSaleControl.getListAllPrintToKicForm_1(txtTable.getText());
+//                    for (BalanceBean balance : listBalanceForm) {
+//                        String PCode = balance.getR_PluCode();
+//                        String R_ETD = balance.getR_ETD();
+//                        if (printerForm.equals("1")) {
+////                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
+//                        }
                     }
                     break;
-                }
+//                }
                 case "6": {
                     List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
                     for (BalanceBean balance : listBalanceForm) {
@@ -2935,7 +2967,7 @@ public class MainSale extends javax.swing.JDialog {
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint();
+            kichenPrint("POS");
             holdTableAndSave();
 
             PublicVar.ErrorColect = false;
@@ -3325,7 +3357,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showBillCheck() {
         if (model.getRowCount() > 0) {
-            kichenPrint();
+            kichenPrint("POS");
             bntcheckbillClick();
         }
     }
@@ -3338,7 +3370,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showCheckBill() {
         if (model.getRowCount() > 0) {
-            kichenPrint();
+            kichenPrint("POS");
             btnPaymentClick();
         }
     }

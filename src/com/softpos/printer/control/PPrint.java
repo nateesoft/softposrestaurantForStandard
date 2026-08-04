@@ -1719,12 +1719,16 @@ public class PPrint {
                             t1 += "style=vertical-align:topcolspan=1; width=-90%; align=left;><font face=Angsana New size=2>"
                                     + IntFmt.format(bean.getR_Quan()) + " "
                                     + "</font></td><td align=left width=70><font face=Angsana New size=2>"
-                                    + subStringText(bean.getR_PName(), 30)
+                                    + subStringText(bean.getR_PName(), 22)
                                     + "</font></td><td align=right width=70><font face=Angsana New size=2>"
                                     + IntFmt.format(bean.getR_Total()) + bean.getR_ETD() + "_";
+                            if (ConfigFile.getProperties("printUnitPerPrice").equals("true")) {
+                                t1 += "colspan=3 align=left><font face=Angsana New size=2>"
+                                        + TAB + "# Price : " + df.format(bean.getR_Price()) + "_";
+                            }
                             if (!bean.getR_Opt1().equals("")) {
                                 t1 += "colspan=3 align=left><font face=Angsana New size=2>"
-                                        + subStringText(ThaiUtil.ASCII2Unicode(TAB + bean.getR_Opt1()), 30) + "_";
+                                        + subStringText(ThaiUtil.ASCII2Unicode(TAB + bean.getR_Opt1()), 22) + "_";
                             }
                         }
                     } else {

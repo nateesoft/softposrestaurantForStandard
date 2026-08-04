@@ -67,7 +67,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private final BalanceControl BalanceControl = AppContext.getBalanceControl();
     private final PUtility PUtility = new PUtility();
     private final MemmaterControl MemmaterController = AppContext.getMemmaterController();
-    
+
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final POSConfigSetup POSConfigSetup = new POSConfigSetup();
     private final PosControl PosControl = AppContext.getPosControl();
@@ -1628,7 +1628,7 @@ public class PaymentDialog extends javax.swing.JDialog {
             txtCreditTrackNo.requestFocus();
             return;
         }
-        
+
         BalanceBean balanceBean = checkBillControl.getBalanceByTableNo(tableNo);
         boolean isTakeOrder = isTakeOrder();
         if (balanceBean != null && isTakeOrder == true) {
@@ -2106,7 +2106,7 @@ public class PaymentDialog extends javax.swing.JDialog {
             billBean.setB_AccrCode(txtArCode.getText());
             billBean.setB_AccrAmt(saveAR);
             int creditDay = 0;
-            if(!lbCredit.getText().trim().equals("")){
+            if (!lbCredit.getText().trim().equals("")) {
                 try {
                     creditDay = Integer.parseInt(lbCredit.getText());
                 } catch (NumberFormatException e) {
@@ -2114,7 +2114,7 @@ public class PaymentDialog extends javax.swing.JDialog {
                     creditDay = 0;
                 }
             }
-            
+
             billBean.setB_SubDiscBath(tBean.getDiscBath());
             billBean.setB_AccrCr(creditDay);
 
@@ -2502,13 +2502,14 @@ public class PaymentDialog extends javax.swing.JDialog {
                         printerName = "kic" + rKic;
                         String printerForm = BranchControl.getForm(rKic);
                         if (printerForm.equals("1")) {
-                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic);
+                            List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic, balanceBean.getR_ETD(),"POS");
                             printerName = "kic" + rKic;
                             for (BalanceBean balance : listBalanceForm) {
                                 String PCode = balance.getR_PluCode();
+                                String R_ETD = balance.getR_ETD();
                                 if (printerForm.equals("1")) {
                                     if (PublicVar.printkic) {
-                                        printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode});
+                                        printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode},R_ETD,"POS");
                                     }
                                 }
                             }

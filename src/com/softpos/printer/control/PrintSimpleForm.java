@@ -105,7 +105,7 @@ public class PrintSimpleForm {
         return ans;
     }
 
-    public void KIC_FORM_1(String printerName, final String tableNo, final String[] PCode) {
+    public void KIC_FORM_1(String printerName, final String tableNo, final String[] PCode, String R_ETD, String TypeMachine) {
         AppLogUtil.info("KIC_FORM_1 : Start Printing....");
         AppLogUtil.info("KIC_FORM_1 : printerName: " + printerName);
         AppLogUtil.info("KIC_FORM_1 : tableNo: " + tableNo);
@@ -125,532 +125,207 @@ public class PrintSimpleForm {
         //น้าตะไคร้ใบเตย       2
         //__________________
         //28/04/2014 14:15 001/
-
+        itemVoidPrint(printerName, tableNo, PCode);
+        String sql = "select R_Index, TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
+                + "R_Price, b.Macno,R_Date, R_Time,"
+                + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
+                + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+                + "from tablefile t,balance b "
+                + "where t.tcode=b.r_table "
+                + "and r_table='" + tableNo + "' "
+                + "and R_PrintOK='Y' "
+                + "and R_KicPrint<>'P' "
+                + "and R_Kic<>'' "
+                + "and R_PluCode='" + PCode[0] + "' "
+                + "and R_ETD='" + R_ETD + "' "
+                + "and R_VOID<>'V' "
+                + "order by R_Index";
+        if (TypeMachine.equals("PDA")) {
+            sql = "select R_Index, TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
+                    + "R_Price, b.Macno,R_Date, R_Time,"
+                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
+                    + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
+                    + "from tablefile t,balance b "
+                    + "where t.tcode=b.r_table "
+                    + "and r_table='" + tableNo + "' "
+                    + "and R_PrintOK='Y' "
+                    + "and R_KicPrint<>'P' "
+                    + "and R_Kic<>'' "
+                    + "and R_PluCode='" + PCode[0] + "' "
+                    + "and R_ETD='" + R_ETD + "' "
+                    + "and R_VOID<>'V' "
+                    + "and trantype='PDA' "
+                    + "order by R_Index";
+        }
+        AppLogUtil.warn(PrintSimpleForm.class, sql);
         mysqlConnect.open(this.getClass());
-
-        itemVoidPrint(printerName, tableNo, PCode, "E");
         try {
-            String sql = "select R_Index, TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
-                    + "R_Price, b.Macno,R_Date, R_Time,"
-                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
-                    + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
-                    + "from tablefile t,balance b "
-                    + "where t.tcode=b.r_table "
-                    + "and r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "and R_PluCode='" + PCode[0] + "' "
-                    + "and R_ETD='E' "
-                    + "and R_VOID<>'V' "
-                    + "order by R_Index";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
-                    String ETD = rs.getString("R_ETD");
-                    String macNo = rs.getString("macno");
-                    String custCount = rs.getString("TCustomer");
-                    double qty = rs.getDouble("R_Quan");
-                    String TUser = getEmpName(rs.getString("R_Emp"));
-                    String r_index = (rs.getString("R_Index"));
-
-                    //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                    List<String[]> listOpt = new ArrayList<>();
-                    try {
-                        String sqlOpt = "select * from balance "
-                                + "where r_table='" + tableNo + "' "
-                                + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
-                                + "and r_index='" + r_index + "' "
-                                + "and r_void<>'V' ";
-                        AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
-                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement(); ResultSet rsOpt = stmt2.executeQuery(sqlOpt)) {
-                            while (rsOpt.next()) {
-                                String Vo = rsOpt.getString("R_Void");
-                                String RVo = ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt9"));
-                                if (Vo.equals("V")) {
-                                    if (!RVo.equals("")) {
-                                        RVo = "ยกเลิก " + RVo;
-                                    }
-                                }
-                                String[] OPT = new String[]{
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt1")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt2")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt3")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt4")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt5")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt6")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt7")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt8")),
-                                    RVo
-                                };
-
-                                listOpt.add(OPT);
-                            }
-
-                        }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
-                    }
-
-                    //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
-                    t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + rs.getString("TCode") + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
-                    t += "colspan=3 align=center>_";
-                    switch (ETD) {
-                        case "E":
-                            ETD = "*** ทานในร้าน ***";
-                            break;
-                        case "T":
-                            ETD = "*** ห่อกลับ ***";
-                            break;
-                        case "D":
-                            ETD = "*** ส่งถึงบ้าน ***";
-                            break;
-                        case "P":
-                            ETD = "*** ปิ่นโต ***";
-                            break;
-                        case "W":
-                            ETD = "*** ขายส่ง ***";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    t += "colspan=3 align=center><font face=Tahoma size=5>" + ETD + "_";
-                    t += "colspan=3 align=center>_";
-                    String product = productName;
-                    if (product.length() > 16) {
-                        String productSubF = product.substring(0, 16);
-                        String productSubR = product.substring(16);
-
-                        product = productSubF + "\n" + productSubR;
-
-                    }
-                    t += "colspan=3 align=left><font face=Tahoma size=5>" + (product) + "_";
-                    t += "<td colspan=3 align=right><font face=Tahoma size=5>" + df.format(qty) + "_";
-                    //********* พิมพ์ข้อความพิเศษ *************
-                    for (int x = 0; x < listOpt.size(); x++) {
-                        String[] OPT = (String[]) listOpt.get(x);
-                        for (String OPT1 : OPT) {
-                            if (OPT1 != null) {
-                                if (!OPT1.trim().equals("")) {
-                                    t += "colspan=5 align=left><font face=Tahoma size=3>" + Space + ("*** " + OPT1) + "_";
+            ResultSet rs = mysqlConnect.executeQuery(sql);
+            while (rs.next()) {
+                String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
+                String ETD = rs.getString("R_ETD");
+                String ETDOriginal = rs.getString("R_ETD");
+                String macNo = rs.getString("macno");
+                String custCount = rs.getString("TCustomer");
+                double qty = rs.getDouble("R_Quan");
+                String TUser = getEmpName(rs.getString("R_Emp"));
+                String r_index = (rs.getString("R_Index"));
+                String R_VOID = rs.getString("R_Void");
+                //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
+                List<String[]> listOpt = new ArrayList<>();
+                try {
+                    String sqlOpt = "select * from balance "
+                            + "where r_table='" + tableNo + "' "
+                            + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
+                            + "and r_index='" + r_index + "' "
+                            + "and r_void<>'V' ";
+                    AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                    try (ResultSet rsOpt = mysqlConnect.executeQuery(sqlOpt)) {
+                        while (rsOpt.next()) {
+                            String Vo = rsOpt.getString("R_Void");
+                            String RVo = ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt9"));
+                            if (Vo.equals("V")) {
+                                if (!RVo.equals("")) {
+                                    RVo = "ยกเลิก " + RVo;
                                 }
                             }
-                        }
-                    }
-                    //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
-                    t += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                    t += "colspan=3 align=left><font face=Tahoma size=2>" + simp.format(new Date()) + "_";
-                    t += "colspan=3 align=left><font face=Tahoma size=2>" + Space + "Mac" + Space + macNo + "/" + TUser + "_";
+                            String[] OPT = new String[]{
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt1")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt2")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt3")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt4")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt5")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt6")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt7")),
+                                ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt8")),
+                                RVo
+                            };
 
-                    //add kictran data
-                    String R_Que = seekKicItemNo();
-                    int TempQue = Integer.parseInt(R_Que);
-                    String R_VOID = rs.getString("R_Void");
-                    if (R_VOID == null) {
-                        R_VOID = "";
+                            listOpt.add(OPT);
+                        }
+
                     }
-                    //หากมีสินค้า VOID
-                    try {
-                        if (R_VOID.equals("V")) {
-                            String SQLQuery2 = "update kictran "
-                                    + "set pvoid = 'V' "
-                                    + "where pindex ='" + rs.getString("R_Index") + "' "
-                                    + "and ptable='" + rs.getString("R_Table") + "' "
-                                    + "and pcode='" + rs.getString("R_PluCode") + "' "
-                                    + "and pkic='" + rs.getString("R_Kic") + "' "
-                                    + "and pflage='N'";
-                            AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
-                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
-                                stmt1.executeUpdate(SQLQuery2);
-                                stmt1.close();
-                            }
-                        } else {
-                            String sqlK = "insert into kictran "
-                                    + "(pitemno,pdate,pcode,pqty,pindex,"
-                                    + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",'" + DateUtil.getMySQL_yyyyMMdd() + "',"
-                                    + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
-                                    + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
-                                    + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
-                                    + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlK);
-                            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
-                                stmt3.executeUpdate(sqlK);
-                                stmt3.close();
+                } catch (SQLException e) {
+                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                }
+
+                //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
+                t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + tableNo + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
+                t += "colspan=3 align=center>_";
+                switch (ETD) {
+                    case "E":
+                        ETD = "*** ทานในร้าน ***";
+                        break;
+                    case "T":
+                        ETD = "*** ห่อกลับ ***";
+                        break;
+                    case "D":
+                        ETD = "*** ส่งถึงบ้าน ***";
+                        break;
+                    case "P":
+                        ETD = "*** ปิ่นโต ***";
+                        break;
+                    case "W":
+                        ETD = "*** ขายส่ง ***";
+                        break;
+                    default:
+                        break;
+                }
+
+                t += "colspan=3 align=center><font face=Tahoma size=5>" + ETD + "_";
+                t += "colspan=3 align=center>_";
+                String product = productName;
+                if (product.length() > 16) {
+                    String productSubF = product.substring(0, 16);
+                    String productSubR = product.substring(16);
+
+                    product = productSubF + "\n" + productSubR;
+
+                }
+                t += "colspan=3 align=left><font face=Tahoma size=5>" + (product) + "_";
+                t += "<td colspan=3 align=right><font face=Tahoma size=5>" + df.format(qty) + "_";
+                //********* พิมพ์ข้อความพิเศษ *************
+                for (int x = 0; x < listOpt.size(); x++) {
+                    String[] OPT = (String[]) listOpt.get(x);
+                    for (String OPT1 : OPT) {
+                        if (OPT1 != null) {
+                            if (!OPT1.trim().equals("")) {
+                                t += "colspan=5 align=left><font face=Tahoma size=4>" + Space + ("*** " + OPT1) + "_";
                             }
                         }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
                     }
-                    PrinterDriverControl pd = new PrinterDriverControl();
-                    String[] strs = t.split("_");
-                    for (String data1 : strs) {
-                        PublicVar.printerDriverKitChenName = "kic" + printerName;
-                        pd.addTextIFont(data1);
+                }
+                //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
+                t += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
+                t += "colspan=3 align=left><font face=Tahoma size=3>" + simp.format(new Date()) + "_";
+                t += "colspan=3 align=left><font face=Tahoma size=3>" + Space + "Mac" + Space + macNo + "/" + TUser + "_";
+                t += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
+                //add kictran data
+                String R_Que = seekKicItemNo();
+                int TempQue = Integer.parseInt(R_Que);
+
+                if (R_VOID == null) {
+                    R_VOID = "";
+                }
+                //หากมีสินค้า VOID
+                try {
+                    if (R_VOID.equals("V")) {
+                        String SQLQuery2 = "update kictran "
+                                + "set pvoid = 'V' "
+                                + "where pindex ='" + rs.getString("R_Index") + "' "
+                                + "and ptable='" + rs.getString("R_Table") + "' "
+                                + "and pcode='" + rs.getString("R_PluCode") + "' "
+                                + "and pkic='" + rs.getString("R_Kic") + "' "
+                                + "and pflage='N'";
+                        AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                        mysqlConnect.executeUpdate(SQLQuery2);
+
+                    } else {
+                        String sqlK = "insert into kictran "
+                                + "(pitemno,pdate,pcode,pqty,pindex,"
+                                + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
+                                + "values (" + TempQue + ",'" + DateUtil.getMySQL_yyyyMMdd() + "',"
+                                + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
+                                + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
+                                + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
+                                + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
+                                + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
+                        AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                        mysqlConnect.executeUpdate(sqlK);
                     }
-                    pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+                } catch (SQLException e) {
+                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                }
+                PrinterDriverControl pd = new PrinterDriverControl();
+                String[] strs = t.split("_");
+                for (String data1 : strs) {
+                    PublicVar.printerDriverKitChenName = printerName;
+                    pd.addTextIFont(data1);
+                }
+                pd.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+                try {
+                    mysqlConnect.open(this.getClass());
+                    String sqlUpdateBalance = "update balance set "
+                            + "r_kicprint='P' , "
+                            + "r_printok='Y' "
+                            + "where r_table='" + tableNo + "' "
+                            + "and r_index='" + r_index + "'"
+                            + "and r_etd='" + ETDOriginal + "';";
+                    mysqlConnect.executeUpdate(sqlUpdateBalance);
+                } catch (Exception e) {
+                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                } finally {
+                    mysqlConnect.close();
                 }
 
             }
-        } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
-        }
 
-        itemVoidPrint(printerName, tableNo, PCode, "T");
-        try {
-            String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,sum(R_Quan) R_Quan,"
-                    + "R_Price, b.Macno,R_Date, R_Time,"
-                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
-                    + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
-                    + "from tablefile t,balance b "
-                    + "where t.tcode=b.r_table "
-                    + "and r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "and R_PluCode='" + PCode[0] + "' "
-                    + "and R_ETD='T' "
-                    + "and R_VOID<>'V' "
-                    + "group by R_PluCode "
-                    + "order by R_Index";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
-                    String ETD = rs.getString("R_ETD");
-                    String macNo = rs.getString("macno");
-                    String custCount = rs.getString("TCustomer");
-                    double qty = rs.getDouble("R_Quan");
-                    String TUser = getEmpName(rs.getString("R_Emp"));
-                    String r_index = (rs.getString("R_Index"));
-
-                    //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                    List<String[]> listOpt = new ArrayList<>();
-                    try {
-                        String sqlOpt = "select * from balance "
-                                + "where r_table='" + tableNo + "' "
-                                + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
-                                + "and r_index='" + r_index + "'"
-                                + "and r_void<>'V' ";
-                        AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
-                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
-                            ResultSet rsOpt = stmt2.executeQuery(sqlOpt);
-                            while (rsOpt.next()) {
-                                String Vo = rsOpt.getString("R_Void");
-                                String RVo = ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt9"));
-                                if (Vo.equals("V")) {
-                                    if (!RVo.equals("")) {
-                                        RVo = "ยกเลิก " + RVo;
-                                    }
-                                }
-                                String[] OPT = new String[]{
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt1")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt2")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt3")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt4")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt5")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt6")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt7")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt8")),
-                                    RVo
-                                };
-
-                                listOpt.add(OPT);
-                            }
-
-                            rsOpt.close();
-                        }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
-                    }
-
-                    //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
-                    tt += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + rs.getString("TCode") + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
-                    tt += "colspan=3 align=center>_";
-                    switch (ETD) {
-                        case "E":
-                            ETD = "*** ทานในร้าน ***";
-                            break;
-                        case "T":
-                            ETD = "*** ห่อกลับ ***";
-                            break;
-                        case "D":
-                            ETD = "*** ส่งถึงบ้าน ***";
-                            break;
-                        case "P":
-                            ETD = "*** ปิ่นโต ***";
-                            break;
-                        case "W":
-                            ETD = "*** ขายส่ง ***";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    tt += "colspan=3 align=center><font face=Tahoma size=5>" + ETD + "_";
-                    tt += "colspan=3 align=center>_";
-                    String product = productName;
-                    if (product.length() > 16) {
-                        String productSubF = product.substring(0, 16);
-                        String productSubR = product.substring(16);
-                        product = productSubF + "\n" + productSubR;
-                    }
-                    tt += "colspan=3 align=left><font face=Tahoma size=5>" + (product) + "_";
-                    tt += "<td colspan=3 align=right><font face=Tahoma size=5>" + df.format(qty) + "_";
-
-                    //********* พิมพ์ข้อความพิเศษ *************
-                    for (int x = 0; x < listOpt.size(); x++) {
-                        String[] OPT = (String[]) listOpt.get(x);
-                        for (String OPT1 : OPT) {
-                            if (OPT1 != null) {
-                                if (!OPT1.trim().equals("")) {
-                                    tt += "colspan=5 align=left><font face=Tahoma size=3>" + Space + ("*** " + OPT1) + "_";
-                                }
-                            }
-                        }
-                    }
-                    //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
-
-                    tt += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                    tt += "colspan=3 align=left><font face=Tahoma size=2>" + (simp.format(new Date()) + Space + "Mac" + Space + macNo + "/" + TUser) + "_";
-
-                    //add kictran data
-                    String R_Que = seekKicItemNo();
-                    int TempQue = Integer.parseInt(R_Que);
-                    String R_VOID = rs.getString("R_Void");
-                    if (R_VOID == null) {
-                        R_VOID = "";
-                    }
-                    try {
-                        if (R_VOID.equals("V")) {
-                            String SQLQuery2 = "update kictran "
-                                    + "set pvoid = 'V' "
-                                    + "where pindex ='" + rs.getString("R_Index") + "' "
-                                    + "and ptable='" + rs.getString("R_Table") + "' "
-                                    + "and pcode='" + rs.getString("R_PluCode") + "' "
-                                    + "and pkic='" + rs.getString("R_Kic") + "' "
-                                    + "and pflage='N'";
-                            AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
-                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
-                                stmt1.executeUpdate(SQLQuery2);
-                            }
-                        } else {
-                            String sqlK = "insert into kictran "
-                                    + "(pitemno,pdate,pcode,pqty,pindex,"
-                                    + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",'" + DateUtil.getMySQL_yyyyMMdd() + "',"
-                                    + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
-                                    + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
-                                    + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
-                                    + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlK);
-                            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
-                                stmt3.executeUpdate(sqlK);
-                                stmt3.close();
-                            }
-                        }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
-        }
-
-        PrinterDriverControl pd2 = new PrinterDriverControl();
-        String[] strs1 = tt.split("_");
-        for (String data2 : strs1) {
-            PublicVar.printerDriverKitChenName = "kic" + printerName;
-            pd2.addTextIFont(data2);
-        }
-
-        pd2.printHTMLKitChen(PublicVar.printerDriverKitChenName);
-
-        itemVoidPrint(printerName, tableNo, PCode, "D");
-        try {
-            String sql = "select TUser,R_Void,R_PluCode,R_Index,TCode, TCustomer, R_PName,R_Quan R_Quan,"
-                    + "R_Price, b.Macno,R_Date, R_Time,"
-                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
-                    + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
-                    + "from tablefile t,balance b "
-                    + "where t.tcode=b.r_table "
-                    + "and r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "and R_PluCode='" + PCode[0] + "' "
-                    + "and R_ETD='D' "
-                    + "and R_VOID<>'V' "
-                    + "group by R_PluCode "
-                    + "order by R_Index";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
-            try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    String productName = ThaiUtil.ASCII2Unicode(rs.getString("R_PName"));
-                    String ETD = rs.getString("R_ETD");
-                    String macNo = rs.getString("macno");
-                    String custCount = rs.getString("TCustomer");
-                    double qty = rs.getDouble("R_Quan");
-                    String TUser = getEmpName(rs.getString("R_Emp"));
-                    String r_index = (rs.getString("R_Index"));
-
-                    //*********** เพิ่มมารองรับการพิมพ์ข้อความพิเศษ ***********
-                    List<String[]> listOpt = new ArrayList<>();
-                    try {
-                        String sqlOpt = "select * from balance "
-                                + "where r_table='" + tableNo + "' "
-                                + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
-                                + "and r_index='" + r_index + "'"
-                                + "and r_void<>'V' ";
-                        AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
-                        try (Statement stmt2 = mysqlConnect.getConnection().createStatement(); ResultSet rsOpt = stmt2.executeQuery(sqlOpt)) {
-                            while (rsOpt.next()) {
-                                String Vo = rsOpt.getString("R_Void");
-                                String RVo = ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt9"));
-                                if (Vo.equals("V")) {
-                                    if (!RVo.equals("")) {
-                                        RVo = "ยกเลิก " + RVo;
-                                    }
-                                }
-                                String[] OPT = new String[]{
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt1")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt2")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt3")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt4")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt5")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt6")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt7")),
-                                    ThaiUtil.ASCII2Unicode(rsOpt.getString("r_opt8")),
-                                    RVo
-                                };
-                                listOpt.add(OPT);
-                            }
-                        }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
-                    }
-
-                    //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
-                    td += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + rs.getString("TCode") + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
-                    td += "colspan=3 align=center>_";
-                    switch (ETD) {
-                        case "E":
-                            ETD = "*** ทานในร้าน ***";
-                            break;
-                        case "T":
-                            ETD = "*** ห่อกลับ ***";
-                            break;
-                        case "D":
-                            ETD = "*** ส่งถึงบ้าน ***";
-                            break;
-                        case "P":
-                            ETD = "*** ปิ่นโต ***";
-                            break;
-                        case "W":
-                            ETD = "*** ขายส่ง ***";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    td += "colspan=3 align=center><font face=Tahoma size=5>" + ETD + "_";
-                    td += "colspan=3 align=center>_";
-                    String product = productName;
-                    if (product.length() > 16) {
-                        String productSubF = product.substring(0, 16);
-                        String productSubR = product.substring(16);
-
-                        product = productSubF + "\n" + productSubR;
-
-                    }
-                    td += "colspan=3 align=left><font face=Tahoma size=5>" + (product) + "_";
-                    td += "<td colspan=3 align=right><font face=Tahoma size=5>" + df.format(qty) + "_";
-
-                    //********* พิมพ์ข้อความพิเศษ *************
-                    for (int x = 0; x < listOpt.size(); x++) {
-                        String[] OPT = (String[]) listOpt.get(x);
-                        for (String OPT1 : OPT) {
-                            if (OPT1 != null) {
-                                if (!OPT1.trim().equals("")) {
-                                    td += "colspan=5 align=left><font face=Tahoma size=3>" + Space + ("*** " + OPT1) + "_";
-                                }
-                            }
-                        }
-                    }
-                    //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
-
-                    td += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
-                    td += "colspan=3 align=left><font face=Tahoma size=2>" + (simp.format(new Date()) + Space + "Mac" + Space + macNo + "/" + TUser) + "_";
-
-                    //add kictran data
-                    String R_Que = seekKicItemNo();
-                    int TempQue = Integer.parseInt(R_Que);
-                    String R_VOID = rs.getString("R_Void");
-                    if (R_VOID == null) {
-                        R_VOID = "";
-                    }
-                    try {
-                        if (R_VOID.equals("V")) {
-                            String SQLQuery2 = "update kictran "
-                                    + "set pvoid = 'V' "
-                                    + "where pindex ='" + rs.getString("R_Index") + "' "
-                                    + "and ptable='" + rs.getString("R_Table") + "' "
-                                    + "and pcode='" + rs.getString("R_PluCode") + "' "
-                                    + "and pkic='" + rs.getString("R_Kic") + "' "
-                                    + "and pflage='N'";
-                            AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
-                            try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
-                                stmt1.executeUpdate(SQLQuery2);
-                            }
-                        } else {
-                            String sqlK = "insert into kictran "
-                                    + "(pitemno,pdate,pcode,pqty,pindex,"
-                                    + "macno,cashier,emp,ptable,ptimein,pvoid,petd,pkic) "
-                                    + "values (" + TempQue + ",'" + DateUtil.getMySQL_yyyyMMdd() + "',"
-                                    + "'" + rs.getString("R_PluCode") + "'," + rs.getString("R_Quan") + ","
-                                    + "'" + rs.getString("R_Index") + "','" + rs.getString("Macno") + "',"
-                                    + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
-                                    + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
-                                    + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlK);
-                            try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
-                                stmt3.executeUpdate(sqlK);
-                                stmt3.close();
-                            }
-                        }
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
-                    }
-                }
-            }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             AppLogUtil.log(PrintSimpleForm.class, "error", e);
         } finally {
-            mysqlConnect.closeConnection(this.getClass());
+            mysqlConnect.close();
         }
-
-        PrinterDriverControl pd3 = new PrinterDriverControl();
-        String[] strs3 = td.split("_");
-        for (String data3 : strs3) {
-            PublicVar.printerDriverKitChenName = "kic" + printerName;
-            pd3.addTextIFont(data3);
-        }
-        pd3.printHTMLKitChen(PublicVar.printerDriverKitChenName);
-        String sql = "update balance "
-                + "set r_kicprint='P',"
-                + "r_pause='Y' "
-                + "where r_table='" + tableNo + "' "
-                + "and r_kicprint<>'P' "
-                + "and r_printOk='Y' "
-                + "and r_kic<>'' "
-                + "and trantype='PDA';";
-        AppLogUtil.warn(PrintSimpleForm.class, sql);
-        databaseConnection.executeUpdate(sql);
+//
     }
 
     public void KIC_FORM_3New(final String printerName, final String tableNo, final int R_Kic, final String RETD, final String ATFromPrintToKic, String macno) {
@@ -717,7 +392,9 @@ public class PrintSimpleForm {
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                     + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic"
                     + " order by r_spindex";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlNovoid);
             if (ConfigFile.getProperties("businessType").equals("steak")) {
                 sqlNovoid = "select r_index,r_spindex,r_linkindex,R_Void,R_PluCode, R_PName,r_pause,"
                         + "sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
@@ -735,7 +412,9 @@ public class PrintSimpleForm {
                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                         + "R_ETD,b.cashier,R_EMP,R_Table,R_Kic,R_linkIndex,r_index"
                         + " order by r_spindex";
-                AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sqlNovoid);
             }
             if (ATFromPrintToKic.equals("PDA")) {
                 sqlNovoid = "select r_index,r_spindex,r_linkindex,R_Void,R_PluCode, R_PName,"
@@ -755,7 +434,9 @@ public class PrintSimpleForm {
                         + "R_Price,"
                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                         + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic";
-                AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sqlNovoid);
             }
             //loop Novoid
 
@@ -1090,10 +771,12 @@ public class PrintSimpleForm {
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
+
                     }
                 }
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -1150,7 +833,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='E' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -1165,11 +850,15 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='E' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     } catch (Exception e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
                     }
                 }
             }
@@ -1192,7 +881,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='T' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -1207,12 +898,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='T' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -1235,7 +930,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='D' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -1250,12 +947,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='D' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -1278,7 +979,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='P' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -1293,12 +996,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='P' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -1321,7 +1028,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='W' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -1336,18 +1045,24 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='W' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
+
                 }
 
             }
 
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         }
 
         //Loop Void
@@ -1368,7 +1083,9 @@ public class PrintSimpleForm {
                     + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlvoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlvoid);
 
             //loop Novoid
             try {
@@ -1663,8 +1380,10 @@ public class PrintSimpleForm {
                     }
                 }
                 rs.close();
+
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -1678,8 +1397,10 @@ public class PrintSimpleForm {
             }
             try {
                 pd1.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+
             } catch (Exception e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             }
             try {
                 String sql = "update balance "
@@ -1692,7 +1413,9 @@ public class PrintSimpleForm {
                         + "and r_void<>'V' "
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'";
-                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sql);
                 databaseConnection.executeUpdate(sql);
                 sql = "update balance "
                         + "set r_kicprint='P',"
@@ -1705,11 +1428,15 @@ public class PrintSimpleForm {
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'"
                         + ";";
-                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sql);
                 databaseConnection.executeUpdate(sql);
                 mysqlConnect.closeConnection(this.getClass());
+
             } catch (Exception e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             }
         }
     }
@@ -1778,7 +1505,9 @@ public class PrintSimpleForm {
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                     + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic"
                     + " order by r_spindex";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlNovoid);
             if (ConfigFile.getProperties("businessType").equals("steak")) {
                 sqlNovoid = "select r_index,r_spindex,r_linkindex,R_Void,R_PluCode, R_PName,r_pause,"
                         + "sum(R_Quan) R_Quan,R_Price, b.Macno,R_Date, R_Time,"
@@ -1796,7 +1525,9 @@ public class PrintSimpleForm {
                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                         + "R_ETD,b.cashier,R_EMP,R_Table,R_Kic,R_linkIndex,r_index"
                         + " order by r_spindex";
-                AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sqlNovoid);
             }
             if (ATFromPrintToKic.equals("PDA")) {
                 sqlNovoid = "select r_index,r_spindex,r_linkindex,R_Void,R_PluCode, R_PName,"
@@ -1816,7 +1547,9 @@ public class PrintSimpleForm {
                         + "R_Price,"
                         + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,"
                         + "R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic";
-                AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sqlNovoid);
             }
             //loop Novoid
 
@@ -2152,10 +1885,12 @@ public class PrintSimpleForm {
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
+
                     }
                 }
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -2195,7 +1930,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='E' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -2210,11 +1947,15 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='E' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     } catch (Exception e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
                     }
                 }
             }
@@ -2237,7 +1978,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='T' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -2252,12 +1995,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='T' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -2280,7 +2027,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='D' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -2295,12 +2044,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='D' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -2323,7 +2076,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='P' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -2338,12 +2093,16 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='P' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 }
 
             }
@@ -2366,7 +2125,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='W' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         } else {
                             sql = "update balance "
                                     + "set r_kicprint='P',"
@@ -2381,18 +2142,24 @@ public class PrintSimpleForm {
                                     + "and trantype <> 'PDA'"
                                     + "and R_kic='" + r_kic + "'"
                                     + "and r_etd='W' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sql);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sql);
                         }
                         databaseConnection.executeUpdate(sql);
+
                     }
                 } catch (Exception e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
+
                 }
 
             }
 
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         }
 
         //Loop Void
@@ -2413,7 +2180,9 @@ public class PrintSimpleForm {
                     + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlvoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlvoid);
 
             //loop Novoid
             try {
@@ -2708,8 +2477,10 @@ public class PrintSimpleForm {
                     }
                 }
                 rs.close();
+
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -2723,8 +2494,10 @@ public class PrintSimpleForm {
             }
             try {
                 pd1.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+
             } catch (Exception e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             }
             try {
                 String sql = "update balance "
@@ -2737,7 +2510,9 @@ public class PrintSimpleForm {
                         + "and r_void<>'V' "
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'";
-                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sql);
                 databaseConnection.executeUpdate(sql);
                 sql = "update balance "
                         + "set r_kicprint='P',"
@@ -2750,11 +2525,15 @@ public class PrintSimpleForm {
                         + "and macno='" + macno + "' "
                         + "and R_Kic='" + R_Kic + "'"
                         + ";";
-                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sql);
                 databaseConnection.executeUpdate(sql);
                 mysqlConnect.closeConnection(this.getClass());
+
             } catch (Exception e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             }
         }
     }
@@ -2818,7 +2597,9 @@ public class PrintSimpleForm {
                     + "and R_Void<>'V' "
                     + "and R_Kic='" + R_Kic + "' "
                     + " order by r_index";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlNovoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlNovoid);
             //loop Novoid
 
             mysqlConnect.open(this.getClass());
@@ -3099,10 +2880,12 @@ public class PrintSimpleForm {
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=3>" + "เครื่อง : " + bean.getMacno() + "</td><td colspan=2 align=right><font face=Tahoma size=3>" + "พนักงาน : " + getEmpName(bean.getR_Emp()) + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + printerName + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + "_";
+
                     }
                 }
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -3118,8 +2901,10 @@ public class PrintSimpleForm {
         }
         try {
             printDriver.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         }
 
         //Loop Void
@@ -3140,7 +2925,9 @@ public class PrintSimpleForm {
                     + "group by R_EMP, R_Void, R_PluCode, R_PName, R_Price,"
                     + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
                     + "order by r_etd;";
-            AppLogUtil.warn(PrintSimpleForm.class, sqlvoid);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sqlvoid);
             //loop Novoid
 
             try {
@@ -3435,8 +3222,10 @@ public class PrintSimpleForm {
                     }
                 }
                 rs.close();
+
             } catch (SQLException e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             } finally {
                 mysqlConnect.closeConnection(this.getClass());
             }
@@ -3450,8 +3239,10 @@ public class PrintSimpleForm {
             }
             try {
                 pd1.printHTMLKitChen(PublicVar.printerDriverKitChenName);
+
             } catch (Exception e) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", e);
             }
             String sql = "update balance "
                     + "set r_kicprint='P',"
@@ -3462,7 +3253,9 @@ public class PrintSimpleForm {
                     + "and r_kic<>'' "
                     + "and r_void='V' "
                     + "and macno='" + macno + "'";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sql);
             databaseConnection.executeUpdate(sql);
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -3515,9 +3308,11 @@ public class PrintSimpleForm {
 
                 }
                 rs.close();
+
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -3586,7 +3381,9 @@ public class PrintSimpleForm {
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
                                         + "group by R_PluCode,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_Kic order by R_Index";
-                                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                                AppLogUtil
+                                        .warn(PrintSimpleForm.class,
+                                                sql);
                                 try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                                     int line = 0;
                                     String macNo = "";
@@ -3605,7 +3402,9 @@ public class PrintSimpleForm {
                                         try {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' and r_pluCode='" + rs.getString("R_PluCode") + "'";
-                                            AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                                            AppLogUtil
+                                                    .warn(PrintSimpleForm.class,
+                                                            sqlOpt);
                                             try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rsOpt = stmt1.executeQuery(sqlOpt)) {
                                                 while (rsOpt.next()) {
                                                     String Vo = rsOpt.getString("R_Void");
@@ -3633,7 +3432,8 @@ public class PrintSimpleForm {
                                                 }
                                             }
                                         } catch (SQLException e) {
-                                            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                            AppLogUtil.log(PrintSimpleForm.class,
+                                                    "error", e);
                                         }
 
                                         //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -3687,7 +3487,9 @@ public class PrintSimpleForm {
                                                         + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                         + "and pkic='" + rs.getString("R_Kic") + "' "
                                                         + "and pflage='N'";
-                                                AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                                                AppLogUtil
+                                                        .warn(PrintSimpleForm.class,
+                                                                SQLQuery2);
                                                 try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt2.executeUpdate(SQLQuery2);
                                                 }
@@ -3701,13 +3503,17 @@ public class PrintSimpleForm {
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                         + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                                AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                                                AppLogUtil
+                                                        .warn(PrintSimpleForm.class,
+                                                                sqlK);
                                                 try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt2.executeUpdate(sqlK);
+
                                                 }
                                             }
                                         } catch (SQLException e) {
-                                            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                            AppLogUtil.log(PrintSimpleForm.class,
+                                                    "error", e);
                                         }
                                     }
 
@@ -3717,7 +3523,8 @@ public class PrintSimpleForm {
 
                                 }
                             } catch (SQLException e) {
-                                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                AppLogUtil.log(PrintSimpleForm.class,
+                                        "error", e);
                             } finally {
                                 mysqlConnect.closeConnection(this.getClass());
                             }
@@ -3730,11 +3537,15 @@ public class PrintSimpleForm {
                 }, pf);
                 try {
                     pj.print();
+
                 } catch (PrinterException e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
+
                 }
             } catch (PrinterException ex) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", ex);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", ex);
             }
         });
     }
@@ -3795,7 +3606,9 @@ public class PrintSimpleForm {
                                         + "and R_KicPrint<>'P' "
                                         + "and R_Kic<>'' "
                                         + "group by R_PluCode,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_Kic order by R_Index";
-                                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                                AppLogUtil
+                                        .warn(PrintSimpleForm.class,
+                                                sql);
                                 try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                                     int line = 0;
                                     String macNo = "";
@@ -3815,7 +3628,9 @@ public class PrintSimpleForm {
                                             String sqlOpt = "select * from balance "
                                                     + "where r_table='" + tableNo + "' "
                                                     + "and r_pluCode='" + rs.getString("R_PluCode") + "'";
-                                            AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                                            AppLogUtil
+                                                    .warn(PrintSimpleForm.class,
+                                                            sqlOpt);
                                             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                 ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                                                 while (rsOpt.next()) {
@@ -3842,9 +3657,11 @@ public class PrintSimpleForm {
                                                 }
 
                                                 rsOpt.close();
+
                                             }
                                         } catch (SQLException e) {
-                                            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                            AppLogUtil.log(PrintSimpleForm.class,
+                                                    "error", e);
                                         }
 
                                         //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -3896,7 +3713,9 @@ public class PrintSimpleForm {
                                                         + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                         + "and pkic='" + rs.getString("R_Kic") + "' "
                                                         + "and pflage='N'";
-                                                AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                                                AppLogUtil
+                                                        .warn(PrintSimpleForm.class,
+                                                                SQLQuery2);
                                                 try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt1.executeUpdate(SQLQuery2);
                                                 }
@@ -3910,13 +3729,17 @@ public class PrintSimpleForm {
                                                         + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                         + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                                         + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                                AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                                                AppLogUtil
+                                                        .warn(PrintSimpleForm.class,
+                                                                sqlK);
                                                 try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                                     stmt1.executeUpdate(sqlK);
+
                                                 }
                                             }
                                         } catch (SQLException e) {
-                                            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                            AppLogUtil.log(PrintSimpleForm.class,
+                                                    "error", e);
                                         }
                                     }
 
@@ -3931,7 +3754,8 @@ public class PrintSimpleForm {
 
                                 }
                             } catch (SQLException e) {
-                                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                AppLogUtil.log(PrintSimpleForm.class,
+                                        "error", e);
                             } finally {
                                 mysqlConnect.closeConnection(this.getClass());
                             }
@@ -3944,11 +3768,15 @@ public class PrintSimpleForm {
                 }, pf);
                 try {
                     pj.print();
+
                 } catch (PrinterException e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
+
                 }
             } catch (PrinterException ex) {
-                AppLogUtil.log(PrintSimpleForm.class, "error", ex);
+                AppLogUtil.log(PrintSimpleForm.class,
+                        "error", ex);
             }
         });
     }
@@ -3983,7 +3811,9 @@ public class PrintSimpleForm {
                             + "and R_Index='" + R_Index + "' "
                             + "and R_Kic<>'' "
                             + "order by R_Index";
-                    AppLogUtil.warn(PrintSimpleForm.class, sql);
+                    AppLogUtil
+                            .warn(PrintSimpleForm.class,
+                                    sql);
                     try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                         ResultSet rs = stmt.executeQuery(sql);
                         String TUser;
@@ -4001,7 +3831,9 @@ public class PrintSimpleForm {
                                         + "where r_table='" + tableNo + "' "
                                         + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                                         + "and R_Index='" + R_Index + "'";
-                                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                                AppLogUtil
+                                        .warn(PrintSimpleForm.class,
+                                                sql);
                                 try (Statement stmt1 = mysqlConnect.getConnection().createStatement(); ResultSet rsOpt = stmt1.executeQuery(sqlOpt)) {
                                     while (rsOpt.next()) {
                                         String Vo = rsOpt.getString("R_Void");
@@ -4024,11 +3856,13 @@ public class PrintSimpleForm {
                                         };
 
                                         listOpt.add(OPT);
+
                                     }
 
                                 }
                             } catch (SQLException e) {
-                                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                AppLogUtil.log(PrintSimpleForm.class,
+                                        "error", e);
                             }
 
                             //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -4081,7 +3915,9 @@ public class PrintSimpleForm {
                                             + "and pcode='" + rs.getString("R_PluCode") + "' "
                                             + "and pkic='" + rs.getString("R_Kic") + "' "
                                             + "and pflage='N'";
-                                    AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                                    AppLogUtil
+                                            .warn(PrintSimpleForm.class,
+                                                    SQLQuery2);
                                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                         stmt1.executeUpdate(SQLQuery2);
                                         stmt1.close();
@@ -4096,14 +3932,18 @@ public class PrintSimpleForm {
                                             + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                             + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                             + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                    AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                                    AppLogUtil
+                                            .warn(PrintSimpleForm.class,
+                                                    sqlK);
                                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                         stmt1.executeUpdate(sqlK);
                                         stmt1.close();
+
                                     }
                                 }
                             } catch (SQLException e) {
-                                AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                AppLogUtil.log(PrintSimpleForm.class,
+                                        "error", e);
                             }
                         }
                         try {
@@ -4112,18 +3952,24 @@ public class PrintSimpleForm {
                                     + "where r_table='" + tableNo + "' "
                                     + "and r_index='" + R_Index + "' "
                                     + "and r_plucode='" + R_Plucode + "'";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlUPdate);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlUPdate);
                             try (Statement stmtUpdate = mysqlConnect.getConnection().createStatement()) {
                                 stmtUpdate.executeUpdate(sqlUPdate);
                                 stmtUpdate.close();
+
                             }
                         } catch (SQLException e) {
-                            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                            AppLogUtil.log(PrintSimpleForm.class,
+                                    "error", e);
                         }
                         rs.close();
+
                     }
                 } catch (SQLException e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 } finally {
                     mysqlConnect.closeConnection(this.getClass());
                 }
@@ -4183,7 +4029,9 @@ public class PrintSimpleForm {
                             + "and R_Kic='" + printerName.replace("kic", "") + "' "
                             + "group by b.R_PluCode,r_etd,TUser,R_Void,TCode,TCustomer,R_PName,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,b.cashier,R_EMP,R_Table,R_Kic "
                             + "order by R_ETD,R_Index";
-                    AppLogUtil.warn(PrintSimpleForm.class, sql);
+                    AppLogUtil
+                            .warn(PrintSimpleForm.class,
+                                    sql);
                     try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                         String TUser;
                         while (rs.next()) {
@@ -4204,7 +4052,9 @@ public class PrintSimpleForm {
                                             + "where r_table='" + tableNo
                                             + "' and r_pluCode='"
                                             + rs.getString("R_PluCode") + "' and r_index='" + r_index + "' ";
-                                    AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                                    AppLogUtil
+                                            .warn(PrintSimpleForm.class,
+                                                    sqlOpt);
                                     try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                         ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                                         while (rsOpt.next()) {
@@ -4231,9 +4081,11 @@ public class PrintSimpleForm {
                                         }
 
                                         rsOpt.close();
+
                                     }
                                 } catch (SQLException e) {
-                                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                    AppLogUtil.log(PrintSimpleForm.class,
+                                            "error", e);
                                 }
 
                                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -4307,7 +4159,9 @@ public class PrintSimpleForm {
                                                 + "and pcode='" + rs.getString("R_PluCode") + "' "
                                                 + "and pkic='" + rs.getString("R_Kic") + "' "
                                                 + "and pflage='N'";
-                                        AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                                        AppLogUtil
+                                                .warn(PrintSimpleForm.class,
+                                                        SQLQuery2);
                                         try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                             stmt1.executeUpdate(SQLQuery2);
                                             stmt1.close();
@@ -4322,14 +4176,18 @@ public class PrintSimpleForm {
                                                 + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                                 + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                                 + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                                        AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                                        AppLogUtil
+                                                .warn(PrintSimpleForm.class,
+                                                        sqlK);
                                         try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                             stmt1.executeUpdate(sqlK);
                                             stmt1.close();
+
                                         }
                                     }
                                 } catch (SQLException e) {
-                                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                                    AppLogUtil.log(PrintSimpleForm.class,
+                                            "error", e);
                                 }
                             }
                             String sqlUpdateBalance = "update balance set R_KicPrint='P' "
@@ -4337,13 +4195,17 @@ public class PrintSimpleForm {
                                     + "and r_kic='" + printerName.replace("kic", "") + "' "
                                     + "and R_KicPrint<>'P' "
                                     + "and r_pause='P';";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlUpdateBalance);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlUpdateBalance);
                             mysqlConnect.executeUpdate(sqlUpdateBalance);
+
                         }
 
                     }
                 } catch (SQLException e) {
-                    AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                    AppLogUtil.log(PrintSimpleForm.class,
+                            "error", e);
                 } finally {
                     mysqlConnect.closeConnection(this.getClass());
                 }
@@ -4392,7 +4254,9 @@ public class PrintSimpleForm {
                     + "and TOnact='N' "
                     + "and r_etd='" + r_etd + "' "
                     + "order by R_Index";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sql);
             Statement stmt;
             stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -4422,7 +4286,9 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + " "
                                     + "and r_etd='" + r_etd + "' "
                                     + "and r_index='" + r_index + "' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlUpdateBalance);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlUpdateBalance);
                             mysqlConnect.executeUpdate(sqlUpdateBalance);
                         } else {
                             sqlUpdateBalance = "update balance "
@@ -4434,17 +4300,23 @@ public class PrintSimpleForm {
                                     + "and r_plucode='" + r_plucode + "' "
                                     + "and r_etd='" + r_etd + "' "
                                     + "and r_index='" + r_index + "' ;";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlUpdateBalance);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlUpdateBalance);
                             mysqlConnect.executeUpdate(sqlUpdateBalance);
+
                         }
                     } catch (Exception e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
+
                     }
 
                 }
             }
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -4463,8 +4335,10 @@ public class PrintSimpleForm {
                 printerDriver.addTextIFont(data1);
             }
             printerDriver.printHTMLKitChen("kic" + kicName);
+
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         }
 
     }
@@ -4486,7 +4360,9 @@ public class PrintSimpleForm {
                     + "group by R_PluCode,R_ETD,TUser,R_Void,TCode,TCustomer,R_PName,R_Price,b.Macno,R_Date,R_Time,R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,R_Opt7,R_Opt8,R_Opt9,b.cashier,R_EMP,R_Table,R_Kic "
                     + "order by R_ETD, R_Index";
 
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sql);
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
                 String ETD;
@@ -4518,7 +4394,9 @@ public class PrintSimpleForm {
                                 + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                                 + "and r_index='" + rs.getString("R_Index") + "' "
                                 + "and R_KicPrint<>'P'";
-                        AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                        AppLogUtil
+                                .warn(PrintSimpleForm.class,
+                                        sqlOpt);
                         try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                             ResultSet rsOpt = stmt1.executeQuery(sqlOpt);
                             while (rsOpt.next()) {
@@ -4543,9 +4421,11 @@ public class PrintSimpleForm {
                                 listOpt.add(OPT);
                             }
                             rsOpt.close();
+
                         }
                     } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
                     }
 //                                    *********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                     if (!printHeader) {
@@ -4609,7 +4489,9 @@ public class PrintSimpleForm {
                                     + "and pcode='" + rs.getString("R_PluCode") + "' "
                                     + "and pkic='" + rs.getString("R_Kic") + "' "
                                     + "and pflage='N'";
-                            AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            SQLQuery2);
                             try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                                 stmt2.executeUpdate(SQLQuery2);
                                 stmt2.close();
@@ -4624,22 +4506,28 @@ public class PrintSimpleForm {
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                     + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlK);
                             try (Statement stmt2 = mysqlConnect.getConnection().createStatement()) {
                                 stmt2.executeUpdate(sqlK);
                                 stmt2.close();
+
                             }
                         }
                     } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
                     }
 //END TEMP UPDATE
                 }
                 textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
                 textToPrint += "colspan=3 align=left><font face=Tahoma size=2>" + "Terminal : " + Space + macNo + (" Name :" + TUser) + "_";
+
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -4655,7 +4543,7 @@ public class PrintSimpleForm {
 
     }
 
-    public void itemVoidPrint(String printerName, final String tableNo, final String[] PCode, String ETD) {
+    public void itemVoidPrint(String printerName, final String tableNo, final String[] PCode) {
         String t = "";
 
         mysqlConnect.open(this.getClass());
@@ -4675,7 +4563,9 @@ public class PrintSimpleForm {
                     + "and R_VOID='V' "
                     + "group by R_PluCode "
                     + "order by R_Index";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sql);
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     printerName = rs.getString("R_Kic");
@@ -4694,7 +4584,9 @@ public class PrintSimpleForm {
                                 + "and r_pluCode='" + rs.getString("R_PluCode") + "' "
                                 + "and r_index='" + r_index + "'"
                                 + "and r_void='V' ";
-                        AppLogUtil.warn(PrintSimpleForm.class, sqlOpt);
+                        AppLogUtil
+                                .warn(PrintSimpleForm.class,
+                                        sqlOpt);
                         try (Statement stmt2 = mysqlConnect.getConnection().createStatement(); ResultSet rsOpt = stmt2.executeQuery(sqlOpt)) {
                             while (rsOpt.next()) {
                                 String Vo = rsOpt.getString("R_Void");
@@ -4717,11 +4609,13 @@ public class PrintSimpleForm {
                                 };
 
                                 listOpt.add(OPT);
+
                             }
 
                         }
                     } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
                     }
 
                     //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
@@ -4791,7 +4685,9 @@ public class PrintSimpleForm {
                                     + "and pcode='" + rs.getString("R_PluCode") + "' "
                                     + "and pkic='" + rs.getString("R_Kic") + "' "
                                     + "and pflage='N'";
-                            AppLogUtil.warn(PrintSimpleForm.class, SQLQuery2);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            SQLQuery2);
                             try (Statement stmt1 = mysqlConnect.getConnection().createStatement()) {
                                 stmt1.executeUpdate(SQLQuery2);
                                 stmt1.close();
@@ -4806,19 +4702,25 @@ public class PrintSimpleForm {
                                     + "'" + rs.getString("Cashier") + "','" + rs.getString("R_Emp") + "',"
                                     + "'" + rs.getString("R_Table") + "','" + DateUtil.getMySQL_HHmmss() + "','',"
                                     + "'" + rs.getString("R_ETD") + "','" + rs.getString("R_Kic") + "')";
-                            AppLogUtil.warn(PrintSimpleForm.class, sqlK);
+                            AppLogUtil
+                                    .warn(PrintSimpleForm.class,
+                                            sqlK);
                             try (Statement stmt3 = mysqlConnect.getConnection().createStatement()) {
                                 stmt3.executeUpdate(sqlK);
                                 stmt3.close();
+
                             }
                         }
                     } catch (SQLException e) {
-                        AppLogUtil.log(PrintSimpleForm.class, "error", e);
+                        AppLogUtil.log(PrintSimpleForm.class,
+                                "error", e);
+
                     }
                 }
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -4864,12 +4766,16 @@ public class PrintSimpleForm {
         try {
             try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
                 String sql = "update branch set kicitemno =" + branchBean.getKicItemNo();
-                AppLogUtil.warn(PrintSimpleForm.class, sql);
+                AppLogUtil
+                        .warn(PrintSimpleForm.class,
+                                sql);
                 stmt.executeUpdate(sql);
                 stmt.close();
+
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         }
 
         mysqlConnect.closeConnection(this.getClass());
@@ -4899,16 +4805,20 @@ public class PrintSimpleForm {
             String sql = "select r_emp from balance "
                     + "where r_table='" + table + "' and r_index='" + r_index + "' "
                     + "and r_plucode='" + Code + "' limit 1;";
-            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            AppLogUtil
+                    .warn(PrintSimpleForm.class,
+                            sql);
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     empName = ThaiUtil.ASCII2Unicode(rs.getString("r_emp"));
                     empName = getEmpName(empName);
+
                 }
 
             }
         } catch (SQLException e) {
-            AppLogUtil.log(PrintSimpleForm.class, "error", e);
+            AppLogUtil.log(PrintSimpleForm.class,
+                    "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
@@ -4917,43 +4827,76 @@ public class PrintSimpleForm {
     }
 
     public String subString(String str) {
+
         int size = str.length();
         String text = "";
         if (size <= 20 && size > 0) {
             return str;
         } else if (size > 20 && size <= 40) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20);
+
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20);
+            } catch (Exception e) {
+                text = str.substring(0, 20);
+            }
         } else if (size > 40 && size <= 60) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20, 43);
-            text += "\n" + str.substring(43);
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20, 43);
+                text += "\n" + str.substring(43);
+            } catch (Exception e) {
+                text = str.substring(0, 20);
+            }
+
         } else if (size > 60 && size <= 80) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20, 43);
-            text += "\n" + str.substring(43, 66);
-            text += "\n" + str.substring(66);
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20, 43);
+                text += "\n" + str.substring(43, 66);
+                text += "\n" + str.substring(66);
+            } catch (Exception e) {
+                text = str;
+            }
+
         } else if (size > 80 && size <= 100) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20, 43);
-            text += "\n" + str.substring(43, 66);
-            text += "\n" + str.substring(66, 89);
-            text += "\n" + str.substring(89);
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20, 43);
+                text += "\n" + str.substring(43, 66);
+                text += "\n" + str.substring(66, 89);
+                text += "\n" + str.substring(89);
+            } catch (Exception e) {
+                text = str;
+            }
+
         } else if (size > 100 && size <= 120) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20, 43);
-            text += "\n" + str.substring(43, 66);
-            text += "\n" + str.substring(66, 89);
-            text += "\n" + str.substring(89, 112);
-            text += "\n" + str.substring(112);
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20, 43);
+                text += "\n" + str.substring(43, 66);
+                text += "\n" + str.substring(66, 89);
+                text += "\n" + str.substring(89, 112);
+                text += "\n" + str.substring(112);
+            } catch (Exception e) {
+                text = str;
+            }
+
         } else if (size > 120) {
-            text = str.substring(0, 20);
-            text += "\n" + str.substring(20, 43);
-            text += "\n" + str.substring(43, 66);
-            text += "\n" + str.substring(66, 89);
-            text += "\n" + str.substring(89, 112);
-            text += "\n" + str.substring(112, 122);
+            try {
+                text = str.substring(0, 20);
+                text += "\n" + str.substring(20, 43);
+                text += "\n" + str.substring(43, 66);
+                text += "\n" + str.substring(66, 89);
+                text += "\n" + str.substring(89, 112);
+                text += "\n" + str.substring(112, 122);
+            } catch (Exception e) {
+                text = str;
+            }
         }
+        text = text.replace("(", "");
+        text = text.replace(")", "");
+        text = text.replace("+", ",");
         return text;
 
     }
