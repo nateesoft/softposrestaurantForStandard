@@ -2776,6 +2776,17 @@ public class MainSale extends javax.swing.JDialog {
                     }
                     break;
                 }
+                case "8": {
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic, balanceBean.getR_ETD(),"POS");
+                    for (BalanceBean balance : listBalanceForm) {
+                        String PCode = balance.getR_PluCode();
+                        String R_ETD = balance.getR_ETD();
+                        if (printerForm.equals("1")) {
+                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode}, R_ETD,"POS");
+                        }
+                    }
+                    break;
+                }
             }
         }
 

@@ -12,14 +12,6 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/pos/core/controller/PrintToKicControl.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BillControl.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/pos/core/controller/BalanceControl.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/connect.ini</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/connection/database/MySQLConnect.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/program/PrintToKic.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/printer/control/PPrint.java</file>
-            <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/payment/view/PaymentDialog.java</file>
             <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/main/pos/view/MainSale.java</file>
             <file>file:/D:/Source%20Code%20Java/github/softposrestaurantForStandard/src/com/softpos/printer/control/PrintSimpleForm.java</file>
         </group>
