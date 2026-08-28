@@ -8,6 +8,8 @@ import com.softpos.pos.core.controller.PrintToKicControl;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.BranchBean;
 import com.softpos.connection.database.ConfigFile;
+import com.softpos.connection.mq.RabbitMQConsumer;
+import com.softpos.pos.core.model.RabbitMQOrderBean;
 import com.softpos.pos.core.controller.MainSaleControl;
 import java.awt.Cursor;
 import java.util.List;
@@ -29,6 +31,8 @@ public class PrintToKic extends javax.swing.JFrame {
     private final PrintToKicControl control = AppContext.getPrintToKicController();
     private final BranchControl BranchControl = AppContext.getBranchControl();
     private final MainSaleControl mainSaleControl = AppContext.getMainSaleController();
+    private final com.softpos.pos.core.controller.BalanceControl balanceControl = AppContext.getBalanceControl();
+    private RabbitMQConsumer rabbitmqConsumer;
 
     /**
      * Creates new form PrintToKic
@@ -52,6 +56,8 @@ public class PrintToKic extends javax.swing.JFrame {
                 lblProcessShow.setText("สถานะการพิมพ์");
                 setState(JFrame.ICONIFIED);
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                startRabbitMQConsumer();
 
                 if (printkic == true) {
                     System.out.println("PROCESS " + refresh + "sec");
@@ -230,6 +236,9 @@ public class PrintToKic extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (MSG.CONF(this, "ต้องการออกจากโปรแกรม Print PDA หรือไม่")) {
+            if (rabbitmqConsumer != null) {
+                rabbitmqConsumer.stop();
+            }
             System.exit(0);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -364,6 +373,67 @@ public class PrintToKic extends javax.swing.JFrame {
         }
 
         kicPrintting = false;
+    }
+
+    /**
+     * เริ่ม RabbitMQ consumer ถ้าเปิดใช้งานใน connect.ini (use_rabbitmq,true)
+     * message ที่รับเข้ามาจะถูก map เป็น {@link RabbitMQOrderBean} เพื่อ log ตรวจสอบ
+     * (ยังไม่บันทึกลง DB — จะเพิ่มใน saveFromCloudCustomerOrder ขั้นถัดไป)
+     */
+    private void startRabbitMQConsumer() {
+        if (!PublicVar.useRabbitmq) {
+            return;
+        }
+        try {
+            rabbitmqConsumer = new RabbitMQConsumer(
+                    (tableNo, macno, rawMessage) -> onRabbitMQPrintTriggered(rawMessage));
+            rabbitmqConsumer.start();
+            AppLogUtil.info(PrintToKic.class, "RabbitMQ consumer started");
+        } catch (Exception e) {
+            AppLogUtil.error(PrintToKic.class, "RabbitMQ consumer start failed — " + e.getMessage());
+        }
+    }
+
+    /**
+     * ถูกเรียกจาก RabbitMQ consumer thread เมื่อมี order เข้ามา
+     * ตอนนี้ทำแค่ map + log + แสดงสถานะบนหน้าจอ
+     */
+    private void onRabbitMQPrintTriggered(String rawMessage) {
+        AppLogUtil.info(PrintToKic.class, "RabbitMQ message received");
+
+        RabbitMQOrderBean orderBean = RabbitMQOrderBean.fromJson(rawMessage);
+        if (orderBean == null) {
+            AppLogUtil.error(PrintToKic.class, "RabbitMQ mapping failed — rawMessage is null or empty");
+            javax.swing.SwingUtilities.invokeLater(()
+                    -> lblProcessShow.setText("[RabbitMQ] Mapping failed: empty message"));
+            return;
+        }
+
+        AppLogUtil.info(PrintToKic.class, orderBean.toString());
+
+        final String showText = String.format(
+                "[RabbitMQ] โต๊ะ: %s  Order: %s  สถานะ: %s",
+                orderBean.getTableNumber(), orderBean.getOrderId(), orderBean.getStatus());
+        final String logText = String.format(
+                "ยอดรวม: %.2f  รายการ: %d  สาขา: %s",
+                orderBean.getTotalAmount(), orderBean.getItemCount(), orderBean.getBranchId());
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            lblProcessShow.setText(showText);
+            lblProcessLog.setText(logText);
+        });
+
+        // บันทึกลง balance + mark TranType='PDA' -> loop kicPrintFromPDA() ที่มีอยู่จะพิมพ์ออกครัวต่อ
+        try {
+            int saved = balanceControl.saveFromCloudCustomerOrder(orderBean);
+            AppLogUtil.info(PrintToKic.class, "cloud order saved rows = " + saved
+                    + " (table " + orderBean.getTableNumber() + ")");
+            final String saveMsg = (saved > 0)
+                    ? "[RabbitMQ] บันทึก " + saved + " รายการ โต๊ะ " + orderBean.getTableNumber() + " — รอพิมพ์ครัว"
+                    : "[RabbitMQ] ไม่มีรายการถูกบันทึก (ตรวจสอบรหัสสินค้า/โต๊ะ)";
+            javax.swing.SwingUtilities.invokeLater(() -> lblProcessLog.setText(saveMsg));
+        } catch (Exception e) {
+            AppLogUtil.error(PrintToKic.class, "saveFromCloudCustomerOrder failed — " + e.getMessage());
+        }
     }
 
     public static void main(String args[]) {

@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: myrestaurant-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: nathee2024
+      MYSQL_DATABASE: MyRestaurant
+      TZ: Asia/Bangkok
+    ports:
+      # host:container  -> connect from host via localhost:3307
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pnathee2024"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:

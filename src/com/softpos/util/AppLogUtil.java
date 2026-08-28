@@ -110,6 +110,14 @@ public class AppLogUtil {
     }
 
     /**
+     * Log an error message (no exception).
+     */
+    public static void error(Class<?> clazz, String msg) {
+        init();
+        LOGGER.log(Level.SEVERE, "{0}", clazz.getSimpleName() + " | " + msg);
+    }
+
+    /**
      * Log application startup — call once from main().
      */
     public static void startup(String appName, String version) {

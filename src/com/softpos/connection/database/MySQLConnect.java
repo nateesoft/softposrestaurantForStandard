@@ -78,6 +78,32 @@ public class MySQLConnect {
                     }
                 } else if (data[0].equalsIgnoreCase("printerName")) {
                     PublicVar.printerDriverName = data[1];
+                } else if (data[0].equalsIgnoreCase("use_rabbitmq")) {
+                    try {
+                        PublicVar.useRabbitmq = Boolean.parseBoolean(data[1]);
+                    } catch (Exception e) {
+                        PublicVar.useRabbitmq = false;
+                    }
+                } else if (data[0].equalsIgnoreCase("rabbitmq_host")) {
+                    PublicVar.rabbitmqHost = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_port")) {
+                    try {
+                        PublicVar.rabbitmqPort = Integer.parseInt(data[1].trim());
+                    } catch (NumberFormatException e) {
+                        PublicVar.rabbitmqPort = 5672;
+                    }
+                } else if (data[0].equalsIgnoreCase("rabbitmq_user")) {
+                    PublicVar.rabbitmqUser = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_pass")) {
+                    PublicVar.rabbitmqPass = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_vhost")) {
+                    PublicVar.rabbitmqVhost = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_queue")) {
+                    PublicVar.rabbitmqQueue = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_exchange")) {
+                    PublicVar.rabbitmqExchange = data[1];
+                } else if (data[0].equalsIgnoreCase("rabbitmq_routing_key")) {
+                    PublicVar.rabbitmqRoutingKey = data[1];
                 }
             }
             try {

@@ -6,6 +6,8 @@ import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.BalanceBean;
 import com.softpos.pos.core.model.MemberBean;
 import com.softpos.pos.core.model.ProductBean;
+import com.softpos.pos.core.model.RabbitMQOrderBean;
+import com.softpos.pos.core.model.RabbitMQOrderBean.ItemDetail;
 import com.softpos.connection.database.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -2259,5 +2261,202 @@ public class BalanceControl {
             mysqlConnect.close();
         }
 
+    }
+
+    // ===================================================================
+    // RabbitMQ / Cloud customer order  (food-ordering-service -> KIC print)
+    // ===================================================================
+
+    /**
+     * บันทึก order ที่รับมาจาก RabbitMQ ลงตาราง balance + อัปเดตสถานะโต๊ะ
+     * รายการที่ถูกบันทึกจะถูก mark เป็น {@code TranType='PDA'} เพื่อให้
+     * loop {@code kicPrintFromPDA()} ใน PrintToKic ดึงไปพิมพ์ออกครัวต่อ
+     *
+     * @return จำนวนรายการ (balance rows) ที่บันทึกสำเร็จ, 0 ถ้าไม่มีอะไรถูกบันทึก
+     */
+    public int saveFromCloudCustomerOrder(RabbitMQOrderBean orderBean) {
+        if (orderBean == null || orderBean.getTableNumber() == null
+                || orderBean.getTableNumber().trim().isEmpty()) {
+            AppLogUtil.error(BalanceControl.class, "saveFromCloudCustomerOrder: tableNumber ว่าง");
+            return 0;
+        }
+
+        String tableNo = charEngCheck(orderBean.getTableNumber().trim());
+        ProductControl productControl = AppContext.getProductControl();
+
+        // getIndexBalance คืน index ถัดไป เช่น A1/003 -> เริ่มนับจากเลขนี้
+        String nextIndex = getIndexBalance(tableNo);
+        int baseNumber;
+        try {
+            baseNumber = Integer.parseInt(nextIndex.split("/")[1]);
+        } catch (RuntimeException e) {
+            baseNumber = 1;
+        }
+
+        int saved = 0;
+        int offset = 0;
+        List<String> savedIndexes = new ArrayList<>();
+        for (ItemDetail item : orderBean.getItemDetails()) {
+            String pcode = item.getCode();
+            if (pcode == null || pcode.trim().isEmpty()) {
+                AppLogUtil.warn(BalanceControl.class,
+                        "ข้าม item ไม่มีรหัสสินค้า (name=" + item.getName() + ")");
+                continue;
+            }
+
+            ProductBean product = productControl.getProductByPCode(pcode);
+            if (product == null || product.getPCode() == null || product.getPCode().isEmpty()) {
+                AppLogUtil.warn(BalanceControl.class,
+                        "ไม่พบสินค้ารหัส " + pcode + " ใน product — ข้ามรายการนี้");
+                continue;
+            }
+
+            String rIndex = tableNo + "/" + String.format("%03d", baseNumber + offset);
+            String[] options = getMenuOptions(item.getSpecialInstructions());
+
+            BalanceBean bean = new BalanceBean();
+            bean.setR_Index(rIndex);
+            bean.setR_Table(tableNo);
+            bean.setCashier("");
+            bean.setR_Emp("");
+            bean.setR_PluCode(pcode);
+            bean.setR_Quan(item.getQuantity());
+            bean.setR_Price(item.getPrice());
+            bean.setR_ETD(convertToETD(item.getDiningOption()));
+            bean.setR_KicPrint("");
+            bean.setR_Pause("P");
+            bean.setR_LinkIndex("");
+            bean.setStkCode("");
+            bean.setVoidMSG("");
+            bean.setR_PrSubType("");
+            bean.setR_PrSubCode("");
+            bean.setR_PrSubQuan(0);
+            bean.setR_PrSubDisc(0);
+            bean.setR_PrSubBath(0);
+            bean.setR_PrSubAmt(0);
+            bean.setR_QuanCanDisc(item.getQuantity());
+            bean.setR_Opt1(options[0]);
+            bean.setR_Opt2(options[1]);
+            bean.setR_Opt3(options[2]);
+            bean.setR_Opt4(options[3]);
+            bean.setR_Opt5(options[4]);
+            bean.setR_Opt6(options[5]);
+            bean.setR_Opt7(options[6]);
+            bean.setR_Opt8(options[7]);
+            bean.setR_Opt9("");
+
+            boolean ok = saveBalance(bean);
+            if (ok) {
+                saved++;
+                offset++;
+                savedIndexes.add(rIndex);
+                AppLogUtil.info(BalanceControl.class,
+                        "cloud order -> balance " + rIndex + " " + pcode + " x" + item.getQuantity());
+            } else {
+                AppLogUtil.error(BalanceControl.class,
+                        "บันทึก balance ไม่สำเร็จ index=" + rIndex + " pcode=" + pcode);
+            }
+        }
+
+        if (saved > 0) {
+            markCloudOrderRowsAsPDA(tableNo, savedIndexes);
+            updateTableFileSummary(orderBean, tableNo);
+        }
+
+        return saved;
+    }
+
+    /**
+     * mark เฉพาะแถวที่เพิ่งบันทึกให้เป็น PDA order (ระบุด้วย R_Index ที่แน่นอน)
+     * เพื่อให้ PrintToKicControl.getBalaneForPDA() มองเห็นและสั่งพิมพ์
+     */
+    private void markCloudOrderRowsAsPDA(String tableNo, List<String> rIndexList) {
+        if (rIndexList == null || rIndexList.isEmpty()) {
+            return;
+        }
+        StringBuilder in = new StringBuilder();
+        for (int i = 0; i < rIndexList.size(); i++) {
+            if (i > 0) {
+                in.append(",");
+            }
+            in.append("'").append(rIndexList.get(i).replace("'", "''")).append("'");
+        }
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "update balance set "
+                    + "TranType='PDA', PDAPrintCheck='Y' "
+                    + "where R_Table='" + tableNo + "' "
+                    + "and R_Index in (" + in + ")";
+            int n = mysqlConnect.executeUpdate(sql);
+            AppLogUtil.info(BalanceControl.class, "mark PDA rows table=" + tableNo + " affected=" + n);
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
+    /**
+     * อัปเดตสรุปยอดบนโต๊ะ + เปิดสถานะโต๊ะ (TOnAct='Y')
+     * ใช้ยอดจาก payload ของ order เป็นหลัก (เหมือน print-2-kic-v2)
+     */
+    private int updateTableFileSummary(RabbitMQOrderBean orderBean, String tableNo) {
+        mysqlConnect.open(this.getClass());
+        try {
+            String sql = "update tablefile set "
+                    + "TItem='" + orderBean.getItemCount() + "', "
+                    + "TAmount='" + orderBean.getTotalAmount() + "', "
+                    + "NetTotal='" + orderBean.getTotalAmount() + "', "
+                    + "TOnAct='Y', PrintChkBill='N', ChkBill='N' "
+                    + "where Tcode='" + tableNo + "'";
+            int n = mysqlConnect.executeUpdate(sql);
+            if (n <= 0) {
+                AppLogUtil.warn(BalanceControl.class,
+                        "updateTableFileSummary: ไม่พบแถว tablefile Tcode=" + tableNo);
+            }
+            return n;
+        } catch (Exception e) {
+            AppLogUtil.log(BalanceControl.class, "error", e);
+            return -1;
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
+    /** แยก specialInstructions (คั่นด้วย ',') เป็น R_Opt1..8 */
+    private String[] getMenuOptions(String specialInstructions) {
+        String[] options = {"", "", "", "", "", "", "", ""};
+        if (specialInstructions == null || specialInstructions.trim().isEmpty()) {
+            return options;
+        }
+        String[] opts = ThaiUtil.Unicode2ASCII(specialInstructions).split(",");
+        int len = Math.min(opts.length, options.length);
+        System.arraycopy(opts, 0, options, 0, len);
+        return options;
+    }
+
+    /** dining option จาก food-ordering -> รหัส R_ETD ของ POS (E=ทานที่ร้าน, T=กลับบ้าน) */
+    private String convertToETD(String diningOption) {
+        if (diningOption == null) {
+            return "E";
+        }
+        switch (diningOption.trim().toLowerCase()) {
+            case "takeaway":
+            case "take-away":
+            case "takehome":
+                return "T";
+            case "dine-in":
+            case "dinein":
+            default:
+                return "E";
+        }
+    }
+
+    /** ทำให้รหัสโต๊ะเป็นตัวพิมพ์ใหญ่ถ้ามีตัวพิมพ์เล็กปน (ตาม CharactorCheck ของ print-2-kic-v2) */
+    private String charEngCheck(String table) {
+        if (table == null) {
+            return null;
+        }
+        return table.matches(".*[a-z].*") ? table.toUpperCase() : table;
     }
 }
