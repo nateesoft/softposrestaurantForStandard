@@ -11,9 +11,16 @@ import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.util.AppLogUtil;
 import com.softpos.connection.database.MySQLConnect;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
 import java.text.DecimalFormat;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -200,6 +207,8 @@ public class PrintKicFormReport {
             //Footer
             param.put("R_Index", ThaiUtil.ASCII2Unicode(R_Index));
             param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
+            // QR code แทน barcode เดิม (Code128) — ส่งเป็นรูปภาพให้ report
+            param.put("qrImage", qrImage(R_Index, 240));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, mysqlConnect.getConnection());
 
@@ -283,6 +292,40 @@ public class PrintKicFormReport {
             }
         }
         return null;
+    }
+
+    /**
+     * Render {@code text} as a square QR-code image (black modules on white),
+     * used in place of the old Code128 barcode on KIC form 8.
+     *
+     * @param sizePx requested pixel size of the (square) image.
+     * @return the QR image, or {@code null} if encoding failed (the report shows
+     *         a blank in that case instead of crashing).
+     */
+    private static BufferedImage qrImage(final String text, final int sizePx) {
+        try {
+            Map<EncodeHintType, Object> hints = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.MARGIN, 1);
+
+            BitMatrix matrix = new MultiFormatWriter().encode(
+                    text == null ? "" : text, BarcodeFormat.QR_CODE, sizePx, sizePx, hints);
+
+            int w = matrix.getWidth();
+            int h = matrix.getHeight();
+            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            int black = Color.BLACK.getRGB();
+            int white = Color.WHITE.getRGB();
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    img.setRGB(x, y, matrix.get(x, y) ? black : white);
+                }
+            }
+            return img;
+        } catch (Exception e) {
+            AppLogUtil.log(PrintKicFormReport.class, "error", e);
+            return null;
+        }
     }
 
 }
