@@ -10,16 +10,15 @@ import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.util.AppLogUtil;
-import com.softpos.connection.database.ConfigFile;
+import com.softpos.connection.database.MySQLConnect;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.AttributeSet;
@@ -31,51 +30,41 @@ import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.PrinterName;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import com.softpos.util.DateUtil;
 import java.awt.print.PrinterException;
+import net.sf.jasperreports.engine.JRException;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PrintKicFormReport {
-
-    private static final String server = ConfigFile.getProperties("server");
-    private static final String db = ConfigFile.getProperties("database");
-
-    private Connection connect = null;
-
-//    private static final String MYSQL_HOST = "jdbc:mysql://localhost:3307/";
-    private static final String MYSQL_HOST = "jdbc:mysql://" + server + ":3307/";
-
-//    private static final String MYSQL_DB = "salarydb";
-    private static final String MYSQL_DB = db;
-    private static final String MYSQL_USER_PASS = "user=root&password=";
-    private static final String MYSQL_URL = MYSQL_HOST + MYSQL_DB + "?" + MYSQL_USER_PASS;
-
-    private static final String JASPER_FILE = "\\src\\java\\printReport\\kicFrom_7Qrcode.jasper";
-    private final DecimalFormat df = new DecimalFormat("#,##0.00");
+    private final MySQLConnect mysqlConnect;
     private final DecimalFormat intFM = new DecimalFormat("#,##0");
+
+    public PrintKicFormReport() {
+        this.mysqlConnect = new MySQLConnect();
+    }
 
     public void PrintKicForm7_Report(
             final String tableNo, final String printerName, final String Macno, final String R_ETD, final String R_PluCode) throws Exception {
-//        printerName = "Snagit 9";
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
+
         TableFileControl tbControl = AppContext.getTableFileControl();
         TableFileBean tbBean = tbControl.getDataByTCode(tableNo);
 
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
+        
+        mysqlConnect.open(PrintKicFormReport.class);
+        
         try {
-            PrintKicFormReport report = new PrintKicFormReport();
-
-            report.openConnection();
 
             // source file
-            String sourceFileName = "D:\\Source Code Java\\softposrestaurantForStandard\\src\\report\\file\\kicFrom_7Qrcode.jrxml";
-            String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
+            JasperReport reportSource = JasperCompileManager.compileReport(
+                    getClass().getResourceAsStream("/report/file/kicFrom_7Qrcode.jrxml"));
 
             // set parameters
             Map param = new HashMap();
@@ -117,19 +106,21 @@ public class PrintKicFormReport {
             param.put("R_PluCode", ThaiUtil.ASCII2Unicode(R_PluCode));
             param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, mysqlConnect.getConnection());
             PrinterJob printerJob = PrinterJob.getPrinterJob();
 
             PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
             printerJob.defaultPage(pageFormat);
 
-            int selectedService = 0;
-            AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
-
-            PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
+            PrintService selectedPrintService = find2DPrintService(printerName);
+            if (selectedPrintService == null) {
+                AppLogUtil.error(PrintKicFormReport.class, "Printer '" + printerName
+                        + "' is not available as a 2D print service; skipping KIC form 7 print.");
+                return;
+            }
 
             try {
-                printerJob.setPrintService(printService[selectedService]);
+                printerJob.setPrintService(selectedPrintService);
             } catch (PrinterException e) {
                 AppLogUtil.log(PrintKicFormReport.class, "error", e);
             }
@@ -141,19 +132,19 @@ public class PrintKicFormReport {
             // these are deprecated
             exporter = new JRPrintServiceExporter();
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, printService[selectedService]);
-            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printService[selectedService].getAttributes());
+            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, selectedPrintService);
+            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, selectedPrintService.getAttributes());
             exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
             exporter.exportReport();
 
             param.clear();
-            
-            report.closeConnection();
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
-        } catch (Exception ex) {
+        } catch (JRException ex) {
             Logger.getLogger(PrintKicFormReport.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            mysqlConnect.close();
         }
     }
 
@@ -164,14 +155,11 @@ public class PrintKicFormReport {
         TableFileBean tbBean = tbControl.getDataByTCode(tableNo);
 
         ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
-
+        mysqlConnect.open(PrintKicFormReport.class);
+        
         try {
-            PrintKicFormReport report = new PrintKicFormReport();
-
-            report.openConnection();
-
-            String sourceFileName = "D:\\Source Code Java\\softposrestaurantForStandard\\src\\report\\file\\kicFrom_8Qrcode.jrxml";
-            String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
+            JasperReport reportSource = JasperCompileManager.compileReport(
+                    getClass().getResourceAsStream("/report/file/kicFrom_8Qrcode.jrxml"));
 
             // set parameters
             Map param = new HashMap();
@@ -213,7 +201,16 @@ public class PrintKicFormReport {
             param.put("R_Index", ThaiUtil.ASCII2Unicode(R_Index));
             param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, mysqlConnect.getConnection());
+
+            // save เป็น PDF ไว้ตรวจสอบ output กรณียังทดสอบผ่านเครื่องพิมพ์จริงไม่ได้
+            File pdfDir = new File("kic_pdf");
+            if (!pdfDir.exists()) {
+                pdfDir.mkdirs();
+            }
+            String pdfFileName = new File(pdfDir, "kicForm8_" + tableNo + "_"
+                    + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf").getPath();
+            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFileName);
 
             //Class Printer Job
             PrinterJob printerJob = PrinterJob.getPrinterJob();
@@ -221,13 +218,15 @@ public class PrintKicFormReport {
             PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
             printerJob.defaultPage(pageFormat);
 
-            int selectedService = 0;
-
-            AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
-            PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
+            PrintService selectedPrintService = find2DPrintService(printerName);
+            if (selectedPrintService == null) {
+                AppLogUtil.error(PrintKicFormReport.class, "Printer '" + printerName
+                        + "' is not available as a 2D print service; skipping KIC form 8 print.");
+                return;
+            }
 
             try {
-                printerJob.setPrintService(printService[selectedService]);
+                printerJob.setPrintService(selectedPrintService);
             } catch (PrinterException e) {
                 AppLogUtil.log(PrintKicFormReport.class, "error", e);
             }
@@ -239,39 +238,51 @@ public class PrintKicFormReport {
             // these are deprecated
             exporter = new JRPrintServiceExporter();
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, printService[selectedService]);
-            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printService[selectedService].getAttributes());
+            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, selectedPrintService);
+            exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, selectedPrintService.getAttributes());
             exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
             exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
             exporter.exportReport();
 
             param.clear();
-            // close connection
-            report.closeConnection();
+
             ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
 
-        } catch (Exception e) {
+        } catch (JRException e) {
             AppLogUtil.log(PrintKicFormReport.class, "error", e);
+        } finally {
+            mysqlConnect.close();
         }
     }
 
-    public Connection getConnection() throws Exception {
-        return connect;
-    }
+    /**
+     * Find a print service by name that actually supports Java 2D printing.
+     *
+     * <p>A CUPS/IPP queue added as a "raw" printer only advertises byte-stream
+     * doc flavors, so {@code PrinterJob.setPrintService(...)} rejects it with
+     * "Not a 2D print service: IPP Printer : ...". We therefore look up only
+     * services that support {@code DocFlavor.SERVICE_FORMATTED.PAGEABLE}, and
+     * fall back to {@code PrinterJob.lookupPrintServices()} (which only ever
+     * returns 2D-capable services) matching by name.
+     *
+     * @return a 2D-capable {@link PrintService}, or {@code null} if none matches.
+     */
+    private static PrintService find2DPrintService(final String printerName) {
+        AttributeSet nameAttr = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
 
-    public void closeConnection() throws Exception {
-        if (connect != null) {
-            connect.close();
+        PrintService[] matches = PrintServiceLookup.lookupPrintServices(
+                DocFlavor.SERVICE_FORMATTED.PAGEABLE, nameAttr);
+        if (matches != null && matches.length > 0) {
+            return matches[0];
         }
-    }
 
-    public Connection openConnection() throws Exception {
-        if (connect == null) {
-            Class.forName("com.mysql.jdbc.Driver");
-            connect = DriverManager.getConnection(MYSQL_URL);
+        for (PrintService ps : PrinterJob.lookupPrintServices()) {
+            if (ps.getName() != null && ps.getName().equalsIgnoreCase(printerName)) {
+                return ps;
+            }
         }
-        return connect;
+        return null;
     }
 
 }

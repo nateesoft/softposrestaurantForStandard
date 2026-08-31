@@ -2860,6 +2860,9 @@ public class MainSale extends javax.swing.JDialog {
                     String retd = balanceBean.getR_ETD();
                     printSimpleForm.KIC_FORM_2New(printerName, tableNo, iKic, retd, "", balanceBean.getMacno());
                     break;
+                case "8":
+                    printSimpleForm.KIC_FORM_8Qrcode(printerName, tableNo, balanceBean.getR_ETD());
+                    break;
                 default:
                     printBillVoidCheck();
                     MSG.ERR(this, "ไม่พบฟอร์มปริ้นเตอร์ครัวในระบบที่สามารถใช้งานได้ !!!");

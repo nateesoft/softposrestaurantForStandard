@@ -4461,24 +4461,18 @@ public class PrintSimpleForm {
         try {
             mysqlConnect.open(this.getClass());
 
-            String sql = "select "
-                    + "TOnact,TUser,R_Void,R_Index, R_PluCode, TCode, TCustomer, R_PName, R_Quan R_Quan,"
-                    + "R_Total R_Price, b.Macno,R_Date, R_Time,"
-                    + "R_Opt1,R_Opt2,R_Opt3,R_Opt4,R_Opt5,R_Opt6,"
-                    + "R_Opt7,R_Opt8,R_Opt9,R_ETD,b.cashier,R_EMP,R_Table,R_ETD,R_Kic "
-                    + "from tablefile t,balance b "
-                    + "where t.tcode=b.r_table "
-                    + "and r_table='" + tableNo + "' "
-                    + "and R_PrintOK='Y' "
-                    + "and R_KicPrint<>'P' "
-                    + "and R_Kic<>'' "
-                    + "and R_Kic='" + printerName.replace("kic", "") + "'"
-                    + "and TOnact='N' "
-                    + "and r_etd='" + r_etd + "' "
-                    + "order by R_Index";
-            AppLogUtil
-                    .warn(PrintSimpleForm.class,
-                            sql);
+            String sql = "select b.*, t.TOnAct, t.MacNo from tablefile t " +
+                    "inner join balance b on t.Tcode =b.R_Table " +
+                    "where r_table='"+tableNo+"' " +
+                    "and R_PrintOK='Y' " +
+                    "and R_KicPrint<>'P' " +
+                    "and R_Kic<>'' " +
+                    "and R_Kic='" + printerName.replace("kic", "") + "' " +
+                    "and TOnact='N' " +
+                    "and r_etd='" + r_etd + "' " +
+                    "order by R_Index";
+            AppLogUtil.warn(PrintSimpleForm.class, sql);
+            
             Statement stmt;
             stmt = mysqlConnect.getConnection().createStatement();
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -4487,7 +4481,7 @@ public class PrintSimpleForm {
                 while (rs.next()) {
                     countRound++;
                     String TOnact = rs.getString("TOnact");
-                    String Macno = rs.getString("macno");
+                    String Macno = rs.getString("MacNo");
                     String r_plucode = rs.getString("R_PluCode");
                     String r_index = rs.getString("R_Index");
                     tempPlucode = r_plucode;
@@ -4537,8 +4531,7 @@ public class PrintSimpleForm {
                 }
             }
         } catch (Exception e) {
-            AppLogUtil.log(PrintSimpleForm.class,
-                    "error", e);
+            AppLogUtil.log(PrintSimpleForm.class, "error", e);
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }

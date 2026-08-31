@@ -7,7 +7,6 @@ import static com.softpos.pos.core.controller.BalanceControl.updateProSerTableMe
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.model.POSConfigSetup;
 import com.softpos.pos.core.controller.TableFileControl;
-import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.CuponBean;
 import com.softpos.pos.core.model.DiscountBean;
 import com.softpos.pos.core.model.MemberBean;
@@ -21,7 +20,6 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
-import com.softpos.util.NumberUtil;
 import com.softpos.util.NumberUtil;
 
 public class DiscountDialog extends javax.swing.JDialog {

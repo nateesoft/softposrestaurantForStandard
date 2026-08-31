@@ -121,7 +121,6 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     public FloorPlanDialog() {
-        setUndecorated(true);
         initComponents();
         setupAutoRefresh();
         setupKeyboardShortcuts();
