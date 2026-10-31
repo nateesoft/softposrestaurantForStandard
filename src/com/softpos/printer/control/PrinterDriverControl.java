@@ -1,6 +1,7 @@
 package com.softpos.printer.control;
 
 import com.softpos.constants.PublicVar;
+import com.softpos.i18n.ReceiptTranslator;
 
 import java.awt.Font;
 import java.awt.print.PrinterException;
@@ -61,7 +62,7 @@ public class PrinterDriverControl {
 
     public void printHTML() {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, PublicVar.languagePrint);
         AppLogUtil.info("printHTML: ");
         AppLogUtil.htmlFile(text);
 
