@@ -1,6 +1,7 @@
 package com.softpos.i18n;
 
 import com.softpos.util.AppLogUtil;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  * Thai and English labels: the "TH" receipt button prints in the shop language, "EN" in English.
  * Only text between HTML tags is translated, longest key first; English keys only match whole
  * words. Thai installations print exactly as before.
+ * Reports and kitchen tickets always use the shop language ("TH").
  */
 public class ReceiptTranslator {
 
@@ -27,6 +29,9 @@ public class ReceiptTranslator {
     private static final Pattern TEXT = Pattern.compile(">([^<]+)");
     // Unquoted "face=Angsana New size=2" is read by Swing as face=Angsana, so it never was Angsana New
     private static final Pattern FONT_FACE = Pattern.compile("face=(\"[^\"]*\"|'[^']*'|sAngsana New|Angsana New|Tahoma)");
+
+    private static final Pattern SMALL_THAI_FONT = Pattern.compile("(?i)sarabun|angsana|cordia|browallia");
+    private static final float SMALL_THAI_FONT_SCALE = 0.7f;
 
     private static final Map<Locale, List<Entry>> ENTRIES = new HashMap<>();
 
@@ -72,6 +77,38 @@ public class ReceiptTranslator {
             result = result.replace("<body>", "<body style=\"font-family:'" + Lang.getThaiLaoFontFamily() + "'\">");
         }
         return result;
+    }
+
+    /** Plain printed text (kitchen tickets drawn with Graphics, Jasper texts) in the shop language. */
+    public static String translateText(String text) {
+        Locale locale = receiptLocale("TH");
+        return text == null || locale == null ? text : translate(text, entries(locale));
+    }
+
+    /** Font for printed text: as requested on Thai installations, a font with Lao glyphs for Lao. */
+    public static Font printFont(String family, int style, int size) {
+        return isLaoPrint() ? Lang.createScreenFont(Lang.getThaiLaoFontFamily(), style, size) : new Font(family, style, size);
+    }
+
+    /** Font family for printed text, see printFont. */
+    public static String printFontFamily(String family) {
+        return isLaoPrint() ? Lang.getThaiLaoFontFamily() : family;
+    }
+
+    /**
+     * Font size for printFontFamily(family): Thai fonts like TH Sarabun New and Angsana New are
+     * small for their point size, so the Lao font is scaled down to fit the same layout.
+     */
+    public static int printFontSize(String family, int size) {
+        if (isLaoPrint() && family != null && SMALL_THAI_FONT.matcher(family).find()) {
+            return Math.round(size * SMALL_THAI_FONT_SCALE);
+        }
+        return size;
+    }
+
+    private static boolean isLaoPrint() {
+        Locale locale = receiptLocale("TH");
+        return locale != null && Lang.LAO.getLanguage().equals(locale.getLanguage());
     }
 
     private static String translate(String text, List<Entry> entries) {

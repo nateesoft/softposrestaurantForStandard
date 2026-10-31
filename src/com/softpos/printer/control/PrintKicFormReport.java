@@ -8,6 +8,7 @@ import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.ControlPrintCheckBill;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.util.ThaiUtil;
+import com.softpos.i18n.ReceiptTranslator;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.util.AppLogUtil;
 import com.softpos.connection.database.MySQLConnect;
@@ -45,6 +46,13 @@ import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import java.awt.print.PrinterException;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRBand;
+import net.sf.jasperreports.engine.JRElement;
+import net.sf.jasperreports.engine.JRElementGroup;
+import net.sf.jasperreports.engine.design.JRDesignStaticText;
+import net.sf.jasperreports.engine.design.JRDesignTextElement;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +63,37 @@ public class PrintKicFormReport {
 
     public PrintKicFormReport() {
         this.mysqlConnect = new MySQLConnect();
+    }
+
+    /**
+     * Compiles a kitchen ticket report with its static texts in the shop language and a font
+     * that has Lao glyphs on Lao installations (TH Sarabun New has none); Thai is unchanged.
+     */
+    private JasperReport compileKicReport(String resource) throws JRException {
+        JasperDesign design = JRXmlLoader.load(getClass().getResourceAsStream(resource));
+        for (JRBand band : design.getAllBands()) {
+            localize(band.getElements());
+        }
+        return JasperCompileManager.compileReport(design);
+    }
+
+    private static void localize(JRElement[] elements) {
+        for (JRElement e : elements) {
+            if (e instanceof JRDesignStaticText) {
+                JRDesignStaticText text = (JRDesignStaticText) e;
+                text.setText(ReceiptTranslator.translateText(text.getText()));
+            }
+            if (e instanceof JRDesignTextElement && ((JRDesignTextElement) e).getOwnFontName() != null) {
+                JRDesignTextElement text = (JRDesignTextElement) e;
+                if (text.getOwnFontSize() != null) {
+                    text.setFontSize(ReceiptTranslator.printFontSize(text.getOwnFontName(), text.getOwnFontSize()));
+                }
+                text.setFontName(ReceiptTranslator.printFontFamily(text.getOwnFontName()));
+            }
+            if (e instanceof JRElementGroup) {
+                localize(((JRElementGroup) e).getElements());
+            }
+        }
     }
 
     public void PrintKicForm7_Report(
@@ -70,8 +109,7 @@ public class PrintKicFormReport {
         try {
 
             // source file
-            JasperReport reportSource = JasperCompileManager.compileReport(
-                    getClass().getResourceAsStream("/report/file/kicFrom_7Qrcode.jrxml"));
+            JasperReport reportSource = compileKicReport("/report/file/kicFrom_7Qrcode.jrxml");
 
             // set parameters
             Map param = new HashMap();
@@ -83,27 +121,27 @@ public class PrintKicFormReport {
             switch (etdThai) {
                 case "E": {
                     etdThai = "ทานในร้าน";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "T": {
                     etdThai = "ใส่ห่อ";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "D": {
                     etdThai = "เดลิเวอรี่";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "P": {
                     etdThai = "ปิ่นโต";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "W": {
                     etdThai = "ค้าส่ง";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
 
@@ -165,8 +203,7 @@ public class PrintKicFormReport {
         mysqlConnect.open(PrintKicFormReport.class);
         
         try {
-            JasperReport reportSource = JasperCompileManager.compileReport(
-                    getClass().getResourceAsStream("/report/file/kicFrom_8Qrcode.jrxml"));
+            JasperReport reportSource = compileKicReport("/report/file/kicFrom_8Qrcode.jrxml");
 
             // set parameters
             Map param = new HashMap();
@@ -178,27 +215,27 @@ public class PrintKicFormReport {
             switch (etdThai) {
                 case "E": {
                     etdThai = "ทานในร้าน";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "T": {
                     etdThai = "ใส่ห่อ";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "D": {
                     etdThai = "เดลิเวอรี่";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "P": {
                     etdThai = "ปิ่นโต";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
                 case "W": {
                     etdThai = "ค้าส่ง";
-                    param.put("etdThai", etdThai);
+                    param.put("etdThai", ReceiptTranslator.translateText(etdThai));
                     break;
                 }
 

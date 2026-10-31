@@ -135,7 +135,7 @@ public class PrinterDriverControl {
 
     public void printHTMLKitChen(String printerName) {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, "TH");
         AppLogUtil.info("printHTMLKitChen: " + printerName);
         AppLogUtil.htmlFile(text);
         try {
@@ -160,7 +160,7 @@ public class PrinterDriverControl {
 
     public void printHTMLKitChenByKictran(String printerName) {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, "TH");
         AppLogUtil.info("printHTMLKitChenByKictran: ");
         AppLogUtil.htmlFile(text);
         try {

@@ -14,6 +14,7 @@ import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
+import com.softpos.i18n.ReceiptTranslator;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -3660,10 +3661,10 @@ public class PrintSimpleForm {
 
                                         //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                                         line += 25;
-                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+                                        g2.setFont(ReceiptTranslator.printFont("Tahoma", Font.PLAIN, 20));
                                         if (!printTable) {
                                             String tableHead = dataFullR("โต๊ะ " + rs.getString("TCode"), PaperMaxLength - 3);
-                                            g2.drawString(tableHead + " C " + custCount, SpaceFront, line);
+                                            g2.drawString(ReceiptTranslator.translateText(tableHead + " C " + custCount), SpaceFront, line);
                                             line += 25;
 
                                             printTable = true;
@@ -3672,8 +3673,8 @@ public class PrintSimpleForm {
                                         printG(g2, ETD, line);
 
                                         line += 25;
-                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                                        g2.drawString(productName, SpaceFront, line);
+                                        g2.setFont(ReceiptTranslator.printFont("Tahoma", Font.PLAIN, 15));
+                                        g2.drawString(ReceiptTranslator.translateText(productName), SpaceFront, line);
                                         //********* พิมพ์ข้อความพิเศษ *************
                                         for (int x = 0; x < listOpt.size(); x++) {
                                             String[] OPT = (String[]) listOpt.get(x);
@@ -3681,17 +3682,17 @@ public class PrintSimpleForm {
                                                 if (OPT1 != null) {
                                                     if (!OPT1.trim().equals("")) {
                                                         line += 20;
-                                                        g2.drawString("*** " + OPT1, SpaceFront, line);
+                                                        g2.drawString(ReceiptTranslator.translateText("*** " + OPT1), SpaceFront, line);
                                                     }
                                                 }
                                             }
                                         }
                                         //********* สิ้นสุดการพิมพ์ข้อความพิเศษ *************
                                         line += 20;
-                                        g2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-                                        g2.drawString("จำนวน    " + qty + "      ราคา " + rs.getDouble("R_Price"), SpaceFront, line);
+                                        g2.setFont(ReceiptTranslator.printFont("Tahoma", Font.PLAIN, 15));
+                                        g2.drawString(ReceiptTranslator.translateText("จำนวน    " + qty + "      ราคา " + rs.getDouble("R_Price")), SpaceFront, line);
                                         line += 20;
-                                        g2.drawString("-----------------------------------------", SpaceFront, line);
+                                        g2.drawString(ReceiptTranslator.translateText("-----------------------------------------"), SpaceFront, line);
 
                                         //add kictran data
                                         String R_Que = seekKicItemNo();
@@ -3740,8 +3741,8 @@ public class PrintSimpleForm {
                                     }
 
                                     line += 20;
-                                    g2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-                                    g2.drawString("  " + simp.format(new Date()) + "   Mac " + macNo + "/" + TUser, SpaceFront, line);
+                                    g2.setFont(ReceiptTranslator.printFont("Tahoma", Font.PLAIN, 12));
+                                    g2.drawString(ReceiptTranslator.translateText("  " + simp.format(new Date()) + "   Mac " + macNo + "/" + TUser), SpaceFront, line);
 
                                 }
                             } catch (SQLException e) {
@@ -3889,9 +3890,9 @@ public class PrintSimpleForm {
                                         //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
                                         if (!printHeader) {
                                             line += 25;
-                                            g2.setFont(new Font("Thahoma", Font.PLAIN, 30));
+                                            g2.setFont(ReceiptTranslator.printFont("Thahoma", Font.PLAIN, 30));
                                             String tableHead = dataFullR("โต๊ะ " + rs.getString("TCode"), PaperMaxLength - 3);
-                                            g2.drawString(tableHead + " C " + custCount, SpaceFront, line);
+                                            g2.drawString(ReceiptTranslator.translateText(tableHead + " C " + custCount), SpaceFront, line);
                                             line += 25;
 
                                             //print ETD
@@ -3899,11 +3900,11 @@ public class PrintSimpleForm {
                                             printHeader = true;
                                         }
                                         line += 25;
-                                        g2.setFont(new Font("Thahoma", Font.PLAIN, 20));
+                                        g2.setFont(ReceiptTranslator.printFont("Thahoma", Font.PLAIN, 20));
                                         String product = dataFullR(productName, PaperMaxLength);
 
-                                        g2.drawString("---" + product, SpaceFront, line);
-                                        g2.drawString("" + qty, SpaceFront + 155, line);
+                                        g2.drawString(ReceiptTranslator.translateText("---" + product), SpaceFront, line);
+                                        g2.drawString(ReceiptTranslator.translateText("" + qty), SpaceFront + 155, line);
 
                                         //********* พิมพ์ข้อความพิเศษ *************
                                         for (int x = 0; x < listOpt.size(); x++) {
@@ -3912,7 +3913,7 @@ public class PrintSimpleForm {
                                                 if (OPT1 != null) {
                                                     if (!OPT1.trim().equals("")) {
                                                         line += 20;
-                                                        g2.drawString("*** " + OPT1, SpaceFront + 5, line);
+                                                        g2.drawString(ReceiptTranslator.translateText("*** " + OPT1), SpaceFront + 5, line);
                                                     }
                                                 }
                                             }
@@ -3967,12 +3968,12 @@ public class PrintSimpleForm {
 
                                     //Print header
                                     line += 20;
-                                    g2.setFont(new Font("Thahoma", Font.PLAIN, 20));
-                                    g2.drawString("-----------------------------------------", SpaceFront, line);
+                                    g2.setFont(ReceiptTranslator.printFont("Thahoma", Font.PLAIN, 20));
+                                    g2.drawString(ReceiptTranslator.translateText("-----------------------------------------"), SpaceFront, line);
                                     line += 20;
 
-                                    g2.setFont(new Font("Thahoma", Font.PLAIN, 20));
-                                    g2.drawString("  " + simp.format(new Date()) + "   Mac " + macNo + "/" + TUser, SpaceFront, line);
+                                    g2.setFont(ReceiptTranslator.printFont("Thahoma", Font.PLAIN, 20));
+                                    g2.drawString(ReceiptTranslator.translateText("  " + simp.format(new Date()) + "   Mac " + macNo + "/" + TUser), SpaceFront, line);
 
                                 }
                             } catch (SQLException e) {
@@ -4954,19 +4955,19 @@ public class PrintSimpleForm {
         final int SpaceFront = 25;
         switch (ETD) {
             case "E":
-                g2.drawString("** DINE IN **", SpaceFront, line);
+                g2.drawString(ReceiptTranslator.translateText("** DINE IN **"), SpaceFront, line);
                 break;
             case "T":
-                g2.drawString("** TAKE AWAY **", SpaceFront, line);
+                g2.drawString(ReceiptTranslator.translateText("** TAKE AWAY **"), SpaceFront, line);
                 break;
             case "D":
-                g2.drawString("** DELIVERY **", SpaceFront, line);
+                g2.drawString(ReceiptTranslator.translateText("** DELIVERY **"), SpaceFront, line);
                 break;
             case "P":
-                g2.drawString("*** PINTO ***", SpaceFront, line);
+                g2.drawString(ReceiptTranslator.translateText("*** PINTO ***"), SpaceFront, line);
                 break;
             case "W":
-                g2.drawString("*** WHOLE SALE ***", SpaceFront, line);
+                g2.drawString(ReceiptTranslator.translateText("*** WHOLE SALE ***"), SpaceFront, line);
                 break;
             default:
                 break;
