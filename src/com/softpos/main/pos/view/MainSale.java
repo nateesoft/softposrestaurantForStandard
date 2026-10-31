@@ -255,6 +255,7 @@ public class MainSale extends javax.swing.JDialog {
         btnSplit.setText(Lang.get("mainsale.btnSplit"));
         btnPayment.setText(Lang.get("mainsale.btnPayment"));
         jButton1.setText(Lang.get("mainsale.btnKeyboard"));
+        btnLangTH.setText(Lang.get("mainsale.btnLangLocal"));
         jLabel14.setText(Lang.get("mainsale.customer"));
         jLabel10.setText(Lang.get("mainsale.table"));
         jLabel11.setText(Lang.get("mainsale.outstanding"));
