@@ -508,7 +508,7 @@ public class MTDDept extends javax.swing.JDialog {
             pd.addTextIFont(data1);
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
 
     }
 

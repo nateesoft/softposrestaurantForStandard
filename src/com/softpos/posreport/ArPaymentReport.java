@@ -426,7 +426,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
 
     }
 

@@ -405,7 +405,7 @@ private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void bntExitClick() {

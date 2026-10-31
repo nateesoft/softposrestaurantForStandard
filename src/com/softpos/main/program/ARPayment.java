@@ -2296,7 +2296,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void _TCashExit() {

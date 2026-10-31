@@ -465,7 +465,7 @@ private void txtCashNo2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
         txtMacNo1.requestFocus();
     }
 

@@ -3195,7 +3195,7 @@ public class PPrint {
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void printGroup(PluRec[] GArray) {
@@ -3374,7 +3374,7 @@ public class PPrint {
             pd.addTextIFont(data1);
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void printPlu(PluRec[] GArray) {
@@ -3571,7 +3571,7 @@ public class PPrint {
             pd.addTextIFont(data1);
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void printBillCopy(TranRecord[] myArray1, String _RefNo, int ICopy, CreditPaymentRec[] CreditArray1) {
@@ -4697,7 +4697,7 @@ public class PPrint {
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void printHeaderBill() {

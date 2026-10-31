@@ -989,7 +989,7 @@ private void bntOKMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             pd.addTextIFont(data1);
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

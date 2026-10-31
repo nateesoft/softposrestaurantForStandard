@@ -60,9 +60,19 @@ public class PrinterDriverControl {
         return editor;
     }
 
+    /** Receipts and bills: in the language of the TH/EN receipt button (PublicVar.languagePrint). */
     public void printHTML() {
+        printHTML(PublicVar.languagePrint);
+    }
+
+    /** Reports and slips: always in the shop language, whatever the last receipt button was. */
+    public void printReportHTML() {
+        printHTML("TH");
+    }
+
+    private void printHTML(String languagePrint) {
         //Print Cashier
-        String text = ReceiptTranslator.translateHtml(header + textAll + footer, PublicVar.languagePrint);
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, languagePrint);
         AppLogUtil.info("printHTML: ");
         AppLogUtil.htmlFile(text);
 

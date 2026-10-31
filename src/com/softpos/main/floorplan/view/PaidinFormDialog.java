@@ -56,7 +56,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
             pd.addTextIFont(">");
             pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal());
             Prn.openDrawerDriver();
-            pd.printHTML();
+            pd.printReportHTML();
 
         } else if (!POSHW.getPRNPort().equals("NONE")) {
             if (Prn.openPrint(POSHW.getPRNPort())) {

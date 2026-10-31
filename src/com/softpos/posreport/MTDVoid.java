@@ -546,7 +546,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
         txtMacNo1.requestFocus();
     }
 

@@ -2144,7 +2144,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

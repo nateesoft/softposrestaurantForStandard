@@ -560,7 +560,7 @@ public class MTDInvReport extends javax.swing.JDialog {
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void bntExitClick() {
