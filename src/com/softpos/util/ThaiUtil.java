@@ -1,5 +1,8 @@
 package com.softpos.util;
 
+/**
+ * Text for latin1 database columns: Thai as TIS-620 bytes, Lao as LaoUtil byte pairs.
+ */
 public class ThaiUtil {
 
     public static String Unicode2ASCII(String unicode) {
@@ -15,13 +18,14 @@ public class ThaiUtil {
                 ascii.setCharAt(i, (char) (code - 0xD60));
             }
         }
-        return ascii.toString();
+        return LaoUtil.encode(ascii.toString());
     }
 
     public static String ASCII2Unicode(String ascii) {
         if (ascii == null) {
             return "";
         }
+        ascii = LaoUtil.decode(ascii);
         StringBuilder unicode = new StringBuilder(ascii);
         int code;
         for (int i = 0; i < ascii.length(); i++) {

@@ -160,8 +160,8 @@ public class ReceiptTranslator {
         if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) {
             return "[A-Za-z0-9]";
         }
-        if (c >= 'ก' && c <= '๎') {
-            return "[ก-๎]";
+        if (c >= '\u0E01' && c <= '\u0E4E') {
+            return "[\u0E01-\u0E4E]";
         }
         return null;
     }

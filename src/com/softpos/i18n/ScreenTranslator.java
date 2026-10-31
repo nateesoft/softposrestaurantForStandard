@@ -166,7 +166,7 @@ public class ScreenTranslator {
     static boolean hasThai(String s) {
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (ch >= '฀' && ch <= '๿') {
+            if (ch >= '\u0E00' && ch <= '\u0E7F') {
                 return true;
             }
         }
