@@ -10,6 +10,7 @@ import com.softpos.constants.PublicVar;
 import com.softpos.pos.core.model.LoginBean;
 import com.softpos.pos.core.model.PosUserBean;
 import com.softpos.connection.database.ConfigFile;
+import com.softpos.i18n.ScreenTranslator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -365,6 +366,7 @@ public class Login extends javax.swing.JDialog {
         com.formdev.flatlaf.FlatIntelliJLaf.setup();
 
         applyThaiFont();
+        ScreenTranslator.install();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> AppLogUtil.shutdown()));
         SwingUtilities.invokeLater(() -> {

@@ -252,7 +252,7 @@ public class Lang {
     }
 
     // Java 8 reads .properties as ISO-8859-1; read them as UTF-8 instead
-    private static class UTF8Control extends ResourceBundle.Control {
+    static class UTF8Control extends ResourceBundle.Control {
 
         @Override
         public List<String> getFormats(String baseName) {

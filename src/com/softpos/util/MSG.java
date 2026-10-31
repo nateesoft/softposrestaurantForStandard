@@ -1,5 +1,7 @@
 package com.softpos.util;
 
+import com.softpos.i18n.Lang;
+import com.softpos.i18n.ScreenTranslator;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.net.URL;
@@ -12,9 +14,9 @@ public class MSG {
         AppLogUtil.info("[MODAL_ERROR]: " + error);
         try {
             URL imgURL = MSG.class.getResource("/images/error64.png");
-            JOptionPane.showMessageDialog(com, error, "Error Message", JOptionPane.OK_OPTION, new ImageIcon(imgURL));
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(error), Lang.get("msg.title.error"), JOptionPane.OK_OPTION, new ImageIcon(imgURL));
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(com, error);
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(error));
         }
     }
 
@@ -22,9 +24,9 @@ public class MSG {
         AppLogUtil.info("[MODAL_WARNING]: " + warning);
         try {
             URL imgURL = MSG.class.getResource("/images/warning64.png");
-            JOptionPane.showMessageDialog(com, warning, "Warning Message", JOptionPane.OK_OPTION, new ImageIcon(imgURL));
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(warning), Lang.get("msg.title.warning"), JOptionPane.OK_OPTION, new ImageIcon(imgURL));
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(com, warning);
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(warning));
         }
     }
 
@@ -32,9 +34,9 @@ public class MSG {
         AppLogUtil.info("[MODAL_INFO]: " + notice);
         try {
             URL imgURL = MSG.class.getResource("/images/notice64.png");
-            JOptionPane.showMessageDialog(com, notice, "Notice Message", JOptionPane.OK_OPTION, new ImageIcon(imgURL));
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(notice), Lang.get("msg.title.notice"), JOptionPane.OK_OPTION, new ImageIcon(imgURL));
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(com, notice);
+            JOptionPane.showMessageDialog(com, ScreenTranslator.translateMessage(notice));
         }
     }
 
@@ -43,7 +45,7 @@ public class MSG {
         boolean success = false;
         try {
             URL imgURL = MSG.class.getResource("/images/warning64.png");
-            int rs = JOptionPane.showConfirmDialog(com, confirm, "Confirm Dialog", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(imgURL));
+            int rs = JOptionPane.showConfirmDialog(com, ScreenTranslator.translateMessage(confirm), Lang.get("msg.title.confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, new ImageIcon(imgURL));
             if (rs == JOptionPane.YES_OPTION) {
                 AppLogUtil.info("[MODAL_CONFIRM]: ACCEPT");
                 success = true;
