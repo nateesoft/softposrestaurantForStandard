@@ -1,17 +1,19 @@
-/build/*
-/dist/*
-/lib/*
-connect.ini
-*.log*
-*.properties
-*.ini*
-*.htm*
-/connect.ini
-*.running
-connect.ini
-*.jar
-test-reports
-kic_pdf
+# Build output
+/build/
+/dist/
 
-# screen-text language files (Lang)
-!src/com/softpos/i18n/*.properties
+# NetBeans: per-machine settings
+/nbproject/private/
+
+# Config with passwords / per-machine values
+/connect.ini
+
+# Runtime
+*.log*
+*.running
+logs/
+test-reports/
+kic_pdf/
+
+# OS
+.DS_Store
