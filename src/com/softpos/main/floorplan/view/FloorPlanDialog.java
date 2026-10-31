@@ -1199,10 +1199,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        ShowTableDialog s = new ShowTableDialog(this, true);
-        setVisible(false);
-
-        s.setVisible(true);
+        ShowTableDialog showTableDialog = new ShowTableDialog(this, true);
+        showTableDialog.setVisible(true);
         if (!PublicVar.TableSelected.equals("")) {
             setVisible(false);
             if (autoRefreshTimer != null) {

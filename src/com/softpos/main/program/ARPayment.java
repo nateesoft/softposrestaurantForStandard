@@ -29,6 +29,7 @@ import javax.swing.table.TableColumn;
 import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import javax.swing.JFrame;
 
 public class ARPayment extends javax.swing.JDialog {
 
@@ -2843,7 +2844,7 @@ private void _CrCardNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     // End of variables declaration//GEN-END:variables
 
     private void FindAr1Click() {
-        FindAr frm = new FindAr(null, true);
+        FindAr frm = new FindAr(new JFrame(), true);
         frm.setVisible(true);
         if (!PublicVar.ReturnString.equals("")) {
             txtArCode.setText(PublicVar.ReturnString);
