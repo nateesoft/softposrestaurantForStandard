@@ -12,3 +12,6 @@ connect.ini
 *.jar
 test-reports
 kic_pdf
+
+# screen-text language files (Lang)
+!src/com/softpos/i18n/*.properties

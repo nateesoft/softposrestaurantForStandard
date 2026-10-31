@@ -1,5 +1,6 @@
 package com.softpos.pos.core.controller;
 
+import com.softpos.i18n.Lang;
 import com.softpos.util.ThaiUtil;
 import com.softpos.pos.core.model.MenuMGR;
 import com.softpos.constants.PublicVar;
@@ -137,7 +138,7 @@ public class ButtonCustom {
         }
         switch (layout) {
             case 0:
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
                 }
@@ -148,7 +149,7 @@ public class ButtonCustom {
                 button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 break;
             case 1:
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
                 }
@@ -159,7 +160,7 @@ public class ButtonCustom {
                 button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 break;
             case 2:
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
@@ -168,7 +169,7 @@ public class ButtonCustom {
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 break;
             case 3:
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 button.setText("<html><center>" + m.getMenuShowText() + "</center></html>");
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -178,13 +179,13 @@ public class ButtonCustom {
                 break;
             case 4:
                 button.setBackground(getColorFormat(m.getBGColor()));
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 button.setForeground(getColorFormat(m.getFontColor(), Color.BLACK));
                 button.setText("<html>" + m.getMenuShowText() + "</html>");
                 button.setHorizontalTextPosition(SwingConstants.CENTER);
                 break;
             case 5:
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
                 }
@@ -193,7 +194,7 @@ public class ButtonCustom {
                 break;
             case 6:
                 button.setBackground(getColorFormat(m.getBGColor()));
-                button.setFont(new Font(m.getFontName(), fontType, m.getFontSize()));
+                button.setFont(Lang.screenFont(m.getFontName(), fontType, m.getFontSize()));
                 if (!m.getIMG().equals("")) {
                     updateIconFull(button, m.getIMG(), m.getImgSize());
                 }

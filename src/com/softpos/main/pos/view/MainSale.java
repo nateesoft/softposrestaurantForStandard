@@ -20,6 +20,7 @@ import com.softpos.printer.control.PPrint;
 import com.softpos.pos.core.controller.PosControl;
 import com.softpos.pos.core.controller.ProductControl;
 import com.softpos.constants.PublicVar;
+import com.softpos.i18n.Lang;
 import com.softpos.main.program.ARPayment;
 import com.softpos.main.program.AddNewArCustomer;
 import com.softpos.main.program.ArHistory;
@@ -245,9 +246,45 @@ public class MainSale extends javax.swing.JDialog {
         BranchBean branchBean;
     }
 
+    // Screen texts come from com/softpos/i18n/messages_*.properties; initComponents() texts are designer defaults only
+    private void applyLanguage() {
+        setTitle(Lang.get("mainsale.title"));
+        btnCancel.setText(Lang.get("mainsale.btnCancel"));
+        btnHold.setText(Lang.get("mainsale.btnHold"));
+        bntPrintCheckBill.setText(Lang.get("mainsale.btnPrintCheckBill"));
+        btnSplit.setText(Lang.get("mainsale.btnSplit"));
+        btnPayment.setText(Lang.get("mainsale.btnPayment"));
+        jButton1.setText(Lang.get("mainsale.btnKeyboard"));
+        jLabel14.setText(Lang.get("mainsale.customer"));
+        jLabel10.setText(Lang.get("mainsale.table"));
+        jLabel11.setText(Lang.get("mainsale.outstanding"));
+        jLabel9.setText(Lang.get("mainsale.credit"));
+        jLabel13.setText(Lang.get("mainsale.creditLimit"));
+        txtMember1.setText(Lang.get("mainsale.memberSearch"));
+        txtMember2.setText(Lang.get("mainsale.memberScoreLabel"));
+        jLabel1.setText(Lang.get("mainsale.itemCount", "0"));
+        jMenuItem1.setText(Lang.get("mainsale.popup.editItem"));
+        jMenuItem2.setText(Lang.get("mainsale.popup.buttonType"));
+        MMainMenu1.setText(Lang.get("mainsale.menu.main"));
+        jMenuItem7.setText(Lang.get("mainsale.menu.refundDepositCash"));
+        jMenuItem8.setText(Lang.get("mainsale.menu.cancelRefundDeposit"));
+        MCancelArPayment2.setText(Lang.get("mainsale.menu.arPayment"));
+        MCancelArPayment1.setText(Lang.get("mainsale.menu.cancelArPayment"));
+        MAddNewAccr1.setText(Lang.get("mainsale.menu.editArCustomer"));
+        MRepArNotPayment1.setText(Lang.get("mainsale.menu.repArNotPay"));
+        MRepArHistory1.setText(Lang.get("mainsale.menu.repArHistory"));
+        MRepMemberHistory1.setText(Lang.get("mainsale.menu.repMemberHistory"));
+        MRepInvCash1.setText(Lang.get("mainsale.menu.printInvoice"));
+        MHeaderBill1.setText(Lang.get("mainsale.menu.headerBill"));
+        jMenu2.setText(Lang.get("mainsale.menu.product"));
+        jCheckBoxMenuItem3.setText(Lang.get("mainsale.menu.productOption"));
+        Lang.applyFont(getRootPane(), jPopupMenu1);
+    }
+
     public MainSale(java.awt.Frame parent, boolean modal, String tableNo) {
         super(parent, modal);
         initComponents();
+        applyLanguage();
 
         // Pure UI-only setup
         MMainMenu1.setVisible(true);
@@ -327,7 +364,7 @@ public class MainSale extends javax.swing.JDialog {
                         if (ValidateValue.isNotEmpty(memberBean.getMember_Code())) {
                             BalanceControl.updateProSerTable(tNo, memberBean);
                             txtMember1.setText(memberBean.getMember_NameThai());
-                            txtMember2.setText("แต้มสะสม " + memberBean.getMember_TotalScore());
+                            txtMember2.setText(Lang.get("mainsale.memberScore", String.valueOf(memberBean.getMember_TotalScore())));
                         } else if (d.tbBean.getMemDiscAmt() != 0) {
                             BalanceControl.updateProSerTableMemVIP(tNo, d.tbBean.getMemDisc());
                         }
@@ -435,7 +472,7 @@ public class MainSale extends javax.swing.JDialog {
         tbShowBalance.setRowHeight(45);
 
         JTableHeader header = tbShowBalance.getTableHeader();
-        header.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 12));
+        header.setFont(Lang.screenFont("Tahoma", Font.BOLD, 12));
 
         JTableUtility.alignColumn(tbShowBalance, 2, "right");
         JTableUtility.alignColumn(tbShowBalance, 3, "right");
@@ -466,7 +503,7 @@ public class MainSale extends javax.swing.JDialog {
         txtTable.requestFocus();
 
         lbTotalAmount.setText("0.00");
-        jLabel1.setText("จำนวนรายการสินค้า: 0 รายการ");
+        jLabel1.setText(Lang.get("mainsale.itemCount", "0"));
 
         changeSaleType("E");
         getTableAction();
@@ -610,7 +647,7 @@ public class MainSale extends javax.swing.JDialog {
         jPopupMenu1.add(jMenuItem2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("โปรแกรมร้านอาหาร");
+        setTitle("โปรแกรมร้านอาหาร - ຊອບແວສຳລັບຮ້ານອາຫານ ");
         setBackground(new java.awt.Color(255, 204, 204));
         setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -624,7 +661,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
+        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว<br />ຍົກເລີກການ<br />ຈັດສົ່ງຈາກເຮືອນຄົວ</html>");
         btnCancel.setFocusable(false);
         btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCancel.setRequestFocusEnabled(false);
@@ -638,7 +675,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
-        btnHold.setText("ส่งครัว/พักบิล");
+        btnHold.setText("<html>ส่งครัว/พักบิล<br />ສົ່ງລາຍການເຂົ້າຄົວ/<br/>ພັກບິນໄວ້ກ່ອນ</html>");
         btnHold.setActionCommand("พักบิล/พักโต๊ะ (F3)");
         btnHold.setFocusable(false);
         btnHold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -654,7 +691,7 @@ public class MainSale extends javax.swing.JDialog {
 
         bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
-        bntPrintCheckBill.setText("พิมพ์ตรวจสอบ");
+        bntPrintCheckBill.setText("<html>พิมพ์ตรวจสอบ<br />ພິມອອກເພື່ອຢັ້ງຢືນ</html>");
         bntPrintCheckBill.setFocusable(false);
         bntPrintCheckBill.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bntPrintCheckBill.setRequestFocusEnabled(false);
@@ -668,7 +705,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
-        btnSplit.setText("แยกชำระ");
+        btnSplit.setText("<html>แยกชำระ<br />ການຊໍາລະແຍກກັນ</html>");
         btnSplit.setFocusable(false);
         btnSplit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSplit.setPreferredSize(new java.awt.Dimension(70, 61));
@@ -684,7 +721,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
-        btnPayment.setText("ชำระเงิน");
+        btnPayment.setText("<html>ชำระเงิน<br/>ຊໍາລະເງິນ</html>");
         btnPayment.setFocusable(false);
         btnPayment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPayment.setRequestFocusEnabled(false);
@@ -1534,7 +1571,7 @@ public class MainSale extends javax.swing.JDialog {
             );
         }
 
-        jLabel1.setText("จำนวนรายการสินค้า: " + tableFileControl.getItemCount(tableNo) + " รายการ");
+        jLabel1.setText(Lang.get("mainsale.itemCount", String.valueOf(tableFileControl.getItemCount(tableNo))));
         txtCust.setText("" + tfBean.getTCustomer());
 
         // for member
@@ -1543,7 +1580,7 @@ public class MainSale extends javax.swing.JDialog {
             PublicVar.MemberAlready = true;
             memberBean = MemmaterController.getMember(MemberCode);
             txtMember1.setText(memberBean.getMember_NameThai());
-            txtMember2.setText("แต้มสะสม : " + memberBean.getMember_TotalScore());
+            txtMember2.setText(Lang.get("mainsale.memberScore", String.valueOf(memberBean.getMember_TotalScore())));
         }
 
         pushToAdvertisingScreen(tfBean, totalDiscount);
@@ -1924,8 +1961,8 @@ public class MainSale extends javax.swing.JDialog {
         this.memberBean = MemmaterController.getMember(MBD.getMemCode());
         if (memberBean == null) {
             memberBean = null;
-            txtMember1.setText(" <ค้นหาสมาชิก> ");
-            txtMember2.setText(": แต้มสะสม");
+            txtMember1.setText(Lang.get("mainsale.memberSearch"));
+            txtMember2.setText(Lang.get("mainsale.memberScoreLabel"));
         } else {
             BalanceControl.updateProSerTable(tableNo, memberBean);
             try {
@@ -1969,8 +2006,8 @@ public class MainSale extends javax.swing.JDialog {
         MBD.setVisible(true);
         String memberCode = MBD.getMemCode();
         if (memberCode.equals("")) {
-            txtMember1.setText(" <ค้นหาสมาชิก> ");
-            txtMember2.setText(": แต้มสะสม");
+            txtMember1.setText(Lang.get("mainsale.memberSearch"));
+            txtMember2.setText(Lang.get("mainsale.memberScoreLabel"));
         }
     }//GEN-LAST:event_txtMember1ActionPerformed
 
@@ -3951,10 +3988,10 @@ public class MainSale extends javax.swing.JDialog {
             });
         }
 
-        btnGrid[BACK_BUTTON_SLOT].setText("กลับ");
+        btnGrid[BACK_BUTTON_SLOT].setText(Lang.get("common.back"));
         btnGrid[BACK_BUTTON_SLOT].setName(menuCode);
         btnGrid[BACK_BUTTON_SLOT].setFocusable(false);
-        btnGrid[BACK_BUTTON_SLOT].setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 14));
+        btnGrid[BACK_BUTTON_SLOT].setFont(Lang.screenFont("Tahoma", Font.BOLD | Font.ITALIC, 14));
         btnGrid[BACK_BUTTON_SLOT].setBackground(Color.GRAY);
         btnGrid[BACK_BUTTON_SLOT].addActionListener((ActionEvent e) -> {
             JButton btn = (JButton) e.getSource();
