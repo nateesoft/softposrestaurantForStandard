@@ -460,7 +460,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(344, 459));
+        setSize(new java.awt.Dimension(344, 474));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -306,7 +306,7 @@ public class EmployLoginDialog extends javax.swing.JDialog {
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(333, 470));
+        setSize(new java.awt.Dimension(333, 429));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
