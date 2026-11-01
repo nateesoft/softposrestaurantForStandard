@@ -788,7 +788,7 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         for (String data : strs) {
             pd.addTextIFont(data);
         }
-        pd.printHTML();
+        pd.printReportHTML();
 
     }
 

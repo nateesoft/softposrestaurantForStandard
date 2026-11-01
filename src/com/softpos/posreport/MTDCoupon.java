@@ -491,7 +491,7 @@ public class MTDCoupon extends javax.swing.JDialog {
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
 
     }
 

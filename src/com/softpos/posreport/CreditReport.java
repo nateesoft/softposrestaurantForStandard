@@ -527,7 +527,7 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             pd.addTextIFont(data1);
         }
 
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     private void insertTempCredit(String TRefno, String TCrCode, String TCrId, String TCrApp, Double TCrAmt) {

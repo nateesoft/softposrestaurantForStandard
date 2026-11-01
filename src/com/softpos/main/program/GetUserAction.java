@@ -173,7 +173,7 @@ public class GetUserAction extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(432, 202));
+        setSize(new java.awt.Dimension(423, 187));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

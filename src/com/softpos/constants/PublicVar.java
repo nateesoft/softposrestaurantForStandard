@@ -541,6 +541,7 @@ public class PublicVar {
     public static boolean printProcessing = false;
     public static String temp_table = "";
     public static String VoucherType = "";
+    // Receipt language button: "TH" = the shop language (connect.ini language: th, lo, ...), "EN" = English
     public static String languagePrint = "";
     public static String filePath = "";
     //ConfigFile

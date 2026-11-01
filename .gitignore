@@ -1,14 +1,19 @@
-/build/*
-/dist/*
-/lib/*
-connect.ini
-*.log*
-*.properties
-*.ini*
-*.htm*
+# Build output
+/build/
+/dist/
+
+# NetBeans: per-machine settings
+/nbproject/private/
+
+# Config with passwords / per-machine values
 /connect.ini
+
+# Runtime
+*.log*
 *.running
-connect.ini
-*.jar
-test-reports
-kic_pdf
+logs/
+test-reports/
+kic_pdf/
+
+# OS
+.DS_Store

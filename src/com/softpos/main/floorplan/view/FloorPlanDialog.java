@@ -1199,10 +1199,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        ShowTableDialog s = new ShowTableDialog(this, true);
-        setVisible(false);
-
-        s.setVisible(true);
+        ShowTableDialog showTableDialog = new ShowTableDialog(this, true);
+        showTableDialog.setVisible(true);
         if (!PublicVar.TableSelected.equals("")) {
             setVisible(false);
             if (autoRefreshTimer != null) {
@@ -1737,6 +1735,8 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     private final TableSetupControl tableSetupControl = AppContext.getTableSetupControl();
     List<FloorPlanBean> listFloorPlan = new ArrayList<>();
     private final Map<String, JButton> buttonMap = new HashMap<>();
+    // when the last table button click finished, see MouseFocusAction
+    private long tableActionDoneAt;
 
     private ImageIcon loadIcon(String path) {
         java.net.URL url = getClass().getResource(path);
@@ -2156,6 +2156,18 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             button.setFont(fontA);
             button.setBorder(null);
         }
+        // loadHeaderTab (startup and "กำหนดชื่อแต่ละ Tab") runs this again; a second listener would
+        // open the table twice, e.g. EmployLoginDialog shows again after Cancel
+        for (java.awt.event.MouseListener l : button.getMouseListeners()) {
+            if (l instanceof MouseClickAction) {
+                button.removeMouseListener(l);
+            }
+        }
+        for (ActionListener l : button.getActionListeners()) {
+            if (l instanceof MouseFocusAction) {
+                button.removeActionListener(l);
+            }
+        }
         button.addMouseListener(new FloorPlanDialog.MouseClickAction(button, c));
         button.addActionListener(new FloorPlanDialog.MouseFocusAction(button, c));
     }
@@ -2399,6 +2411,21 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            // A click made while the previous table click was still being handled (double click or
+            // tap, or a click queued behind EmployLoginDialog) would open the table again, e.g. the
+            // login dialog shows again after Cancel
+            if (e.getWhen() > 0 && e.getWhen() <= tableActionDoneAt) {
+                AppLogUtil.info("Ignore table click made before the previous one finished: " + button.getText().trim());
+                return;
+            }
+            try {
+                openTable();
+            } finally {
+                tableActionDoneAt = System.currentTimeMillis();
+            }
+        }
+
+        private void openTable() {
             String tableNo = button.getText().trim();
             AppLogUtil.info("Click Open Table: " + tableNo);
 

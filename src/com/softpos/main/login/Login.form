@@ -87,22 +87,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace pref="159" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lbUser" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbPass" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="15" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lbUser" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="15" pref="15" max="-2" attributes="0"/>
-                              <Component id="txtUser" min="-2" pref="226" max="-2" attributes="0"/>
-                              <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
-                              <Component id="btnLogin" min="-2" pref="149" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="20" pref="20" max="-2" attributes="0"/>
-                              <Component id="lbPass" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="16" pref="16" max="-2" attributes="0"/>
-                              <Component id="txtPass" min="-2" pref="226" max="-2" attributes="0"/>
-                              <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
-                              <Component id="btnCancel" min="-2" pref="149" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="txtUser" alignment="0" min="-2" pref="226" max="-2" attributes="0"/>
+                          <Component id="txtPass" alignment="0" min="-2" pref="226" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnLogin" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
+                          <Component id="btnCancel" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" pref="142" max="-2" attributes="0"/>
@@ -132,7 +129,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                      <Component id="lbPass" min="-2" pref="23" max="-2" attributes="0"/>
+                                      <Component id="lbPass" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="txtPass" min="-2" pref="35" max="-2" attributes="0"/>
                                   <Component id="btnCancel" min="-2" pref="35" max="-2" attributes="0"/>

@@ -28,6 +28,7 @@ import com.softpos.printer.control.PrinterDriverControl;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
 import com.softpos.util.NumberUtil;
+import javax.swing.JFrame;
 
 public class PrintInv1 extends javax.swing.JDialog {
 
@@ -1067,7 +1068,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ExtItemList ex = new ExtItemList(null, true);
+        ExtItemList ex = new ExtItemList(new JFrame(), true);
         ex.setVisible(true);
 
         if (!ExtItemList.data.equals("")) {
@@ -2144,7 +2145,7 @@ private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

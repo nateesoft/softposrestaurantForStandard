@@ -1,6 +1,7 @@
 package com.softpos.printer.control;
 
 import com.softpos.constants.PublicVar;
+import com.softpos.i18n.ReceiptTranslator;
 
 import java.awt.Font;
 import java.awt.print.PrinterException;
@@ -59,9 +60,19 @@ public class PrinterDriverControl {
         return editor;
     }
 
+    /** Receipts and bills: in the language of the TH/EN receipt button (PublicVar.languagePrint). */
     public void printHTML() {
+        printHTML(PublicVar.languagePrint);
+    }
+
+    /** Reports and slips: always in the shop language, whatever the last receipt button was. */
+    public void printReportHTML() {
+        printHTML("TH");
+    }
+
+    private void printHTML(String languagePrint) {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, languagePrint);
         AppLogUtil.info("printHTML: ");
         AppLogUtil.htmlFile(text);
 
@@ -124,7 +135,7 @@ public class PrinterDriverControl {
 
     public void printHTMLKitChen(String printerName) {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, "TH");
         AppLogUtil.info("printHTMLKitChen: " + printerName);
         AppLogUtil.htmlFile(text);
         try {
@@ -149,7 +160,7 @@ public class PrinterDriverControl {
 
     public void printHTMLKitChenByKictran(String printerName) {
         //Print Cashier
-        String text = header + textAll + footer;
+        String text = ReceiptTranslator.translateHtml(header + textAll + footer, "TH");
         AppLogUtil.info("printHTMLKitChenByKictran: ");
         AppLogUtil.htmlFile(text);
         try {

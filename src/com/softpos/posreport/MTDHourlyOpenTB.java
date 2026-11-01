@@ -631,7 +631,7 @@ public class MTDHourlyOpenTB extends javax.swing.JDialog {
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -740,7 +740,7 @@ private void txtCntOrderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     private void insertTempTopSale(String TGroup, String TCode, String TName, Double TQuan, Double Tamount) {

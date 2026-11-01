@@ -175,10 +175,10 @@ public class ShowTableDialog extends javax.swing.JDialog {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 431, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
                         .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -189,8 +189,9 @@ public class ShowTableDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -199,42 +200,46 @@ public class ShowTableDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void ShowTableLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ShowTableLoginKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_F8) {
-        int maxrow;
-        int currow = 0;
-        String TableSelected;
-        maxrow = ShowTableLogin.getRowCount();
-        if (maxrow > 0) {
-            for (int i = 0; i < maxrow; i++) {
-                if (ShowTableLogin.isRowSelected(i)) {
-                    currow = i;
+    switch (evt.getKeyCode()) {
+        case KeyEvent.VK_F8:
+            int maxrow;
+            int currow = 0;
+            String TableSelected;
+            maxrow = ShowTableLogin.getRowCount();
+            if (maxrow > 0) {
+                for (int i = 0; i < maxrow; i++) {
+                    if (ShowTableLogin.isRowSelected(i)) {
+                        currow = i;
+                    }
                 }
+                TableSelected = ShowTableLogin.getValueAt(currow, 0).toString();
+                AppContext.getTableFileControl().setTableNotActive(TableSelected);
+                loadDataToGrid();
             }
-            TableSelected = ShowTableLogin.getValueAt(currow, 0).toString();
-            AppContext.getTableFileControl().setTableNotActive(TableSelected);
+            break;
+        case KeyEvent.VK_ESCAPE:
+            cancelOrEscape();
+            break;
+        case KeyEvent.VK_F5:
             loadDataToGrid();
-        }
-
-    } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        PublicVar.ReturnString = "";
-        this.dispose();
-    } else if (evt.getKeyCode() == KeyEvent.VK_F5) {
-        loadDataToGrid();
-        int row = ShowTableLogin.getSelectedRow();
-        PublicVar.TableSelected = "";
-        if (row != -1) {
-            String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
-            if (!tableNo.equals("")) {
-                PublicVar.TableSelected = tableNo;
-                TableFileControl tfCont = AppContext.getTableFileControl();
-                if (tfCont.checkTableOpened(tableNo)) {
-                    MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
-                    PublicVar.TableSelected = "";
-                } else {
-                    this.dispose();
+            int row = ShowTableLogin.getSelectedRow();
+            PublicVar.TableSelected = "";
+            if (row != -1) {
+                String tableNo = ShowTableLogin.getValueAt(row, 0).toString();
+                if (!tableNo.equals("")) {
+                    PublicVar.TableSelected = tableNo;
+                    TableFileControl tfCont = AppContext.getTableFileControl();
+                    if (tfCont.checkTableOpened(tableNo)) {
+                        MSG.WAR(this, "มีพนักงานกำลังใช้งานโต๊ะนี้อยู่ !!!");
+                        PublicVar.TableSelected = "";
+                    } else {
+                        this.dispose();
+                    }
                 }
             }
-        }
+            break;
+        default:
+            break;
     }
 }//GEN-LAST:event_ShowTableLoginKeyPressed
 
@@ -243,12 +248,14 @@ private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_formWindowActivated
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
+        cancelOrEscape();
+    }//GEN-LAST:event_bntExitActionPerformed
+
+    private void cancelOrEscape() {
         PublicVar.ReturnString = "";
         PublicVar.TableSelected = "";
         this.dispose();
-        FloorPlanDialog fl = new FloorPlanDialog();
-        fl.setVisible(true);
-    }//GEN-LAST:event_bntExitActionPerformed
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int row = ShowTableLogin.getSelectedRow();

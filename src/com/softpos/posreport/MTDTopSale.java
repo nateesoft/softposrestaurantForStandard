@@ -661,7 +661,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void InsertTemp(String TGroup, String TCode, String TName, Double TQuan, Double Tamount) {

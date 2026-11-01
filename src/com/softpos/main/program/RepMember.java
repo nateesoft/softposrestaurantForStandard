@@ -23,6 +23,7 @@ import javax.swing.table.TableColumn;
 import com.softpos.util.component.DateChooseDialog;
 import com.softpos.util.MSG;
 import java.text.ParseException;
+import javax.swing.JFrame;
 
 public class RepMember extends javax.swing.JDialog {
 
@@ -546,8 +547,9 @@ private void cmdDateChoose3ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(null, true, point);
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+    if(dcd.getSelectDate() !=null){
+        ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+    }
 }//GEN-LAST:event_cmdDateChoose3ActionPerformed
 
 private void cmdDateChoose3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmdDateChoose3FocusGained
@@ -559,17 +561,17 @@ private void cmdDateChoose3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
 }//GEN-LAST:event_cmdDateChoose3KeyPressed
 
 private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDateChoose2ActionPerformed
-
     Point point = cmdDateChoose2.getLocationOnScreen();
     point.setLocation(point.getX(), point.getY());
-        com.softpos.util.component.DateChooseDialog dcd = new com.softpos.util.component.DateChooseDialog(new java.awt.Frame(), true, point);
+    DateChooseDialog dcd = new DateChooseDialog(new java.awt.Frame(), true, point);
     dcd.setVisible(true);
-    //dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+    if(dcd.getSelectDate() !=null){
+        ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+    }
 }//GEN-LAST:event_cmdDateChoose2ActionPerformed
 
     public void FindAr1Click() {
-        FindMember frm = new FindMember(null, true);
+        FindMember frm = new FindMember(new JFrame(), true);
         frm.setVisible(true);
         if (!PublicVar.ReturnString.equals("")) {
             arcode1.setText(PublicVar.ReturnString);
@@ -577,7 +579,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     public void FindAr2Click() {
-        FindMember frm = new FindMember(null, true);
+        FindMember frm = new FindMember(new JFrame(), true);
         frm.setVisible(true);
         if (!PublicVar.ReturnString.equals("")) {
             arcode2.setText(PublicVar.ReturnString);

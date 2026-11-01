@@ -56,7 +56,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
             pd.addTextIFont(">");
             pd.addTextIFont("colspan=3 align=left><font face=Angsana New size=2>" + "REG ID :" + POSHW.getTerminal());
             Prn.openDrawerDriver();
-            pd.printHTML();
+            pd.printReportHTML();
 
         } else if (!POSHW.getPRNPort().equals("NONE")) {
             if (Prn.openPrint(POSHW.getPRNPort())) {
@@ -460,7 +460,7 @@ public class PaidinFormDialog extends javax.swing.JDialog {
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setSize(new java.awt.Dimension(344, 459));
+        setSize(new java.awt.Dimension(344, 474));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

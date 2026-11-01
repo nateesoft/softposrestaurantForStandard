@@ -574,9 +574,11 @@ private void cmdDateChoose1ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, point);
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
-    ardate2.requestFocus();
+    
+    if(dcd.getSelectDate() !=null){
+        ardate2.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+        ardate2.requestFocus();
+    }
 }//GEN-LAST:event_cmdDateChoose1ActionPerformed
 
 private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDateChoose2ActionPerformed
@@ -584,10 +586,10 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
     point.setLocation(point.getX(), point.getY());
     DateChooseDialog dcd = new DateChooseDialog(new Frame(), true, point);
     dcd.setVisible(true);
-    // dcd.showDialog(new LookAndFeelFrame(), true, point);
-    ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
-    ardate1.requestFocus();
-//    ardate1.setText(ShowDatefmt.format(dcd.getSelectedDate().getTime()));
+    if(dcd.getSelectDate() !=null){
+        ardate1.setText(ShowDatefmt.format(dcd.getSelectDate().getTime()));
+        ardate1.requestFocus();
+    }
 }//GEN-LAST:event_cmdDateChoose2ActionPerformed
 
     public void FindAr1Click() {
@@ -768,7 +770,7 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         for (String data1 : strs) {
             pd.addTextIFont(data1);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void bntOKClick() {

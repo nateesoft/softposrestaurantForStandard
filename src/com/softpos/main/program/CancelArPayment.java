@@ -276,7 +276,7 @@ public class CancelArPayment extends javax.swing.JDialog {
         for (String data : strs) {
             pd.addTextIFont(data);
         }
-        pd.printHTML();
+        pd.printReportHTML();
     }
 
     public void showCell(int row, int column) {
