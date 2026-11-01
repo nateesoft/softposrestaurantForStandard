@@ -36,6 +36,7 @@ public class UrgentFoodDisplay extends javax.swing.JFrame {
                 for (int i = 0; i < 10; i++) {
                     try {
                         playSound();
+                        Thread.sleep(2000);
                     } catch (Exception e) {
                         AppLogUtil.log(UrgentFoodDisplay.class, "error", e);
                     }
