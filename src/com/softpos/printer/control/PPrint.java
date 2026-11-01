@@ -3080,7 +3080,7 @@ public class PPrint {
                         double amt = rs.getDouble("amt");
                         String quan = rs.getString("quan");
                         String name = rs.getString("name");
-                        t += (Space + "align=left><font face=Angsana New size=2>" + pUtility.DataFullR(name, 20) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
+                        t += (Space + "align=left><font face=Angsana New size=2>" + pUtility.DataFullR(name, 20) + TAB + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(quan, 6) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(amt), 13) + TAB + "_");
                     }
                 } catch (SQLException e) {
                     AppLogUtil.log(PPrint.class, "error", e);

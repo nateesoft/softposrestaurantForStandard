@@ -46,6 +46,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 printerName = ConfigFile.getProperties("printerName");
                 jLabel4.setText("Printer Active = " + printerName);
                 getDataFromKicTran();
+
                 System.out.println("Into Method UrgentFoodLoopCheck() " + countTime + this.getClass());
                 if (trickSound == true) {
                     for (int a = 0; a < 10; a++) {
@@ -55,7 +56,7 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 }
             }
         }).start();
-        
+
         if (printerConfigDriver.equals("true")) {
             new Thread(() -> {
                 for (int i = 0; i < 10; i++) {
@@ -98,12 +99,12 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                             UrgentFoodDisplay display = new UrgentFoodDisplay(tableNo, pcode, pdesc, pindex);
                             display.setVisible(true);
                         }
+
                     } else {
                         trickSound = false;
                     }
                 } catch (Exception e) {
                     AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                    MSG.NOTICE(this, e.getMessage());
                 }
 
                 try {
@@ -185,7 +186,6 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                         }
                     } catch (Exception e) {
                         AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                        MSG.ERR(this, e.getMessage());
                     }
                     try {
                         controller.markCheckoutPrinted(pTable, pIndex, pcode);
@@ -196,13 +196,12 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                     try {
                         controller.markCheckoutPrintedNoBalance(pTable, pIndex, pcode);
                     } catch (Exception e) {
-                        MSG.ERR(this, e.getMessage());
                         AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
                     }
                 }
             }
         } catch (Exception e) {
-            MSG.ERR(this, e.getMessage());
+            AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
         }
     }
 
@@ -230,9 +229,14 @@ public class UrgentFoodLoopCheck extends javax.swing.JFrame {
                 }
             } catch (Exception e) {
                 AppLogUtil.log(UrgentFoodLoopCheck.class, "error", e);
-                MSG.ERR(new JFrame(), e.getMessage());
             }
         }).start();
+    }
+
+    public static void main(String[] args) {
+        UrgentFoodLoopCheck urgent = new UrgentFoodLoopCheck();
+        urgent.setVisible(true);
+
     }
 
     /**

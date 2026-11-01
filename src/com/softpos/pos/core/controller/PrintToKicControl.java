@@ -163,7 +163,7 @@ public class PrintToKicControl {
                     + "and pkic='" + stationKicNo + "' "
                     + "limit 1;";
             try (ResultSet rs = mysqlConnect.executeQuery(sql)) {
-                if (rs.next() && !rs.wasNull()) {
+                if (rs.next()) {
                     bean = new PKicTranBean();
                     bean.setpTable(rs.getString("PTable"));
                     bean.setR_UrgentFoodItemName(rs.getString("R_UrgentFoodItemName"));

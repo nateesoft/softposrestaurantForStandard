@@ -134,11 +134,11 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         AdvertisingScreen.open();
         PublicVar.TableSelected = "";
 
-        jMenu9.setVisible(false);
-        jMenu1.setVisible(true);
-        jMenu2.setVisible(false);
-        jMenu3.setVisible(true);
-        jMenu4.setVisible(false);
+//        jMenu9.setVisible(false);
+//        jMenu1.setVisible(true);
+//        jMenu2.setVisible(false);
+//        jMenu3.setVisible(true);
+//        jMenu4.setVisible(false);
 
         jSeparator3.setVisible(false);
         MShowDailyEJ1.setVisible(false);
