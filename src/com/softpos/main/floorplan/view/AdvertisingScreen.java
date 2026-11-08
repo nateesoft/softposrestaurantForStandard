@@ -84,15 +84,17 @@ public class AdvertisingScreen extends JFrame {
      * แสดงข้อมูลการชำระเงินบนจอที่ 2
      *
      * @param tableNo    เลขโต๊ะ
+     * @param orderItems รายการอาหารที่สั่ง (ใช้ SaleInfoPanel.Item)
      * @param payLines   รายการวิธีชำระเงิน (ใช้ SaleInfoPanel.Item)
      * @param grandTotal ยอดชำระทั้งหมด
      * @param changeAmt  เงินทอน (0 = ยังไม่ได้ชำระ)
      */
     public static void showPaymentInfo(String tableNo,
+            List<SaleInfoPanel.Item> orderItems,
             List<SaleInfoPanel.Item> payLines,
             double grandTotal, double changeAmt) {
         if (instance == null) return;
-        instance.salePanel.updatePayment(tableNo, payLines, grandTotal, changeAmt);
+        instance.salePanel.updatePayment(tableNo, orderItems, payLines, grandTotal, changeAmt);
         instance.cards.show(instance.getContentPane(), CARD_SALE);
     }
 }

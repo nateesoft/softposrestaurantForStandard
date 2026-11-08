@@ -60,6 +60,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
     private double originalGrandTotal = 0;
+    private java.util.List<SaleInfoPanel.Item> orderItems = new java.util.ArrayList<>();
     private POSConfigSetup CONFIG;
     private PaymentControl checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
@@ -1962,7 +1963,26 @@ public class PaymentDialog extends javax.swing.JDialog {
             bntCashActionPerformed(null);
         }
         originalGrandTotal = parseAmount(txtTotalAmount.getText());
+        loadOrderItems(bc);
         pushPaymentInfo();
+    }
+
+    /** โหลดรายการอาหารสำหรับแสดงบนจอที่ 2 (ไม่ขึ้นกับ config PrintSum) */
+    private void loadOrderItems(BalanceControl bc) {
+        orderItems = new java.util.ArrayList<>();
+        DecimalFormat qtyFmt = new DecimalFormat("#,##0.##");
+        for (BalanceBean b : bc.getAllBalanceNoVoidSum(tableNo)) {
+            if ("V".equals(b.getR_Void())) {
+                continue;
+            }
+            String pluCode = b.getR_PluCode();
+            if (pluCode == null || pluCode.trim().isEmpty()) {
+                continue;
+            }
+            String etd = b.getR_ETD() == null ? "" : b.getR_ETD();
+            String name = (etd + " " + b.getR_PName()).trim();
+            orderItems.add(new SaleInfoPanel.Item(name, qtyFmt.format(b.getR_Quan()), dec.format(b.getR_Total())));
+        }
     }
 
     private double parseAmount(String text) {
@@ -2010,7 +2030,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         boolean isPaid = "เงินทอน".equals(Digital_Msg.getText());
         double change = isPaid ? parseAmount(txtTotalAmount.getText()) : 0;
 
-        AdvertisingScreen.showPaymentInfo(tableNo, payLines, originalGrandTotal, change);
+        AdvertisingScreen.showPaymentInfo(tableNo, orderItems, payLines, originalGrandTotal, change);
     }
 
     @Override

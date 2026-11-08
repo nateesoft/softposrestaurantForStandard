@@ -662,7 +662,7 @@ public class MainSale extends javax.swing.JDialog {
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว<br />ຍົກເລີກການ<br />ຈັດສົ່ງຈາກເຮືອນຄົວ</html>");
+        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
         btnCancel.setFocusable(false);
         btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCancel.setRequestFocusEnabled(false);
@@ -676,7 +676,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
-        btnHold.setText("<html>ส่งครัว/พักบิล<br />ສົ່ງລາຍການເຂົ້າຄົວ/<br/>ພັກບິນໄວ້ກ່ອນ</html>");
+        btnHold.setText("<html>ส่งครัว/พักบิล</html>");
         btnHold.setActionCommand("พักบิล/พักโต๊ะ (F3)");
         btnHold.setFocusable(false);
         btnHold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -692,7 +692,7 @@ public class MainSale extends javax.swing.JDialog {
 
         bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
-        bntPrintCheckBill.setText("<html>พิมพ์ตรวจสอบ<br />ພິມອອກເພື່ອຢັ້ງຢືນ</html>");
+        bntPrintCheckBill.setText("<html>พิมพ์ตรวจสอบ</html>");
         bntPrintCheckBill.setFocusable(false);
         bntPrintCheckBill.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bntPrintCheckBill.setRequestFocusEnabled(false);
@@ -706,7 +706,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
-        btnSplit.setText("<html>แยกชำระ<br />ການຊໍາລະແຍກກັນ</html>");
+        btnSplit.setText("<html>แยกชำระ</html>");
         btnSplit.setFocusable(false);
         btnSplit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSplit.setPreferredSize(new java.awt.Dimension(70, 61));
@@ -722,7 +722,7 @@ public class MainSale extends javax.swing.JDialog {
 
         btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
-        btnPayment.setText("<html>ชำระเงิน<br/>ຊໍາລະເງິນ</html>");
+        btnPayment.setText("<html>ชำระเงิน</html>");
         btnPayment.setFocusable(false);
         btnPayment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPayment.setRequestFocusEnabled(false);

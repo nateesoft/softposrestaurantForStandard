@@ -25,6 +25,7 @@ public class SaleInfoPanel extends JPanel {
     private String tableNo = "";
     private int customerCount = 0;
     private List<Item> items = new ArrayList<>();
+    private List<Item> payLines = new ArrayList<>();
     private double subTotal;
     private double serviceAmt;
     private double vatAmt;
@@ -62,28 +63,44 @@ public class SaleInfoPanel extends JPanel {
         this.serviceAmt = serviceAmt;
         this.vatAmt = vatAmt;
         this.grandTotal = grandTotal;
+        this.payLines = new ArrayList<>();
         this.paymentMode = false;
         this.changeAmt = 0;
         this.scrollOffset = 0;
         repaint();
     }
 
-    public void updatePayment(String tableNo, List<Item> payLines, double grandTotal, double change) {
+    public void updatePayment(String tableNo, List<Item> orderItems, List<Item> payLines,
+            double grandTotal, double change) {
+        boolean sameOrder = this.items.equals(orderItems) || (orderItems == null && this.items.isEmpty());
         this.tableNo = tableNo != null ? tableNo : "";
         this.customerCount = 0;
-        this.items = payLines != null ? new ArrayList<>(payLines) : new ArrayList<>();
+        this.items = orderItems != null ? new ArrayList<>(orderItems) : new ArrayList<>();
+        this.payLines = payLines != null ? new ArrayList<>(payLines) : new ArrayList<>();
         this.subTotal = 0;
         this.serviceAmt = 0;
         this.vatAmt = 0;
         this.grandTotal = grandTotal;
         this.paymentMode = true;
         this.changeAmt = change;
-        this.scrollOffset = 0;
+        if (!sameOrder) {
+            this.scrollOffset = 0;
+        }
         repaint();
     }
 
+    private static final int TOTAL_LINE_H = 34;
+    private static final int GRAND_BAR_H = 80;
+
+    /** ความสูงพื้นที่ยอดรวม — โหมดชำระเงินขยายตามจำนวนบรรทัดวิธีชำระ + เงินทอน */
+    private int totalsHeight() {
+        if (!paymentMode) return TOTALS_H;
+        int lines = payLines.size() + (changeAmt > 0 ? 1 : 0);
+        return Math.max(TOTALS_H, GRAND_BAR_H + lines * TOTAL_LINE_H + 20);
+    }
+
     private int maxVisibleRows() {
-        int availH = getHeight() - HEADER_H - 40 - TOTALS_H;
+        int availH = getHeight() - HEADER_H - 40 - totalsHeight();
         return Math.max(1, availH / ROW_H);
     }
 
@@ -188,7 +205,7 @@ public class SaleInfoPanel extends JPanel {
             String empty = "ยังไม่มีรายการสั่ง";
             FontMetrics fm = g2.getFontMetrics();
             int areaTop = HEADER_H + 40;
-            int areaH = h - areaTop - TOTALS_H;
+            int areaH = h - areaTop - totalsHeight();
             g2.drawString(empty, (w - fm.stringWidth(empty)) / 2, areaTop + areaH / 2);
             return;
         }
@@ -239,7 +256,7 @@ public class SaleInfoPanel extends JPanel {
     }
 
     private void paintTotals(Graphics2D g2, int w, int h) {
-        int sepY = h - TOTALS_H;
+        int sepY = h - totalsHeight();
 
         // Separator
         g2.setColor(new Color(255, 180, 50, 100));
@@ -256,6 +273,14 @@ public class SaleInfoPanel extends JPanel {
         FontMetrics fm = g2.getFontMetrics();
 
         if (paymentMode) {
+            // วิธีชำระเงิน (เงินสด / บัตรเครดิต / ...)
+            g2.setColor(new Color(200, 200, 215));
+            for (Item p : payLines) {
+                g2.drawString(p.name, labelX, y);
+                g2.drawString(p.amount, valueRightX - fm.stringWidth(p.amount), y);
+                y += lineH;
+            }
+
             // เงินทอน row (แสดงเฉพาะเมื่อมีเงินทอน)
             if (changeAmt > 0) {
                 g2.setColor(new Color(100, 255, 150));
