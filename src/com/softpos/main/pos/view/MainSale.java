@@ -156,7 +156,7 @@ public class MainSale extends javax.swing.JDialog {
                     }
                     break;
                 case KeyEvent.VK_F3:
-                    holdTableProcess();
+                    holdAndKitchenProcess();
                     break;
                 case KeyEvent.VK_F4:
                     showCheckBill();
@@ -183,7 +183,7 @@ public class MainSale extends javax.swing.JDialog {
         AppLogUtil.info("printCheckBillProcess: " + tableNo);
 
         // check print to kitchen
-        processPrintBillCheck();
+        processPrintBillCheck(tableNo);
 
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
@@ -193,22 +193,20 @@ public class MainSale extends javax.swing.JDialog {
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint("POS");
+            kichenPrint(tableNo);
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
-
-            printBillCheck();
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
         }
     }
 
-    private void paymentBillProcess() {
+    private void paymentDialogProcess() {
         AppLogUtil.info("paymentBillProcess: " + tableNo);
         TestEventBus.fire(TestEventBus.Event.CHECKBILL_OPEN, "table=" + tableNo);
 
         // check print to kitchen
-        processPrintBillCheck();
+        processPrintBillCheck(tableNo);
 
         if (btnClickPrintKic == true) {
             balanceControl.updateBalanceRKicByTableNo(tableNo);
@@ -220,7 +218,7 @@ public class MainSale extends javax.swing.JDialog {
             tableFileControl.updateTPauseYByTableNo(tableNo);
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint("POS");
+            kichenPrint(tableNo);
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
             tableFileControl.updateTPauseNByTableNo(tableNo);
@@ -229,10 +227,17 @@ public class MainSale extends javax.swing.JDialog {
         }
     }
 
-    private void processPrintBillCheck() {
+    private void processPrintBillCheck(String tableNo) {
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
             AppLogUtil.info("Condition to print bill check: " + tableNo);
-            printBillCheck();
+            
+            if (PublicVar.useprint) {
+                AppLogUtil.info("printBillCheck usePrint = " + PublicVar.useprint);
+                PPrint print = new PPrint();
+                print.printCheckBill(tableNo);
+            } else {
+                MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + PublicVar.useprint);
+            }
         }
     }
 
@@ -249,11 +254,11 @@ public class MainSale extends javax.swing.JDialog {
     // Screen texts come from com/softpos/i18n/messages_*.properties; initComponents() texts are designer defaults only
     private void applyLanguage() {
         setTitle(Lang.get("mainsale.title"));
-        btnCancel.setText(Lang.get("mainsale.btnCancel"));
-        btnHold.setText(Lang.get("mainsale.btnHold"));
+        btnCancelSendKic.setText(Lang.get("mainsale.btnCancel"));
+        btnHoldAndKitchen.setText(Lang.get("mainsale.btnHold"));
         bntPrintCheckBill.setText(Lang.get("mainsale.btnPrintCheckBill"));
-        btnSplit.setText(Lang.get("mainsale.btnSplit"));
-        btnPayment.setText(Lang.get("mainsale.btnPayment"));
+        btnBillSplitPayment.setText(Lang.get("mainsale.btnSplit"));
+        btnPaymentDialog.setText(Lang.get("mainsale.btnPayment"));
         jButton1.setText(Lang.get("mainsale.btnKeyboard"));
         btnLangTH.setText(Lang.get("mainsale.btnLangLocal"));
         jLabel14.setText(Lang.get("mainsale.customer"));
@@ -405,7 +410,7 @@ public class MainSale extends javax.swing.JDialog {
                     isTakeOrder();
 
                     if (!txtTypeDesc.getText().equals(SALE_DINE_IN)) {
-                        CustomerName ccd = new CustomerName(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+                        CustomerName ccd = new CustomerName(new JFrame(), true, tNo, txtShowETD.getText());
                         ccd.setVisible(true);
 
                     }
@@ -524,11 +529,11 @@ public class MainSale extends javax.swing.JDialog {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        btnCancel = new javax.swing.JButton();
-        btnHold = new javax.swing.JButton();
+        btnCancelSendKic = new javax.swing.JButton();
+        btnHoldAndKitchen = new javax.swing.JButton();
         bntPrintCheckBill = new javax.swing.JButton();
-        btnSplit = new javax.swing.JButton();
-        btnPayment = new javax.swing.JButton();
+        btnBillSplitPayment = new javax.swing.JButton();
+        btnPaymentDialog = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         lbTotalAmount = new javax.swing.JLabel();
         tbpMain = new javax.swing.JTabbedPane();
@@ -661,34 +666,34 @@ public class MainSale extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnCancel.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
-        btnCancel.setFocusable(false);
-        btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCancel.setRequestFocusEnabled(false);
-        btnCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelSendKic.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnCancelSendKic.setText("<html>ยกเลิกราย<br />การก่อนส่งครัว</html>");
+        btnCancelSendKic.setFocusable(false);
+        btnCancelSendKic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCancelSendKic.setRequestFocusEnabled(false);
+        btnCancelSendKic.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCancelSendKic.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
+                btnCancelSendKicActionPerformed(evt);
             }
         });
-        jPanel2.add(btnCancel);
+        jPanel2.add(btnCancelSendKic);
 
-        btnHold.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnHold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
-        btnHold.setText("<html>ส่งครัว/พักบิล</html>");
-        btnHold.setActionCommand("พักบิล/พักโต๊ะ (F3)");
-        btnHold.setFocusable(false);
-        btnHold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnHold.setPreferredSize(new java.awt.Dimension(70, 61));
-        btnHold.setRequestFocusEnabled(false);
-        btnHold.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnHold.addActionListener(new java.awt.event.ActionListener() {
+        btnHoldAndKitchen.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnHoldAndKitchen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hold.png"))); // NOI18N
+        btnHoldAndKitchen.setText("<html>ส่งครัว/พักบิล</html>");
+        btnHoldAndKitchen.setActionCommand("พักบิล/พักโต๊ะ (F3)");
+        btnHoldAndKitchen.setFocusable(false);
+        btnHoldAndKitchen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnHoldAndKitchen.setPreferredSize(new java.awt.Dimension(70, 61));
+        btnHoldAndKitchen.setRequestFocusEnabled(false);
+        btnHoldAndKitchen.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnHoldAndKitchen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHoldActionPerformed(evt);
+                btnHoldAndKitchenActionPerformed(evt);
             }
         });
-        jPanel2.add(btnHold);
+        jPanel2.add(btnHoldAndKitchen);
 
         bntPrintCheckBill.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         bntPrintCheckBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
@@ -704,35 +709,35 @@ public class MainSale extends javax.swing.JDialog {
         });
         jPanel2.add(bntPrintCheckBill);
 
-        btnSplit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnSplit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
-        btnSplit.setText("<html>แยกชำระ</html>");
-        btnSplit.setFocusable(false);
-        btnSplit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSplit.setPreferredSize(new java.awt.Dimension(70, 61));
-        btnSplit.setRequestFocusEnabled(false);
-        btnSplit.setRolloverEnabled(false);
-        btnSplit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSplit.addActionListener(new java.awt.event.ActionListener() {
+        btnBillSplitPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnBillSplitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/split.png"))); // NOI18N
+        btnBillSplitPayment.setText("<html>แยกชำระ</html>");
+        btnBillSplitPayment.setFocusable(false);
+        btnBillSplitPayment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBillSplitPayment.setPreferredSize(new java.awt.Dimension(70, 61));
+        btnBillSplitPayment.setRequestFocusEnabled(false);
+        btnBillSplitPayment.setRolloverEnabled(false);
+        btnBillSplitPayment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnBillSplitPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSplitActionPerformed(evt);
+                btnBillSplitPaymentActionPerformed(evt);
             }
         });
-        jPanel2.add(btnSplit);
+        jPanel2.add(btnBillSplitPayment);
 
-        btnPayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
-        btnPayment.setText("<html>ชำระเงิน</html>");
-        btnPayment.setFocusable(false);
-        btnPayment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnPayment.setRequestFocusEnabled(false);
-        btnPayment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnPayment.addActionListener(new java.awt.event.ActionListener() {
+        btnPaymentDialog.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnPaymentDialog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/เช็คบิล.png"))); // NOI18N
+        btnPaymentDialog.setText("<html>ชำระเงิน</html>");
+        btnPaymentDialog.setFocusable(false);
+        btnPaymentDialog.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnPaymentDialog.setRequestFocusEnabled(false);
+        btnPaymentDialog.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPaymentDialog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPaymentActionPerformed(evt);
+                btnPaymentDialogActionPerformed(evt);
             }
         });
-        jPanel2.add(btnPayment);
+        jPanel2.add(btnPaymentDialog);
 
         jPanel3.setBackground(new java.awt.Color(255, 102, 0));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1407,7 +1412,7 @@ public class MainSale extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     private void tableOpened() {
-        if (!txtTable.getText().trim().equals("")) {
+        if (!tableNo.trim().equals("")) {
             txtTableOnExit();
             if (!CONFIG.getP_EmpUse().equals("Y")) {
                 if (PublicVar.TableRec_TCustomer == 0) {
@@ -1422,7 +1427,7 @@ public class MainSale extends javax.swing.JDialog {
             }
             return;
         }
-        if (txtTable.getText().trim().length() > 5) {
+        if (tableNo.trim().length() > 5) {
             MSG.ERR(this, "หมายเลขโต๊ะต้องกำหนดเป็นตัวเลข 0-9 เท่านั้น และกำหนดได้ไม่เกิน 5 ตัวอักษร...");
             txtTable.selectAll();
             txtTable.requestFocus();
@@ -1856,21 +1861,21 @@ public class MainSale extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tbShowBalanceMouseClicked
 
-    private void btnHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldActionPerformed
-        holdTableProcess();
-    }//GEN-LAST:event_btnHoldActionPerformed
+    private void btnHoldAndKitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoldAndKitchenActionPerformed
+        holdAndKitchenProcess();
+    }//GEN-LAST:event_btnHoldAndKitchenActionPerformed
 
-    private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
-        paymentBillProcess();
-    }//GEN-LAST:event_btnPaymentActionPerformed
+    private void btnPaymentDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentDialogActionPerformed
+        paymentDialogProcess();
+    }//GEN-LAST:event_btnPaymentDialogActionPerformed
 
-    private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
-        splitBillProcess();
-    }//GEN-LAST:event_btnSplitActionPerformed
+    private void btnBillSplitPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillSplitPaymentActionPerformed
+        splitBillPaymentProcess();
+    }//GEN-LAST:event_btnBillSplitPaymentActionPerformed
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        cancelItemBeforeHold();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    private void btnCancelSendKicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelSendKicActionPerformed
+        cancelSendKitchenProcess();
+    }//GEN-LAST:event_btnCancelSendKicActionPerformed
 
     private void txtTableFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTableFocusGained
         if (!PublicVar.TableSelected.equals("")) {
@@ -1887,7 +1892,7 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCustFocusGained
 
     private void txtCustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCustMouseClicked
-        CustomerCountDialog ccd = new CustomerCountDialog(this, true, txtTable.getText(), txtShowETD.getText());
+        CustomerCountDialog ccd = new CustomerCountDialog(this, true, tableNo, txtShowETD.getText());
         ccd.setVisible(true);
 
         showSum();
@@ -1970,7 +1975,7 @@ public class MainSale extends javax.swing.JDialog {
                 if (ValidateValue.isNotEmpty(memberBean.getMember_Code()) && memberBean != null) {
                     txtMember1.setText(memberBean.getMember_NameThai());
                     txtMember2.setText(QtyIntFmt.format(memberBean.getMember_TotalScore()));
-                    loadTableBalance(txtTable.getText());
+                    loadTableBalance(tableNo);
                 }
             } catch (Exception e) {
                 MSG.ERR(this, e.getMessage());
@@ -2057,14 +2062,14 @@ public class MainSale extends javax.swing.JDialog {
 
     }
 
-    private void bntcheckbillClick() {
+    private void bntCheckBillClick() {
         if (!chkEJPath()) {
             return;
         }
         PublicVar.ErrorColect = false;
         PublicVar.ProcessType = "1"; //For Check Bill
 
-        PaymentDialog frm = new PaymentDialog(this, true, txtTable.getText(), memberBean, "", "");
+        PaymentDialog frm = new PaymentDialog(this, true, tableNo, memberBean, "", "");
         frm.setVisible(true);
 
         if (PublicVar.SubTotalOK) {
@@ -2089,7 +2094,7 @@ public class MainSale extends javax.swing.JDialog {
 
             //visible MainSale
             setVisible(false);
-            PaymentDialog frm = new PaymentDialog(this, true, txtTable.getText(), memberBean, "", "");
+            PaymentDialog frm = new PaymentDialog(this, true, tableNo, memberBean, "", "");
             frm.setVisible(true);
             if (PublicVar.SubTotalOK) {
                 initScreen();
@@ -2099,7 +2104,7 @@ public class MainSale extends javax.swing.JDialog {
                 PublicVar.TableSelected = "";
                 showFloorPlan();
             } else {
-                loadTableBalance(txtTable.getText());
+                loadTableBalance(tableNo);
                 showSum();
                 setVisible(true);
             }
@@ -2125,7 +2130,7 @@ public class MainSale extends javax.swing.JDialog {
             PosUserBean posUserbean = posUserControl.getPosUser();
             boolean isPermit = posUserbean.getSale3().equals("Y");
             if (isPermit) {//มีสิทธิ์ Void
-                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, tableNo, memberBean);
                 voidD.setVisible(true);
                 if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
 
@@ -2153,7 +2158,7 @@ public class MainSale extends javax.swing.JDialog {
                             if (voidposUser.getSale3().equals("Y")) {
 //                            if (posUser.getSale3().equals("Y")) {
                                 PublicVar.TUserRec = posUser;
-                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, tableNo, memberBean);
                                 voidD.setVisible(true);
                                 if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
                                     //check link r (28/02/2016 15:12)
@@ -2163,12 +2168,12 @@ public class MainSale extends javax.swing.JDialog {
                                         hasValue = true;
                                         procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
 //                                        procVoid(balanceBean.getR_Index(), VoidPopupDialog.VOID_MSG[1], posUser.getUserName());
-                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
                                     }
 
                                     if (!hasValue) {
                                         procVoid(R_Index, VoidPopupDialog.VOID_MSG[1], voidposUser.getUserName());
-                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+                                        txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
                                     }
                                     showCell(row, 0);
                                 }
@@ -2187,7 +2192,7 @@ public class MainSale extends javax.swing.JDialog {
                         if (posUser.getUserName() != null) {
                             if (posUser.getSale4().equals("Y")) {
                                 PublicVar.TUserRec = posUser;
-                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, txtTable.getText(), memberBean);
+                                VoidPopupDialog voidD = new VoidPopupDialog(new JFrame(), true, tableNo, memberBean);
                                 voidD.setVisible(true);
                                 if (!VoidPopupDialog.VOID_MSG[0].equals("")) {
 
@@ -2222,7 +2227,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void procVoid(String RIndex, String voidMsg, String LoginName) {
         BalanceControl branchControl = AppContext.getBalanceControl();
-        BalanceBean bean = branchControl.getBalanceIndex(txtTable.getText(), RIndex);
+        BalanceBean bean = branchControl.getBalanceIndex(tableNo, RIndex);
 
         if (bean.getR_Void().equals("V")) {
             bean.setR_Void("");
@@ -2235,11 +2240,11 @@ public class MainSale extends javax.swing.JDialog {
             String StkCode = PUtility.GetStkCode();
             if (PublicVar.ChargeCode.equals("")) {
                 StkRemark = "SAL";
-                DocNo = "EV" + txtTable.getText() + "/" + Timefmt.format(new Date());
+                DocNo = "EV" + tableNo + "/" + Timefmt.format(new Date());
             } else {
                 StkRemark = "FRE";
                 if (PublicVar.ChargeDocNo.equals("")) {
-                    DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    DocNo = tableNo + "/" + Timefmt.format(new Date());
                     PublicVar.ChargeDocNo = DocNo;
                 } else {
                     DocNo = PublicVar.ChargeDocNo;
@@ -2276,11 +2281,11 @@ public class MainSale extends javax.swing.JDialog {
             String DocNo;
             if (PublicVar.ChargeCode.equals("")) {
                 StkRemark = "SAL";
-                DocNo = "V" + txtTable.getText() + "/" + Timefmt.format(new Date());
+                DocNo = "V" + tableNo + "/" + Timefmt.format(new Date());
             } else {
                 StkRemark = "FRE";
                 if (PublicVar.ChargeDocNo.equals("")) {
-                    DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    DocNo = tableNo + "/" + Timefmt.format(new Date());
                     PublicVar.ChargeDocNo = DocNo;
                 } else {
                     DocNo = PublicVar.ChargeDocNo;
@@ -2314,11 +2319,11 @@ public class MainSale extends javax.swing.JDialog {
         }
 
         //update promotion, discount
-        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+        BalanceControl.updateProSerTable(tableNo, memberBean);
         PublicVar.ErrorColect = false;
         PublicVar.TableRec_DiscBath = 0.0;
 
-        loadTableBalance(txtTable.getText());
+        loadTableBalance(tableNo);
     }
 
     private void showCell(int row, int column) {
@@ -2342,7 +2347,7 @@ public class MainSale extends javax.swing.JDialog {
             String RIndex = model.getValueAt(row, 10).toString();
             if (!RKicPrint.equals("P")) {
                 if (!RVoid.equals("V")) {
-                    OptionMsg frm = new OptionMsg(new JFrame(), true, txtTable.getText(), RIndex);
+                    OptionMsg frm = new OptionMsg(new JFrame(), true, tableNo, RIndex);
                     frm.setVisible(true);
                 } else {
                     MSG.WAR(this, "รายการนี้ได้ยกเลิกออกจากบิลแล้ว ไม่สามารถใส่ข้อความพิเศษได้ !");
@@ -2440,14 +2445,14 @@ public class MainSale extends javax.swing.JDialog {
         boolean ChangOk = false;
         int row = tbShowBalance.getSelectedRow();
         if (row != -1) {
-            if (!txtTable.getText().trim().equals("")) {
+            if (!tableNo.trim().equals("")) {
                 PublicVar.ChangTypeOK = false;
-                ChangTypeDialog frm = new ChangTypeDialog(new JFrame(), true, txtTable.getText(), txtShowETD.getText());
+                ChangTypeDialog frm = new ChangTypeDialog(new JFrame(), true, tableNo, txtShowETD.getText());
                 frm.setVisible(true);
                 if (PublicVar.ChangTypeOK) {
                     if (ChangOk) {
                         clearDataMem();
-                        loadTableBalance(txtTable.getText());
+                        loadTableBalance(tableNo);
                         txtProductCode.requestFocus();
                     }
                 }
@@ -2624,7 +2629,7 @@ public class MainSale extends javax.swing.JDialog {
         balance.setCashier(PublicVar.USERCODE);
         balance.setR_ETD(etd);
         balance.setR_Quan(R_Quan);
-        balance.setR_Table(txtTable.getText());
+        balance.setR_Table(tableNo);
         balance.setR_Emp(emp);
 
         balance.setR_PrCuType("");
@@ -2725,7 +2730,7 @@ public class MainSale extends javax.swing.JDialog {
 
         //Process Stock Out
         String StkRemark = "SAL";
-        String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+        String DocNo = tableNo + "/" + Timefmt.format(new Date());
         if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
             PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                     balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
@@ -2757,13 +2762,13 @@ public class MainSale extends javax.swing.JDialog {
         }
 
         //update promotion
-        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
-        String Discount = BalanceControl.GetDiscount(txtTable.getText());
+        BalanceControl.updateProSerTable(tableNo, memberBean);
+        String Discount = BalanceControl.GetDiscount(tableNo);
         txtDiscount.setText("- " + Discount);
         PublicVar.ErrorColect = true;
     }
 
-    private void kichenPrint(String MachineType) {
+    private void kichenPrint(String tableNo) {
         tableFileControl.updateTPauseYByTableNo(tableNo);
 
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
@@ -2804,23 +2809,23 @@ public class MainSale extends javax.swing.JDialog {
 
             switch (printerForm) {
                 case "1": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic, balanceBean.getR_ETD(),"POS");
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic, balanceBean.getR_ETD(),"POS");
                     for (BalanceBean balance : listBalanceForm) {
                         String PCode = balance.getR_PluCode();
                         String R_ETD = balance.getR_ETD();
                         if (printerForm.equals("1")) {
-                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode}, R_ETD,"POS");
+                            printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode}, R_ETD,"POS");
                         }
                     }
                     break;
                 }
                 case "8": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(txtTable.getText(), rKic, balanceBean.getR_ETD(),"POS");
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm1(tableNo, rKic, balanceBean.getR_ETD(),"POS");
                     for (BalanceBean balance : listBalanceForm) {
                         String PCode = balance.getR_PluCode();
                         String R_ETD = balance.getR_ETD();
                         if (printerForm.equals("1")) {
-                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode}, R_ETD,"POS");
+                            printSimpleForm.KIC_FORM_1(printerName, tableNo, new String[]{PCode}, R_ETD,"POS");
                         }
                     }
                     break;
@@ -2847,24 +2852,16 @@ public class MainSale extends javax.swing.JDialog {
 
             switch (printerForm) {
                 case "1": {
-//                    List<BalanceBean> listBalanceForm = mainSaleControl.getListAllPrintToKicForm_1(txtTable.getText());
-//                    for (BalanceBean balance : listBalanceForm) {
-//                        String PCode = balance.getR_PluCode();
-//                        String R_ETD = balance.getR_ETD();
-//                        if (printerForm.equals("1")) {
-////                            printSimpleForm.KIC_FORM_1(printerName, txtTable.getText(), new String[]{PCode});
-//                        }
                     }
                     break;
-//                }
                 case "6": {
-                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(txtTable.getText(), rKic);
+                    List<BalanceBean> listBalanceForm = mainSaleControl.printOnlyForm6(tableNo, rKic);
                     for (BalanceBean balance : listBalanceForm) {
                         String R_Index = balance.getR_Index();
                         String R_PLUCODE = balance.getR_PluCode();
                         double qty = balance.getR_Quan();
                         double priceTotal = balance.getR_Total();
-                        printSimpleForm.KIC_FORM_6(printerName, txtTable.getText(), R_Index, R_PLUCODE, qty, priceTotal);
+                        printSimpleForm.KIC_FORM_6(printerName, tableNo, R_Index, R_PLUCODE, qty, priceTotal);
                     }
                     break;
                 }
@@ -2882,11 +2879,11 @@ public class MainSale extends javax.swing.JDialog {
                             }
                             break;
                         case "4":
-                            printSimpleForm.KIC_FORM_4(printerName, txtTable.getText());
+                            printSimpleForm.KIC_FORM_4(printerName, tableNo);
                             printBillVoidCheck();
                             break;
                         case "5":
-                            printSimpleForm.KIC_FORM_5(printerName, txtTable.getText());
+                            printSimpleForm.KIC_FORM_5(printerName, tableNo);
                             printBillVoidCheck();
                             break;
                         default:
@@ -2908,7 +2905,7 @@ public class MainSale extends javax.swing.JDialog {
             }
         }
 
-        checkKicPrint();
+        checkKicPrint(tableNo);
 
         //update r_kicprint
         balanceControl.updateBalanceByKicPrintIsPAndPrintOKIsY(tableNo);
@@ -2966,7 +2963,7 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void txtTableOnExit() {
-        TableFileBean tableFileBean = mainSaleControl.getTableFileByCode(txtTable.getText().trim());
+        TableFileBean tableFileBean = mainSaleControl.getTableFileByCode(tableNo.trim());
         if (tableFileBean != null) {
             if (tableFileBean.getTOnAct().equals("Y") && tableFileBean.getTAmount() > 0) {
                 MSG.WAR(this, "มีพนักงานกำลังป้อนรายการโต๊ะนี้อยู่...");
@@ -2980,16 +2977,16 @@ public class MainSale extends javax.swing.JDialog {
                 txtCust.setText("" + tableFileBean.getTCustomer());
                 txtCust.setEditable(false);
 
-                tableFileControl.updateTOnactYMacnoCashierByTCode(PublicVar.MACNO, PublicVar.USERCODE, DateUtil.getMySQL_yyyyMMdd(), DateUtil.getMySQL_HHmmss(), txtTable.getText().trim());
+                tableFileControl.updateTOnactYMacnoCashierByTCode(PublicVar.MACNO, PublicVar.USERCODE, DateUtil.getMySQL_yyyyMMdd(), DateUtil.getMySQL_HHmmss(), tableNo.trim());
 
                 tbpMain.setSelectedIndex(0);
 
                 //คำนวณ promotion/service/vat ก่อน load ข้อมูล
                 this.memberBean = MemmaterController.getMember(tableFileBean.getMemCode());
-                BalanceControl.updateProSerTable(txtTable.getText().trim(), memberBean);
+                BalanceControl.updateProSerTable(tableNo.trim(), memberBean);
 
                 //load data to table
-                loadTableBalance(txtTable.getText());
+                loadTableBalance(tableNo);
                 TableOpenStatus = true;
             }
         } else {
@@ -3005,21 +3002,21 @@ public class MainSale extends javax.swing.JDialog {
 
     private void orderMenuToBalance() {
         saveMenuToBalance();
-        loadTableBalance(txtTable.getText());
+        loadTableBalance(tableNo);
         txtProductCode.setText("");
         txtProductCode.requestFocus();
     }
 
     //ปุ่มพักโต๊ะ
     private void bntHoldTableClick() {
-        if (txtTable.getText().length() > 0 && tbShowBalance.getRowCount() > 0) {
+        if (tableNo.length() > 0 && tbShowBalance.getRowCount() > 0) {
             if (btnClickPrintKic == true) {
                 balanceControl.updateRKicByKicPrintNotPAndRTable(tableNo);
             }
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint("POS");
+            kichenPrint(tableNo);
             holdTableAndSave();
 
             PublicVar.ErrorColect = false;
@@ -3036,12 +3033,12 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void updateCustomerCount(int custCount) {
-        tableFileControl.updateTOnActAndCustomerByTCode(custCount, PublicVar.MACNO, txtTable.getText());
+        tableFileControl.updateTOnActAndCustomerByTCode(custCount, PublicVar.MACNO, tableNo);
         txtProductCode.requestFocus();
     }
 
     private void holdTableAndSave() {
-        tableFileControl.updateTOnActMacNoTPauseByTableNo(PublicVar.MACNO, txtTable.getText());
+        tableFileControl.updateTOnActMacNoTPauseByTableNo(PublicVar.MACNO, tableNo);
 
         showSum();
     }
@@ -3106,13 +3103,13 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showTableAvialble() {
         if (!PUtility.CheckCashierClose(PublicVar._User)) {
-            if (txtTable.getText().trim().equals("")) {
+            if (tableNo.trim().equals("")) {
                 ShowTableDialog frm = new ShowTableDialog(new JFrame(), true);
                 frm.setVisible(true);
 
                 if (!PublicVar.ReturnString.equals("")) {
                     txtTable.setText(PublicVar.TableSelected);
-                    if (txtTable.getText().trim().length() > 0) {
+                    if (tableNo.trim().length() > 0) {
                         txtTable.setEditable(false);
                         txtTableOnExit();
                         if (PublicVar.TableRec_TCustomer == 0) {
@@ -3229,8 +3226,9 @@ public class MainSale extends javax.swing.JDialog {
     private javax.swing.JMenuItem MRepInvCash1;
     private javax.swing.JMenuItem MRepMemberHistory1;
     private javax.swing.JButton bntPrintCheckBill;
-    private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnHold;
+    private javax.swing.JButton btnBillSplitPayment;
+    private javax.swing.JButton btnCancelSendKic;
+    private javax.swing.JButton btnHoldAndKitchen;
     private javax.swing.JRadioButton btnLangEN;
     private javax.swing.JRadioButton btnLangTH;
     private javax.swing.JButton btnP1;
@@ -3265,10 +3263,9 @@ public class MainSale extends javax.swing.JDialog {
     private javax.swing.JButton btnP7;
     private javax.swing.JButton btnP8;
     private javax.swing.JButton btnP9;
-    private javax.swing.JButton btnPayment;
+    private javax.swing.JButton btnPaymentDialog;
     private javax.swing.JButton btnPrintKic;
     private javax.swing.JButton btnRecalAllItem;
-    private javax.swing.JButton btnSplit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem3;
@@ -3327,8 +3324,8 @@ public class MainSale extends javax.swing.JDialog {
     private javax.swing.JTextField txtTypeDesc;
     // End of variables declaration//GEN-END:variables
 
-    private void splitBillProcess() {
-        SplitBillPayment sp = new SplitBillPayment(this, true, txtTable.getText());
+    private void splitBillPaymentProcess() {
+        SplitBillPayment sp = new SplitBillPayment(this, true, tableNo);
         sp.setVisible(true);
 
         if (!sp.getTable2().equals("")) {
@@ -3336,7 +3333,7 @@ public class MainSale extends javax.swing.JDialog {
             txtTable.setText(sp.getTable2());
             tableOpened();
             txtCustOnExit();
-            txtDiscount.setText(BalanceControl.GetDiscount(txtTable.getText()));
+            txtDiscount.setText(BalanceControl.GetDiscount(tableNo));
         }
         sumSplit();
     }
@@ -3363,21 +3360,21 @@ public class MainSale extends javax.swing.JDialog {
 
                 // update old order
                 MemberControl mc = AppContext.getMemberControl();
-                mc.updateMemberAllBalance(txtTable.getText(), memberBean);
+                mc.updateMemberAllBalance(tableNo, memberBean);
 
                 // update all discount and promotion
-                BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+                BalanceControl.updateProSerTable(tableNo, memberBean);
             }
         }
 
         showSum();
     }
 
-    private void holdTableProcess() {
+    private void holdAndKitchenProcess() {
         AppLogUtil.info("Hold Table: " + tableNo);
 
         // check print to kitchen
-        processPrintBillCheck();
+        processPrintBillCheck(tableNo);
 
         tbpMain.setSelectedIndex(0);
 
@@ -3409,8 +3406,8 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showBillCheck() {
         if (model.getRowCount() > 0) {
-            kichenPrint("POS");
-            bntcheckbillClick();
+            kichenPrint(tableNo);
+            bntCheckBillClick();
         }
     }
 
@@ -3422,7 +3419,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showCheckBill() {
         if (model.getRowCount() > 0) {
-            kichenPrint("POS");
+            kichenPrint(tableNo);
             btnPaymentClick();
         }
     }
@@ -3466,7 +3463,7 @@ public class MainSale extends javax.swing.JDialog {
                 switch (typeIndex) {
                     case "ItemOption":
                         bntoptionClick();
-                        loadTableBalance(txtTable.getText());
+                        loadTableBalance(tableNo);
                         break;
                     case "TypeSale":
                         if (model.getRowCount() > 0) {
@@ -3482,10 +3479,10 @@ public class MainSale extends javax.swing.JDialog {
                         if (checkCanDisc(RIndex)) {
                             if (model.getRowCount() > 0) {
                                 if (!PCode.equals("") && !PVoid.equals("V")) {
-                                    ItemDiscount i = new ItemDiscount(new JFrame(), true, txtTable.getText(), RIndex, memberBean);
+                                    ItemDiscount i = new ItemDiscount(new JFrame(), true, tableNo, RIndex, memberBean);
                                     i.setVisible(true);
 
-                                    loadTableBalance(txtTable.getText());
+                                    loadTableBalance(tableNo);
                                     txtProductCode.setText("");
                                     txtProductCode.requestFocus();
                                 }
@@ -3496,7 +3493,7 @@ public class MainSale extends javax.swing.JDialog {
                         break;
                     case "ItemVoid":
                         if (RPause.equalsIgnoreCase("P") && !RKicPrint.equals("P")) {
-                            cancelItemBeforeHold();
+                            cancelSendKitchenProcess();
                         } else {
                             if (!PCode.equals("") && !PVoid.equals("V")) {
                                 bntVoidClick();
@@ -3511,20 +3508,20 @@ public class MainSale extends javax.swing.JDialog {
                         //*ให้อัพเดตข้อมูลใน balance เป็นเครื่องหมาย -P และถอดโปรส่วนลดออกให้หมด
                         break;
                     case "ItemMove":
-                        MoveItemDialog m = new MoveItemDialog(new JFrame(), true, txtTable.getText());
+                        MoveItemDialog m = new MoveItemDialog(new JFrame(), true, tableNo);
                         m.setVisible(true);
                         break;
                     case "EditQty":
-                        ItemEditQty itemEditQty = new ItemEditQty(this, true, txtTable.getText(), RIndex, memberBean);
+                        ItemEditQty itemEditQty = new ItemEditQty(this, true, tableNo, RIndex, memberBean);
                         itemEditQty.setVisible(true);
                         break;
                     default:
                         break;
                 }
             }
-            BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
+            BalanceControl.updateProSerTable(tableNo, memberBean);
             //load data from balance
-            loadTableBalance(txtTable.getText());
+            loadTableBalance(tableNo);
         }
     }
 
@@ -3623,8 +3620,8 @@ public class MainSale extends javax.swing.JDialog {
         boolean isTakeOrder = false;
         POSHWSetup poshwSetup = PosControl.getData(PublicVar.MACNO);
         if (poshwSetup.getTakeOrderChk().equals("Y")) {
-            btnPayment.setVisible(false);
-            btnSplit.setVisible(false);
+            btnPaymentDialog.setVisible(false);
+            btnBillSplitPayment.setVisible(false);
             isTakeOrder = true;
         }
 
@@ -3656,7 +3653,7 @@ public class MainSale extends javax.swing.JDialog {
                     balance.setCashier(PublicVar.USERCODE);
                     balance.setR_ETD(etd);
                     balance.setR_Quan(R_Quan);
-                    balance.setR_Table(txtTable.getText());
+                    balance.setR_Table(tableNo);
                     balance.setR_Emp(emp);
 
                     balance.setR_PrCuType("");
@@ -3722,7 +3719,7 @@ public class MainSale extends javax.swing.JDialog {
 
                     //Process stock out
                     String StkRemark = "SAL";
-                    String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+                    String DocNo = tableNo + "/" + Timefmt.format(new Date());
                     if (productBean.getPStock().equals("Y") && productBean.getPActive().equals("Y")) {
                         PUtility.ProcessStockOut(DocNo, StkCode, balance.getR_PluCode(), new Date(), StkRemark, balance.getR_Quan(), balance.getR_Total(),
                                 balance.getCashier(), balance.getR_Stock(), balance.getR_Set(), R_Index, "1");
@@ -3768,7 +3765,7 @@ public class MainSale extends javax.swing.JDialog {
         return isCheck;
     }
 
-    private void cancelItemBeforeHold() {
+    private void cancelSendKitchenProcess() {
         try {
             balanceControl.updateQuanCanDiscByTableAndPrCode(tableNo);
             tableFileControl.updateNetTotalByTCode(tableNo);
@@ -3779,11 +3776,11 @@ public class MainSale extends javax.swing.JDialog {
         int[] rows = tbShowBalance.getSelectedRows();
         String StkRemark = "SAL";
         Date TDate = new Date();
-        String DocNo = txtTable.getText() + "/" + Timefmt.format(new Date());
+        String DocNo = tableNo + "/" + Timefmt.format(new Date());
 
         for (int i = 0; i < rows.length; i++) {
             String r_index = "" + tbShowBalance.getValueAt(rows[i], 10);
-            BalanceBean bean = balanceControl.getBalanceIndex(txtTable.getText(), r_index);
+            BalanceBean bean = balanceControl.getBalanceIndex(tableNo, r_index);
             if (bean == null) {
                 continue;
             }
@@ -3802,7 +3799,7 @@ public class MainSale extends javax.swing.JDialog {
                 }
             }
 
-            tempSetControl.deleteTempByPTableNo(txtTable.getText());
+            tempSetControl.deleteTempByPTableNo(tableNo);
             boolean canRemoveFromTableBalance = balanceControl.deleteBalanceByRIndexAndRPause(r_index);
             if (!canRemoveFromTableBalance) {
                 MSG.WAR(this, "รายการอาหาร " + bean.getR_PName() + " ถูกส่งครัวไปแล้ว ไม่สามารถลบออกได้ จะต้อง Void เท่านั้น");
@@ -3825,7 +3822,7 @@ public class MainSale extends javax.swing.JDialog {
                 if (isMenuSet) {
                     List<BalanceBean> listBalance = mainSaleControl.getBalanceByRLinkIndex(r_index);
                     for (BalanceBean balanceBean : listBalance) {
-                        BalanceBean bean2 = balanceControl.getBalanceIndex(txtTable.getText(), balanceBean.getR_Index());
+                        BalanceBean bean2 = balanceControl.getBalanceIndex(tableNo, balanceBean.getR_Index());
                         balanceControl.deleteBalanceWhereRIndexAndRPauseIsP(balanceBean.getR_Index());
 
                         PUtility.ProcessStockOut(DocNo, bean2.getStkCode(), bean2.getR_PluCode(), TDate, StkRemark, -1 * bean2.getR_Quan(),
@@ -3851,17 +3848,17 @@ public class MainSale extends javax.swing.JDialog {
         }
 
         //update tablefile
-        BalanceControl.updateProSerTable(txtTable.getText(), memberBean);
-        txtDiscount.setText("- " + BalanceControl.GetDiscount(txtTable.getText()));
+        BalanceControl.updateProSerTable(tableNo, memberBean);
+        txtDiscount.setText("- " + BalanceControl.GetDiscount(tableNo));
         showSum();
-        loadTableBalance(txtTable.getText());
+        loadTableBalance(tableNo);
     }
 
     private void updateTableFile() {
         tableFileControl.updateTableFileByTCode(PublicVar.MACNO, txtCust.getText(), tableNo);
     }
 
-    private void checkKicPrint() {
+    private void checkKicPrint(String tableNo) {
         if (mainSaleControl.checkKicPrint(tableNo)) {
             String CheckBillBeforeCash = CONFIG.getP_CheckBillBeforCash();
             if (CheckBillBeforeCash.equals("Y")) {
@@ -4057,16 +4054,6 @@ public class MainSale extends javax.swing.JDialog {
         }
     }
 
-    private void printBillCheck() {
-        if (PublicVar.useprint) {
-            AppLogUtil.info("printBillCheck usePrint = " + PublicVar.useprint);
-            PPrint print = new PPrint();
-            print.printCheckBill(txtTable.getText());
-        } else {
-            MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + PublicVar.useprint);
-        }
-    }
-
     private void printBillVoidCheck() {
         if (PublicVar.useprint) {
             if (mainSaleControl.printBillVoidCheck(tableNo)) {
@@ -4094,7 +4081,7 @@ public class MainSale extends javax.swing.JDialog {
                 //check before order foods
                 boolean checkBefore = mgrButtonBean.getCheck_before().equals("Y");
                 if (checkBefore) {
-                    boolean passBefore = mainSaleControl.checkPassBeforeOrder(txtTable.getText());
+                    boolean passBefore = mainSaleControl.checkPassBeforeOrder(tableNo);
                     if (!passBefore) {
                         MSG.WAR(this, "ไม่มีรายการอาหาร กรุณาเลือกเมนูอาหารหลักก่อน");
                         return false;
@@ -4115,7 +4102,7 @@ public class MainSale extends javax.swing.JDialog {
                     String tempset = "INSERT INTO tempset "
                             + "(PTableNo, PIndex, PCode, PDesc, "
                             + "PPostStock,PProTry, POption, PTime) "
-                            + "VALUES ('" + txtTable.getText() + "', '', '" + autoPCode + "', "
+                            + "VALUES ('" + tableNo + "', '', '" + autoPCode + "', "
                             + "'" + ThaiUtil.Unicode2ASCII(autoPDesc) + "', '" + pstock + "',"
                             + "'auto', '', "
                             + "'" + DateUtil.getMySQL_HHmmss() + "')";
@@ -4161,7 +4148,7 @@ public class MainSale extends javax.swing.JDialog {
             updateCustomerCount(cc);
         }
         if (cc == 0 && r_etd.equalsIgnoreCase("E")) {
-            CustomerCountDialog ccd = new CustomerCountDialog(this, true, txtTable.getText(), txtShowETD.getText());
+            CustomerCountDialog ccd = new CustomerCountDialog(this, true, tableNo, txtShowETD.getText());
             ccd.setVisible(true);
 
             txtCust.setText("" + ccd.getCountCustomer());
