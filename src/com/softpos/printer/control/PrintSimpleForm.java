@@ -1,5 +1,6 @@
 package com.softpos.printer.control;
 
+import com.softpos.queue.QueueService;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BranchControl;
 import com.softpos.pos.core.controller.DatabaseConnection;
@@ -211,7 +212,7 @@ public class PrintSimpleForm {
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
-                t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + tableNo + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
+                t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + tableNo + QueueService.kitchenSuffix() + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
                 t += "colspan=3 align=center>_";
                 switch (ETD) {
                     case "E":
@@ -434,7 +435,7 @@ public class PrintSimpleForm {
                 }
 
                 //*********** สิ้นสุดการตรวจสอบข้อความพิเศษ ***********
-                t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + tableNo + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
+                t += "align=left><font face=Tahoma size=5>" + "โต๊ะ " + tableNo + QueueService.kitchenSuffix() + "</td><td align=right><font face=Tahoma size=5>" + " CC. " + "</td><td align=left><font face=Tahoma size=5>" + custCount + "_";
                 t += "colspan=3 align=center>_";
                 switch (ETD) {
                     case "E":
@@ -588,7 +589,7 @@ public class PrintSimpleForm {
             }
         }
 
-        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
+        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo) + QueueService.kitchenSuffix();
 
         TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
@@ -1656,7 +1657,7 @@ public class PrintSimpleForm {
             }
         }
 
-        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
+        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo) + QueueService.kitchenSuffix();
 
         TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
@@ -2705,7 +2706,7 @@ public class PrintSimpleForm {
             }
         }
 
-        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
+        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo) + QueueService.kitchenSuffix();
 
         TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 

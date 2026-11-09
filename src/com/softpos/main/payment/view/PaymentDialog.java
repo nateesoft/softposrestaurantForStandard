@@ -19,6 +19,9 @@ import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
+import com.softpos.main.pos.view.MainSale;
+import com.softpos.queue.QueueMonitor;
+import com.softpos.queue.QueueService;
 import com.softpos.main.floorplan.view.SaleInfoPanel;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
@@ -2194,8 +2197,10 @@ public class PaymentDialog extends javax.swing.JDialog {
             }
             BillControl billControl = AppContext.getBillControl();
             PublicVar.SubTotalOK = true;
+            foodCenterPrintKitchen();
             String billNoRef = billControl.saveBillNo(tableNo, billBean);
             txtBillNo.setText(billNoRef);
+            foodCenterQueueDone(billNoRef);
 
             //clear tempset
             clearTempSet(tableNo);
@@ -2280,7 +2285,9 @@ public class PaymentDialog extends javax.swing.JDialog {
                     billBean.setB_SumScore(memberBean.getMember_TotalScore());
                 }
             }
-            billControl.saveBillNo(tableNo, billBean);
+            foodCenterPrintKitchen();
+            String billNoRef2 = billControl.saveBillNo(tableNo, billBean);
+            foodCenterQueueDone(billNoRef2);
 
             PublicVar.MemberAlready = false;
             lockScreen1(false);
@@ -2488,7 +2495,57 @@ public class PaymentDialog extends javax.swing.JDialog {
         }
     }
 
+    private int foodCenterQueueId = -1;
+
+    /**
+     * FoodCenter: payment is complete, so allocate the queue number and print to the kitchen
+     * (MainSale.kichenPrint) with that number. Must run before saveBillNo, which clears the balance.
+     */
+    private void foodCenterPrintKitchen() {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId > 0) {
+            return;
+        }
+        String customer = "";
+        if (memberBean != null && memberBean.getMember_Code() != null && !memberBean.getMember_Code().isEmpty()) {
+            customer = memberBean.getMember_NameThai();
+        }
+        foodCenterQueueId = QueueService.createQueue(tableNo, customer);
+        int queueNo = foodCenterQueueId > 0 ? QueueService.getQueueNo(foodCenterQueueId) : 0;
+        if (queueNo <= 0) {
+            MSG.WAR(this, "สร้างเลขคิวไม่สำเร็จ ระบบจะพิมพ์ออกครัวโดยไม่มีเลขคิว");
+        }
+        QueueService.setKitchenQueueNo(queueNo);
+        try {
+            if (getOwner() instanceof MainSale) {
+                ((MainSale) getOwner()).kichenPrint(tableNo);
+            } else {
+                AppLogUtil.warn(PaymentDialog.class, "owner is not MainSale, kitchen not printed for FoodCenter");
+            }
+        } finally {
+            QueueService.setKitchenQueueNo(0);
+        }
+    }
+
+    /** FoodCenter: link the queue to the bill and tell the cashier/customer the queue number. */
+    private void foodCenterQueueDone(String billNo) {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
+            return;
+        }
+        QueueService.setBillNo(foodCenterQueueId, billNo);
+        QueueMonitor.getInstance().refreshNow();
+        int queueNo = QueueService.getQueueNo(foodCenterQueueId);
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "<html><div style='text-align:center;width:300px'>"
+                + "<font size=6>คิวหมายเลข</font><br>"
+                + "<font size=20 color='#C84B00'><b>" + queueNo + "</b></font><br>"
+                + "<font size=4>ส่งออเดอร์เข้าครัวเรียบร้อยแล้ว</font></div></html>",
+                "Queue", javax.swing.JOptionPane.PLAIN_MESSAGE);
+    }
+
     private void kichenPrint() {
+        if (QueueService.isFoodCenter()) {
+            return; // FoodCenter prints to the kitchen only after payment (foodCenterPrintKitchen)
+        }
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
         String printerName;
         String[] kicMaster = BranchControl.getKicData20();

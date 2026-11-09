@@ -2,6 +2,7 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
+import com.softpos.queue.QueueService;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.floorplan.view.PaidinFormDialog;
 import com.softpos.main.floorplan.view.RefundBillDialog;
@@ -193,7 +194,7 @@ public class MainSale extends javax.swing.JDialog {
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint(tableNo);
+            kichenPrintUnlessFoodCenter(tableNo);
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
         } else {
@@ -218,7 +219,7 @@ public class MainSale extends javax.swing.JDialog {
             tableFileControl.updateTPauseYByTableNo(tableNo);
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint(tableNo);
+            kichenPrintUnlessFoodCenter(tableNo);
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
             tableFileControl.updateTPauseNByTableNo(tableNo);
@@ -256,6 +257,9 @@ public class MainSale extends javax.swing.JDialog {
         setTitle(Lang.get("mainsale.title"));
         btnCancelSendKic.setText(Lang.get("mainsale.btnCancel"));
         btnHoldAndKitchen.setText(Lang.get("mainsale.btnHold"));
+        if (QueueService.isFoodCenter()) {
+            btnHoldAndKitchen.setEnabled(false); // FoodCenter prints to kitchen only after payment
+        }
         bntPrintCheckBill.setText(Lang.get("mainsale.btnPrintCheckBill"));
         btnBillSplitPayment.setText(Lang.get("mainsale.btnSplit"));
         btnPaymentDialog.setText(Lang.get("mainsale.btnPayment"));
@@ -2768,7 +2772,17 @@ public class MainSale extends javax.swing.JDialog {
         PublicVar.ErrorColect = true;
     }
 
-    private void kichenPrint(String tableNo) {
+    /**
+     * FoodCenter: the kitchen is only printed after payment (PaymentDialog calls
+     * kichenPrint directly together with the queue number), never from these buttons.
+     */
+    private void kichenPrintUnlessFoodCenter(String tableNo) {
+        if (!QueueService.isFoodCenter()) {
+            kichenPrint(tableNo);
+        }
+    }
+
+    public void kichenPrint(String tableNo) {
         tableFileControl.updateTPauseYByTableNo(tableNo);
 
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
@@ -3016,7 +3030,7 @@ public class MainSale extends javax.swing.JDialog {
 
             tableFileControl.updateTOnActToNByTCode(tableNo);
 
-            kichenPrint(tableNo);
+            kichenPrintUnlessFoodCenter(tableNo);
             holdTableAndSave();
 
             PublicVar.ErrorColect = false;
@@ -3371,6 +3385,9 @@ public class MainSale extends javax.swing.JDialog {
     }
 
     private void holdAndKitchenProcess() {
+        if (QueueService.isFoodCenter()) {
+            return;
+        }
         AppLogUtil.info("Hold Table: " + tableNo);
 
         // check print to kitchen
@@ -3406,7 +3423,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showBillCheck() {
         if (model.getRowCount() > 0) {
-            kichenPrint(tableNo);
+            kichenPrintUnlessFoodCenter(tableNo);
             bntCheckBillClick();
         }
     }
@@ -3419,7 +3436,7 @@ public class MainSale extends javax.swing.JDialog {
 
     private void showCheckBill() {
         if (model.getRowCount() > 0) {
-            kichenPrint(tableNo);
+            kichenPrintUnlessFoodCenter(tableNo);
             btnPaymentClick();
         }
     }
