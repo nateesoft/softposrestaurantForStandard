@@ -210,6 +210,10 @@ public final class QueueService {
         kitchenQueueNo = no;
     }
 
+    public static int getKitchenQueueNo() {
+        return kitchenQueueNo;
+    }
+
     /** Text appended to the table header of kitchen tickets, e.g. "  คิว 12"; empty when no queue is active. */
     public static String kitchenSuffix() {
         return kitchenQueueNo > 0 ? "   คิว " + kitchenQueueNo : "";

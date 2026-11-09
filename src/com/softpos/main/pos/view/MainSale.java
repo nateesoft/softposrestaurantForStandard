@@ -2,6 +2,8 @@ package com.softpos.main.pos.view;
 
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
+import com.softpos.printer.template.KitchenTemplatePrinter;
+import com.softpos.printer.template.KitchenTemplateService;
 import com.softpos.queue.QueueService;
 import com.softpos.main.floorplan.view.FloorPlanDialog;
 import com.softpos.main.floorplan.view.PaidinFormDialog;
@@ -2794,6 +2796,8 @@ public class MainSale extends javax.swing.JDialog {
             PublicVar.Branch_Saveorder = config;
         }
 
+        java.util.Set<String> templateKitchens = new java.util.HashSet<>();
+
         PKicTran kictran = new PKicTran();
         List<BalanceBean> listToKicTran = BalanceControl.getAllBalanceNewItemToKicTran(tableNo);
         kictran.setPKicTran(listToKicTran, branchBean.getKicItemNo());
@@ -2820,6 +2824,9 @@ public class MainSale extends javax.swing.JDialog {
             String printerForm = BranchControl.getForm(rKic);
 
             AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+            if (KitchenTemplateService.loadEnabled(rKic) != null) {
+                continue; // this kitchen prints from its designer template (loop below)
+            }
 
             switch (printerForm) {
                 case "1": {
@@ -2863,6 +2870,14 @@ public class MainSale extends javax.swing.JDialog {
             String printerForm = BranchControl.getForm(rKic);
 
             AppLogUtil.info("kichenPrint (printerName=" + printerName + ", printerForm=" + printerForm + ")");
+            String kitchenTemplate = KitchenTemplateService.loadEnabled(rKic);
+            if (kitchenTemplate != null) {
+                // designer template: one ticket per kitchen, whatever the built-in form is
+                if (templateKitchens.add(rKic)) {
+                    KitchenTemplatePrinter.print(tableNo, rKic, printerName, kitchenTemplate);
+                }
+                continue;
+            }
 
             switch (printerForm) {
                 case "1": {
