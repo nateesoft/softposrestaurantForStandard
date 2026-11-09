@@ -134,6 +134,18 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         AdvertisingScreen.open();
         PublicVar.TableSelected = "";
 
+        javax.swing.JMenuItem kicTemplateItem = new javax.swing.JMenuItem("ออกแบบใบสั่งครัว (Kitchen Template)");
+        kicTemplateItem.addActionListener(ev -> com.softpos.printer.template.KitchenTemplateDialog.open(this));
+        jMenu7.add(kicTemplateItem);
+
+        if (com.softpos.queue.QueueService.isFoodCenter()) {
+            javax.swing.JMenuItem queueItem = new javax.swing.JMenuItem("จัดการคิว");
+            queueItem.addActionListener(ev -> com.softpos.queue.QueueManagerDialog.open(this));
+            javax.swing.JMenu queueMenu = new javax.swing.JMenu("คิว");
+            queueMenu.add(queueItem);
+            jMenuBar1.add(queueMenu);
+        }
+
 //        jMenu9.setVisible(false);
 //        jMenu1.setVisible(true);
 //        jMenu2.setVisible(false);

@@ -59,6 +59,8 @@ public class Login extends javax.swing.JDialog {
         PublicVar.picturePath = ConfigFile.getProperties("picturePath");
 
         clearTablefileNotUse();
+        com.softpos.printer.template.KitchenTemplateService.ensureTable();
+        com.softpos.queue.QueueService.ensureTable(); // FoodCenter: create queue_works if missing
     }
 
     @SuppressWarnings("unchecked")

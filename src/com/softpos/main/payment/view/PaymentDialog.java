@@ -19,6 +19,9 @@ import com.softpos.pos.core.controller.DatabaseConnection;
 import com.softpos.pos.core.controller.MainSaleControl;
 import com.softpos.pos.core.controller.TableFileControl;
 import com.softpos.main.floorplan.view.AdvertisingScreen;
+import com.softpos.main.pos.view.MainSale;
+import com.softpos.queue.QueueMonitor;
+import com.softpos.queue.QueueService;
 import com.softpos.main.floorplan.view.SaleInfoPanel;
 import com.softpos.pos.core.model.AccrBean;
 import com.softpos.pos.core.model.BalanceBean;
@@ -60,6 +63,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private MemberBean memberBean;
     private double CreditCharge = 0.00;
     private double originalGrandTotal = 0;
+    private java.util.List<SaleInfoPanel.Item> orderItems = new java.util.ArrayList<>();
     private POSConfigSetup CONFIG;
     private PaymentControl checkBillControl = AppContext.getCheckBillController();
     private DatabaseConnection databaseConnection = AppContext.getDatabaseConnection();
@@ -1962,7 +1966,26 @@ public class PaymentDialog extends javax.swing.JDialog {
             bntCashActionPerformed(null);
         }
         originalGrandTotal = parseAmount(txtTotalAmount.getText());
+        loadOrderItems(bc);
         pushPaymentInfo();
+    }
+
+    /** โหลดรายการอาหารสำหรับแสดงบนจอที่ 2 (ไม่ขึ้นกับ config PrintSum) */
+    private void loadOrderItems(BalanceControl bc) {
+        orderItems = new java.util.ArrayList<>();
+        DecimalFormat qtyFmt = new DecimalFormat("#,##0.##");
+        for (BalanceBean b : bc.getAllBalanceNoVoidSum(tableNo)) {
+            if ("V".equals(b.getR_Void())) {
+                continue;
+            }
+            String pluCode = b.getR_PluCode();
+            if (pluCode == null || pluCode.trim().isEmpty()) {
+                continue;
+            }
+            String etd = b.getR_ETD() == null ? "" : b.getR_ETD();
+            String name = (etd + " " + b.getR_PName()).trim();
+            orderItems.add(new SaleInfoPanel.Item(name, qtyFmt.format(b.getR_Quan()), dec.format(b.getR_Total())));
+        }
     }
 
     private double parseAmount(String text) {
@@ -2010,7 +2033,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         boolean isPaid = "เงินทอน".equals(Digital_Msg.getText());
         double change = isPaid ? parseAmount(txtTotalAmount.getText()) : 0;
 
-        AdvertisingScreen.showPaymentInfo(tableNo, payLines, originalGrandTotal, change);
+        AdvertisingScreen.showPaymentInfo(tableNo, orderItems, payLines, originalGrandTotal, change);
     }
 
     @Override
@@ -2174,8 +2197,16 @@ public class PaymentDialog extends javax.swing.JDialog {
             }
             BillControl billControl = AppContext.getBillControl();
             PublicVar.SubTotalOK = true;
-            String billNoRef = billControl.saveBillNo(tableNo, billBean);
+            foodCenterPrintKitchen();
+            String billNoRef;
+            try {
+                billNoRef = billControl.saveBillNo(tableNo, billBean);
+            } catch (RuntimeException e) {
+                foodCenterQueueFailed();
+                throw e;
+            }
             txtBillNo.setText(billNoRef);
+            foodCenterQueueDone(billNoRef);
 
             //clear tempset
             clearTempSet(tableNo);
@@ -2260,7 +2291,15 @@ public class PaymentDialog extends javax.swing.JDialog {
                     billBean.setB_SumScore(memberBean.getMember_TotalScore());
                 }
             }
-            billControl.saveBillNo(tableNo, billBean);
+            foodCenterPrintKitchen();
+            String billNoRef2;
+            try {
+                billNoRef2 = billControl.saveBillNo(tableNo, billBean);
+            } catch (RuntimeException e) {
+                foodCenterQueueFailed();
+                throw e;
+            }
+            foodCenterQueueDone(billNoRef2);
 
             PublicVar.MemberAlready = false;
             lockScreen1(false);
@@ -2468,7 +2507,79 @@ public class PaymentDialog extends javax.swing.JDialog {
         }
     }
 
+    private int foodCenterQueueId = -1;
+
+    /**
+     * FoodCenter: payment is complete, so allocate the queue number and print to the kitchen
+     * (MainSale.kichenPrint) with that number. Must run before saveBillNo, which clears the balance.
+     */
+    private void foodCenterPrintKitchen() {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId > 0) {
+            return;
+        }
+        String customer = "";
+        if (memberBean != null && memberBean.getMember_Code() != null && !memberBean.getMember_Code().isEmpty()) {
+            customer = memberBean.getMember_NameThai();
+        }
+        foodCenterQueueId = QueueService.createQueue(tableNo, customer);
+        int queueNo = foodCenterQueueId > 0 ? QueueService.getQueueNo(foodCenterQueueId) : 0;
+        if (queueNo <= 0) {
+            MSG.WAR(this, "สร้างเลขคิวไม่สำเร็จ ระบบจะพิมพ์ออกครัวโดยไม่มีเลขคิว");
+        }
+        QueueService.setKitchenQueueNo(queueNo);
+        try {
+            if (getOwner() instanceof MainSale) {
+                ((MainSale) getOwner()).kichenPrint(tableNo);
+            } else {
+                AppLogUtil.warn(PaymentDialog.class, "owner is not MainSale, kitchen not printed for FoodCenter");
+            }
+        } catch (RuntimeException e) {
+            // a printer problem must not block the payment: the bill is still saved
+            AppLogUtil.log(PaymentDialog.class, "error", e);
+            MSG.ERR(this, "พิมพ์ออกครัวไม่สำเร็จ กรุณาตรวจสอบเครื่องพิมพ์ครัว (คิว " + queueNo + ")");
+        } finally {
+            QueueService.setKitchenQueueNo(0);
+        }
+    }
+
+    /**
+     * FoodCenter: the bill could not be saved after the queue was created and the kitchen printed.
+     * Cancel the queue and make the table printable again so a retry creates a fresh queue and ticket.
+     */
+    private void foodCenterQueueFailed() {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
+            return;
+        }
+        int queueNo = QueueService.getQueueNo(foodCenterQueueId);
+        QueueService.setStatus(foodCenterQueueId, QueueService.CANCEL);
+        QueueMonitor.getInstance().refreshNow();
+        foodCenterQueueId = -1;
+        databaseConnection.executeUpdate("update balance set r_kicprint='' where r_table='" + tableNo
+                + "' and trantype is null and r_kicprint='P'");
+        MSG.ERR(this, "บันทึกบิลไม่สำเร็จ ยกเลิกคิว " + queueNo + " แล้ว\n"
+                + "ใบสั่งครัวคิว " + queueNo + " ที่พิมพ์ไปแล้วให้ยกเลิก แล้วกดชำระเงินใหม่อีกครั้ง");
+    }
+
+    /** FoodCenter: link the queue to the bill and tell the cashier/customer the queue number. */
+    private void foodCenterQueueDone(String billNo) {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
+            return;
+        }
+        QueueService.setBillNo(foodCenterQueueId, billNo);
+        QueueMonitor.getInstance().refreshNow();
+        int queueNo = QueueService.getQueueNo(foodCenterQueueId);
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "<html><div style='text-align:center;width:300px'>"
+                + "<font size=6>คิวหมายเลข</font><br>"
+                + "<font size=20 color='#C84B00'><b>" + queueNo + "</b></font><br>"
+                + "<font size=4>ส่งออเดอร์เข้าครัวเรียบร้อยแล้ว</font></div></html>",
+                "Queue", javax.swing.JOptionPane.PLAIN_MESSAGE);
+    }
+
     private void kichenPrint() {
+        if (QueueService.isFoodCenter()) {
+            return; // FoodCenter prints to the kitchen only after payment (foodCenterPrintKitchen)
+        }
         PrintSimpleForm printSimpleForm = new PrintSimpleForm();
         String printerName;
         String[] kicMaster = BranchControl.getKicData20();

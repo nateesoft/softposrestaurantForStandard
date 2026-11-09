@@ -1050,39 +1050,39 @@ public class FileSettingDialog extends javax.swing.JDialog {
             }
 
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter writer = new BufferedWriter(fw);
-            writer.write("server," + txtServer.getText());
-            writer.newLine();
-            writer.write("database," + txtDatabase.getText());
-            writer.newLine();
-            writer.write("db_member," + txtMember.getText());
-            writer.newLine();
-            writer.write("user," + txtUser.getText());
-            writer.newLine();
-            writer.write("pass," + txtPass.getText());
-            writer.newLine();
-            writer.write("port," + txtPort.getText());
-            writer.newLine();
-            writer.write("charset," + txtCharSet.getText());
-            writer.newLine();
-            writer.write("language," + txtLang.getText());
-            writer.newLine();
-            writer.write("macno," + txtMacno.getText());
-            writer.newLine();
-            writer.write("useprint," + cbPrint.getSelectedItem());
-            writer.newLine();
-            writer.write("printkic," + cbKicPrint.getSelectedItem());
-            writer.newLine();
-            writer.write("autoqty," + cbPopup.getSelectedItem());
-            writer.newLine();
-            writer.write("printdriver," + cbDriver.getSelectedItem());
-            writer.newLine();
-            writer.write("printerName," + txtPrinterDriverName.getText());
-            writer.newLine();
-            writer.flush();
-            writer.close();
+            try (BufferedWriter writer = new BufferedWriter(fw)) {
+                writer.write("server," + txtServer.getText());
+                writer.newLine();
+                writer.write("database," + txtDatabase.getText());
+                writer.newLine();
+                writer.write("db_member," + txtMember.getText());
+                writer.newLine();
+                writer.write("user," + txtUser.getText());
+                writer.newLine();
+                writer.write("pass," + txtPass.getText());
+                writer.newLine();
+                writer.write("port," + txtPort.getText());
+                writer.newLine();
+                writer.write("charset," + txtCharSet.getText());
+                writer.newLine();
+                writer.write("language," + txtLang.getText());
+                writer.newLine();
+                writer.write("macno," + txtMacno.getText());
+                writer.newLine();
+                writer.write("useprint," + cbPrint.getSelectedItem());
+                writer.newLine();
+                writer.write("printkic," + cbKicPrint.getSelectedItem());
+                writer.newLine();
+                writer.write("autoqty," + cbPopup.getSelectedItem());
+                writer.newLine();
+                writer.write("printdriver," + cbDriver.getSelectedItem());
+                writer.newLine();
+                writer.write("printerName," + txtPrinterDriverName.getText());
+                writer.newLine();
+                writer.flush();
+            }
 
-            MSG.NOTICE(this, "กรุณาออกจากระบบ และเริ่มต้นใหม่อีกครั้ง !");
+            MSG.WAR(this, "กรุณาออกจากระบบ และเริ่มต้นใหม่อีกครั้ง !");
         } catch (IOException e) {
             AppLogUtil.log(FileSettingDialog.class, "error", e);
         }
