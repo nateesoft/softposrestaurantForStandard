@@ -2198,7 +2198,13 @@ public class PaymentDialog extends javax.swing.JDialog {
             BillControl billControl = AppContext.getBillControl();
             PublicVar.SubTotalOK = true;
             foodCenterPrintKitchen();
-            String billNoRef = billControl.saveBillNo(tableNo, billBean);
+            String billNoRef;
+            try {
+                billNoRef = billControl.saveBillNo(tableNo, billBean);
+            } catch (RuntimeException e) {
+                foodCenterQueueFailed();
+                throw e;
+            }
             txtBillNo.setText(billNoRef);
             foodCenterQueueDone(billNoRef);
 
@@ -2286,7 +2292,13 @@ public class PaymentDialog extends javax.swing.JDialog {
                 }
             }
             foodCenterPrintKitchen();
-            String billNoRef2 = billControl.saveBillNo(tableNo, billBean);
+            String billNoRef2;
+            try {
+                billNoRef2 = billControl.saveBillNo(tableNo, billBean);
+            } catch (RuntimeException e) {
+                foodCenterQueueFailed();
+                throw e;
+            }
             foodCenterQueueDone(billNoRef2);
 
             PublicVar.MemberAlready = false;
@@ -2521,9 +2533,31 @@ public class PaymentDialog extends javax.swing.JDialog {
             } else {
                 AppLogUtil.warn(PaymentDialog.class, "owner is not MainSale, kitchen not printed for FoodCenter");
             }
+        } catch (RuntimeException e) {
+            // a printer problem must not block the payment: the bill is still saved
+            AppLogUtil.log(PaymentDialog.class, "error", e);
+            MSG.ERR(this, "พิมพ์ออกครัวไม่สำเร็จ กรุณาตรวจสอบเครื่องพิมพ์ครัว (คิว " + queueNo + ")");
         } finally {
             QueueService.setKitchenQueueNo(0);
         }
+    }
+
+    /**
+     * FoodCenter: the bill could not be saved after the queue was created and the kitchen printed.
+     * Cancel the queue and make the table printable again so a retry creates a fresh queue and ticket.
+     */
+    private void foodCenterQueueFailed() {
+        if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
+            return;
+        }
+        int queueNo = QueueService.getQueueNo(foodCenterQueueId);
+        QueueService.setStatus(foodCenterQueueId, QueueService.CANCEL);
+        QueueMonitor.getInstance().refreshNow();
+        foodCenterQueueId = -1;
+        databaseConnection.executeUpdate("update balance set r_kicprint='' where r_table='" + tableNo
+                + "' and trantype is null and r_kicprint='P'");
+        MSG.ERR(this, "บันทึกบิลไม่สำเร็จ ยกเลิกคิว " + queueNo + " แล้ว\n"
+                + "ใบสั่งครัวคิว " + queueNo + " ที่พิมพ์ไปแล้วให้ยกเลิก แล้วกดชำระเงินใหม่อีกครั้ง");
     }
 
     /** FoodCenter: link the queue to the bill and tell the cashier/customer the queue number. */
