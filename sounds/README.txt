@@ -12,7 +12,18 @@ Most reliable: recorded clips. Create a folder per language and put these WAV fi
   sounds/th/n9.wav     "เก้า"
   sounds/th/end.wav    "ค่ะ"                  (optional, played last)
 
-The number is spoken digit by digit: queue 125 = call + n1 + n2 + n5 (+ end).
+By default the number is spoken digit by digit: queue 125 = call + n1 + n2 + n5 (+ end).
+
+Thai "read as a quantity" (125 = หนึ่งร้อยยี่สิบห้า): set  queueSpeak,words  in connect.ini and add these clips
+(queue 1-9999; anything else, or a missing clip, falls back to digit by digit):
+
+  sounds/th/ten.wav       "สิบ"
+  sounds/th/yi.wav        "ยี่"      (20-29 = ยี่สิบ...)
+  sounds/th/et.wav        "เอ็ด"     (11, 21, 101 ... = ...เอ็ด)
+  sounds/th/hundred.wav   "ร้อย"
+  sounds/th/thousand.wav  "พัน"      (only if the queue can reach 1000)
+
+  15 = ten + n5     21 = yi + ten + et     125 = n1 + hundred + yi + ten + n5
 The whole call is repeated 3 times. A new language = a new folder (sounds/lo, sounds/en ...)
 and queueVoice,<folder name> in connect.ini.
 
