@@ -3165,9 +3165,18 @@ public class PPrint {
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
             t += ("colspan=3 align=left><font face=Angsana New size=2>" + "SaleType" + TAB + TAB + "Docket" + TAB + TAB + "CC" + TAB + "Amount" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Dine - In" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Take Away" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
-            t += ("align=left><font face=Angsana New size=2>" + "Delivery" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
+
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Dine - In" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11)) + "_";
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "<td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB  + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Take Away" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11)) + "_";
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "<td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB  + "_");
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + "Delivery" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11)) + "_";
+            t += ("colspan=3 align=left><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "<td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
+
+//            t += ("align=left><font face=Angsana New size=2>" + "Dine - In" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Eat_In_Amt), 13) + TAB + "_");
+//            t += ("align=left><font face=Angsana New size=2>" + "Take Away" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.Take_AwayAmt), 13) + TAB + "_");
+//            t += ("align=left><font face=Angsana New size=2>" + "Delivery" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCnt), 11) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 8) + "</td><td align=right><font face=Angsana New size=2>" + pUtility.DataFull(DecFmt.format(frec.DeliveryAmt), 13) + TAB + "_");
+//            
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "=================================" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>" + "Analysts" + "_");
             t += ("colspan=3 align=center><font face=Angsana New size=2>_");

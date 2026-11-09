@@ -1361,10 +1361,21 @@ private void cmdDateChoose2ActionPerformed(java.awt.event.ActionEvent evt) {//GE
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
         t += ("colspan=2 align=left><font face=Angsana New size=1>" + "SaleType" + TAB + "Docket" + TAB + "CC" + "</td><td align=center><font face=Angsana New size=1>" + "Amount" + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
-        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Dine - In" + TAB + IntFmt.format(frec.Eat_In_Cnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Eat_In_Amt), 8) + "_");
-        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Take Away" + TAB + IntFmt.format(frec.Take_AwayCnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Take_AwayAmt), 8) + "_");
-        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Delivery" + TAB + IntFmt.format(frec.DeliveryCnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.DeliveryAmt), 8) + "_");
+
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Dine - In" + TAB + IntFmt.format(frec.Eat_In_Cnt)) + "_";
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 4) + TAB + "<td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Eat_In_Amt), 8) + "_");
+
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Take Away" + TAB + IntFmt.format(frec.Take_AwayCnt)) + "_";
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 4) + TAB + "<td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Take_AwayAmt), 8) + "_");
+
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + "Delivery" + TAB + IntFmt.format(frec.DeliveryCnt)) + "_";
+        t += ("colspan=3 align=left><font face=Angsana New size=1>" + TAB + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 4) + TAB + "<td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.DeliveryAmt), 8) + "_");
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
+
+//        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Dine - In" + TAB + IntFmt.format(frec.Eat_In_Cnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Eat_In_Cust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Eat_In_Amt), 8) + "_");
+//        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Take Away" + TAB + IntFmt.format(frec.Take_AwayCnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.Take_AwayCust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.Take_AwayAmt), 8) + "_");
+//        t += ("colspan=2 align=left><font face=Angsana New size=1>" + "Delivery" + TAB + IntFmt.format(frec.DeliveryCnt) + TAB + PUtility.DataFullSpace(IntFmt.format(frec.DeliveryCust), 4) + TAB + "</td><td align=right><font face=Angsana New size=1>" + PUtility.DataFullR(DecFmt.format(frec.DeliveryAmt), 8) + "_");
+//        t += ("colspan=3 align=center><font face=Angsana New size=1>" + "===========================") + "_";
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "Analysts") + "_";
         t += ("colspan=3 align=center><font face=Angsana New size=1>" + "_");
         t += ("align=right><font face=Angsana New size=1>" + "DineIn" + TAB + "</td><td align=center><font face=Angsana New size=1>" + "TakeAway" + "</td><td align=right><font face=Angsana New size=1>" + "Delivery" + "_");
