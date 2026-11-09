@@ -1,5 +1,6 @@
 package com.softpos.printer.template;
 
+import com.softpos.util.MSG;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -98,6 +99,17 @@ public class KitchenTemplateDialog extends JDialog {
         enabledBox.addActionListener(e -> dirty = true);
         kitchenBox.addActionListener(e -> switchKitchen());
 
+        Font ui = new Font("Tahoma", Font.PLAIN, 14);
+        applyFont(top, ui);
+        applyFont(tabs, ui);
+        for (java.awt.Component c : left.getComponents()) {
+            if (c instanceof JLabel) {
+                c.setFont(ui);
+            }
+        }
+        for (java.awt.Component c : buttons.getComponents()) {
+            c.setFont(new Font("Tahoma", Font.BOLD, 14));
+        }
         loadKitchen(0);
         setSize(980, 640);
         setLocationRelativeTo(owner);
@@ -109,6 +121,15 @@ public class KitchenTemplateDialog extends JDialog {
             out[i] = "{" + KitchenTemplatePrinter.VARIABLES[i][0] + "}  -  " + KitchenTemplatePrinter.VARIABLES[i][1];
         }
         return out;
+    }
+
+    private static void applyFont(java.awt.Component c, Font f) {
+        c.setFont(f);
+        if (c instanceof java.awt.Container) {
+            for (java.awt.Component child : ((java.awt.Container) c).getComponents()) {
+                applyFont(child, f);
+            }
+        }
     }
 
     private JButton button(String text, Runnable action) {
@@ -140,9 +161,7 @@ public class KitchenTemplateDialog extends JDialog {
         if (loading) {
             return;
         }
-        if (dirty && JOptionPane.showConfirmDialog(this,
-                "ยังไม่ได้บันทึกการแก้ไขของครัวนี้ ต้องการทิ้งการแก้ไขหรือไม่?", "Kitchen Template",
-                JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+        if (dirty && !MSG.CONF(this, "ยังไม่ได้บันทึกการแก้ไขของครัวนี้ ต้องการทิ้งการแก้ไขหรือไม่?")) {
             loading = true;
             kitchenBox.setSelectedIndex(currentIndex);
             loading = false;
@@ -194,14 +213,14 @@ public class KitchenTemplateDialog extends JDialog {
 
     private void save() {
         if (enabledBox.isSelected() && editor.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "เทมเพลตว่างเปล่า ไม่สามารถเปิดใช้งานได้");
+            MSG.WAR(this, "เทมเพลตว่างเปล่า ไม่สามารถเปิดใช้งานได้");
             return;
         }
         if (KitchenTemplateService.save(kicNo(kitchenBox.getSelectedIndex()), enabledBox.isSelected(), editor.getText())) {
             dirty = false;
-            JOptionPane.showMessageDialog(this, "บันทึกเทมเพลตครัว " + kicNo(kitchenBox.getSelectedIndex()) + " แล้ว");
+            MSG.NOTICE(this, "บันทึกเทมเพลตครัว " + kicNo(kitchenBox.getSelectedIndex()) + " แล้ว");
         } else {
-            JOptionPane.showMessageDialog(this, "บันทึกไม่สำเร็จ ดู log เพื่อตรวจสอบ", "Error", JOptionPane.ERROR_MESSAGE);
+            MSG.ERR(this, "บันทึกไม่สำเร็จ ดู log เพื่อตรวจสอบ");
         }
     }
 

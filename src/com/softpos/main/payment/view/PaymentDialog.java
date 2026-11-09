@@ -2569,7 +2569,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         QueueMonitor.getInstance().refreshNow();
         int queueNo = QueueService.getQueueNo(foodCenterQueueId);
         javax.swing.JOptionPane.showMessageDialog(this,
-                "<html><div style='text-align:center;width:300px'>"
+                "<html><div style='font-family:Tahoma;text-align:center;width:300px'>"
                 + "<font size=6>คิวหมายเลข</font><br>"
                 + "<font size=20 color='#C84B00'><b>" + queueNo + "</b></font><br>"
                 + "<font size=4>ส่งออเดอร์เข้าครัวเรียบร้อยแล้ว</font></div></html>",

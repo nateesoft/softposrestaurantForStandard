@@ -135,13 +135,16 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         PublicVar.TableSelected = "";
 
         javax.swing.JMenuItem kicTemplateItem = new javax.swing.JMenuItem("ออกแบบใบสั่งครัว (Kitchen Template)");
+        kicTemplateItem.setFont(new java.awt.Font("Tahoma", 0, 12));
         kicTemplateItem.addActionListener(ev -> com.softpos.printer.template.KitchenTemplateDialog.open(this));
         jMenu7.add(kicTemplateItem);
 
         if (com.softpos.queue.QueueService.isFoodCenter()) {
             javax.swing.JMenuItem queueItem = new javax.swing.JMenuItem("จัดการคิว");
+            queueItem.setFont(new java.awt.Font("Tahoma", 0, 12));
             queueItem.addActionListener(ev -> com.softpos.queue.QueueManagerDialog.open(this));
             javax.swing.JMenu queueMenu = new javax.swing.JMenu("คิว");
+            queueMenu.setFont(new java.awt.Font("Tahoma", 1, 12));
             queueMenu.add(queueItem);
             jMenuBar1.add(queueMenu);
         }
