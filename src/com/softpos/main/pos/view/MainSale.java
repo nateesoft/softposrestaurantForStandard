@@ -259,9 +259,6 @@ public class MainSale extends javax.swing.JDialog {
         setTitle(Lang.get("mainsale.title"));
         btnCancelSendKic.setText(Lang.get("mainsale.btnCancel"));
         btnHoldAndKitchen.setText(Lang.get("mainsale.btnHold"));
-        if (QueueService.isFoodCenter()) {
-            btnHoldAndKitchen.setEnabled(false); // FoodCenter prints to kitchen only after payment
-        }
         bntPrintCheckBill.setText(Lang.get("mainsale.btnPrintCheckBill"));
         btnBillSplitPayment.setText(Lang.get("mainsale.btnSplit"));
         btnPaymentDialog.setText(Lang.get("mainsale.btnPayment"));
@@ -3399,10 +3396,8 @@ public class MainSale extends javax.swing.JDialog {
         showSum();
     }
 
+    /** Hold the bill and go back to the floor plan. FoodCenter: no kitchen print here (see kichenPrintUnlessFoodCenter). */
     private void holdAndKitchenProcess() {
-        if (QueueService.isFoodCenter()) {
-            return;
-        }
         AppLogUtil.info("Hold Table: " + tableNo);
 
         // check print to kitchen

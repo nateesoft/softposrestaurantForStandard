@@ -43,10 +43,22 @@ public class QueueManagerDialog extends JDialog {
         buttons.add(button("ยกเลิกคิว", () -> setStatus(QueueService.CANCEL)));
         add(buttons, BorderLayout.SOUTH);
 
+        applyFont(getContentPane(), new Font("Tahoma", Font.PLAIN, 15));
+        table.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 16));
         setSize(760, 520);
         setLocationRelativeTo(owner);
         QueueMonitor.getInstance().addListener(refresh);
         reload();
+    }
+
+    private static void applyFont(java.awt.Component c, Font f) {
+        c.setFont(f);
+        if (c instanceof java.awt.Container) {
+            for (java.awt.Component child : ((java.awt.Container) c).getComponents()) {
+                applyFont(child, f);
+            }
+        }
     }
 
     private JButton button(String text, Runnable action) {
