@@ -30,6 +30,8 @@ public final class QueueAnnouncer {
         return t;
     });
 
+    private static boolean warned = false;
+
     private QueueAnnouncer() {
     }
 
@@ -128,11 +130,13 @@ public final class QueueAnnouncer {
         ProcessBuilder pb;
         if (os.contains("win")) {
             // text is passed via environment so it is never parsed as script
+            // exit 3 when no installed voice speaks this language: the caller then falls back to a beep
             String script = "Add-Type -AssemblyName System.Speech;"
                     + "$s=New-Object System.Speech.Synthesis.SpeechSynthesizer;"
-                    + "$c=[System.Globalization.CultureInfo]::GetCultureInfo($env:QUEUE_LOCALE);"
-                    + "try{$s.SelectVoiceByHints([System.Speech.Synthesis.VoiceGender]::NotSet,"
-                    + "[System.Speech.Synthesis.VoiceAge]::NotSet,0,$c)}catch{};"
+                    + "$p=$env:QUEUE_LOCALE.Substring(0,2);"
+                    + "$v=$s.GetInstalledVoices()|Where-Object{$_.Enabled -and $_.VoiceInfo.Culture.Name.StartsWith($p)}|Select-Object -First 1;"
+                    + "if(-not $v){exit 3};"
+                    + "$s.SelectVoice($v.VoiceInfo.Name);"
                     + "$s.Speak($env:QUEUE_TEXT)";
             pb = new ProcessBuilder("powershell", "-NoProfile", "-Command", script);
             pb.environment().put("QUEUE_LOCALE", locale(lang));
@@ -148,6 +152,12 @@ public final class QueueAnnouncer {
         while (p.getInputStream().read(buf) >= 0) {
             // drain output so the process cannot block
         }
-        return p.waitFor() == 0;
+        int code = p.waitFor();
+        if (code != 0 && !warned) {
+            warned = true;
+            AppLogUtil.warn(QueueAnnouncer.class, "no text-to-speech voice for '" + lang
+                    + "' (exit " + code + "); using beep. Put recorded clips in sounds/" + lang + "/ (see sounds/README.txt)");
+        }
+        return code == 0;
     }
 }
