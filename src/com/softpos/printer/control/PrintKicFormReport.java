@@ -37,7 +37,6 @@ import javax.print.attribute.standard.Copies;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.PrinterName;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -49,10 +48,9 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRBand;
 import net.sf.jasperreports.engine.JRElement;
 import net.sf.jasperreports.engine.JRElementGroup;
-import net.sf.jasperreports.engine.design.JRDesignStaticText;
-import net.sf.jasperreports.engine.design.JRDesignTextElement;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.engine.JRStaticText;
+import net.sf.jasperreports.engine.base.JRBaseTextElement;
+import net.sf.jasperreports.engine.util.JRLoader;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -66,25 +64,27 @@ public class PrintKicFormReport {
     }
 
     /**
-     * Compiles a kitchen ticket report with its static texts in the shop language and a font
-     * that has Lao glyphs on Lao installations (TH Sarabun New has none); Thai is unchanged.
+     * Loads a precompiled kitchen ticket report with its static texts in the shop language and a
+     * font that has Lao glyphs on Lao installations (TH Sarabun New has none); Thai is unchanged.
+     * The .jasper is used because the bundled JDT compiler cannot compile a .jrxml on Java 9+:
+     * recompile the .jasper on Java 8 (or iReport) whenever its .jrxml changes.
      */
-    private JasperReport compileKicReport(String resource) throws JRException {
-        JasperDesign design = JRXmlLoader.load(getClass().getResourceAsStream(resource));
-        for (JRBand band : design.getAllBands()) {
+    private JasperReport loadKicReport(String resource) throws JRException {
+        JasperReport report = (JasperReport) JRLoader.loadObject(getClass().getResourceAsStream(resource));
+        for (JRBand band : report.getAllBands()) {
             localize(band.getElements());
         }
-        return JasperCompileManager.compileReport(design);
+        return report;
     }
 
     private static void localize(JRElement[] elements) {
         for (JRElement e : elements) {
-            if (e instanceof JRDesignStaticText) {
-                JRDesignStaticText text = (JRDesignStaticText) e;
+            if (e instanceof JRStaticText) {
+                JRStaticText text = (JRStaticText) e;
                 text.setText(ReceiptTranslator.translateText(text.getText()));
             }
-            if (e instanceof JRDesignTextElement && ((JRDesignTextElement) e).getOwnFontName() != null) {
-                JRDesignTextElement text = (JRDesignTextElement) e;
+            if (e instanceof JRBaseTextElement && ((JRBaseTextElement) e).getOwnFontName() != null) {
+                JRBaseTextElement text = (JRBaseTextElement) e;
                 if (text.getOwnFontSize() != null) {
                     text.setFontSize(ReceiptTranslator.printFontSize(text.getOwnFontName(), text.getOwnFontSize()));
                 }
@@ -109,7 +109,7 @@ public class PrintKicFormReport {
         try {
 
             // source file
-            JasperReport reportSource = compileKicReport("/report/file/kicFrom_7Qrcode.jrxml");
+            JasperReport reportSource = loadKicReport("/report/file/kicFrom_7Qrcode.jasper");
 
             // set parameters
             Map param = new HashMap();
@@ -203,7 +203,7 @@ public class PrintKicFormReport {
         mysqlConnect.open(PrintKicFormReport.class);
         
         try {
-            JasperReport reportSource = compileKicReport("/report/file/kicFrom_8Qrcode.jrxml");
+            JasperReport reportSource = loadKicReport("/report/file/kicFrom_8Qrcode.jasper");
 
             // set parameters
             Map param = new HashMap();
