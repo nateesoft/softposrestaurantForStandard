@@ -578,6 +578,7 @@ public class PrintSimpleForm {
         String textToPrint = "";
         String textToPrint2 = "";
         String tableHead;
+        String queueHead;
 
         BalanceBean bean = new BalanceBean();
         PrintService[] printerService = PrinterJob.lookupPrintServices();
@@ -589,7 +590,8 @@ public class PrintSimpleForm {
             }
         }
 
-        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo) + QueueService.kitchenSuffix();
+        tableHead = "โต๊ะ " + ThaiUtil.ASCII2Unicode(tableNo);
+        queueHead = QueueService.kitchenSuffix();
 
         TableFileBean tBean = tableFileControl.getDataByTCode(tableNo);
 
@@ -724,6 +726,7 @@ public class PrintSimpleForm {
                     if (!listE.isEmpty()) {
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("") + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("") + "_";
+                        textToPrint += "colspan=1 align=center><font face=Tahoma size=10>" + (queueHead) + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Tahoma size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
 
