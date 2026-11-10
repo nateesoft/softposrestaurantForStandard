@@ -2527,6 +2527,9 @@ public class PaymentDialog extends javax.swing.JDialog {
             MSG.WAR(this, "สร้างเลขคิวไม่สำเร็จ ระบบจะพิมพ์ออกครัวโดยไม่มีเลขคิว");
         }
         QueueService.setKitchenQueueNo(queueNo);
+        // same table state as the sale screen: form 3/8 only print a table with TOnAct='N'
+        TableFileControl tableFileControl = AppContext.getTableFileControl();
+        tableFileControl.updateTOnActToNByTCode(tableNo);
         try {
             if (getOwner() instanceof MainSale) {
                 ((MainSale) getOwner()).kichenPrint(tableNo);
@@ -2538,6 +2541,7 @@ public class PaymentDialog extends javax.swing.JDialog {
             AppLogUtil.log(PaymentDialog.class, "error", e);
             MSG.ERR(this, "พิมพ์ออกครัวไม่สำเร็จ กรุณาตรวจสอบเครื่องพิมพ์ครัว (คิว " + queueNo + ")");
         } finally {
+            tableFileControl.updateTOnActToYByTCode(tableNo);
             QueueService.setKitchenQueueNo(0);
         }
     }
