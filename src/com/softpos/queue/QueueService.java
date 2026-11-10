@@ -64,6 +64,7 @@ public final class QueueService {
 
     private static Boolean foodCenter;
     private static volatile int kitchenQueueNo = 0;
+    private static volatile int receiptQueueNo = 0;
 
     private QueueService() {
     }
@@ -212,6 +213,15 @@ public final class QueueService {
 
     public static int getKitchenQueueNo() {
         return kitchenQueueNo;
+    }
+
+    /** Queue number printed on the receipt while a FoodCenter bill is being saved; same as the kitchen ticket (0 = none). */
+    public static void setReceiptQueueNo(int no) {
+        receiptQueueNo = no;
+    }
+
+    public static int getReceiptQueueNo() {
+        return receiptQueueNo;
     }
 
     /** Text appended to the table header of kitchen tickets, e.g. "  คิว 12"; empty when no queue is active. */

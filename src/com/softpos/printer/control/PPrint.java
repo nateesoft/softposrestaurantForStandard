@@ -15,6 +15,7 @@ import com.softpos.pos.core.model.TSaleBean;
 import com.softpos.pos.core.model.TableFileBean;
 import com.softpos.pos.core.model.TranRecord;
 import com.softpos.connection.database.ConfigFile;
+import com.softpos.queue.QueueService;
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.pos.core.controller.AppContext;
 import com.softpos.pos.core.controller.BalanceControl;
@@ -557,6 +558,30 @@ public class PPrint {
 
     }
 
+    /**
+     * Queue number for the receipt, 0 to print none. FoodCenter uses the number of the kitchen ticket;
+     * other businesses keep the bill count + 1, enabled by PrintQueue.
+     */
+    private int resolveReceiptQueueNo() {
+        if (QueueService.isFoodCenter()) {
+            return QueueService.getReceiptQueueNo();
+        }
+        if (!"true".equals(ConfigFile.getProperties("PrintQueue"))) {
+            return 0;
+        }
+        try {
+            mysqlConnect.open(this.getClass());
+            try (ResultSet rs = mysqlConnect.executeQuery("select count(b_refno) cbillno from billno")) {
+                return rs.next() ? rs.getInt("cbillno") + 1 : 0;
+            }
+        } catch (SQLException e) {
+            AppLogUtil.log(PPrint.class, "error", e);
+            return 0;
+        } finally {
+            mysqlConnect.closeConnection(this.getClass());
+        }
+    }
+
     public void printSubTotalBillDriver(String _RefNo, String tableNo) {
         String t = "";
         String t1 = "";
@@ -579,26 +604,9 @@ public class PPrint {
                 }
             }
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
-                if (ConfigFile.getProperties("PrintQueue").equals("true")) {
-
-                    try {
-                        mysqlConnect.open(this.getClass());
-                        String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysqlConnect.executeQuery(sqlGetCountBillno);
-                        int queue = 0;
-                        int Q = 0;
-                        if (rs.next()) {
-                            queue = rs.getInt("cbillno");
-                            queue++;
-                        }
-                        t += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
-                        rs.close();
-
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PPrint.class, "error", e);
-                    } finally {
-                        mysqlConnect.closeConnection(this.getClass());
-                    }
+                int queue = resolveReceiptQueueNo();
+                if (queue > 0) {
+                    t += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
                 }
                 Date dateP = new Date();
                 if (POSHW.getHeading1().trim().length() >= 18) {
@@ -914,25 +922,10 @@ public class PPrint {
             }
 
             if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
-                if (ConfigFile.getProperties("PrintQueue").equals("true")) {
-                    try {
-                        mysqlConnect.open(this.getClass());
-                        String sqlGetCountBillno = "select count(b_refno) cbillno from billno";
-                        ResultSet rs = mysqlConnect.executeQuery(sqlGetCountBillno);
-                        int queue = 0;
-                        if (rs.next()) {
-                            queue = rs.getInt("cbillno");
-                            queue++;
-                        }
-                        t += "colspan=3 align=center><font face=Angsana New size=4>" + "คิว(Queue): " + queue + "_";
-                        t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
-
-                        rs.close();
-                    } catch (SQLException e) {
-                        AppLogUtil.log(PPrint.class, "error", e);
-                    } finally {
-                        mysqlConnect.closeConnection(this.getClass());
-                    }
+                int queue = resolveReceiptQueueNo();
+                if (queue > 0) {
+                    t += "colspan=3 align=center><font face=Angsana New size=4>" + "คิว(Queue): " + queue + "_";
+                    t1 += "colspan=3 align=center><font face=Angsana New size=3>" + "คิว(Queue): " + queue + "_";
                 }
                 Date dateP = new Date();
 
@@ -1349,6 +1342,9 @@ public class PPrint {
                     print(POSHW.getHeading4());
                     print("REG ID :" + POSHW.getMacNo());
                     if (CONFIG.getP_PrintDetailOnRecp().equals("Y")) {
+                        if (QueueService.getReceiptQueueNo() > 0) {
+                            print("QUEUE : " + QueueService.getReceiptQueueNo());
+                        }
                         Date dateP = new Date();
                         print(" ");
                         print(pUtility.DataFullR(PPrint_DatefmtThai.format(dateP).replace("/", " / "), 25) + pUtility.DataFullR(" TABLE : " + tableNo, 15));

@@ -2527,6 +2527,7 @@ public class PaymentDialog extends javax.swing.JDialog {
             MSG.WAR(this, "สร้างเลขคิวไม่สำเร็จ ระบบจะพิมพ์ออกครัวโดยไม่มีเลขคิว");
         }
         QueueService.setKitchenQueueNo(queueNo);
+        QueueService.setReceiptQueueNo(queueNo); // read while saveBillNo prints the receipt
         // same table state as the sale screen: form 3/8 only print a table with TOnAct='N'
         TableFileControl tableFileControl = AppContext.getTableFileControl();
         tableFileControl.updateTOnActToNByTCode(tableNo);
@@ -2551,6 +2552,7 @@ public class PaymentDialog extends javax.swing.JDialog {
      * Cancel the queue and make the table printable again so a retry creates a fresh queue and ticket.
      */
     private void foodCenterQueueFailed() {
+        QueueService.setReceiptQueueNo(0);
         if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
             return;
         }
@@ -2566,6 +2568,7 @@ public class PaymentDialog extends javax.swing.JDialog {
 
     /** FoodCenter: link the queue to the bill and tell the cashier/customer the queue number. */
     private void foodCenterQueueDone(String billNo) {
+        QueueService.setReceiptQueueNo(0);
         if (!QueueService.isFoodCenter() || foodCenterQueueId <= 0) {
             return;
         }
