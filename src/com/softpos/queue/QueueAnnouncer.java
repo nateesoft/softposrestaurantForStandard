@@ -30,6 +30,8 @@ public final class QueueAnnouncer {
         return t;
     });
 
+    private static boolean warned = false;
+
     private QueueAnnouncer() {
     }
 
@@ -89,12 +91,15 @@ public final class QueueAnnouncer {
         }
         java.util.List<File> files = new java.util.ArrayList<>();
         files.add(call);
-        for (char c : String.valueOf(no).toCharArray()) {
-            File f = new File(dir, "n" + c + ".wav");
-            if (!f.isFile()) {
+        java.util.List<String> names = clipNames(lang, no);
+        if (names == null || !allExist(dir, names)) {
+            names = digitClipNames(no); // number-style clips missing: read digit by digit
+            if (!allExist(dir, names)) {
                 return false;
             }
-            files.add(f);
+        }
+        for (String name : names) {
+            files.add(new File(dir, name + ".wav"));
         }
         File end = new File(dir, "end.wav");
         if (end.isFile()) {
@@ -104,6 +109,62 @@ public final class QueueAnnouncer {
             playAndWait(f);
         }
         return true;
+    }
+
+    private static boolean allExist(File dir, java.util.List<String> names) {
+        for (String n : names) {
+            if (!new File(dir, n + ".wav").isFile()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static java.util.List<String> digitClipNames(int no) {
+        java.util.List<String> names = new java.util.ArrayList<>();
+        for (char c : String.valueOf(no).toCharArray()) {
+            names.add("n" + c);
+        }
+        return names;
+    }
+
+    /**
+     * Clips to play for the number. connect.ini "queueSpeak,words" reads Thai numbers as a quantity
+     * (125 = 1 hundred 2 ten 5) using n0..n9 + ten, yi, et, hundred, thousand; anything else reads digit by digit.
+     */
+    static java.util.List<String> clipNames(String lang, int no) {
+        if (!"words".equalsIgnoreCase(ConfigFile.getProperties("queueSpeak")) || !"th".equals(lang)
+                || no < 1 || no > 9999) {
+            return digitClipNames(no);
+        }
+        java.util.List<String> n = new java.util.ArrayList<>();
+        int th = no / 1000;
+        int h = (no / 100) % 10;
+        int t = (no / 10) % 10;
+        int u = no % 10;
+        if (th > 0) {
+            n.add("n" + th);
+            n.add("thousand");
+        }
+        if (h > 0) {
+            n.add("n" + h);
+            n.add("hundred");
+        }
+        if (t == 1) {
+            n.add("ten");
+        } else if (t == 2) {
+            n.add("yi");
+            n.add("ten");
+        } else if (t >= 3) {
+            n.add("n" + t);
+            n.add("ten");
+        }
+        if (u == 1 && no > 10) {
+            n.add("et");
+        } else if (u > 0) {
+            n.add("n" + u);
+        }
+        return n;
     }
 
     private static void playAndWait(File f) throws Exception {
@@ -128,11 +189,13 @@ public final class QueueAnnouncer {
         ProcessBuilder pb;
         if (os.contains("win")) {
             // text is passed via environment so it is never parsed as script
+            // exit 3 when no installed voice speaks this language: the caller then falls back to a beep
             String script = "Add-Type -AssemblyName System.Speech;"
                     + "$s=New-Object System.Speech.Synthesis.SpeechSynthesizer;"
-                    + "$c=[System.Globalization.CultureInfo]::GetCultureInfo($env:QUEUE_LOCALE);"
-                    + "try{$s.SelectVoiceByHints([System.Speech.Synthesis.VoiceGender]::NotSet,"
-                    + "[System.Speech.Synthesis.VoiceAge]::NotSet,0,$c)}catch{};"
+                    + "$p=$env:QUEUE_LOCALE.Substring(0,2);"
+                    + "$v=$s.GetInstalledVoices()|Where-Object{$_.Enabled -and $_.VoiceInfo.Culture.Name.StartsWith($p)}|Select-Object -First 1;"
+                    + "if(-not $v){exit 3};"
+                    + "$s.SelectVoice($v.VoiceInfo.Name);"
                     + "$s.Speak($env:QUEUE_TEXT)";
             pb = new ProcessBuilder("powershell", "-NoProfile", "-Command", script);
             pb.environment().put("QUEUE_LOCALE", locale(lang));
@@ -148,6 +211,12 @@ public final class QueueAnnouncer {
         while (p.getInputStream().read(buf) >= 0) {
             // drain output so the process cannot block
         }
-        return p.waitFor() == 0;
+        int code = p.waitFor();
+        if (code != 0 && !warned) {
+            warned = true;
+            AppLogUtil.warn(QueueAnnouncer.class, "no text-to-speech voice for '" + lang
+                    + "' (exit " + code + "); using beep. Put recorded clips in sounds/" + lang + "/ (see sounds/README.txt)");
+        }
+        return code == 0;
     }
 }
