@@ -69,7 +69,12 @@ public final class QueueMonitor {
         }
     }
 
-    private void poll() {
+    /** The caller announces this queue itself and is about to set it to Serve: do not announce it again here. */
+    public synchronized void skipAnnounce(int queueId) {
+        knownServe.add(queueId);
+    }
+
+    private synchronized void poll() {
         try {
             List<QueueService.Entry> list = QueueService.listActive();
             Set<Integer> nowServe = new HashSet<>();
