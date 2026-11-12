@@ -2267,7 +2267,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
     }
 
     private void setupKeyboardShortcuts() {
-        lblKeyInput = new javax.swing.JLabel("  [พิมพ์เลขโต๊ะ + Enter]  ");
+        lblKeyInput = new javax.swing.JLabel(keyHint());
         lblKeyInput.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblKeyInput.setForeground(Color.WHITE);
         lblKeyInput.setOpaque(true);
@@ -2334,15 +2334,19 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyDispatcher);
     }
 
+    private static String keyHint() {
+        return com.softpos.queue.QueueService.isFoodCenter() ? "  [พิมพ์เลขคิว + Enter]  " : "  [พิมพ์เลขโต๊ะ + Enter]  ";
+    }
+
     private void updateKeyInputLabel() {
         if (lblKeyInput == null) {
             return;
         }
         if (keyBuffer.length() == 0) {
-            lblKeyInput.setText("  [พิมพ์เลขโต๊ะ + Enter]  ");
+            lblKeyInput.setText(keyHint());
             lblKeyInput.setBackground(new Color(60, 60, 120));
         } else {
-            lblKeyInput.setText("  โต๊ะ: " + keyBuffer.toString() + "  ");
+            lblKeyInput.setText((com.softpos.queue.QueueService.isFoodCenter() ? "  คิว: " : "  โต๊ะ: ") + keyBuffer.toString() + "  ");
             lblKeyInput.setBackground(new Color(160, 60, 0));
         }
     }
@@ -2354,6 +2358,10 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         String typed = keyBuffer.toString();
         keyBuffer.setLength(0);
         updateKeyInputLabel();
+        if (com.softpos.queue.QueueService.isFoodCenter()) {
+            callQueue(typed);
+            return;
+        }
         for (JButton btn : buttons) {
             if (btn == null) {
                 continue;
@@ -2368,6 +2376,31 @@ public class FloorPlanDialog extends javax.swing.JFrame {
                 btn.doClick();
                 return;
             }
+        }
+    }
+
+    /** FoodCenter: the typed number is a queue number to call by voice, not a table. */
+    private void callQueue(String typed) {
+        int queueNo;
+        try {
+            queueNo = Integer.parseInt(typed);
+        } catch (NumberFormatException ex) {
+            queueNo = -1;
+        }
+        com.softpos.queue.QueueService.Entry found = null;
+        if (queueNo > 0) {
+            for (com.softpos.queue.QueueService.Entry q : com.softpos.queue.QueueService.listActive()) {
+                if (q.no == queueNo) {
+                    found = q;
+                    break;
+                }
+            }
+        }
+        if (found != null) {
+            com.softpos.queue.QueueCallDialog.callReady(this, found);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "ไม่มี queue " + typed + " อยู่ในระบบ",
+                    "เรียกคิว", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
     }
 

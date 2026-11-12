@@ -2,6 +2,7 @@ package com.softpos.main.floorplan.view;
 
 import com.softpos.connection.database.ConfigFile;
 import com.softpos.queue.QueueBoardPanel;
+import com.softpos.queue.QueueCallPanel;
 import com.softpos.queue.QueueMonitor;
 import com.softpos.queue.QueueService;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class AdvertisingScreen extends JFrame {
     private static final String CARD_ADS = "ads";
     private static final String CARD_SALE = "sale";
     private static final String CARD_QUEUE = "queue";
+    private static final String CARD_CALL = "call";
 
     private static final List<AdvertisingScreen> screensOpen = new ArrayList<>();
 
@@ -42,6 +44,10 @@ public class AdvertisingScreen extends JFrame {
     private final boolean showsSale;
     private final boolean showsQueue;
     private final boolean queueFullWhenIdle;
+    private final QueueCallPanel callPanel = new QueueCallPanel();
+    private String currentCard = CARD_ADS;
+    private String cardBeforeCall;
+    private static int pendingCalls = 0;
 
     private AdvertisingScreen(GraphicsConfiguration gc, String mode) {
         super(gc);
@@ -74,14 +80,25 @@ public class AdvertisingScreen extends JFrame {
         if (queueFullWhenIdle) {
             container.add(new QueueBoardPanel(false), CARD_QUEUE);
         }
+        container.add(callPanel, CARD_CALL);
         setContentPane(container);
 
         setBounds(gc.getBounds());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
+    /** Switches card; while a queue call is on screen the new card is only remembered and shown after the call. */
+    private void showCard(String card) {
+        if (CARD_CALL.equals(currentCard)) {
+            cardBeforeCall = card;
+            return;
+        }
+        currentCard = card;
+        cards.show(getContentPane(), card);
+    }
+
     private void showIdle() {
-        cards.show(getContentPane(), queueFullWhenIdle ? CARD_QUEUE : CARD_ADS);
+        showCard(queueFullWhenIdle ? CARD_QUEUE : CARD_ADS);
     }
 
     /** What monitor N should show, from connect.ini (monitorN) with defaults. */
@@ -127,10 +144,44 @@ public class AdvertisingScreen extends JFrame {
         }
     }
 
+    /**
+     * Full-screen "queue N is ready" card with a flashing border on every open customer monitor.
+     *
+     * @return false when no customer monitor is open (nothing was shown; call {@link #hideCall} only if true)
+     */
+    public static boolean showCall(int queueNo) {
+        if (screensOpen.isEmpty()) return false;
+        pendingCalls++;
+        for (AdvertisingScreen s : screensOpen) {
+            if (!CARD_CALL.equals(s.currentCard)) {
+                s.cardBeforeCall = s.currentCard;
+            }
+            s.callPanel.start(queueNo);
+            s.currentCard = CARD_CALL;
+            s.cards.show(s.getContentPane(), CARD_CALL);
+        }
+        return true;
+    }
+
+    /** Ends one {@link #showCall}; the monitors go back to what they showed before once every call is over. */
+    public static void hideCall() {
+        if (pendingCalls > 0) pendingCalls--;
+        if (pendingCalls > 0) return;
+        for (AdvertisingScreen s : screensOpen) {
+            s.callPanel.stop();
+            if (CARD_CALL.equals(s.currentCard)) {
+                s.currentCard = s.cardBeforeCall == null ? CARD_ADS : s.cardBeforeCall;
+                s.cards.show(s.getContentPane(), s.currentCard);
+            }
+        }
+    }
+
     public static void close() {
         if (screensOpen.isEmpty()) return;
+        pendingCalls = 0;
         QueueMonitor.getInstance().stop();
         for (AdvertisingScreen s : screensOpen) {
+            s.callPanel.stop();
             s.adsPanel.stopTimers();
             s.salePanel.stopTimers();
             s.dispose();
@@ -164,7 +215,7 @@ public class AdvertisingScreen extends JFrame {
             if (!s.showsSale) continue;
             s.salePanel.update(tableNo, customerCount, items,
                     subTotal, serviceAmt, vatAmt, grandTotal);
-            s.cards.show(s.getContentPane(), CARD_SALE);
+            s.showCard(CARD_SALE);
         }
     }
 
@@ -184,7 +235,7 @@ public class AdvertisingScreen extends JFrame {
         for (AdvertisingScreen s : screensOpen) {
             if (!s.showsSale) continue;
             s.salePanel.updatePayment(tableNo, orderItems, payLines, grandTotal, changeAmt);
-            s.cards.show(s.getContentPane(), CARD_SALE);
+            s.showCard(CARD_SALE);
         }
     }
 }

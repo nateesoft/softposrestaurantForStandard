@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.Mixer;
 
 /**
  * Calls a queue number out loud, 3 times. Language comes from connect.ini
@@ -41,8 +42,14 @@ public final class QueueAnnouncer {
     }
 
     public static void announce(int queueNo) {
+        announce(queueNo, null);
+    }
+
+    /** Same as {@link #announce(int)}; onDone runs on the announcer thread once all calls have finished (or failed). */
+    public static void announce(int queueNo, Runnable onDone) {
         final String lang = language();
         EXEC.submit(() -> {
+          try {
             for (int i = 0; i < REPEAT; i++) {
                 try {
                     if (!playClips(lang, queueNo) && !speak(lang, queueNo)) {
@@ -57,6 +64,11 @@ public final class QueueAnnouncer {
                     AppLogUtil.log(QueueAnnouncer.class, "error", e);
                 }
             }
+          } finally {
+            if (onDone != null) {
+                onDone.run();
+            }
+          }
         });
     }
 
@@ -167,9 +179,38 @@ public final class QueueAnnouncer {
         return n;
     }
 
+    private static boolean listed = false;
+
+    /**
+     * Clip on the output device named in connect.ini "queueAudioDevice" (part of the device name, e.g.
+     * SAMSUNG or HDMI, case-insensitive); the OS default device when not set or not found.
+     * All devices are written to the log once, so the exact name can be copied from there.
+     */
+    private static Clip openClip() throws Exception {
+        String want = ConfigFile.getProperties("queueAudioDevice").trim().toLowerCase();
+        Mixer.Info chosen = null;
+        StringBuilder all = new StringBuilder();
+        for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
+            boolean canPlay = AudioSystem.getMixer(mi).isLineSupported(new javax.sound.sampled.DataLine.Info(Clip.class, null));
+            if (!canPlay) {
+                continue;
+            }
+            all.append("[").append(mi.getName()).append("] ");
+            if (chosen == null && !want.isEmpty() && mi.getName().toLowerCase().contains(want)) {
+                chosen = mi;
+            }
+        }
+        if (!listed) {
+            listed = true;
+            AppLogUtil.info(QueueAnnouncer.class, "audio devices: " + all + "| queueAudioDevice='" + want
+                    + "' -> " + (chosen == null ? "OS default" : chosen.getName()));
+        }
+        return chosen == null ? AudioSystem.getClip() : AudioSystem.getClip(chosen);
+    }
+
     private static void playAndWait(File f) throws Exception {
         try (AudioInputStream in = AudioSystem.getAudioInputStream(f)) {
-            Clip clip = AudioSystem.getClip();
+            Clip clip = openClip();
             java.util.concurrent.CountDownLatch done = new java.util.concurrent.CountDownLatch(1);
             clip.addLineListener(ev -> {
                 if (ev.getType() == LineEvent.Type.STOP) {
