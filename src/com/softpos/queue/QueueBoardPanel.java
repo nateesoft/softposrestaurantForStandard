@@ -40,7 +40,7 @@ public class QueueBoardPanel extends JPanel {
 
         g2.setColor(new Color(255, 200, 50));
         g2.setFont(new Font("Tahoma", Font.BOLD, compact ? 30 : 56));
-        String title = "คิวอาหาร";
+        String title = "คิวอาหาร (QUEUE)";
         FontMetrics fm = g2.getFontMetrics();
         g2.drawString(title, (w - fm.stringWidth(title)) / 2, headH - (compact ? 16 : 30));
 

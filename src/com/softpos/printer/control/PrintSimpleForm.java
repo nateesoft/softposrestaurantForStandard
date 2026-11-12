@@ -726,7 +726,7 @@ public class PrintSimpleForm {
                     if (!listE.isEmpty()) {
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("") + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("") + "_";
-                        textToPrint += "colspan=1 align=center><font face=Tahoma size=10>" + (queueHead) + "_";
+                        textToPrint += "colspan=3 align=center><font face=Tahoma size=10>" + (queueHead) + "_";
                         textToPrint += "colspan=1 align=left><font face=Tahoma size=5>" + (tableHead) + "</td><td colspan=2 align=right><font face=Tahoma size=5>" + "ลูกค้า : " + tBean.getTCustomer() + "_";
                         textToPrint += "colspan=3 align=center><font face=Tahoma size=3>" + ("-----------------------------------------") + "_";
 

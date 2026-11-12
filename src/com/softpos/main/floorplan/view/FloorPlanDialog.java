@@ -143,7 +143,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
             javax.swing.JMenuItem queueItem = new javax.swing.JMenuItem("จัดการคิว");
             queueItem.setFont(new java.awt.Font("Tahoma", 0, 12));
             queueItem.addActionListener(ev -> com.softpos.queue.QueueManagerDialog.open(this));
-            javax.swing.JMenu queueMenu = new javax.swing.JMenu("คิว");
+            javax.swing.JMenu queueMenu = new javax.swing.JMenu(" คิว(QUEUE)");
             queueMenu.setFont(new java.awt.Font("Tahoma", 1, 12));
             queueMenu.add(queueItem);
             jMenuBar1.add(queueMenu);
@@ -157,7 +157,7 @@ public class FloorPlanDialog extends javax.swing.JFrame {
 
         jSeparator3.setVisible(false);
         MShowDailyEJ1.setVisible(false);
-
+        jMenu9.setVisible(false);
         jMenuItem38.setVisible(false);
 
         new SwingWorker<FloorInitData, Void>() {
