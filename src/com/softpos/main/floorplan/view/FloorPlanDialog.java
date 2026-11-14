@@ -130,8 +130,15 @@ public class FloorPlanDialog extends javax.swing.JFrame {
         LoadingOverlay.show(this, "กำลังโหลดข้อมูล...");
 
         // Pure UI setup — no DB calls
+        // หลายหน้าจอ: FloorPlanDialog อยู่จอหลัก (primary) เสมอ แล้วค่อยเปิดจอลูกค้า
+        setBounds(java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration().getBounds());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         AdvertisingScreen.open();
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            toFront();
+            requestFocus();
+        });
         PublicVar.TableSelected = "";
 
         javax.swing.JMenuItem kicTemplateItem = new javax.swing.JMenuItem("ออกแบบใบสั่งครัว (Kitchen Template)");

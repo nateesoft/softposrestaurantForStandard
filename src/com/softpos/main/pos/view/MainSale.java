@@ -1911,16 +1911,50 @@ public class MainSale extends javax.swing.JDialog {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void adjustFullScreenLayout() {
-        int rightW = jPanel4.getWidth() - 4;
-        int rightH = jPanel4.getHeight();
-        if (rightW <= 0 || rightH <= 0) {
-            return;
-        }
-        // jPanel4 ใช้ AbsoluteLayout — ต้อง setBounds เองเพื่อให้ขยายตามจอ
-        jPanel3.setBounds(2, 2, rightW, 90);
-        tbpMain.setBounds(2, 103, rightW, rightH - 213);
-        jPanel2.setBounds(2, rightH - 102, rightW, 100);
-        jPanel4.revalidate();
+        // ฝั่งขวา (jPanel4) ขยายเต็มพื้นที่ที่เหลือของจอ: ยอดรวมสูงคงที่, เมนู (tbpMain) ยืดตามพื้นที่, ปุ่มล่างสูงคงที่
+        javax.swing.GroupLayout rootLayout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(rootLayout);
+        rootLayout.setHorizontalGroup(
+            rootLayout.createSequentialGroup()
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        rootLayout.setVerticalGroup(
+            rootLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout rightLayout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(rightLayout);
+        rightLayout.setHorizontalGroup(
+            rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tbpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        rightLayout.setVerticalGroup(
+            rightLayout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        javax.swing.GroupLayout totalLayout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(totalLayout);
+        totalLayout.setHorizontalGroup(
+            totalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(lbTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        totalLayout.setVerticalGroup(
+            totalLayout.createSequentialGroup()
+                .addComponent(lbTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+        );
+        getContentPane().revalidate();
+        getContentPane().doLayout();
 
         // jPanel9 ฝั่งซ้าย — ขยาย jScrollPane1 ให้ใช้ความสูงที่เหลือ
         int scrollH = getContentPane().getHeight() - jPanel1.getHeight() - jPanel6.getHeight() - 10;

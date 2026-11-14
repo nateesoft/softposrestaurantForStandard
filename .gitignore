@@ -18,3 +18,4 @@ kic_pdf/
 # OS
 .DS_Store
 *~
+backupdb

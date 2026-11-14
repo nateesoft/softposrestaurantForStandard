@@ -33,6 +33,10 @@ public class SaleInfoPanel extends JPanel {
     private boolean paymentMode = false;
     private double changeAmt = 0;
 
+    // QR ชำระเงิน: แสดงครึ่งขวาของจอ (รายการขายย่อเหลือครึ่งซ้าย)
+    private com.google.zxing.common.BitMatrix qrMatrix;
+    private double qrAmount;
+
     private int scrollOffset = 0;
     private Timer clockTimer;
     private Timer scrollTimer;
@@ -70,6 +74,20 @@ public class SaleInfoPanel extends JPanel {
         repaint();
     }
 
+    public void showQr(com.google.zxing.common.BitMatrix matrix, double amount) {
+        this.qrMatrix = matrix;
+        this.qrAmount = amount;
+        this.scrollOffset = 0;
+        repaint();
+    }
+
+    public void clearQr() {
+        if (qrMatrix != null) {
+            qrMatrix = null;
+            repaint();
+        }
+    }
+
     public void updatePayment(String tableNo, List<Item> orderItems, List<Item> payLines,
             double grandTotal, double change) {
         boolean sameOrder = this.items.equals(orderItems) || (orderItems == null && this.items.isEmpty());
@@ -83,6 +101,7 @@ public class SaleInfoPanel extends JPanel {
         this.grandTotal = grandTotal;
         this.paymentMode = true;
         this.changeAmt = change;
+        this.qrMatrix = null;
         if (!sameOrder) {
             this.scrollOffset = 0;
         }
@@ -133,17 +152,77 @@ public class SaleInfoPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        int w = getWidth();
+        int fullW = getWidth();
         int h = getHeight();
+        boolean qr = qrMatrix != null;
+        int w = qr ? fullW / 2 : fullW;   // โหมด QR: วาดรายการขายเฉพาะครึ่งซ้าย
 
-        paintBackground(g2, w, h);
+        paintBackground(g2, fullW, h);
         paintHeader(g2, w);
         paintColumnHeader(g2, w);
         paintItems(g2, w, h);
         paintTotals(g2, w, h);
         paintClock(g2, w, h);
+        if (qr) {
+            paintQr(g2, w, fullW - w, h);
+        }
 
         g2.dispose();
+    }
+
+    private void paintQr(Graphics2D g2, int x0, int pw, int h) {
+        g2.setPaint(new GradientPaint(x0, 0, new Color(0, 70, 120), x0, h, new Color(0, 35, 70)));
+        g2.fillRect(x0, 0, pw, h);
+
+        g2.setFont(new Font("Tahoma", Font.BOLD, 40));
+        g2.setColor(Color.WHITE);
+        FontMetrics fm = g2.getFontMetrics();
+        String title = "สแกนเพื่อชำระเงิน";
+        g2.drawString(title, x0 + (pw - fm.stringWidth(title)) / 2, 70);
+
+        g2.setFont(new Font("Tahoma", Font.PLAIN, 24));
+        g2.setColor(new Color(170, 215, 255));
+        fm = g2.getFontMetrics();
+        String sub = "PromptPay / Thai QR Payment";
+        g2.drawString(sub, x0 + (pw - fm.stringWidth(sub)) / 2, 108);
+
+        // กรอบสีขาว + QR (สี่เหลี่ยมจัตุรัสใหญ่สุดที่ว่างพอ)
+        int pad = 24;
+        int amountH = 110;
+        int top = 130;
+        int card = Math.min(pw - 60, h - top - amountH - 20);
+        if (card > 2 * pad + 20) {
+            int cx = x0 + (pw - card) / 2;
+            g2.setColor(Color.WHITE);
+            g2.fillRoundRect(cx, top, card, card, 24, 24);
+
+            int n = qrMatrix.getWidth();
+            int module = Math.max(1, (card - 2 * pad) / n);
+            int qrSize = module * n;
+            int qx = cx + (card - qrSize) / 2;
+            int qy = top + (card - qrSize) / 2;
+            g2.setColor(Color.BLACK);
+            for (int yy = 0; yy < n; yy++) {
+                for (int xx = 0; xx < n; xx++) {
+                    if (qrMatrix.get(xx, yy)) {
+                        g2.fillRect(qx + xx * module, qy + yy * module, module, module);
+                    }
+                }
+            }
+        }
+
+        g2.setFont(new Font("Tahoma", Font.PLAIN, 26));
+        g2.setColor(ACCENT_BRIGHT);
+        fm = g2.getFontMetrics();
+        String lbl = "ยอดชำระ";
+        int ay = top + Math.max(card, 0) + 45;
+        g2.drawString(lbl, x0 + (pw - fm.stringWidth(lbl)) / 2, ay);
+
+        g2.setFont(new Font("Tahoma", Font.BOLD, 56));
+        g2.setColor(Color.WHITE);
+        fm = g2.getFontMetrics();
+        String amt = String.format("฿ %,.2f", qrAmount);
+        g2.drawString(amt, x0 + (pw - fm.stringWidth(amt)) / 2, ay + 60);
     }
 
     private void paintBackground(Graphics2D g2, int w, int h) {
