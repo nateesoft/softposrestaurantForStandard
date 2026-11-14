@@ -53,6 +53,7 @@ public class AdvertisingScreen extends JFrame {
         super(gc);
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setFocusableWindowState(false); // จอลูกค้าเป็นจอแสดงผลอย่างเดียว ห้ามแย่ง focus จาก FloorPlanDialog
 
         showsSale = mode.startsWith("sale");
         showsQueue = mode.contains("queue");
@@ -125,15 +126,19 @@ public class AdvertisingScreen extends JFrame {
     /** Opens monitor2 / monitor3 as configured. Monitors that are not connected are skipped. */
     public static void open() {
         if (!screensOpen.isEmpty()) return;
-        GraphicsDevice[] screens = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .getScreenDevices();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        // monitor 1 = จอหลัก (OS primary) ที่ใช้แสดง FloorPlanDialog; monitor2/3 = จอที่เหลือตามลำดับ
+        GraphicsDevice primary = ge.getDefaultScreenDevice();
+        java.util.List<GraphicsDevice> others = new java.util.ArrayList<>();
+        for (GraphicsDevice d : ge.getScreenDevices()) {
+            if (d != primary) others.add(d);
+        }
         boolean queue = false;
         for (int monitor = 2; monitor <= 3; monitor++) {
-            if (screens.length < monitor) continue;
+            if (others.size() < monitor - 1) continue;
             String mode = modeOf(monitor);
             if (mode.equals("none")) continue;
-            AdvertisingScreen s = new AdvertisingScreen(screens[monitor - 1].getDefaultConfiguration(), mode);
+            AdvertisingScreen s = new AdvertisingScreen(others.get(monitor - 2).getDefaultConfiguration(), mode);
             screensOpen.add(s);
             s.setVisible(true);
             s.showIdle();
@@ -192,6 +197,7 @@ public class AdvertisingScreen extends JFrame {
     /** Idle view: ads slideshow, or the full-screen queue board on queue monitors. */
     public static void showAds() {
         for (AdvertisingScreen s : screensOpen) {
+            s.salePanel.clearQr();
             s.showIdle();
         }
     }
@@ -236,6 +242,28 @@ public class AdvertisingScreen extends JFrame {
             if (!s.showsSale) continue;
             s.salePanel.updatePayment(tableNo, orderItems, payLines, grandTotal, changeAmt);
             s.showCard(CARD_SALE);
+        }
+    }
+
+    /**
+     * แสดง QR ให้ลูกค้าสแกนที่จอลูกค้าที่เป็น sale (ครึ่งขวาของจอ)
+     *
+     * @return false ถ้าไม่มีจอลูกค้าที่แสดง sale (ไม่ได้แสดงอะไร)
+     */
+    public static boolean showQr(com.google.zxing.common.BitMatrix matrix, double amount) {
+        boolean shown = false;
+        for (AdvertisingScreen s : screensOpen) {
+            if (!s.showsSale) continue;
+            s.salePanel.showQr(matrix, amount);
+            s.showCard(CARD_SALE);
+            shown = true;
+        }
+        return shown;
+    }
+
+    public static void hideQr() {
+        for (AdvertisingScreen s : screensOpen) {
+            s.salePanel.clearQr();
         }
     }
 }

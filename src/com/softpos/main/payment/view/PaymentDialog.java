@@ -86,6 +86,8 @@ public class PaymentDialog extends javax.swing.JDialog {
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, screen.width, screen.height);
+        expandRightSide();
+        setupExitKeys();
 
         PublicVar.temp_table = tableNo;
         this.memberBean = memberBean;
@@ -1584,6 +1586,170 @@ public class PaymentDialog extends javax.swing.JDialog {
         txtReturnMoneyAmount.requestFocus();
     }//GEN-LAST:event_bntEarnestActionPerformed
 
+    /**
+     * ฝั่งซ้าย (รายการบิล) คงความกว้างเดิม ส่วนฝั่งขวา (ตัวเลข/ส่วนลด/ปุ่มชำระ)
+     * ขยายเต็มพื้นที่ที่เหลือของจอ — เขียนทับ horizontal group ของ jPanel6 ตอนรัน
+     * เพื่อไม่ต้องแก้โค้ดที่ NetBeans generate
+     */
+    private void expandRightSide() {
+        final javax.swing.GroupLayout l = (javax.swing.GroupLayout) jPanel6.getLayout();
+        final javax.swing.GroupLayout.Alignment LD = javax.swing.GroupLayout.Alignment.LEADING;
+        final int DS = javax.swing.GroupLayout.DEFAULT_SIZE;
+        final int PS = javax.swing.GroupLayout.PREFERRED_SIZE;
+        final int MX = Short.MAX_VALUE;
+        final javax.swing.LayoutStyle.ComponentPlacement REL = javax.swing.LayoutStyle.ComponentPlacement.RELATED;
+        java.awt.Insets in = getInsets();
+        int usableW = Toolkit.getDefaultToolkit().getScreenSize().width - in.left - in.right - 2 * 14 - 6;
+        final int halfW = Math.max(0, usableW / 2);
+
+        // ฝั่งซ้าย: resizable=false -> กว้างเท่า preferred ของตัวที่กว้างสุด
+        javax.swing.GroupLayout.ParallelGroup left = l.createParallelGroup(LD, false)
+                .addGroup(l.createSequentialGroup()
+                        .addComponent(jPanel22, PS, DS, PS)
+                        .addPreferredGap(REL)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(REL)
+                        .addComponent(txtBillNo))
+                .addComponent(jPanel21, DS, DS, MX)
+                .addComponent(jScrollPane1)
+                .addComponent(jPanelDiscount, DS, DS, MX)
+                .addGroup(l.createSequentialGroup()
+                        .addComponent(bntPrintCheckBill1, PS, 148, PS)
+                        .addPreferredGap(REL)
+                        .addComponent(bntPrintCheckBill2, PS, 142, PS)
+                        .addPreferredGap(REL)
+                        .addComponent(bntPrintCheckBill, DS, DS, MX))
+                .addComponent(jPanelMember, PS, DS, PS)
+                .addComponent(jPanel3, DS, DS, MX)
+                // บังคับให้ฝั่งซ้ายกว้างครึ่งหนึ่งของพื้นที่ใช้งาน (หักขอบ/ช่องว่างตรงกลางประมาณ)
+                .addGap(halfW, halfW, halfW);
+
+        // ฝั่งขวา: ทุกส่วนยืดเต็มความกว้าง
+        javax.swing.GroupLayout.ParallelGroup right = l.createParallelGroup(LD)
+                .addComponent(panelNumber, DS, DS, MX)
+                .addComponent(jPanel1, DS, DS, MX)
+                .addComponent(jPanel2, DS, DS, MX)
+                .addComponent(jPanel8, DS, DS, MX)
+                .addGroup(l.createSequentialGroup()
+                        .addComponent(btnDiscountAll, PS, 160, PS)
+                        .addPreferredGap(REL)
+                        .addComponent(txtDiscountAmount, DS, DS, MX));
+
+        l.setHorizontalGroup(l.createParallelGroup(LD)
+                .addGroup(l.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(l.createParallelGroup(LD)
+                                .addGroup(l.createSequentialGroup()
+                                        .addGap(83, 83, 83)
+                                        .addComponent(lbArName, PS, 375, PS)
+                                        .addGap(5, 5, 5))
+                                .addGroup(l.createSequentialGroup()
+                                        .addGroup(left)
+                                        .addPreferredGap(REL)
+                                        .addGroup(right)))
+                        .addContainerGap()));
+
+        // ===== ภายใน panel ฝั่งขวา: ปุ่มกว้างคงที่ ช่องกรอกยืดตามความกว้าง =====
+        final int BTN_W = 160;        // ปุ่มทั่วไป ให้อ่านข้อความได้ครบ
+        final int BTN_CREDIT_W = 220; // "บัตรเครดิต (Credit Card)"
+        // jPanel1: เงินสด
+        javax.swing.GroupLayout l1 = (javax.swing.GroupLayout) jPanel1.getLayout();
+        // ปุ่มชำระด้วย QR Code (PromptPay) อยู่ขวาช่องเงินสด
+        btnQrCode.setFont(new java.awt.Font("Tahoma", 1, 14));
+        btnQrCode.setText("ชำระด้วย QR Code");
+        btnQrCode.setFocusable(false);
+        btnQrCode.setRequestFocusEnabled(false);
+        for (java.awt.event.ActionListener al : btnQrCode.getActionListeners()) {
+            btnQrCode.removeActionListener(al);
+        }
+        btnQrCode.addActionListener(ev -> payByQrCode());
+        l1.setHorizontalGroup(l1.createParallelGroup(LD)
+                .addGroup(l1.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(bntCash, PS, BTN_W, PS)
+                        .addPreferredGap(REL)
+                        .addComponent(txtCashAmount, DS, 383, MX)
+                        .addPreferredGap(REL)
+                        .addComponent(btnQrCode, PS, BTN_W + 20, PS)
+                        .addContainerGap()));
+        l1.setVerticalGroup(l1.createParallelGroup(LD)
+                .addGroup(l1.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(l1.createParallelGroup(LD)
+                                .addComponent(txtCashAmount, PS, 40, PS)
+                                .addComponent(bntCash, PS, 40, PS)
+                                .addComponent(btnQrCode, PS, 40, PS))
+                        .addContainerGap()));
+
+        // jPanel2: บัตรเครดิต
+        javax.swing.GroupLayout l2 = (javax.swing.GroupLayout) jPanel2.getLayout();
+        l2.setHorizontalGroup(l2.createParallelGroup(LD)
+                .addComponent(jPanel5, DS, DS, MX)
+                .addGroup(l2.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(l2.createParallelGroup(LD)
+                                .addGroup(l2.createSequentialGroup()
+                                        .addComponent(txtCreditNo, PS, 122, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtCreditTrackNo, PS, 95, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtCreditAmount, DS, 251, MX))
+                                .addGroup(l2.createSequentialGroup()
+                                        .addComponent(btnCredit, PS, BTN_CREDIT_W, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtCreditName, DS, 281, MX)))
+                        .addContainerGap()));
+
+        // jPanel5: หัวคอลัมน์ (Credit Card NO. / Trace NO / จำนวนเงิน) จัดให้ตรงกับช่องกรอกด้านล่าง + padding
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        javax.swing.GroupLayout l5 = (javax.swing.GroupLayout) jPanel5.getLayout();
+        l5.setHorizontalGroup(l5.createParallelGroup(LD)
+                .addGroup(l5.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, PS, 122, PS)   // ตรงกับ txtCreditNo
+                        .addPreferredGap(REL)
+                        .addComponent(jLabel2, PS, 95, PS)    // ตรงกับ txtCreditTrackNo
+                        .addPreferredGap(REL)
+                        .addComponent(jLabel8, DS, 251, MX)   // ตรงกับ txtCreditAmount
+                        .addGap(8, 8, 8)                      // ชดเชย inset ข้อความชิดขวาของช่อง
+                        .addContainerGap()));
+        l5.setVerticalGroup(l5.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(l5.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel8))
+                .addGap(5, 5, 5));
+
+        // jPanel8: Entertain / คืนเงินมัดจำ / Gift Voucher / ลูกหนี้
+        javax.swing.GroupLayout l8 = (javax.swing.GroupLayout) jPanel8.getLayout();
+        l8.setHorizontalGroup(l8.createParallelGroup(LD)
+                .addGroup(l8.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(l8.createParallelGroup(LD)
+                                .addGroup(l8.createSequentialGroup()
+                                        .addComponent(jButton1, PS, BTN_W, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtEntertainAmount, DS, 115, MX)
+                                        .addPreferredGap(REL)
+                                        .addComponent(bntEarnest, PS, BTN_W, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtReturnMoneyAmount, DS, 126, MX))
+                                .addGroup(l8.createSequentialGroup()
+                                        .addComponent(btnGiftVoucher, PS, BTN_W, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtGiftVoucherAmount, DS, 115, MX))
+                                .addGroup(l8.createSequentialGroup()
+                                        .addComponent(btnCredit1, PS, BTN_W, PS)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtArCode, DS, 247, MX)
+                                        .addPreferredGap(REL)
+                                        .addComponent(txtArAmount, DS, 126, MX)))
+                        .addContainerGap()));
+    }
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         LoadDisc();
     }//GEN-LAST:event_formWindowOpened
@@ -1639,8 +1805,88 @@ public class PaymentDialog extends javax.swing.JDialog {
             MSG.WAR(this, "Food can't pay this Computer:\n เครื่องนี้ไม่สามารถชำระเงินค่าอาหารได้");
         } else {
             checkBillOK();
+            markPaymentCompletedIfDone();
         }
     }//GEN-LAST:event_btnAcceptActionPerformed
+
+    /**
+     * ชำระด้วย QR Code (PromptPay): แสดง QR พร้อมยอดคงเหลือที่จอลูกค้า (monitor2/3 ที่เป็น sale) ครึ่งขวาของจอ
+     * จากนั้นใส่ยอดลงช่องเงินสด แคชเชียร์กด Enter ยืนยันเมื่อลูกค้าโอนแล้ว (บันทึกเป็นเงินสด)
+     * ตั้งค่าเลขรับเงินใน connect.ini  เช่น  promptpay,0812345678  (เบอร์โทร 10 หลัก หรือเลขบัตร/ภาษี 13 หลัก)
+     */
+    private void payByQrCode() {
+        if (paymentCompleted || PublicVar.SubTotalOK) {
+            return;
+        }
+        String ppId = com.softpos.connection.database.ConfigFile.getProperties("promptpay");
+        double amount = parseAmount(txtTotalAmount.getText());
+        if (amount <= 0) {
+            MSG.WAR(this, "ไม่มียอดที่ต้องชำระ");
+            return;
+        }
+        String payload = com.softpos.util.PromptPayQr.payload(ppId, amount);
+        if (payload == null) {
+            MSG.WAR(this, "ยังไม่ได้ตั้งค่า PromptPay ใน connect.ini\nเช่น  promptpay,0812345678  (เบอร์โทร 10 หลัก หรือเลขบัตร/ภาษี 13 หลัก)");
+            return;
+        }
+        com.google.zxing.common.BitMatrix matrix = com.softpos.util.PromptPayQr.matrix(payload);
+        if (matrix == null || !AdvertisingScreen.showQr(matrix, amount)) {
+            MSG.WAR(this, "ไม่พบจอลูกค้าที่แสดงหน้าขาย (monitor2/monitor3 = sale ใน connect.ini)");
+            return;
+        }
+        txtCashAmount.setEditable(true);
+        txtCashAmount.setFocusable(true);
+        txtCashAmount.setText(dec.format(amount));
+        txtCashAmount.selectAll();
+        txtCashAmount.requestFocus();
+    }
+
+    /** true เมื่อชำระเงินเสร็จแล้ว (บันทึกบิลแล้ว) — หลังจากนี้ Enter/ESC จะปิดหน้าจอ */
+    private boolean paymentCompleted = false;
+
+    /**
+     * หลังชำระเสร็จ ช่องเงินสดถูก disable ทำให้ focus หาย ปุ่ม Enter/ESC จึงไม่ทำงาน (ค้าง)
+     * จึงย้าย focus มาที่ panel หลัก และเปิดโหมดปิดหน้าจอด้วย Enter/ESC
+     * (ใช้ invokeLater เพื่อไม่ให้ Enter ตัวเดียวกันที่เพิ่งกดชำระ ไปปิดหน้าจอทันที)
+     */
+    private void markPaymentCompletedIfDone() {
+        if (!PublicVar.SubTotalOK) {
+            return;
+        }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            if (!isDisplayable()) {
+                return;
+            }
+            paymentCompleted = true;
+            jPanel6.setFocusable(true);
+            jPanel6.requestFocusInWindow();
+        });
+    }
+
+    /** ESC = ออกจากหน้าจอได้ทุกเมื่อ, Enter = ออกจากหน้าจอเมื่อชำระเสร็จแล้ว (ไม่ว่า focus อยู่ที่ใด) */
+    private void setupExitKeys() {
+        javax.swing.JRootPane root = getRootPane();
+        javax.swing.InputMap im = root.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+        im.put(javax.swing.KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "payExitEsc");
+        im.put(javax.swing.KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "payExitEnter");
+        root.getActionMap().put("payExitEsc", new javax.swing.AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (isDisplayable()) {
+                    clearTempGift();
+                    dispose();
+                }
+            }
+        });
+        root.getActionMap().put("payExitEnter", new javax.swing.AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (paymentCompleted && isDisplayable()) {
+                    dispose();
+                }
+            }
+        });
+    }
 
     private void txtCreditTrackNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCreditTrackNoActionPerformed
         // TODO add your handling code here:
@@ -1824,6 +2070,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private javax.swing.JButton btnDiscountAll;
     private javax.swing.JButton btnDot;
     private javax.swing.JButton btnExit;
+    private final javax.swing.JButton btnQrCode = new javax.swing.JButton();
     private javax.swing.JButton btnGiftVoucher;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
