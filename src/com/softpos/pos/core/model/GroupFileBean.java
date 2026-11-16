@@ -24,6 +24,5 @@ public class GroupFileBean {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-    
-    
+
 }

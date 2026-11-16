@@ -150,14 +150,20 @@ public class CuponControl {
      * Used by GiftVoucherDialog.loadData().
      */
     public List<Object[]> loadTempGift(String macno) {
-
         mysqlConnect.open(this.getClass());
         List<Object[]> rows = new ArrayList<>();
         try {
-            String sql = "select * from tempgift where macno='" + macno + "'";
+            String sql = "select t.*, g.GTName "
+                    + "from tempgift t "
+                    + "inner join gifttype g on t.giftno = g.GTCode "
+                    + "where t.macno='" + macno + "'";
             try (Statement stmt = mysqlConnect.getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    rows.add(new Object[]{rs.getString("giftno"), rs.getDouble("giftamt")});
+                    rows.add(new Object[]{
+                        rs.getString("giftno"),
+                        rs.getString("GTName"),
+                        rs.getDouble("giftamt")
+                    });
                 }
             }
         } catch (SQLException e) {

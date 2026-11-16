@@ -9,8 +9,8 @@ import javax.swing.table.JTableHeader;
 
 public class GiftDialogList extends javax.swing.JDialog {
 
-    private String giftCode;
     private String giftTypeCode;
+    private String giftTypeName;
 
     public GiftDialogList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -20,16 +20,20 @@ public class GiftDialogList extends javax.swing.JDialog {
         loadData();
     }
 
-    public String getGiftCode() {
-        return giftCode;
-    }
-
-    public void setGiftCode(String giftCode) {
-        this.giftCode = giftCode;
-    }
-
     public void setGiftTypeCode(String giftTypeCode) {
         this.giftTypeCode = giftTypeCode;
+    }
+
+    public String getGiftTypeCode() {
+        return giftTypeCode;
+    }
+
+    public String getGiftTypeName() {
+        return giftTypeName;
+    }
+
+    public void setGiftTypeName(String giftTypeName) {
+        this.giftTypeName = giftTypeName;
     }
 
     @SuppressWarnings("unchecked")
@@ -101,14 +105,18 @@ public class GiftDialogList extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        setGiftCode(null);
+        setGiftTypeCode(null);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (evt.getClickCount() == 2) {
             giftTypeCode = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+            giftTypeName = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
+            
             setGiftTypeCode(giftTypeCode);
+            setGiftTypeName(giftTypeName);
+            
             PublicVar.VoucherType = giftTypeCode;
             dispose();
         }

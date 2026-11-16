@@ -48,6 +48,7 @@ public class AppContext {
     private static ItemEditQtyControl itemEditQtyController;
     private static PosHwSetupControl posHwSetupControl;
     private static TempSetControl tempSetControl;
+    private static GiftTypeControl giftTypeControl;
 
     private AppContext() {}
     
@@ -108,6 +109,11 @@ public class AppContext {
     public static CuponControl getCuponControl() {
         if (cuponControl == null) cuponControl = new CuponControl();
         return cuponControl;
+    }
+    
+    public static GiftTypeControl getGiftTypeControl() {
+        if (giftTypeControl == null) giftTypeControl = new GiftTypeControl();
+        return giftTypeControl;
     }
 
     public static CuponListControl getCuponListControl() {

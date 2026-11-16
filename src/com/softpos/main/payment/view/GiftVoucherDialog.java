@@ -3,12 +3,15 @@ package com.softpos.main.payment.view;
 import com.softpos.constants.PublicVar;
 import com.softpos.main.program.GiftDialogList;
 import com.softpos.pos.core.controller.AppContext;
+import com.softpos.pos.core.controller.GiftTypeControl;
+import com.softpos.pos.core.model.GiftTypeBean;
 import com.softpos.util.AppLogUtil;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.softpos.util.NumberUtil;
+import javax.swing.JFrame;
 
 public class GiftVoucherDialog extends javax.swing.JDialog {
 
@@ -28,7 +31,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         netTotalAmount = Double.parseDouble(totalAmountText.replace(",", ""));
 
         loadData();
-        txtGiftCode.requestFocus();
+        txtGiftTypeCode.requestFocus();
     }
 
     public double getTotalAmount() {
@@ -47,7 +50,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         txtGiftMoney = new javax.swing.JTextField();
-        txtGiftCode = new javax.swing.JTextField();
+        txtGiftTypeCode = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
@@ -91,15 +94,10 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             }
         });
 
-        txtGiftCode.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtGiftCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtGiftCodeActionPerformed(evt);
-            }
-        });
-        txtGiftCode.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtGiftTypeCode.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtGiftTypeCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtGiftCodeKeyPressed(evt);
+                txtGiftTypeCodeKeyPressed(evt);
             }
         });
 
@@ -129,11 +127,11 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtGiftCode, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGiftTypeCode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
-                        .addComponent(txtGiftMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtGiftMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -144,11 +142,10 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtGiftCode, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtGiftMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtGiftTypeCode, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGiftMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -165,11 +162,11 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "เลขที่บัตรกำนัล", "จำนวนเงิน"
+                "เลขที่บัตรกำนัล", "ชื่อบัตรกำนัล", "จำนวนเงิน"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -179,9 +176,11 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tbGift);
         if (tbGift.getColumnModel().getColumnCount() > 0) {
             tbGift.getColumnModel().getColumn(0).setPreferredWidth(150);
-            tbGift.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tbGift.getColumnModel().getColumn(1).setPreferredWidth(250);
+            tbGift.getColumnModel().getColumn(2).setPreferredWidth(100);
         }
 
+        txtTotalAmount.setEditable(false);
         txtTotalAmount.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtTotalAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalAmount.setText("0.00");
@@ -224,24 +223,24 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 218, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTotalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTotalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -254,17 +253,17 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTotalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(btnClear)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -275,7 +274,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -286,7 +285,7 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         int rows = model.getRowCount();
         for (int i = 0; i < rows; i++) {
             String GNo = tbGift.getValueAt(i, 0).toString();
-            String GAmt = tbGift.getValueAt(i, 1).toString().replace(",", "");
+            String GAmt = tbGift.getValueAt(i, 2).toString().replace(",", "");
             if (netTotalAmount > 0) {
                 boolean saved = AppContext.getCuponControl().saveTempGift(
                         GNo, PublicVar.VoucherType, Double.parseDouble(GAmt), PublicVar.MACNO);
@@ -303,14 +302,21 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         clearModel();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void txtGiftCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGiftCodeKeyPressed
+    private void txtGiftTypeCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGiftTypeCodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             btnExitActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txtGiftMoney.selectAll();
-            txtGiftMoney.requestFocus();
+            GiftTypeBean giftTypeBean = loadGiftTypeCode(txtGiftTypeCode.getText());
+            if(giftTypeBean != null){
+                txtGiftTypeCode.setText(giftTypeBean.getGiftTypeCode());
+                this.giftTypeCode = giftTypeBean.getGiftTypeCode();
+                this.giftTypeName = giftTypeBean.getGiftTypeName();
+                
+                txtGiftMoney.selectAll();
+                txtGiftMoney.requestFocus();
+            }
         }
-    }//GEN-LAST:event_txtGiftCodeKeyPressed
+    }//GEN-LAST:event_txtGiftTypeCodeKeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int sel = tbGift.getSelectedRow();
@@ -341,25 +347,28 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private String giftTypeCode = null;
+    private String giftTypeName = null;
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        GiftDialogList list = new GiftDialogList(null, true);
+        GiftDialogList list = new GiftDialogList(new JFrame(), true);
         list.setVisible(true);
 
-        if (list.getGiftCode() != null) {
-            txtGiftCode.setText(list.getGiftCode());
-            txtGiftCode.selectAll();
-            txtGiftCode.requestFocus();
+        if (list.getGiftTypeCode() != null) {
+            this.giftTypeCode = list.getGiftTypeCode();
+            this.giftTypeName = list.getGiftTypeName();
+            
+            txtGiftTypeCode.setText(list.getGiftTypeCode());
+            txtGiftTypeCode.selectAll();
+            txtGiftTypeCode.requestFocus();
         } else {
-            txtGiftCode.setText("");
+            this.giftTypeCode = null;
+            this.giftTypeName = null;
+            
+            txtGiftTypeCode.setText("");
             txtGiftMoney.setText("0.00");
-
-            txtGiftCode.requestFocus();
+            txtGiftTypeCode.requestFocus();
         }
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void txtGiftCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiftCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtGiftCodeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
@@ -375,20 +384,20 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbGift;
-    private javax.swing.JTextField txtGiftCode;
     private javax.swing.JTextField txtGiftMoney;
+    private javax.swing.JTextField txtGiftTypeCode;
     private javax.swing.JTextField txtTotalAmount;
     // End of variables declaration//GEN-END:variables
 
     private void clearText() {
-        txtGiftCode.setText("");
+        txtGiftTypeCode.setText("");
         txtGiftMoney.setText("0.00");
-        txtGiftCode.requestFocus();
+        txtGiftTypeCode.requestFocus();
 
         int size = model.getRowCount();
         double total = 0.00;
         for (int i = 0; i < size; i++) {
-            double money = Double.parseDouble(model.getValueAt(i, 1).toString());
+            double money = Double.parseDouble(model.getValueAt(i, 2).toString());
             total += money;
         }
 
@@ -408,9 +417,8 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
     }
 
     private void saveGift() {
-        String GNo = txtGiftCode.getText();
-        if (GNo.equals("")) {
-            txtGiftCode.requestFocus();
+        if (this.giftTypeCode == null || this.giftTypeName == null) {
+            txtGiftTypeCode.requestFocus();
             return;
         }
         String GAmt = txtGiftMoney.getText().replace(",", "");
@@ -422,13 +430,20 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
             }
         } catch (NumberFormatException e) {
             AppLogUtil.log(GiftVoucherDialog.class, "error", e);
+            this.giftTypeCode = null;
+            this.giftTypeName = null;
+            
             txtGiftMoney.setText("");
             txtGiftMoney.requestFocus();
             return;
         }
 
-        removeAtRow(txtGiftCode.getText());
-        model.addRow(new Object[]{txtGiftCode.getText(), txtGiftMoney.getText()});
+        removeAtRow(this.giftTypeCode);
+        model.addRow(new Object[]{
+            this.giftTypeCode, 
+            this.giftTypeName, 
+            txtGiftMoney.getText()
+        });
         clearText();
     }
 
@@ -447,8 +462,14 @@ public class GiftVoucherDialog extends javax.swing.JDialog {
         for (Object[] row : rows) {
             model.addRow(new Object[]{
                 row[0],
-                NumberUtil.showDouble2((Double) row[1])
+                row[1],
+                NumberUtil.showDouble2((Double) row[2])
             });
         }
+    }
+
+    private GiftTypeBean loadGiftTypeCode(String giftTypeCode) {
+        GiftTypeControl giftTypeControl = new GiftTypeControl();
+        return giftTypeControl.findByCode(giftTypeCode);
     }
 }
