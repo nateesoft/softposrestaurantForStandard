@@ -1653,6 +1653,7 @@ public class PaymentDialog extends javax.swing.JDialog {
         final int BTN_W = 160;        // ปุ่มทั่วไป ให้อ่านข้อความได้ครบ
         final int BTN_CREDIT_W = 220; // "บัตรเครดิต (Credit Card)"
         // jPanel1: เงินสด
+        txtCashAmount.setMinimumSize(new java.awt.Dimension(100, 35));
         javax.swing.GroupLayout l1 = (javax.swing.GroupLayout) jPanel1.getLayout();
         // ปุ่มชำระด้วย QR Code (PromptPay) อยู่ขวาช่องเงินสด
         btnQrCode.setFont(new java.awt.Font("Tahoma", 1, 14));
@@ -1666,11 +1667,12 @@ public class PaymentDialog extends javax.swing.JDialog {
         l1.setHorizontalGroup(l1.createParallelGroup(LD)
                 .addGroup(l1.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(bntCash, PS, BTN_W, PS)
+                        // จอ 1024: ปุ่ม/ช่องหดได้ (min เล็กลง) ไม่ให้ฝั่งขวากว้างเกินที่เหลือ
+                        .addComponent(bntCash, 100, BTN_W, BTN_W)
                         .addPreferredGap(REL)
-                        .addComponent(txtCashAmount, DS, 383, MX)
+                        .addComponent(txtCashAmount, 100, 383, MX)
                         .addPreferredGap(REL)
-                        .addComponent(btnQrCode, PS, BTN_W + 20, PS)
+                        .addComponent(btnQrCode, 110, BTN_W + 20, BTN_W + 20)
                         .addContainerGap()));
         l1.setVerticalGroup(l1.createParallelGroup(LD)
                 .addGroup(l1.createSequentialGroup()
