@@ -25,7 +25,7 @@ import org.update4j.FileMetadata;
  *
  * After running, upload to server:
  *   update4j-config.xml         → http://YOUR_SERVER/softpos/update4j-config.xml
- *   SoftPOSRestaurantForStandart.jar → http://YOUR_SERVER/softpos/SoftPOSRestaurantForStandart.jar
+ *   SoftPOSRestaurantForStandard.jar → http://YOUR_SERVER/softpos/SoftPOSRestaurantForStandard.jar
  *
  * REQUIRES: Java 9+ to run (update4j uses JPMS).
  */

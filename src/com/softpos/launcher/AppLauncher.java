@@ -16,19 +16,19 @@ import org.update4j.Configuration;
  * Entry point for launcher.jar — checks for updates then starts the main app.
  *
  * Deployment layout (all in same directory): launcher.jar ← users run this
- * SoftPOSRestaurantForStandart.jar ← main app (gets auto-updated)
+ * SoftPOSRestaurantForStandard.jar ← main app (gets auto-updated)
  * lib/update4j-1.5.9.jar connect.ini ← add:
  * updateUrl,http://YOUR_SERVER/softpos
  *
  * Server must serve: http://YOUR_SERVER/softpos/update4j-config.xml
- * http://YOUR_SERVER/softpos/SoftPOSRestaurantForStandart.jar
+ * http://YOUR_SERVER/softpos/SoftPOSRestaurantForStandard.jar
  *
  * REQUIRES: Java 9+ runtime (update4j uses JPMS). Source compiles to Java 8
  * bytecode but must run on JRE 9+.
  */
 public class AppLauncher {
 
-    private static final String MAIN_JAR = "SoftPOSRestaurantForStandart.jar";
+    private static final String MAIN_JAR = "SoftPOSRestaurantForStandard.jar";
 
     public static void main(String[] args) {
         try {
