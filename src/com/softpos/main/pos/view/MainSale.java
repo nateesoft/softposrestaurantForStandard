@@ -185,9 +185,6 @@ public class MainSale extends javax.swing.JDialog {
     private void printCheckBillProcess() {
         AppLogUtil.info("printCheckBillProcess: " + tableNo);
 
-        // check print to kitchen
-        processPrintBillCheck(tableNo);
-
         double totalCheck = Double.parseDouble(lbTotalAmount.getText().replace(",", ""));
         if (totalCheck > 0) {
             if (btnClickPrintKic == true) {
@@ -199,6 +196,9 @@ public class MainSale extends javax.swing.JDialog {
             kichenPrintUnlessFoodCenter(tableNo);
 
             tableFileControl.updateTOnActToYByTCode(tableNo);
+
+            // the check bill slip is printed for every businessType
+            printBillCheckSlip(tableNo);
         } else {
             MSG.WAR(this, "มูลค่า 0 บาทไม่สามารถพิมพ์รายการได้");
         }
@@ -233,14 +233,17 @@ public class MainSale extends javax.swing.JDialog {
     private void processPrintBillCheck(String tableNo) {
         if (ConfigFile.getProperties("businessType").equals("steak") && mainSaleControl.checkKicPrint(tableNo) == true) {
             AppLogUtil.info("Condition to print bill check: " + tableNo);
-            
-            if (PublicVar.useprint) {
-                AppLogUtil.info("printBillCheck usePrint = " + PublicVar.useprint);
-                PPrint print = new PPrint();
-                print.printCheckBill(tableNo);
-            } else {
-                MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!" + PublicVar.useprint);
-            }
+            printBillCheckSlip(tableNo);
+        }
+    }
+
+    private void printBillCheckSlip(String tableNo) {
+        if (PublicVar.useprint) {
+            AppLogUtil.info("printBillCheckSlip: " + tableNo);
+            PPrint print = new PPrint();
+            print.printCheckBill(tableNo);
+        } else {
+            MSG.WAR(this, "ระบบไม่ได้กำหนดให้ใช้งานเครื่องพิมพ์ !!!");
         }
     }
 
