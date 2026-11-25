@@ -97,4 +97,31 @@ public class FinalcialRec {
     public Double Entertain = 0.0;
     public Double BillEntertain = 0.0;
     public Double B_NetDiff = 0.0;
+    
+    public int Eat_In_CntNoCash = 0;
+    public Double Eat_In_AmtNoCash = 0.00;
+    public int Eat_In_CustNoCash = 0;
+    public Double Eat_In_NetNoCash = 0.00;
+    
+    public int Take_Away_CntNoCash = 0;
+    public Double Take_Away_AmtNoCash = 0.00;
+    public int Take_Away_CustNoCash = 0;
+    public Double Take_Away_NetNoCash = 0.00;
+    
+    public int Delivery_CntNoCash = 0;
+    public Double Delivery_AmtNoCash = 0.00;
+    public int Delivery_CustNoCash = 0;
+    public Double Delivery_NetNoCash = 0.00;
+    
+    public int Pinto_CntNoCash = 0;
+    public Double Pinto_AmtNoCash = 0.00;
+    public int Pinto_CustNoCash = 0;
+    public Double Pinto_NetNoCash = 0.00;
+    
+    public int WholeSale_CntNoCash = 0;
+    public Double WholeSale_AmtNoCash = 0.00;
+    public int WholeSale_CustNoCash = 0;
+    public Double WholeSale_NetNoCash = 0.00;
+    
+    
 }

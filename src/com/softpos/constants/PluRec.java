@@ -26,4 +26,5 @@ public class PluRec {
     public Double W_Amt = 0.0;
     public Double S_Qty = 0.0;
     public Double S_Amt = 0.0;
+    public String R_ETD = "";
 }

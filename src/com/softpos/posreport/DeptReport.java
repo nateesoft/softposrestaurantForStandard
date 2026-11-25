@@ -7,6 +7,7 @@ import com.softpos.constants.PluRec;
 
 import com.softpos.connection.database.MySQLConnect;
 import com.softpos.constants.PublicVar;
+import com.softpos.pos.core.model.GroupFileReportBean;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import java.util.ArrayList;
 
 public class DeptReport extends javax.swing.JDialog {
 
@@ -328,8 +330,6 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         GArray = new PluRec[1];
         ArraySize = 0;
 
-
-        
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -338,6 +338,15 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
                     + "and (r_void<>'V') and (r_refund<>'V') Order by r_group";
             ResultSet rs = stmt.executeQuery(SqlQuery);
+
+            String sql = "select r_group,gf.groupname,sum(r_quan) r_quan,sum(r_nettotal) r_nettotal, r_etd "
+                    + "from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "group by r_etd  ";
             TempGroup = "";
             Double SumEQty = 0.0;
             Double SumEAmt = 0.0;
@@ -518,7 +527,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         Jdi_depReport dept = new Jdi_depReport(new Frame(), true);
         dept.setData(GArray);
         dept.setHeaderPage(MacNo1, MacNo2, CashNo1, CashNo2, Group1, Group2);
-        
+
         dept.setVisible(true);
     }
 
@@ -529,197 +538,188 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String CashNo2 = txtCashNo2.getText();
         String Group1 = txtGroup1.getText();
         String Group2 = txtGroup2.getText();
-        String TempGroup = "";
-        int ArraySize = 0;
-        Boolean Found = false;
         PluRec[] GArray;
         GArray = new PluRec[1];
-        ArraySize = 0;
-
-
+        GroupFileReportBean bean = new GroupFileReportBean();
+        ArrayList<GroupFileReportBean> list = new ArrayList();
         mysqlConnect.open(this.getClass());
         try {
-            Statement stmt = mysqlConnect.getConnection().createStatement();
-            String SqlQuery = "select *from t_sale "
-                    + "where "
-                    + "(macno>='" + MacNo1 + "') and (macno<='" + MacNo2 + "') "
-                    + "and (cashier>='" + CashNo1 + "') and (cashier<='" + CashNo2 + "') "
-                    + "and (r_group>='" + Group1 + "') and (r_group<='" + Group2 + "') "
-                    + "and (r_void<>'V') and (r_refund<>'V') "
-                    + "Order by r_group";
+            Statement stmtE = mysqlConnect.getConnection().createStatement();
+            Statement stmtT = mysqlConnect.getConnection().createStatement();
+            Statement stmtD = mysqlConnect.getConnection().createStatement();
+            Statement stmtP = mysqlConnect.getConnection().createStatement();
+            Statement stmtW = mysqlConnect.getConnection().createStatement();
+            String R_ETD = "";
+            String sqlQuery = "";
+            R_ETD = "E";
+            sqlQuery = "select r_group,sum(r_quan) r_quan,sum(r_nettotal) r_total, r_etd ,r_pname,gf.groupname groupName "
+                    + " from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "and r_etd='" + R_ETD + "' "
+                    + "group by r_etd,r_group  ";
 
-            ResultSet rs = stmt.executeQuery(SqlQuery);
-            TempGroup = "";
-            Double SumEQty = 0.0;
-            Double SumEAmt = 0.0;
-            Double SumTQty = 0.0;
-            Double SumTAmt = 0.0;
-            Double SumDQty = 0.0;
-            Double SumDAmt = 0.0;
-            Double SumPQty = 0.0;
-            Double SumPAmt = 0.0;
-            Double SumWQty = 0.0;
-            Double SumWAmt = 0.0;
-            Double SumSQty = 0.0;
-            Double SumSAmt = 0.0;
-            PluRec GroupRec = new PluRec();
-            GroupRec.MacNo1 = MacNo1;
-            GroupRec.MacNo2 = MacNo2;
-            GroupRec.Cashier1 = CashNo1;
-            GroupRec.Cashier2 = CashNo2;
-            GroupRec.Group1 = Group1;
-            GroupRec.Group2 = Group2;
-            GroupRec.Plu1 = "";
-            GroupRec.Plu2 = "";
-            GroupRec.GroupCode = TempGroup;
-            GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-            GroupRec.PCode = "";
-            GroupRec.PName = "";
+            ResultSet rsE = stmtE.executeQuery(sqlQuery);
+            double sumR_EtdTTLE = 0.00;
+            double sumR_EtdTTLT = 0.00;
+            double sumR_EtdTTLD = 0.00;
+            double sumR_EtdTTLP = 0.00;
+            double sumR_EtdTTLW = 0.00;
+            while (rsE.next()) {
+                bean = new GroupFileReportBean();
+                bean.setMacnoFrom(MacNo1);
+                bean.setMacnoTo(MacNo2);
+                bean.setCashFrom(CashNo1);
+                bean.setCashTo(CashNo2);
+                bean.setGroupFrom(Group1);
+                bean.setGroupTo(Group2);
 
-            GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-            GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
-            GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-            GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-            GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-            GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-            GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-            GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
-            GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-            GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
-            GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-            GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-            GArray[ArraySize] = GroupRec;
-
-            while (rs.next()) {
-                TempGroup = rs.getString("r_group");
-
-                if (!TempGroup.equals(rs.getString("r_group"))) {
-                    GroupRec = new PluRec();
-                    GroupRec.MacNo1 = MacNo1;
-                    GroupRec.MacNo2 = MacNo2;
-                    GroupRec.Cashier1 = CashNo1;
-                    GroupRec.Cashier2 = CashNo2;
-                    GroupRec.Group1 = Group1;
-                    GroupRec.Group2 = Group2;
-                    GroupRec.Plu1 = "";
-                    GroupRec.Plu2 = "";
-                    GroupRec.GroupCode = TempGroup;
-                    GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-                    GroupRec.PCode = "";
-                    GroupRec.PName = "";
-
-                    GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-                    GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
-
-                    GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-                    GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-                    GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-                    GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-                    GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-                    GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
-                    GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-                    GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
-                    GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-                    GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-                    if (ArraySize == 0) {
-                        GArray[ArraySize] = GroupRec;
-                        ArraySize = GArray.length;
-                    } else {
-                        GArray = PUtility.addPluArray(GArray);
-                        ArraySize = GArray.length;
-                        GArray[ArraySize - 1] = GroupRec;
-                    }
-                    TempGroup = rs.getString("r_group");
-                    SumEQty = 0.0;
-                    SumEAmt = 0.0;
-                    SumTQty = 0.0;
-
-                    SumTAmt = 0.0;
-                    SumDQty = 0.0;
-                    SumDAmt = 0.0;
-                    SumPQty = 0.0;
-                    SumPAmt = 0.0;
-                    SumWQty = 0.0;
-                    SumWAmt = 0.0;
-                    SumSQty = 0.0;
-                    SumSAmt = 0.0;
-                }
-                if (rs.getString("r_etd").equals("E")) {
-                    SumEQty = SumEQty + rs.getDouble("r_quan");
-                    SumEAmt = SumEAmt + rs.getDouble("r_total");
-                }
-                if (rs.getString("r_etd").equals("T")) {
-                    SumTQty = SumTQty + rs.getDouble("r_quan");
-                    SumTAmt = SumTAmt + rs.getDouble("r_total");
-                }
-                if (rs.getString("r_etd").equals("D")) {
-                    SumDQty = SumDQty + rs.getDouble("r_quan");
-                    SumDAmt = SumDAmt + rs.getDouble("r_total");
-                }
-                if (rs.getString("r_etd").equals("P")) {
-                    SumPQty = SumPQty + rs.getDouble("r_quan");
-                    SumPAmt = SumPAmt + rs.getDouble("r_total");
-                }
-                if (rs.getString("r_etd").equals("W")) {
-                    SumWQty = SumWQty + rs.getDouble("r_quan");
-                    SumWAmt = SumWAmt + rs.getDouble("r_total");
-                }
-                SumSQty = SumSQty + rs.getDouble("r_quan");
-                SumSAmt = SumSAmt + rs.getDouble("r_total");
+                bean.setGroupCode(rsE.getString("R_Group"));
+                bean.setGroupName(rsE.getString("groupName"));
+                bean.setR_ETD(rsE.getString("r_etd"));
+                bean.setSumQtyE(rsE.getDouble("r_quan"));
+                bean.setSumTTLE(rsE.getDouble("r_total"));
+                sumR_EtdTTLE += rsE.getDouble("r_total");
+                bean.setSumTypeE(rsE.getDouble("r_quan"));
+                list.add(bean);
             }
-            if (SumSQty > 0) {
-                GroupRec = new PluRec();
-                GroupRec.MacNo1 = MacNo1;
-                GroupRec.MacNo2 = MacNo2;
-                GroupRec.Cashier1 = CashNo1;
-                GroupRec.Cashier2 = CashNo2;
-                GroupRec.Group1 = Group1;
-                GroupRec.Group2 = Group2;
-                GroupRec.Plu1 = "";
-                GroupRec.Plu2 = "";
-                GroupRec.GroupCode = TempGroup;
-                GroupRec.GroupName = PUtility.SeekGroupName(TempGroup);
-                GroupRec.PCode = "";
-                GroupRec.PName = "";
+            R_ETD = "T";
+            sqlQuery = "select r_group,sum(r_quan) r_quan,sum(r_nettotal) r_total, r_etd ,r_pname,gf.groupname groupName "
+                    + " from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "and r_etd='" + R_ETD + "' "
+                    + "group by r_etd,r_group  ";
 
-                GroupRec.E_Qty = GroupRec.E_Qty + SumEQty;
-                GroupRec.E_Amt = GroupRec.E_Amt + SumEAmt;
+            ResultSet rsT = stmtT.executeQuery(sqlQuery);
+            sumR_EtdTTLT = 0.00;
+            while (rsT.next()) {
+                bean = new GroupFileReportBean();
+                bean.setMacnoFrom(MacNo1);
+                bean.setMacnoTo(MacNo2);
+                bean.setCashFrom(CashNo1);
+                bean.setCashTo(CashNo2);
+                bean.setGroupFrom(Group1);
+                bean.setGroupTo(Group2);
 
-                GroupRec.T_Qty = GroupRec.T_Qty + SumTQty;
-                GroupRec.T_Amt = GroupRec.T_Amt + SumTAmt;
-
-                GroupRec.D_Qty = GroupRec.D_Qty + SumDQty;
-                GroupRec.D_Amt = GroupRec.D_Amt + SumDAmt;
-
-                GroupRec.P_Qty = GroupRec.P_Qty + SumPQty;
-                GroupRec.P_Amt = GroupRec.P_Amt + SumPAmt;
-
-                GroupRec.W_Qty = GroupRec.W_Qty + SumWQty;
-                GroupRec.W_Amt = GroupRec.W_Amt + SumWAmt;
-
-                GroupRec.S_Qty = GroupRec.S_Qty + SumSQty;
-                GroupRec.S_Amt = GroupRec.S_Amt + SumSAmt;
-                if (ArraySize == 0) {
-                    GArray[ArraySize] = GroupRec;
-                    ArraySize = GArray.length;
-                } else {
-                    GArray = PUtility.addPluArray(GArray);
-                    ArraySize = GArray.length;
-                    GArray[ArraySize - 1] = GroupRec;
-                }
+                bean.setGroupCode(rsT.getString("R_Group"));
+                bean.setGroupName(rsT.getString("groupName"));
+                bean.setR_ETD(rsT.getString("r_etd"));
+                bean.setSumQtyT(rsT.getDouble("r_quan"));
+                bean.setSumTTLT(rsT.getDouble("r_total"));
+                sumR_EtdTTLT += rsT.getDouble("r_total");
+                bean.setSumTypeT(rsT.getDouble("r_quan"));
+                list.add(bean);
             }
+            R_ETD = "D";
+            sqlQuery = "select r_group,sum(r_quan) r_quan,sum(r_nettotal) r_total, r_etd ,r_pname,gf.groupname groupName "
+                    + " from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "and r_etd='" + R_ETD + "' "
+                    + "group by r_etd,r_group  ";
 
-            rs.close();
-            stmt.close();
+            ResultSet rsD = stmtD.executeQuery(sqlQuery);
+            sumR_EtdTTLD = 0.00;
+            while (rsD.next()) {
+                bean = new GroupFileReportBean();
+                bean.setMacnoFrom(MacNo1);
+                bean.setMacnoTo(MacNo2);
+                bean.setCashFrom(CashNo1);
+                bean.setCashTo(CashNo2);
+                bean.setGroupFrom(Group1);
+                bean.setGroupTo(Group2);
+
+                bean.setGroupCode(rsD.getString("R_Group"));
+                bean.setGroupName(rsD.getString("groupName"));
+                bean.setR_ETD(rsD.getString("r_etd"));
+                bean.setSumQtyD(rsD.getDouble("r_quan"));
+                bean.setSumTTLD(rsD.getDouble("r_total"));
+                sumR_EtdTTLD += rsD.getDouble("r_total");
+                bean.setSumTypeD(rsD.getDouble("r_quan"));
+                list.add(bean);
+            }
+            R_ETD = "P";
+            sqlQuery = "select r_group,sum(r_quan) r_quan,sum(r_nettotal) r_total, r_etd ,r_pname,gf.groupname groupName "
+                    + " from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "and r_etd='" + R_ETD + "' "
+                    + "group by r_etd,r_group  ";
+
+            ResultSet rsP = stmtP.executeQuery(sqlQuery);
+            sumR_EtdTTLP = 0.00;
+            while (rsD.next()) {
+                bean = new GroupFileReportBean();
+                bean.setMacnoFrom(MacNo1);
+                bean.setMacnoTo(MacNo2);
+                bean.setCashFrom(CashNo1);
+                bean.setCashTo(CashNo2);
+                bean.setGroupFrom(Group1);
+                bean.setGroupTo(Group2);
+
+                bean.setGroupCode(rsP.getString("R_Group"));
+                bean.setGroupName(rsP.getString("groupName"));
+                bean.setR_ETD(rsP.getString("r_etd"));
+                bean.setSumQtyP(rsP.getDouble("r_quan"));
+                bean.setSumTTLP(rsP.getDouble("r_total"));
+                sumR_EtdTTLP += rsP.getDouble("r_total");
+                bean.setSumTypeP(rsP.getDouble("r_quan"));
+                list.add(bean);
+            }
+            R_ETD = "W";
+            sqlQuery = "select r_group,sum(r_quan) r_quan,sum(r_nettotal) r_total, r_etd ,r_pname,gf.groupname groupName "
+                    + " from t_sale "
+                    + "inner join groupfile gf on r_group = gf.groupcode "
+                    + "where r_void<>'V' and r_refund<>'V' "
+                    + "and macno between'" + MacNo1 + "' and '" + MacNo2 + "' "
+                    + "and cashier between'" + CashNo1 + "' and '" + CashNo2 + "' "
+                    + "and r_group between'" + Group1 + "' and '" + Group2 + "' "
+                    + "and r_etd='" + R_ETD + "' "
+                    + "group by r_etd,r_group  ";
+
+            ResultSet rsW = stmtW.executeQuery(sqlQuery);
+            sumR_EtdTTLW = 0.00;
+            while (rsW.next()) {
+                bean = new GroupFileReportBean();
+                bean.setMacnoFrom(MacNo1);
+                bean.setMacnoTo(MacNo2);
+                bean.setCashFrom(CashNo1);
+                bean.setCashTo(CashNo2);
+                bean.setGroupFrom(Group1);
+                bean.setGroupTo(Group2);
+
+                bean.setGroupCode(rsW.getString("R_Group"));
+                bean.setGroupName(rsW.getString("groupName"));
+                bean.setR_ETD(rsW.getString("r_etd"));
+                bean.setSumQtyP(rsW.getDouble("r_quan"));
+                bean.setSumTTLP(rsW.getDouble("r_total"));
+                sumR_EtdTTLW += rsW.getDouble("r_total");
+                bean.setSumTypeP(rsW.getDouble("r_quan"));
+                list.add(bean);
+            }
+            rsE.close();
+            rsT.close();
+            rsD.close();
+            rsP.close();
+            rsW.close();
+            stmtE.close();
+            stmtT.close();
+            stmtD.close();
+            stmtP.close();
+            stmtW.close();
         } catch (SQLException e) {
             MSG.ERR(this, e.getMessage());
             AppLogUtil.log(DeptReport.class, "error", e);
@@ -728,7 +728,7 @@ private void txtGroup2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
 
         if (PublicVar.useprint) {
-            prn.printGroup(GArray);
+            prn.printGroup(GArray, list);
         }
         txtMacNo1.requestFocus();
     }

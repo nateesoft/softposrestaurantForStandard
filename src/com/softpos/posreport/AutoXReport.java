@@ -10,6 +10,7 @@ import com.softpos.constants.PluRec;
 import com.softpos.constants.PublicVar;
 
 import com.softpos.connection.database.MySQLConnect;
+import com.softpos.pos.core.model.GroupFileReportBean;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import java.util.ArrayList;
 
 public class AutoXReport extends javax.swing.JDialog {
 
@@ -35,7 +37,6 @@ public class AutoXReport extends javax.swing.JDialog {
     private final MySQLConnect mysqlConnect = new MySQLConnect();
     private final POSHWSetup POSHWSetup = new POSHWSetup();
     private final PUtility PUtility = new PUtility();
-    
 
     /**
      * Creates new form AutoXRep
@@ -594,7 +595,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     public boolean ChkSaleData() {
         boolean ReturnVal = false;
 
-        
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1287,7 +1287,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         prn.print("AR Code    เลขที่ใบเสร็จรับเงิน/วันที่  จำนวนเงิน");
         prn.print("----------------------------------------");
 
-
         mysqlConnect.open(this.getClass());
         try {
             Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -1420,7 +1419,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         PluRec[] GArray;
         GArray = new PluRec[1];
         ArraySize = 0;
-
 
         mysqlConnect.open(this.getClass());
         try {
@@ -1604,9 +1602,10 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         } finally {
             mysqlConnect.closeConnection(this.getClass());
         }
-
+        GroupFileReportBean bean = new GroupFileReportBean();
+        ArrayList<GroupFileReportBean> list = new ArrayList();
         if (PublicVar.printdriver) {
-            prn.printGroupDriver(GArray);
+//            prn.printGroupDriver(GArray);
         } else {
             PrintGroup(GArray);
         }
@@ -1691,7 +1690,6 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         PluRec[] GArray;
         GArray = new PluRec[1];
         ArraySize = 0;
-
 
         mysqlConnect.open(this.getClass());
         try {
@@ -2036,7 +2034,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("----------------------------------------");
             prn.print("ใบเสร็จ   เวลาพิมพ์     จำนวนเงิน   ภาษี(Vat)");
             prn.print("----------------------------------------");
-            
+
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2111,7 +2109,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("----------------------------------------");
             int SumVoid = 0;
             Double SumAmount = 0.0;
-            
+
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();
@@ -2160,7 +2158,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             CreditReport credit = new CreditReport(null, true);
             credit.printCreditReportDriver(MacNo1, MacNo2, CashNo1, CashNo2);
         } else {
-            
+
             mysqlConnect.open(this.getClass());
             try {
                 try (Statement stmt = mysqlConnect.getConnection().createStatement()) {
@@ -2310,7 +2308,7 @@ private void bntOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             prn.print("----------------------------------------");
             int Sumtotal = 0;
             Double SumtotalAmount = 0.0;
-            
+
             mysqlConnect.open(this.getClass());
             try {
                 Statement stmt = mysqlConnect.getConnection().createStatement();

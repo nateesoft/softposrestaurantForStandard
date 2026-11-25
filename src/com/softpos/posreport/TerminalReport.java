@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.softpos.util.AppLogUtil;
 import com.softpos.util.MSG;
+import java.text.DecimalFormat;
 
 public class TerminalReport extends javax.swing.JDialog {
 
@@ -172,6 +173,13 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                     + "where b_macno='" + txtMacNo.getText() + "' "
                     + "order by b_refno";
             ResultSet rs = stmt.executeQuery(SqlQuery);
+            
+            Statement stmtNoCash = mysqlConnect.getConnection().createStatement();
+            String SqlQueryNocash = "select * from billno "
+                    + "where b_macno='" + txtMacNo.getText() + "' "
+                    + "and b_cramt1<>'0' "
+                    + " order by b_etd,b_refno";
+            ResultSet rsNocash = stmtNoCash.executeQuery(SqlQueryNocash);
 
             String sqlGetEntertainPay = "select sum(B_Entertain) EntertainAMT ,sum(B_NetDiff) B_NetDiff from billno where b_void<>'V' and b_macno='" + txtMacNo.getText() + "';";
             ResultSet rsGetEntertain = mysqlConnect.executeQuery(sqlGetEntertainPay);
@@ -187,8 +195,8 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                 frec.BillEntertain = rsGetSumBillno.getDouble("b_refno");
             }
             rsGetSumBillno.close();
-
             while (rs.next()) {
+
                 frec.StBill = rs.getString("b_refno");
 
                 frec.SpBill = rs.getString("b_refno");
@@ -296,10 +304,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                         frec.DeliveryAmt = frec.DeliveryAmt + rs.getDouble("b_total");
                         frec.DeliveryCust = frec.DeliveryCust + rs.getInt("b_cust");
                         frec.DeliveryNet = frec.DeliveryNet + rs.getDouble("b_nettotal");
-                        String amt = frec.DeliveryAmt + "";
-                        String cust = frec.DeliveryCust + "";
-                        String net = frec.DeliveryNet + "";
-                        AppLogUtil.info(amt + ":" + cust + ":" + net);
                     }
                     if (rs.getString("b_etd").equals("P")) {
                         frec.PintoCnt++;
@@ -313,12 +317,46 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
                         frec.WholeCust = frec.WholeCust + rs.getInt("b_cust");
                         frec.WholeNet = frec.WholeNet + rs.getDouble("b_nettotal");
                     }
+                    if (rsNocash.getString("b_etd").equals("E")) {
+                        frec.Eat_In_CntNoCash++;
+                        frec.Eat_In_AmtNoCash = frec.Eat_In_AmtNoCash + rsNocash.getDouble("b_total");
+                        frec.Eat_In_CustNoCash = frec.Eat_In_CustNoCash + rsNocash.getInt("b_cust");
+                        frec.Eat_In_NetNoCash = frec.Eat_In_NetNoCash + rsNocash.getDouble("b_nettotal");
+                    }
+                    if (rsNocash.getString("b_etd").equals("T")) {
+                        frec.Take_Away_CntNoCash++;
+                        frec.Take_Away_AmtNoCash = frec.Take_Away_AmtNoCash + rsNocash.getDouble("b_total");
+                        frec.Take_Away_CustNoCash = frec.Take_Away_CustNoCash + rsNocash.getInt("b_cust");
+                        frec.Take_Away_NetNoCash = frec.Take_Away_NetNoCash + rsNocash.getDouble("b_nettotal");
+                    }
+                    if (rsNocash.getString("b_etd").equals("D")) {
+                        frec.Delivery_CntNoCash++;
+                        frec.Delivery_AmtNoCash = frec.Delivery_AmtNoCash + rsNocash.getDouble("b_total");
+                        frec.Delivery_CustNoCash = frec.Delivery_CustNoCash + rsNocash.getInt("b_cust");
+                        frec.Delivery_NetNoCash = frec.Delivery_NetNoCash + rsNocash.getDouble("b_nettotal");
+                    }
+                    if (rsNocash.getString("b_etd").equals("P")) {
+                        frec.Pinto_CntNoCash++;
+                        frec.Pinto_AmtNoCash = frec.Pinto_AmtNoCash + rsNocash.getDouble("b_total");
+                        frec.Pinto_CustNoCash = frec.Pinto_CustNoCash + rsNocash.getInt("b_cust");
+                        frec.Pinto_NetNoCash = frec.Pinto_NetNoCash + rsNocash.getDouble("b_nettotal");
+                    }
+                    if (rs.getString("b_etd").equals("W")) {
+                        frec.WholeSale_CntNoCash++;
+                        frec.WholeSale_AmtNoCash = frec.WholeSale_AmtNoCash + rsNocash.getDouble("b_total");
+                        frec.WholeSale_CustNoCash = frec.WholeSale_CustNoCash + rsNocash.getInt("b_cust");
+                        frec.WholeSale_NetNoCash = frec.WholeSale_NetNoCash + rsNocash.getDouble("b_nettotal");
+                    }
                 } else {
                     frec.AmtBillVoid = frec.AmtBillVoid + (rs.getDouble("b_nettotal") + rs.getDouble("b_crchargeamt1"));
                     frec.CntBillVoid++;
                     frec.CntBill++;
                 }
             }
+            int billStart = 1 + Integer.parseInt(frec.StBill);
+            billStart = billStart - frec.CntBill;
+            DecimalFormat df = new DecimalFormat("0000000");
+            frec.StBill = df.format(billStart);
             rs.close();
             stmt.close();
         } catch (SQLException e) {
